@@ -58,6 +58,10 @@ extern char func_01ff8000;
  * unnamed in src/engine/card/CARD_PullOut.cpp, which no header declares. */
 extern void func_02061138(void);
 
+/* The card's read state: the installed read function, ROMCTRL, the cached
+   page pointer and the page cache itself (CARDRomStat, card_rom.h). */
+CARDRomStat rom_stat;
+
 /* Whether [buf, buf + len) touches the ITCM (it ends at 0x02000000) or the
  * DTCM. */
 static inline int CARDi_IsInTcm(u32 buf, u32 len) {

@@ -110,3 +110,6 @@ void func_0206ccd8(const char *fmt, ...) {
         func_0206a928(&s, fmt, &p);
     }
 }
+/* The non-fatal assert line: prints the file, line and expression and
+   returns, where the stop branch above traps. */
+const char data_020868d4[40] = "WARING FILE=[%s] LINE=[%d]  EXP=[%s] \n";

@@ -50,6 +50,7 @@
 #include "nitro/hw/registers.h"
 #include "math/CalcLib.h"
 #include "Ov007Settings.h"
+#include "Ov007Item.h"
 
 extern "C" {
 extern FileSaveData *data_0209b33c;
@@ -381,4 +382,56 @@ extern "C" {
  * Keep the configured identity while its shared declaration is reserved. */
 int data_ov007_02103260 = -1;
 BaseSpawnInfo<dScDSMT_c> g_profile_DSMT = {dScDSMT_c_classInit, 1, 3};
+
+/* The menu's memory and file hooks plus its command callback, in
+ * Ov007MenuHooks order. InitResources hands the record to
+ * func_ov007_020b7138, which installs the six entries. */
+Ov007MenuHooks data_ov007_02103290 = {
+    (int)DSMT_MenuAlloc,    (int)DSMT_MenuFree,        (int)DSMT_MenuMaxAllocSize,
+    (int)DSMT_MenuLoadFile, (int)DSMT_MenuReleaseFile, (int (*)(int))DSMT_MenuCallback,
+};
+
+/* Pending-music delay, counted down by Behavior before it applies the ID. */
+extern unsigned short data_ov007_02104c28;
 }
+
+/* The item-node animation index arrays. func_ov007_020ade58 reaches them only
+ * through data_ov007_020ccb7c's animIndices pointers, and each keeps its ROM
+ * symbol. The ROM orders them item0, item7, item4, item8, items3And6, item2,
+ * item5, item1; mwcc does not emit separate constants in declaration order,
+ * so the manifest records the emitted address of each and the production link
+ * puts them back in ROM order. Items 3 and 6 share one array. */
+extern "C" const u8 data_ov007_020ccb54[4] = {0, 0, 0, 0}; /* item 0 */
+extern "C" const u8 data_ov007_020ccb58[4] = {0, 0, 0, 0}; /* item 7 */
+extern "C" const u8 data_ov007_020ccb5c[4] = {1, 0, 0, 0}; /* item 4 */
+extern "C" const u8 data_ov007_020ccb60[4] = {0, 0, 0, 0}; /* item 8 */
+extern "C" const u8 data_ov007_020ccb64[4] = {0, 0, 0, 0}; /* items 3 and 6 */
+extern "C" const u8 data_ov007_020ccb68[4] = {4, 0, 0, 0}; /* item 2 */
+extern "C" const u8 data_ov007_020ccb6c[4] = {2, 0, 0, 0}; /* item 5 */
+extern "C" const u8 data_ov007_020ccb70[12] = {0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 0, 0}; /* item 1 */
+
+/* One row per menu item: the sprite bank, the node's animation count and the
+ * array above whose indices select entries in that bank. */
+extern "C" const Ov007NodeSprites data_ov007_020ccb7c[9] = {
+    {5, 1, {0}, data_ov007_020ccb54}, {0, 10, {0}, data_ov007_020ccb70},
+    {0, 1, {0}, data_ov007_020ccb68}, {3, 1, {0}, data_ov007_020ccb64},
+    {3, 1, {0}, data_ov007_020ccb5c}, {3, 1, {0}, data_ov007_020ccb6c},
+    {3, 1, {0}, data_ov007_020ccb64}, {4, 1, {0}, data_ov007_020ccb58},
+    {0, 1, {0}, data_ov007_020ccb60},
+};
+
+/* The nine item placement rows func_ov007_020ade58 hands
+ * func_ov007_020aea6c: kind, home position and slide distance. */
+extern "C" const Ov007ItemLayout data_ov007_020ccbc4[9] = {
+    {1, 12, 176, 0, 64}, {1, 128, 164, 0, 64}, {1, 232, 11, 0, -32},
+    {5, 33, 93, 0, 0},   {5, 162, 61, 0, 0},   {5, 230, 78, 0, 0},
+    {5, 213, 67, 0, 0},  {7, 14, 40, 0, -256}, {9, 128, 136, 0, 100},
+};
+
+/* Menu selection table: [selected slot * 3 + target slot] -> item id. */
+extern "C" const int data_ov007_020ccc20[9] = {
+    0, 11, 12, 13, 0, 14, 15, 16, 0,
+};
+
+/* BG map palette index for the unselected (0) and selected (1) mode. */
+extern "C" const u8 data_ov007_020ccc44[4] = {3, 4, 0, 0};

@@ -679,7 +679,9 @@ extern int sTeresaBooTouchOffsets[];
 extern int sTeresaSpawnCounts[];
 extern int sTeresaSpawnKinds[];
 extern int sTeresaSpawnBurst[];
-extern int sTeresaPaintMask[];
+/* PaintSquare's stipple shape: eight rows of eight 4-bit columns. */
+int sTeresaPaintMask[8] = {0x00111100, 0x01111110, 0x11111111, 0x11111111,
+                           0x11111111, 0x11111111, 0x01111110, 0x00111100};
 extern int            sMgTopScreenYOffset;
 
 /* The four pointer-to-member state tables. Pmf handlers take the Boo/slot

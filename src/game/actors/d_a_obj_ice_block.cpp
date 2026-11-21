@@ -232,3 +232,7 @@ void daObjIceBlock_c::ReleaseStar() {
  * destructors; the registration nodes are compiler temporaries. */
 IceBlockModelFilePtr data_ov081_02128fd8(ASSET_ICE_BLOCK_LL_BMD);
 IceBlockCollisionFilePtr data_ov081_02128fd0(ASSET_ICE_BLOCK_LL_KCL);
+
+/* Two words of section-tail storage no function reads; the ROM keeps them
+ * inside this TU's .bss run. */
+u32 data_ov081_02128ff8[2];

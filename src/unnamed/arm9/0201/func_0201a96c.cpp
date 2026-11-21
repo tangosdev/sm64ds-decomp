@@ -40,3 +40,8 @@ typedef char WatchdogAlarm_must_be_0x44[sizeof(WatchdogAlarm) == 0x44 ? 1 : -1];
 
 unsigned short data_0209d534[32];
 WatchdogAlarm gWatchdog;
+
+/* The OSThread func_0201a1bc runs the card/IRQ work on, laid out after this
+   file's own .bss (data_0209d528..data_0209d5b8). One object so the thread
+   structure's configured interior labels keep their addresses. */
+u8 data_0209d5b8[0x94];

@@ -40,6 +40,7 @@ enum daGrock_c_AssetId { ASSET_CV_GORO_ROCK_BMD = 0x05d4 };
 
 #pragma defer_codegen off
 
+#include "SpawnInfo.h"
 #include "decl_common.h"
 #include "daGrock_c.h"
 #include "daPly_c.h"
@@ -392,3 +393,6 @@ daGrock_c *daGrock_c_classInit() {
  * and registers the destructor; the registration node is a compiler
  * temporary. */
 GrockModelFilePtr data_ov021_02114a50(ASSET_CV_GORO_ROCK_BMD);
+
+extern "C" SpawnInfo<daGrock_c> g_profile_GORO_ROCK = {
+    daGrock_c_classInit, 221, 70, 0x00000002, 0x00000000, 0x0012c000, 0x017d0000, 0x017d0000};

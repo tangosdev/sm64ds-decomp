@@ -1750,6 +1750,17 @@ PanelStateFnI sPanelShakeStateTable[3] = {
     &dScMgPanel_c::Shake_StateLoseTry,
 };
 
+/* The six-column board's y coordinate per cell (mWidth - 4 == 2). It is
+   the third row of sPanelPuzzleYPerMode. */
+u16 data_ov006_0213e1fc[36] = {
+    0x0010, 0x0010, 0x0010, 0x0010, 0x0010, 0x0010, // row 0
+    0x0030, 0x0030, 0x0030, 0x0030, 0x0030, 0x0030, // row 1
+    0x0050, 0x0050, 0x0050, 0x0050, 0x0050, 0x0050, // row 2
+    0x0070, 0x0070, 0x0070, 0x0070, 0x0070, 0x0070, // row 3
+    0x0090, 0x0090, 0x0090, 0x0090, 0x0090, 0x0090, // row 4
+    0x00b0, 0x00b0, 0x00b0, 0x00b0, 0x00b0, 0x00b0, // row 5
+};
+
 /* MG_PANEL's base profile: the factory, then the same priority in both
    halfwords. */
 BaseSpawnInfo<dScMgPanel_c> g_profile_MG_PANEL = {

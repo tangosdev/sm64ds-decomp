@@ -16,6 +16,11 @@
       "name": ".text",
       "start": "0x020568cc",
       "end": "0x02056c1c"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x02086324",
+      "end": "0x02086384"
     }
   ],
   "functions": [
@@ -63,6 +68,15 @@
     }
   ],
   "data": [],
+  "rodata": [
+    {
+      "symbol": "data_02086324",
+      "address": "0x02086324",
+      "size": "0x60",
+      "binding": "STB_GLOBAL",
+      "evidence": "The 16 texture-bank combinations' LCDC slot windows, indexed by GX_ResetBankForTex's result in GX_BeginLoadTex: each row is the first and second texture block and the first block's size, all in 4 KiB units, shifted left 12 into data_020a60ac/bc/c0. The companion texture-palette table data_02086314[] is the existing src/data/arm9/data_02086314.c claim immediately below."
+    }
+  ],
   "bss": [],
   "compiler_only_output": [],
   "verification": {
@@ -85,6 +99,61 @@
       "declared_function_set_equals_defined_function_set": "PASS",
       "functions_occur_in_expected_order": "PASS",
       "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020568cc",
+        "end": "0x02056c1c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020568cc",
+          "end": "0x02056c1c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02086324",
+          "end": "0x02086384",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 7
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
     }
-  }
+  },
+  "production_mode": "intact-object"
 }

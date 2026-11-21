@@ -1,7 +1,0 @@
-/* ov022 .rodata at 0x02112a6c (56 bytes). */
-#include "types.h"
-
-const u32 data_ov022_02112a6c[14] = {
-    0xfffffb18, 0xfffffb04, 0xfffffaef, 0xfffffadb, 0xfffffac6, 0xfffffab2, 0xfffffa9d,
-    0xfffffa88, 0xfffffa74, 0xfffffa5f, 0xfffffa4b, 0xfffffa36, 0xfffffa21, 0xfffffa0d,
-};

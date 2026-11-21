@@ -92,11 +92,17 @@ extern "C" {
 /* Static minigame base state: the graphCallback_c registry instance, the
    MgFx record pool, and the two PMF state tables the dispatchers call
    through. Declaration order is the ROM's __sinit order. */
+void *sMgWorkBuffer;
+int sMgPaintWord;
+dScMgBase_c *gMgScene;
+int sMgTopScreenYOffset;
+int sMgSparkleSpritesGuard;
 dScMgBase_c::graphCallback_c sMgGraphCallback;
 MgFx sMgFxPool[0x40];
 EntPMF sMgFxUpdateTable[2] = {&MgFx::UpdateDrift, &MgFx::UpdateFlyTo};
 EntPMF sMgFxDrawTable[2] = {&MgFx::DrawSparkle, &MgFx::DrawFlyTo};
 OamAttr *sMgSparkleSprites[16];
+unsigned char sMgBannerGfxSlotUsed[4];
 }
 
 extern "C" {
@@ -140,6 +146,8 @@ extern void *func_020182bc(const char *path);
 extern int sMgSparkleSpritesGuard;
 /* Five one-entry OamAttr templates; attr3 = 0xffff ends each list.
    DrawSparkle interleaves them into the 16-frame sMgSparkleSprites. */
+int sMgBannerButtonsArmed = 1;
+
 OamAttr data_ov004_020be9ec[] = {
     {0x00f8, 0x41f8, 0xe293, 0xffff},
 };

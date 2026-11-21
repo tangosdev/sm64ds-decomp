@@ -181,7 +181,11 @@ extern signed char gCurrentSublevel;
 extern daPly_c *gPlayers[];
 extern signed char gCurrentAreaId;
 extern const unsigned char data_02075250[8];
-extern unsigned char data_02075258[];
+/* The eleven sound-player numbers func_02011c54 stops; the twelfth byte is
+   padding. */
+extern const u8 data_02075258[12] = {
+    2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 15, 0,
+};
 
 typedef struct {
     int playerID;
@@ -957,7 +961,7 @@ void func_02011c8c(void) {
 
 void func_02011c54(void) {
     unsigned int i;
-    unsigned char *p = data_02075258;
+    unsigned char *p = (unsigned char *)data_02075258;
     for (i = 0; i < 11; i++) {
         NNS_SndPlayerStopSeqByPlayerNo(*p, 1);
         p = p + 1;
@@ -1160,3 +1164,7 @@ int func_02011654(char *table, char *n) {
     return func_02011aa0(n);
 }
 
+/* re-hosted arm9 data */
+/* The sound driver's mixer state, SaveBlock and the save-file tables up to
+   Timer's state; interior labels keep their symbols.txt addresses. */
+u8 data_0209ba84[0x1a34];

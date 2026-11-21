@@ -405,3 +405,6 @@ PianoStateEntry data_ov063_0211efbc[2] = {
     {&daPiano_c::InitStateSearch, &daPiano_c::StateSearch},
     {&daPiano_c::InitStateAttack, &daPiano_c::StateAttack},
 };
+
+/* Tail word of the piano unit's bss; no source reference. */
+u32 data_ov063_0211efdc[1];

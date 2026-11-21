@@ -29,8 +29,11 @@
  * at 0x02148fbc, which has no such pragma and so emits in the reverse of
  * source order -- its classInit block sits at the top of its file instead).
  *
- * What stays:
- * - The 0xc-stride file rows are local: only this TU indexes those tables.
+ * The 0xc-stride asset rows are this TU's own .data (0x0214e188..0x0214e1d0);
+ * only this TU indexes them. The CLPS blocks they name are shared course
+ * data in the co-resident overlays, so the pointers bind cross-module.
+ *
+ * What stays: the class's own _ZTI/_ZTS/profiles/_ZTV at 0x0214e0c0..0x0214e258.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -76,8 +79,20 @@ struct SimpleBgAssets {
 };
 typedef char SimpleBgAssets_size_must_be_0xc[sizeof(SimpleBgAssets) == 0xc ? 1 : -1];
 
-/* The model, KCL and CLPS for each variant. */
-extern SimpleBgAssets data_ov102_0214e188[];
+/* The model, KCL and CLPS for each variant. Retail order: KI_IWA,
+ * KI_HASIRA_DAI, BK_TOWER, DOKAN, MC_DODAI, MC_HAZAD. */
+extern SimpleBgAssets data_ov102_0214e188[6];
+
+/* CLPS blocks the rows above name: shared course data, duplicated at the same
+ * address in every overlay that uses the object, so these bind cross-module. */
+extern "C" {
+extern struct CLPS_Block data_ov009_02113ccc;
+extern struct CLPS_Block data_ov009_02113cec;
+extern struct CLPS_Block data_ov009_021136f4;
+extern struct CLPS_Block data_ov002_0210d814;
+extern struct CLPS_Block data_ov019_02112c18;
+extern struct CLPS_Block data_ov019_02112c58;
+}
 extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
 extern u8 gGameMode;
@@ -230,3 +245,15 @@ SimpleBgClsnFilePtr gBkTowerCollisionFile(ASSET_BK_TOWER_KCL);
 SimpleBgClsnFilePtr gObjDokanCollisionFile(ASSET_OBJ_DOKAN_KCL);
 SimpleBgClsnFilePtr gMcDodaiCollisionFile(ASSET_MC_DODAI_KCL);
 SimpleBgClsnFilePtr gMcHazadCollisionFile(ASSET_MC_HAZAD_KCL);
+
+/* Per-variant asset rows, in registry order. The interior labels
+   data_ov102_0214e18c/0214e190 name the first row's collision and CLPS
+   words. */
+SimpleBgAssets data_ov102_0214e188[6] = {
+    {&gKiIwaModelFile, &gKiIwaCollisionFile, &data_ov009_02113ccc},
+    {&gKiHasiraDaiModelFile, &gKiHasiraDaiCollisionFile, &data_ov009_02113cec},
+    {&gBkTowerModelFile, &gBkTowerCollisionFile, &data_ov009_021136f4},
+    {&gdaObjSimpleBgObjDokanModelFile, &gObjDokanCollisionFile, &data_ov002_0210d814},
+    {&gMcDodaiModelFile, &gMcDodaiCollisionFile, &data_ov019_02112c18},
+    {&gMcHazadModelFile, &gMcHazadCollisionFile, &data_ov019_02112c58},
+};

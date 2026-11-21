@@ -78,7 +78,12 @@ extern daSnowmanTurnRate data_ov081_021289a4[2];
 extern "C" int AngleDiff(int a, int b);
 /* Sound::Play(3, id, pos) — PlayBank3. This TU calls the wrapper. */
 void func_02012694(unsigned int a, const Vector3 *p);
-extern Vector3 data_ov081_02128998; /* cylinder offset (0, 0x1e000, 0) */
+/* Cylinder offset (0, 0x1e000, 0): a POD twin, since a Vector3 global
+ * would carry its constructor into .bss. */
+struct SnowmanCylinderOffset {
+    fx32 x, y, z;
+};
+extern SnowmanCylinderOffset data_ov081_02128998;
 extern unsigned char gNumPlayers;
 extern daPly_c *gPlayers[];
 extern union Matrix4x3 gScratchMtx;
@@ -222,7 +227,9 @@ void daSnowman_c::RotateTowardPlayer(int idx) {
 /* Reacts to whatever the collision cylinder touched this frame. */
 void daSnowman_c::CheckAttacks() {
     Vector3 v;
-    v = data_ov081_02128998;
+    v.x = data_ov081_02128998.x;
+    v.y = data_ov081_02128998.y;
+    v.z = data_ov081_02128998.z;
     this->mdCcAcPos_c.SetPosRelativeToActor(v);
 
     u32 id = this->mdCcAcPos_c.otherOwner;
@@ -947,7 +954,9 @@ int daSnowman_c::InitResources()
     mScale.z = 0x1000;
     mTerminalVelocity = -0xc8000;
 
-    v = data_ov081_02128998;
+    v.x = data_ov081_02128998.x;
+    v.y = data_ov081_02128998.y;
+    v.z = data_ov081_02128998.z;
     mdCcAcPos_c.Init(this, v, 0x3c000, 0x96000, 0x200004, 0x42050);
 
     mAngle.y = mPrevAngle.y;
@@ -1020,3 +1029,6 @@ daSnowman_c::State data_ov081_02128e94(&daSnowman_c::StateDeathEnter,
                                        &daSnowman_c::StateDeathExecute);
 daSnowman_c::State data_ov081_02128e24(&daSnowman_c::StateMeltEnter,
                                        &daSnowman_c::StateMeltExecute);
+
+SnowmanCylinderOffset data_ov081_02128998 = {0, 0x1e000, 0};
+daSnowmanTurnRate data_ov081_021289a4[2] = {{1, 0x1000, 0x1000}, {1, 0x1000, 0x1000}};

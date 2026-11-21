@@ -1,13 +1,16 @@
     .text       start:0x02113ee0 end:0x0211b524 kind:code align:32
     .rodata.ent_pat start:0x0211b524 end:0x0211b52c kind:rodata align:1
     .data.ent_step start:0x0211b52c end:0x0211b534 kind:data align:2
-    .rodata     start:0x0211b534 end:0x0211b5e0 kind:rodata align:4
+    .rodata     start:0x0211b534 end:0x0211b5d4 kind:rodata align:4
+    .rodata.entry_langx start:0x0211b5d4 end:0x0211b5e0 kind:rodata align:4
     .init       start:0x0211b5e0 end:0x0211c5a4 kind:code align:4
     .ctor       start:0x0211c5a4 end:0x0211c5b0 kind:rodata align:4
     .data start:0x0211c5c0 end:0x0211c678 kind:data align:32
     .data.ent_anim start:0x0211c678 end:0x0211c688 kind:data align:4
     .data.ent_anim2 start:0x0211c688 end:0x0211c698 kind:data align:4
-    .data.gap_vt start:0x0211c698 end:0x0211c6f0 kind:data align:4
+    .data.gap_vt start:0x0211c698 end:0x0211c6e8 kind:data align:4
+    .data.entry_xbase start:0x0211c6e8 end:0x0211c6ec kind:data align:4
+    .data.entry_course start:0x0211c6ec end:0x0211c6f0 kind:data align:4
     .data.entry_sprites0 start:0x0211c6f0 end:0x0211c6f8 kind:data align:4
     .data.entry_sprite_gap0 start:0x0211c6f8 end:0x0211c708 kind:data align:4
     .data.entry_sprites1 start:0x0211c708 end:0x0211c710 kind:data align:4
@@ -48,7 +51,7 @@ src/game/stages/d_ent_obj.cpp:
     .data start:0x0211c5c0 end:0x0211c648
     .data.ent_anim start:0x0211c678 end:0x0211c688
     .data.ent_anim2 start:0x0211c688 end:0x0211c698
-    .bss start:0x0211d384 end:0x0211d5bc
+    .bss start:0x0211d380 end:0x0211d5bc
 
 src/game/stages/d_s_entry.cpp:
     complete
@@ -56,6 +59,9 @@ src/game/stages/d_s_entry.cpp:
     .init start:0x0211bb00 end:0x0211c51c
     .ctor start:0x0211c5a8 end:0x0211c5ac
     .bss start:0x0211d5c0 end:0x0211d980
+    .data.entry_xbase start:0x0211c6e8 end:0x0211c6ec
+    .data.entry_course start:0x0211c6ec end:0x0211c6f0
+    .rodata.entry_langx start:0x0211b5d4 end:0x0211b5e0
     .data.entry_sprites0 start:0x211c6f0 end:0x211c6f8
     .data.entry_sprites1 start:0x211c708 end:0x211c710
     .data.entry_sprites2 start:0x211c720 end:0x211c728
@@ -81,16 +87,4 @@ src/game/stages/d_s_entry_entry.cpp:
     .init start:0x0211c51c end:0x0211c5a4
     .ctor start:0x0211c5ac end:0x0211c5b0
     .data.entry_tail start:0x0211d34c end:0x0211d364
-    .bss start:0x0211d980 end:0x0211d9ac
-
-src/data/ov075/data_ov075_0211d380.c:
-    complete
-    .bss start:0x0211d380 end:0x0211d384
-
-src/data/ov075/data_ov075_0211d9ac.c:
-    complete
-    .bss start:0x0211d9ac end:0x0211d9bc
-
-src/data/ov075/data_ov075_0211d9bc.c:
-    complete
-    .bss start:0x0211d9bc end:0x0211d9c0
+    .bss start:0x0211d980 end:0x0211d9c0

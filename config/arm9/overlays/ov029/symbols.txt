@@ -175,14 +175,12 @@ _ZTS14daObjWcObj01_c kind:data(any) addr:0x02113bf4
 g_profile_WC_OBJ01 kind:data(any) addr:0x02113c08 ambiguous
 data_ov029_02113c14 kind:data(any) addr:0x02113c14 ambiguous
 data_ov029_02113c20 kind:data(any) addr:0x02113c20 ambiguous
-data_ov029_02113c28 kind:data(any) addr:0x02113c28 ambiguous
 _ZTV14daObjWcObj01_c kind:data(any) addr:0x02113c2c
 data_ov029_02113c48 kind:data(any) addr:0x02113c48 ambiguous
 _ZTI15daObjWc_Obj02_c kind:data(any) addr:0x02113cac
 _ZTS15daObjWc_Obj02_c kind:data(any) addr:0x02113cb8
 g_profile_WC_OBJ02 kind:data(any) addr:0x02113ccc ambiguous
 data_ov029_02113cd4 kind:data(any) addr:0x02113cd4 ambiguous
-data_ov029_02113cec kind:data(any) addr:0x02113cec ambiguous
 _ZTV15daObjWc_Obj02_c kind:data(any) addr:0x02113cf0
 data_ov029_02113cf4 kind:data(any) addr:0x02113cf4 ambiguous
 data_ov029_02113d30 kind:data(any) addr:0x02113d30 ambiguous
@@ -198,7 +196,6 @@ _ZTS15daObjWc_Obj05_c kind:data(any) addr:0x02113e3c
 g_profile_WC_OBJ05 kind:data(any) addr:0x02113e50 ambiguous
 data_ov029_02113e6c kind:data(any) addr:0x02113e6c ambiguous
 _ZTV15daObjWc_Obj05_c kind:data(any) addr:0x02113e74
-data_ov029_02113e88 kind:data(any) addr:0x02113e88 ambiguous
 _ZTI14daObjWcObj06_c kind:data(any) addr:0x02113ef4
 data_ov029_02113f00 kind:data(any) addr:0x02113f00
 _ZTS14daObjWcObj06_c kind:data(any) addr:0x02113f0c

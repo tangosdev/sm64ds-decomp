@@ -87,6 +87,12 @@ enum d_a_trs_trap_AssetId {
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 
+/* CLPS.h forward-declares the block; these two tables are the plain 8-word
+   layout every overlay uses. */
+struct CLPS_Block {
+    u32 w[8];
+};
+
 #pragma defer_codegen off
 
 /* The per-trap resource rows, indexed by mIndex: the model handle, the
@@ -103,6 +109,8 @@ int data_ov063_0211ec58[8] = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
                               0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
 int data_ov063_0211ec78[8] = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
                               0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+CLPS_Block data_ov063_0211ec38 = {{0x53504c43, 0x00010008, 0x01000fcc, 0x000000ff, 0xffffffff,
+                                   0xffffffff, 0xffffffff, 0xffffffff}};
 CLPS_Block *data_ov063_0211e9e8[4] = {
     (CLPS_Block *)data_ov063_0211ec58, (CLPS_Block *)data_ov063_0211ebf8,
     (CLPS_Block *)data_ov063_0211ec78, (CLPS_Block *)data_ov063_0211ec18};

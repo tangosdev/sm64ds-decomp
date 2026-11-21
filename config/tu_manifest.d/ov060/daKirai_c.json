@@ -28,7 +28,8 @@
       "end": "0x0211a4d0"
     },
     {
-      "name": ".data",
+      "name": ".data.ov060Tail",
+      "input_section": ".data",
       "start": "0x0211aa30",
       "end": "0x0211aa50"
     },
@@ -399,7 +400,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.ov060Tail",
           "start": "0x0211aa30",
           "end": "0x0211aa50",
           "differingBytes": 0,
@@ -722,7 +723,7 @@
       "target_address": "0x0211a388"
     },
     {
-      "section": ".data",
+      "section": ".data.ov060Tail",
       "source": "0x0211aa30",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -732,7 +733,7 @@
       "target_address": "0x02118970"
     },
     {
-      "section": ".data",
+      "section": ".data.ov060Tail",
       "source": "0x0211aa38",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -742,7 +743,7 @@
       "target_address": "0x02118728"
     },
     {
-      "section": ".data",
+      "section": ".data.ov060Tail",
       "source": "0x0211aa40",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -752,7 +753,7 @@
       "target_address": "0x02118834"
     },
     {
-      "section": ".data",
+      "section": ".data.ov060Tail",
       "source": "0x0211aa48",
       "type": "R_ARM_ABS32",
       "kind": "load",

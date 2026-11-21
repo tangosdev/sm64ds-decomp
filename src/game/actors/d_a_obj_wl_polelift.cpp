@@ -14,10 +14,9 @@
  * reconstructed.
  */
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum d_a_obj_wl_polelift_AssetId {
-    ASSET_WL_POLE_LIFT_BMD = 0x06db
-};
+enum d_a_obj_wl_polelift_AssetId { ASSET_WL_POLE_LIFT_BMD = 0x06db };
 
+#include "SpawnInfo.h"
 #include "common.h"
 #include "daObjWlPolelift_c.h"
 #include "SharedFilePtr.h"
@@ -38,9 +37,12 @@ struct PoleliftModelFile : SharedFilePtr {
 };
 
 extern "C" {
-extern Vector3 data_ov026_02113a9c;
 extern PoleliftModelFile data_ov026_02113ea0;
 }
+
+/* Collider offset (0, 0x28000, 0), between this class's typeinfo and its
+ * name. Three ints, not a Vector3: the C++ type would register ~Vector3. */
+extern "C" int data_ov026_02113a9c[3] = {0, 0x28000, 0};
 
 daObjWlPolelift_c *daObjWlPolelift_c_classInit() {
     return new daObjWlPolelift_c();
@@ -48,8 +50,7 @@ daObjWlPolelift_c *daObjWlPolelift_c_classInit() {
 
 /* Load the lift model, bind its path and collision state, and initialize the
  * actor-owned shadow and cylinder. */
-s32 daObjWlPolelift_c::InitResources()
-{
+s32 daObjWlPolelift_c::InitResources() {
     model.SetFile(dExtSimpleModel_c::LoadFile(data_ov026_02113ea0), 1, -1);
     if ((gSaveBlock.file.flags1 & 0x204) == 0)
         return 0;
@@ -60,9 +61,9 @@ s32 daObjWlPolelift_c::InitResources()
     moveSpeed = 1;
 
     Vector3 offset;
-    offset.x = data_ov026_02113a9c.x;
-    offset.y = data_ov026_02113a9c.y;
-    offset.z = data_ov026_02113a9c.z;
+    offset.x = data_ov026_02113a9c[0];
+    offset.y = data_ov026_02113a9c[1];
+    offset.z = data_ov026_02113a9c[2];
     clsn.Init(this, offset, 0x50000, 0x12c000, 0x80000c, 0);
     UpdateModelTransform();
     return 1;
@@ -70,8 +71,7 @@ s32 daObjWlPolelift_c::InitResources()
 
 /* Move toward the current path node, reverse or wrap at path ends, and keep
  * the owned collision and shadow state aligned with the lift. */
-s32 daObjWlPolelift_c::Behavior()
-{
+s32 daObjWlPolelift_c::Behavior() {
     Vector3 node;
     Vector3 prevNode;
     Vector3 delta;
@@ -148,7 +148,9 @@ s32 daObjWlPolelift_c::Behavior()
         if (ray.DetectClsn())
             groundY = ray.clsnY;
 
-        clsnOffset = data_ov026_02113a9c;
+        clsnOffset.x = data_ov026_02113a9c[0];
+        clsnOffset.y = data_ov026_02113a9c[1];
+        clsnOffset.z = data_ov026_02113a9c[2];
         clsn.SetPosRelativeToActor(clsnOffset);
         clsn.Update();
         UpdateModelTransform();
@@ -158,16 +160,14 @@ s32 daObjWlPolelift_c::Behavior()
 }
 
 /* Vtable slot 9. The owned dExtSimpleModel_c renders through its own vtable. */
-s32 daObjWlPolelift_c::Render()
-{
+s32 daObjWlPolelift_c::Render() {
     model.Render(0);
     return 1;
 }
 
 /* Vtable slot 3. Releases the one shared file the class holds and reports
  * success; it never touches the object. */
-s32 daObjWlPolelift_c::CleanupResources()
-{
+s32 daObjWlPolelift_c::CleanupResources() {
     data_ov026_02113ea0.Release();
     return 1;
 }
@@ -196,3 +196,12 @@ void daObjWlPolelift_c::UpdateShadow() {
 /* Static-init global (was the handwritten __sinit_ov026_02112b7c shard):
  * the model handle (file 0x6db). */
 PoleliftModelFile data_ov026_02113ea0(ASSET_WL_POLE_LIFT_BMD);
+
+extern "C" SpawnInfo<daObjWlPolelift_c> g_profile_WL_POLELIFT = {daObjWlPolelift_c_classInit,
+                                                                 89,
+                                                                 250,
+                                                                 0x00000000,
+                                                                 0x00000000,
+                                                                 0x00400000,
+                                                                 0x01000000,
+                                                                 0x01000000};

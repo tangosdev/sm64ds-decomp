@@ -18,6 +18,12 @@
       "end": "0x02112950"
     },
     {
+      "name": ".rodata.data_ov022_02112950",
+      "input_section": ".rodata",
+      "start": "0x02112950",
+      "end": "0x02112c98"
+    },
+    {
       "name": ".init",
       "start": "0x021130bc",
       "end": "0x021130f8"
@@ -26,6 +32,11 @@
       "name": ".ctor",
       "start": "0x0211311c",
       "end": "0x02113120"
+    },
+    {
+      "name": ".data",
+      "start": "0x02114434",
+      "end": "0x02114500"
     },
     {
       "name": ".bss",
@@ -105,7 +116,50 @@
       "ordinal": 9
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "_ZTI21daObj_volcanoCannon_c",
+      "address": "0x02114434",
+      "size": "0xc",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "_ZTS21daObj_volcanoCannon_c",
+      "address": "0x02114440",
+      "size": "0x18",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "g_profile_OBJ_VOLCANO_CANNON",
+      "address": "0x02114458",
+      "size": "0x1c",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "_ZTV21daObj_volcanoCannon_c",
+      "address": "0x0211447c",
+      "size": "0x84",
+      "evidence": "compiler emission of the class key function",
+      "emitted_storage_address": "0x02114474",
+      "address_point_bias": "0x8"
+    },
+    {
+      "symbol": "data_ov022_021144f8",
+      "address": "0x021144f8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Zero tail of this file. The placeholder name stays."
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov022_02112950",
+      "address": "0x02112950",
+      "size": "0x348",
+      "binding": "STB_GLOBAL",
+      "evidence": "read-only table that begins where this class's code ends"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov022_02114690",
@@ -120,27 +174,6 @@
       "symbol": "_ZN21daObj_volcanoCannon_cD2Ev",
       "disposition": "deadstrip",
       "reason": "mwccarm emits the base-object destructor variant beside the licensed D1/D0 pair whenever it lowers an out-of-line destructor definition. daObj_volcanoCannon_c's D2 has no entry in config/arm9/overlays/ov022/symbols.txt, so the ROM gives it no home, and no function surviving in this TU references it."
-    },
-    {
-      "symbol": "_ZTI21daObj_volcanoCannon_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov022",
-      "canonical_address": "0x02114434",
-      "reason": "Text-only TU: externalize to canonical public address 0x02114434."
-    },
-    {
-      "symbol": "_ZTS21daObj_volcanoCannon_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov022",
-      "canonical_address": "0x02114440",
-      "reason": "Text-only TU: externalize to canonical public address 0x02114440."
-    },
-    {
-      "symbol": "_ZTV21daObj_volcanoCannon_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov022",
-      "canonical_address": "0x0211447c",
-      "reason": "Text-only TU: externalize to canonical public address 0x0211447c."
     },
     {
       "symbol": "_ZTI8dActor_c",
@@ -262,6 +295,376 @@
       "addend": 0,
       "target_module": "ov022",
       "target_address": "0x02114690"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114458",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z31daObj_volcanoCannon_c_classInitv",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02112918"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114478",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI21daObj_volcanoCannon_c",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02114434"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c6RenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043af0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211449c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114498",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114490",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211448c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114484",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114480",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN21daObj_volcanoCannon_cD0Ev",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02112610"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114494",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN21daObj_volcanoCannon_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02112800"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114488",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN21daObj_volcanoCannon_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x021127e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211447c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN21daObj_volcanoCannon_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x021128b8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN21daObj_volcanoCannon_cD1Ev",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x021125e0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114438",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS21daObj_volcanoCannon_c",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02114440"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211443c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dActor_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208e390"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114434",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".rodata.data_ov022_02112950",
+      "source": "0x0211295c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov022_02113168",
+      "addend": 0,
+      "target_module": "ov022",
+      "target_address": "0x02113168"
     }
   ],
   "verification": {
@@ -298,9 +701,6 @@
         39
       ],
       "data": [
-        "_ZTI21daObj_volcanoCannon_c",
-        "_ZTS21daObj_volcanoCannon_c",
-        "_ZTV21daObj_volcanoCannon_c",
         "_ZTI8dActor_c",
         "_ZTS8dActor_c",
         "_ZTI7dBase_c",
@@ -309,15 +709,12 @@
         "_ZTS7fBase_c"
       ],
       "dataExternalized": [
-        "_ZTI21daObj_volcanoCannon_c",
         "_ZTI7dBase_c",
         "_ZTI7fBase_c",
         "_ZTI8dActor_c",
-        "_ZTS21daObj_volcanoCannon_c",
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
-        "_ZTS8dActor_c",
-        "_ZTV21daObj_volcanoCannon_c"
+        "_ZTS8dActor_c"
       ],
       "canonicalDuplicates": []
     },
@@ -356,6 +753,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata.data_ov022_02112950",
+          "start": "0x02112950",
+          "end": "0x02112c98",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x021130bc",
           "end": "0x021130f8",
@@ -374,6 +778,13 @@
           "start": "0x02114690",
           "end": "0x021146a0",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02114434",
+          "end": "0x02114500",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

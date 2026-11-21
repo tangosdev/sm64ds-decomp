@@ -1,7 +1,0 @@
-/* ov053 cartridge data at 0x02112530, 48 bytes. */
-#include "types.h"
-
-u32 data_ov053_02112530[12] = {
-    0x000000ff, 0x0003b005, 0x000000ff, 0x00230fc0, 0x000000ff, 0x02030fc0,
-    0x000000ff, 0xffffffff, 0xffffffff, 0x00000000, 0x00000000, 0x00000000,
-};

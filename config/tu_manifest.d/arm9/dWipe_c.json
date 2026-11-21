@@ -36,7 +36,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x0209f610",
+      "start": "0x0209f5f8",
       "end": "0x0209f648"
     }
   ],
@@ -212,6 +212,13 @@
     }
   ],
   "bss": [
+    {
+      "symbol": "data_0209f5f8",
+      "address": "0x0209f5f8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "display-engine flag, fresh-line flag and the two scanline-table cursors. data_0209f5fc, data_0209f600, data_0209f604, data_0209f608 and data_0209f60c are interior labels."
+    },
     {
       "symbol": "@261",
       "address": "0x0209f610",
@@ -600,7 +607,7 @@
         },
         {
           "section": ".bss",
-          "start": "0x0209f610",
+          "start": "0x0209f5f8",
           "end": "0x0209f648",
           "comparison": "NOBITS -- symbol/module gates"
         }

@@ -37,7 +37,7 @@ extern void Initialise3dGraphics(int arg);
 
 /* The running scene: ResetFadersAndSound stores `this`, and dActor_c::Spawn,
    LevelObjects and dScEntry_c spawn their children under it. */
-extern fBase_c *gCurrentScene;
+fBase_c *gCurrentScene;
 
 extern dFader_c *gSoftResetFader;
 
@@ -51,7 +51,7 @@ extern u8 data_02092660;
 extern u8 gSoftResetPending;
 
 /* The fader the scene change runs, installed by SetFaders. */
-extern dFdBrightness_c *gSceneFader;
+dFdBrightness_c *gSceneFader;
 /* The scene SetSceneToSpawn queued, with gNextSceneParam its spawn
    parameter. 0x187 means none: SpawnIfNecessary stores it once it has
    spawned the queued scene, and BeforeBehavior fades the running scene out
@@ -60,7 +60,7 @@ extern u16 gNextSceneId;
 
 extern void func_02023544(void);
 
-extern u32 gNextSceneParam;
+u32 gNextSceneParam;
 
 extern int func_0203d9b4(void);
 

@@ -79,6 +79,9 @@ extern int sHeyhoCount;
 extern int sJump3DMariosLeft;
 extern void *LoadFile(int handle);
 extern void DecompressLZ16(void *src, void *dst);
+
+/* Per-language NCG handles, in GetGameLanguage order. */
+int sJump2NcgByLanguage[5] = {208, 210, 205, 206, 207};
 extern int Mg_GetTopScreenYOffset(void);
 extern int Jump3D_InitPool(void *base, int count);
 extern u8 gMainScreenLayers;

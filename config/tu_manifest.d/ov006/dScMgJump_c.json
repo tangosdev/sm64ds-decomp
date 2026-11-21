@@ -33,7 +33,8 @@
       "end": "0x021335a8"
     },
     {
-      "name": ".data",
+      "name": ".data.gap55",
+      "input_section": ".data",
       "start": "0x0213cb4c",
       "end": "0x0213cb8c"
     },
@@ -41,6 +42,12 @@
       "name": ".bss",
       "start": "0x02142188",
       "end": "0x021421b0"
+    },
+    {
+      "name": ".data.sJumpNcgByLanguage",
+      "input_section": ".data",
+      "start": "0x0213cbc8",
+      "end": "0x0213cbdc"
     }
   ],
   "functions": [
@@ -227,6 +234,13 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler PMF literal for &dScMgJump_c::State_Play (0x020ee508), emitted by dScMgJump_c::BeginPlay; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "sJumpNcgByLanguage",
+      "address": "0x0213cbc8",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five overlay-0 file-table NCG ids in GetGameLanguage order; no relocations"
     }
   ],
   "bss": [
@@ -383,7 +397,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.gap55",
           "start": "0x0213cb4c",
           "end": "0x0213cb8c",
           "differingBytes": 0,
@@ -394,11 +408,18 @@
           "start": "0x02142188",
           "end": "0x021421b0",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.sJumpNcgByLanguage",
+          "start": "0x0213cbc8",
+          "end": "0x0213cbdc",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 32
+          "LICENSED": 33
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -409,38 +430,38 @@
           {
             "section": ".init",
             "original": [
-              81
+              82
             ],
             "desired": [
-              81
+              82
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              79
+              80
             ],
             "desired": [
-              79
+              80
             ]
           },
           {
-            "section": ".data",
+            "section": ".data.gap55",
             "original": [
               5,
               7,
               9,
-              13,
               15,
               17,
               19,
-              21
+              21,
+              23
             ],
             "desired": [
               21,
               17,
               15,
-              13,
+              23,
               9,
               19,
               7,
@@ -461,27 +482,36 @@
               39,
               28
             ]
+          },
+          {
+            "section": ".data.sJumpNcgByLanguage",
+            "original": [
+              43
+            ],
+            "desired": [
+              43
+            ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".data",
+              "section": ".data.gap55",
               "original": [
                 5,
                 7,
                 9,
-                13,
                 15,
                 17,
                 19,
-                21
+                21,
+                23
               ],
               "desired": [
                 21,
                 17,
                 15,
-                13,
+                23,
                 9,
                 19,
                 7,
@@ -491,11 +521,11 @@
                 5,
                 7,
                 9,
-                13,
                 15,
                 17,
                 19,
-                21
+                21,
+                23
               ]
             },
             {
@@ -889,7 +919,7 @@
       "target_address": "0x02130e9c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap55",
       "source": "0x0213cb4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -899,7 +929,7 @@
       "target_address": "0x020ee3ec"
     },
     {
-      "section": ".data",
+      "section": ".data.gap55",
       "source": "0x0213cb54",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -909,7 +939,7 @@
       "target_address": "0x020ee5b8"
     },
     {
-      "section": ".data",
+      "section": ".data.gap55",
       "source": "0x0213cb5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -919,7 +949,7 @@
       "target_address": "0x020ee44c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap55",
       "source": "0x0213cb64",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -929,7 +959,7 @@
       "target_address": "0x020eeafc"
     },
     {
-      "section": ".data",
+      "section": ".data.gap55",
       "source": "0x0213cb6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -939,7 +969,7 @@
       "target_address": "0x020ee2c4"
     },
     {
-      "section": ".data",
+      "section": ".data.gap55",
       "source": "0x0213cb74",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -949,7 +979,7 @@
       "target_address": "0x020ee2c0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap55",
       "source": "0x0213cb7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -959,7 +989,7 @@
       "target_address": "0x020ee2c0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap55",
       "source": "0x0213cb84",
       "type": "R_ARM_ABS32",
       "kind": "load",

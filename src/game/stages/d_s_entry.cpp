@@ -381,7 +381,7 @@ void dScEntry_c::SetSlotBorderPalette(int slot, int dim) {
  *     operand order decides which of r0/r1 holds the shifted attribute word.
  */
 extern "C" {
-extern u8 data_ov075_0211c6e8[];
+extern u8 data_ov075_0211c6e8[4];
 extern OamAttr data_ov075_0211c7c0[];
 extern OamAttr data_ov075_0211c8b0[];
 extern OamAttr data_ov075_0211c870[];
@@ -672,3 +672,13 @@ dScEntry_c::StepSet data_ov075_0211d798 = {data_ov075_0211c758, data_ov075_0211c
 dScEntry_c::StepSet data_ov075_0211d7f8 = {data_ov075_0211c868, data_ov075_0211c800,
                                            data_ov075_0211c838};
 dScEntry_c::StepSet data_ov075_0211d828 = {data_ov075_0211c848, data_ov075_0211c820, 0};
+
+/* Left x of the first player row, indexed by 4 - players. */
+extern "C" u8 data_ov075_0211c6e8[4] = {0x20, 0x2c, 0x48, 0x00};
+
+/* Course id started for each VS course slot. */
+extern "C" s8 data_ov075_0211c6ec[4] = {0x33, 0x2b, 0x1d, 0x2a};
+
+/* X the language tag is drawn at, indexed by language. Read-only, so the
+   compiler files it in .rodata where the cartridge keeps it. */
+extern "C" const s16 data_ov075_0211b5d4[6] = {0x56, 0x56, 0x4e, 0x56, 0x46, 0x00};

@@ -10,7 +10,7 @@ extern int func_02065af0(int *thiz);
 extern void func_02065be0(void);
 extern void func_02065ba0(int v);
 extern void func_02065bb0(int v);
-extern int data_020a94c0;
+extern u8 data_020a94c0[];
 
 /* NitroSDK WBT_End: the teardown twin of WBT_InitParent (WBT_InitParent) and
  * WBT_InitChild (WBT_InitChild). Once initialized (data_020a94c0), clear the
@@ -24,11 +24,11 @@ void WBT_End(void) {
     WBTWork *work;
     int i;
     WBTCommand cmd;
-    if (data_020a94c0 == 0) {
+    if (*(int *)data_020a94c0 == 0) {
         OS_RestoreInterrupts(saved);
         return;
     }
-    data_020a94c0 = 0;
+    *(int *)data_020a94c0 = 0;
     WBT_SetOwnAid(-1);
     func_02065ad0(0);
     work = func_02065b94();
@@ -51,3 +51,8 @@ void WBT_End(void) {
     OS_RestoreInterrupts(saved);
 }
 }
+
+/* The tail of the ARM9 .bss: the WBT child-thread state at the base, then a
+   WM block and newlib's __cs/__atexit/signal state. One object so the
+   configured interior labels keep their addresses. */
+u8 data_020a94c0[0xf60];

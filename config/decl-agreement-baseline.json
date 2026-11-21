@@ -46,7 +46,9 @@
    "include/decl_common.h": ["return:char []"]
   },
   "data_02092114": {
-   "include/decl_common.h": ["return:unsigned char"]
+   "include/decl_common.h": ["return:unsigned char"],
+   "src/game/player/d_a_ply_methods.cpp": ["return:signed char"],
+   "src/ui/hud/CapIconMgr.cpp": ["return:signed char"]
   },
   "data_0209b2e4": {
    "src/game/stages/d_s_entry.cpp": ["return:unsigned char"],

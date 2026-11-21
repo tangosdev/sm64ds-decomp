@@ -33,7 +33,8 @@
       "end": "0x02114048"
     },
     {
-      "name": ".data",
+      "name": ".data.data_ov036_02112b68",
+      "input_section": ".data",
       "start": "0x02112b68",
       "end": "0x02112b88"
     }
@@ -461,7 +462,7 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
-          "section": ".data",
+          "section": ".data.data_ov036_02112b68",
           "start": "0x02112b68",
           "end": "0x02112b88",
           "differingBytes": 0,
@@ -512,7 +513,7 @@
             ]
           },
           {
-            "section": ".data",
+            "section": ".data.data_ov036_02112b68",
             "original": [
               5,
               25
@@ -547,7 +548,7 @@
               ]
             },
             {
-              "section": ".data",
+              "section": ".data.data_ov036_02112b68",
               "original": [
                 5,
                 25
@@ -579,8 +580,7 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null,
-      "localWorkerNote": "Verified on this machine's stock EU dump (gamecode ASMP): the scratch link built sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, identical to this tree's own stock build. rom.sha256 records the fleet-canonical d1506e90 that every other intact entry on main shares; the differing bytes are NDS container fields outside every module range, and moduleSetSha256, the symbol inventory and tuRanges match the canonical records exactly."
+      "linkerOutput": null
     }
   },
   "compiler_only_output": [

@@ -103,16 +103,20 @@ int IsStarCollectedInCurLevel(s32 flag);
 void SetStarMarker(int i, dActor_c *self, int v);
 
 extern SharedFilePtr data_ov084_02130dfc;   /* the plant's model */
-extern SharedFilePtr *data_ov084_021302f4[];/* the six shared animation handles */
+extern SharedFilePtr *const data_ov084_021302f4[]; /* the six shared animation handles */
 extern SharedFilePtr data_ov002_0210da38;   /* the sleep-bubble model, out of ov002 */
 extern SharedFilePtr data_ov084_02130df4;   /* idle animation */
 extern SharedFilePtr data_ov084_02130e04;   /* spit animation */
 extern SharedFilePtr data_ov084_02130e14;   /* grow-in lunge animation */
 extern SharedFilePtr data_ov084_02130e1c;   /* post-spit animation */
 extern SharedFilePtr data_ov084_02130e24;   /* death animation */
-extern int data_ov084_0213029c[];           /* SpawnDeathBurst reach per frame */
-extern int data_ov084_021302c4[];           /* SpawnDeathBurst height per frame */
-extern u8 data_ov084_02130294[];            /* UpdateClsnOffset's five bone indices */
+/* Per-frame SpawnDeathBurst reach and height, and the five bone indices
+ * UpdateClsnOffset maps. */
+extern const int data_ov084_0213029c[10] = {0x78, 0x70,  0x40,  0x10,  0,
+                                            -8,   -0x20, -0x30, -0x40, -0x40};
+extern const int data_ov084_021302c4[10] = {0x40, 0x80, 0xc0, 0xd0, 0xd0,
+                                            0xd0, 0xd0, 0xc8, 0xc0, 0xc0};
+extern const u8 data_ov084_02130294[8] = {0, 3, 4, 5, 6, 0, 0, 0};
 
 /* One vtable store and four destructor calls, every one a consequence of
  * `struct daFPkn_c : dEnemyBase_c` and the members that declaration types,
@@ -199,7 +203,7 @@ void daFPkn_c::UpdateClsnOffset()
         ModelBone *bones = mAnmModel.data.bones;
         int i;
         for (i = 0; i < 5; i++) {
-            u8* p = data_ov084_02130294 + i;
+            const u8 *p = data_ov084_02130294 + i;
             rot.x += (s16)bones[*p].rotX;
             rot.y += (s16)bones[*p].rotY;
             rot.z += (s16)bones[*p].rotZ;

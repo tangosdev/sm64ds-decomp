@@ -98,3 +98,7 @@ ResourceDescriptor data_ov021_021148d0 = {
     &gCvShutterCollisionFile,
     &data_ov021_02113a00,
 };
+
+extern "C" {
+u32 data_ov021_02114a8c[5];
+}

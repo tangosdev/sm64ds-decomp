@@ -261,6 +261,13 @@
       "evidence": "CLPS block"
     },
     {
+      "symbol": "data_ov063_0211ec38",
+      "address": "0x0211ec38",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block handed to dBgW_KcMbg::SetFile"
+    },
+    {
       "symbol": "data_ov063_0211ec58",
       "address": "0x0211ec58",
       "size": "0x20",
@@ -407,6 +414,11 @@
       "end": "0x0211d270"
     },
     {
+      "name": ".rodata",
+      "start": "0x0211e26c",
+      "end": "0x0211e29c"
+    },
+    {
       "name": ".init",
       "start": "0x0211e3cc",
       "end": "0x0211e590"
@@ -420,16 +432,6 @@
       "name": ".data",
       "start": "0x0211e9ac",
       "end": "0x0211e9cc"
-    },
-    {
-      "name": ".bss",
-      "start": "0x0211ee98",
-      "end": "0x0211ef58"
-    },
-    {
-      "name": ".rodata",
-      "start": "0x0211e26c",
-      "end": "0x0211e29c"
     },
     {
       "name": ".data.trap",
@@ -450,6 +452,12 @@
       "end": "0x0211ec38"
     },
     {
+      "name": ".data.mid",
+      "input_section": ".data",
+      "start": "0x0211ec38",
+      "end": "0x0211ec58"
+    },
+    {
       "name": ".data.clps2",
       "input_section": ".data",
       "start": "0x0211ec58",
@@ -460,6 +468,11 @@
       "input_section": ".data",
       "start": "0x0211ec78",
       "end": "0x0211ec98"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0211ee98",
+      "end": "0x0211ef58"
     }
   ],
   "source": "src/game/actors/d_a_trs_trap.cpp",
@@ -558,6 +571,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x0211e26c",
+          "end": "0x0211e29c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x0211e3cc",
           "end": "0x0211e590",
@@ -575,19 +595,6 @@
           "section": ".data",
           "start": "0x0211e9ac",
           "end": "0x0211e9cc",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".bss",
-          "start": "0x0211ee98",
-          "end": "0x0211ef58",
-          "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".rodata",
-          "start": "0x0211e26c",
-          "end": "0x0211e29c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -613,6 +620,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data.mid",
+          "start": "0x0211ec38",
+          "end": "0x0211ec58",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data.clps2",
           "start": "0x0211ec58",
           "end": "0x0211ec78",
@@ -625,6 +639,12 @@
           "end": "0x0211ec98",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0211ee98",
+          "end": "0x0211ef58",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {

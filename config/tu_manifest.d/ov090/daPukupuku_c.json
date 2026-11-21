@@ -30,6 +30,11 @@
       "end": "0x021340d0"
     },
     {
+      "name": ".data",
+      "start": "0x021342b8",
+      "end": "0x021342e4"
+    },
+    {
       "name": ".bss",
       "start": "0x0213455c",
       "end": "0x021345a4"
@@ -160,7 +165,43 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail; the other three .ctor words belong to the daMenbo_c, daManta_c and daShark_c TUs"
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov090_021342b8",
+      "address": "0x021342b8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row, StateSwim"
+    },
+    {
+      "symbol": "data_ov090_021342c0",
+      "address": "0x021342c0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row, InitStateSwim"
+    },
+    {
+      "symbol": "data_ov090_021342c8",
+      "address": "0x021342c8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row, StatePause"
+    },
+    {
+      "symbol": "data_ov090_021342d0",
+      "address": "0x021342d0",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state row, InitStatePause"
+    },
+    {
+      "symbol": "data_ov090_021342d8",
+      "address": "0x021342d8",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision-cylinder offset (0, -0x1e000, 0)"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov090_0213455c",
@@ -259,6 +300,30 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02134578"
+    },
+    {
+      "symbol": "data_ov090_021342b8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF record is a configured relocation destination"
+    },
+    {
+      "symbol": "data_ov090_021342c0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF record is a configured relocation destination"
+    },
+    {
+      "symbol": "data_ov090_021342c8",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF record is a configured relocation destination"
+    },
+    {
+      "symbol": "data_ov090_021342d0",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF record is a configured relocation destination"
     }
   ],
   "relocations": [
@@ -431,6 +496,46 @@
       "addend": 0,
       "target_module": "ov090",
       "target_address": "0x02133f4c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021342b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daPukupuku_c9StateSwimEv",
+      "addend": 0,
+      "target_module": "ov090",
+      "target_address": "0x02133200"
+    },
+    {
+      "section": ".data",
+      "source": "0x021342c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daPukupuku_c13InitStateSwimEv",
+      "addend": 0,
+      "target_module": "ov090",
+      "target_address": "0x02133290"
+    },
+    {
+      "section": ".data",
+      "source": "0x021342c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daPukupuku_c10StatePauseEv",
+      "addend": 0,
+      "target_module": "ov090",
+      "target_address": "0x02133190"
+    },
+    {
+      "section": ".data",
+      "source": "0x021342d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daPukupuku_c14InitStatePauseEv",
+      "addend": 0,
+      "target_module": "ov090",
+      "target_address": "0x021331c4"
     }
   ],
   "notes": [
@@ -532,7 +637,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -564,6 +669,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x021342b8",
+          "end": "0x021342e4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x0213455c",
           "end": "0x021345a4",
@@ -572,7 +684,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 23
+          "LICENSED": 28
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -583,74 +695,115 @@
           {
             "section": ".init",
             "original": [
-              58
+              67
             ],
             "desired": [
-              58
+              67
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              56
+              65
             ],
             "desired": [
-              56
+              65
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              6,
+              8,
+              13,
+              15,
+              22
+            ],
+            "desired": [
+              6,
+              15,
+              13,
+              8,
+              22
             ]
           },
           {
             "section": ".bss",
             "original": [
-              7,
-              8,
-              18,
-              21,
-              24,
-              25
+              5,
+              12,
+              27,
+              30,
+              33,
+              34
             ],
             "desired": [
-              7,
-              8,
-              21,
-              18,
-              25,
-              24
+              5,
+              12,
+              30,
+              27,
+              33,
+              34
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".bss",
+              "section": ".data",
               "original": [
-                7,
+                6,
                 8,
-                18,
-                21,
-                24,
-                25
+                13,
+                15,
+                22
               ],
               "desired": [
-                7,
+                6,
+                15,
+                13,
                 8,
-                21,
-                18,
-                25,
-                24
+                22
               ],
               "slots": [
-                7,
+                6,
                 8,
-                18,
-                21,
-                24,
-                25
+                13,
+                15,
+                22
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                12,
+                27,
+                30,
+                33,
+                34
+              ],
+              "desired": [
+                5,
+                12,
+                30,
+                27,
+                33,
+                34
+              ],
+              "slots": [
+                5,
+                12,
+                27,
+                30,
+                33,
+                34
               ]
             }
           ],
-          "symbolIndices": 6,
+          "symbolIndices": 11,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 4,
           "error": null
         },
         "errors": null
@@ -756,14 +909,34 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@688",
+      "from": "@686",
       "to": "@620",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @680 to @626 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @626 to @623 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @623 to @660 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @660 to @672 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @672 to @677 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @680 to @682 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @688 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @680 to @626 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @626 to @623 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @623 to @660 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @660 to @672 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @672 to @677 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
+    },
+    {
+      "from": "@687",
+      "to": "@737",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @681 to @627 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @627 to @624 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @624 to @661 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @661 to @673 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @673 to @678 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name)."
     },
     {
       "from": "@689",
-      "to": "@737",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin Re-keyed from @681 to @627 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @627 to @624 when the unused locals, pointer copies and declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @624 to @661 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @661 to @673 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @673 to @678 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @681 to @683 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @689 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "to": "data_ov090_021342c0",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {InitStateSwim, 0} copied by __sinit into the swim row; retail word at 0x021342c0 is 0x02133290"
+    },
+    {
+      "from": "@691",
+      "to": "data_ov090_021342b8",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {StateSwim, 0} copied by __sinit; retail word at 0x021342b8 is 0x02133200"
+    },
+    {
+      "from": "@693",
+      "to": "data_ov090_021342d0",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {InitStatePause, 0}; retail word at 0x021342d0 is 0x021331c4"
+    },
+    {
+      "from": "@695",
+      "to": "data_ov090_021342c8",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {StatePause, 0}; retail word at 0x021342c8 is 0x02133190"
     }
   ],
   "rodata": null

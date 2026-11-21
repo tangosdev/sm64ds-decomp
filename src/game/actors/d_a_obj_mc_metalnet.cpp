@@ -19,6 +19,7 @@ enum d_a_obj_mc_metalnet_AssetId { ASSET_MC_METALNET_BMD = 0x0691, ASSET_MC_META
 #include "daObjMc_Metalnet_c.h"
 #include "SharedFilePtr.h"
 #include "SaveBlock.h"
+#include "SpawnInfo.h"
 
 struct McMetalnetModelFilePtr : SharedFilePtr {
     McMetalnetModelFilePtr(u32 fileID);
@@ -30,9 +31,22 @@ struct McMetalnetClsnFileHandle : SharedFilePtr {
     ~McMetalnetClsnFileHandle();
 };
 
+/* 'CLPS' collision-property block: tag, count/stride header, entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+
+/* The net's collision properties: one floor entry. */
+CLPS_Block data_ov009_02112bf8 = {
+    0x53504c43,
+    0x00010008,
+    {0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
+
 extern McMetalnetModelFilePtr data_ov009_02113e90;   /* the net's BMD        */
 extern McMetalnetClsnFileHandle data_ov009_02113e88; /* its collision KCL    */
-extern CLPS_Block data_ov009_02112bf8;
 
 /* The global mode byte. Unnamed in config; compared against 1 in fifty-odd
    places across the tree, always to mean "not the ordinary single-player run". */
@@ -136,3 +150,12 @@ s32 daObjMc_Metalnet_c::CleanupResources() {
 
 McMetalnetModelFilePtr data_ov009_02113e90(ASSET_MC_METALNET_BMD);
 McMetalnetClsnFileHandle data_ov009_02113e88(ASSET_MC_METALNET_KCL);
+
+extern "C" SpawnInfo<daObjMc_Metalnet_c> g_profile_MC_METALNET = {daObjMc_Metalnet_c_classInit,
+                                                                  339,
+                                                                  339,
+                                                                  0x00000002,
+                                                                  0x00000000,
+                                                                  0x00500000,
+                                                                  0x01000000,
+                                                                  0x00000000};

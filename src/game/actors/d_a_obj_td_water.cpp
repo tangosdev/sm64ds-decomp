@@ -38,6 +38,7 @@ enum d_a_obj_td_water_AssetId { ASSET_TD_OBJ_WATER_BMD = 0x06b7, ASSET_TD_OBJ_WA
 #include "Event.h"
 
 #include "private/BTA_File.h"
+#include "SpawnInfo.h"
 
 struct KCL_File;
 
@@ -184,3 +185,14 @@ TdWaterClsnFileHandle data_ov032_02113af4(ASSET_TD_OBJ_WATER_KCL);
 
 /* The BMD material the texture animation above drives. */
 char data_ov032_02112edc[12] = "water_mat";
+
+extern "C" {
+u32 data_ov032_02113b1c[1];
+}
+
+extern "C" SpawnInfo<daObjTdWater_c> g_profile_TD_WATER = {
+    daObjTdWater_c_classInit, 107, 269, 0x00000000, 0x00064000, 0x00258000, 0x01f40000, 0x00050000};
+
+#pragma explicit_zero_data on
+extern "C" u32 data_ov032_02113a24[7] = {0, 0, 0, 0, 0, 0, 0};
+#pragma explicit_zero_data off

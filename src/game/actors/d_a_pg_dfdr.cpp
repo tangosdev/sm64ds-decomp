@@ -87,12 +87,10 @@ struct PgDfdrCollisionFilePtr : SharedFilePtr {
 
 /* One 8-byte state word (a pointer-to-member: function address, this-delta).
  * The four words live in .data; the state table copies each of them. */
-struct DfdrDesc {
-    int w[2];
-};
+typedef void (daPgDfdr_c::*DfdrStateFunc)();
 
 struct DfdrStateTable {
-    DfdrDesc a, b, c, d;
+    DfdrStateFunc a, b, c, d;
 };
 
 extern PgDfdrCollisionFilePtr data_ov027_02113c6c;
@@ -101,11 +99,13 @@ extern PgDfdrTexSequenceFilePtr data_ov027_02113c94;
 extern PgDfdrAnimationFilePtr data_ov027_02113c84;
 extern PgDfdrAnimationFilePtr data_ov027_02113c74;
 extern PgDfdrAnimationFilePtr data_ov027_02113c8c;
-extern SharedFilePtr *data_ov027_02112ca4[3];
-extern DfdrDesc data_ov027_021139d4;
-extern DfdrDesc data_ov027_021139cc;
-extern DfdrDesc data_ov027_021139dc;
-extern DfdrDesc data_ov027_021139c4;
+/* The three animation handles InitResources loads, in order; const, so the
+   table lands in .rodata as the cartridge has it. */
+extern SharedFilePtr *const data_ov027_02112ca4[3] = {
+    &data_ov027_02113c84,
+    &data_ov027_02113c74,
+    &data_ov027_02113c8c,
+};
 extern DfdrStateTable data_ov027_02113ce4;
 struct PatrolStep {
     s32 distance;
@@ -340,5 +340,16 @@ PgDfdrAnimationFilePtr data_ov027_02113c74(ASSET_PENGUIN_WALK2_BCA);
 PgDfdrAnimationFilePtr data_ov027_02113c8c(ASSET_PENGUIN_BACK_BCA);
 PgDfdrTexSequenceFilePtr data_ov027_02113c94(ASSET_PENGUIN_WAIT1_BTP);
 PgDfdrCollisionFilePtr data_ov027_02113c6c(ASSET_PENGUIN_KCL);
-DfdrStateTable data_ov027_02113ce4 = {data_ov027_021139d4, data_ov027_021139cc, data_ov027_021139dc,
-                                      data_ov027_021139c4};
+/* turn-enter, turn, walk-enter, walk; mwcc writes the four member images
+   this initializer copies as the .data words at 0x021139c4..0x021139dc. */
+DfdrStateTable data_ov027_02113ce4 = {
+    (DfdrStateFunc)&daPgDfdr_c::InitStateTurn, (DfdrStateFunc)&daPgDfdr_c::StateTurn,
+    (DfdrStateFunc)&daPgDfdr_c::InitStateWalk, (DfdrStateFunc)&daPgDfdr_c::StateWalk};
+
+/* The collision-property block InitResources hands to dBgW_KcMbg::SetFile. */
+struct CLPS_Block {
+    u32 words[8];
+};
+
+CLPS_Block data_ov027_021130e8 = {0x53504c43, 0x00030008, 0x01002fc0, 0x000000ff,
+                                  0x01000fc0, 0x000000ff, 0x01001fc0, 0x000000ff};

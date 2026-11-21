@@ -390,6 +390,41 @@ PicGateFilePtr gForExWarioModelFile(ASSET_FOR_EX_WARIO_BMD);
 PicGateFilePtr gForVsCrossModelFile(ASSET_FOR_VS_CROSS_BMD);
 PicGateFilePtr gForVsIslandModelFile(ASSET_FOR_VS_ISLAND_BMD);
 
+/* Picture id to its model-file handle. The nineteen handles above are
+   constructed in this order, so the table is a real relocation per name. */
+extern SharedFilePtr *const data_ov080_0212775c[19] = {
+    &gForBhModelFile,      &gForBkModelFile,      &gForKiModelFile,       &gForSmModelFile,
+    &gForCvEx5ModelFile,   &gForFlModelFile,      &gForDlModelFile,       &gForWlModelFile,
+    &gForSlModelFile,      &gForWcModelFile,      &gForHmModelFile,       &gForHsModelFile,
+    &gForTdTtModelFile,    &gForCtModelFile,      &gForExMarioModelFile,  &gForExLuigiModelFile,
+    &gForExWarioModelFile, &gForVsCrossModelFile, &gForVsIslandModelFile,
+};
+
+/* The flat texcoord matrix G3_LoadTexMtxEnv installs for the gate mesh. */
+extern const int data_ov080_0212771c[16] = {
+    0x00040000, 0, 0, 0, 0, 0xfffc0000, 0, 0, 0, 0, 0x1000, 0, 0, 0, 0, 0x1000,
+};
+
+/* One wave row per picture shape, selected by the low bits of param1. */
+extern const daPicGate_c::WaveParams data_ov080_021277a8[7] = {
+    {0x3a000, 0x3333, 0x16c000, 0x1f4000, 60},  {0x3a000, 0x3333, 0x16c000, 0x384000, 60},
+    {0x3a000, 0x3333, 0x16c000, 0x384000, 60},  {0x3a000, 0x3333, 0x16c000, 0x384000, 60},
+    {0x3a000, 0x3333, 0x16c000, 0x384000, 60},  {0x3a000, 0x3333, 0x16c000, 0x5dc000, 60},
+    {0x3a000, 0x1111, 0x16c000, 0x1f4000, 100},
+};
+
+extern const daPicGate_c::WaveParams data_ov080_02127848[6] = {
+    {0x3a000, 0x1111, 0x16c000, 0x384000, 100}, {0x3a000, 0x1111, 0x16c000, 0x384000, 100},
+    {0x3a000, 0x1111, 0x16c000, 0x384000, 100}, {0x3a000, 0x1111, 0x16c000, 0x5dc000, 100},
+    {0x10000, 0xe38, 0x12c000, 0x384000, 100},  {0x20000, 0xd79, 0x12c000, 0x384000, 100},
+};
+
+/* Per-picture texture state: one 0x18-byte slot of an Ov080Mat followed by
+   the loaded flag. LoadTexture walks both with the same offset. */
+unsigned char data_ov080_02128688[0x14];
+unsigned char data_ov080_0212869c[0x1bc];
+u32 data_ov080_02128858[2];
+
 daPicGate_c::State sStates[4] = {
     {&daPicGate_c::InitProximityRipple, &daPicGate_c::UpdateProximityRipple,
      &daPicGate_c::DrawRippleImage},

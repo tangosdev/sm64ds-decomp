@@ -30,7 +30,12 @@
     {
       "name": ".bss",
       "start": "0x02113eb0",
-      "end": "0x02113ed8"
+      "end": "0x02113ee0"
+    },
+    {
+      "name": ".data",
+      "start": "0x02113b60",
+      "end": "0x02113c20"
     }
   ],
   "functions": [
@@ -84,7 +89,41 @@
       "ordinal": 6
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "_ZTI10daMcFlag_c",
+      "address": "0x02113b60",
+      "size": "0xc",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "_ZTS10daMcFlag_c",
+      "address": "0x02113b6c",
+      "size": "0xd",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "g_profile_MC_FLAG",
+      "address": "0x02113b7c",
+      "size": "0x1c",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "_ZTV10daMcFlag_c",
+      "address": "0x02113ba0",
+      "size": "0x84",
+      "evidence": "compiler emission of the class key function",
+      "emitted_storage_address": "0x02113b98",
+      "address_point_bias": "0x8"
+    },
+    {
+      "symbol": "data_ov009_02113c1c",
+      "address": "0x02113c1c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Zero padding that brings this overlay .data up to the .bss boundary. The placeholder name stays."
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZTI7dBase_c",
@@ -127,27 +166,6 @@
       "reason": "A vague-linkage passenger: naming a base class in this TU's hierarchy makes mwccarm emit its type_info record here too. The cartridge keeps its canonical copy at arm9:0x0208e384, which no section this entry licenses (.text 0x02112078-0x02112228) reaches, so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
       "canonical_module": "arm9",
       "canonical_address": "0x0208e384"
-    },
-    {
-      "symbol": "_ZTI10daMcFlag_c",
-      "disposition": "deadstrip-data",
-      "reason": "Emitted because this TU HOMES the class: InitResources is the key function and include/daMcFlag_c.h declares ~daMcFlag_c() INLINE, so mwccarm emits the retail D1/D0 pair here as real C++ members and, with them, this class's vtable and RTTI. That is the opposite of the mangled-body siblings such as ov029/daObjWc_Mizu_c, where the same three records are vague linkage no TU homes -- here they are genuine key-function output. The cartridge keeps its canonical copy at ov009:0x02113b60, outside this entry's only licensed range (.text 0x02112078-0x02112228), so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
-      "canonical_module": "ov009",
-      "canonical_address": "0x02113b60"
-    },
-    {
-      "symbol": "_ZTS10daMcFlag_c",
-      "disposition": "deadstrip-data",
-      "reason": "Emitted because this TU HOMES the class: InitResources is the key function and include/daMcFlag_c.h declares ~daMcFlag_c() INLINE, so mwccarm emits the retail D1/D0 pair here as real C++ members and, with them, this class's vtable and RTTI. That is the opposite of the mangled-body siblings such as ov029/daObjWc_Mizu_c, where the same three records are vague linkage no TU homes -- here they are genuine key-function output. The cartridge keeps its canonical copy at ov009:0x02113b6c, outside this entry's only licensed range (.text 0x02112078-0x02112228), so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
-      "canonical_module": "ov009",
-      "canonical_address": "0x02113b6c"
-    },
-    {
-      "symbol": "_ZTV10daMcFlag_c",
-      "disposition": "deadstrip-data",
-      "reason": "Emitted because this TU HOMES the class: InitResources is the key function and include/daMcFlag_c.h declares ~daMcFlag_c() INLINE, so mwccarm emits the retail D1/D0 pair here as real C++ members and, with them, this class's vtable and RTTI. That is the opposite of the mangled-body siblings such as ov029/daObjWc_Mizu_c, where the same three records are vague linkage no TU homes -- here they are genuine key-function output. The cartridge keeps its canonical copy at ov009:0x02113ba0, outside this entry's only licensed range (.text 0x02112078-0x02112228), so dsd supplies that ROM data independently and production isolation discards the emitted copy. tools/romdata_check.py word-compares the two, relocations applied, before it is discarded.",
-      "canonical_module": "ov009",
-      "canonical_address": "0x02113ba0"
     }
   ],
   "bss": [
@@ -178,6 +196,13 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node for data_ov009_02113eb0"
+    },
+    {
+      "symbol": "data_ov009_02113ed8",
+      "address": "0x02113ed8",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Zero tail of this file. The placeholder name stays."
     }
   ],
   "notes": [
@@ -287,8 +312,15 @@
         {
           "section": ".bss",
           "start": "0x02113eb0",
-          "end": "0x02113ed8",
+          "end": "0x02113ee0",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data",
+          "start": "0x02113b60",
+          "end": "0x02113c20",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -509,6 +541,366 @@
       "addend": 0,
       "target_module": "ov009",
       "target_address": "0x02113ecc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b64",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS10daMcFlag_c",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113b6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b68",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dActor_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208e390"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b60",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b7c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z20daMcFlag_c_classInitv",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x021121f0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10daMcFlag_c",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113b60"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bdc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bd8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bd4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bd0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113c18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113c14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113c10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113c0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113c08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113c04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113c00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bfc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bf8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bf4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bf0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113be8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bcc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bc8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bbc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bb4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bb0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ba8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ba4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113be4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daMcFlag_cD0Ev",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x021120a8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bc4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daMcFlag_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x0211211c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bb8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daMcFlag_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02112144"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113bac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daMcFlag_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x021120ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ba0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daMcFlag_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02112190"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113be0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daMcFlag_cD1Ev",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02112078"
     }
   ],
   "symbol_binding_rewrites": [

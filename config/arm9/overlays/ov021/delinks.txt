@@ -4,7 +4,11 @@
     .ctor       start:0x02113734 end:0x02113740 kind:rodata align:4
     .data_pre start:0x02113760 end:0x02113a00 kind:data align:32
     .data.cvShutterClps start:0x02113a00 end:0x02113a20 kind:data align:4
-    .data.w13a20 start:0x02113a20 end:0x02114740 kind:data align:32
+    .data.w13a20 start:0x02113a20 end:0x02113a60 kind:data align:4
+    .data.cvLiftClps start:0x02113a60 end:0x02113a70 kind:data align:4
+    .data.w13a20b start:0x02113a70 end:0x02113a80 kind:data align:4
+    .data.cvLiftPlatClps start:0x02113a80 end:0x02113a90 kind:data align:4
+    .data.w13a20c start:0x02113a90 end:0x02114740 kind:data align:4
     .rodata     start:0x02114740 end:0x02114748 kind:rodata align:4
     .data       start:0x02114748 end:0x021148d0 kind:data align:4
     .data.cvres start:0x021148d0 end:0x021148dc kind:data align:4
@@ -18,6 +22,8 @@ src/game/actors/d_a_obj_cv_news_lift.cpp:
     .ctor start:0x02113734 end:0x02113738
     .data start:0x02114748 end:0x0211480c
     .bss start:0x021149a0 end:0x02114a50
+    .data.cvLiftClps start:0x02113a60 end:0x02113a70
+    .data.cvLiftPlatClps start:0x02113a80 end:0x02113a90
 
 src/game/actors/d_a_grock.cpp:
     complete
@@ -25,6 +31,7 @@ src/game/actors/d_a_grock.cpp:
     .init start:0x02113688 end:0x021136c8
     .ctor start:0x02113738 end:0x0211373c
     .bss start:0x02114a50 end:0x02114a64
+    .data start:0x02114818 end:0x021148c4
 
 src/game/actors/d_a_obj_cv_shutter.cpp:
     complete
@@ -33,36 +40,4 @@ src/game/actors/d_a_obj_cv_shutter.cpp:
     .ctor start:0x0211373c end:0x02113740
     .data.cvShutterClps start:0x02113a00 end:0x02113a20
     .data.cvres start:0x021148d0 end:0x021148dc
-    .bss start:0x02114a64 end:0x02114a8c
-
-src/data/ov021/data_ov021_02114860.c:
-    complete
-    .data start:0x02114860 end:0x02114874
-
-src/data/ov021/data_ov021_02114874.c:
-    complete
-    .data start:0x02114874 end:0x0211487c
-
-src/data/ov021/data_ov021_0211487c.c:
-    complete
-    .data start:0x0211487c end:0x0211488c
-
-src/data/ov021/data_ov021_0211488c.c:
-    complete
-    .data start:0x0211488c end:0x02114898
-
-src/data/ov021/data_ov021_02114898.c:
-    complete
-    .data start:0x02114898 end:0x021148b4
-
-src/data/ov021/data_ov021_021148b4.c:
-    complete
-    .data start:0x021148b4 end:0x021148b8
-
-src/data/ov021/data_ov021_021148b8.c:
-    complete
-    .data start:0x021148b8 end:0x021148c4
-
-src/data/ov021/data_ov021_02114a8c.c:
-    complete
-    .bss start:0x02114a8c end:0x02114aa0
+    .bss start:0x02114a64 end:0x02114aa0

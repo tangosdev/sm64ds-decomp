@@ -60,6 +60,16 @@ extern Matrix4x3 gViewMtx;
 extern SharedFilePtr *const data_ov060_02119514[];
 extern SharedFilePtr *const data_ov060_0211953c[];
 extern CLPS_Block *data_ov060_0211a980[];
+extern CLPS_Block data_ov008_021116c0;
+extern CLPS_Block data_ov008_02111700;
+extern CLPS_Block data_ov008_02111740;
+extern CLPS_Block data_ov008_02111640;
+extern CLPS_Block data_ov008_02111680;
+extern CLPS_Block data_ov008_021116e0;
+extern CLPS_Block data_ov008_02111720;
+extern CLPS_Block data_ov008_021116a0;
+extern CLPS_Block data_ov008_02111760;
+extern CLPS_Block data_ov008_02111660;
 extern int data_0208e738;
 
 typedef void (daKpa3Bg_c::*Handler)();
@@ -300,4 +310,12 @@ HandlerEntry data_ov060_0211b1ac[3] = {
     {(Handler)&daKpa3Bg_c::StateStart},
     {&daKpa3Bg_c::StateCheck},
     {&daKpa3Bg_c::StateFall},
+};
+
+/* One row per mVariant: the CLPS block of the course overlay that spawns
+ * this platform. The block itself is shared with that course. */
+CLPS_Block *data_ov060_0211a980[10] = {
+    &data_ov008_021116c0, &data_ov008_02111700, &data_ov008_02111740, &data_ov008_02111640,
+    &data_ov008_02111680, &data_ov008_021116e0, &data_ov008_02111720, &data_ov008_021116a0,
+    &data_ov008_02111760, &data_ov008_02111660,
 };

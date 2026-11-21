@@ -97,11 +97,38 @@ daBrq_c *daBrq_c_classInit() {
 extern "C" SpawnInfo<daBrq_c> g_profile_BIRIKYU = {
     daBrq_c_classInit, 0x010a, 0x007d, 0x00000003, 0, 0x00028000, 0x01000000, 0x00a28000};
 
+/* The BTA's texture-SRT keys: one scale, one translation, sixty rotation
+ * keys and the single material record that names its target. */
+extern const fx32 data_ov070_02122244[1] = {0x1000};
+extern const fx32 data_ov070_02122248[1] = {0};
+extern char data_ov070_021231e4[16];
+extern const BTAMaterialRecord data_ov070_0212224c[1] = {
+    {0xffff, 0, (char *)data_ov070_021231e4, {1, 0}, {1, 0}, {60, 0}, {1, 0}, {1, 0}},
+};
+extern const u16 data_ov070_02122268[60] = {
+    0x0044, 0x0089, 0x00cd, 0x0111, 0x0155, 0x019a, 0x01de, 0x0222, 0x0266, 0x02ab, 0x02ef, 0x0333,
+    0x0377, 0x03bc, 0x0400, 0x0444, 0x0489, 0x04cd, 0x0511, 0x0555, 0x059a, 0x05de, 0x0622, 0x0666,
+    0x06ab, 0x06ef, 0x0733, 0x0777, 0x07bc, 0x0800, 0xf844, 0xf889, 0xf8cd, 0xf911, 0xf955, 0xf99a,
+    0xf9de, 0xfa22, 0xfa66, 0xfaab, 0xfaef, 0xfb33, 0xfb77, 0xfbbc, 0xfc00, 0xfc44, 0xfc89, 0xfccd,
+    0xfd11, 0xfd55, 0xfd9a, 0xfdde, 0xfe22, 0xfe66, 0xfeab, 0xfeef, 0xff33, 0xff77, 0xffbc, 0x0000,
+};
+
 extern SharedFilePtr *const data_ov070_021222e0[2] = {
     &data_ov070_021235f4,
     &data_ov070_0212360c,
 };
-extern BTA_File data_ov070_021231f4;
+extern char data_ov070_021231e4[16] = "mat_bilikyu2";
+/* The BTA template Prepare rebases and resolves against the model. */
+BTA_File data_ov070_021231f4 = {
+    60,
+    0,
+    (fx32 *)data_ov070_02122244,
+    (u16 *)data_ov070_02122268,
+    (fx32 *)data_ov070_02122248,
+    1,
+    0,
+    (BTAMaterialRecord *)data_ov070_0212224c,
+};
 
 int daBrq_c::InitResources() {
     BMD_File *bmd;

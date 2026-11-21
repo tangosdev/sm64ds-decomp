@@ -14,11 +14,8 @@
  * daObjKm1_Kurumajiku_c, KM1_KURUMAJIKU registry). Retail does not
  * store that spelling.
  *
- * Notes:
- * - data_ov043_02112344 is overlay data this TU does not own; the BMD/KCL
- *   SharedFilePtrs and CLPS_Block are still data_ov043_*.
- * - g_profile_KM1_KURUMAJIKU is overlay data; this TU is text-only so the
- *   definition here is a deadstripped duplicate.
+ * data_ov043_02112344 sits between this class's typeinfo and its name.
+ * g_profile_KM1_KURUMAJIKU follows the name and precedes the vtable.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -46,7 +43,20 @@ struct Km1KurumajikuCollisionFilePtr : SharedFilePtr {
 };
 
 extern daObjKurumajiku_c::Resources data_ov043_02112344;
-extern struct CLPS_Block data_ov043_02111bc0;
+
+/* 'CLPS' collision-property block: tag, count/stride header, entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[3];
+};
+
+/* The axle's floor entry; retail's slot is 0x14 bytes. */
+CLPS_Block data_ov043_02111bc0 = {
+    0x53504c43,
+    0x00010008,
+    {0x00000fc0, 0x000000ff, 0xffffffff},
+};
 
 /* KM1_KURUMA: the cart this axle drives. InitResourcesFrom spawns four. */
 enum { kCartActorId = 0x88 };

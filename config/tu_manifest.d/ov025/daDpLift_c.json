@@ -34,6 +34,12 @@
       "name": ".bss",
       "start": "0x02113ad8",
       "end": "0x02113b00"
+    },
+    {
+      "name": ".data.liftClps",
+      "start": "0x02112d08",
+      "end": "0x02112d28",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -101,7 +107,15 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov025_02112d08",
+      "address": "0x02112d08",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "the lift's collision-property block handed to dBgW_KcMbg::SetFile"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov025_02113ad8",
@@ -222,7 +236,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -258,11 +272,18 @@
           "start": "0x02113ad8",
           "end": "0x02113b00",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.liftClps",
+          "start": "0x02112d08",
+          "end": "0x02112d28",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 15
+          "LICENSED": 16
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -273,34 +294,43 @@
           {
             "section": ".init",
             "original": [
-              48
+              52
             ],
             "desired": [
-              48
+              52
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              46
+              50
             ],
             "desired": [
-              46
+              50
             ]
           },
           {
             "section": ".bss",
             "original": [
-              20,
               21,
               22,
-              23
+              23,
+              24
             ],
             "desired": [
-              23,
-              21,
+              24,
               22,
-              20
+              23,
+              21
+            ]
+          },
+          {
+            "section": ".data.liftClps",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
             ]
           }
         ],
@@ -309,22 +339,22 @@
             {
               "section": ".bss",
               "original": [
-                20,
                 21,
                 22,
-                23
+                23,
+                24
               ],
               "desired": [
-                23,
-                21,
+                24,
                 22,
-                20
+                23,
+                21
               ],
               "slots": [
-                20,
                 21,
                 22,
-                23
+                23,
+                24
               ]
             }
           ],

@@ -11,7 +11,7 @@ typedef struct {
 } Quat;
 
 extern void func_0203cebc(Vector3 *out, Vector3 *p, Vector3 *q, Vector3 *r);
-extern Quat data_02075b04;
+extern const Quat data_02075b04 = {0, 0, 0, 0x1000};
 
 void Quaternion_FromVector3(Quat *out, Vector3 *a, Vector3 *b) {
     Vector3 vb, va, vb2, vcross;

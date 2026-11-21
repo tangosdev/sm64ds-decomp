@@ -10,7 +10,7 @@
     "TEXT: dScEntry_c_classInit_ENTRY through EntryMesh::Init is the contiguous run 0x0211a854..0x0211b524. d_s_entry_methods.cpp ends at 0x0211a854 and .rodata begins at 0x0211b524.",
     "INIT: __sinit_ov075_0211c51c (0x0211c51c..0x0211c5a4) constructs EntryMeshTextureFile with file 0x8418, registers func_020178b4, and copies the three EntryMesh pointer-to-member descriptors into EntryMeshHandlers. mwcc emits that initializer from the file-scope objects in this TU.",
     "DATA: the three descriptors are 0x0211d34c UpdateRipple, 0x0211d354 InitGrid, 0x0211d35c DrawGrid. The claim stops at 0x0211d364; data_ov075_0211d364 keeps the following zero gap out of this object.",
-    "BSS: EntryMeshTextureFile at 0x0211d980 (8), its registration node at 0x0211d988 (0xc), EntryMeshHandlers at 0x0211d994 (0x18). data_ov075_0211d9ac is the end anchor; the next object is data_ov075_0211d9bc."
+    "BSS: EntryMeshTextureFile at 0x0211d980 (8), its registration node at 0x0211d988 (0xc), EntryMeshHandlers at 0x0211d994 (0x18), then data_ov075_0211d9ac (0x14) through 0x0211d9c0. data_ov075_0211d9bc is the interior label at +0x10."
   ],
   "sections": [
     {
@@ -37,7 +37,7 @@
     {
       "name": ".bss",
       "start": "0x0211d980",
-      "end": "0x0211d9ac"
+      "end": "0x0211d9c0"
     }
   ],
   "functions": [
@@ -219,6 +219,14 @@
       "size": "0x18",
       "binding": "STB_GLOBAL",
       "evidence": "the {InitGrid, UpdateRipple, DrawGrid} row EntryMesh::Init, Behavior and Render call through."
+    }
+  ,
+    {
+      "symbol": "data_ov075_0211d9ac",
+      "address": "0x0211d9ac",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "Zero tail of this file. The placeholder name stays."
     }
   ],
   "init": [
@@ -522,7 +530,7 @@
         {
           "section": ".bss",
           "start": "0x0211d980",
-          "end": "0x0211d9ac",
+          "end": "0x0211d9c0",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],

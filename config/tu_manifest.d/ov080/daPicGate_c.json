@@ -18,6 +18,42 @@
       "end": "0x02126fbc"
     },
     {
+      "name": ".rodata.rows",
+      "start": "0x02127714",
+      "end": "0x0212771c",
+      "input_section": ".rodata"
+    },
+    {
+      "name": ".rodata.gateMtx",
+      "start": "0x0212771c",
+      "end": "0x0212775c",
+      "input_section": ".rodata"
+    },
+    {
+      "name": ".rodata.gateFiles",
+      "start": "0x0212775c",
+      "end": "0x021277a8",
+      "input_section": ".rodata"
+    },
+    {
+      "name": ".rodata.gateWaves",
+      "start": "0x021277a8",
+      "end": "0x02127834",
+      "input_section": ".rodata"
+    },
+    {
+      "name": ".rodata.pic",
+      "input_section": ".rodata",
+      "start": "0x02127834",
+      "end": "0x02127848"
+    },
+    {
+      "name": ".rodata.picWaves",
+      "start": "0x02127848",
+      "end": "0x021278c0",
+      "input_section": ".rodata"
+    },
+    {
       "name": ".init",
       "start": "0x02127b2c",
       "end": "0x02127f60"
@@ -35,19 +71,7 @@
     {
       "name": ".bss",
       "start": "0x021284ac",
-      "end": "0x02128688"
-    },
-    {
-      "name": ".rodata.rows",
-      "start": "0x02127714",
-      "end": "0x0212771c",
-      "input_section": ".rodata"
-    },
-    {
-      "name": ".rodata.pic",
-      "input_section": ".rodata",
-      "start": "0x02127834",
-      "end": "0x02127848"
+      "end": "0x02128860"
     }
   ],
   "functions": [
@@ -488,6 +512,27 @@
       "size": "0x60",
       "binding": "STB_GLOBAL",
       "evidence": "the four daPicGate_c::State rows (twelve PMF descriptors) copied by the initializer"
+    },
+    {
+      "symbol": "data_ov080_02128688",
+      "address": "0x02128688",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-picture Ov080Mat slot written by daPicGate_c::LoadTexture"
+    },
+    {
+      "symbol": "data_ov080_0212869c",
+      "address": "0x0212869c",
+      "size": "0x1bc",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-picture texture-loaded flags, parallel to the mat slots"
+    },
+    {
+      "symbol": "data_ov080_02128858",
+      "address": "0x02128858",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "tail bss word pair with no source reference, kept as cartridge state"
     }
   ],
   "notes": [
@@ -549,6 +594,48 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata.rows",
+          "start": "0x02127714",
+          "end": "0x0212771c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.gateMtx",
+          "start": "0x0212771c",
+          "end": "0x0212775c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.gateFiles",
+          "start": "0x0212775c",
+          "end": "0x021277a8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.gateWaves",
+          "start": "0x021277a8",
+          "end": "0x02127834",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.pic",
+          "start": "0x02127834",
+          "end": "0x02127848",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata.picWaves",
+          "start": "0x02127848",
+          "end": "0x021278c0",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x02127b2c",
           "end": "0x02127f60",
@@ -572,22 +659,8 @@
         {
           "section": ".bss",
           "start": "0x021284ac",
-          "end": "0x02128688",
+          "end": "0x02128860",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".rodata.rows",
-          "start": "0x02127714",
-          "end": "0x0212771c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.pic",
-          "start": "0x02127834",
-          "end": "0x02127848",
-          "differingBytes": 0,
-          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -1987,6 +2060,196 @@
       "addend": 0,
       "target_module": "ov080",
       "target_address": "0x02125fd0"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x212775c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForBhModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x212851c"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x2127760",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForBkModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x2128524"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x2127764",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForKiModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x21284ac"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x2127768",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForSmModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x21284fc"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x212776c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForCvEx5ModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x212850c"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x2127770",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForFlModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x21284cc"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x2127774",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForDlModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x21284b4"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x2127778",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForWlModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x2128514"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x212777c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForSlModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x21284f4"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x2127780",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForWcModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x212852c"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x2127784",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForHmModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x21284dc"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x2127788",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForHsModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x21284e4"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x212778c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForTdTtModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x21284ec"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x2127790",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForCtModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x21284bc"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x2127794",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForExMarioModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x2128504"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x2127798",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForExLuigiModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x212853c"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x212779c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForExWarioModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x21284d4"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x21277a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForVsCrossModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x2128534"
+    },
+    {
+      "section": ".rodata.gateFiles",
+      "source": "0x21277a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gForVsIslandModelFile",
+      "addend": 0,
+      "target_module": "ov080",
+      "target_address": "0x21284c4"
     }
   ],
   "symbol_binding_rewrites": [
@@ -2376,6 +2639,34 @@
       "size": "0x14",
       "binding": "STB_GLOBAL",
       "evidence": "default wave parameters"
+    },
+    {
+      "symbol": "data_ov080_0212771c",
+      "address": "0x0212771c",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "flat 4x4 texcoord matrix installed by G3_LoadTexMtxEnv"
+    },
+    {
+      "symbol": "data_ov080_0212775c",
+      "address": "0x0212775c",
+      "size": "0x4c",
+      "binding": "STB_GLOBAL",
+      "evidence": "picture id to SharedFilePtr handle, one relocation per picture"
+    },
+    {
+      "symbol": "data_ov080_021277a8",
+      "address": "0x021277a8",
+      "size": "0x8c",
+      "binding": "STB_GLOBAL",
+      "evidence": "wave table for picture shapes"
+    },
+    {
+      "symbol": "data_ov080_02127848",
+      "address": "0x02127848",
+      "size": "0x78",
+      "binding": "STB_GLOBAL",
+      "evidence": "second wave table, six WaveParams rows"
     }
   ]
 }

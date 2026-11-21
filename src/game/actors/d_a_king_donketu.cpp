@@ -192,6 +192,14 @@ extern KingDonketuAnimResFileHandle gKingIceDonketuDamageAnimationFile; /* anim,
 extern KingDonketuAnimResFileHandle gKingIceDonketuJumpStAnimationFile; /* anim, file 0x358 */
 extern KingDonketuAnimResFileHandle gKingIceDonketuWaitAnimationFile; /* anim, file 0x35a */
 
+/* The collision cylinder's offset from the boss's origin, used by Init and
+ * Behavior. 0x60000 below the position. A POD twin: a Vector3 global would be
+ * built by __sinit, and the cartridge has these twelve bytes pre-set in .data. */
+struct CylinderOffset {
+    fx32 x, y, z;
+};
+extern CylinderOffset data_ov073_02123040;
+
 /* The sixteen state records __sinit_d_a_king_donketu.cpp fills from the PMF
  * literals at 0x02122f40, dispatched through the struct C shadow. */
 extern daKing_Donketu_c::State data_ov073_02123320;
@@ -1791,7 +1799,9 @@ int daKing_Donketu_c::Behavior()
 
     UpdateWMClsn(mWithMeshClsn, 0);
 
-    offset = data_ov073_02123040;
+    offset.x = data_ov073_02123040.x;
+    offset.y = data_ov073_02123040.y;
+    offset.z = data_ov073_02123040.z;
     mdCcAcPos_c.SetPosRelativeToActor(offset);
 
     if (mState == &data_ov073_02123360 || mState == &data_ov073_02123390)
@@ -1877,6 +1887,10 @@ KingDonketuAnimResFileHandle gKingIceDonketuDamageAnimationFile(ASSET_KING_ICE_D
 KingDonketuAnimResFileHandle gKingIceDonketuJumpEdAnimationFile(ASSET_KING_ICE_DONKETU_JUMP_ED_BCA);
 KingDonketuAnimResFileHandle gKingIceDonketuJumpStAnimationFile(ASSET_KING_ICE_DONKETU_JUMP_ST_BCA);
 KingDonketuAnimResFileHandle gKingIceDonketuWaitAnimationFile(ASSET_KING_ICE_DONKETU_WAIT_BCA);
+
+/* SetPosRelativeToActor / Init offset: the cylinder center sits 0x60000 below
+ * the boss's origin. */
+CylinderOffset data_ov073_02123040 = {0, -0x60000, 0};
 
 daKing_Donketu_c::State data_ov073_02123330 = {&daKing_Donketu_c::EnterIntroTalk,
                                                &daKing_Donketu_c::UpdateIntroTalk};

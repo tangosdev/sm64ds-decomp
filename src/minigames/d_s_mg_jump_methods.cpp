@@ -100,6 +100,9 @@ extern s16 data_02082614[];
 extern int sJump3DMarioCount;
 extern int sHeyhoUnsettledCount;
 extern int sJump3DRisenOutCount;
+
+/* Per-language NCG handles, in GetGameLanguage order. */
+int sJumpNcgByLanguage[5] = {208, 210, 205, 206, 207};
 }
 void Heyho_ReactAll(void);
 void Heyho_SeparateAll(void);

@@ -1,8 +1,16 @@
     .text       start:0x0211f000 end:0x02122244 kind:code align:32
-    .rodata     start:0x02122244 end:0x02122afc kind:rodata align:4
+    .rodata.brqBta start:0x02122244 end:0x021222e0 kind:rodata align:4
+    .rodata     start:0x021222e0 end:0x02122afc kind:rodata align:4
     .init       start:0x02122afc end:0x021230a4 kind:code align:4
     .ctor       start:0x021230a4 end:0x021230b4 kind:rodata align:4
-    .data       start:0x021230c0 end:0x02123500 kind:data align:32
+    .data       start:0x021230c0 end:0x021231e4 kind:data align:32
+    .data.brqBta start:0x021231e4 end:0x0212320c kind:data align:4
+    .data.brqPmf start:0x0212320c end:0x0212323c kind:data align:4
+    .data.brqMain start:0x0212323c end:0x021232f4 kind:data align:4
+    .data.krpaMain start:0x021232f4 end:0x02123334 kind:data align:4
+    .data.gap1334 start:0x02123334 end:0x021234c4 kind:data align:4
+    .data.krpaAnim start:0x021234c4 end:0x021234f4 kind:data align:4
+    .data.krpaPad start:0x021234f4 end:0x02123500 kind:data align:4
     .bss        start:0x02123500 end:0x02123720 kind:bss align:32
 src/game/actors/d_a_propeller_heyho.cpp:
     complete
@@ -15,7 +23,9 @@ src/game/actors/d_a_propeller_heyho.cpp:
 src/game/actors/d_a_brq.cpp:
     complete
     .text start:0x02120570 end:0x02121118
-    .data start:0x0212323c end:0x021232f4
+    .data.brqBta start:0x021231e4 end:0x0212320c
+    .data.brqMain start:0x0212323c end:0x021232f4
+    .rodata.brqBta start:0x02122244 end:0x021222e0
     .rodata start:0x021222e0 end:0x021222e8
     .init start:0x02122d80 end:0x02122f30
     .ctor start:0x021230a8 end:0x021230ac
@@ -27,8 +37,9 @@ src/game/actors/d_a_krpa.cpp:
     .text start:0x02121118 end:0x02121b48
     .init start:0x02122f30 end:0x02123030
     .ctor start:0x021230ac end:0x021230b0
-    .data start:0x021232f4 end:0x02123334
-    .rodata start:0x021222e8 end:0x02122594
+    .data.krpaMain start:0x021232f4 end:0x02123334
+    .data.krpaAnim start:0x021234c4 end:0x021234f4
+    .rodata start:0x021222e8 end:0x02122afc
     .bss start:0x02123698 end:0x021236ec
 
 src/game/actors/d_a_kp_fr.cpp:

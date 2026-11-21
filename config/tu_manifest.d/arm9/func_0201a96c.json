@@ -29,7 +29,7 @@
     {
       "name": ".bss",
       "start": "0x0209d528",
-      "end": "0x0209d5b8"
+      "end": "0x0209d64c"
     }
   ],
   "functions": [
@@ -63,6 +63,13 @@
       "size": "0x44",
       "evidence": "the file-scope WatchdogAlarm. Retail __sinit calls func_0201aa18 on it and registers func_0201aaec. Suspended lives at 0x40; the next symbol is data_0209d5b8.",
       "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_0209d5b8",
+      "address": "0x0209d5b8",
+      "size": "0x94",
+      "binding": "STB_GLOBAL",
+      "evidence": "The OSThread func_0201a1bc runs the card/IRQ work on, after this TU's watchdog state (data_0209d528..data_0209d5b8)."
     }
   ],
   "compiler_only_output": [],
@@ -195,9 +202,9 @@
   ],
   "verification": {
     "linkcheck": {
-      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
       "result": "scratch-data-verified",
-      "scratch": "build/tu/arm9-func_0201a96c/link (gitignored)",
+      "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
       "phases": {
         "delink": true,
         "lcf": true,
@@ -238,56 +245,18 @@
         {
           "section": ".bss",
           "start": "0x0209d528",
-          "end": "0x0209d5b8",
+          "end": "0x0209d64c",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 6
+          "LICENSED": 7
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
-      "nontextSectionOrder": {
-        "groups": [
-          {
-            "section": ".init",
-            "original": [
-              12
-            ],
-            "desired": [
-              12
-            ]
-          },
-          {
-            "section": ".ctor",
-            "original": [
-              10
-            ],
-            "desired": [
-              10
-            ]
-          },
-          {
-            "section": ".bss",
-            "original": [
-              5,
-              6,
-              7
-            ],
-            "desired": [
-              5,
-              6,
-              7
-            ]
-          }
-        ],
-        "objisolate": null,
-        "errors": null
-      },
-      "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
       "symbolCheckErrors": [],
       "symbolCheckBaselineErrors": [],
@@ -296,8 +265,7 @@
         "bytes": 16777216,
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
-      },
-      "linkerOutput": null
+      }
     },
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",

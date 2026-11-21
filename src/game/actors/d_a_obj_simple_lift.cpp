@@ -107,6 +107,26 @@ extern SimpleLiftClsnFileHandle gKm2Rift02CollisionFile;
 extern SimpleLiftModelFilePtr gBkTransbarModelFile;
 extern SimpleLiftClsnFileHandle gBkTransbarCollisionFile;
 
+/* The seven asset rows. The CLPS blocks live in the course overlays that
+ * spawn these lifts; the model and collision handles are this TU's own. */
+extern CLPS_Block data_ov008_02111be0;
+extern CLPS_Block data_ov008_02111b34;
+extern CLPS_Block data_ov008_02111b74;
+extern CLPS_Block data_ov022_02112b08;
+extern CLPS_Block data_ov010_02112530;
+extern CLPS_Block data_ov010_02112590;
+extern CLPS_Block data_ov009_02113554;
+
+SimpleLiftAssets data_ov091_02135024[7] = {
+    {&gKm1DeruModelFile, &gKm1DeruCollisionFile, &data_ov008_02111be0},
+    {&gKm3Deru01ModelFile, &gKm3Deru01CollisionFile, &data_ov008_02111b34},
+    {&gKm3Deru02ModelFile, &gKm3Deru02CollisionFile, &data_ov008_02111b74},
+    {&gRcRift01ModelFile, &gRcRift01CollisionFile, &data_ov022_02112b08},
+    {&gKm2Rift01ModelFile, &gKm2Rift01CollisionFile, &data_ov010_02112530},
+    {&gKm2Rift02ModelFile, &gKm2Rift02CollisionFile, &data_ov010_02112590},
+    {&gBkTransbarModelFile, &gBkTransbarCollisionFile, &data_ov009_02113554},
+};
+
 /* Emission order is ROM order. Do not reorder. */
 #pragma defer_codegen off
 

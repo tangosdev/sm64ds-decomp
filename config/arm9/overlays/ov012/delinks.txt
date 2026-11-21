@@ -38,16 +38,4 @@ src/game/actors/d_a_obj_c0_water.cpp:
     .data.c0WaterName start:0x02111bc4 end:0x02111bd0
     .data.c0Bta start:0x02111c24 end:0x02111c3c
     .data.c0Clps start:0x02111c90 end:0x02111cb0
-    .bss start:0x021124c8 end:0x021124f0
-
-src/data/ov012/data_ov012_021124f0.c:
-    complete
-    .bss start:0x021124f0 end:0x021124f8
-
-src/data/ov012/data_ov012_021124f8.c:
-    complete
-    .bss start:0x021124f8 end:0x021124fc
-
-src/data/ov012/data_ov012_021124fc.c:
-    complete
-    .bss start:0x021124fc end:0x02112500
+    .bss start:0x021124c8 end:0x02112500

@@ -28,7 +28,8 @@
       "end": "0x021335ac"
     },
     {
-      "name": ".data",
+      "name": ".data.gap56",
+      "input_section": ".data",
       "start": "0x0213cc74",
       "end": "0x0213cca4"
     },
@@ -36,6 +37,12 @@
       "name": ".bss",
       "start": "0x021421c4",
       "end": "0x021421ec"
+    },
+    {
+      "name": ".data.sJump2NcgByLanguage",
+      "input_section": ".data",
+      "start": "0x0213cce0",
+      "end": "0x0213ccf4"
     }
   ],
   "functions": [
@@ -292,6 +299,13 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler PMF literal for &dScMgJump2_c::State_End (0x020ef4ec), emitted by dScMgJump2_c::BeginEnd; paired by its consumer relocation and by its own {fn, 0} relocation target"
+    },
+    {
+      "symbol": "sJump2NcgByLanguage",
+      "address": "0x0213cce0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "five overlay-0 file-table NCG ids in GetGameLanguage order; no relocations"
     }
   ],
   "bss": [
@@ -480,7 +494,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.gap56",
           "start": "0x0213cc74",
           "end": "0x0213cca4",
           "differingBytes": 0,
@@ -491,11 +505,18 @@
           "start": "0x021421c4",
           "end": "0x021421ec",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.sJump2NcgByLanguage",
+          "start": "0x0213cce0",
+          "end": "0x0213ccf4",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 42
+          "LICENSED": 43
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -506,23 +527,23 @@
           {
             "section": ".init",
             "original": [
-              104
+              105
             ],
             "desired": [
-              104
+              105
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              102
+              103
             ],
             "desired": [
-              102
+              103
             ]
           },
           {
-            "section": ".data",
+            "section": ".data.gap56",
             "original": [
               5,
               7,
@@ -554,12 +575,21 @@
               35,
               24
             ]
+          },
+          {
+            "section": ".data.sJump2NcgByLanguage",
+            "original": [
+              39
+            ],
+            "desired": [
+              39
+            ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".data",
+              "section": ".data.gap56",
               "original": [
                 5,
                 7,
@@ -941,7 +971,7 @@
       "target_address": "0x021421e0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap56",
       "source": "0x0213cc74",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -951,7 +981,7 @@
       "target_address": "0x020ef47c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap56",
       "source": "0x0213cc7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -961,7 +991,7 @@
       "target_address": "0x020efaf0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap56",
       "source": "0x0213cc84",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -971,7 +1001,7 @@
       "target_address": "0x020ef5ac"
     },
     {
-      "section": ".data",
+      "section": ".data.gap56",
       "source": "0x0213cc8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -981,7 +1011,7 @@
       "target_address": "0x020ef480"
     },
     {
-      "section": ".data",
+      "section": ".data.gap56",
       "source": "0x0213cc94",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -991,7 +1021,7 @@
       "target_address": "0x020ef794"
     },
     {
-      "section": ".data",
+      "section": ".data.gap56",
       "source": "0x0213cc9c",
       "type": "R_ARM_ABS32",
       "kind": "load",

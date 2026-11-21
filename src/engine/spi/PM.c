@@ -92,7 +92,7 @@ static inline void GXi_PowerLCD(BOOL enable) {
     }
 }
 
-extern u16 PMi_IsInit;
+extern u8 PMi_IsInit[];
 extern volatile int PMi_SyncFlag; /* SPI_PXI_COMMAND_PM_SYNC (0x60) answered */
 extern int PMi_SleepEndFlag;      /* SPI_PXI_COMMAND_PM_SLEEP_END (0x62) answered */
 extern u32 PMi_LCDCount;          /* the VBlank count when the LCD last went off */
@@ -147,11 +147,11 @@ void PMi_CallCallbackAndUnlock(u32 result) {
 void PM_Init(void) {
     int i;
 
-    if (PMi_IsInit) {
+    if (*(u16 *)PMi_IsInit) {
         return;
     }
 
-    PMi_IsInit = TRUE;
+    *(u16 *)PMi_IsInit = TRUE;
     PMi_Work.lock = FALSE;
     PMi_Work.callback = NULL;
 
@@ -525,3 +525,8 @@ u32 PMi_SendLEDPatternCommand(PMLEDPattern pattern) {
 
     return sendResult;
 }
+
+/* The PM/SPI state: PMi_IsInit, the sync/sleep flags, the mutex, the card
+   interface work and its thread stack. One object so the interior labels
+   keep their symbols.txt addresses. */
+u8 PMi_IsInit[0x67c];

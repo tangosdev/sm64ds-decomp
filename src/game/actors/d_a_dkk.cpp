@@ -198,3 +198,14 @@ int daDkk_c::OnAimedAtWithEgg() {
  * mwcc emits __sinit_d_a_dkk.cpp. */
 DkkModelFilePtr gDonkakuModelFile(ASSET_DONKAKU_BMD);
 DkkClsnFileHandler gDonkakuCollisionFile(ASSET_DONKAKU_KCL);
+
+/* Grindel's collision-property block and the resource table that names it. */
+struct CLPS_Block {
+    u32 words[8];
+};
+
+CLPS_Block data_ov025_02112d28 = {0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff,
+                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+DsnBaseFileTable data_ov025_02113814 = {
+    &gDonkakuModelFile, &gDonkakuCollisionFile, &data_ov025_02112d28, 0, 0x1a0000, 0x170000,
+};

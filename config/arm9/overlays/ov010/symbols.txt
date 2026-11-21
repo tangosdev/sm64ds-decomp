@@ -119,7 +119,6 @@ _ZTS14daObjC1_Trap_c kind:data(any) addr:0x02112aac
 g_profile_C1_TRAP kind:data(any) addr:0x02112ac0 ambiguous
 data_ov010_02112adc kind:data(any) addr:0x02112adc ambiguous
 _ZTV14daObjC1_Trap_c kind:data(any) addr:0x02112ae4
-data_ov010_02112b08 kind:data(any) addr:0x02112b08 ambiguous
 _ZTI15daObjC1Hikari_c kind:data(any) addr:0x02112b64
 _ZTS15daObjC1Hikari_c kind:data(any) addr:0x02112b70
 g_profile_C1_HIKARI kind:data(any) addr:0x02112b84 ambiguous
@@ -138,6 +137,7 @@ data_ov010_02112c88 kind:data(any) addr:0x02112c88 ambiguous
 data_ov010_02112ca8 kind:data(any) addr:0x02112ca8 ambiguous
 data_ov010_02112cc8 kind:data(any) addr:0x02112cc8 ambiguous
 data_ov010_02112cd0 kind:data(any) addr:0x02112cd0 ambiguous
+data_ov010_02112ce4 kind:data(any) addr:0x02112ce4
 data_ov010_02112d00 kind:bss addr:0x02112d00
 data_ov010_02112d08 kind:bss addr:0x02112d08
 @744 kind:bss addr:0x02112d10

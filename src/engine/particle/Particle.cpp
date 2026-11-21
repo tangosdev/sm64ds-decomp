@@ -57,7 +57,7 @@ dPa_c::~dPa_c() {
         ::operator delete[](sParticleHeapBase);
         sParticleHeapBase = 0;
     }
-    if (mResourceFile != data_02075f14) {
+    if (mResourceFile != (void *)data_02075f14) {
         Memory::Deallocate(mResourceFile);
     }
     gParticleControl = 0;
@@ -127,7 +127,7 @@ void dPa_c::Initialise() {
     mManager->mPolygonAttr = 0x8000;
 
     if (memcmp((u8 *)data_02075f14, data_0208f668, 4) != 0) {
-        mResourceFile = data_02075f14;
+        mResourceFile = (void *)data_02075f14;
     } else {
         /* The compressed stream starts at +4; its header word carries the
            decompressed size in the upper 24 bits. */
@@ -143,7 +143,7 @@ void dPa_c::Initialise() {
     SPLManager_UploadTexturesEx(mManager, (u32(*)(u32, u32))Particle::Texture::AllocTexVram);
     SPLManager_UploadPalettesEx(mManager, (u32(*)(u32, u32))Particle::Texture::AllocPalVram);
 
-    if (mResourceFile != data_02075f14) {
+    if (mResourceFile != (void *)data_02075f14) {
         /* The textures are in VRAM now; keep only the resource's resident
            part. allocSize is reused for it: a fresh local takes r4 where the
            ROM has r5. */

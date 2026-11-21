@@ -3692,7 +3692,7 @@ pmf_dScMgHanachan_c_Phase_Result_2 kind:data(any) addr:0x0213ca6c
 pmf_Wiggler_TurnTowardAim_10 kind:data(any) addr:0x0213ca74
 _ZTI15dScMgHanachan_c kind:data(any) addr:0x0213ca7c
 _ZTS15dScMgHanachan_c kind:data(any) addr:0x0213ca88
-sHanaTextSpritesByLanguage kind:data(any) addr:0x0213ca9c
+sHanaTextSpritesByLanguage kind:data(byte[0x14]) addr:0x0213ca9c
 _ZTV15dScMgHanachan_c kind:data(any) addr:0x0213cab8
 sJumpLastPick kind:data(any) addr:0x0213cb48
 pmf_dScMgJump_c_State_Result kind:data(any) addr:0x0213cb4c
@@ -3707,7 +3707,7 @@ sJumpRenderScale kind:data(any) addr:0x0213cb8c
 _ZTI11dScMgJump_c kind:data(any) addr:0x0213cb98
 _ZTS11dScMgJump_c kind:data(any) addr:0x0213cba4
 sJumpTextSpritesByLanguage kind:data(any) addr:0x0213cbb4
-sJumpNcgByLanguage kind:data(any) addr:0x0213cbc8
+sJumpNcgByLanguage kind:data(byte[0x14]) addr:0x0213cbc8
 _ZTV11dScMgJump_c kind:data(any) addr:0x0213cbe4
 pmf_dScMgJump2_c_State_Idle kind:data(any) addr:0x0213cc74
 g_profile_MG_JUMP2 kind:data(any) addr:0x0213cc7c ambiguous
@@ -3719,7 +3719,7 @@ _ZTI12dScMgJump2_c kind:data(any) addr:0x0213cca4
 sJump2RenderScale kind:data(any) addr:0x0213ccb0
 _ZTS12dScMgJump2_c kind:data(any) addr:0x0213ccbc
 sJump2TextSpritesByLanguage kind:data(any) addr:0x0213cccc
-sJump2NcgByLanguage kind:data(any) addr:0x0213cce0
+sJump2NcgByLanguage kind:data(byte[0x14]) addr:0x0213cce0
 _ZTV12dScMgJump2_c kind:data(any) addr:0x0213ccfc
 @2210 kind:data(any) addr:0x0213cd8c
 @2200 kind:data(any) addr:0x0213cd94
@@ -3753,7 +3753,7 @@ sLuigiBoardFlags kind:data(any) addr:0x0213ce84
 sLuigiBoardModes kind:data(any) addr:0x0213ce98
 sLuigiBoardMovers kind:data(any) addr:0x0213ceac
 sLuigiWantedPicks kind:data(any) addr:0x0213cec0
-sLuigiPlaceLimits kind:data(any) addr:0x0213cee0
+sLuigiPlaceLimits kind:data(byte[0x28]) addr:0x0213cee0
 _ZTV12dScMgLuigi_c kind:data(any) addr:0x0213cf10
 sLuigiBg1NcgPath kind:data(any) addr:0x0213cfa0
 pmf_dScMgMemory_c_StatePlay kind:data(any) addr:0x0213cfc0 local
@@ -3829,8 +3829,8 @@ _ZTS14dScMgMemory2_c kind:data(any) addr:0x0213d35c
 sMemory2CardNcgByLanguage kind:data(any) addr:0x0213d370
 data_ov006_0213d384 kind:data(any) addr:0x0213d384
 data_ov006_0213d3c4 kind:data(any) addr:0x0213d3c4
-data_ov006_0213d40c kind:data(any) addr:0x0213d40c
-sMemory2CardFrameSprites kind:data(any) addr:0x0213d45c
+data_ov006_0213d40c kind:data(byte[0x50]) addr:0x0213d40c
+sMemory2CardFrameSprites kind:data(byte[0x70]) addr:0x0213d45c
 _ZTV14dScMgMemory2_c kind:data(any) addr:0x0213d4d4
 sMCarloPickAllowed kind:data(any) addr:0x0213d564
 sMCarloPayout kind:data(any) addr:0x0213d568
@@ -3925,7 +3925,7 @@ _ZTI16dScMgPachinko2_c kind:data(any) addr:0x0213db4c
 _ZTS16dScMgPachinko2_c kind:data(any) addr:0x0213db58
 sPachinko2PaddleDescendLimits kind:data(any) addr:0x0213db6c
 sPachinko2PaddleSweepLimits kind:data(any) addr:0x0213db84
-sPachinko2PaddleGatherTargets kind:data(any) addr:0x0213db9c
+sPachinko2PaddleGatherTargets kind:data(byte[0x18]) addr:0x0213db9c
 _ZTV16dScMgPachinko2_c kind:data(any) addr:0x0213dbbc
 @2236 kind:data(any) addr:0x0213dc4c
 @2240 kind:data(any) addr:0x0213dc54
@@ -3997,7 +3997,7 @@ data_ov006_0213e10c kind:data(any) addr:0x0213e10c
 data_ov006_0213e140 kind:data(any) addr:0x0213e140
 data_ov006_0213e174 kind:data(any) addr:0x0213e174
 data_ov006_0213e1b4 kind:data(any) addr:0x0213e1b4
-data_ov006_0213e1fc kind:data(any) addr:0x0213e1fc
+data_ov006_0213e1fc kind:data(byte[0x48]) addr:0x0213e1fc
 _ZTV12dScMgPanel_c kind:data(any) addr:0x0213e24c
 sRouletteResultIndex kind:data(any) addr:0x0213e2dc
 data_ov006_0213e2e0 kind:data(any) addr:0x0213e2e0
@@ -4276,7 +4276,7 @@ pmf_dScMgTeresa_c_BigBoo_StateRemove kind:data(any) addr:0x0213f9ac
 _ZTI13dScMgTeresa_c kind:data(any) addr:0x0213f9b4
 _ZTS13dScMgTeresa_c kind:data(any) addr:0x0213f9c0
 sTeresaCountdownSprites kind:data(any) addr:0x0213f9d0
-sTeresaPaintMask kind:data(any) addr:0x0213f9e4
+sTeresaPaintMask kind:data(byte[0x20]) addr:0x0213f9e4
 _ZTV13dScMgTeresa_c kind:data(any) addr:0x0213fa0c
 sTrmpTouchBlocked kind:data(any) addr:0x0213fa9c
 pmf_dScMgTrampoline_c_StateWaitExit kind:data(any) addr:0x0213faa0
@@ -4338,7 +4338,7 @@ data_ov006_0213fe48 kind:data(any) addr:0x0213fe48
 data_ov006_0213fe58 kind:data(any) addr:0x0213fe58
 data_ov006_0213fe68 kind:data(any) addr:0x0213fe68
 sBscBigSmallNcgByLanguage kind:data(any) addr:0x0213fe78
-sBscCardSprites kind:data(any) addr:0x0213fe8c
+sBscCardSprites kind:data(byte[0x34]) addr:0x0213fe8c
 _ZTV10dScMgBSC_c kind:data(any) addr:0x0213fec8
 @2730 kind:data(any) addr:0x0213ff58
 @2728 kind:data(any) addr:0x0213ff60

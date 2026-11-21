@@ -21,4 +21,3 @@
 # Waivers are consumed ONCE. After the decrease lands, main's own total is the new floor
 # and the row does nothing; stale rows are harmless and can be pruned in a later sweep.
 #
-{"module": "arm9", "section": ".bss", "start": "0x020a0df0", "end": "0x020a0df4", "reason": "Retracted fakematch (#821, #5503): func_0203bb5c.cpp claimed this word as a constructed EmptyInit data_020a0df0 'padding' object, but it is gTouchInfo[2], live touch state written by func_0203bb60 and cleared by func_0203bb14. The ROM holds no storage for the EmptyInit (only its empty __sinit at 0x020750b4 survives), so the object is now a dead-stripped static and the word is no longer claimed by a source that does not own it."}

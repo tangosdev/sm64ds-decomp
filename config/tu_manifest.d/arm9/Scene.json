@@ -34,7 +34,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x0209f5c4",
+      "start": "0x0209f5b8",
       "end": "0x0209f5f8"
     }
   ],
@@ -190,6 +190,27 @@
   "data": [],
   "bss": [
     {
+      "symbol": "gNextSceneParam",
+      "address": "0x0209f5b8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "spawn parameter SetSceneToSpawn queues for the next scene"
+    },
+    {
+      "symbol": "gSceneFader",
+      "address": "0x0209f5bc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "fader SetFaders installs for the scene change"
+    },
+    {
+      "symbol": "gCurrentScene",
+      "address": "0x0209f5c0",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "the running scene. ResetFadersAndSound stores this; spawns parent their children to it."
+    },
+    {
       "symbol": "@332",
       "address": "0x0209f5c4",
       "size": "0xc",
@@ -289,7 +310,7 @@
         },
         {
           "section": ".bss",
-          "start": "0x0209f5c4",
+          "start": "0x0209f5b8",
           "end": "0x0209f5f8",
           "comparison": "NOBITS -- symbol/module gates"
         }

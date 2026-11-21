@@ -1,126 +1,194 @@
 {
-  "id": "arm9/FS_Overlay",
-  "module": "arm9",
-  "source": "src/engine/fs/FS_Overlay.c",
-  "promoted_source": "src/engine/fs/FS_Overlay.c",
-  "status": "promoted",
-  "boundary_confidence": "high",
-  "boundary_evidence": [
-    "One contiguous run of the Nitro SDK's FS_overlay.c, 0x0205db88..0x0205e0f4: 10 functions, gapless in config/arm9/delinks.txt. Nine are identified by their bodies against pret's pokediamond FS_overlay.c. FS_ClearOverlayImage invalidates the I- and D-cache over image and bss and zeroes the bss. FS_GetOverlayFileID returns the ROM archive and the header's file_id. FSi_LoadOverlayInfoCore bounds-checks the entry against the target's table region, opens it with FS_OpenFileDirect and reads the 0x20-byte header. FS_LoadOverlayInfo copies the entry from the in-memory table (fsi_ovt9 or fsi_ovt7) when there is one, else calls FSi_LoadOverlayInfoCore with fsi_arc_rom and the ROM header's regions. FSi_CompareDigest HMACs with the digest key and compares 20 bytes a word at a time. FS_StartOverlay checks the multiboot child's digest, decompresses and runs sinit_init..sinit_init_end. FS_EndOverlay unlinks and runs __global_destructor_chain entries in the overlay. FS_UnloadOverlayImage and FS_UnloadOverlay are pret's.",
-    "FS_AttachOverlayTable belongs to this file. It calls FSi_CompareDigest, which pret's FS_overlay.c defines, and checks against SDK_OVERLAYTABLE_DIGEST, the 20-byte digest directly below SDK_OVERLAY_DIGEST, the per-overlay digest table FS_StartOverlay indexes. It writes the fsi_ovt9 and fsi_ovt7 regions FS_LoadOverlayInfo reads. Its place fits: it sits directly below FS_UnloadOverlay, pret's last function, so it was defined after it. FSi_OnRomReadDone at 0x0205db78, pret's first FS_rom.c function and the top of arm9/FS_Rom, ends the run below. pret dead-strips it, but NitroSDK fs_overlay.c defines it as its last function, FS_AttachOverlayTable(target, ptr, len): for an ARM9 table, switch DGT to overlay-table mode, panic unless FSi_CompareDigest(SDK_OVERLAYTABLE_DIGEST, ptr, len), restore the mode, then store ptr and len in fsi_ovt9 or fsi_ovt7 with interrupts disabled. The body is that, step for step.",
-    "Order: mwccarm emits the bodies in reverse. pret's file order is FS_ClearOverlayImage, FS_GetOverlayFileID, FSi_LoadOverlayInfoCore, FS_LoadOverlayInfo, FSi_CompareDigest, FS_StartOverlay, FS_EndOverlay, FS_UnloadOverlayImage, FS_UnloadOverlay, and the ROM holds it reversed. Older SDK: FSi_GetOverlayBinarySize, FS_LoadOverlayImageAsync, FS_LoadOverlayImage and FS_LoadOverlay are absent (the game keeps its own loaders, FS_LoadOverlay at 0x02018ad0, func_02018b64 (FS_LoadOverlayImage) and func_02018c00 (FS_LoadOverlayInfo)), FSi_LoadOverlayInfoCore has no file_pos tail, and FS_StartOverlay has no DC_FlushRange.",
-    "BOTTOM EDGE: FSi_OnRomReadDone (0x0205db78..0x0205db88), the highest function of FS_rom.c (arm9/FS_Rom).",
-    "TOP EDGE: DGT_Hash2CalcHmac at 0x0205e0f4, the DGT library."
-  ],
-  "sections": [
-    {
-      "name": ".text",
-      "start": "0x0205db88",
-      "end": "0x0205e0f4"
-    }
-  ],
-  "functions": [
-    {
-      "symbol": "FS_AttachOverlayTable",
-      "address": "0x0205db88",
-      "size": "0x00000084",
-      "legacy_source": "src/unnamed/arm9/0205/func_0205db88.cpp",
-      "ordinal": 0
-    },
-    {
-      "symbol": "FS_UnloadOverlay",
-      "address": "0x0205dc0c",
-      "size": "0x00000054",
-      "legacy_source": "src/FS_UnloadOverlay.c",
-      "ordinal": 1
-    },
-    {
-      "symbol": "FS_UnloadOverlayImage",
-      "address": "0x0205dc60",
-      "size": "0x0000001c",
-      "legacy_source": "src/FS_UnloadOverlayImage.c",
-      "ordinal": 2
-    },
-    {
-      "symbol": "FS_EndOverlay",
-      "address": "0x0205dc7c",
-      "size": "0x00000120",
-      "legacy_source": "src/FS_EndOverlay.cpp",
-      "ordinal": 3
-    },
-    {
-      "symbol": "FS_StartOverlay",
-      "address": "0x0205dd9c",
-      "size": "0x00000100",
-      "legacy_source": "src/FS_StartOverlay.c",
-      "ordinal": 4
-    },
-    {
-      "symbol": "FSi_CompareDigest",
-      "address": "0x0205de9c",
-      "size": "0x000000a4",
-      "legacy_source": "src/FSi_CompareDigest.c",
-      "ordinal": 5
-    },
-    {
-      "symbol": "FS_LoadOverlayInfo",
-      "address": "0x0205df40",
-      "size": "0x000000bc",
-      "legacy_source": "src/FS_LoadOverlayInfo.c",
-      "ordinal": 6
-    },
-    {
-      "symbol": "FSi_LoadOverlayInfoCore",
-      "address": "0x0205dffc",
-      "size": "0x0000008c",
-      "legacy_source": "src/FSi_LoadOverlayInfoCore.c",
-      "ordinal": 7
-    },
-    {
-      "symbol": "FS_GetOverlayFileID",
-      "address": "0x0205e088",
-      "size": "0x00000028",
-      "legacy_source": "src/FS_GetOverlayFileID.c",
-      "ordinal": 8
-    },
-    {
-      "symbol": "FS_ClearOverlayImage",
-      "address": "0x0205e0b0",
-      "size": "0x00000044",
-      "legacy_source": "src/FS_ClearOverlayImage.cpp",
-      "ordinal": 9
-    }
-  ],
-  "data": [],
-  "bss": [],
-  "relocations": [],
-  "compiler_only_output": [],
-  "notes": [
-    "Hand-assembled, following arm9/FS_Rom: tu_map cannot segment arm9/main.",
-    "Built as C++, which the CP15:: cache calls once required; those calls are now the SDK's C-linkage DC_*/IC_* functions (nitro/os/cache.h). Every function keeps C linkage.",
-    "Text-only: the digest key (fsi_digest_key_ptr, fsi_digest_key_len) and the digest tables stay in the data link.",
-    "FS_GetOverlayFileID returns its FSFileID by value, as pret's does: as C++, the old out-parameter form lost its stack temporary (0x18 bytes, not 0x28), and the by-value form matches. Its callers LoadOverlay and func_02018b64 take the same form and still match. struct Pair is the SDK's FSFileID. Those callers spell it Pair too, and a rename would change their declarations."
-  ],
-  "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
-    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/arm9-FS_Overlay/FS_Overlay.o (gitignored)",
-    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 10,
-    "functions_declared": 10,
-    "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
-      "data": [],
-      "dataExternalized": []
-    },
-    "criteria": {
-      "every_declared_function_defined": "PASS",
-      "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
-      "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
-    }
+ "id": "arm9/FS_Overlay",
+ "module": "arm9",
+ "source": "src/engine/fs/FS_Overlay.c",
+ "promoted_source": "src/engine/fs/FS_Overlay.c",
+ "status": "promoted",
+ "boundary_confidence": "high",
+ "boundary_evidence": [
+  "One contiguous run of the Nitro SDK's FS_overlay.c, 0x0205db88..0x0205e0f4: 10 functions, gapless in config/arm9/delinks.txt. Nine are identified by their bodies against pret's pokediamond FS_overlay.c. FS_ClearOverlayImage invalidates the I- and D-cache over image and bss and zeroes the bss. FS_GetOverlayFileID returns the ROM archive and the header's file_id. FSi_LoadOverlayInfoCore bounds-checks the entry against the target's table region, opens it with FS_OpenFileDirect and reads the 0x20-byte header. FS_LoadOverlayInfo copies the entry from the in-memory table (fsi_ovt9 or fsi_ovt7) when there is one, else calls FSi_LoadOverlayInfoCore with fsi_arc_rom and the ROM header's regions. FSi_CompareDigest HMACs with the digest key and compares 20 bytes a word at a time. FS_StartOverlay checks the multiboot child's digest, decompresses and runs sinit_init..sinit_init_end. FS_EndOverlay unlinks and runs __global_destructor_chain entries in the overlay. FS_UnloadOverlayImage and FS_UnloadOverlay are pret's.",
+  "FS_AttachOverlayTable belongs to this file. It calls FSi_CompareDigest, which pret's FS_overlay.c defines, and checks against SDK_OVERLAYTABLE_DIGEST, the 20-byte digest directly below SDK_OVERLAY_DIGEST, the per-overlay digest table FS_StartOverlay indexes. It writes the fsi_ovt9 and fsi_ovt7 regions FS_LoadOverlayInfo reads. Its place fits: it sits directly below FS_UnloadOverlay, pret's last function, so it was defined after it. FSi_OnRomReadDone at 0x0205db78, pret's first FS_rom.c function and the top of arm9/FS_Rom, ends the run below. pret dead-strips it, but NitroSDK fs_overlay.c defines it as its last function, FS_AttachOverlayTable(target, ptr, len): for an ARM9 table, switch DGT to overlay-table mode, panic unless FSi_CompareDigest(SDK_OVERLAYTABLE_DIGEST, ptr, len), restore the mode, then store ptr and len in fsi_ovt9 or fsi_ovt7 with interrupts disabled. The body is that, step for step.",
+  "Order: mwccarm emits the bodies in reverse. pret's file order is FS_ClearOverlayImage, FS_GetOverlayFileID, FSi_LoadOverlayInfoCore, FS_LoadOverlayInfo, FSi_CompareDigest, FS_StartOverlay, FS_EndOverlay, FS_UnloadOverlayImage, FS_UnloadOverlay, and the ROM holds it reversed. Older SDK: FSi_GetOverlayBinarySize, FS_LoadOverlayImageAsync, FS_LoadOverlayImage and FS_LoadOverlay are absent (the game keeps its own loaders, FS_LoadOverlay at 0x02018ad0, func_02018b64 (FS_LoadOverlayImage) and func_02018c00 (FS_LoadOverlayInfo)), FSi_LoadOverlayInfoCore has no file_pos tail, and FS_StartOverlay has no DC_FlushRange.",
+  "BOTTOM EDGE: FSi_OnRomReadDone (0x0205db78..0x0205db88), the highest function of FS_rom.c (arm9/FS_Rom).",
+  "TOP EDGE: DGT_Hash2CalcHmac at 0x0205e0f4, the DGT library."
+ ],
+ "sections": [
+  {
+   "name": ".text",
+   "start": "0x0205db88",
+   "end": "0x0205e0f4"
+  },
+  {
+   "name": ".rodata",
+   "start": "0x0208677c",
+   "end": "0x020867bc"
   }
+ ],
+ "functions": [
+  {
+   "symbol": "FS_AttachOverlayTable",
+   "address": "0x0205db88",
+   "size": "0x00000084",
+   "legacy_source": "src/unnamed/arm9/0205/func_0205db88.cpp",
+   "ordinal": 0
+  },
+  {
+   "symbol": "FS_UnloadOverlay",
+   "address": "0x0205dc0c",
+   "size": "0x00000054",
+   "legacy_source": "src/FS_UnloadOverlay.c",
+   "ordinal": 1
+  },
+  {
+   "symbol": "FS_UnloadOverlayImage",
+   "address": "0x0205dc60",
+   "size": "0x0000001c",
+   "legacy_source": "src/FS_UnloadOverlayImage.c",
+   "ordinal": 2
+  },
+  {
+   "symbol": "FS_EndOverlay",
+   "address": "0x0205dc7c",
+   "size": "0x00000120",
+   "legacy_source": "src/FS_EndOverlay.cpp",
+   "ordinal": 3
+  },
+  {
+   "symbol": "FS_StartOverlay",
+   "address": "0x0205dd9c",
+   "size": "0x00000100",
+   "legacy_source": "src/FS_StartOverlay.c",
+   "ordinal": 4
+  },
+  {
+   "symbol": "FSi_CompareDigest",
+   "address": "0x0205de9c",
+   "size": "0x000000a4",
+   "legacy_source": "src/FSi_CompareDigest.c",
+   "ordinal": 5
+  },
+  {
+   "symbol": "FS_LoadOverlayInfo",
+   "address": "0x0205df40",
+   "size": "0x000000bc",
+   "legacy_source": "src/FS_LoadOverlayInfo.c",
+   "ordinal": 6
+  },
+  {
+   "symbol": "FSi_LoadOverlayInfoCore",
+   "address": "0x0205dffc",
+   "size": "0x0000008c",
+   "legacy_source": "src/FSi_LoadOverlayInfoCore.c",
+   "ordinal": 7
+  },
+  {
+   "symbol": "FS_GetOverlayFileID",
+   "address": "0x0205e088",
+   "size": "0x00000028",
+   "legacy_source": "src/FS_GetOverlayFileID.c",
+   "ordinal": 8
+  },
+  {
+   "symbol": "FS_ClearOverlayImage",
+   "address": "0x0205e0b0",
+   "size": "0x00000044",
+   "legacy_source": "src/FS_ClearOverlayImage.cpp",
+   "ordinal": 9
+  }
+ ],
+ "data": [],
+ "bss": [],
+ "relocations": [],
+ "compiler_only_output": [],
+ "notes": [
+  "Hand-assembled, following arm9/FS_Rom: tu_map cannot segment arm9/main.",
+  "Built as C++, which the CP15:: cache calls once required; those calls are now the SDK's C-linkage DC_*/IC_* functions (nitro/os/cache.h). Every function keeps C linkage.",
+  "Text-only: the digest key (fsi_digest_key_ptr, fsi_digest_key_len) and the digest tables stay in the data link.",
+  "FS_GetOverlayFileID returns its FSFileID by value, as pret's does: as C++, the old out-parameter form lost its stack temporary (0x18 bytes, not 0x28), and the by-value form matches. Its callers LoadOverlay and func_02018b64 take the same form and still match. struct Pair is the SDK's FSFileID. Those callers spell it Pair too, and a rename would change their declarations."
+ ],
+ "verification": {
+  "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+  "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "object": "build/tu/arm9-FS_Overlay/FS_Overlay.o (gitignored)",
+  "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+  "functions_matched": 10,
+  "functions_declared": 10,
+  "compilerOnlyOutput": {
+   "requested": [],
+   "deadstripped": [],
+   "data": [],
+   "dataExternalized": []
+  },
+  "criteria": {
+   "every_declared_function_defined": "PASS",
+   "every_declared_function_bytes_match": "PASS",
+   "declared_function_set_equals_defined_function_set": "PASS",
+   "functions_occur_in_expected_order": "PASS",
+   "relocation_destinations_verified": "PASS"
+  },
+  "linkcheck": {
+   "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
+   "result": "scratch-data-verified",
+   "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
+   "phases": {
+    "delink": true,
+    "lcf": true,
+    "compile": true,
+    "link": true,
+    "checkModules": true,
+    "checkSymbols": true,
+    "rom": true
+   },
+   "tuRange": {
+    "start": "0x0205db88",
+    "end": "0x0205e0f4",
+    "differingBytes": 0,
+    "firstDiff": null
+   },
+   "tuRanges": [
+    {
+     "section": ".text",
+     "start": "0x0205db88",
+     "end": "0x0205e0f4",
+     "differingBytes": 0,
+     "firstDiff": null
+    },
+    {
+     "section": ".rodata",
+     "start": "0x0208677c",
+     "end": "0x020867bc",
+     "differingBytes": 0,
+     "firstDiff": null
+    }
+   ],
+   "objectAudit": {
+    "counts": {
+     "LICENSED": 11
+    },
+    "emittedTextOrderIsRomAscending": true,
+    "nonLicensedSymbols": [],
+    "unlicensedSections": []
+   },
+   "symbolCheckNewVsBaseline": [],
+   "symbolCheckErrors": [],
+   "symbolCheckBaselineErrors": [],
+   "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+   "rom": {
+    "bytes": 16777216,
+    "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "matchesStockRom": true
+   }
+  }
+ },
+ "production_mode": "intact-object",
+ "rodata": [
+  {
+   "symbol": "fsi_def_digest_key",
+   "address": "0x0208677c",
+   "size": "0x40",
+   "binding": "STB_GLOBAL",
+   "evidence": "The 64-byte HMAC key the overlay digests are made with; fsi_digest_key_ptr points at it."
+  }
+ ]
 }

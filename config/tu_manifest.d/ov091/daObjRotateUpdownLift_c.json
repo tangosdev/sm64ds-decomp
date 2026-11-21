@@ -39,6 +39,18 @@
       "end": "0x02134bc4"
     },
     {
+      "name": ".data.updownTable",
+      "input_section": ".data",
+      "start": "0x02134c30",
+      "end": "0x02134c54"
+    },
+    {
+      "name": ".data.updownPath",
+      "input_section": ".data",
+      "start": "0x02134cdc",
+      "end": "0x02134e44"
+    },
+    {
       "name": ".rodata",
       "start": "0x021344e8",
       "end": "0x021344f4"
@@ -158,6 +170,20 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "per-variant shadow size Z {0x32000, 0x32000, 0x78000}, copied to the stack by InitResources"
+    },
+    {
+      "symbol": "data_ov091_02134c30",
+      "address": "0x02134c30",
+      "size": "0x24",
+      "binding": "STB_GLOBAL",
+      "evidence": "three 12-byte file rows {model, collision, CLPS}; rows 0 and 1 share the object files, row 2 is HS_UPDOWN_LIFT"
+    },
+    {
+      "symbol": "data_ov091_02134cdc",
+      "address": "0x02134cdc",
+      "size": "0x168",
+      "binding": "STB_GLOBAL",
+      "evidence": "three 10-node paths, 0x78 bytes each; node 5 Y at +0x40 is the watcher spawn height"
     }
   ],
   "rodata": [
@@ -465,6 +491,20 @@
           "section": ".data",
           "start": "0x02134ba0",
           "end": "0x02134bc4",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.updownTable",
+          "start": "0x02134c30",
+          "end": "0x02134c54",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.updownPath",
+          "start": "0x02134cdc",
+          "end": "0x02134e44",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -922,6 +962,96 @@
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02135478"
+    },
+    {
+      "section": ".data.updownTable",
+      "source": "0x02134c30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjUpdnliftModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135448"
+    },
+    {
+      "section": ".data.updownTable",
+      "source": "0x02134c34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjUpdnliftCollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135450"
+    },
+    {
+      "section": ".data.updownTable",
+      "source": "0x02134c38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d834",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d834"
+    },
+    {
+      "section": ".data.updownTable",
+      "source": "0x02134c3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjUpdnliftModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135448"
+    },
+    {
+      "section": ".data.updownTable",
+      "source": "0x02134c40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gObjUpdnliftCollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135450"
+    },
+    {
+      "section": ".data.updownTable",
+      "source": "0x02134c44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d834",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d834"
+    },
+    {
+      "section": ".data.updownTable",
+      "source": "0x02134c48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHsUpdownLiftModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135440"
+    },
+    {
+      "section": ".data.updownTable",
+      "source": "0x02134c4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gHsUpdownLiftCollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135458"
+    },
+    {
+      "section": ".data.updownTable",
+      "source": "0x02134c50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov008_02111244",
+      "addend": 0,
+      "target_module": "overlays(8,11,28,37,38,40,41,42,46,48,49,50,51,53,54,57,59)",
+      "target_address": "0x02111244"
     }
   ]
 }

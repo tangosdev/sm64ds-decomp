@@ -73,7 +73,7 @@ extern SharedFilePtr
     data_ov002_0210da38; /* BUBBLE_MODEL_PTR -- sleep bubble, shared out of ov002 */
 
 /* Six animation handles, held indirectly: the table is pointers, not objects. */
-extern SharedFilePtr *data_ov084_021302f4[];
+extern SharedFilePtr *const data_ov084_021302f4[6];
 
 /* Behavior calls the current state through this actor's member-pointer
    table, indexed by state. */
@@ -91,11 +91,16 @@ PknStatePMF data_ov084_02130e80[9] = {
 extern void func_02012694(u32 id, const Vector3 *pos);
 
 /* -- shared tables -- */
-extern int data_ov084_0213030c[];        /* per-frame particle X/Z offset (0212f460, 0xfb) */
-extern int data_ov084_02130334[];        /* per-frame particle Y offset */
 extern const u8 data_ov084_021302ec[8] = {0, 3, 4, 5, 6, 0, 0, 0};
-
-
+/* The handles the plant loads, in retail order. */
+SharedFilePtr *const data_ov084_021302f4[6] = {
+    &data_ov084_02130e14, &data_ov084_02130e24, &data_ov084_02130e0c,
+    &data_ov084_02130df4, &data_ov084_02130e04, &data_ov084_02130e1c,
+};
+extern const int data_ov084_0213030c[5] = {0x78, 0x70, 0x40, 0x10, 0};
+extern const int data_ov084_02130320[5] = {-8, -0x20, -0x30, -0x40, -0x40};
+extern const int data_ov084_02130334[10] = {0x40, 0x80, 0xc0, 0xd0, 0xd0,
+                                            0xd0, 0xd0, 0xc8, 0xc0, 0xc0};
 
 /* ==========================================================================
  *
@@ -770,3 +775,7 @@ void daPkn_c::Die()
     mState = 5;
     mAnmModel.SetAnim((BCA_File *)data_ov084_02130e24.filePtr, 0x40000000, 0x1000, 0);
 }
+
+/* Six words of section-tail storage no function reads; the ROM keeps them
+ * at the end of this TU's .bss run. */
+u32 data_ov084_02130ec8[6];

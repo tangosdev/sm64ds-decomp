@@ -54,8 +54,7 @@ struct Stream {
 
 extern u16 data_0209a0a0[][9];
 extern u16 data_0209a130[];
-extern char data_02086894[];
-extern char data_0208689c[];
+extern const char data_02086894[12];
 
 extern int func_0206ca44(const char *s);
 extern void func_0206c9f4(struct Stream *s, unsigned int n);
@@ -258,7 +257,7 @@ void func_0206a928(struct Stream *ctx, const char *fmt, int **ap) {
             ctx->fn(ctx, (char *)&cc, 1);
             break;
         case 0: {
-            char *s;
+            const char *s;
             int len;
             int left;
             *ap += 1;
@@ -599,7 +598,7 @@ void func_0206a928(struct Stream *ctx, const char *fmt, int **ap) {
                 fp++;
                 if (READ8(fp) == '.') {
                     while (nz > 0) {
-                        ctx->fn(ctx, data_0208689c, 1);
+                        ctx->fn(ctx, data_02086894 + 8, 1);
                         nz--;
                     }
                 }
@@ -615,3 +614,9 @@ void func_0206a928(struct Stream *ctx, const char *fmt, int **ap) {
     if (nbuf != 0)
         ctx->fn(ctx, buf, nbuf);
 }
+
+/* The printf %s fallback for a null argument, then the single-character
+   zero string the float conversions pad with, at +8. */
+const char data_02086894[12] = {
+    '(', 'n', 'u', 'l', 'l', ')', 0, 0, '0', 0, 0, 0,
+};

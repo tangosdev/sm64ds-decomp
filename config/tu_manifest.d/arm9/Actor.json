@@ -27,13 +27,18 @@
       "end": "0x02074da8"
     },
     {
+      "name": ".rodata",
+      "start": "0x02075244",
+      "end": "0x02075250"
+    },
+    {
       "name": ".ctor",
       "start": "0x02086b68",
       "end": "0x02086b6c"
     },
     {
       "name": ".bss",
-      "start": "0x0209b468",
+      "start": "0x0209b2e4",
       "end": "0x0209b470"
     }
   ],
@@ -721,6 +726,13 @@
   "data": [],
   "bss": [
     {
+      "symbol": "data_0209b2e4",
+      "address": "0x0209b2e4",
+      "size": "0x184",
+      "binding": "STB_GLOBAL",
+      "evidence": "entry-scene/title-screen/minigame/actor globals: title cursor and list, minigame menu page and row, the view matrix and inverse, the actor update masks"
+    },
+    {
       "symbol": "sActorList",
       "address": "0x0209b468",
       "size": "0x8",
@@ -851,6 +863,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x02075244",
+          "end": "0x02075250",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".ctor",
           "start": "0x02086b68",
           "end": "0x02086b6c",
@@ -859,14 +878,14 @@
         },
         {
           "section": ".bss",
-          "start": "0x0209b468",
+          "start": "0x0209b2e4",
           "end": "0x0209b470",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 100
+          "LICENSED": 102
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -877,32 +896,65 @@
           {
             "section": ".init",
             "original": [
-              202
+              200
             ],
             "desired": [
-              202
+              200
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              15
+            ],
+            "desired": [
+              15
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              200
+              198
             ],
             "desired": [
-              200
+              198
             ]
           },
           {
             "section": ".bss",
             "original": [
-              5
+              7,
+              18
             ],
             "desired": [
-              5
+              18,
+              7
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                7,
+                18
+              ],
+              "desired": [
+                18,
+                7
+              ],
+              "slots": [
+                7,
+                18
+              ]
+            }
+          ],
+          "symbolIndices": 2,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -1028,6 +1080,15 @@
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02074d90"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_02075244",
+      "address": "0x02075244",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "WDW water heights by level, 20.12: 45.0, 1000.0, 2750.0"
     }
   ]
 }

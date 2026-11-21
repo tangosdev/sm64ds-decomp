@@ -18,6 +18,11 @@
       "end": "0x02112e0c"
     },
     {
+      "name": ".rodata",
+      "start": "0x02112e0c",
+      "end": "0x02112f9c"
+    },
+    {
       "name": ".init",
       "start": "0x021133a8",
       "end": "0x02113410"
@@ -34,6 +39,11 @@
       "end": "0x021136d4"
     },
     {
+      "name": ".data",
+      "start": "0x02114868",
+      "end": "0x02114880"
+    },
+    {
       "name": ".data.fb_res",
       "input_section": ".data",
       "start": "0x02114880",
@@ -42,7 +52,7 @@
     {
       "name": ".bss",
       "start": "0x02114ad4",
-      "end": "0x02114afc"
+      "end": "0x02114b00"
     }
   ],
   "functions": [
@@ -91,11 +101,32 @@
       "evidence": "falling-block CLPS block"
     },
     {
+      "symbol": "_ZTI20daObjBk_Fall_Block_c",
+      "address": "0x02114868",
+      "size": "0xc",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "_ZTI16daObjFallBlock_c",
+      "address": "0x02114874",
+      "size": "0xc",
+      "evidence": "compiler emission of the class key function; this overlay is its only home"
+    },
+    {
       "symbol": "data_ov015_02114880",
       "address": "0x02114880",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "model, collision, and CLPS descriptor"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_ov015_02112e0c",
+      "address": "0x02112e0c",
+      "size": "0x190",
+      "binding": "STB_GLOBAL",
+      "evidence": "read-only table that begins where this class's code ends"
     }
   ],
   "bss": [
@@ -126,6 +157,14 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
+    }
+  ,
+    {
+      "symbol": "data_ov015_02114afc",
+      "address": "0x02114afc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "Zero tail of this file. The placeholder name stays."
     }
   ],
   "notes": [
@@ -248,6 +287,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x02112e0c",
+          "end": "0x02112f9c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x021133a8",
           "end": "0x02113410",
@@ -269,6 +315,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x02114868",
+          "end": "0x02114880",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data.fb_res",
           "start": "0x02114880",
           "end": "0x0211488c",
@@ -278,7 +331,7 @@
         {
           "section": ".bss",
           "start": "0x02114ad4",
-          "end": "0x02114afc",
+          "end": "0x02114b00",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],
@@ -445,25 +498,11 @@
       "reason": "Vague-linkage type-name string for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x02108a04, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
     },
     {
-      "symbol": "_ZTI16daObjFallBlock_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov015",
-      "canonical_address": "0x02114874",
-      "reason": "Vague-linkage typeinfo record for the inherited base daObjFallBlock_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov015:0x02114874, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
-    },
-    {
       "symbol": "_ZTS16daObjFallBlock_c",
       "disposition": "deadstrip-data",
       "canonical_module": "ov015",
       "canonical_address": "0x0211488c",
       "reason": "Vague-linkage type-name string for the inherited base daObjFallBlock_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov015:0x0211488c, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
-    },
-    {
-      "symbol": "_ZTI20daObjBk_Fall_Block_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov015",
-      "canonical_address": "0x02114868",
-      "reason": "This class's own typeinfo record, vague-linkage and re-emitted by every TU that names it. The cartridge's own copy lives at ov015:0x02114868 -- inside this module's .data, but OUTSIDE the 0x02112cf4..0x02112dd0 .text run this entry claims -- so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them. MEASURED in extracted/overlays/overlay_0015.bin (ov015 base 0x021111a0): 0x02114868 is the __si_class_type_info record whose base pointer is 0x02114874 = _ZTI16daObjFallBlock_c, so the cartridge itself states the direct base."
     },
     {
       "symbol": "_ZTS20daObjBk_Fall_Block_c",
@@ -706,6 +745,76 @@
       "addend": 0,
       "target_module": "ov015",
       "target_address": "0x021136b4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114868",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211486c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS20daObjBk_Fall_Block_c",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x021148a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114870",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI16daObjFallBlock_c",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x02114874"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114874",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114878",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS16daObjFallBlock_c",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x0211488c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211487c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dBgActor_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021089ec"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02112e18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov015_02113458",
+      "addend": 0,
+      "target_module": "ov015",
+      "target_address": "0x02113458"
     }
   ]
 }

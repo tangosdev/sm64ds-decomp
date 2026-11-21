@@ -56,7 +56,13 @@ struct DpLiftCollisionFilePtr : SharedFilePtr {
 extern DpLiftModelFilePtr data_ov025_02113ae0;
 extern SharedFilePtr data_ov002_0210d9f0;
 extern DpLiftCollisionFilePtr data_ov025_02113ad8;
-extern CLPS_Block data_ov025_02112d08;
+
+struct CLPS_Block {
+    u32 words[8];
+};
+
+CLPS_Block data_ov025_02112d08 = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
+                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
 
 daDpLift_c::~daDpLift_c() {}
 

@@ -17,116 +17,6 @@
     .data.tdClps  start:0x02112fb8 end:0x02112fd0 kind:data align:4
     .data         start:0x02112fd0 end:0x02113a40 kind:data align:4
     .bss        start:0x02113a40 end:0x02113b20 kind:bss align:32
-
-
-src/data/ov032/data_ov032_02112fd0.c:
-    complete
-    .data start:0x02112fd0 end:0x02112fd8
-
-src/data/ov032/data_ov032_02112fd8.c:
-    complete
-    .data start:0x02112fd8 end:0x02112ffc
-
-src/data/ov032/data_ov032_02112ffc.c:
-    complete
-    .data start:0x02112ffc end:0x02113008
-
-src/data/ov032/data_ov032_02113008.c:
-    complete
-    .data start:0x02113008 end:0x02113040
-
-src/data/ov032/data_ov032_02113040.c:
-    complete
-    .data start:0x02113040 end:0x02113080
-
-src/data/ov032/data_ov032_02113080.c:
-    complete
-    .data start:0x02113080 end:0x021130c8
-
-src/data/ov032/data_ov032_021130c8.c:
-    complete
-    .data start:0x021130c8 end:0x021130cc
-
-src/data/ov032/data_ov032_021130cc.c:
-    complete
-    .data start:0x021130cc end:0x021130d0
-
-src/data/ov032/data_ov032_021130d0.c:
-    complete
-    .data start:0x021130d0 end:0x02113148
-
-src/data/ov032/data_ov032_02113148.c:
-    complete
-    .data start:0x02113148 end:0x021131c8
-
-src/data/ov032/data_ov032_021131c8.c:
-    complete
-    .data start:0x021131c8 end:0x02113228
-
-src/data/ov032/data_ov032_02113228.c:
-    complete
-    .data start:0x02113228 end:0x0211326c
-
-src/data/ov032/data_ov032_0211326c.c:
-    complete
-    .data start:0x0211326c end:0x021132ec
-
-src/data/ov032/data_ov032_021132ec.c:
-    complete
-    .data start:0x021132ec end:0x02113344
-
-src/data/ov032/data_ov032_02113344.c:
-    complete
-    .data start:0x02113344 end:0x0211336c
-
-src/data/ov032/data_ov032_0211336c.c:
-    complete
-    .data start:0x0211336c end:0x021133a8
-
-src/data/ov032/data_ov032_021133a8.c:
-    complete
-    .data start:0x021133a8 end:0x02113434
-
-src/data/ov032/data_ov032_02113434.c:
-    complete
-    .data start:0x02113434 end:0x0211346c
-
-src/data/ov032/data_ov032_0211346c.c:
-    complete
-    .data start:0x0211346c end:0x02113518
-
-src/data/ov032/data_ov032_02113518.c:
-    complete
-    .data start:0x02113518 end:0x02113534
-
-src/data/ov032/data_ov032_02113534.c:
-    complete
-    .data start:0x02113534 end:0x02113554
-
-src/data/ov032/data_ov032_02113554.c:
-    complete
-    .data start:0x02113554 end:0x021135d4
-
-src/data/ov032/data_ov032_021135d4.c:
-    complete
-    .data start:0x021135d4 end:0x021135f4
-
-src/data/ov032/data_ov032_021135f4.c:
-    complete
-    .data start:0x021135f4 end:0x021136d4
-
-src/data/ov032/data_ov032_021136d4.c:
-    complete
-    .data start:0x021136d4 end:0x021136f4
-
-src/data/ov032/data_ov032_021136f4.c:
-    complete
-    .data start:0x021136f4 end:0x0211373c
-
-src/data/ov032/data_ov032_0211373c.c:
-    complete
-    .data start:0x0211373c end:0x0211377c
-
 src/game/actors/d_a_bakubaku.cpp:
     complete
     .text start:0x021111a0 end:0x021124a8
@@ -135,26 +25,6 @@ src/game/actors/d_a_bakubaku.cpp:
     .data start:0x0211377c end:0x021138a0
     .bss start:0x02113a40 end:0x02113acc
 
-
-src/data/ov032/data_ov032_021138a8.c:
-    complete
-    .data start:0x021138a8 end:0x021138ac
-
-
-src/data/ov032/data_ov032_021138c4.c:
-    complete
-    .data start:0x021138c4 end:0x021138d8
-
-src/data/ov032/data_ov032_021138d8.c:
-    complete
-    .data start:0x021138d8 end:0x021138e0
-
-
-src/data/ov032/data_ov032_02113998.c:
-    complete
-    .data start:0x02113998 end:0x021139a4
-
-
 src/game/actors/d_a_obj_td_futa.cpp:
     complete
     .text start:0x021124a8 end:0x02112698
@@ -162,6 +32,7 @@ src/game/actors/d_a_obj_td_futa.cpp:
     .ctor start:0x02112e98 end:0x02112e9c
     .data.tdFuta start:0x02112f98 end:0x02112fb8
     .bss start:0x02113acc end:0x02113af4
+    .data start:0x021138a0 end:0x02113960
 
 src/game/actors/d_a_obj_td_water.cpp:
     complete
@@ -175,8 +46,9 @@ src/game/actors/d_a_obj_td_water.cpp:
     .data.tdWaterName start:0x02112edc end:0x02112ee8
     .data.tdBta start:0x02112f64 end:0x02112f7c
     .data.tdClps start:0x02112fb8 end:0x02112fd0
-    .bss start:0x02113af4 end:0x02113b1c
+    .bss start:0x02113af4 end:0x02113b20
+    .data start:0x02113960 end:0x02113a40
 
-src/data/ov032/data_ov032_02113b1c.c:
+src/unnamed/ov032/data_ov032_02112fd0.c:
     complete
-    .bss start:0x02113b1c end:0x02113b20
+    .data start:0x02112fd0 end:0x0211377c

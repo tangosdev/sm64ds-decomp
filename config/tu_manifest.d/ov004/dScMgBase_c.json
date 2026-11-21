@@ -23,6 +23,11 @@
       "end": "0x020b2c84"
     },
     {
+      "name": ".rodata",
+      "start": "0x020b944c",
+      "end": "0x020b9488"
+    },
+    {
       "name": ".init",
       "start": "0x020b948c",
       "end": "0x020b955c"
@@ -31,11 +36,6 @@
       "name": ".ctor",
       "start": "0x020b9de4",
       "end": "0x020b9de8"
-    },
-    {
-      "name": ".rodata",
-      "start": "0x020b944c",
-      "end": "0x020b9488"
     },
     {
       "name": ".data.fxpmf",
@@ -54,6 +54,12 @@
       "input_section": ".data",
       "start": "0x020bc070",
       "end": "0x020bc0b8"
+    },
+    {
+      "name": ".data.bannerArmed",
+      "input_section": ".data",
+      "start": "0x020bc150",
+      "end": "0x020bc154"
     },
     {
       "name": ".data.menuScreenEnglish",
@@ -99,8 +105,8 @@
     },
     {
       "name": ".bss",
-      "start": "0x020beb74",
-      "end": "0x020bf3e8"
+      "start": "0x020beb60",
+      "end": "0x020bf3ec"
     }
   ],
   "functions": [
@@ -1094,6 +1100,13 @@
       "evidence": "36 scene-kind ids indexed by the menu game"
     },
     {
+      "symbol": "sMgBannerButtonsArmed",
+      "address": "0x020bc150",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "set when the banner button row is first armed"
+    },
+    {
       "symbol": "data_ov004_020bcaa0",
       "address": "0x020bcaa0",
       "size": "0x5d4",
@@ -1203,6 +1216,41 @@
   ],
   "bss": [
     {
+      "symbol": "sMgWorkBuffer",
+      "address": "0x020beb60",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "minigame work buffer slot"
+    },
+    {
+      "symbol": "sMgPaintWord",
+      "address": "0x020beb64",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "packed paint word used by Mg_PaintCell"
+    },
+    {
+      "symbol": "gMgScene",
+      "address": "0x020beb68",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "the active dScMgBase_c scene"
+    },
+    {
+      "symbol": "sMgTopScreenYOffset",
+      "address": "0x020beb6c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "top-screen Y offset"
+    },
+    {
+      "symbol": "sMgSparkleSpritesGuard",
+      "address": "0x020beb70",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "sparkle sprite guard"
+    },
+    {
       "symbol": "sMgGraphCallback",
       "address": "0x020beb74",
       "size": "0x8",
@@ -1243,6 +1291,13 @@
       "size": "0x800",
       "binding": "STB_GLOBAL",
       "evidence": "the 0x40-entry Ent record pool; the initializer runs __cxa_vec_ctor over it and registers __arraydtor$328 for cleanup"
+    },
+    {
+      "symbol": "sMgBannerGfxSlotUsed",
+      "address": "0x020bf3e8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "banner graphics slot in use"
     }
   ],
   "notes": [
@@ -1299,6 +1354,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x020b944c",
+          "end": "0x020b9488",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x020b948c",
           "end": "0x020b955c",
@@ -1309,13 +1371,6 @@
           "section": ".ctor",
           "start": "0x020b9de4",
           "end": "0x020b9de8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata",
-          "start": "0x020b944c",
-          "end": "0x020b9488",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1337,6 +1392,13 @@
           "section": ".data.scenekind",
           "start": "0x020bc070",
           "end": "0x020bc0b8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.bannerArmed",
+          "start": "0x020bc150",
+          "end": "0x020bc154",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1391,8 +1453,8 @@
         },
         {
           "section": ".bss",
-          "start": "0x020beb74",
-          "end": "0x020bf3e8",
+          "start": "0x020beb60",
+          "end": "0x020bf3ec",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],

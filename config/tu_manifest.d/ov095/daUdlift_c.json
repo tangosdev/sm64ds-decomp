@@ -31,6 +31,11 @@
       "end": "0x021373bc"
     },
     {
+      "name": ".data",
+      "start": "0x0213757c",
+      "end": "0x021375a4"
+    },
+    {
       "name": ".bss",
       "start": "0x02137898",
       "end": "0x02137940"
@@ -171,7 +176,43 @@
       "evidence": "per-variant collision handles"
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov095_0213757c",
+      "address": "0x0213757c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state descriptor, StateMoveUp"
+    },
+    {
+      "symbol": "data_ov095_02137584",
+      "address": "0x02137584",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state descriptor, StateMoveDown"
+    },
+    {
+      "symbol": "data_ov095_0213758c",
+      "address": "0x0213758c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state descriptor, StateStop"
+    },
+    {
+      "symbol": "data_ov095_02137594",
+      "address": "0x02137594",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state descriptor, StateWait"
+    },
+    {
+      "symbol": "data_ov095_0213759c",
+      "address": "0x0213759c",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "state descriptor, StateStopAtBottom"
+    }
+  ],
   "bss": [
     {
       "symbol": "gThLiftModelFile",
@@ -387,6 +428,13 @@
           "section": ".ctor",
           "start": "0x021373b8",
           "end": "0x021373bc",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0213757c",
+          "end": "0x021375a4",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -680,32 +728,57 @@
     {
       "from": "@671",
       "to": "@100",
-      "evidence": "mwcc numbers this registration node @744 per TU and the fleet already defines a global @744, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @730 to @661 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @661 to @663 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @668 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @671 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. mwcc numbers this registration node @744 per TU and the fleet already defines a global @744, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @730 to @661 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@672",
       "to": "@101",
-      "evidence": "mwcc numbers this registration node @745 per TU and the fleet already defines a global @745, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @731 to @662 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @662 to @664 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @669 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @672 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. mwcc numbers this registration node @745 per TU and the fleet already defines a global @745, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @731 to @662 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@673",
       "to": "@102",
-      "evidence": "mwcc numbers this registration node @746 per TU and the fleet already defines a global @746, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @732 to @663 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @663 to @665 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @670 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @673 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. mwcc numbers this registration node @746 per TU and the fleet already defines a global @746, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @732 to @663 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@674",
       "to": "@103",
-      "evidence": "mwcc numbers this registration node @747 per TU and the fleet already defines a global @747, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @733 to @664 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @664 to @666 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @671 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @674 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. mwcc numbers this registration node @747 per TU and the fleet already defines a global @747, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @733 to @664 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@675",
       "to": "@104",
-      "evidence": "mwcc numbers this registration node @748 per TU and the fleet already defines a global @748, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @734 to @665 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @665 to @667 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @672 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @675 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. mwcc numbers this registration node @748 per TU and the fleet already defines a global @748, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @734 to @665 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
     },
     {
       "from": "@676",
       "to": "@105",
-      "evidence": "mwcc numbers this registration node @749 per TU and the fleet already defines a global @749, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @735 to @666 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @666 to @668 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @673 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @676 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. mwcc numbers this registration node @749 per TU and the fleet already defines a global @749, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @735 to @666 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object)."
+    },
+    {
+      "from": "@678",
+      "to": "data_ov095_02137594",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {StateWait, 0}; retail word at 0x02137594 is 0x02136368"
+    },
+    {
+      "from": "@680",
+      "to": "data_ov095_0213757c",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {StateMoveUp, 0}; retail word at 0x0213757c is 0x02136298"
+    },
+    {
+      "from": "@682",
+      "to": "data_ov095_02137584",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {StateMoveDown, 0}; retail word at 0x02137584 is 0x02136178"
+    },
+    {
+      "from": "@684",
+      "to": "data_ov095_0213758c",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {StateStop, 0}; retail word at 0x0213758c is 0x02136090"
+    },
+    {
+      "from": "@686",
+      "to": "data_ov095_0213759c",
+      "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler PMF literal {StateStopAtBottom, 0}; retail word at 0x0213759c is 0x02136104"
     }
   ],
   "symbol_binding_rewrites": [
@@ -756,6 +829,36 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x021378f8"
+    },
+    {
+      "symbol": "data_ov095_0213757c",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF record is a configured relocation destination"
+    },
+    {
+      "symbol": "data_ov095_02137584",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF record is a configured relocation destination"
+    },
+    {
+      "symbol": "data_ov095_0213758c",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF record is a configured relocation destination"
+    },
+    {
+      "symbol": "data_ov095_02137594",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF record is a configured relocation destination"
+    },
+    {
+      "symbol": "data_ov095_0213759c",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local PMF record is a configured relocation destination"
     }
   ],
   "relocations": [
@@ -1148,6 +1251,56 @@
       "addend": 0,
       "target_module": "ov095",
       "target_address": "0x0213759c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213757c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daUdlift_c11StateMoveUpEv",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x02136298"
+    },
+    {
+      "section": ".data",
+      "source": "0x02137584",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daUdlift_c13StateMoveDownEv",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x02136178"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213758c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daUdlift_c9StateStopEv",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x02136090"
+    },
+    {
+      "section": ".data",
+      "source": "0x02137594",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daUdlift_c9StateWaitEv",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x02136368"
+    },
+    {
+      "section": ".data",
+      "source": "0x0213759c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10daUdlift_c17StateStopAtBottomEv",
+      "addend": 0,
+      "target_module": "ov095",
+      "target_address": "0x02136104"
     }
   ]
 }

@@ -46,7 +46,7 @@
 #include "nitro/mi/memory.h"
 #include "nitro/gx/gx_load.h"
 
-extern u8  data_0209e660;    /* sub-OAM suppress flag / single-buffer select */
+extern u8 data_0209e660[]; /* sub-OAM suppress flag / single-buffer select */
 extern int data_0209e67c[];
 extern int data_0209e694[];
 extern const unsigned char data_020755a0[12]; /* OBJ width, stride 4 */
@@ -200,7 +200,7 @@ void OAM::Render(bool sub, struct OamAttr *attr_, int xOff, int yOff, int palett
     int x;
     int om;
 
-    if (!sub || data_0209e660 == 1) {
+    if (!sub || data_0209e660[0] == 1) {
         pCount = &objCountMain;
         dst = bufferMain + *pCount;
         pAff = &curAffineSetMain;
@@ -410,7 +410,7 @@ OamAttr *OAM::Render(bool draw, OamAttr *obj_, int px, int py, int pal, int prio
     Matrix2x2 mtx;
     scale = scale0;
     rot = rot0;
-    if ((!draw) || (data_0209e660 == 1)) {
+    if ((!draw) || (data_0209e660[0] == 1)) {
         counter = &objCountMain;
         cnt = *counter;
         if (cnt >= 128) {
@@ -571,7 +571,7 @@ void OAM::Render(bool draw, OamAttr *obj_, int px, int py, int pal, int prio, Ma
     int x;
     int y;
 
-    if (!draw || data_0209e660 == 1) {
+    if (!draw || data_0209e660[0] == 1) {
         counter = &objCountMain;
         cnt = *counter;
         if (cnt >= 128)
@@ -672,7 +672,7 @@ void OAM::Render(bool draw, OamAttr *obj_, int px, int py, int pal, int prio, Ma
  * 0x02021788  size 0xdc */
 void OAM::Reset() {
     int i;
-    if (data_0209e660 != 0) {
+    if (data_0209e660[0] != 0) {
         for (i = 0; i < 128; i++) {
             bufferMain[i].attr01 = 0xc0;
             bufferMain[i].attr2 = 0;
@@ -712,7 +712,7 @@ void OAM::Load()
      * otherwise the two buffers swap roles with the display select (POWCNT1
      * bit 15: which engine drives the top screen), so each engine gets the
      * buffer assembled for the screen it is currently on. */
-    if (data_0209e660) {
+    if (data_0209e660[0]) {
         GX_LoadOAM(bufferMain, 0, 0x400);
         return;
     }
@@ -759,6 +759,10 @@ u32 OAM::EnableSubOAM(OamTmp *tmp) {
      * slot; this body does not read it. The u32 return is a fiction
      * the ROM does not honour: the function falls off its end without
      * setting r0. The `(long) 0` cast is preserved verbatim. */
-    data_0209e660 = 0;
+    data_0209e660[0] = (long)0;
 }
 
+/* The OAM state: the sub-OAM suppress flag, the fill/affine counters and the
+   main/sub staging buffers the render path writes. One object so the
+   configured labels inside the run keep their symbols.txt addresses. */
+u8 data_0209e660[0xb78];

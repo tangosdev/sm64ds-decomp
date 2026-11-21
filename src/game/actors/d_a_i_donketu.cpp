@@ -18,9 +18,8 @@
  *   the compiler moves the address out of r0 (5 words differ).
  *
  * Notes:
- * - The TU is one `complete` delinks span claiming .text only, so the
- *   file-table handle data_ov027_021138f4 and g_profile_ICE_DONKETU stay
- *   outside it.
+ * - The TU claims .text and the .data resource block data_ov027_021138f4;
+ *   g_profile_ICE_DONKETU stays outside it.
  * - TurnTowardPlayer (run) and func_ov064_0211616c (death) are daOts_c
  *   workers in ov064; they keep their labels with that class.
  * - D1/D0 are not written here: the inline destructor in the header
@@ -170,3 +169,17 @@ IDonketuAnimationFileHandle gIceDonketuDeadAnimationFile(ASSET_ICE_DONKETU_DEAD_
 IDonketuAnimationFileHandle gIceDonketuHitAnimationFile(ASSET_ICE_DONKETU_HIT_BCA);
 IDonketuAnimationFileHandle gIceDonketuTurnAnimationFile(ASSET_ICE_DONKETU_TURN_BCA);
 IDonketuAnimationFileHandle gIceDonketuWalkAnimationFile(ASSET_ICE_DONKETU_WALK_BCA);
+
+/* The Chill Bully's resource block mFileTable points at. */
+BullyResourceConfig data_ov027_021138f4 = {
+    {&gIceDonketuModelFile, &gIceDonketuDeadAnimationFile, &gIceDonketuHitAnimationFile,
+     &gIceDonketuTurnAnimationFile, &gIceDonketuWalkAnimationFile},
+    0x5a000,
+    0xaa000,
+    0x2800,
+    0,
+    0x78000,
+    0xa0000,
+    0x5000,
+    121,
+};
