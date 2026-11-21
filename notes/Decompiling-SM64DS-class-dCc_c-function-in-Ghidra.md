@@ -169,3 +169,152 @@ Now turns into:
 All instances of `other` were unaffected, and now we can properly rename `pdVar10`, it's own entity|variable, to `nextCollider`, and the decompiled code will match the IDE source code.
 
 ![Ghidra-nextCollider-rename-var-retype](images/Ghidra-nextCollider-rename-var-retype.png)
+
+## Setting up structs from `TrmpFx_ClearAll` for showing edge cases
+
+Let's take a look at the `TrmpFx_ClearAll` function, formerly `func_ov006_02120ca0`, which is located in the `src\minigames\d_s_mg_trampoline.cpp` file. The function is defined as follows in IDE source code:
+
+```cpp
+/* .c-derived member: C linkage for the whole block */
+void TrmpFx_ClearAll(void) {
+    int i;
+    for (i = 0; i < sTrmpFxCount; i++) {
+        sTrmpFxPool[i].active = 0;
+    }
+    sTrmpFxList = 0;
+}
+```
+
+In Ghidra, the listing view disassembly for this function is as follows:
+
+```arm
+                         *******************************************************
+                         *                      FUNCTION                       *
+                         *******************************************************
+                         void __stdcall TrmpFx_ClearAll(void)
+           void            <VOID>       <RETURN>
+           int             lr:4         i                                  XREF[1]:   arm9_ov006::02
+           undefined4      Stack[-0x4]  local_4                            XREF[1]:   arm9_ov006::02
+                         /* .c-derived member: C linkage for the whole block */
+                         TrmpFx_ClearAll                           XREF[2]:   StartRound:021220c0(c), 
+                                                                               func_ov006_021242cc:02124364
+    arm9_ov006::02120ca0 00 40 2d      stmdb     sp!,{lr}
+               e9
+    arm9_ov006::02120ca4 04 d0 4d      sub       sp,sp,#0x4
+               e2
+    arm9_ov006::02120ca8 50 10 9f      ldr       r1,[->sTrmpFxCount]                        ; = 02142F70h
+               e5
+    arm9_ov006::02120cac 00 e0 a0      mov       lr,#0x0
+               e3
+    arm9_ov006::02120cb0 00 00 91      ldr       r0,[r1,#0x0]=>DAT_02142f70
+               e5
+    arm9_ov006::02120cb4 00 00 50      cmp       r0,#0x0
+               e3
+    arm9_ov006::02120cb8 0a 00 00      ble       LAB_arm9_ov006__02120ce8
+               da
+    arm9_ov006::02120cbc 40 00 9f      ldr       r0,[->sTrmpFxPool]                         ; = 02142F68h
+               e5
+    arm9_ov006::02120cc0 0e c0 a0      mov       r12,lr
+               e1
+    arm9_ov006::02120cc4 0e 30 a0      mov       r3,lr
+               e1
+                         LAB_arm9_ov006__02120cc8                  XREF[1]:   arm9_ov006::02120ce4(j)  
+    arm9_ov006::02120cc8 00 20 90      ldr       r2,[r0,#0x0]=>DAT_02142f68
+               e5
+    arm9_ov006::02120ccc 01 e0 8e      add       lr,lr,#0x1
+               e2
+    arm9_ov006::02120cd0 0c 20 82      add       r2,r2,r12
+               e0
+    arm9_ov006::02120cd4 b0 32 c2      strh      r3,[r2,#0x20]
+               e1
+    arm9_ov006::02120cd8 00 20 91      ldr       r2,[r1,#0x0]=>DAT_02142f70
+               e5
+    arm9_ov006::02120cdc 24 c0 8c      add       r12,r12,#0x24
+               e2
+    arm9_ov006::02120ce0 02 00 5e      cmp       lr,r2
+               e1
+    arm9_ov006::02120ce4 f7 ff ff      blt       LAB_arm9_ov006__02120cc8
+               ba
+                         LAB_arm9_ov006__02120ce8                  XREF[1]:   arm9_ov006::02120cb8(j)  
+    arm9_ov006::02120ce8 18 00 9f      ldr       r0=>DAT_02142f64,[->sTrmpFxList]           ; = 02142F64h
+               e5
+    arm9_ov006::02120cec 00 10 a0      mov       r1,#0x0
+               e3
+    arm9_ov006::02120cf0 00 10 80      str       r1,[r0,#0x0]=>DAT_02142f64
+               e5
+    arm9_ov006::02120cf4 04 d0 8d      add       sp,sp,#0x4
+               e2
+    arm9_ov006::02120cf8 00 40 bd      ldmia     sp!,{lr}=>local_4
+               e8
+    arm9_ov006::02120cfc 1e ff 2f      bx        lr
+               e1
+                         DAT_arm9_ov006__02120d00                  XREF[1]:   TrmpFx_ClearAll:02120ca8(R)  
+    arm9_ov006::02120d00 70 2f 14      undefined   sTrmpFxCount                               ; = ??
+               02
+                         DAT_arm9_ov006__02120d04                  XREF[1]:   TrmpFx_ClearAll:02120cbc(R)  
+    arm9_ov006::02120d04 68 2f 14      undefined   sTrmpFxPool                                ; = ??
+               02
+                         DAT_arm9_ov006__02120d08                  XREF[1]:   TrmpFx_ClearAll:02120ce8(R)  
+    arm9_ov006::02120d08 64 2f 14      undefined   sTrmpFxList                                ; = ??
+               02
+```
+![Ghidra-TrmpFx_ClearAll-Listing-red-data](images/Ghidra-TrmpFx_ClearAll-Listing-red-data.png)
+
+The decompiled code for `TrmpFx_ClearAll` in Ghidra is as follows:
+
+```cpp
+void TrmpFx_ClearAll(void) {
+  int iVar1;
+  int i;
+  
+                    // /* .c-derived member: C linkage for the whole block */
+  i = 0;
+  if (0 < _DAT_02142f70) {
+    iVar1 = 0;
+    do {
+      i += 1;
+      *(undefined2 *)(_DAT_02142f68 + iVar1 + 0x20) = 0;
+      iVar1 += 0x24;
+    } while (i < _DAT_02142f70);
+  }
+  _DAT_02142f64 = 0;
+  return;
+}
+```
+![Ghidra-TrmpFx_ClearAll_decompiler-view](images/Ghidra-TrmpFx_ClearAll_decompiler-view.png)
+
+Looking with more attention, at the listing view image, we can see that the `.bss` *initialized memory* references for `sTrmpFxCount`, `sTrmpFxPool`, and `sTrmpFxList` are red. Something's wrong. When double-clicking on the red references, for example, `=>DAT_02142f70`, a warning:
+
+```text
+Address not found in program's memory: 02142f70
+```
+```arm
+    arm9_ov006::02120cb0 00 00 91      ldr       r0,[r1,#0x0]=>DAT_02142f70
+               e5
+```
+
+Let's go and select the region of the red text, right-click, hover over `References`, and select `Add/Edit...` or press `R`.
+
+![Ghidra-Fix-Red-DAT_02142f70_menus](images/Ghidra-Fix-Red-DAT_02142f70_menus.png)
+
+This window appears:
+
+![Ghidra-Fix-Red-ov006-DAT_Reference-Editor](images/Ghidra-Fix-Red-ov006-DAT_Reference-Editor.png)
+
+We can double click the label, and another sub-window appears, where the problem can be spotted:
+
+![Ghidra-Advanced-Reference-Editor-fix-ov006-DAT](images/Ghidra-Advanced-Reference-Editor-fix-ov006-DAT.png)
+
+The `Address` field is set to `02142f70`, which is correct, however, the main way of accessing the `.bss` section is through the `arm9_ov006.bss` segment, not through `ram:02142f70`. We can change it to `arm9_ov006.bss`, and click `OK`. The red text should disappear, and the decompiled code will now show the correct references to the `.bss` section.
+
+![Ghidra-TrmpFx_ClearAll_bss-sTrmpFxCount-fixed](images/Ghidra-TrmpFx_ClearAll_bss-sTrmpFxCount-fixed.png)
+
+In the decompiled view, we can rename the globals `sTrmpFxCount`, `sTrmpFxPool`, and `sTrmpFxList` to their correct names, and the decompiled code will get closer to the IDE source code:
+
+```text
+_DAT_02142f70 -> sTrmpFxCount
+_DAT_02142f68 -> sTrmpFxPool
+_DAT_02142f64 -> sTrmpFxList
+```
+
+![Ghidra-Decompiler-View-TrmpFx_ClearAll-Globals-Rename](images/Ghidra-Decompiler-View-TrmpFx_ClearAll-Globals-Rename.png)

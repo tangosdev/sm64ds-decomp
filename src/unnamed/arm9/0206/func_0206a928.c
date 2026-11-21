@@ -54,7 +54,7 @@ struct Stream {
 
 extern u16 data_0209a0a0[][9];
 extern u16 data_0209a130[];
-extern const char data_02086894[8];
+extern const char data_02086894[12];
 
 extern int func_0206ca44(const char *s);
 extern void func_0206c9f4(struct Stream *s, unsigned int n);
@@ -615,7 +615,8 @@ void func_0206a928(struct Stream *ctx, const char *fmt, int **ap) {
         ctx->fn(ctx, buf, nbuf);
 }
 
-/* The printf %s fallback for a null argument. The '0' pad at +8 is data_0208689c. */
-const char data_02086894[8] = {
-    '(', 'n', 'u', 'l', 'l', ')', 0, 0,
+/* The printf %s fallback for a null argument, then the single-character
+   zero string the float conversions pad with, at +8. */
+const char data_02086894[12] = {
+    '(', 'n', 'u', 'l', 'l', ')', 0, 0, '0', 0, 0, 0,
 };

@@ -29,7 +29,7 @@
     },
     {
       "name": ".rodata",
-      "start": "0x02112b2c",
+      "start": "0x021129a0",
       "end": "0x02112b38"
     },
     {
@@ -150,6 +150,13 @@
     }
   ],
   "rodata": [
+    {
+      "symbol": "data_ov029_021129a0",
+      "address": "0x021129a0",
+      "size": "0x18c",
+      "binding": "STB_GLOBAL",
+      "evidence": "texture-animation keys the water's BTA_File points at"
+    },
     {
       "symbol": "data_ov029_02112b2c",
       "address": "0x02112b2c",
@@ -403,6 +410,16 @@
       "addend": 0,
       "target_module": "ov029",
       "target_address": "0x021129a4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021129a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov029_02112ec0",
+      "addend": 0,
+      "target_module": "ov029",
+      "target_address": "0x02112ec0"
     }
   ],
   "notes": [
@@ -530,7 +547,7 @@
         },
         {
           "section": ".rodata",
-          "start": "0x02112b2c",
+          "start": "0x021129a0",
           "end": "0x02112b38",
           "differingBytes": 0,
           "firstDiff": null

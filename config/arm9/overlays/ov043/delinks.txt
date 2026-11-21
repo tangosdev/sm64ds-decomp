@@ -15,7 +15,7 @@
     .data.clps3 start:0x02111c60 end:0x02111c78 kind:data align:4
     .data.gap4 start:0x02111c78 end:0x02111c80 kind:data align:4
     .data.clps4 start:0x02111c80 end:0x02111c98 kind:data align:4
-    .data        start:0x02111c98 end:0x021125e0 kind:data align:4
+    .data start:0x02111c98 end:0x021125e0 kind:data align:4
     .bss        start:0x021125e0 end:0x02112720 kind:bss align:32
 src/game/actors/d_a_obj_km1_ukishima.cpp:
     complete
@@ -58,37 +58,4 @@ src/game/actors/d_a_obj_km1_dorifu.cpp:
 
 src/unnamed/ov043/data_ov043_02111ca0.c:
     complete
-    .data start:0x02111ca0 end:0x02111fc0
-
-src/unnamed/ov043/data_ov043_02111fc0.c:
-    complete
-    .data start:0x02111fc0 end:0x0211208c
-
-src/unnamed/ov043/data_ov043_0211208c.c:
-    complete
-    .data start:0x0211208c end:0x021120bc
-
-src/unnamed/ov043/data_ov043_021120bc.c:
-    complete
-    .data start:0x021120bc end:0x021120f8
-
-src/unnamed/ov043/data_ov043_021120f8.c:
-    complete
-    .data start:0x021120f8 end:0x02112138
-
-src/unnamed/ov043/data_ov043_02112138.c:
-    complete
-    .data start:0x02112138 end:0x021121b8
-
-src/unnamed/ov043/data_ov043_021121b8.c:
-    complete
-    .data start:0x021121b8 end:0x021121dc
-
-src/unnamed/ov043/data_ov043_021121dc.c:
-    complete
-    .data start:0x021121dc end:0x02112258
-
-src/unnamed/ov043/data_ov043_02112258.c:
-    complete
-    .data start:0x02112258 end:0x02112270
-
+    .data start:0x02111ca0 end:0x02112270

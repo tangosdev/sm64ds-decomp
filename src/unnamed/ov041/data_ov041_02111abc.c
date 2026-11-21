@@ -1,9 +1,0 @@
-#include "types.h"
-
-u32 data_ov041_02111abc[6] = {
-    0xfb260068, 0x00000000, 0xffff0000, 0xfe8500f7, 0xf4da0083, 0x00000000,
-};
-
-u32 data_ov041_02111ad4[8] = {
-    0xffff0000, 0xfede00fe, 0xe96f015c, 0x00000000, 0x10040000, 0x019000fe, 0xf8f8006c, 0x00000000,
-};

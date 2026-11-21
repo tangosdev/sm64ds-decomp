@@ -1,126 +1,19 @@
     .text       start:0x021111a0 end:0x0211203c kind:code align:32
     .init       start:0x0211203c end:0x0211219c kind:code align:4
     .ctor       start:0x0211219c end:0x021121a8 kind:rodata align:4
-    .data.data_ov010_021121c0 start:0x021121c0 end:0x021122f8 kind:data align:32
+    .data.c1TrapClpsPre start:0x021121c0 end:0x021122f8 kind:data align:32
     .data.c1TrapClps start:0x021122f8 end:0x02112310 kind:data align:4
-    .data        start:0x02112310 end:0x02112d00 kind:data align:4
+    .data       start:0x02112310 end:0x02112d00 kind:data align:4
     .bss        start:0x02112d00 end:0x02112d80 kind:bss align:32
-src/unnamed/ov010/data_ov010_021121c0.c:
-    complete
-    .data.data_ov010_021121c0 start:0x021121c0 end:0x021121cc
-
-src/unnamed/ov010/data_ov010_021121cc.c:
-    complete
-    .data.data_ov010_021121c0 start:0x021121cc end:0x021121f4
-
-src/unnamed/ov010/data_ov010_021121f4.c:
-    complete
-    .data.data_ov010_021121c0 start:0x021121f4 end:0x021121fc
-
-src/unnamed/ov010/data_ov010_021121fc.c:
-    complete
-    .data.data_ov010_021121c0 start:0x021121fc end:0x0211223c
-
-src/unnamed/ov010/data_ov010_0211223c.c:
-    complete
-    .data.data_ov010_021121c0 start:0x0211223c end:0x02112258
-
-src/unnamed/ov010/data_ov010_02112258.c:
-    complete
-    .data.data_ov010_021121c0 start:0x02112258 end:0x02112278
-
-src/unnamed/ov010/data_ov010_02112278.c:
-    complete
-    .data.data_ov010_021121c0 start:0x02112278 end:0x02112288
-
-src/unnamed/ov010/data_ov010_02112288.c:
-    complete
-    .data.data_ov010_021121c0 start:0x02112288 end:0x02112294
-
-src/unnamed/ov010/data_ov010_02112294.c:
-    complete
-    .data.data_ov010_021121c0 start:0x02112294 end:0x021122d8
-
-src/unnamed/ov010/data_ov010_021122d8.c:
-    complete
-    .data.data_ov010_021121c0 start:0x021122d8 end:0x021122f8
-
-src/unnamed/ov010/data_ov010_02112318.c:
-    complete
-    .data start:0x02112318 end:0x02112358
-
-src/unnamed/ov010/data_ov010_02112358.c:
-    complete
-    .data start:0x02112358 end:0x021123d8
-
-src/unnamed/ov010/data_ov010_021123d8.c:
-    complete
-    .data start:0x021123d8 end:0x021123f4
-
-src/unnamed/ov010/data_ov010_02112404.c:
-    complete
-    .data start:0x02112404 end:0x0211241c
-
-src/unnamed/ov010/data_ov010_0211241c.c:
-    complete
-    .data start:0x0211241c end:0x02112434
-
-src/unnamed/ov010/data_ov010_02112434.c:
-    complete
-    .data start:0x02112434 end:0x02112464
-
-src/unnamed/ov010/data_ov010_02112464.c:
-    complete
-    .data start:0x02112464 end:0x02112494
-
-src/unnamed/ov010/data_ov010_02112494.c:
-    complete
-    .data start:0x02112494 end:0x021124ac
-
-src/unnamed/ov010/data_ov010_021124c0.c:
-    complete
-    .data start:0x021124c0 end:0x021124ec
-
-src/unnamed/ov010/data_ov010_021124ec.c:
-    complete
-    .data start:0x021124ec end:0x021124f8
-
-src/unnamed/ov010/data_ov010_021124f8.c:
-    complete
-    .data start:0x021124f8 end:0x02112520
-
-src/unnamed/ov010/data_ov010_02112520.c:
-    complete
-    .data start:0x02112520 end:0x02112570
-
-src/unnamed/ov010/data_ov010_02112570.c:
-    complete
-    .data start:0x02112570 end:0x02112590
-
-src/unnamed/ov010/data_ov010_02112590.c:
-    complete
-    .data start:0x02112590 end:0x02112610
-
-src/unnamed/ov010/data_ov010_02112610.c:
-    complete
-    .data start:0x02112610 end:0x02112948
-
-src/unnamed/ov010/data_ov010_02112948.c:
-    complete
-    .data start:0x02112948 end:0x02112a6c
-
-src/unnamed/ov010/data_ov010_02112a6c.c:
-    complete
-    .data start:0x02112a6c end:0x02112a78
-
 src/game/actors/d_a_obj_c1_trap.cpp:
     complete
     .text start:0x021111a0 end:0x021119d0
     .init start:0x0211203c end:0x0211211c
     .ctor start:0x0211219c end:0x021121a0
-    .data start:0x02112a78 end:0x02112b64
+    .data start:0x02112318 end:0x02112b64
     .bss start:0x02112d00 end:0x02112d50
     .data.c1TrapClps start:0x021122f8 end:0x02112310
+    .data.c1TrapClpsPre start:0x021121c0 end:0x021122f8
 
 src/game/actors/d_a_obj_c1_hikari.cpp:
     complete
@@ -137,5 +30,3 @@ src/game/actors/d_a_obj_c1_peach.cpp:
     .ctor start:0x021121a4 end:0x021121a8
     .bss start:0x02112d64 end:0x02112d80
     .data start:0x02112c24 end:0x02112d00
-
-

@@ -41,7 +41,7 @@ struct daChoro_Rock_c : dEnemyBase_c {
     virtual s32 InitResources();
     virtual s32 Render();
 
-    void func_ov080_02124418();
+    void UpdateModelMatrix(); /* 0x02124418 -- same body as daChoropu_c's, on mModel */
 };
 
 #ifndef SM64DS_PLATFORM_PC

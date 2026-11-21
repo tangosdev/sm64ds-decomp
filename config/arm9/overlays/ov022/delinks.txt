@@ -1,179 +1,18 @@
     .text       start:0x021111a0 end:0x02112950 kind:code align:32
-    .rodata      start:0x02112950 end:0x02112ca8 kind:rodata align:4
+    .rodata.data_ov022_02112950 start:0x02112950 end:0x02112c98 kind:rodata align:4
+    .rodata     start:0x02112c98 end:0x02112ca8 kind:rodata align:4
     .init       start:0x02112ca8 end:0x021130f8 kind:code align:4
     .ctor       start:0x021130f8 end:0x02113120 kind:rodata align:4
-    .data        start:0x02113140 end:0x02114500 kind:data align:32
+    .data.data_ov022_02113140 start:0x02113140 end:0x02113cd4 kind:data align:32
+    .data       start:0x02113cd4 end:0x02114500 kind:data align:4
     .bss        start:0x02114500 end:0x021146a0 kind:bss align:32
-src/unnamed/ov022/data_ov022_02112950.c:
-    complete
-    .rodata start:0x02112950 end:0x02112958
-
-src/unnamed/ov022/data_ov022_02112958.c:
-    complete
-    .rodata start:0x02112958 end:0x02112968
-
-src/unnamed/ov022/data_ov022_02112968.c:
-    complete
-    .rodata start:0x02112968 end:0x02112a6c
-
-src/unnamed/ov022/data_ov022_02112a6c.c:
-    complete
-    .rodata start:0x02112a6c end:0x02112aa4
-
-src/unnamed/ov022/data_ov022_02112aa4.c:
-    complete
-    .rodata start:0x02112aa4 end:0x02112b84
-
-src/unnamed/ov022/data_ov022_02112b84.c:
-    complete
-    .rodata start:0x02112b84 end:0x02112bdc
-
-src/unnamed/ov022/data_ov022_02112bdc.c:
-    complete
-    .rodata start:0x02112bdc end:0x02112c08
-
-src/unnamed/ov022/data_ov022_02112c08.c:
-    complete
-    .rodata start:0x02112c08 end:0x02112c44
-
-src/unnamed/ov022/data_ov022_02112c44.c:
-    complete
-    .rodata start:0x02112c44 end:0x02112c88
-
-src/unnamed/ov022/data_ov022_02112c88.c:
-    complete
-    .rodata start:0x02112c88 end:0x02112c98
-
-src/unnamed/ov022/data_ov022_02113140.c:
-    complete
-    .data start:0x02113140 end:0x02113148
-
-src/unnamed/ov022/data_ov022_02113148.c:
-    complete
-    .data start:0x02113148 end:0x02113170
-
-src/unnamed/ov022/data_ov022_02113170.c:
-    complete
-    .data start:0x02113170 end:0x02113188
-
-src/unnamed/ov022/data_ov022_02113188.c:
-    complete
-    .data start:0x02113188 end:0x021131f8
-
-src/unnamed/ov022/data_ov022_021131f8.c:
-    complete
-    .data start:0x021131f8 end:0x02113228
-
-src/unnamed/ov022/data_ov022_02113228.c:
-    complete
-    .data start:0x02113228 end:0x02113260
-
-src/unnamed/ov022/data_ov022_02113260.c:
-    complete
-    .data start:0x02113260 end:0x021132d8
-
-src/unnamed/ov022/data_ov022_021132d8.c:
-    complete
-    .data start:0x021132d8 end:0x02113318
-
-src/unnamed/ov022/data_ov022_02113318.c:
-    complete
-    .data start:0x02113318 end:0x02113344
-
-src/unnamed/ov022/data_ov022_02113344.c:
-    complete
-    .data start:0x02113344 end:0x02113518
-
-src/unnamed/ov022/data_ov022_02113518.c:
-    complete
-    .data start:0x02113518 end:0x021135d4
-
-src/unnamed/ov022/data_ov022_021135d4.c:
-    complete
-    .data start:0x021135d4 end:0x021136d4
-
-src/unnamed/ov022/data_ov022_021136d4.c:
-    complete
-    .data start:0x021136d4 end:0x021136f4
-
-src/unnamed/ov022/data_ov022_021136f4.c:
-    complete
-    .data start:0x021136f4 end:0x021137e4
-
-src/unnamed/ov022/data_ov022_021137e4.c:
-    complete
-    .data start:0x021137e4 end:0x021137f8
-
-src/unnamed/ov022/data_ov022_021137f8.c:
-    complete
-    .data start:0x021137f8 end:0x02113800
-
-src/unnamed/ov022/data_ov022_02113804.c:
-    complete
-    .data start:0x02113804 end:0x02113820
-
-src/unnamed/ov022/data_ov022_02113820.c:
-    complete
-    .data start:0x02113820 end:0x021138a8
-
-src/unnamed/ov022/data_ov022_021138a8.c:
-    complete
-    .data start:0x021138a8 end:0x021138bc
-
-src/unnamed/ov022/data_ov022_021138bc.c:
-    complete
-    .data start:0x021138bc end:0x021138f0
-
-src/unnamed/ov022/data_ov022_021138f0.c:
-    complete
-    .data start:0x021138f0 end:0x02113980
-
-src/unnamed/ov022/data_ov022_02113980.c:
-    complete
-    .data start:0x02113980 end:0x021139b0
-
-src/unnamed/ov022/data_ov022_021139b0.c:
-    complete
-    .data start:0x021139b0 end:0x021139f4
-
-src/unnamed/ov022/data_ov022_021139f4.c:
-    complete
-    .data start:0x021139f4 end:0x02113a50
-
-src/unnamed/ov022/data_ov022_02113a50.c:
-    complete
-    .data start:0x02113a50 end:0x02113aa0
-
-src/unnamed/ov022/data_ov022_02113aa0.c:
-    complete
-    .data start:0x02113aa0 end:0x02113b10
-
-src/unnamed/ov022/data_ov022_02113b10.c:
-    complete
-    .data start:0x02113b10 end:0x02113b7c
-
-src/unnamed/ov022/data_ov022_02113b7c.c:
-    complete
-    .data start:0x02113b7c end:0x02113c08
-
-src/unnamed/ov022/data_ov022_02113c08.c:
-    complete
-    .data start:0x02113c08 end:0x02113c20
-
-src/unnamed/ov022/data_ov022_02113c20.c:
-    complete
-    .data start:0x02113c20 end:0x02113cc8
-
-src/unnamed/ov022/data_ov022_02113ccc.c:
-    complete
-    .data start:0x02113ccc end:0x02113cd4
-
 src/game/actors/d_a_obj_fl_ring.cpp:
     complete
     .text start:0x021111a0 end:0x021115a8
     .init start:0x02112ca8 end:0x02112d14
     .ctor start:0x021130f8 end:0x021130fc
     .bss start:0x02114500 end:0x02114528
+    .data.data_ov022_02113140 start:0x02113140 end:0x02113cd4
     .data start:0x02113cd4 end:0x02113d98
 
 src/game/actors/d_a_obj_fl_koma_d.cpp:
@@ -243,10 +82,8 @@ src/game/actors/d_a_obj_fl_maruta.cpp:
 src/game/actors/d_a_obj_volcano_cannon.cpp:
     complete
     .text start:0x021125e0 end:0x02112950
+    .rodata.data_ov022_02112950 start:0x02112950 end:0x02112c98
     .init start:0x021130bc end:0x021130f8
     .ctor start:0x0211311c end:0x02113120
     .bss start:0x02114690 end:0x021146a0
     .data start:0x02114434 end:0x02114500
-
-
-

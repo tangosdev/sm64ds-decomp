@@ -22,8 +22,8 @@
  *
  * The func_ov063_* helpers are methods now (daTrs_c, one on daTBasket_c):
  * r0 is the object, so each one is a member of that class.
- * func_ov063_02118f24 stays free (C linkage): its receiver is the
- * ICON_TERESA marker, not the Boo. func_ov063_0211a0a8 is pure math.
+ * SpawnTrackedStar stays free (C linkage): its receiver is the
+ * ICON_TERESA marker, not the Boo. DeadbandStep is pure math.
  *
  * deslop leftovers:
  * - DropShadowRadHeight, dCcAcPos_c::Init, dCcAc_c::Init, dBgCh_Actr::Init,
@@ -446,7 +446,7 @@ void daTBasket_c::func_ov063_021169c4() {
 /* Behavior handler for variant 4 (needs 15 stars): the scripted-path Boo.
    Hidden until canAppear, then waits for the player within 0x3e8000, flies
    a fixed path and fades. */
-void daTrs_c::func_ov063_02116a1c() {
+void daTrs_c::UpdateStarGatedPathBoo() {
     Vector3 v;
     int a;
     int scale;
@@ -502,7 +502,6 @@ void daTrs_c::func_ov063_02116a1c() {
     Oscillate(1);
 }
 
-
 void daTrs_c::func_ov063_02116bf0() {
 
 }
@@ -510,7 +509,7 @@ void daTrs_c::func_ov063_02116bf0() {
 
 /* Behavior handler for variant 3: spawns TERESA children (param 0xfff1)
    while fewer than two are alive, five at most. */
-void daTrs_c::func_ov063_02116bf4() {
+void daTrs_c::UpdateChildSpawner() {
 
     unsigned char st;
 
@@ -1414,11 +1413,11 @@ void daTrs_c::UpdateBigBooDefeated() {
     if (this->mStateTimer <= 15) {
         if (this->mStateTimer == 15) {
             if (this->mDeathMode == 0) {
-                func_ov063_02118eac();
+                AwardStar();
             } else if (this->mDeathMode == 1) {
-                func_ov063_02118e5c();
+                AwardStarAndArmTrap();
             } else {
-                func_ov063_02118ea0();
+                AwardStarVeneer();
             }
 
             this->mPos.x = this->mHomePos.x;
@@ -1489,9 +1488,9 @@ void daTrs_c::SpawnKey() {
     func_02012694(0xbb, &this->mCamSpacePos);
 }
 
-void daTrs_c::func_ov063_02118e5c() {
+void daTrs_c::AwardStarAndArmTrap() {
 
-    func_ov063_02118eac();
+    AwardStar();
     unsigned int id = this->mCachedActorID;
     if (id == 0) return;
     void *actor = dActor_c::FindWithID(id);
@@ -1503,14 +1502,12 @@ void daTrs_c::func_ov063_02118e5c() {
     this->mFoundActor = 0;
 }
 
+void daTrs_c::AwardStarVeneer() {
 
-void daTrs_c::func_ov063_02118ea0() {
-
-    func_ov063_02118eac();
+    AwardStar();
 }
 
-
-void daTrs_c::func_ov063_02118eac() {
+void daTrs_c::AwardStar() {
 
     Vector3 v;
     void *p;
@@ -1527,12 +1524,12 @@ void daTrs_c::func_ov063_02118eac() {
     p = dActor_c::FindWithID(id);
     this->mFoundActor = (dActor_c *)p;
     if (this->mFoundActor != 0) {
-        (static_cast<daTrsIcon_c *>(this->mFoundActor))->func_ov063_02118f24(v);
+        (static_cast<daTrsIcon_c *>(this->mFoundActor))->SpawnTrackedStar(v);
     }
     this->mFoundActor = 0;
 }
 
-void daTrsIcon_c::func_ov063_02118f24(const Vector3 &pos) {
+void daTrsIcon_c::SpawnTrackedStar(const Vector3 &pos) {
     unsigned int val = 4;
     this->UntrackAndSpawnStar(this->mTrackStarID, this->mStarID, pos, val);
 }
@@ -2088,7 +2085,7 @@ void daTrs_c::ChaseMario(int a1, short a2, int a3) {
                 int otherY = p->mPos.y;
                 int dy = myY - otherY;
                 if ((a1 << 0xc) < dy && dy < 0x1f4000 && (this->mHomePos.y - myY) < 0xfa000) {
-                    this->mSpeed.y = this->func_ov063_0211a0a8(myY, otherY, 0xa000, 0x2000);
+                    this->mSpeed.y = this->DeadbandStep(myY, otherY, 0xa000, 0x2000);
                 }
             }
         }
@@ -2119,7 +2116,7 @@ void daTrs_c::SetVelFromPlayerVel(int a, int b) {
     this->mHorzSpeed = FX_MUL(pv, h);
 }
 
-int daTrs_c::func_ov063_0211a0a8(int a1, int a2, int a3, int a4) {
+int daTrs_c::DeadbandStep(int a1, int a2, int a3, int a4) {
     int diff = a1 - a2;
     if (diff > 0) {
         if (diff < a3) return 0;
@@ -2759,10 +2756,10 @@ int daTrs_c::Behavior()
         UpdateBoo();
         break;
     case 3:
-        func_ov063_02116bf4();
+        UpdateChildSpawner();
         break;
     case 4:
-        func_ov063_02116a1c();
+        UpdateStarGatedPathBoo();
         break;
     case 5:
         UpdateCageBoo();

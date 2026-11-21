@@ -22,7 +22,7 @@
   {
    "name": ".rodata",
    "start": "0x020868fc",
-   "end": "0x0208690c"
+   "end": "0x02086a58"
   }
  ],
  "functions": [
@@ -129,7 +129,7 @@
     {
      "section": ".rodata",
      "start": "0x020868fc",
-     "end": "0x0208690c",
+     "end": "0x02086a58",
      "differingBytes": 0,
      "firstDiff": null
     }
@@ -158,7 +158,7 @@
   {
    "symbol": "data_020868fc",
    "address": "0x020868fc",
-   "size": "0x10",
+   "size": "0x15c",
    "binding": "STB_GLOBAL",
    "evidence": "The isdoverlay.c assertion strings: the file name, one message per sanity check, and the compiler's padding between them."
   }

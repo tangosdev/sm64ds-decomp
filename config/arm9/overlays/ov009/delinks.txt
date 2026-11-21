@@ -1,14 +1,15 @@
     .text       start:0x021111a0 end:0x02112228 kind:code align:32
-    .rodata      start:0x02112228 end:0x02112458 kind:rodata align:4
+    .rodata     start:0x02112228 end:0x02112458 kind:rodata align:4
     .init       start:0x02112458 end:0x02112b34 kind:code align:4
     .ctor       start:0x02112b34 end:0x02112b44 kind:rodata align:4
-    .data.data_ov009_02112b60 start:0x02112b60 end:0x02112bc4 kind:data align:32
+    .data.gap0  start:0x02112b60 end:0x02112bc4 kind:data align:32
     .data.data_ov009_02112bc4 start:0x02112bc4 end:0x02112bdc kind:data align:4
-    .data.data_ov009_02112bdc start:0x02112bdc end:0x02112bf8 kind:data align:4
+    .data.gap1  start:0x02112bdc end:0x02112bf8 kind:data align:4
     .data.data_ov009_02112bf8 start:0x02112bf8 end:0x02112c18 kind:data align:4
     .data.gap2  start:0x02112c18 end:0x02112c38 kind:data align:4
     .data.data_ov009_02112c38 start:0x02112c38 end:0x02112c58 kind:data align:4
-    .data        start:0x02112c58 end:0x02113c20 kind:data align:4
+    .data.data_ov009_02112c58 start:0x02112c58 end:0x021138fc kind:data align:4
+    .data       start:0x021138fc end:0x02113c20 kind:data align:4
     .bss        start:0x02113c20 end:0x02113ee0 kind:bss align:32
 src/game/actors/d_a_s_bird.cpp:
     complete
@@ -26,188 +27,12 @@ src/game/actors/d_a_obj_mc_water.cpp:
     .data.data_ov009_02112bc4 start:0x02112bc4 end:0x02112bdc
     .data.gap2 start:0x02112c18 end:0x02112c38
     .data.data_ov009_02112c38 start:0x02112c38 end:0x02112c58
+    .rodata start:0x02112230 end:0x02112458
+    .data.gap0 start:0x02112b60 end:0x02112bc4
+    .data.gap1 start:0x02112bdc end:0x02112bf8
+    .data.data_ov009_02112c58 start:0x02112c58 end:0x021138fc
     .bss start:0x02113c68 end:0x02113e88
     .data start:0x021139d4 end:0x02113a98
-
-src/unnamed/ov009/data_ov009_02112230.c:
-    complete
-    .rodata start:0x02112230 end:0x02112238
-
-src/unnamed/ov009/data_ov009_02112238.c:
-    complete
-    .rodata start:0x02112238 end:0x02112254
-
-src/unnamed/ov009/data_ov009_02112254.c:
-    complete
-    .rodata start:0x02112254 end:0x02112270
-
-src/unnamed/ov009/data_ov009_02112270.c:
-    complete
-    .rodata start:0x02112270 end:0x02112294
-
-src/unnamed/ov009/data_ov009_02112294.c:
-    complete
-    .rodata start:0x02112294 end:0x021122ec
-
-src/unnamed/ov009/data_ov009_021122ec.c:
-    complete
-    .rodata start:0x021122ec end:0x02112358
-
-src/unnamed/ov009/data_ov009_02112358.c:
-    complete
-    .rodata start:0x02112358 end:0x021123e4
-
-src/unnamed/ov009/data_ov009_021123e4.c:
-    complete
-    .rodata start:0x021123e4 end:0x02112404
-
-src/unnamed/ov009/data_ov009_02112404.c:
-    complete
-    .rodata start:0x02112404 end:0x0211241c
-
-src/unnamed/ov009/data_ov009_0211241c.c:
-    complete
-    .rodata start:0x0211241c end:0x02112434
-
-src/unnamed/ov009/data_ov009_02112434.c:
-    complete
-    .rodata start:0x02112434 end:0x0211244c
-
-src/unnamed/ov009/data_ov009_0211244c.c:
-    complete
-    .rodata start:0x0211244c end:0x02112458
-
-src/unnamed/ov009/data_ov009_02112b60.c:
-    complete
-    .data.data_ov009_02112b60 start:0x02112b60 end:0x02112b6c
-
-src/unnamed/ov009/data_ov009_02112b6c.c:
-    complete
-    .data.data_ov009_02112b60 start:0x02112b6c end:0x02112b84
-
-src/unnamed/ov009/data_ov009_02112b84.c:
-    complete
-    .data.data_ov009_02112b60 start:0x02112b84 end:0x02112ba8
-
-src/unnamed/ov009/data_ov009_02112ba8.c:
-    complete
-    .data.data_ov009_02112b60 start:0x02112ba8 end:0x02112bc4
-
-src/unnamed/ov009/data_ov009_02112bdc.c:
-    complete
-    .data.data_ov009_02112bdc start:0x02112bdc end:0x02112bec
-
-src/unnamed/ov009/data_ov009_02112bec.c:
-    complete
-    .data.data_ov009_02112bdc start:0x02112bec end:0x02112bf8
-
-src/unnamed/ov009/data_ov009_02112c58.c:
-    complete
-    .data start:0x02112c58 end:0x02112c88
-
-src/unnamed/ov009/data_ov009_02112c88.c:
-    complete
-    .data start:0x02112c88 end:0x02112c9c
-
-src/unnamed/ov009/data_ov009_02112c9c.c:
-    complete
-    .data start:0x02112c9c end:0x02112cc8
-
-src/unnamed/ov009/data_ov009_02112cc8.c:
-    complete
-    .data start:0x02112cc8 end:0x02112cd0
-
-src/unnamed/ov009/data_ov009_02112cd0.c:
-    complete
-    .data start:0x02112cd0 end:0x02112d44
-
-src/unnamed/ov009/data_ov009_02112d44.c:
-    complete
-    .data start:0x02112d44 end:0x02112d84
-
-src/unnamed/ov009/data_ov009_02112d84.c:
-    complete
-    .data start:0x02112d84 end:0x02112e14
-
-src/unnamed/ov009/data_ov009_02112e14.c:
-    complete
-    .data start:0x02112e14 end:0x02112e5c
-
-src/unnamed/ov009/data_ov009_02112e5c.c:
-    complete
-    .data start:0x02112e5c end:0x02112f2c
-
-src/unnamed/ov009/data_ov009_02112f2c.c:
-    complete
-    .data start:0x02112f2c end:0x02112fd0
-
-src/unnamed/ov009/data_ov009_02112fd0.c:
-    complete
-    .data start:0x02112fd0 end:0x02112ffc
-
-src/unnamed/ov009/data_ov009_02112ffc.c:
-    complete
-    .data start:0x02112ffc end:0x021130cc
-
-src/unnamed/ov009/data_ov009_021130cc.c:
-    complete
-    .data start:0x021130cc end:0x02113214
-
-src/unnamed/ov009/data_ov009_02113214.c:
-    complete
-    .data start:0x02113214 end:0x021132ec
-
-src/unnamed/ov009/data_ov009_021132ec.c:
-    complete
-    .data start:0x021132ec end:0x021133a8
-
-src/unnamed/ov009/data_ov009_021133a8.c:
-    complete
-    .data start:0x021133a8 end:0x02113518
-
-src/unnamed/ov009/data_ov009_02113518.c:
-    complete
-    .data start:0x02113518 end:0x02113534
-
-src/unnamed/ov009/data_ov009_02113554.c:
-    complete
-    .data start:0x02113554 end:0x021135d4
-
-src/unnamed/ov009/data_ov009_021135d4.c:
-    complete
-    .data start:0x021135d4 end:0x021136d4
-
-src/unnamed/ov009/data_ov009_021136f4.c:
-    complete
-    .data start:0x021136f4 end:0x021137e4
-
-src/unnamed/ov009/data_ov009_021137e4.c:
-    complete
-    .data start:0x021137e4 end:0x021137f8
-
-src/unnamed/ov009/data_ov009_021137f8.c:
-    complete
-    .data start:0x021137f8 end:0x02113800
-
-src/unnamed/ov009/data_ov009_02113800.c:
-    complete
-    .data start:0x02113800 end:0x02113820
-
-src/unnamed/ov009/data_ov009_02113820.c:
-    complete
-    .data start:0x02113820 end:0x021138a8
-
-src/unnamed/ov009/data_ov009_021138a8.c:
-    complete
-    .data start:0x021138a8 end:0x021138bc
-
-src/unnamed/ov009/data_ov009_021138bc.c:
-    complete
-    .data start:0x021138bc end:0x021138f0
-
-src/unnamed/ov009/data_ov009_021138f0.c:
-    complete
-    .data start:0x021138f0 end:0x021138fc
 
 src/game/actors/d_a_obj_mc_metalnet.cpp:
     complete
@@ -225,5 +50,3 @@ src/game/actors/d_a_mc_flag.cpp:
     .ctor start:0x02112b40 end:0x02112b44
     .bss start:0x02113eb0 end:0x02113ee0
     .data start:0x02113b60 end:0x02113c20
-
-

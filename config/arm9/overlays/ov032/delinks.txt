@@ -1,5 +1,5 @@
     .text       start:0x021111a0 end:0x021128f0 kind:code align:32
-    .rodata      start:0x021128f0 end:0x021128f4 kind:rodata align:4
+    .rodata     start:0x021128f0 end:0x021128f4 kind:rodata align:4
     .rodata.w28f4 start:0x021128f4 end:0x021128fc kind:rodata align:4
     .rodata.tdWaterScale start:0x021128fc end:0x02112900 kind:rodata align:4
     .rodata.w2900 start:0x02112900 end:0x0211291c kind:rodata align:4
@@ -15,7 +15,7 @@
     .data.tdMid   start:0x02112f7c end:0x02112f98 kind:data align:4
     .data.tdFuta  start:0x02112f98 end:0x02112fb8 kind:data align:4
     .data.tdClps  start:0x02112fb8 end:0x02112fd0 kind:data align:4
-    .data        start:0x02112fd0 end:0x02113a40 kind:data align:4
+    .data         start:0x02112fd0 end:0x02113a40 kind:data align:4
     .bss        start:0x02113a40 end:0x02113b20 kind:bss align:32
 src/game/actors/d_a_bakubaku.cpp:
     complete
@@ -51,53 +51,4 @@ src/game/actors/d_a_obj_td_water.cpp:
 
 src/unnamed/ov032/data_ov032_02112fd0.c:
     complete
-    .data start:0x02112fd0 end:0x02112ffc
-
-src/unnamed/ov032/data_ov032_02112ffc.c:
-    complete
-    .data start:0x02112ffc end:0x021130c8
-
-src/unnamed/ov032/data_ov032_021130c8.c:
-    complete
-    .data start:0x021130c8 end:0x021130d0
-
-src/unnamed/ov032/data_ov032_021130d0.c:
-    complete
-    .data start:0x021130d0 end:0x021131c8
-
-src/unnamed/ov032/data_ov032_021131c8.c:
-    complete
-    .data start:0x021131c8 end:0x02113228
-
-src/unnamed/ov032/data_ov032_02113228.c:
-    complete
-    .data start:0x02113228 end:0x021132ec
-
-src/unnamed/ov032/data_ov032_021132ec.c:
-    complete
-    .data start:0x021132ec end:0x02113344
-
-src/unnamed/ov032/data_ov032_02113344.c:
-    complete
-    .data start:0x02113344 end:0x02113434
-
-src/unnamed/ov032/data_ov032_02113434.c:
-    complete
-    .data start:0x02113434 end:0x02113518
-
-src/unnamed/ov032/data_ov032_02113518.c:
-    complete
-    .data start:0x02113518 end:0x021135d4
-
-src/unnamed/ov032/data_ov032_021135d4.c:
-    complete
-    .data start:0x021135d4 end:0x021136d4
-
-src/unnamed/ov032/data_ov032_021136d4.c:
-    complete
-    .data start:0x021136d4 end:0x0211373c
-
-src/unnamed/ov032/data_ov032_0211373c.c:
-    complete
-    .data start:0x0211373c end:0x0211377c
-
+    .data start:0x02112fd0 end:0x0211377c

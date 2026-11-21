@@ -1,115 +1,15 @@
     .text       start:0x021111a0 end:0x021116ac kind:code align:32
-    .rodata      start:0x021116ac end:0x021116b8 kind:rodata align:4
+    .rodata     start:0x021116ac end:0x021116b8 kind:rodata align:4
     .init       start:0x021116b8 end:0x02111760 kind:code align:4
     .ctor       start:0x02111760 end:0x02111768 kind:rodata align:4
-    .data        start:0x02111780 end:0x02112280 kind:data align:32
+    .data       start:0x02111780 end:0x02112280 kind:data align:32
     .bss        start:0x02112280 end:0x021122c0 kind:bss align:32
-src/unnamed/ov013/data_ov013_02111780.c:
-    complete
-    .data start:0x02111780 end:0x0211178c
-
-src/unnamed/ov013/data_ov013_0211178c.c:
-    complete
-    .data start:0x0211178c end:0x021117ec
-
-src/unnamed/ov013/data_ov013_021117ec.c:
-    complete
-    .data start:0x021117ec end:0x02111804
-
-src/unnamed/ov013/data_ov013_02111804.c:
-    complete
-    .data start:0x02111804 end:0x02111844
-
-src/unnamed/ov013/data_ov013_02111844.c:
-    complete
-    .data start:0x02111844 end:0x021118d0
-
-src/unnamed/ov013/data_ov013_021118d0.c:
-    complete
-    .data start:0x021118d0 end:0x0211190c
-
-src/unnamed/ov013/data_ov013_0211190c.c:
-    complete
-    .data start:0x0211190c end:0x02111928
-
-src/unnamed/ov013/data_ov013_0211192c.c:
-    complete
-    .data start:0x0211192c end:0x02111960
-
-src/unnamed/ov013/data_ov013_02111960.c:
-    complete
-    .data start:0x02111960 end:0x02111a3c
-
-src/unnamed/ov013/data_ov013_02111a3c.c:
-    complete
-    .data start:0x02111a3c end:0x02111a4c
-
-src/unnamed/ov013/data_ov013_02111a4c.c:
-    complete
-    .data start:0x02111a4c end:0x02111abc
-
-src/unnamed/ov013/data_ov013_02111abc.c:
-    complete
-    .data start:0x02111abc end:0x02111ad4
-
-src/unnamed/ov013/data_ov013_02111ad4.c:
-    complete
-    .data start:0x02111ad4 end:0x02111af4
-
-src/unnamed/ov013/data_ov013_02111af4.c:
-    complete
-    .data start:0x02111af4 end:0x02111b34
-
-src/unnamed/ov013/data_ov013_02111b34.c:
-    complete
-    .data start:0x02111b34 end:0x02111b64
-
-src/unnamed/ov013/data_ov013_02111b64.c:
-    complete
-    .data start:0x02111b64 end:0x02111b6c
-
-src/unnamed/ov013/data_ov013_02111b6c.c:
-    complete
-    .data start:0x02111b6c end:0x02111b88
-
-src/unnamed/ov013/data_ov013_02111b88.c:
-    complete
-    .data start:0x02111b88 end:0x02111bd4
-
-src/unnamed/ov013/data_ov013_02111bd4.c:
-    complete
-    .data start:0x02111bd4 end:0x02111c20
-
-src/unnamed/ov013/data_ov013_02111c20.c:
-    complete
-    .data start:0x02111c20 end:0x02111cc8
-
-src/unnamed/ov013/data_ov013_02111cc8.c:
-    complete
-    .data start:0x02111cc8 end:0x02111f18
-
-src/unnamed/ov013/data_ov013_02111f18.c:
-    complete
-    .data start:0x02111f18 end:0x0211208c
-
-src/unnamed/ov013/data_ov013_0211208c.c:
-    complete
-    .data start:0x0211208c end:0x021120bc
-
-src/unnamed/ov013/data_ov013_021120bc.c:
-    complete
-    .data start:0x021120bc end:0x021120d8
-
-src/unnamed/ov013/data_ov013_021120d8.c:
-    complete
-    .data start:0x021120d8 end:0x021120e0
-
 src/game/actors/d_a_obj_clock_huriko.cpp:
     complete
     .text start:0x021111a0 end:0x021113bc
     .init start:0x021116b8 end:0x021116f8
     .ctor start:0x02111760 end:0x02111764
-    .data start:0x021120e0 end:0x021121a4
+    .data start:0x02111780 end:0x021121a4
     .bss start:0x02112280 end:0x02112294
 
 src/game/actors/d_a_obj_clock.cpp:
@@ -120,4 +20,3 @@ src/game/actors/d_a_obj_clock.cpp:
     .init start:0x021116f8 end:0x02111760
     .ctor start:0x02111764 end:0x02111768
     .bss start:0x02112294 end:0x021122c0
-
