@@ -18,7 +18,7 @@
   {
    "name": ".rodata",
    "start": "0x02086a58",
-   "end": "0x02086b60"
+   "end": "0x02086b58"
   }
  ],
  "functions": [
@@ -35,9 +35,9 @@
   {
    "symbol": "data_02086a58",
    "address": "0x02086a58",
-   "size": "0x108",
+   "size": "0x100",
    "binding": "STB_GLOBAL",
-   "evidence": "The MSL ctype map (128 u16 class masks) followed by the two-word null member-pointer sentinel __ptmf_null at 0x02086b58."
+   "evidence": "The MSL ctype map, 128 u16 class masks. __ptmf_null is the next object, in its own file."
   }
  ],
  "bss": [],
@@ -79,7 +79,7 @@
     {
      "section": ".rodata",
      "start": "0x02086a58",
-     "end": "0x02086b60",
+     "end": "0x02086b58",
      "differingBytes": 0,
      "firstDiff": null
     }

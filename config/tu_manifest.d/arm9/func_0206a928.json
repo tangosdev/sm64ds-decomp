@@ -7,7 +7,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "One function, .text 0x0206a928..0x0206bc8c, gapless in config/arm9/delinks.txt between CTRDG_Proc.cpp (CTRDG_Init at 0x0206a88c..0x0206a928) and func_0206bc8c.c (func_0206bc8c at 0x0206bc8c), and the decoder's kind:function(arm,size=0x1360) record.",
-    "The TU owns its strings: .rodata 0x02086894..0x020868a0 is one 12-byte const char array, \"(null)\\0\\0\" then \"0\\0\\0\\0\", and both reads are this TU's own."
+    "The TU owns \"(null)\" at 0x02086894..0x0208689c. The '0' pad at 0x0208689c is the next object, data_0208689c."
   ],
   "sections": [
     {
@@ -18,7 +18,7 @@
     {
       "name": ".rodata",
       "start": "0x02086894",
-      "end": "0x020868a0"
+      "end": "0x0208689c"
     }
   ],
   "functions": [
@@ -35,7 +35,7 @@
     {
       "symbol": "data_02086894",
       "address": "0x02086894",
-      "size": "0xc",
+      "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "The printf %s fallback \"(null)\" and, at +8, the one-character zero string the float conversions pad with. Both loads are this TU's own (0x0206bbb4 for \"(null)\", 0x0206bc88 for the +8 string)."
     }
@@ -79,7 +79,7 @@
         {
           "section": ".rodata",
           "start": "0x02086894",
-          "end": "0x020868a0",
+          "end": "0x0208689c",
           "differingBytes": 0,
           "firstDiff": null
         }
