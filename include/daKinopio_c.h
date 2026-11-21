@@ -94,16 +94,10 @@ struct daKinopio_c : dActor_c {
     void UpdateModelPose();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKinopio_c_State_size_must_be_0x14[
     sizeof(daKinopio_c::State) == 0x14 ? 1 : -1];
-#endif
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKinopio_c_size_must_be_0x210[
     sizeof(struct daKinopio_c) == 0x210 ? 1 : -1];
-#endif
 
 #endif /* DAKINOPIO_C_H */

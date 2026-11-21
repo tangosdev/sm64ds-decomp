@@ -50,9 +50,7 @@ typedef struct Ov007OamList {
     char pad_08[4];
 } Ov007OamList;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007OamNode_size_must_be_0x44[sizeof(Ov007OamNode) == 0x44 ? 1 : -1];
 typedef char Ov007OamList_size_must_be_0xc[sizeof(Ov007OamList) == 0xc ? 1 : -1];
-#endif
 
 #endif

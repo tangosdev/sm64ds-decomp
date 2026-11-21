@@ -86,10 +86,7 @@ struct dPathLiftActor_c : dBgActor_c {
     void BaseBehavior();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dPathLiftActor_c_size_must_be_0x450[
     sizeof(dPathLiftActor_c) == 0x450 ? 1 : -1];
-#endif
 
 #endif /* PATHLIFT_H */

@@ -95,10 +95,7 @@ struct daObjKurumajiku_c : dBgActor_c {
     int InitResourcesFrom(Resources *, unsigned int);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjKurumajiku_c_size_must_be_0x330[sizeof(daObjKurumajiku_c) == 0x330 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

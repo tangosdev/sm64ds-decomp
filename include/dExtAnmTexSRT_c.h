@@ -21,9 +21,7 @@
  * caller (daTor_c, daWater_Tatumaki_c, the ov006 users, daObjMcWater_c) passes
  * exactly those two, and the sibling veneers at 0x0201577c
  * (dExtAnmMaterial_c) and 0x0201597c (dExtAnmTexPat_c) are called the
- * same way. Declared static below: a static member mangles identically,
- * and the earlier "(this, &model, &file)" reading of this comment cost
- * the PC port a wrong-register hunt.
+ * same way. Declared static below: a static member mangles identically.
  * SetFile is a real member under its scalar mangling: speed is an fx32
  * and startFrame a u16. Measured against the ROM body, a u32 startFrame
  * adds a truncation (0x5c, not 0x54); the sibling dExtAnmTexPat_c::SetFile
@@ -48,10 +46,7 @@ struct dExtAnmTexSRT_c : dExtFrameCtrl_c {
     void SetFile(BTA_File &animFile, int flags, fx32 speed, u16 startFrame);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dExtAnmTexSRT_c_size_must_be_0x14[sizeof(dExtAnmTexSRT_c) == 0x14 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

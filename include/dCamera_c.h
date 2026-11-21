@@ -316,9 +316,6 @@ struct dCamera_c : dView_c {
     void SetFovShake(int, int, int);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Camera_size_must_be_0x1a8[sizeof(struct dCamera_c) == 0x1a8 ? 1 : -1];
-#endif
 
 #endif

@@ -64,8 +64,6 @@ typedef struct MBGameInfo {
     struct MBGameInfo *nextp; /* 0x4b4 */
 } MBGameInfo;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char MBGameInfo_size_must_be_0x4b8[sizeof(MBGameInfo) == 0x4b8 ? 1 : -1];
-#endif
 
 #endif

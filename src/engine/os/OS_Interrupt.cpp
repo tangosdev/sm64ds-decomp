@@ -12,24 +12,17 @@
  * not handled through it: their handlers live in the callback table
  * OSi_IrqCallbackInfo (DMA 0-3, then timers 0-3), which the stubs in os_irqTable.c
  * (src/engine/os/OS_IrqTable.cpp) dispatch.
- *
- * PC port: smoke_gx builds OSi_EnterDmaCallback from this file through
- * port/tools/hostgen.py, which emits the whole file. port/ntr/runtime.cpp
- * supplies the host's interrupt registry (OS_EnableIrqMask and the rest), so
- * everything except OSi_EnterDmaCallback sits under #ifndef _MSC_VER.
  */
 
 #include "nitro/os/interrupt.h"
 #include "nitro/os/thread.h"
 #include "nitro/hw/registers.h"
 
-// The DTCM queue keeps C linkage: the PC port links this file, and MSVC
-// mangles C++ data names. The tables are in nitro/os/interrupt.h.
+// The DTCM queue keeps C linkage. The tables are in nitro/os/interrupt.h.
 extern "C" {
 extern OSThreadQueue OSi_IrqThreadQueue; /* os_irqHandler.c, in DTCM */
 }
 
-#ifndef _MSC_VER
 
 // OS_InitThreadQueue(&OSi_IrqThreadQueue): this SDK's thread queue is a u16
 // mask of thread ids, so emptying it is a store of 0.
@@ -77,7 +70,6 @@ extern "C" OSIrqFunction OS_GetIrqFunction(OSIrqMask intrBit) {
     return 0;
 }
 
-#endif
 
 // Installs a DMA channel's completion callback and enables its interrupt.
 // The entry stays armed only if the channel's interrupt was already enabled.
@@ -89,7 +81,6 @@ extern "C" void OSi_EnterDmaCallback(u32 dmaNo, void (*callback)(void *), void *
     OSi_IrqCallbackInfo[dmaNo].enable = OS_EnableIrqMask(imask) & imask;
 }
 
-#ifndef _MSC_VER
 
 // Installs a timer's overflow callback and enables its interrupt. The SDK
 // indexes the entry as OSi_IrqCallbackInfo[timerNo + OSi_IRQCALLBACK_NO_TIMER0];
@@ -146,5 +137,3 @@ extern "C" OSIrqMask OS_ResetRequestIrqMask(OSIrqMask mask) {
     REG_IME = ime;
     return old;
 }
-
-#endif

@@ -39,9 +39,7 @@ struct CupFx {
     s8 cup;       /* +0x17 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char CupFx_size_must_be_0x18[sizeof(CupFx) == 0x18 ? 1 : -1];
-#endif
 
 struct dScMgCup_c : dScMgSingle3DBase_c {
     dScMgCup_c();
@@ -102,9 +100,6 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
     u8 pad_546e[2]; /* 0x546e */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgCup_c_size_must_be_0x5470[sizeof(dScMgCup_c) == 0x5470 ? 1 : -1];
-#endif
 
 #endif

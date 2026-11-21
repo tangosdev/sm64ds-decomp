@@ -45,12 +45,10 @@ typedef int BOOL;
 #define OSi_STACK_CHECKNUM_TOP 0x7bf9dd5bUL
 #define OSi_STACK_CHECKNUM_WARN 0x597dfbd9UL
 
-#ifndef SM64DS_PLATFORM_PC
 /* The ROM's layout: the idle and launcher threads sit 0x94 apart, and the
  * thread info block ends where the idle thread begins. */
 typedef char OSThread_size_must_be_0x94[sizeof(OSThread) == 0x94 ? 1 : -1];
 typedef char OSThreadInfo_size_must_be_0x54[sizeof(OSThreadInfo) == 0x54 ? 1 : -1];
-#endif
 
 extern "C" {
 

@@ -31,9 +31,7 @@ typedef struct Ov007BgLayer {
     struct Ov007BgLayer *prev; /* 0x34 */
 } Ov007BgLayer;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007BgLayer_size_must_be_0x38[sizeof(Ov007BgLayer) == 0x38 ? 1 : -1];
-#endif
 
 /* The 0x10-byte BG layer list func_ov007_020c0604 builds (the display
  * record's bgListMain/bgListSub). */

@@ -51,9 +51,7 @@ typedef struct Ov007Sprite {
     u16 *tilemap;        /* 0x84: c4684 tile map when drawFlags & 8 */
 } Ov007Sprite;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Sprite_size_must_be_0x88[sizeof(Ov007Sprite) == 0x88 ? 1 : -1];
-#endif
 
 #ifdef __cplusplus
 extern "C" {

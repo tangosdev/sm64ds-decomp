@@ -15,8 +15,6 @@ typedef struct Ov007PaletteBuf {
     u16 colors[0x20];   /* 0x04 */
 } Ov007PaletteBuf;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007PaletteBuf_size_must_be_0x44[sizeof(Ov007PaletteBuf) == 0x44 ? 1 : -1];
-#endif
 
 #endif

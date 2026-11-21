@@ -702,10 +702,6 @@
    "ref": "src/b.cpp"
   },
   {
-   "file": "tools/port_linked_functions.py",
-   "ref": "port/tools/linkage.py"
-  },
-  {
    "file": "tools/pr_linkcheck.py",
    "ref": "src/a.c"
   },

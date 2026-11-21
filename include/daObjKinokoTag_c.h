@@ -54,9 +54,6 @@ struct daObjKinokoTag_c : dActor_c {
     void TrySpawnMegaMushroom();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjKinokoTag_c_size_must_be_0x110[sizeof(daObjKinokoTag_c) == 0x110 ? 1 : -1];
-#endif
 
 #endif

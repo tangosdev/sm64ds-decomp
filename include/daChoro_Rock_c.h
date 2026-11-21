@@ -44,9 +44,6 @@ struct daChoro_Rock_c : dEnemyBase_c {
     void UpdateModelMatrix(); /* 0x02124418 -- same body as daChoropu_c's, on mModel */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daChoro_Rock_c_size_must_be_0x354[sizeof(daChoro_Rock_c) == 0x354 ? 1 : -1];
-#endif
 
 #endif /* DACHORO_ROCK_C_H */

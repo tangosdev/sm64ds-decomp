@@ -238,11 +238,9 @@ extern s32 IsStarCollected(s32 level, s32 idx);
  * one this file is bound to. The deallocation is an inline operator delete --
  * dEnemyBase_c's, reached because dEnemyBase_c is this class's IMMEDIATE base.
  */
-#ifndef _MSC_VER
 daStar_c::~daStar_c()
 {
 }
-#endif
 
 #pragma defer_codegen on
 

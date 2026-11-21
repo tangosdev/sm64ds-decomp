@@ -18,9 +18,6 @@ struct daBar_c : dActor_c {
     virtual void OnPendingDestroy();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daBar_c_size_must_be_0x108[sizeof(daBar_c) == 0x108 ? 1 : -1];
-#endif
 
 #endif /* DABAR_C_H */

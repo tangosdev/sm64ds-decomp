@@ -98,9 +98,6 @@ struct daMoray_c : dEnemyBase_c {
     void UpdatePose();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daMoray_c_size_must_be_0x4b0[sizeof(struct daMoray_c) == 0x4b0 ? 1 : -1];
-#endif
 
 #endif /* DAMORAY_C_H */

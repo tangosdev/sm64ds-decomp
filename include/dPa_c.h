@@ -249,8 +249,6 @@ struct dPa_c {
     void Update();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dPa_callback_c_size_must_be_0x4[
     sizeof(dPa_c::level_c::callback_c) == 0x4 ? 1 : -1];
 typedef char dPa_simpleCallback_c_size_must_be_0x8[
@@ -281,6 +279,5 @@ typedef char dPa_cleanParticleCallback_c_size_must_be_0x4[
 typedef char dPa_checkWaterRippleCallback_c_size_must_be_0x4[
     sizeof(dPa_c::level_c::checkWaterRippleCallback_c) == 0x4 ? 1 : -1];
 typedef char dPa_c_size_must_be_0x81c[sizeof(dPa_c) == 0x81c ? 1 : -1];
-#endif
 
 #endif

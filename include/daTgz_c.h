@@ -96,9 +96,6 @@ struct daTgz_c : dActor_c {
     void SetState(int i);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daTgz_c_size_must_be_0x3ec[sizeof(daTgz_c) == 0x3ec ? 1 : -1];
-#endif
 
 #endif /* DATGZ_C_H */

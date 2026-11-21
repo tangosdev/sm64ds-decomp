@@ -46,11 +46,8 @@ struct DorriePlatform {
     ~DorriePlatform();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char DorriePlatform_size_must_be_0x200[
     sizeof(DorriePlatform) == 0x200 ? 1 : -1];
-#endif
 
 struct daDossy_c : dActor_c {
     daDossyCap_c *mCap;         /* 0x0d4 */
@@ -136,10 +133,7 @@ struct daDossy_c : dActor_c {
     static void HeadStoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daDossy_c_size_must_be_0x11b8[
     sizeof(daDossy_c) == 0x11b8 ? 1 : -1];
-#endif
 
 #endif /* DADOSSY_C_H */

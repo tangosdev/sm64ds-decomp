@@ -21,9 +21,6 @@ struct daObjKm3_Dorifu_c : daObjDorifu_c {
     int InitResources();    /* slot  0 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjKm3_Dorifu_c_size_must_be_0xdcc[sizeof(daObjKm3_Dorifu_c) == 0xdcc ? 1 : -1];
-#endif
 
 #endif /* DAOBJKM3_DORIFU_C_H */

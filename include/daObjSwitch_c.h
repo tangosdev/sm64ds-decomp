@@ -85,9 +85,6 @@ struct daObjSwitch_c : dBgActor_c {
     void CallStateBehavior();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char StarSwitch_size_must_be_0x354[sizeof(daObjSwitch_c) == 0x354 ? 1 : -1];
-#endif
 
 #endif /* DAOBJSWITCH_C_H */

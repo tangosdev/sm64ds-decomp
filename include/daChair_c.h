@@ -66,9 +66,6 @@ struct daChair_c : dActor_c {
     void UpdateModel();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daChair_c_size_must_be_0x3a8[sizeof(daChair_c) == 0x3a8 ? 1 : -1];
-#endif
 
 #endif

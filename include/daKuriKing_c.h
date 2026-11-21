@@ -172,9 +172,6 @@ struct daKuriKing_c : dEnemyBase_c {
     Vector3 func_ov074_0212087c(int n_);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKuriKing_c_size_must_be_0x610[sizeof(daKuriKing_c) == 0x610 ? 1 : -1];
-#endif
 
 #endif /* DAKURIKING_C_H */

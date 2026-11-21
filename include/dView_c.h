@@ -33,9 +33,6 @@ struct dView_c : dBase_c {
     virtual s32 Render();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dView_c_size_must_be_0x80[sizeof(dView_c) == 0x80 ? 1 : -1];
-#endif
 
 #endif /* DVIEW_C_H */

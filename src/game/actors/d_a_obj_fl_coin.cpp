@@ -391,11 +391,9 @@ void daObjFl_Puzzle_c::SpawnCoin() {
 }
 
 /* A delete expression forces the compiler-spelled deleting destructor. */
-#ifndef _MSC_VER
 void daObjFl_Puzzle_c_EmitDeletingDestructor(daObjFl_Puzzle_c *piece) {
     delete piece;
 }
-#endif
 
 /* Force mwccarm to emit the class-body destructor as a genuine C++ D1. */
 void daObjFl_Puzzle_c_EmitDestructor(daObjFl_Puzzle_c *piece) {

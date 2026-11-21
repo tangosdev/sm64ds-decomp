@@ -76,8 +76,6 @@ struct dMgTrmpln2Mario_c : dMgTrmpRingObjAdapter_c {
                              * states drive its dExtFrameCtrl_c base and read its file */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char dMgTrmpln2Mario_c_size_must_be_0xdc[sizeof(dMgTrmpln2Mario_c) == 0xdc ? 1 : -1];
-#endif
 
 #endif

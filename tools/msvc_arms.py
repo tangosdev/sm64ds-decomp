@@ -28,7 +28,7 @@ plus their `#elif` / `#else` / `#endif`. Any other condition that mentions `_MSC
 (`#if _MSC_VER >= 1300`, one joined with `||`) is left as it is and every side of it is
 read, which is how both tools read every conditional before this module existed;
 `unresolved()` names those lines so a report can say so. Other macros are never
-evaluated: `#if 0`, `SM64DS_PLATFORM_PC` and the rest read exactly as they did.
+evaluated: `#if 0` and every other macro read exactly as they did.
 
 Dropped lines become empty lines, so line numbers stay what they are in the file.
 Directives inside comments or literals are ignored. Files with continued lines or

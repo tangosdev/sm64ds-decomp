@@ -92,10 +92,7 @@ typedef struct MbParentFile {
     u8 update; /* 0x5c3 */
 } MbParentFile;
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char MbParentFile_size_must_be_0x5c4[sizeof(MbParentFile) == 0x5c4 ? 1 : -1];
-#endif
 
 /* NitroSDK MBCommRequestData (nitro/mb.h): the entry request a child sends
  * in pieces. MBi_ReceiveRequestDataPiece assembles it into the child's row
@@ -110,9 +107,7 @@ typedef struct MBCommRequestData {
     u8 pad[3];
 } MBCommRequestData;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char MBCommRequestData_size_must_be_0x20[sizeof(MBCommRequestData) == 0x20 ? 1 : -1];
-#endif
 
 /* NitroSDK MbRequestPieceBuf (mb_block.h): each child's request, assembled
  * piece by piece, and the pieces received so far, by bit. A row is the

@@ -42,9 +42,6 @@ struct daObjSimpleLift_c : dBgActor_c {
     Vector3 mBasePos; /* 0x324 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjSimpleLift_c_size_must_be_0x330[sizeof(daObjSimpleLift_c) == 0x330 ? 1 : -1];
-#endif
 
 #endif /* DAOBJSIMPLELIFT_C_H */

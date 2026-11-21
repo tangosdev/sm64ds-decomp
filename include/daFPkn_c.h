@@ -102,9 +102,6 @@ struct daFPkn_c : dEnemyBase_c {
     int  StateInit();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daFPkn_c_size_must_be_0x22c[sizeof(daFPkn_c) == 0x22c ? 1 : -1];
-#endif
 
 #endif /* DAFPKN_C_H */

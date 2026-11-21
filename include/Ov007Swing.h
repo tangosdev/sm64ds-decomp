@@ -35,9 +35,7 @@ typedef struct Ov007SwingParams {
 #endif
 } Ov007SwingParams;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007SwingParams_size_must_be_0x30[sizeof(Ov007SwingParams) == 0x30 ? 1 : -1];
-#endif
 
 /* The 0x70-byte record func_ov007_020ca010 builds and func_ov007_020c9fa0
  * frees, one per menu item (sMeshScene[4..11]); medium-confidence
@@ -71,8 +69,6 @@ typedef struct Ov007Swing {
 #endif
 } Ov007Swing;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Swing_size_must_be_0x70[sizeof(Ov007Swing) == 0x70 ? 1 : -1];
-#endif
 
 #endif

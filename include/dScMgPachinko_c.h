@@ -68,10 +68,7 @@ struct dScMgPachinko_ball {
     u8  unk37;          /* 0x37 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgPachinko_ball_size_must_be_0x38[sizeof(struct dScMgPachinko_ball) == 0x38 ? 1 : -1];
-#endif
 
 /* One Bob-omb shot, aimed with the stylus and fired up the board: 0x38 bytes,
    48 of them at 0x4ed8 (mShot). */
@@ -103,10 +100,7 @@ struct dScMgPachinko_shot {
                            zeroed on grab and when served */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgPachinko_shot_size_must_be_0x38[sizeof(struct dScMgPachinko_shot) == 0x38 ? 1 : -1];
-#endif
 
 /* A score popup: 30 of them at 0x4cf0 (Popup_SpawnScore). */
 struct dScMgPachinko_popup {
@@ -220,7 +214,6 @@ struct dScMgPachinko_bg {
     u8  state;      /* 0x13 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char dScMgPachinko_popup_size_must_be_0xc[sizeof(dScMgPachinko_popup) == 0xc ? 1 : -1];
 typedef char dScMgPachinko_row_size_must_be_0x18[sizeof(dScMgPachinko_row) == 0x18 ? 1 : -1];
 typedef char dScMgPachinko_pipe_size_must_be_0x1c[sizeof(dScMgPachinko_pipe) == 0x1c ? 1 : -1];
@@ -228,7 +221,6 @@ typedef char dScMgPachinko_fx_size_must_be_0x14[sizeof(dScMgPachinko_fx) == 0x14
 typedef char dScMgPachinko_flyer_size_must_be_0x1c[sizeof(dScMgPachinko_flyer) == 0x1c ? 1 : -1];
 typedef char dScMgPachinko_target_size_must_be_0xc[sizeof(dScMgPachinko_target) == 0xc ? 1 : -1];
 typedef char dScMgPachinko_bg_size_must_be_0x14[sizeof(dScMgPachinko_bg) == 0x14 ? 1 : -1];
-#endif
 
 struct dScMgPachinko_c : dScMgBase_c {
     virtual ~dScMgPachinko_c();
@@ -365,9 +357,6 @@ struct dScMgPachinko_c : dScMgBase_c {
     u8 pad_5c35[0x3];
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgPachinko_c_size_must_be_0x5c38[sizeof(struct dScMgPachinko_c) == 0x5c38 ? 1 : -1];
-#endif
 
 #endif

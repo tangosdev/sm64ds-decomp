@@ -95,10 +95,7 @@ struct daSpd_c : dActor_c {
     void func_ov071_0211f0b4();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Scuttlebug_size_must_be_0x3ac[sizeof(daSpd_c) == 0x3ac ? 1 : -1];
-#endif
 
 /* OnYoshiTryEat is the key function once ~daSpd_c is inline, so d_a_spd.cpp
  * emits _ZTV7daSpd_c (compared against the cartridge and discarded by the

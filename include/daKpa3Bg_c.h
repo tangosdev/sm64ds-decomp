@@ -63,8 +63,6 @@ struct daKpa3Bg_c : dBgActor_c {
     static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char daKpa3Bg_c_size_must_be_0x32c[sizeof(daKpa3Bg_c) == 0x32c ? 1 : -1];
-#endif
 
 #endif

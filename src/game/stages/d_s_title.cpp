@@ -94,9 +94,7 @@ struct TitleLevelEntry {
     s8 levelID;
     u8 entranceID;
 };
-#ifndef SM64DS_PLATFORM_PC
 typedef char TitleLevelEntry_size_must_be_0x08[sizeof(TitleLevelEntry) == 0x08 ? 1 : -1];
-#endif
 
 /* Displayed strings retain their exact cartridge spelling. The compiler owns
  * the literal pool; the manifest binds its generated names to address labels. */

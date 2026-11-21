@@ -64,9 +64,6 @@ struct daObjPushblock_c : dBgActor_c {
     void Kill();                           /* slot 31 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char PushBlock_size_must_be_0x4f4[sizeof(daObjPushblock_c) == 0x4f4 ? 1 : -1];
-#endif
 
 #endif /* DAOBJPUSHBLOCK_C_H */

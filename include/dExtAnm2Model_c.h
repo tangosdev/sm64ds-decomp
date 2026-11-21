@@ -29,19 +29,7 @@ struct dExtAnm2Model_c : dExtAnmModel_c {
     dExtFrameCtrl_c otherAnim;       /* 0x68 - a member, built with dExtFrameCtrl_c::C1 */
 
     /* --- vtable order. Do not reorder. --- */
-    /* The destructor pair spelled as two plain virtuals on the host, plus the
-       non-virtual destructor declaration the src/ definitions need; the whole
-       ruling is in include/dExtModel_c.h. Nothing is declared after it here, so
-       this class has no skew of its own -- but an override must still carry
-       the SAME TWO NAMES its base declares, or slots 0 and 1 of the primary
-       table would be a fresh pair appended past Virtual18 instead. */
-#ifdef _MSC_VER
-    virtual void Destructor1();                /* slot 0 (D1) */
-    virtual void Destructor0();                /* slot 1 (D0) */
-    ~dExtAnm2Model_c();                        /* no slot */
-#else
     virtual ~dExtAnm2Model_c(); /* slots 0 (D1), 1 (D0) */
-#endif
 
     /* DECLARED, defined out of line in src/engine/model/d_ext_model.cpp as real
      * C++ -- complete-object context, hence C1. Init list `: otherFile(0)`
@@ -56,10 +44,7 @@ struct dExtAnm2Model_c : dExtAnmModel_c {
     void Func_020162C4(BCA_File *animFile, int flags, fx32 speed, u16 startFrame);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dExtAnm2Model_c_size_must_be_0x78[sizeof(dExtAnm2Model_c) == 0x78 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

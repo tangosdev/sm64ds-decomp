@@ -93,10 +93,7 @@ struct BooFlags16 {
         groundSeen:1, hitByParam3Player:1, defeated:1, mirrored:1,
         soundStarted:1, camHeld:1;
 };
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BooFlags16_size_must_be_0x2[sizeof(BooFlags16) == 0x2 ? 1 : -1];
-#endif
 
 struct daTrs_c : dCapEnemy_c {
     /* A count, kept on a Big Boo: each Boo that reports to it (mBigBooID)
@@ -396,9 +393,6 @@ struct daTrs_c : dCapEnemy_c {
     void Stop();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daTrs_c_size_must_be_0x5e0[sizeof(daTrs_c) == 0x5e0 ? 1 : -1];
-#endif
 
 #endif

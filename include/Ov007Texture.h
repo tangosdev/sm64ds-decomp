@@ -30,8 +30,6 @@ typedef struct Ov007Texture {
 #endif
 } Ov007Texture;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Texture_size_must_be_0x2c[sizeof(Ov007Texture) == 0x2c ? 1 : -1];
-#endif
 
 #endif

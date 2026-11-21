@@ -38,11 +38,9 @@ struct TreeNd {
     TreeNd *func_0203b358();
 };
 
-#ifndef SM64DS_PLATFORM_PC
 /* Five words: parent, child, prev, next, owner. fBase_c.h asserts the whole
    0x50 actor root; this pins the nested node itself. */
 typedef char SceneNode_size_must_be_0x14[sizeof(fBase_c::SceneNode) == 0x14 ? 1 : -1];
-#endif
 
 fBase_c::SceneNode::SceneNode()
 {

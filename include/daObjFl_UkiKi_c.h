@@ -57,10 +57,7 @@ struct daObjFl_UkiKi_c : dBgActor_c {
     virtual s32 Render();           /* slot  9 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjFl_UkiKi_c_size_must_be_0x328[sizeof(daObjFl_UkiKi_c) == 0x328 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

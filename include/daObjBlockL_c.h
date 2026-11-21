@@ -118,9 +118,6 @@ struct daObjBlockL_c : dBgActor_c {
     void OnHitByMegaChar(daPly_c &player);  /* slot 27 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjBlockL_c_size_must_be_0x330[sizeof(daObjBlockL_c) == 0x330 ? 1 : -1];
-#endif
 
 #endif /* DAOBJBLOCKL_C_H */

@@ -49,9 +49,6 @@ struct daObjDlPyramid_c : dBgActor_c {
     void UpdateModelMatrix(); /* yaw + position >> 3 into mTopModel */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjDlPyramid_c_size_must_be_0x3b8[sizeof(daObjDlPyramid_c) == 0x3b8 ? 1 : -1];
-#endif
 
 #endif /* DAOBJDLPYRAMID_C_H */

@@ -31,9 +31,6 @@ struct daMugenBGM_c : dActor_c {
     static Fog *GetActiveFog();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daMugenBGM_c_size_must_be_0xd4[sizeof(daMugenBGM_c) == 0xd4 ? 1 : -1];
-#endif
 
 #endif /* DAMUGENBGM_C_H */

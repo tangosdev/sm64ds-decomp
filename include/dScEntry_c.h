@@ -198,8 +198,6 @@ struct dScEntry_c::graphCallback_c : dGraph_c::callback_c {
 /* The entry scene's one graph callback (ov075 .bss 0x0211d71c). */
 extern dScEntry_c::graphCallback_c sEntryGraphCallback;
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScEntry_c_size_must_be_0x288[sizeof(dScEntry_c) == 0x288 ? 1 : -1];
 typedef char dScEntry_c_Step_size_must_be_0x8[sizeof(dScEntry_c::Step) == 0x8 ? 1 : -1];
 typedef char dScEntry_c_StepSet_size_must_be_0x18[sizeof(dScEntry_c::StepSet) == 0x18 ? 1 : -1];
@@ -208,6 +206,5 @@ typedef char dScEntry_oam_animation_size_must_be_0x2c[sizeof(OamAnimation) == 0x
 typedef char dScEntry_graphCallback_c_size_must_be_0x10[sizeof(dScEntry_c::graphCallback_c) == 0x10
                                                             ? 1
                                                             : -1];
-#endif
 
 #endif

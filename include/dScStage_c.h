@@ -38,10 +38,7 @@ struct StageArea {
     void *mBlockList; /* 0x08 - singly linked, next pointer at +0x0c */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char StageArea_size_must_be_0xc[sizeof(struct StageArea) == 0xc ? 1 : -1];
-#endif
 
 /* The level loader's minimap-change sentinel: link a record into area idx's
  * height-sorted mBlockList so that above the given height the minimap switches
@@ -155,9 +152,6 @@ public:
     virtual int GraphCallback2(); /* slot 2 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Stage_size_must_be_0x9c8[sizeof(struct dScStage_c) == 0x9c8 ? 1 : -1];
-#endif
 
 #endif

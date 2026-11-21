@@ -160,12 +160,9 @@ struct dScMg3DEsp_c : dScMgSingle3DBase_c {
     void DrawBanner();            /* the end-of-round marker */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMg3DEsp_c_size_must_be_0x5558[sizeof(dScMg3DEsp_c) == 0x5558 ? 1 : -1];
 typedef char dScMg3DEsp_c_Card_size_must_be_0x18[sizeof(dScMg3DEsp_c::Card) == 0x18 ? 1 : -1];
 typedef char dScMg3DEsp_c_Row_size_must_be_0x14[sizeof(dScMg3DEsp_c::Row) == 0x14 ? 1 : -1];
 typedef char dScMg3DEsp_c_Slot_size_must_be_0x20[sizeof(dScMg3DEsp_c::Slot) == 0x20 ? 1 : -1];
-#endif
 
 #endif

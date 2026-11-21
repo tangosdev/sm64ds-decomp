@@ -75,9 +75,6 @@ struct dBgW_KcMbg : dBgW_Kc {
     void SetFilterByMoveDir(); /* 0x020398fc */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgW_KcMbg_size_must_be_0x1c8[sizeof(dBgW_KcMbg) == 0x1c8 ? 1 : -1];
-#endif
 
 #endif /* DBGW_KCMBG_H */

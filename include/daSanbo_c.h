@@ -123,9 +123,6 @@ struct daSanbo_c : dActor_c {
  * factories are `return new daSanbo_c()`, which calls the inherited
  * fBase_c::operator new (`_ZN7fBase_cnwEm`). */
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daSanbo_c_size_must_be_0x3b0[sizeof(daSanbo_c) == 0x3b0 ? 1 : -1];
-#endif
 
 #endif /* DASANBO_C_H */

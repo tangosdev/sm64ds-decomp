@@ -31,9 +31,6 @@ struct cMgSmartball_dokan_c : cMgSmartball_object_c {
     int  CheckBall(int *pos);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char cMgSmartball_dokan_c_size_must_be_0x34[sizeof(cMgSmartball_dokan_c) == 0x34 ? 1 : -1];
-#endif
 
 #endif

@@ -53,9 +53,6 @@ struct dFdDummy_c : dFdColor_c {
     virtual int SetForwardTime(u32 frames, u32);  /* slot 4 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dFdDummy_c_size_must_be_0x10[sizeof(dFdDummy_c) == 0x10 ? 1 : -1];
-#endif
 
 #endif

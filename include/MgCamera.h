@@ -39,13 +39,11 @@ struct MgCamera {
     u8 pad_ba[0x2]; /* 0xba */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 /* The offsets above rely on the SDK types' sizes. */
 typedef char fx32_size_must_be_0x4[sizeof(fx32) == 0x4 ? 1 : -1];
 typedef char VecFx32_size_must_be_0xc[sizeof(VecFx32) == 0xc ? 1 : -1];
 typedef char MtxFx43_size_must_be_0x30[sizeof(MtxFx43) == 0x30 ? 1 : -1];
 typedef char MgCamera_size_must_be_0xbc[sizeof(MgCamera) == 0xbc ? 1 : -1];
-#endif
 
 /* The scene camera presets and the two world-to-screen projections. They are
    free functions, not members: every minigame scene calls them on its own

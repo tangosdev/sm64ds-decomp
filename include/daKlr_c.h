@@ -58,9 +58,6 @@ struct daKlr_c : dEnemyBase_c {
     void UpdateModelAndShadow();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKlr_c_size_must_be_0x3e0[sizeof(daKlr_c) == 0x3e0 ? 1 : -1];
-#endif
 
 #endif /* DAKLR_C_H */

@@ -87,13 +87,11 @@ int func_02063718(WBTWork *, void *, int);
 }
 #endif
 
-#ifndef SM64DS_PLATFORM_PC
 /* ROM layout under mwccarm: a command is 0x9c bytes, a block list node
  * 0x34, a peer record steps 0x68, and peer[] starts at 0x1d4. */
 typedef char WBTCommand_size_must_be_0x9c[sizeof(WBTCommand) == 0x9c ? 1 : -1];
 typedef char WBTBlockInfoList_size_must_be_0x34[sizeof(WBTBlockInfoList) == 0x34 ? 1 : -1];
 typedef char WBTPeerRecord_size_must_be_0x68[sizeof(WBTPeerRecord) == 0x68 ? 1 : -1];
 typedef char WBTWork_peer_must_be_at_0x1d4[(int)&((WBTWork *)0)->peer == 0x1d4 ? 1 : -1];
-#endif
 
 #endif

@@ -44,8 +44,6 @@ static inline int Pad_GetInputLock(const Ov007Pad *pad) {
     return pad->inputLock;
 }
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Pad_size_must_be_0x70[sizeof(Ov007Pad) == 0x70 ? 1 : -1];
-#endif
 
 #endif

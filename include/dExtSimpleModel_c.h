@@ -52,19 +52,7 @@ struct dExtSimpleModel_c : dExtModel_c {
     dExtSimpleModel_c();
 
     /* --- vtable, in _ZTV17dExtSimpleModel_c order. Do not reorder. --- */
-    /* The destructor pair spelled as two plain virtuals on the host, plus the
-       non-virtual destructor declaration the src/ definitions need; the whole
-       ruling, and the ROM-vs-MSVC layout measurement behind it, is in
-       include/dExtModel_c.h. An override takes its base's slots, so these carry
-       the SAME TWO NAMES the base declares -- a fresh name would append a slot
-       instead of claiming one. */
-#ifdef _MSC_VER
-    virtual void Destructor1();                       /* slot 0 (D1) */
-    virtual void Destructor0();                       /* slot 1 (D0) */
-    ~dExtSimpleModel_c();                             /* no slot */
-#else
     virtual ~dExtSimpleModel_c(); /* slots 0 (D1), 1 (D0) */
-#endif
     virtual int DoSetFile(char *file, int a, int b);  /* slot 2 */
     virtual void UpdateVerts();                       /* slot 3 */
     virtual void Virtual10(Matrix4x3 &mat);           /* slot 4 */
@@ -91,9 +79,6 @@ struct dExtSimpleModel_c : dExtModel_c {
     static u32 LoadCompressedTextureToVram(char *src, u32 size, char *dst);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dExtSimpleModel_c_size_must_be_0x50[sizeof(dExtSimpleModel_c) == 0x50 ? 1 : -1];
-#endif
 
 #endif /* DEXTSIMPLEMODEL_C_H */

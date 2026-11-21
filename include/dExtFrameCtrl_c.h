@@ -69,9 +69,6 @@ struct dExtFrameCtrl_c {
     static void UpdateFileOffsets(BCA_File &file);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dExtFrameCtrl_c_size_must_be_0x10[sizeof(dExtFrameCtrl_c) == 0x10 ? 1 : -1];
-#endif
 
 #endif /* DEXTFRAMECTRL_C_H */

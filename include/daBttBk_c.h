@@ -89,9 +89,6 @@ struct daBttBk_c : dActor_c {
     void SetState(int i);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daBttBk_c_size_must_be_0x378[sizeof(daBttBk_c) == 0x378 ? 1 : -1];
-#endif
 
 #endif

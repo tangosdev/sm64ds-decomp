@@ -47,10 +47,8 @@ struct dMgTrmpRingObjAdapter_c : dMgTrmpObjAdapter_c {
     s16 mItemPushCount; /* 0x22 -- item-end pushes this frame (TrmpItem_ReflectOffLine) */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char dMgTrmpObjAdapter_c_size_must_be_0x1c[sizeof(dMgTrmpObjAdapter_c) == 0x1c ? 1 : -1];
 typedef char
     dMgTrmpRingObjAdapter_c_size_must_be_0x24[sizeof(dMgTrmpRingObjAdapter_c) == 0x24 ? 1 : -1];
-#endif
 
 #endif

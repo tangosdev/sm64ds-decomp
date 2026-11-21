@@ -87,9 +87,6 @@ struct daWbm_c : dEnemyBase_c {
     void StateBounce();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daWbm_c_size_must_be_0x3cc[sizeof(daWbm_c) == 0x3cc ? 1 : -1];
-#endif
 
 #endif /* DAWBM_C_H */

@@ -50,9 +50,6 @@ struct daObjMcWater_c : dBgActor_c {
     void SpawnWaterfalls();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjMcWater_c_size_must_be_0x338[sizeof(daObjMcWater_c) == 0x338 ? 1 : -1];
-#endif
 
 #endif /* DAOBJMCWATER_C_H */

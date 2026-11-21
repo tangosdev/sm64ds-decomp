@@ -104,11 +104,9 @@ struct Dealer {
     s32 mDealSoundPlayed;                        /* 0x26c -- sound 0x13a, once per deal */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char DealerModelFilePtr_size_must_be_0x8[sizeof(DealerModelFilePtr) == 0x8 ? 1 : -1];
 typedef char
     DealerAnimationFileHandle_size_must_be_0x8[sizeof(DealerAnimationFileHandle) == 0x8 ? 1 : -1];
 typedef char Dealer_size_must_be_0x270[sizeof(Dealer) == 0x270 ? 1 : -1];
-#endif
 
 #endif

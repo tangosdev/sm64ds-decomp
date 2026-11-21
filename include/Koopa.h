@@ -117,9 +117,6 @@ struct daNknk_c : dEnemyBase_c {
 // Community source compatibility name; retail RTTI is daNknk_c.
 typedef daNknk_c Koopa;
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Koopa_size_must_be_0x3d0[sizeof(Koopa) == 0x3d0 ? 1 : -1];
-#endif
 
 #endif /* KOOPA_H */

@@ -80,10 +80,7 @@ private:
     void UpdateModelTransform();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daBrq_c_State_size_must_be_0x10[sizeof(daBrq_c::State) == 0x10 ? 1 : -1];
 typedef char daBrq_c_size_must_be_0x434[sizeof(daBrq_c) == 0x434 ? 1 : -1];
-#endif
 
 #endif /* DABRQ_C_H */

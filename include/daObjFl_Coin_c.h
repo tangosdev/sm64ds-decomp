@@ -46,8 +46,6 @@ struct daObjFl_Coin_c : dActor_c {
     virtual s32 Behavior();      /* slot 6 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char daObjFl_Coin_c_size_must_be_0xd8[sizeof(daObjFl_Coin_c) == 0xd8 ? 1 : -1];
-#endif
 
 #endif /* DAOBJFL_COIN_C_H */

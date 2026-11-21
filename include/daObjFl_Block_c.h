@@ -54,9 +54,6 @@ struct daObjFl_Block_c : dBgActor_c {
     static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjFl_Block_c_size_must_be_0x328[sizeof(daObjFl_Block_c) == 0x328 ? 1 : -1];
-#endif
 
 #endif /* DAOBJFL_BLOCK_C_H */

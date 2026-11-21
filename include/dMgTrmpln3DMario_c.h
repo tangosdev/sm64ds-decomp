@@ -84,8 +84,6 @@ struct dMgTrmpln3DMario_c : dMgTrmpObjAdapter_c {
                              * states drive its dExtFrameCtrl_c base and read its file */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char dMgTrmpln3DMario_c_size_must_be_0xd0[sizeof(dMgTrmpln3DMario_c) == 0xd0 ? 1 : -1];
-#endif
 
 #endif

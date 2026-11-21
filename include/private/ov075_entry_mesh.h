@@ -102,8 +102,6 @@ struct EntryMesh {
     int Init(const Vector3 *, int);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char EntryMeshVertex_size_must_be_0x18[sizeof(EntryMeshVertex) == 0x18 ? 1 : -1];
 typedef char EntryMeshMaterial_size_must_be_0x14[sizeof(EntryMeshMaterial) == 0x14 ? 1 : -1];
 typedef char EntryMesh_size_must_be_0xa8[sizeof(EntryMesh) == 0xa8 ? 1 : -1];
@@ -112,6 +110,5 @@ typedef char
     EntryMesh_mVertices_must_be_at_0x80[(int)&((EntryMesh *)0)->mVertices == 0x80 ? 1 : -1];
 typedef char
     EntryMesh_mRippleTimer_must_be_at_0xa2[(int)&((EntryMesh *)0)->mRippleTimer == 0xa2 ? 1 : -1];
-#endif
 
 #endif

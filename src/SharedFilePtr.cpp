@@ -25,16 +25,6 @@
  *
  * mwccarm's default deferred codegen emits .text in reverse source order, so
  * the definitions run from the highest address down. Do not reorder.
- *
- * HOST BUILD. port/ compiles this file for gate 3b and every target above it.
- * The host gets the refcounting core (func_02017e0c, func_02017c24, LoadFile,
- * Release). dExtSimpleModel_c::LoadFile and dExtFrameCtrl_c::LoadFile are compiled only
- * where the gate-4b slice supplies their UpdateFileOffsets, and
- * dBgW_Kc::LoadFile only where gate 8 does: port/CMakeLists.txt defines
- * SM64DS_PORT_GATE4B and SM64DS_PORT_GATE8 on those targets. Everything else
- * is DS-only. port/hal/fs.cpp supplies Load (the card seam) and an
- * ABI-portable Construct, and port/hal/gx_upload_bridge.cpp supplies
- * ReallocateModelFile.
  */
 
 #include "types.h"
@@ -52,9 +42,7 @@ void Deallocate(void *ptr);
 #include "nitro/os/cache.h"
 #include "nitro/mi/memory.h"
 #include "nitro/os/system.h"
-#ifndef _MSC_VER
 #include "nitro/fs/file.h"
-#endif
 
 extern "C" {
 /* The last file ID any handle touched: every entry point stores it first,
@@ -73,7 +61,6 @@ int myFS_ReadFile(void *a, void *b, int c);
 
 unsigned int TrimModelFile(void *file);
 
-#ifndef _MSC_VER
 void *SharedFilePtr::func_02017e48(unsigned int id) {
     func_02017e0c(id);
     return this;
@@ -83,7 +70,6 @@ void *SharedFilePtr::func_02017e34() {
     gLastUsedFileID = fileID;
     return this;
 }
-#endif
 
 /* Stamps a fresh handle: no file, no holders, and the FAT file ID that
    func_02018a24 resolves from the overlay-0 file ID. */
@@ -93,7 +79,6 @@ void SharedFilePtr::func_02017e0c(unsigned int id) {
     fileID = func_02018a24(id);
 }
 
-#ifndef _MSC_VER
 /* Resolve fileID to its bytes, either already resident in the overlay-file
    table or streamed from the card, decompress them if they are LZ-tagged,
    and stash and return the buffer. */
@@ -156,7 +141,6 @@ void *SharedFilePtr::Load() {
     filePtr = (void *)raw;
     return filePtr;
 }
-#endif
 
 /* Frees the file once the last holder lets go. */
 void SharedFilePtr::func_02017c24() {
@@ -198,7 +182,6 @@ void SharedFilePtr::Release() {
     func_02017c24();
 }
 
-#ifndef _MSC_VER
 void *SharedFilePtr::func_02017b4c(unsigned int id) {
     func_02017e48(id);
     return this;
@@ -208,9 +191,7 @@ int SharedFilePtr_Destruct_Clsn(int self) {
     reinterpret_cast<SharedFilePtr *>(self)->func_02017e34();
     return self;
 }
-#endif
 
-#if !defined(_MSC_VER) || defined(SM64DS_PORT_GATE8)
 /* Loads a KCL collision file; the first holder rebases its offsets. */
 KCL_File *dBgW_Kc::LoadFile(SharedFilePtr &ptr) {
     u8 refs;
@@ -224,9 +205,7 @@ KCL_File *dBgW_Kc::LoadFile(SharedFilePtr &ptr) {
     }
     return file;
 }
-#endif
 
-#ifndef _MSC_VER
 void *SharedFilePtr::func_02017ae4(unsigned int id) {
     func_02017e48(id);
     return this;
@@ -251,9 +230,7 @@ int SharedFilePtr::func_02017a9c() {
 void SharedFilePtr::ReallocateModelFile() {
     TrimModelFile(filePtr);
 }
-#endif
 
-#if !defined(_MSC_VER) || defined(SM64DS_PORT_GATE4B)
 /* Loads a BMD model. The first holder rebases its offsets, registers it in
    the common model data array, and trims its allocation to the real size. */
 BMD_File *dExtSimpleModel_c::LoadFile(SharedFilePtr &ptr) {
@@ -267,9 +244,7 @@ BMD_File *dExtSimpleModel_c::LoadFile(SharedFilePtr &ptr) {
     }
     return filePtr;
 }
-#endif
 
-#ifndef _MSC_VER
 void *SharedFilePtr::func_02017a24(unsigned int id) {
     func_02017ae4(id);
     return this;
@@ -306,9 +281,7 @@ extern "C" int SharedFilePtr_Destruct_Anim(int self) {
     reinterpret_cast<SharedFilePtr *>(self)->func_02017e34();
     return self;
 }
-#endif
 
-#if !defined(_MSC_VER) || defined(SM64DS_PORT_GATE4B)
 /* Loads a BCA animation; the first holder rebases its offsets. */
 BCA_File *dExtFrameCtrl_c::LoadFile(SharedFilePtr &ptr) {
     u8 refs;
@@ -322,9 +295,7 @@ BCA_File *dExtFrameCtrl_c::LoadFile(SharedFilePtr &ptr) {
     }
     return file;
 }
-#endif
 
-#ifndef _MSC_VER
 extern "C" void *SharedFilePtr_Construct_TexSeq(void *self, unsigned int fileID) {
     static_cast<SharedFilePtr *>(self)->func_02017e48(fileID);
     return self;
@@ -367,4 +338,3 @@ void *SharedFilePtr::func_0201787c() {
     }
     return loaded;
 }
-#endif

@@ -73,9 +73,6 @@ struct daFPknBall_c : dEnemyBase_c {
     void UpdateVisuals();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daFPknBall_c_size_must_be_0x378[sizeof(daFPknBall_c) == 0x378 ? 1 : -1];
-#endif
 
 #endif /* DAFPKNBALL_C_H */

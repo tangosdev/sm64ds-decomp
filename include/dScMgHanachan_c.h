@@ -132,13 +132,10 @@ struct dScMgHanachan_c : dScMgBase_c {
     void Phase_SetupRound();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char
     dScMgHanachan_c_Phase_size_must_be_0x08[sizeof(dScMgHanachan_c::Phase) == 0x08 ? 1 : -1];
 typedef char
     dScMgHanachan_c_wiggler_size_must_be_0x98[sizeof(dScMgHanachan_c::Wiggler) == 0x98 ? 1 : -1];
 typedef char dScMgHanachan_c_size_must_be_0x4f68[sizeof(dScMgHanachan_c) == 0x4f68 ? 1 : -1];
-#endif
 
 #endif

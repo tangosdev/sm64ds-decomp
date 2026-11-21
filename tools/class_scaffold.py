@@ -585,9 +585,9 @@ def render_header(ev, rec, slots, base_n, size_row, run):
             lines.append(f"    {decl[0]};")
     lines.append("};")
     if size_row:
-        lines += ["", "#ifndef SM64DS_PLATFORM_PC",
+        lines += ["",
                   f"typedef char {tree}_size_must_be_{size_row['size_hex']}"
-                  f"[sizeof({tree}) == {size_row['size_hex']} ? 1 : -1];", "#endif"]
+                  f"[sizeof({tree}) == {size_row['size_hex']} ? 1 : -1];"]
     lines += ["", f"#endif /* {guard} */", ""]
     return "\n".join(lines)
 

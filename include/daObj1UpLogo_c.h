@@ -52,9 +52,6 @@ struct daObj1UpLogo_c : dActor_c {
     void SetFollowTarget(dActor_c *);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObj1UpLogo_c_size_must_be_0x150[sizeof(daObj1UpLogo_c) == 0x150 ? 1 : -1];
-#endif
 
 #endif

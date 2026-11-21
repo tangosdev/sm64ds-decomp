@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 """How much of the game is MATCHED and LINKED.
 
-The README progress block shows those two bars. PORTED, the count of functions
-whose translation unit the PC port linked, is no longer printed: the port
-lives in its own repository. ``ported()`` still reads the stamped list so
-chaos-db's JSON can carry the figure; ``--write-readme`` does not.
+The README progress block shows those two bars.
 
   MATCHED    the C compiles to the ROM's exact bytes. Provably the original
              logic. This is the number the README bar and the treemap show.
@@ -42,8 +39,6 @@ SRC = REPO / "src"
 README = REPO / "README.md"
 README_START = "<!-- tiers:start -->"
 README_END = "<!-- tiers:end -->"
-PORTED_STAMP = REPO / "config" / "port_linkage.json"
-PORTED_FUNCTIONS = REPO / "config" / "port_linked_functions.txt"
 FUNCTION_AUTHORS = REPO / "function-authors.json"
 
 
@@ -162,149 +157,11 @@ def linked(authors_path=None, config_root=None):
             "pct": round(100.0 * got / len(universe), 2)}
 
 
-# ------------------------------------------------------------------- PORTED
-#
-# PORTED cannot be computed here and must not pretend otherwise. The PC port lives
-# in its own repository (https://github.com/tangosdev/sm64ds-pc-port), and its
-# linkage tool reads the walk_window map that only an MSVC build of the port
-# writes. So the number is STAMPED: measured by hand, recorded with the branch and
-# commit it came from, and refreshed when someone runs a port build.
-#
-# A stamp with no provenance is worse than no number, so a stamp missing its
-# branch/commit/date is treated as absent.
-
-
-def ported_functions(stamp=None, list_path=None):
-    """``(keys, commit)`` from the per-function list, or ``(None, reason)``.
-
-    config/port_linked_functions.txt is written by tools/port_linked_functions.py
-    from a port build. It is believed only while its ``# commit:`` line equals the
-    commit of the usable stamp: two port builds must never be mixed, and a list
-    without the stamp's provenance is a number nobody can trace. ``keys`` is the
-    set of ``module:0xaddr`` strings; ``commit`` is the list's commit on success.
-    """
-    p = pathlib.Path(list_path or PORTED_FUNCTIONS)
-    if not p.is_file():
-        return None, "no per-function list"
-    if stamp is None:
-        stamp = ported_stamp()
-    if not stamp:
-        return None, "no usable stamp"
-    keys, commit, universe = set(), None, None
-    for line in p.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if line.startswith("# commit:"):
-            commit = line.split(":", 1)[1].strip()
-        elif line.startswith("# universe:"):
-            try:
-                universe = int(line.split(":", 1)[1])
-            except ValueError:
-                universe = None
-        elif line and not line.startswith("#"):
-            keys.add(line)
-    if not commit or commit != stamp["commit"]:
-        return None, f"list commit {commit!r}, stamp commit {stamp['commit']!r}"
-    return keys, universe
-
-
-def ported_stamp(stamp_path=None):
-    """The stamped PORTED measurement (translation units), or None if unusable."""
-    p = pathlib.Path(stamp_path or PORTED_STAMP)
-    if not p.is_file():
-        return None
-    try:
-        d = json.loads(p.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return None
-    if not all(d.get(k) for k in ("measuredAt", "branch", "commit")):
-        return None
-    tot = d.get("matchedTus") or 0
-    got = d.get("linkedTus") or 0
-    if not tot:
-        return None
-    return {
-        "ported": got,
-        "portedTus": got,
-        "matchedTus": tot,
-        "pct": round(100.0 * got / tot, 2),
-        "measuredAt": d["measuredAt"],
-        "branch": d["branch"],
-        "commit": d["commit"],
-        "stale": bool(d.get("stale", False)),
-    }
-
-
-def ported(stamp_path=None, list_path=None):
-    """PORTED, per function when the stamped build has a per-function list.
-
-    Returns ``ported`` / ``of`` / ``pct`` / ``unit`` (``"functions"`` or, for a
-    stamp with no usable list, ``"units"``) plus the stamp's translation-unit
-    figures as extra detail: ``linkedTus`` and ``matchedTus``. ``of`` for the
-    function count is the list's own ``# universe:`` line, the function universe
-    of the measured tree; chaos_db_ci overrides it with the published record
-    count so both bars share one denominator. None when there is no usable
-    stamp at all.
-    """
-    stamp = ported_stamp(stamp_path)
-    if not stamp:
-        return None
-    out = {"ported": stamp["ported"], "portedTus": stamp["portedTus"],
-           "matchedTus": stamp["matchedTus"], "unit": "units",
-           "of": stamp["matchedTus"], "pct": stamp["pct"],
-           "measuredAt": stamp["measuredAt"], "branch": stamp["branch"],
-           "commit": stamp["commit"], "stale": stamp["stale"]}
-    keys, universe = ported_functions(
-        stamp, list_path or (pathlib.Path(stamp_path).with_name("port_linked_functions.txt")
-                             if stamp_path else None))
-    if keys is not None and universe:
-        out.update(ported=len(keys), of=universe, unit="functions",
-                   pct=round(100.0 * len(keys) / universe, 2))
-    return out
-
-
-# ------------------------------------------------------------------ MATCHED
-
-
-def matched(db_path=None):
-    """MATCHED from chaos-db.json, the file the bar and treemap also read.
-
-    Returns None when the db is absent rather than recomputing it: a second
-    implementation of the matched rule is a second source of truth, and this
-    repo has already paid for one of those (the itcm undercount).
-    """
-    p = pathlib.Path(db_path) if db_path else (REPO / "chaos-db.json")
-    if not p.is_file():
-        return None
-    try:
-        db = json.loads(p.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
-        return None
-    st = db.get("stats") or {}
-    tot, got = st.get("totalFunctions"), st.get("matchedFunctions")
-    if not tot:
-        return None
-    return {
-        "matched": got,
-        "functions": tot,
-        "pct": round(100.0 * got / tot, 2),
-        "matchedBytes": st.get("matchedBytes"),
-        "totalBytes": st.get("totalBytes"),
-        "bytePct": (round(100.0 * st["matchedBytes"] / st["totalBytes"], 2)
-                    if st.get("totalBytes") else None),
-        # The assembly subset, read from the same db for the same reason MATCHED is:
-        # recomputing it here would be a second source of truth. Absent from a db
-        # generated before the field existed, and every consumer treats that as
-        # "do not print the line" rather than as zero.
-        "handAsm": st.get("handAsmFunctions"),
-        "handAsmBytes": st.get("handAsmBytes"),
-    }
-
-
 # ------------------------------------------------------------------- output
 
 
 def collect(db_path=None):
-    return {"matched": matched(db_path), "linked": linked(), "ported": ported()}
+    return {"matched": matched(db_path), "linked": linked()}
 
 
 # Joining preserved README rows. Spelled as a constant because a newline escape
@@ -335,11 +192,7 @@ def matched_caption(m):
 
 
 def bar_block(t, preserved_matched=None):
-    """The single fenced block shown under the README "## Progress" heading.
-
-    MATCHED and LINKED only. The stamped PORTED figure stays in ``collect()``
-    for chaos-db and is not a row here.
-    """
+    """The single fenced block shown under the README "## Progress" heading."""
     rows = []
     m, k = t["matched"], t["linked"]
     if m:

@@ -63,9 +63,6 @@ struct daObjKi_Hasira_c : dBgActor_c {
     void UpdateModelMatrix();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjKi_Hasira_c_size_must_be_0x328[sizeof(daObjKi_Hasira_c) == 0x328 ? 1 : -1];
-#endif
 
 #endif /* DAOBJKI_HASIRA_C_H */

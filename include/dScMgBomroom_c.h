@@ -57,11 +57,8 @@ struct dScMgBomroom_Slot {
     u8  idx;          /* +0x0e -- sprite/sub index */
     u8 level;         /* +0x0f -- see PenGate_StateOpening */
 };
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgBomroom_Bomb_size_must_be_0x40[sizeof(struct dScMgBomroom_Bomb) == 0x40 ? 1 : -1];
 typedef char dScMgBomroom_Slot_size_must_be_0x10[sizeof(struct dScMgBomroom_Slot) == 0x10 ? 1 : -1];
-#endif
 
 struct dScMgBomroom_c : dScMgBase_c {
     virtual ~dScMgBomroom_c();
@@ -191,9 +188,6 @@ struct dScMgBomroom_c : dScMgBase_c {
     u8 pad_62fd[0x3];   /* 0x62fd -- tail padding to the 0x6300 allocation */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgBomroom_c_size_must_be_0x6300[sizeof(struct dScMgBomroom_c) == 0x6300 ? 1 : -1];
-#endif
 
 #endif

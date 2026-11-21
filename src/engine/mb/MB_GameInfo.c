@@ -88,9 +88,7 @@ typedef struct MbBeacon {
     } data;
 } MbBeacon;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char MbBeacon_size_must_be_0x70[sizeof(MbBeacon) == 0x70 ? 1 : -1];
-#endif
 
 extern MbBeaconSendStatus data_020a9d2c;
 /* data_020a9d40 must be the struct object itself: reached through a cast

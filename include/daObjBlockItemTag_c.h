@@ -42,9 +42,6 @@ struct daObjBlockItemTag_c : dActor_c {
     void SpawnSilverStar();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjBlockItemTag_c_size_must_be_0xdc[sizeof(daObjBlockItemTag_c) == 0xdc ? 1 : -1];
-#endif
 
 #endif /* DAOBJBLOCKITEMTAG_C_H */

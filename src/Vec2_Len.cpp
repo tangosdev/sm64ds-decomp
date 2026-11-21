@@ -16,7 +16,6 @@ fx32 Vec2_Len(const Vector2 *v) {
 
 /* Zero 2D origin. Retail __sinit_020750ec stores both words and registers
    NullDestructor_0203d47c, the empty ~Vector2. */
-#ifndef SM64DS_PLATFORM_PC
 struct ZeroVector2 {
     int x;
     int y;
@@ -26,4 +25,3 @@ struct ZeroVector2 {
 };
 
 ZeroVector2 data_020a0ec8;
-#endif

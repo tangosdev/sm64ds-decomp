@@ -171,9 +171,6 @@ struct daYegg_c : dEnemyBase_c {
     int Render();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daYegg_c_size_must_be_0x42c[sizeof(daYegg_c) == 0x42c ? 1 : -1];
-#endif
 
 #endif /* DAYEGG_C_H */

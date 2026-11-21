@@ -50,9 +50,6 @@ struct daObj_Mip_Key_c : dEnemyBase_c {
     void UpdateModelAndShadow();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObj_Mip_Key_c_size_must_be_0x1a0[sizeof(daObj_Mip_Key_c) == 0x1a0 ? 1 : -1];
-#endif
 
 #endif /* DAOBJ_MIP_KEY_C_H */

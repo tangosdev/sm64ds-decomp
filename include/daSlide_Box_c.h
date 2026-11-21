@@ -42,10 +42,7 @@ struct daSlide_Box_c : dBgActor_c {
     void UpdateModel();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daSlide_Box_c_size_must_be_0x4f8[
     sizeof(daSlide_Box_c) == 0x4f8 ? 1 : -1];
-#endif
 
 #endif /* DASLIDE_BOX_C_H */

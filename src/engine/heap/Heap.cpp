@@ -83,12 +83,7 @@ void *OS_AllocFromArenaLo(s32 arena, unsigned int size, unsigned int align);
    and _Znam. An explicit call is spelled `::operator new': inside a member
    of an fBase_c-derived class, plain `operator new' finds fBase_c's class
    allocator first. The library declarations of the deallocators carry
-   `throw()', so the definitions do as well.
-
-   THE HOST KEEPS ITS OWN GLOBAL OPERATORS. Defining them here would replace
-   the CRT's for the whole PC port, so on the host every new and delete,
-   array or not, is the CRT's. Nothing here reaches MSVC. */
-#ifndef _MSC_VER
+   `throw()', so the definitions do as well. */
 
 /* func_0203cc0c at 0x0203cc0c -- allocate from the default heap with the
  * default alignment. The body of operator new and operator new[]. */
@@ -123,7 +118,6 @@ void operator delete(void *ptr) throw() {
 void operator delete[](void *ptr) throw() {
     func_0203cbf0(ptr);
 }
-#endif /* !_MSC_VER */
 
 namespace mHeap {
 
@@ -1083,7 +1077,6 @@ void Deallocate(void *ptr)
 /* Zero Vector3 immediately after GAME_HEAP_PTR. Vector3(x, y, z) scalarizes,
  * and a type derived from Vector3 would emit ~Vector3 into this object, so
  * the stores are a file-local type. Its destructor is aliased to ~Vector3. */
-#ifndef _MSC_VER
 struct VecOff {
     int x, y, z;
     VecOff(int px, int py, int pz) {
@@ -1096,4 +1089,3 @@ struct VecOff {
 typedef char VecOff_size_must_be_0xc[sizeof(VecOff) == 0xc ? 1 : -1];
 
 VecOff data_020a0ebc(0, 0, 0);
-#endif

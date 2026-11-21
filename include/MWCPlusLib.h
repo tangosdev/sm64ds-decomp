@@ -48,13 +48,11 @@ typedef struct ActionIterator {
     struct EHIndexEntry *indexEnd;   /* 0x10 */
 } ActionIterator;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char
     ActionIterator_indexBegin_must_be_at_0x0c[(int)&((ActionIterator *)0)->indexBegin == 0x0c ? 1
                                                                                               : -1];
 typedef char
     ActionIterator_indexEnd_must_be_at_0x10[(int)&((ActionIterator *)0)->indexEnd == 0x10 ? 1 : -1];
 typedef char ActionIterator_must_be_0x14_bytes[sizeof(ActionIterator) == 0x14 ? 1 : -1];
-#endif
 
 #endif /* MWCPLUSLIB_H */

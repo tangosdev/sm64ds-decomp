@@ -537,11 +537,9 @@ void daBmb_c::State3()
 
 extern "C" {
 
-/* THE QUAD VIEW AND ITS TWO TABLES SIT AT FILE SCOPE. They used to be declared
-   inside the body below, but C++ gives a function-local class no linkage, so an
-   `extern` of that type is ill-formed (MSVC C2624) even though mwccarm accepts
-   it. Hoisting the type changes nothing the compiler emits: the object is
-   byte-identical under 2004/b56. */
+/* THE QUAD VIEW AND ITS TWO TABLES SIT AT FILE SCOPE. A function-local class
+   has no linkage, so an extern of that type is ill-formed. Hoisting the type
+   changes nothing the compiler emits. */
 typedef struct { int v[4]; } Quad;
 /* Thrown-bob-omb launch speeds, indexed by the carrier's param1 (clamped to 4):
    horizontal, then vertical. */

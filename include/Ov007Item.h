@@ -102,13 +102,11 @@ typedef struct Ov007ItemView {
 #endif
 } Ov007ItemView;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007ItemLayout_size_must_be_0xa[sizeof(Ov007ItemLayout) == 0xa ? 1 : -1];
 typedef char Ov007NodeSprites_size_must_be_0x8[sizeof(Ov007NodeSprites) == 0x8 ? 1 : -1];
 typedef char Ov007HitBox_size_must_be_0x14[sizeof(Ov007HitBox) == 0x14 ? 1 : -1];
 typedef char Ov007Item_size_must_be_0x2c[sizeof(Ov007Item) == 0x2c ? 1 : -1];
 typedef char Ov007ItemNode_size_must_be_0x8[sizeof(Ov007ItemNode) == 0x8 ? 1 : -1];
 typedef char Ov007ItemView_size_must_be_0x1c[sizeof(Ov007ItemView) == 0x1c ? 1 : -1];
-#endif
 
 #endif

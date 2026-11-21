@@ -173,9 +173,6 @@ struct daBmb_c : dEnemyBase_c {
     void func_ov102_0214ad14();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daBmb_c_size_must_be_0x400[sizeof(daBmb_c) == 0x400 ? 1 : -1];
-#endif
 
 #endif /* DABMB_C_H */

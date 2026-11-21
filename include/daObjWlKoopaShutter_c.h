@@ -27,9 +27,6 @@ struct daObjWlKoopaShutter_c : dBgActor_c {
     virtual s32   Render();                /* slot  9 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjWlKoopaShutter_c_size_must_be_0x320[sizeof(daObjWlKoopaShutter_c) == 0x320 ? 1 : -1];
-#endif
 
 #endif /* DAOBJWLKOOPASHUTTER_C_H */

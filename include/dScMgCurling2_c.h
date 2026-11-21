@@ -30,11 +30,8 @@ struct dScMgCurling2_stone {
     u8 unk2e[0x2]; /* 0x2e, untouched */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char
     dScMgCurling2_stone_size_must_be_0x30[sizeof(struct dScMgCurling2_stone) == 0x30 ? 1 : -1];
-#endif
 
 /* Falling piece, 0x24 bytes, 0x32 of them at 0x48c0. Seeded across the top
  * of the screen and recycled once y passes 0xc8. */
@@ -61,10 +58,8 @@ struct dScMgCurling2_piece {
     u8 pad23;        /* 0x23 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char
     dScMgCurling2_piece_size_must_be_0x24[sizeof(struct dScMgCurling2_piece) == 0x24 ? 1 : -1];
-#endif
 
 /* Number spawned between two stones when they collide, 0x18 bytes,
  * 0x3c of them at 0x4fe0. */
@@ -80,10 +75,8 @@ struct dScMgCurling2_value {
     u8 pad16[2];  /* 0x16 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char
     dScMgCurling2_value_size_must_be_0x18[sizeof(struct dScMgCurling2_value) == 0x18 ? 1 : -1];
-#endif
 
 /* Per-throw score marker, 0x10 bytes, five of them at 0x4870 -- one per
  * thrown stone. The caption is drawn once the countdown expires. */
@@ -97,10 +90,8 @@ struct dScMgCurling2_mark {
     u8 unk0e[0x2]; /* 0x0e, untouched */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char
     dScMgCurling2_mark_size_must_be_0x10[sizeof(struct dScMgCurling2_mark) == 0x10 ? 1 : -1];
-#endif
 
 struct dScMgCurling2_c : dScMgBase_c {
     virtual ~dScMgCurling2_c();
@@ -248,9 +239,6 @@ struct dScMgCurling2_c : dScMgBase_c {
     u8 mCounterVisible;               /* 0x55c3, enables DrawCounter */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgCurling2_c_size_must_be_0x55c4[sizeof(dScMgCurling2_c) == 0x55c4 ? 1 : -1];
-#endif
 
 #endif

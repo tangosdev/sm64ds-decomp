@@ -104,9 +104,7 @@ struct Heyho {
     u8 pad_ee[0x2];      /* 0xee */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char HeyhoPath_size_must_be_0x30[sizeof(HeyhoPath) == 0x30 ? 1 : -1];
 typedef char Heyho_size_must_be_0xf0[sizeof(Heyho) == 0xf0 ? 1 : -1];
-#endif
 
 #endif

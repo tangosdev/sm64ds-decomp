@@ -428,8 +428,6 @@ struct daDemo_c : dActor_c {
     int func_ov002_020f7bb8(unsigned char *p, u16 id);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daDemo_c_size_must_be_0x104[
     sizeof(daDemo_c) == 0x104 ? 1 : -1];
 typedef char daDemo_c_anmModel_c_size_must_be_0x84[sizeof(daDemo_c::anmModel_c) == 0x84 ? 1 : -1];
@@ -447,7 +445,6 @@ typedef char daDemo_c_StaffRoll_Window_size_must_be_0x30[sizeof(daDemo_c::StaffR
                                                              : -1];
 typedef char
     daDemo_c_StaffRoll_Doll_size_must_be_0x14[sizeof(daDemo_c::StaffRoll::Doll) == 0x14 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

@@ -45,9 +45,6 @@ struct dFdWipe_c : dFdColor_c {
     void LoadAndSetFile(u16 ov0ID);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dFdWipe_c_size_must_be_0x60[sizeof(dFdWipe_c) == 0x60 ? 1 : -1];
-#endif
 
 #endif /* DFDWIPE_C_H */

@@ -62,9 +62,6 @@ struct daObjBk_Botaosi_c : dBgActor_c {
     virtual void OnHitByMegaChar(daPly_c &player); /* slot 27 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjBk_Botaosi_c_size_must_be_0x39c[sizeof(daObjBk_Botaosi_c) == 0x39c ? 1 : -1];
-#endif
 
 #endif /* DAOBJBK_BOTAOSI_C_H */

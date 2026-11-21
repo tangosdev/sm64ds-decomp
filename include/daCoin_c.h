@@ -132,9 +132,6 @@ struct daCoin_c : dActor_c {
     void StateDrop();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daCoin_c_size_must_be_0x3b4[sizeof(daCoin_c) == 0x3b4 ? 1 : -1];
-#endif
 
 #endif

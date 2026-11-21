@@ -80,9 +80,6 @@ struct SBirdAnimationFilePtr : SharedFilePtr {
 extern SBirdModelFilePtr data_ov009_02113c20;
 extern SBirdAnimationFilePtr data_ov009_02113c28;
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daSBird_c_size_must_be_0x184[sizeof(daSBird_c) == 0x184 ? 1 : -1];
-#endif
 
 #endif /* DASBIRD_C_H */

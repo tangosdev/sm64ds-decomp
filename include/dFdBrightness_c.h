@@ -63,9 +63,6 @@ inline dFdBrightness_c::dFdBrightness_c(fx32 initial) {
     speed = 0;
 }
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dFdBrightness_c_size_must_be_0xc[sizeof(dFdBrightness_c) == 0xc ? 1 : -1];
-#endif
 
 #endif /* DFDBRIGHTNESS_C_H */

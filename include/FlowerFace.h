@@ -88,13 +88,11 @@ struct FlowerFace {
     FlowerFaceAnimationFileHandle mHateAnim; /* 0xda4 -- yoshi_hate.bca (0x220) */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char
     FlowerFaceModelFilePtr_size_must_be_0x8[sizeof(FlowerFaceModelFilePtr) == 0x8 ? 1 : -1];
 typedef char FlowerFaceAnimationFileHandle_size_must_be_0x8
     [sizeof(FlowerFaceAnimationFileHandle) == 0x8 ? 1 : -1];
 typedef char FallingPetal_size_must_be_0x98[sizeof(FallingPetal) == 0x98 ? 1 : -1];
 typedef char FlowerFace_size_must_be_0xdac[sizeof(FlowerFace) == 0xdac ? 1 : -1];
-#endif
 
 #endif

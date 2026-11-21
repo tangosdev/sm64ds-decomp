@@ -85,9 +85,6 @@ struct daWater_Tatumaki_c : dEnemyBase_c {
     void OnPendingDestroy();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daWater_Tatumaki_c_size_must_be_0x1bc[sizeof(daWater_Tatumaki_c) == 0x1bc ? 1 : -1];
-#endif
 
 #endif /* DAWATER_TATUMAKI_C_H */

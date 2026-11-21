@@ -22,9 +22,6 @@ struct daObjFl_Seesaw_c : dBgActor_c {
     void UpdateModelTransform();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjFl_Seesaw_c_size_must_be_0x324[sizeof(daObjFl_Seesaw_c) == 0x324 ? 1 : -1];
-#endif
 
 #endif /* DAOBJFL_SEESAW_C_H */

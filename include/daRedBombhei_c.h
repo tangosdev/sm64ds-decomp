@@ -67,10 +67,7 @@ struct daRedBombhei_c : dActor_c {
     void UpdateModelTransform();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daRedBombhei_c_size_must_be_0x1f0[
     sizeof(daRedBombhei_c) == 0x1f0 ? 1 : -1];
-#endif
 
 #endif /* DAREDBOMBHEI_C_H */

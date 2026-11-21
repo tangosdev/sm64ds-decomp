@@ -38,10 +38,7 @@ struct daObjCtMecha05_c : dBgActor_c {
     virtual ~daObjCtMecha05_c() {}
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjCtMecha05_c_size_must_be_0x394[sizeof(daObjCtMecha05_c) == 0x394 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

@@ -218,7 +218,6 @@ void daObjYajirusi_c::UpdateShadowMatrix() {
 
 /* The PC actor slice retains its existing ROM-data/HAL resource setup;
  * these resource-family constructor aliases belong to the NDS link. */
-#ifndef SM64DS_PLATFORM_PC
 /* Construction order follows the two models, then the two collision files. */
 YajirusiModelFile gYajirusiLModelFile(0x0497);
 YajirusiModelFile gYajirusiRModelFile(0x0499);
@@ -228,4 +227,3 @@ ArrowSignAssets data_ov098_0213c380[2] = {
     {&gYajirusiLModelFile, &gYajirusiLCollisionFile, &data_ov002_0210d914},
     {&gYajirusiRModelFile, &gYajirusiRCollisionFile, &data_ov002_0210d734},
 };
-#endif

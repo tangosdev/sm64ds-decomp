@@ -148,9 +148,6 @@ struct daObjBlockS_c : dBgActor_c {
     };
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjBlockS_c_size_must_be_0x608[sizeof(daObjBlockS_c) == 0x608 ? 1 : -1];
-#endif
 
 #endif

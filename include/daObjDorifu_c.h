@@ -114,11 +114,8 @@ struct daObjDorifu_c : dBgActor_c {
     s32 CleanupResources(daObjDorifuResources *resources);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjDorifu_c_size_must_be_0xdcc[sizeof(daObjDorifu_c) == 0xdcc ? 1 : -1];
 typedef char daObjDorifu_Resource_size_must_be_0xc[
     sizeof(daObjDorifuResources) == 0xc ? 1 : -1];
-#endif
 
 #endif /* DAOBJDORIFU_C_H */

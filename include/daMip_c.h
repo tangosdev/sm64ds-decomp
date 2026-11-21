@@ -164,10 +164,7 @@ struct daMip_c : dEnemyBase_c {
     int  StateTalkMain();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daMip_c_size_must_be_0x474[sizeof(daMip_c) == 0x474 ? 1 : -1];
-#endif
 
 /* ~daMip_c, the key function, owns the compiler-emitted definition of this
  * vtable. The factory is `return new daMip_c()`, which calls the inherited

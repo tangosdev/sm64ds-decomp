@@ -66,9 +66,6 @@ struct daPiano_c : dBgActor_c {
     void UpdateShadows();           /* ov063 0x0211d5f4 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daPiano_c_size_must_be_0x6e4[sizeof(struct daPiano_c) == 0x6e4 ? 1 : -1];
-#endif
 
 #endif
