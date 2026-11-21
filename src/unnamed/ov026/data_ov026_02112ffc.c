@@ -4,6 +4,18 @@
  * Submarine vtables at 0x02113a90 stay unclaimed. */
 #include "types.h"
 
+typedef struct CLPS_Block {
+    u32 words[10];
+} CLPS_Block;
+
+#pragma define_section s_02112fd4 ".data.data_ov026_02112fd4" ".data.data_ov026_02112fd4" ".data.data_ov026_02112fd4" far_data
+#pragma section s_02112fd4 begin
+CLPS_Block data_ov026_02112fd4 = {
+    0x53504c43, 0x00040008, 0x00000fc5, 0x000000ff, 0x00004fc4,
+    0x000000ff, 0x01000fc4, 0x000000ff, 0x01000fc5, 0x000000ff,
+};
+#pragma section s_02112fd4 end
+
 extern u32 data_ov026_02112dc0[];
 extern u32 data_ov026_02112dc4[];
 extern u32 data_ov026_02112df4[];
@@ -15,99 +27,251 @@ extern u32 data_ov026_021130ac[];
 extern u32 data_ov026_021131a0[];
 
 /* 0x02112ffc..0x021132b0 */
-u32 data_ov026_02112ffc[] = {
-    0xffffffff, 0xffffffff,
-    0xffffffff, 0xffffffff,
-    0xffffffff, 0xffffffff,
-    0x00002d02, (u32)data_ov026_021131a0,
-    0x00000e03, (u32)data_ov026_021130ac,
-    0x00000104, (u32)data_ov026_02112e10,
-    0x0000010b, (u32)data_ov026_02112dc0,
-    0x00000501, (u32)data_ov026_0211305c,
-    0x00000208, (u32)data_ov026_02112ea0,
-    0x00000109, (u32)data_ov026_02112df4,
-    0x0000010e, (u32)data_ov026_02112dc4,
-    0x0000010a, (u32)data_ov026_02112e00,
-    0xe37c0000, 0xff9c0b82,
-    0x40000000, 0x05000000,
-    0xe37c0000, 0x00c80b82,
-    0x40000000, 0x00000000,
-    0xe37c0000, 0x01f40b82,
-    0x40000000, 0x00000000,
-    0xe37c0000, 0x03200b82,
-    0x40000000, 0x00000000,
-    0x229b0000, 0x15a10549,
-    0x00000000, 0x00790000,
-    0xff080000, 0x0008ffff,
-    0xffffff07, 0xff02000f,
-    0x00117fff, 0x7fffff02,
-    0xff020013, 0x00157fff,
-    0x7fffff02, 0xff020017,
-    0x00197fff, 0x7fffff02,
-    0xff02001b, 0x001d7fff,
-    0xffffff08, 0xff020025,
-    0x00277f00, 0x7f01ff02,
-    0xff020029, 0x002b7f02,
-    0x7f03ff02, 0x53504c43,
-    0x00100008, 0x00040fc0,
-    0x000000ff, 0x00000fe0,
-    0x000000ff, 0x00050fe0,
-    0x000000ff, 0x00050fcc,
-    0x000000ff, 0x00030fc5,
-    0x000000ff, 0x00050fc5,
-    0x000000ff, 0x00050fc0,
-    0x000000ff, 0x018b0fcc,
-    0x000000ff, 0x018d0fcc,
-    0x000000ff, 0x018c0fcc,
-    0x000000ff, 0x00040fcc,
-    0x000000ff, 0x00040fc4,
-    0x000000ff, 0x00040fc4,
-    0x0000000d, 0x00040fc4,
-    0x0000000a, 0x00040fc4,
-    0x0000000b, 0x00040fc4,
-    0x0000000c, 0xffffffff,
-    0xffffffff, 0xffffffff,
-    0xffffffff, 0xffffffff,
-    0xffffffff, 0x03a0ddd5,
-    0xdfb00320, 0xfe2103aa,
-    0x0332e40a, 0xe931fbd0,
-    0xfd3402ee, 0x022cea2d,
-    0xe71000e7, 0x04ca03aa,
-    0x0446e3bb, 0xe0b506d3,
-    0x0541042c, 0xf61fe255,
-    0xdf38fcad, 0xffeff7a1,
-    0xf989df95, 0xe3d3039c,
-    0x05b3faaa, 0xf9e5e824,
-    0xe99d0461, 0x0152f855,
-    0xf67ce7cf, 0x2454fd64,
-    0x0dde08b1, 0x08b12454,
-    0x15ea05dc, 0x05dc08b1,
-    0x08b12238, 0x172005dc,
-    0x0ea608b1, 0x08b1229c,
-    0x15ea0ea6, 0x02e408b1,
-    0x08b115ea, 0x24f4fb46,
-    0x025808b1, 0x08b124f4,
-    0x1b85f97f, 0xf97f08b1,
-    0x08b1245e, 0x1a8bf97f,
-    0xf87608b1, 0x08b12364,
-    0xde68f876, 0x02bcf3b2,
-    0xf574e02a, 0xe34afe70,
-    0xfcaef47a, 0xf4dee732,
-    0xe918fda8, 0x00e7f588,
-    0xf39de639, 0xe2e604ca,
-    0x060ef3b2, 0xf448e05c,
-    0x1de20514, 0xf0f6fd16,
-    0xfd161de2, 0x1de2effc,
-    0xef34fd16, 0xfd161de2,
-    0x1de2ee3a, 0xeda4fd16,
-    0xfd161de2, 0x1de2ecaa,
-    0xebe2fd16, 0xfd161de2,
-    0x0000e638
-};
+
+
 
 #pragma define_section d13450 ".data.data_ov026_02113450" ".data.data_ov026_02113450" ".data.data_ov026_02113450" far_data
 #pragma section d13450 begin
-u32 data_ov026_02113450[] = {
+
+
+#pragma section d13450 end
+
+#pragma define_section d137c0 ".data.data_ov026_021137c0" ".data.data_ov026_021137c0" ".data.data_ov026_021137c0" far_data
+#pragma section d137c0 begin
+
+
+#pragma section d137c0 end
+
+#pragma define_section s_02112ffc ".data.data_ov026_02112ffc" ".data.data_ov026_02112ffc" ".data.data_ov026_02112ffc" far_data
+#pragma section s_02112ffc begin
+u32 data_ov026_02112ffc[6] = {
+    0xffffffff,
+    0xffffffff,
+    0xffffffff,
+    0xffffffff,
+    0xffffffff,
+    0xffffffff,
+};
+#pragma section s_02112ffc end
+
+#pragma define_section s_02113014 ".data.data_ov026_02113014" ".data.data_ov026_02113014" ".data.data_ov026_02113014" far_data
+#pragma section s_02113014 begin
+u32 data_ov026_02113014[18] = {
+    0x00002d02,
+    (u32)data_ov026_021131a0,
+    0x00000e03,
+    (u32)data_ov026_021130ac,
+    0x00000104,
+    (u32)data_ov026_02112e10,
+    0x0000010b,
+    (u32)data_ov026_02112dc0,
+    0x00000501,
+    (u32)data_ov026_0211305c,
+    0x00000208,
+    (u32)data_ov026_02112ea0,
+    0x00000109,
+    (u32)data_ov026_02112df4,
+    0x0000010e,
+    (u32)data_ov026_02112dc4,
+    0x0000010a,
+    (u32)data_ov026_02112e00,
+};
+#pragma section s_02113014 end
+
+#pragma define_section s_0211305c ".data.data_ov026_0211305c" ".data.data_ov026_0211305c" ".data.data_ov026_0211305c" far_data
+#pragma section s_0211305c begin
+u32 data_ov026_0211305c[20] = {
+    0xe37c0000,
+    0xff9c0b82,
+    0x40000000,
+    0x05000000,
+    0xe37c0000,
+    0x00c80b82,
+    0x40000000,
+    0x00000000,
+    0xe37c0000,
+    0x01f40b82,
+    0x40000000,
+    0x00000000,
+    0xe37c0000,
+    0x03200b82,
+    0x40000000,
+    0x00000000,
+    0x229b0000,
+    0x15a10549,
+    0x00000000,
+    0x00790000,
+};
+#pragma section s_0211305c end
+
+#pragma define_section s_021130ac ".data.data_ov026_021130ac" ".data.data_ov026_021130ac" ".data.data_ov026_021130ac" far_data
+#pragma section s_021130ac begin
+u32 data_ov026_021130ac[8] = {
+    0xff080000,
+    0x0008ffff,
+    0xffffff07,
+    0xff02000f,
+    0x00117fff,
+    0x7fffff02,
+    0xff020013,
+    0x00157fff,
+};
+#pragma section s_021130ac end
+
+#pragma define_section s_021130cc ".data.data_ov026_021130cc" ".data.data_ov026_021130cc" ".data.data_ov026_021130cc" far_data
+#pragma section s_021130cc begin
+u32 data_ov026_021130cc[1] = {
+    0x7fffff02,
+};
+#pragma section s_021130cc end
+
+#pragma define_section s_021130d0 ".data.data_ov026_021130d0" ".data.data_ov026_021130d0" ".data.data_ov026_021130d0" far_data
+#pragma section s_021130d0 begin
+u32 data_ov026_021130d0[12] = {
+    0xff020017,
+    0x00197fff,
+    0x7fffff02,
+    0xff02001b,
+    0x001d7fff,
+    0xffffff08,
+    0xff020025,
+    0x00277f00,
+    0x7f01ff02,
+    0xff020029,
+    0x002b7f02,
+    0x7f03ff02,
+};
+#pragma section s_021130d0 end
+
+#pragma define_section s_02113100 ".data.data_ov026_02113100" ".data.data_ov026_02113100" ".data.data_ov026_02113100" far_data
+#pragma section s_02113100 begin
+u32 data_ov026_02113100[40] = {
+    0x53504c43,
+    0x00100008,
+    0x00040fc0,
+    0x000000ff,
+    0x00000fe0,
+    0x000000ff,
+    0x00050fe0,
+    0x000000ff,
+    0x00050fcc,
+    0x000000ff,
+    0x00030fc5,
+    0x000000ff,
+    0x00050fc5,
+    0x000000ff,
+    0x00050fc0,
+    0x000000ff,
+    0x018b0fcc,
+    0x000000ff,
+    0x018d0fcc,
+    0x000000ff,
+    0x018c0fcc,
+    0x000000ff,
+    0x00040fcc,
+    0x000000ff,
+    0x00040fc4,
+    0x000000ff,
+    0x00040fc4,
+    0x0000000d,
+    0x00040fc4,
+    0x0000000a,
+    0x00040fc4,
+    0x0000000b,
+    0x00040fc4,
+    0x0000000c,
+    0xffffffff,
+    0xffffffff,
+    0xffffffff,
+    0xffffffff,
+    0xffffffff,
+    0xffffffff,
+};
+#pragma section s_02113100 end
+
+#pragma define_section s_021131a0 ".data.data_ov026_021131a0" ".data.data_ov026_021131a0" ".data.data_ov026_021131a0" far_data
+#pragma section s_021131a0 begin
+u32 data_ov026_021131a0[34] = {
+    0x03a0ddd5,
+    0xdfb00320,
+    0xfe2103aa,
+    0x0332e40a,
+    0xe931fbd0,
+    0xfd3402ee,
+    0x022cea2d,
+    0xe71000e7,
+    0x04ca03aa,
+    0x0446e3bb,
+    0xe0b506d3,
+    0x0541042c,
+    0xf61fe255,
+    0xdf38fcad,
+    0xffeff7a1,
+    0xf989df95,
+    0xe3d3039c,
+    0x05b3faaa,
+    0xf9e5e824,
+    0xe99d0461,
+    0x0152f855,
+    0xf67ce7cf,
+    0x2454fd64,
+    0x0dde08b1,
+    0x08b12454,
+    0x15ea05dc,
+    0x05dc08b1,
+    0x08b12238,
+    0x172005dc,
+    0x0ea608b1,
+    0x08b1229c,
+    0x15ea0ea6,
+    0x02e408b1,
+    0x08b115ea,
+};
+#pragma section s_021131a0 end
+
+#pragma define_section s_02113228 ".data.data_ov026_02113228" ".data.data_ov026_02113228" ".data.data_ov026_02113228" far_data
+#pragma section s_02113228 begin
+u32 data_ov026_02113228[34] = {
+    0x24f4fb46,
+    0x025808b1,
+    0x08b124f4,
+    0x1b85f97f,
+    0xf97f08b1,
+    0x08b1245e,
+    0x1a8bf97f,
+    0xf87608b1,
+    0x08b12364,
+    0xde68f876,
+    0x02bcf3b2,
+    0xf574e02a,
+    0xe34afe70,
+    0xfcaef47a,
+    0xf4dee732,
+    0xe918fda8,
+    0x00e7f588,
+    0xf39de639,
+    0xe2e604ca,
+    0x060ef3b2,
+    0xf448e05c,
+    0x1de20514,
+    0xf0f6fd16,
+    0xfd161de2,
+    0x1de2effc,
+    0xef34fd16,
+    0xfd161de2,
+    0x1de2ee3a,
+    0xeda4fd16,
+    0xfd161de2,
+    0x1de2ecaa,
+    0xebe2fd16,
+    0xfd161de2,
+    0x0000e638,
+};
+#pragma section s_02113228 end
+
+#pragma define_section s_02113450 ".data.data_ov026_02113450" ".data.data_ov026_02113450" ".data.data_ov026_02113450" far_data
+#pragma section s_02113450 begin
+u32 data_ov026_02113450[50] = {
     0x1de2e225,
     0xf254f5a6,
     0x1de2e225,
@@ -158,6 +322,12 @@ u32 data_ov026_02113450[] = {
     0x032008fc,
     0x15e02227,
     0x044c08fc,
+};
+#pragma section s_02113450 end
+
+#pragma define_section s_02113518 ".data.data_ov026_02113518" ".data.data_ov026_02113518" ".data.data_ov026_02113518" far_data
+#pragma section s_02113518 begin
+u32 data_ov026_02113518[7] = {
     0x15e02227,
     0x05aa08fc,
     0x1dec023d,
@@ -165,6 +335,12 @@ u32 data_ov026_02113450[] = {
     0x1bee483f,
     0xff06f862,
     0x16760c3d,
+};
+#pragma section s_02113518 end
+
+#pragma define_section s_02113534 ".data.data_ov026_02113534" ".data.data_ov026_02113534" ".data.data_ov026_02113534" far_data
+#pragma section s_02113534 begin
+u32 data_ov026_02113534[8] = {
     0xf66ef63c,
     0x203ae225,
     0x11f8f56a,
@@ -173,6 +349,12 @@ u32 data_ov026_02113450[] = {
     0x1f40e225,
     0x12f2f56a,
     0x1f72e225,
+};
+#pragma section s_02113534 end
+
+#pragma define_section s_02113554 ".data.data_ov026_02113554" ".data.data_ov026_02113554" ".data.data_ov026_02113554" far_data
+#pragma section s_02113554 begin
+u32 data_ov026_02113554[32] = {
     0x13baf56a,
     0x203ae225,
     0x13ecf56a,
@@ -205,6 +387,12 @@ u32 data_ov026_02113450[] = {
     0x1219e225,
     0x0042fcbc,
     0x1219e225,
+};
+#pragma section s_02113554 end
+
+#pragma define_section s_021135d4 ".data.data_ov026_021135d4" ".data.data_ov026_021135d4" ".data.data_ov026_021135d4" far_data
+#pragma section s_021135d4 begin
+u32 data_ov026_021135d4[8] = {
     0x0010fbf4,
     0x1219e225,
     0x0042fb2c,
@@ -213,15 +401,21 @@ u32 data_ov026_02113450[] = {
     0x1219e225,
     0x01d2fb2c,
     0x1219e225,
+};
+#pragma section s_021135d4 end
+
+#pragma define_section s_021135f4 ".data.data_ov026_021135f4" ".data.data_ov026_021135f4" ".data.data_ov026_021135f4" far_data
+#pragma section s_021135f4 begin
+u32 data_ov026_021135f4[3] = {
     0x0204fbf4,
     0x1219e225,
-    0x01d2fcbc
+    0x01d2fcbc,
 };
-#pragma section d13450 end
+#pragma section s_021135f4 end
 
-#pragma define_section d137c0 ".data.data_ov026_021137c0" ".data.data_ov026_021137c0" ".data.data_ov026_021137c0" far_data
-#pragma section d137c0 begin
-u32 data_ov026_021137c0[] = {
+#pragma define_section s_021137c0 ".data.data_ov026_021137c0" ".data.data_ov026_021137c0" ".data.data_ov026_021137c0" far_data
+#pragma section s_021137c0 begin
+u32 data_ov026_021137c0[9] = {
     0x24540069,
     0x0dde08b1,
     0x00000000,
@@ -231,14 +425,38 @@ u32 data_ov026_021137c0[] = {
     0x00000000,
     0x00040000,
     0x24f40069,
+};
+#pragma section s_021137c0 end
+
+#pragma define_section s_021137e4 ".data.data_ov026_021137e4" ".data.data_ov026_021137e4" ".data.data_ov026_021137e4" far_data
+#pragma section s_021137e4 begin
+u32 data_ov026_021137e4[5] = {
     0x025808b1,
     0x00000000,
     0x00060000,
     0x15ea0069,
     0x05d208b1,
+};
+#pragma section s_021137e4 end
+
+#pragma define_section s_021137f8 ".data.data_ov026_021137f8" ".data.data_ov026_021137f8" ".data.data_ov026_021137f8" far_data
+#pragma section s_021137f8 begin
+u32 data_ov026_021137f8[2] = {
     0x00000000,
     0x00030000,
+};
+#pragma section s_021137f8 end
+
+#pragma define_section s_02113800 ".data.data_ov026_02113800" ".data.data_ov026_02113800" ".data.data_ov026_02113800" far_data
+#pragma section s_02113800 begin
+u32 data_ov026_02113800[1] = {
     0x15ea0069,
+};
+#pragma section s_02113800 end
+
+#pragma define_section s_02113804 ".data.data_ov026_02113804" ".data.data_ov026_02113804" ".data.data_ov026_02113804" far_data
+#pragma section s_02113804 begin
+u32 data_ov026_02113804[7] = {
     0x02e408b1,
     0x00000000,
     0x00050000,
@@ -246,9 +464,21 @@ u32 data_ov026_021137c0[] = {
     0xf97a08b1,
     0x00000000,
     0x00070000,
+};
+#pragma section s_02113804 end
+
+#pragma define_section s_02113820 ".data.data_ov026_02113820" ".data.data_ov026_02113820" ".data.data_ov026_02113820" far_data
+#pragma section s_02113820 begin
+u32 data_ov026_02113820[3] = {
     0x23640069,
     0xf87608b1,
     0x00000000,
+};
+#pragma section s_02113820 end
+
+#pragma define_section s_0211382c ".data.data_ov026_0211382c" ".data.data_ov026_0211382c" ".data.data_ov026_0211382c" far_data
+#pragma section s_0211382c begin
+u32 data_ov026_0211382c[31] = {
     0x00080000,
     0x1af7004c,
     0x184c0549,
@@ -280,27 +510,63 @@ u32 data_ov026_021137c0[] = {
     0xffff0000,
     0x28d2002b,
     0x08340546,
+};
+#pragma section s_0211382c end
+
+#pragma define_section s_021138a8 ".data.data_ov026_021138a8" ".data.data_ov026_021138a8" ".data.data_ov026_021138a8" far_data
+#pragma section s_021138a8 begin
+u32 data_ov026_021138a8[5] = {
     0x00000000,
     0xff020000,
     0x28d2001e,
     0x00320640,
     0x00000000,
+};
+#pragma section s_021138a8 end
+
+#pragma define_section s_021138bc ".data.data_ov026_021138bc" ".data.data_ov026_021138bc" ".data.data_ov026_021138bc" far_data
+#pragma section s_021138bc begin
+u32 data_ov026_021138bc[2] = {
     0xff060000,
     0x12c000a1,
+};
+#pragma section s_021138bc end
+
+#pragma define_section s_021138c4 ".data.data_ov026_021138c4" ".data.data_ov026_021138c4" ".data.data_ov026_021138c4" far_data
+#pragma section s_021138c4 begin
+u32 data_ov026_021138c4[5] = {
     0x109a0578,
     0x00000000,
     0xffff0000,
     0x27b20019,
     0x08340481,
+};
+#pragma section s_021138c4 end
+
+#pragma define_section s_021138d8 ".data.data_ov026_021138d8" ".data.data_ov026_021138d8" ".data.data_ov026_021138d8" far_data
+#pragma section s_021138d8 begin
+u32 data_ov026_021138d8[6] = {
     0x00000000,
     0xff000000,
     0x26ea0019,
     0x08340481,
     0x00000000,
     0xff000000,
+};
+#pragma section s_021138d8 end
+
+#pragma define_section s_021138f0 ".data.data_ov026_021138f0" ".data.data_ov026_021138f0" ".data.data_ov026_021138f0" far_data
+#pragma section s_021138f0 begin
+u32 data_ov026_021138f0[3] = {
     0x26220019,
     0x08340481,
     0x00000000,
+};
+#pragma section s_021138f0 end
+
+#pragma define_section s_021138fc ".data.data_ov026_021138fc" ".data.data_ov026_021138fc" ".data.data_ov026_021138fc" far_data
+#pragma section s_021138fc begin
+u32 data_ov026_021138fc[14] = {
     0xff000000,
     0x255a0019,
     0x08340549,
@@ -315,6 +581,12 @@ u32 data_ov026_021137c0[] = {
     0x00000000,
     0xff000000,
     0x23020019,
+};
+#pragma section s_021138fc end
+
+#pragma define_section s_02113934 ".data.data_ov026_02113934" ".data.data_ov026_02113934" ".data.data_ov026_02113934" far_data
+#pragma section s_02113934 begin
+u32 data_ov026_02113934[19] = {
     0x08340611,
     0x00000000,
     0xff000000,
@@ -334,18 +606,36 @@ u32 data_ov026_021137c0[] = {
     0x1405f542,
     0x40000000,
     0x00100000,
+};
+#pragma section s_02113934 end
+
+#pragma define_section s_02113980 ".data.data_ov026_02113980" ".data.data_ov026_02113980" ".data.data_ov026_02113980" far_data
+#pragma section s_02113980 begin
+u32 data_ov026_02113980[6] = {
     0x25a50019,
     0x122b0549,
     0x00000000,
     0xff000000,
     0x24dd0019,
     0x122b0549,
+};
+#pragma section s_02113980 end
+
+#pragma define_section s_02113998 ".data.data_ov026_02113998" ".data.data_ov026_02113998" ".data.data_ov026_02113998" far_data
+#pragma section s_02113998 begin
+u32 data_ov026_02113998[6] = {
     0x00000000,
     0xff000000,
     0x24dd0019,
     0x11630611,
     0x00000000,
     0xff000000,
+};
+#pragma section s_02113998 end
+
+#pragma define_section s_021139b0 ".data.data_ov026_021139b0" ".data.data_ov026_021139b0" ".data.data_ov026_021139b0" far_data
+#pragma section s_021139b0 begin
+u32 data_ov026_021139b0[17] = {
     0x24dd0019,
     0x109b06d9,
     0x00000000,
@@ -363,9 +653,21 @@ u32 data_ov026_021137c0[] = {
     0x00000000,
     0xffff0000,
     0x1dee006b,
+};
+#pragma section s_021139b0 end
+
+#pragma define_section s_021139f4 ".data.data_ov026_021139f4" ".data.data_ov026_021139f4" ".data.data_ov026_021139f4" far_data
+#pragma section s_021139f4 begin
+u32 data_ov026_021139f4[3] = {
     0xf0fffd16,
     0x00000000,
     0xffff0000,
+};
+#pragma section s_021139f4 end
+
+#pragma define_section s_02113a00 ".data.data_ov026_02113a00" ".data.data_ov026_02113a00" ".data.data_ov026_02113a00" far_data
+#pragma section s_02113a00 begin
+u32 data_ov026_02113a00[20] = {
     0x19b600fe,
     0x085cf678,
     0x00000000,
@@ -386,6 +688,12 @@ u32 data_ov026_021137c0[] = {
     0x0db7f56a,
     0x60000000,
     0x01040000,
+};
+#pragma section s_02113a00 end
+
+#pragma define_section s_02113a50 ".data.data_ov026_02113a50" ".data.data_ov026_02113a50" ".data.data_ov026_02113a50" far_data
+#pragma section s_02113a50 begin
+u32 data_ov026_02113a50[9] = {
     0x207700fe,
     0xff91f79a,
     0x00000000,
@@ -395,12 +703,18 @@ u32 data_ov026_021137c0[] = {
     0x00000000,
     0xffff0000,
     0x14da00c5,
+};
+#pragma section s_02113a50 end
+
+#pragma define_section s_02113a74 ".data.data_ov026_02113a74" ".data.data_ov026_02113a74" ".data.data_ov026_02113a74" far_data
+#pragma section s_02113a74 begin
+u32 data_ov026_02113a74[7] = {
     0x11550549,
     0x60000000,
     0xffff0000,
     0x270e00c5,
     0x112a0549,
     0xa0000000,
-    0xffff0000
+    0xffff0000,
 };
-#pragma section d137c0 end
+#pragma section s_02113a74 end

@@ -1,14 +1,99 @@
     .text       start:0x021111a0 end:0x02112228 kind:code align:32
-    .rodata     start:0x02112228 end:0x02112458 kind:rodata align:4
+    .rodata     start:0x02112228 end:0x02112230 kind:rodata align:4
+    .rodata.data_ov009_02112230 start:0x02112230 end:0x02112234 kind:rodata align:4
+    .rodata.data_ov009_02112234 start:0x02112234 end:0x02112238 kind:rodata align:4
+    .rodata.data_ov009_02112238 start:0x02112238 end:0x02112254 kind:rodata align:4
+    .rodata.data_ov009_02112254 start:0x02112254 end:0x02112258 kind:rodata align:4
+    .rodata.data_ov009_02112258 start:0x02112258 end:0x02112270 kind:rodata align:4
+    .rodata.data_ov009_02112270 start:0x02112270 end:0x0211227c kind:rodata align:4
+    .rodata.data_ov009_0211227c start:0x0211227c end:0x02112294 kind:rodata align:4
+    .rodata.data_ov009_02112294 start:0x02112294 end:0x0211229c kind:rodata align:4
+    .rodata.data_ov009_0211229c start:0x0211229c end:0x021122ec kind:rodata align:4
+    .rodata.data_ov009_021122ec start:0x021122ec end:0x02112320 kind:rodata align:4
+    .rodata.data_ov009_02112320 start:0x02112320 end:0x02112358 kind:rodata align:4
+    .rodata.data_ov009_02112358 start:0x02112358 end:0x02112368 kind:rodata align:4
+    .rodata.data_ov009_02112368 start:0x02112368 end:0x021123e4 kind:rodata align:4
+    .rodata.data_ov009_021123e4 start:0x021123e4 end:0x021123f4 kind:rodata align:4
+    .rodata.data_ov009_021123f4 start:0x021123f4 end:0x02112404 kind:rodata align:4
+    .rodata.data_ov009_02112404 start:0x02112404 end:0x0211241c kind:rodata align:4
+    .rodata.data_ov009_0211241c start:0x0211241c end:0x02112428 kind:rodata align:4
+    .rodata.data_ov009_02112428 start:0x02112428 end:0x02112434 kind:rodata align:4
+    .rodata.data_ov009_02112434 start:0x02112434 end:0x02112438 kind:rodata align:4
+    .rodata.data_ov009_02112438 start:0x02112438 end:0x0211244c kind:rodata align:4
+    .rodata.data_ov009_0211244c start:0x0211244c end:0x02112458 kind:rodata align:4
     .init       start:0x02112458 end:0x02112b34 kind:code align:4
     .ctor       start:0x02112b34 end:0x02112b44 kind:rodata align:4
-    .data.gap0  start:0x02112b60 end:0x02112bc4 kind:data align:32
+    .data.data_ov009_02112b60 start:0x02112b60 end:0x02112b64 kind:data align:32
+    .data.data_ov009_02112b64 start:0x02112b64 end:0x02112b68 kind:data align:4
+    .data.data_ov009_02112b68 start:0x02112b68 end:0x02112b6c kind:data align:4
+    .data.data_ov009_02112b6c start:0x02112b6c end:0x02112b74 kind:data align:4
+    .data.data_ov009_02112b74 start:0x02112b74 end:0x02112b7c kind:data align:4
+    .data.data_ov009_02112b7c start:0x02112b7c end:0x02112b84 kind:data align:4
+    .data.data_ov009_02112b84 start:0x02112b84 end:0x02112b88 kind:data align:4
+    .data.data_ov009_02112b88 start:0x02112b88 end:0x02112b94 kind:data align:4
+    .data.data_ov009_02112b94 start:0x02112b94 end:0x02112ba8 kind:data align:4
+    .data.data_ov009_02112ba8 start:0x02112ba8 end:0x02112bac kind:data align:4
+    .data.data_ov009_02112bac start:0x02112bac end:0x02112bc4 kind:data align:4
     .data.data_ov009_02112bc4 start:0x02112bc4 end:0x02112bdc kind:data align:4
-    .data.gap1  start:0x02112bdc end:0x02112bf8 kind:data align:4
+    .data.data_ov009_02112bdc start:0x02112bdc end:0x02112bec kind:data align:4
+    .data.data_ov009_02112bec start:0x02112bec end:0x02112bf8 kind:data align:4
     .data.data_ov009_02112bf8 start:0x02112bf8 end:0x02112c18 kind:data align:4
     .data.gap2  start:0x02112c18 end:0x02112c38 kind:data align:4
     .data.data_ov009_02112c38 start:0x02112c38 end:0x02112c58 kind:data align:4
-    .data.data_ov009_02112c58 start:0x02112c58 end:0x021138fc kind:data align:4
+    .data.data_ov009_02112c58 start:0x02112c58 end:0x02112c68 kind:data align:4
+    .data.data_ov009_02112c68 start:0x02112c68 end:0x02112c78 kind:data align:4
+    .data.data_ov009_02112c78 start:0x02112c78 end:0x02112c88 kind:data align:4
+    .data.data_ov009_02112c88 start:0x02112c88 end:0x02112c9c kind:data align:4
+    .data.data_ov009_02112c9c start:0x02112c9c end:0x02112ca8 kind:data align:4
+    .data.data_ov009_02112ca8 start:0x02112ca8 end:0x02112cc8 kind:data align:4
+    .data.data_ov009_02112cc8 start:0x02112cc8 end:0x02112ccc kind:data align:4
+    .data.data_ov009_02112ccc start:0x02112ccc end:0x02112cd0 kind:data align:4
+    .data.data_ov009_02112cd0 start:0x02112cd0 end:0x02112d04 kind:data align:4
+    .data.data_ov009_02112d04 start:0x02112d04 end:0x02112d44 kind:data align:4
+    .data.data_ov009_02112d44 start:0x02112d44 end:0x02112d48 kind:data align:4
+    .data.data_ov009_02112d48 start:0x02112d48 end:0x02112d84 kind:data align:4
+    .data.data_ov009_02112d84 start:0x02112d84 end:0x02112d98 kind:data align:4
+    .data.data_ov009_02112d98 start:0x02112d98 end:0x02112dcc kind:data align:4
+    .data.data_ov009_02112dcc start:0x02112dcc end:0x02112e14 kind:data align:4
+    .data.data_ov009_02112e14 start:0x02112e14 end:0x02112e5c kind:data align:4
+    .data.data_ov009_02112e5c start:0x02112e5c end:0x02112e7c kind:data align:4
+    .data.data_ov009_02112e7c start:0x02112e7c end:0x02112f2c kind:data align:4
+    .data.data_ov009_02112f2c start:0x02112f2c end:0x02112f3c kind:data align:4
+    .data.data_ov009_02112f3c start:0x02112f3c end:0x02112f58 kind:data align:4
+    .data.data_ov009_02112f58 start:0x02112f58 end:0x02112f7c kind:data align:4
+    .data.data_ov009_02112f7c start:0x02112f7c end:0x02112fd0 kind:data align:4
+    .data.data_ov009_02112fd0 start:0x02112fd0 end:0x02112ffc kind:data align:4
+    .data.data_ov009_02112ffc start:0x02112ffc end:0x0211301c kind:data align:4
+    .data.data_ov009_0211301c start:0x0211301c end:0x021130cc kind:data align:4
+    .data.data_ov009_021130cc start:0x021130cc end:0x021130d0 kind:data align:4
+    .data.data_ov009_021130d0 start:0x021130d0 end:0x02113104 kind:data align:4
+    .data.data_ov009_02113104 start:0x02113104 end:0x02113214 kind:data align:4
+    .data.data_ov009_02113214 start:0x02113214 end:0x02113228 kind:data align:4
+    .data.data_ov009_02113228 start:0x02113228 end:0x021132ec kind:data align:4
+    .data.data_ov009_021132ec start:0x021132ec end:0x02113344 kind:data align:4
+    .data.data_ov009_02113344 start:0x02113344 end:0x021133a8 kind:data align:4
+    .data.data_ov009_021133a8 start:0x021133a8 end:0x021133d4 kind:data align:4
+    .data.data_ov009_021133d4 start:0x021133d4 end:0x02113434 kind:data align:4
+    .data.data_ov009_02113434 start:0x02113434 end:0x02113518 kind:data align:4
+    .data.data_ov009_02113518 start:0x02113518 end:0x02113534 kind:data align:4
+    .data.fill_02113534 start:0x02113534 end:0x02113554 kind:data align:4
+    .data.data_ov009_02113554 start:0x02113554 end:0x021135d4 kind:data align:4
+    .data.data_ov009_021135d4 start:0x021135d4 end:0x021135f4 kind:data align:4
+    .data.data_ov009_021135f4 start:0x021135f4 end:0x021136d4 kind:data align:4
+    .data.fill_021136d4 start:0x021136d4 end:0x021136f4 kind:data align:4
+    .data.data_ov009_021136f4 start:0x021136f4 end:0x0211373c kind:data align:4
+    .data.data_ov009_0211373c start:0x0211373c end:0x021137e4 kind:data align:4
+    .data.data_ov009_021137e4 start:0x021137e4 end:0x021137f8 kind:data align:4
+    .data.data_ov009_021137f8 start:0x021137f8 end:0x02113800 kind:data align:4
+    .data.data_ov009_02113800 start:0x02113800 end:0x02113804 kind:data align:4
+    .data.data_ov009_02113804 start:0x02113804 end:0x02113820 kind:data align:4
+    .data.data_ov009_02113820 start:0x02113820 end:0x0211382c kind:data align:4
+    .data.data_ov009_0211382c start:0x0211382c end:0x021138a8 kind:data align:4
+    .data.data_ov009_021138a8 start:0x021138a8 end:0x021138bc kind:data align:4
+    .data.data_ov009_021138bc start:0x021138bc end:0x021138c4 kind:data align:4
+    .data.data_ov009_021138c4 start:0x021138c4 end:0x021138d8 kind:data align:4
+    .data.data_ov009_021138d8 start:0x021138d8 end:0x021138f0 kind:data align:4
+    .data.data_ov009_021138f0 start:0x021138f0 end:0x021138fc kind:data align:4
     .data       start:0x021138fc end:0x02113c20 kind:data align:4
     .bss        start:0x02113c20 end:0x02113ee0 kind:bss align:32
 src/game/actors/d_a_s_bird.cpp:
@@ -27,13 +112,99 @@ src/game/actors/d_a_obj_mc_water.cpp:
     .data.data_ov009_02112bc4 start:0x02112bc4 end:0x02112bdc
     .data.gap2 start:0x02112c18 end:0x02112c38
     .data.data_ov009_02112c38 start:0x02112c38 end:0x02112c58
-    .rodata start:0x02112230 end:0x02112458
-    .data.gap0 start:0x02112b60 end:0x02112bc4
-    .data.gap1 start:0x02112bdc end:0x02112bf8
-    .data.data_ov009_02112c58 start:0x02112c58 end:0x021138fc
     .bss start:0x02113c68 end:0x02113e88
     .data start:0x021139d4 end:0x02113a98
 
+src/unnamed/ov009/data_ov009_02112230.c:
+    complete
+    .rodata.data_ov009_02112230 start:0x02112230 end:0x02112234
+    .rodata.data_ov009_02112234 start:0x02112234 end:0x02112238
+    .rodata.data_ov009_02112238 start:0x02112238 end:0x02112254
+    .rodata.data_ov009_02112254 start:0x02112254 end:0x02112258
+    .rodata.data_ov009_02112258 start:0x02112258 end:0x02112270
+    .rodata.data_ov009_02112270 start:0x02112270 end:0x0211227c
+    .rodata.data_ov009_0211227c start:0x0211227c end:0x02112294
+    .rodata.data_ov009_02112294 start:0x02112294 end:0x0211229c
+    .rodata.data_ov009_0211229c start:0x0211229c end:0x021122ec
+    .rodata.data_ov009_021122ec start:0x021122ec end:0x02112320
+    .rodata.data_ov009_02112320 start:0x02112320 end:0x02112358
+    .rodata.data_ov009_02112358 start:0x02112358 end:0x02112368
+    .rodata.data_ov009_02112368 start:0x02112368 end:0x021123e4
+    .rodata.data_ov009_021123e4 start:0x021123e4 end:0x021123f4
+    .rodata.data_ov009_021123f4 start:0x021123f4 end:0x02112404
+    .rodata.data_ov009_02112404 start:0x02112404 end:0x0211241c
+    .rodata.data_ov009_0211241c start:0x0211241c end:0x02112428
+    .rodata.data_ov009_02112428 start:0x02112428 end:0x02112434
+    .rodata.data_ov009_02112434 start:0x02112434 end:0x02112438
+    .rodata.data_ov009_02112438 start:0x02112438 end:0x0211244c
+    .rodata.data_ov009_0211244c start:0x0211244c end:0x02112458
+    .data.data_ov009_02112b60 start:0x02112b60 end:0x02112b64
+    .data.data_ov009_02112b64 start:0x02112b64 end:0x02112b68
+    .data.data_ov009_02112b68 start:0x02112b68 end:0x02112b6c
+    .data.data_ov009_02112b6c start:0x02112b6c end:0x02112b74
+    .data.data_ov009_02112b74 start:0x02112b74 end:0x02112b7c
+    .data.data_ov009_02112b7c start:0x02112b7c end:0x02112b84
+    .data.data_ov009_02112b84 start:0x02112b84 end:0x02112b88
+    .data.data_ov009_02112b88 start:0x02112b88 end:0x02112b94
+    .data.data_ov009_02112b94 start:0x02112b94 end:0x02112ba8
+    .data.data_ov009_02112ba8 start:0x02112ba8 end:0x02112bac
+    .data.data_ov009_02112bac start:0x02112bac end:0x02112bc4
+    .data.data_ov009_02112bdc start:0x02112bdc end:0x02112bec
+    .data.data_ov009_02112bec start:0x02112bec end:0x02112bf8
+    .data.data_ov009_02112c58 start:0x02112c58 end:0x02112c68
+    .data.data_ov009_02112c68 start:0x02112c68 end:0x02112c78
+    .data.data_ov009_02112c78 start:0x02112c78 end:0x02112c88
+    .data.data_ov009_02112c88 start:0x02112c88 end:0x02112c9c
+    .data.data_ov009_02112c9c start:0x02112c9c end:0x02112ca8
+    .data.data_ov009_02112ca8 start:0x02112ca8 end:0x02112cc8
+    .data.data_ov009_02112cc8 start:0x02112cc8 end:0x02112ccc
+    .data.data_ov009_02112ccc start:0x02112ccc end:0x02112cd0
+    .data.data_ov009_02112cd0 start:0x02112cd0 end:0x02112d04
+    .data.data_ov009_02112d04 start:0x02112d04 end:0x02112d44
+    .data.data_ov009_02112d44 start:0x02112d44 end:0x02112d48
+    .data.data_ov009_02112d48 start:0x02112d48 end:0x02112d84
+    .data.data_ov009_02112d84 start:0x02112d84 end:0x02112d98
+    .data.data_ov009_02112d98 start:0x02112d98 end:0x02112dcc
+    .data.data_ov009_02112dcc start:0x02112dcc end:0x02112e14
+    .data.data_ov009_02112e14 start:0x02112e14 end:0x02112e5c
+    .data.data_ov009_02112e5c start:0x02112e5c end:0x02112e7c
+    .data.data_ov009_02112e7c start:0x02112e7c end:0x02112f2c
+    .data.data_ov009_02112f2c start:0x02112f2c end:0x02112f3c
+    .data.data_ov009_02112f3c start:0x02112f3c end:0x02112f58
+    .data.data_ov009_02112f58 start:0x02112f58 end:0x02112f7c
+    .data.data_ov009_02112f7c start:0x02112f7c end:0x02112fd0
+    .data.data_ov009_02112fd0 start:0x02112fd0 end:0x02112ffc
+    .data.data_ov009_02112ffc start:0x02112ffc end:0x0211301c
+    .data.data_ov009_0211301c start:0x0211301c end:0x021130cc
+    .data.data_ov009_021130cc start:0x021130cc end:0x021130d0
+    .data.data_ov009_021130d0 start:0x021130d0 end:0x02113104
+    .data.data_ov009_02113104 start:0x02113104 end:0x02113214
+    .data.data_ov009_02113214 start:0x02113214 end:0x02113228
+    .data.data_ov009_02113228 start:0x02113228 end:0x021132ec
+    .data.data_ov009_021132ec start:0x021132ec end:0x02113344
+    .data.data_ov009_02113344 start:0x02113344 end:0x021133a8
+    .data.data_ov009_021133a8 start:0x021133a8 end:0x021133d4
+    .data.data_ov009_021133d4 start:0x021133d4 end:0x02113434
+    .data.data_ov009_02113434 start:0x02113434 end:0x02113518
+    .data.data_ov009_02113518 start:0x02113518 end:0x02113534
+src/unnamed/ov009/data_ov009_02113554.c:
+    complete
+    .data.data_ov009_02113554 start:0x02113554 end:0x021135d4
+    .data.data_ov009_021135d4 start:0x021135d4 end:0x021135f4
+    .data.data_ov009_021135f4 start:0x021135f4 end:0x021136d4
+    .data.data_ov009_021136f4 start:0x021136f4 end:0x0211373c
+    .data.data_ov009_0211373c start:0x0211373c end:0x021137e4
+    .data.data_ov009_021137e4 start:0x021137e4 end:0x021137f8
+    .data.data_ov009_021137f8 start:0x021137f8 end:0x02113800
+    .data.data_ov009_02113800 start:0x02113800 end:0x02113804
+    .data.data_ov009_02113804 start:0x02113804 end:0x02113820
+    .data.data_ov009_02113820 start:0x02113820 end:0x0211382c
+    .data.data_ov009_0211382c start:0x0211382c end:0x021138a8
+    .data.data_ov009_021138a8 start:0x021138a8 end:0x021138bc
+    .data.data_ov009_021138bc start:0x021138bc end:0x021138c4
+    .data.data_ov009_021138c4 start:0x021138c4 end:0x021138d8
+    .data.data_ov009_021138d8 start:0x021138d8 end:0x021138f0
+    .data.data_ov009_021138f0 start:0x021138f0 end:0x021138fc
 src/game/actors/d_a_obj_mc_metalnet.cpp:
     complete
     .text start:0x02111dc4 end:0x02112078

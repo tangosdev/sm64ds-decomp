@@ -19,11 +19,6 @@
       "end": "0x021115cc"
     },
     {
-      "name": ".rodata",
-      "start": "0x021115cc",
-      "end": "0x02112b48"
-    },
-    {
       "name": ".init",
       "start": "0x02112b48",
       "end": "0x02112bb4"
@@ -35,7 +30,7 @@
     },
     {
       "name": ".data",
-      "start": "0x02112bc0",
+      "start": "0x02113314",
       "end": "0x02113320"
     },
     {
@@ -97,13 +92,6 @@
   ],
   "data": [
     {
-      "symbol": "data_ov056_02112bc0",
-      "address": "0x02112bc0",
-      "size": "0x754",
-      "binding": "STB_GLOBAL",
-      "evidence": "file tables that sit in front of this class's profile"
-    },
-    {
       "symbol": "data_ov056_02113314",
       "address": "0x02113314",
       "size": "0xc",
@@ -139,8 +127,7 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x5ee collision handle"
-    }
-  ,
+    },
     {
       "symbol": "data_ov056_02113428",
       "address": "0x02113428",
@@ -359,13 +346,6 @@
           "firstDiff": null
         },
         {
-          "section": ".rodata",
-          "start": "0x021115cc",
-          "end": "0x02112b48",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".init",
           "start": "0x02112b48",
           "end": "0x02112bb4",
@@ -381,7 +361,7 @@
         },
         {
           "section": ".data",
-          "start": "0x02112bc0",
+          "start": "0x02113314",
           "end": "0x02113320",
           "differingBytes": 0,
           "firstDiff": null
@@ -713,246 +693,6 @@
       "addend": 0,
       "target_module": "ov056",
       "target_address": "0x02112b48"
-    },
-    {
-      "section": ".rodata",
-      "source": "0x021115d4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112be0",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112be0"
-    },
-    {
-      "section": ".rodata",
-      "source": "0x021115f0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bec",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112bec"
-    },
-    {
-      "section": ".rodata",
-      "source": "0x0211160c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112c24",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112c24"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112bcc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 244,
-      "target_module": "ov056",
-      "target_address": "0x02112cb4"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112bd4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 84,
-      "target_module": "ov056",
-      "target_address": "0x02112c14"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112bf8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 16,
-      "target_module": "ov056",
-      "target_address": "0x02112bd0"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112bfc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 116,
-      "target_module": "ov056",
-      "target_address": "0x02112c34"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112c18",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 1172,
-      "target_module": "ov056",
-      "target_address": "0x02113054"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112c20",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 708,
-      "target_module": "ov056",
-      "target_address": "0x02112e84"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112c38",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_021115cc",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x021115cc"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112c3c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02111624",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02111624"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112c40",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02111a60",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02111a60"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112c48",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_021115d0",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x021115d0"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112c4c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 388,
-      "target_module": "ov056",
-      "target_address": "0x02112d44"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112c50",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 8,
-      "target_module": "ov056",
-      "target_address": "0x02112bc8"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112c5c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 56,
-      "target_module": "ov056",
-      "target_address": "0x02112bf8"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112cb8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 516,
-      "target_module": "ov056",
-      "target_address": "0x02112dc4"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112cc0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 308,
-      "target_module": "ov056",
-      "target_address": "0x02112cf4"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112cc8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 200,
-      "target_module": "ov056",
-      "target_address": "0x02112c88"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112cd0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 0,
-      "target_module": "ov056",
-      "target_address": "0x02112bc0"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112cd8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 168,
-      "target_module": "ov056",
-      "target_address": "0x02112c68"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112ce0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 24,
-      "target_module": "ov056",
-      "target_address": "0x02112bd8"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112ce8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 4,
-      "target_module": "ov056",
-      "target_address": "0x02112bc4"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112cf0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov056_02112bc0",
-      "addend": 68,
-      "target_module": "ov056",
-      "target_address": "0x02112c04"
     }
   ],
   "defined_symbol_renames": [
@@ -965,15 +705,6 @@
       "from": "@508",
       "to": "@490",
       "evidence": "Re-paired from the .init relocation against the overlay ROM. compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @509 now; licensed under the existing pin @490 Re-keyed from @499 to @497 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @499 to @477 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @475 to @471 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @471 to @512 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @512 to @514 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
-    }
-  ],
-  "rodata": [
-    {
-      "symbol": "data_ov056_021115cc",
-      "address": "0x021115cc",
-      "size": "0x157c",
-      "binding": "STB_GLOBAL",
-      "evidence": "the ice block's BTA and four BCA animations as one run, interior alignment gaps included"
     }
   ]
 }

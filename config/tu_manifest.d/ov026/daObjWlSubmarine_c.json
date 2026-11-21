@@ -34,11 +34,6 @@
       "end": "0x02113f04"
     },
     {
-      "name": ".data",
-      "start": "0x02112fd4",
-      "end": "0x02112ffc"
-    },
-    {
       "name": ".data.wlLate",
       "input_section": ".data",
       "start": "0x02113c24",
@@ -90,12 +85,6 @@
     }
   ],
   "data": [
-    {
-      "symbol": "data_ov026_02112fd4",
-      "address": "0x02112fd4",
-      "size": "0x28",
-      "binding": "STB_GLOBAL"
-    },
     {
       "symbol": "_ZTI18daObjWlSubmarine_c",
       "address": "0x02113c24",
@@ -273,13 +262,6 @@
           "start": "0x02113edc",
           "end": "0x02113f04",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".data",
-          "start": "0x02112fd4",
-          "end": "0x02112ffc",
-          "differingBytes": 0,
-          "firstDiff": null
         },
         {
           "section": ".data.wlLate",

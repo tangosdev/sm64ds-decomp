@@ -47,42 +47,8 @@ extern u32 data_ov036_02112a18[];
 
 #pragma define_section gap0 ".data.gap0" ".data.gap0" ".data.gap0" far_data
 #pragma section gap0 begin
-u32 data_ov036_02112a00[] = {
-    0x000007aa,
-    0x11111114,
-    0x00000003,
-    (u32)&data_ov036_02112a54,
-    0x00000008,
-    (u32)&data_ov036_02112c94,
-    (u32)&data_ov036_02112a08,
-    0x00000000,
-    0x1b7b0000,
-    0x0ce4effc,
-    0x1001f542,
-    0x0905e50c,
-    0x0001ff9c,
-    0x0ce4effc,
-    0x0080f542,
-    0x0905e50c,
-    0x0040ff9c,
-    0x0b220014,
-    0x05dcf902,
-    0xeaab0003,
-    0xffff0000,
-    0x00006d00,
-    (u32)&data_ov036_02113384,
-    0x00006305,
-    (u32)&data_ov036_0211306c,
-    0x00000160,
-    (u32)&data_ov036_02112a44,
-    (u32)&data_ov036_02112d1c,
-    (u32)&data_ov036_02112a10,
-    0x07a907ab,
-    0x07ad07ac,
-    (u32)&data_ov036_02112a18,
-    0x06400101,
-    0x0000002f,
-};
+
+
 #pragma section gap0 end
 
 #pragma define_section s_02112c28 ".data.data_ov036_02112c28" ".data.data_ov036_02112c28" ".data.data_ov036_02112c28" far_data
@@ -1340,3 +1306,96 @@ u32 data_ov036_02113a50[1] = {
 };
 #pragma section s_02113a50 end
 
+#pragma define_section s_02112a00 ".data.data_ov036_02112a00" ".data.data_ov036_02112a00" ".data.data_ov036_02112a00" far_data
+#pragma section s_02112a00 begin
+u32 data_ov036_02112a00[1] = {
+    0x000007aa,
+};
+#pragma section s_02112a00 end
+
+#pragma define_section s_02112a04 ".data.data_ov036_02112a04" ".data.data_ov036_02112a04" ".data.data_ov036_02112a04" far_data
+#pragma section s_02112a04 begin
+u32 data_ov036_02112a04[1] = {
+    0x11111114,
+};
+#pragma section s_02112a04 end
+
+#pragma define_section s_02112a08 ".data.data_ov036_02112a08" ".data.data_ov036_02112a08" ".data.data_ov036_02112a08" far_data
+#pragma section s_02112a08 begin
+u32 data_ov036_02112a08[2] = {
+    0x00000003,
+    (u32)&data_ov036_02112a54,
+};
+#pragma section s_02112a08 end
+
+#pragma define_section s_02112a10 ".data.data_ov036_02112a10" ".data.data_ov036_02112a10" ".data.data_ov036_02112a10" far_data
+#pragma section s_02112a10 begin
+u32 data_ov036_02112a10[2] = {
+    0x00000008,
+    (u32)&data_ov036_02112c94,
+};
+#pragma section s_02112a10 end
+
+#pragma define_section s_02112a18 ".data.data_ov036_02112a18" ".data.data_ov036_02112a18" ".data.data_ov036_02112a18" far_data
+#pragma section s_02112a18 begin
+u32 data_ov036_02112a18[3] = {
+    (u32)&data_ov036_02112a08,
+    0x00000000,
+    0x1b7b0000,
+};
+#pragma section s_02112a18 end
+
+#pragma define_section s_02112a24 ".data.data_ov036_02112a24" ".data.data_ov036_02112a24" ".data.data_ov036_02112a24" far_data
+#pragma section s_02112a24 begin
+u32 data_ov036_02112a24[4] = {
+    0x0ce4effc,
+    0x1001f542,
+    0x0905e50c,
+    0x0001ff9c,
+};
+#pragma section s_02112a24 end
+
+#pragma define_section s_02112a34 ".data.data_ov036_02112a34" ".data.data_ov036_02112a34" ".data.data_ov036_02112a34" far_data
+#pragma section s_02112a34 begin
+u32 data_ov036_02112a34[4] = {
+    0x0ce4effc,
+    0x0080f542,
+    0x0905e50c,
+    0x0040ff9c,
+};
+#pragma section s_02112a34 end
+
+#pragma define_section s_02112a44 ".data.data_ov036_02112a44" ".data.data_ov036_02112a44" ".data.data_ov036_02112a44" far_data
+#pragma section s_02112a44 begin
+u32 data_ov036_02112a44[4] = {
+    0x0b220014,
+    0x05dcf902,
+    0xeaab0003,
+    0xffff0000,
+};
+#pragma section s_02112a44 end
+
+#pragma define_section s_02112a54 ".data.data_ov036_02112a54" ".data.data_ov036_02112a54" ".data.data_ov036_02112a54" far_data
+#pragma section s_02112a54 begin
+u32 data_ov036_02112a54[6] = {
+    0x00006d00,
+    (u32)&data_ov036_02113384,
+    0x00006305,
+    (u32)&data_ov036_0211306c,
+    0x00000160,
+    (u32)&data_ov036_02112a44,
+};
+#pragma section s_02112a54 end
+
+#pragma define_section s_02112a6c ".data.data_ov036_02112a6c" ".data.data_ov036_02112a6c" ".data.data_ov036_02112a6c" far_data
+#pragma section s_02112a6c begin
+u32 data_ov036_02112a6c[7] = {
+    (u32)&data_ov036_02112d1c,
+    (u32)&data_ov036_02112a10,
+    0x07a907ab,
+    0x07ad07ac,
+    (u32)&data_ov036_02112a18,
+    0x06400101,
+    0x0000002f,
+};
+#pragma section s_02112a6c end

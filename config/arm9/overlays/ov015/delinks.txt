@@ -1,5 +1,12 @@
     .text       start:0x021111a0 end:0x02112e0c kind:code align:32
-    .rodata     start:0x02112e0c end:0x02112f9c kind:rodata align:4
+    .rodata.data_ov015_02112e0c start:0x02112e0c end:0x02112e10 kind:rodata align:4
+    .rodata.data_ov015_02112e10 start:0x02112e10 end:0x02112e14 kind:rodata align:4
+    .rodata.data_ov015_02112e14 start:0x02112e14 end:0x02112e30 kind:rodata align:4
+    .rodata.data_ov015_02112e30 start:0x02112e30 end:0x02112e5c kind:rodata align:4
+    .rodata.data_ov015_02112e5c start:0x02112e5c end:0x02112f2c kind:rodata align:4
+    .rodata.data_ov015_02112f2c start:0x02112f2c end:0x02112f58 kind:rodata align:4
+    .rodata.data_ov015_02112f58 start:0x02112f58 end:0x02112f7c kind:rodata align:4
+    .rodata.data_ov015_02112f7c start:0x02112f7c end:0x02112f9c kind:rodata align:4
     .init       start:0x02112f9c end:0x02113410 kind:code align:4
     .ctor       start:0x02113410 end:0x0211342c kind:rodata align:4
     .data_pre start:0x02113440 end:0x02113574 kind:data align:32
@@ -75,7 +82,6 @@ src/game/actors/d_a_obj_bk_ukisima.cpp:
 src/game/actors/d_a_obj_bk_fall_block.cpp:
     complete
     .text start:0x02112cf4 end:0x02112e0c
-    .rodata start:0x02112e0c end:0x02112f9c
     .init start:0x021133a8 end:0x02113410
     .ctor start:0x02113428 end:0x0211342c
     .bss start:0x02114ad4 end:0x02114b00
@@ -84,3 +90,13 @@ src/game/actors/d_a_obj_bk_fall_block.cpp:
     .data.fb_res start:0x02114880 end:0x0211488c
 
 
+src/unnamed/ov015/data_ov015_02112e0c.c:
+    complete
+    .rodata.data_ov015_02112e0c start:0x02112e0c end:0x02112e10
+    .rodata.data_ov015_02112e10 start:0x02112e10 end:0x02112e14
+    .rodata.data_ov015_02112e14 start:0x02112e14 end:0x02112e30
+    .rodata.data_ov015_02112e30 start:0x02112e30 end:0x02112e5c
+    .rodata.data_ov015_02112e5c start:0x02112e5c end:0x02112f2c
+    .rodata.data_ov015_02112f2c start:0x02112f2c end:0x02112f58
+    .rodata.data_ov015_02112f58 start:0x02112f58 end:0x02112f7c
+    .rodata.data_ov015_02112f7c start:0x02112f7c end:0x02112f9c

@@ -1,5 +1,16 @@
     .text       start:0x021111a0 end:0x0211299c kind:code align:32
-    .rodata     start:0x0211299c end:0x02112b38 kind:rodata align:4
+    .rodata.data_ov029_0211299c start:0x0211299c end:0x021129a0 kind:rodata align:4
+    .rodata.data_ov029_021129a0 start:0x021129a0 end:0x021129a4 kind:rodata align:4
+    .rodata.data_ov029_021129a4 start:0x021129a4 end:0x021129b4 kind:rodata align:4
+    .rodata.data_ov029_021129b4 start:0x021129b4 end:0x021129c0 kind:rodata align:4
+    .rodata.data_ov029_021129c0 start:0x021129c0 end:0x02112a6c kind:rodata align:4
+    .rodata.data_ov029_02112a6c start:0x02112a6c end:0x02112aa4 kind:rodata align:4
+    .rodata.data_ov029_02112aa4 start:0x02112aa4 end:0x02112aa8 kind:rodata align:4
+    .rodata.data_ov029_02112aa8 start:0x02112aa8 end:0x02112ac0 kind:rodata align:4
+    .rodata.data_ov029_02112ac0 start:0x02112ac0 end:0x02112adc kind:rodata align:4
+    .rodata.data_ov029_02112adc start:0x02112adc end:0x02112b08 kind:rodata align:4
+    .rodata.data_ov029_02112b08 start:0x02112b08 end:0x02112b2c kind:rodata align:4
+    .rodata     start:0x02112b2c end:0x02112b38 kind:rodata align:4
     .init       start:0x02112b38 end:0x02112e68 kind:code align:4
     .ctor       start:0x02112e68 end:0x02112e88 kind:rodata align:4
     .data.gap0 start:0x02112ea0 end:0x02112fb8 kind:data align:32
@@ -139,8 +150,21 @@ src/game/actors/d_a_obj_wc_mizu.cpp:
     .data.data_ov029_02112fb8 start:0x02112fb8 end:0x02112fd0
     .data.data_ov029_02112fec start:0x02112fec end:0x0211300c
     .bss start:0x021142fc end:0x02114324
-    .rodata start:0x021129a0 end:0x02112b38
+    .rodata start:0x02112b2c end:0x02112b38
 
+src/unnamed/ov029/data_ov029_021129a0.c:
+    complete
+    .rodata.data_ov029_0211299c start:0x0211299c end:0x021129a0
+    .rodata.data_ov029_021129a0 start:0x021129a0 end:0x021129a4
+    .rodata.data_ov029_021129a4 start:0x021129a4 end:0x021129b4
+    .rodata.data_ov029_021129b4 start:0x021129b4 end:0x021129c0
+    .rodata.data_ov029_021129c0 start:0x021129c0 end:0x02112a6c
+    .rodata.data_ov029_02112a6c start:0x02112a6c end:0x02112aa4
+    .rodata.data_ov029_02112aa4 start:0x02112aa4 end:0x02112aa8
+    .rodata.data_ov029_02112aa8 start:0x02112aa8 end:0x02112ac0
+    .rodata.data_ov029_02112ac0 start:0x02112ac0 end:0x02112adc
+    .rodata.data_ov029_02112adc start:0x02112adc end:0x02112b08
+    .rodata.data_ov029_02112b08 start:0x02112b08 end:0x02112b2c
 src/unnamed/ov029/data_ov029.c:
     complete
     .data.data_ov029_021130cc start:0x021130cc end:0x021130d0

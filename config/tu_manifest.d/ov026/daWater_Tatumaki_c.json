@@ -42,18 +42,6 @@
       "end": "0x021124ac"
     },
     {
-      "name": ".rodata.data_ov026_021124e4",
-      "input_section": ".rodata",
-      "start": "0x021124e4",
-      "end": "0x0211251c"
-    },
-    {
-      "name": ".rodata.data_ov026_02112554",
-      "input_section": ".rodata",
-      "start": "0x02112554",
-      "end": "0x021125cc"
-    },
-    {
       "name": ".data.wlLate",
       "start": "0x02113cec",
       "end": "0x02113dd0",
@@ -933,26 +921,6 @@
       "addend": 8,
       "target_module": "arm9",
       "target_address": "0x0209a764"
-    },
-    {
-      "section": ".rodata.data_ov026_021124e4",
-      "source": "0x021124e8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov026_02112dd0",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02112dd0"
-    },
-    {
-      "section": ".rodata.data_ov026_021124e4",
-      "source": "0x02112504",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov026_02112de8",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02112de8"
     }
   ],
   "notes": [
@@ -1142,20 +1110,6 @@
           "section": ".rodata.data_ov026_021124a4",
           "start": "0x021124a4",
           "end": "0x021124ac",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.data_ov026_021124e4",
-          "start": "0x021124e4",
-          "end": "0x0211251c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.data_ov026_02112554",
-          "start": "0x02112554",
-          "end": "0x021125cc",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -1367,20 +1321,6 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "sWhirlpoolBta scale keys; the header at 0x02112f44 points here"
-    },
-    {
-      "symbol": "data_ov026_021124e4",
-      "address": "0x021124e4",
-      "size": "0x38",
-      "binding": "STB_GLOBAL",
-      "evidence": "sWhirlpoolBta material records; the header at 0x02112f54 points here"
-    },
-    {
-      "symbol": "data_ov026_02112554",
-      "address": "0x02112554",
-      "size": "0x78",
-      "binding": "STB_GLOBAL",
-      "evidence": "sWhirlpoolBta translation keys; the header at 0x02112f4c points here"
     }
   ]
 }

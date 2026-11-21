@@ -123,8 +123,221 @@
   "data_ov002_02110aa4": {
    "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"]
   },
+  "data_ov008_02111244": {
+   "src/game/actors/d_a_obj_rotate_updown_lift.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov008_02111640": {
+   "src/game/actors/d_a_kpa3_bg.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov008_02111660": {
+   "src/game/actors/d_a_kpa3_bg.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov008_02111680": {
+   "src/game/actors/d_a_kpa3_bg.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov008_021116a0": {
+   "src/game/actors/d_a_kpa3_bg.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov008_021116c0": {
+   "src/game/actors/d_a_kpa3_bg.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov008_021116e0": {
+   "src/game/actors/d_a_kpa3_bg.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov008_02111700": {
+   "src/game/actors/d_a_kpa3_bg.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov008_02111720": {
+   "src/game/actors/d_a_kpa3_bg.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov008_02111740": {
+   "src/game/actors/d_a_kpa3_bg.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov008_02111760": {
+   "src/game/actors/d_a_kpa3_bg.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov008_02111b34": {
+   "src/game/actors/d_a_obj_simple_lift.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov008_02111b74": {
+   "src/game/actors/d_a_obj_simple_lift.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov008_02111be0": {
+   "src/game/actors/d_a_obj_simple_lift.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov009_02112234": {
+   "src/game/actors/d_a_obj_mc_water.cpp": ["return:int []"]
+  },
+  "data_ov009_02112238": {
+   "src/game/actors/d_a_obj_mc_water.cpp": ["return:BTAMaterialRecord []"]
+  },
+  "data_ov009_021122ec": {
+   "src/game/actors/d_a_obj_mc_water.cpp": ["return:int []"]
+  },
+  "data_ov009_02112404": {
+   "src/game/actors/d_a_kuri_king.cpp": ["return:BTA_File"]
+  },
+  "data_ov009_02112434": {
+   "src/game/actors/d_a_kuri_king.cpp": ["return:BTA_File"]
+  },
+  "data_ov009_0211244c": {
+   "src/game/actors/d_a_kuri_king.cpp": ["return:BTA_File"]
+  },
+  "data_ov009_02113554": {
+   "src/game/actors/d_a_obj_simple_lift.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov010_02112464": {
+   "src/game/actors/d_a_kuri_king.cpp": ["return:BTA_File"]
+  },
+  "data_ov010_02112494": {
+   "src/game/actors/d_a_kuri_king.cpp": ["return:BTA_File"]
+  },
+  "data_ov010_021124c4": {
+   "src/game/actors/d_a_kuri_king.cpp": ["return:BTA_File"]
+  },
+  "data_ov010_02112530": {
+   "src/game/actors/d_a_obj_simple_lift.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov010_02112590": {
+   "src/game/actors/d_a_obj_simple_lift.cpp": ["return:CLPS_Block"]
+  },
+  "data_ov013_02111784": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_0211178c": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111794": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_0211179c": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_021117a4": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_021117ac": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_021117b4": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_021117bc": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_021117c4": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_021117cc": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_021117d4": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_021117dc": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_021117e4": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_021117ec": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_021117f8": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111804": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111814": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111824": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111834": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111860": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111890": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_021118d0": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111918": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_0211196c": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_021119cc": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111a3c": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111ae4": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111b94": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111c54": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111d28": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111e18": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov013_02111f18": {
+   "src/game/actors/d_a_obj_clock_huriko.cpp": ["return:unsigned int"]
+  },
+  "data_ov016_02113af8": {
+   "src/unnamed/ov016/data_ov016_02113550.c": ["return:unsigned int []"]
+  },
+  "data_ov022_02112b08": {
+   "src/game/actors/d_a_obj_simple_lift.cpp": ["return:CLPS_Block"]
+  },
   "data_ov026_02113f4c": {
    "src/game/actors/d_a_water_suikomi.cpp": ["return:Vector3"]
+  },
+  "data_ov029_021129a4": {
+   "src/game/actors/d_a_obj_wc_mizu.cpp": ["return:BTAMaterialRecord []"]
+  },
+  "data_ov029_021129c0": {
+   "src/game/actors/d_a_obj_wc_mizu.cpp": ["return:int []"]
+  },
+  "data_ov029_02112ec0": {
+   "src/unnamed/ov029/data_ov029_021129a0.c": ["return:unsigned int []"]
+  },
+  "data_ov056_021115d0": {
+   "src/game/actors/d_a_obj_ewm_ice_block.cpp": ["return:unsigned int"]
+  },
+  "data_ov056_02111624": {
+   "src/game/actors/d_a_obj_ewm_ice_block.cpp": ["return:unsigned int"]
+  },
+  "data_ov056_02111a60": {
+   "src/unnamed/ov056/data_ov056_02112438.c": ["return:unsigned int []"]
+  },
+  "data_ov056_02112be0": {
+   "src/game/actors/d_a_obj_ewm_ice_block.cpp": ["return:unsigned int"]
+  },
+  "data_ov056_02112bec": {
+   "src/game/actors/d_a_obj_ewm_ice_block.cpp": ["return:unsigned int"]
+  },
+  "data_ov056_02112c04": {
+   "include/decl_common.h": ["return:int []"]
+  },
+  "data_ov056_02112c24": {
+   "src/game/actors/d_a_obj_ewm_ice_block.cpp": ["return:unsigned int"]
+  },
+  "data_ov056_02112c68": {
+   "include/decl_common.h": ["return:char []"]
   },
   "data_ov060_0211b208": {
    "src/game/actors/d_a_f_ring.cpp": ["return:FRingModelFilePtr"]
@@ -149,6 +362,9 @@
   },
   "func_ov079_02123d4c": {
    "src/game/actors/d_a_btn.cpp": ["arity:1", "return:Vector3"]
+  },
+  "gFlRingCollisionFile": {
+   "src/unnamed/ov022/data_ov022_02113ccc.c": ["return:unsigned int []"]
   },
   "gKoopaKeyModelFile": {
    "src/game/actors/d_a_obj_key.cpp": ["return:ObjKeyModelFile"]

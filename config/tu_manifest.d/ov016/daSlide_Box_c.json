@@ -23,7 +23,7 @@
       "name": ".rodata.slideBoxKeys",
       "input_section": ".rodata",
       "start": "0x0211354c",
-      "end": "0x021136dc"
+      "end": "0x02113550"
     },
     {
       "name": ".init",
@@ -158,8 +158,7 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated model resource destructor-registration node"
-    }
-  ,
+    },
     {
       "symbol": "data_ov016_02114e94",
       "address": "0x02114e94",
@@ -334,16 +333,6 @@
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x02113a50"
-    },
-    {
-      "section": ".rodata.slideBoxKeys",
-      "source": "0x02113558",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov016_02113af8",
-      "addend": 0,
-      "target_module": "ov016",
-      "target_address": "0x02113af8"
     }
   ],
   "notes": [
@@ -461,7 +450,7 @@
         {
           "section": ".rodata.slideBoxKeys",
           "start": "0x0211354c",
-          "end": "0x021136dc",
+          "end": "0x02113550",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -704,13 +693,6 @@
       "address": "0x0211354c",
       "size": "0x4",
       "binding": "STB_GLOBAL"
-    },
-    {
-      "symbol": "data_ov016_02113550",
-      "address": "0x02113550",
-      "size": "0x18c",
-      "binding": "STB_GLOBAL",
-      "evidence": "texture keys that follow the four zero bytes this class points at"
     }
   ]
 }

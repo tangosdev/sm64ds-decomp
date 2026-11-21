@@ -48,10 +48,7 @@ struct CLPS_Block {
     u32 words[10];
 };
 
-CLPS_Block data_ov026_02112fd4 = {
-    0x53504c43, 0x00040008, 0x00000fc5, 0x000000ff, 0x00004fc4,
-    0x000000ff, 0x01000fc4, 0x000000ff, 0x01000fc5, 0x000000ff,
-};
+extern "C" CLPS_Block data_ov026_02112fd4;
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */

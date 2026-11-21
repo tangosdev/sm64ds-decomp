@@ -1,7 +1,16 @@
     .text       start:0x021111a0 end:0x021125b0 kind:code align:32
     .init       start:0x021125b0 end:0x021129dc kind:code align:4
     .ctor       start:0x021129dc end:0x021129f8 kind:rodata align:4
-    .data.gap0 start:0x02112a00 end:0x02112a88 kind:data align:32
+    .data.data_ov036_02112a00 start:0x02112a00 end:0x02112a04 kind:data align:32
+    .data.data_ov036_02112a04 start:0x02112a04 end:0x02112a08 kind:data align:4
+    .data.data_ov036_02112a08 start:0x02112a08 end:0x02112a10 kind:data align:4
+    .data.data_ov036_02112a10 start:0x02112a10 end:0x02112a18 kind:data align:4
+    .data.data_ov036_02112a18 start:0x02112a18 end:0x02112a24 kind:data align:4
+    .data.data_ov036_02112a24 start:0x02112a24 end:0x02112a34 kind:data align:4
+    .data.data_ov036_02112a34 start:0x02112a34 end:0x02112a44 kind:data align:4
+    .data.data_ov036_02112a44 start:0x02112a44 end:0x02112a54 kind:data align:4
+    .data.data_ov036_02112a54 start:0x02112a54 end:0x02112a6c kind:data align:4
+    .data.data_ov036_02112a6c start:0x02112a6c end:0x02112a88 kind:data align:4
     .data.data_ov036_02112a88 start:0x02112a88 end:0x02112aa8 kind:data align:4
     .data.data_ov036_02112aa8 start:0x02112aa8 end:0x02112ae8 kind:data align:4
     .data.data_ov036_02112ae8 start:0x02112ae8 end:0x02112b08 kind:data align:4
@@ -154,7 +163,16 @@ src/game/actors/d_a_obj_rc_carpet.cpp:
 
 src/unnamed/ov036/data_ov036_02112c28.c:
     complete
-    .data.gap0 start:0x02112a00 end:0x02112a88
+    .data.data_ov036_02112a00 start:0x02112a00 end:0x02112a04
+    .data.data_ov036_02112a04 start:0x02112a04 end:0x02112a08
+    .data.data_ov036_02112a08 start:0x02112a08 end:0x02112a10
+    .data.data_ov036_02112a10 start:0x02112a10 end:0x02112a18
+    .data.data_ov036_02112a18 start:0x02112a18 end:0x02112a24
+    .data.data_ov036_02112a24 start:0x02112a24 end:0x02112a34
+    .data.data_ov036_02112a34 start:0x02112a34 end:0x02112a44
+    .data.data_ov036_02112a44 start:0x02112a44 end:0x02112a54
+    .data.data_ov036_02112a54 start:0x02112a54 end:0x02112a6c
+    .data.data_ov036_02112a6c start:0x02112a6c end:0x02112a88
     .data.gap2 start:0x02112b08 end:0x02112b28
     .data.data_ov036_02112c28 start:0x02112c28 end:0x02112c44
     .data.data_ov036_02112c44 start:0x02112c44 end:0x02112c4c
