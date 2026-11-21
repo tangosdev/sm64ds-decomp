@@ -69,13 +69,13 @@
     "header_shadows": 1,
     "local_body_no_include": 11,
     "local_body_no_include_cpp": 2,
-    "local_struct_body": 327,
+    "local_struct_body": 326,
     "local_struct_body_cpp": 298,
     "pad_layout": 10
   },
   "totals": {
-    "c_extension": 2155,
-    "cpp_extension": 700,
-    "src_files": 2855
+    "c_extension": 768,
+    "cpp_extension": 680,
+    "src_files": 1448
   }
 }
