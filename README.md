@@ -30,7 +30,7 @@ PORTED     ███████████████████████
 
 <!-- data:start -->
 ```
-DATA       ████████████████░░░░░░░░░░░░░░  52.9%   10,582 / 20,006
+DATA       ████████████████████░░░░░░░░░░  66.9%   13,381 / 20,002
 ```
 
 Data progress: [notes/data-tracking.md](notes/data-tracking.md).

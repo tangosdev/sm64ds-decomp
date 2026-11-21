@@ -28,6 +28,8 @@ on:
       # The LINKED stamp needs no line of its own:
       # config/** already covers config/port_linkage.json.
       - "tools/tiers.py"
+      # data_tiers.py renders the README DATA line from complete delinks claims.
+      - "tools/data_tiers.py"
       # demangle.py decides `class` on every record and the real_name criterion of CONVERTED.
       - "tools/demangle.py"
       - "tools/treemap.py"
@@ -158,12 +160,16 @@ jobs:
         # refresh commit below (which already includes nearmiss/db.jsonl).
         run: python tools/nearmiss_db.py dedupe
       - name: Refresh README progress block
-        # Single README block (MATCHED + LINKED). MATCHED reads chaos-db.json;
-        # LINKED is read from the stamp
-        # in config/port_linkage.json and is deliberately NOT recomputed: it needs an
-        # MSVC port build this runner does not have. README.md is already in the
-        # refresh commit's file list below, so that needs no change.
+        # MATCHED reads chaos-db.json. LINKED is read from the stamp in
+        # config/port_linkage.json and is deliberately NOT recomputed: it needs an
+        # MSVC port build this runner does not have. DATA is the next step.
+        # README.md is already in the refresh commit's file list below.
         run: python tools/tiers.py --write-readme --from-db _chaos_data/chaos-db.json
+      - name: Refresh README data block
+        # Complete delinks claims over every storage address, including BSS.
+        # No ROM. A missing build/rombuild-report.json leaves verification
+        # counts out of the line; the line does not use them.
+        run: python tools/data_tiers.py --write-readme
       - name: Regenerate treemap (README SVG + Pages HTML)
         run: python tools/treemap.py --from-db _chaos_data/chaos-db.json --out docs/index.html --svg docs/progress-treemap.svg
       - name: Regenerate recovered TU treemap

@@ -70,8 +70,11 @@ a full build.
    `python tools/rombuild.py -j16 --no-rom --report-json build/rombuild-report.json`
 4. Check the row:
    `python tools/data_tiers.py --rom-report build/rombuild-report.json`
-5. Regenerate the README DATA line when the claim count changes:
-   `python tools/data_tiers.py --write-readme`
+5. The DATA line does not need a hand edit. A push to main that changes
+   `src/`, `config/`, or `tools/data_tiers.py` runs
+   `python tools/data_tiers.py --write-readme` in `.github/workflows/update-chaos-data.yml`
+   and commits the line with the other progress files. The same command
+   rewrites it locally.
 
 Byte proof stays with `romdata_check` / `validate_merge` / `source_coverage`.
 A claim can land before it is verified. The progress tool does not make a
