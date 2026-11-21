@@ -25,6 +25,7 @@ enum daObjFl_Seesaw_c_AssetId { ASSET_FL_SHISO_BMD = 0x0610, ASSET_FL_SHISO_KCL 
 #include "dBgW.h"
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
+#include "SpawnInfo.h"
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x610, collision file 0x611). mwcc emits
@@ -111,3 +112,12 @@ daObjFl_Seesaw_c *daObjFl_Seesaw_c_classInit() {
  * model handle (file 0x610), then the collision handle (file 0x611). */
 SeesawModelFile data_ov022_021145a8(ASSET_FL_SHISO_BMD);
 SeesawCollisionFilePtr data_ov022_021145a0(ASSET_FL_SHISO_KCL);
+
+extern "C" SpawnInfo<daObjFl_Seesaw_c> g_profile_FL_SEESAW = {daObjFl_Seesaw_c_classInit,
+                                                              77,
+                                                              285,
+                                                              0x00000002,
+                                                              0x00000000,
+                                                              0x00650000,
+                                                              0x02000000,
+                                                              0x00000000};

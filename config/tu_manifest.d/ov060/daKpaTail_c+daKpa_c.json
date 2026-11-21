@@ -22,13 +22,13 @@
       "name": ".rodata.kpaHp",
       "input_section": ".rodata",
       "start": "0x02119264",
-      "end": "0x02119268"
+      "end": "0x0211927c"
     },
     {
       "name": ".rodata.kpaTex",
       "input_section": ".rodata",
       "start": "0x0211927c",
-      "end": "0x02119294"
+      "end": "0x021192dc"
     },
     {
       "name": ".rodata.kpaAnm",
@@ -635,11 +635,25 @@
       "evidence": "health by variant, four bytes"
     },
     {
+      "symbol": "data_ov060_02119268",
+      "address": "0x02119268",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-state flag that keeps a state on its last ground position, twenty bytes"
+    },
+    {
       "symbol": "sKoopaTextureSequenceFiles",
       "address": "0x0211927c",
       "size": "0x18",
       "binding": "STB_GLOBAL",
       "evidence": "six texture-sequence handles"
+    },
+    {
+      "symbol": "sBowsertiltPlatformData",
+      "address": "0x02119294",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "arena-tilt rows of three halfwords (sign, scale, end frame), ending in a zero end-frame row; data_ov060_02119296 and data_ov060_02119298 name the +2 and +4 columns of the same rows"
     },
     {
       "symbol": "sKoopaAnimationFiles",
@@ -1701,14 +1715,14 @@
         {
           "section": ".rodata.kpaHp",
           "start": "0x02119264",
-          "end": "0x02119268",
+          "end": "0x0211927c",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
           "section": ".rodata.kpaTex",
           "start": "0x0211927c",
-          "end": "0x02119294",
+          "end": "0x021192dc",
           "differingBytes": 0,
           "firstDiff": null
         },

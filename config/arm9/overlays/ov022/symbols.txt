@@ -252,6 +252,7 @@ _ZTS21daObj_volcanoCannon_c kind:data(any) addr:0x02114440
 g_profile_OBJ_VOLCANO_CANNON kind:data(any) addr:0x02114458 ambiguous
 _ZTV21daObj_volcanoCannon_c kind:data(any) addr:0x0211447c
 data_ov022_02114498 kind:data(any) addr:0x02114498 ambiguous
+data_ov022_021144f8 kind:data(any) addr:0x021144f8
 gFlRingModelFile kind:bss addr:0x02114500
 gFlRingCollisionFile kind:bss addr:0x02114508
 @602 kind:bss addr:0x02114510

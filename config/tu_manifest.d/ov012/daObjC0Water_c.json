@@ -42,7 +42,7 @@
     {
       "name": ".bss",
       "start": "0x021124c8",
-      "end": "0x021124f0"
+      "end": "0x02112500"
     },
     {
       "name": ".rodata",
@@ -194,6 +194,14 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated model destructor-registration node"
+    }
+  ,
+    {
+      "symbol": "data_ov012_021124f0",
+      "address": "0x021124f0",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "Zero tail of this file. The placeholder name stays."
     }
   ],
   "undefined_symbol_aliases": [
@@ -552,7 +560,7 @@
         {
           "section": ".bss",
           "start": "0x021124c8",
-          "end": "0x021124f0",
+          "end": "0x02112500",
           "comparison": "NOBITS -- symbol/module gates"
         },
         {

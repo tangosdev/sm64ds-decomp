@@ -1,7 +1,0 @@
-/* ov056 cartridge data at 0x021124fc, 52 bytes. */
-#include "types.h"
-
-const u32 data_ov056_021124fc[13] = {
-    0x00009333, 0x00009444, 0x00009555, 0x00009666, 0x00009777, 0x00009889, 0x0000999a,
-    0x00009aab, 0x00009bbc, 0x00009ccd, 0x00009dde, 0x00009eef, 0x0000a000,
-};

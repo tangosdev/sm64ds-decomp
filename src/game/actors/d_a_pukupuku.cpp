@@ -66,24 +66,24 @@ struct PukupukuAnimationFilePtr : SharedFilePtr {
 
 /* One 8-byte state word (a pointer-to-member: function address, this-delta).
  * The four words live in .data; each state row copies two of them. */
-struct PukuDesc {
-    int w[2];
+typedef int (daPukupuku_c::*PukuStateEntry)();
+struct PukuStateRow {
+    PukuStateEntry enter, update;
 };
 
-struct PukuStateRow {
-    PukuDesc x, y;
+/* Collision-cylinder offset (0, -0x1e000, 0). A POD twin, not Vector3: a
+ * Vector3 global with its constructor would move to .bss and need a static
+ * initializer the ROM does not have. */
+struct PukuBodyOffset {
+    fx32 x, y, z;
 };
 
 extern PukupukuModelFile data_ov090_02134564;
 extern PukupukuAnimationFilePtr data_ov090_0213455c;
-extern PukuDesc data_ov090_021342c0;
-extern PukuDesc data_ov090_021342b8;
-extern PukuDesc data_ov090_021342d0;
-extern PukuDesc data_ov090_021342c8;
 extern PukuStateRow data_ov090_02134594;
 extern PukuStateRow data_ov090_02134584;
 
-extern Vector3 data_ov090_021342d8;
+extern PukuBodyOffset data_ov090_021342d8;
 
 int *daPukupuku_c_classInit(void) {
     return (int *)new daPukupuku_c;
@@ -98,7 +98,9 @@ int daPukupuku_c::InitResources() {
 
     dExtFrameCtrl_c::LoadFile(data_ov090_0213455c);
 
-    v = data_ov090_021342d8;
+    v.x = data_ov090_021342d8.x;
+    v.y = data_ov090_021342d8.y;
+    v.z = data_ov090_021342d8.z;
     mdCcAcPos_c.Init(this, v, 0x32000, 0x3c000, 0x200004, 0x8000);
 
     mHomePos.x = mPos.x;
@@ -269,5 +271,7 @@ void daPukupuku_c::CheckPlayerHit() {
  * StatePause). */
 PukupukuModelFile data_ov090_02134564(0x418);
 PukupukuAnimationFilePtr data_ov090_0213455c(0x419);
-PukuStateRow data_ov090_02134594 = {data_ov090_021342c0, data_ov090_021342b8};
-PukuStateRow data_ov090_02134584 = {data_ov090_021342d0, data_ov090_021342c8};
+PukuStateRow data_ov090_02134594 = {&daPukupuku_c::InitStateSwim, &daPukupuku_c::StateSwim};
+PukuStateRow data_ov090_02134584 = {&daPukupuku_c::InitStatePause, &daPukupuku_c::StatePause};
+
+PukuBodyOffset data_ov090_021342d8 = {0, -0x1e000, 0};

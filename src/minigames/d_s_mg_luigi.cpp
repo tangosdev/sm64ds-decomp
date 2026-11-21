@@ -387,6 +387,11 @@ extern const int sLuigiDriftByLevelSpeed[4] = {0xe00, 0xa00, 0x600, 0xc00};
 extern const int sLuigiDriftFixedSpeed[4] = {0xe00, 0xa00, 0x600, 0xc00};
 extern const unsigned short sLuigiTouchSfx[4] = {188, 189, 190, 0};
 
+/* How many pictures fit on each board, indexed by mBoard. */
+u16 sLuigiPlaceLimits[20] = {
+    4, 16, 48, 80, 100, 48, 80, 100, 100, 8, 80, 80, 100, 80, 100, 90, 100, 110, 90, 110,
+};
+
 void dScMgLuigi_c::DrawCurtains() {
     int curtainIndex;
     for (curtainIndex = 0; curtainIndex < 2; curtainIndex++) {
@@ -1206,7 +1211,6 @@ void dScMgLuigi_c::PlaceBoardLayout() {
 void dScMgLuigi_c::PlaceNextPicture() {
     extern u8 sLuigiBoardFlags[];
     extern u8 sLuigiBoardModes[];
-    extern u16 sLuigiPlaceLimits[];
     int boardIndex;
     int pictureIndex;
     int capacity;

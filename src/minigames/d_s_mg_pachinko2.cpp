@@ -230,12 +230,11 @@ const unsigned short *sPachinko2CupWaitFramesPerCup[2] = {
     data_ov006_0212ec8c,
     data_ov006_0212ec9c,
 };
-/* Leftover: the gather-target pointer table at 0x0213db9c sits in the module
- * .data tail, which is a single shared plain .data section; a named claim
- * cannot be carved inside it, and its symbol extent runs into the class
- * vtable storage. The gather pairs above are indexed by that cartridge table
- * in the order ec28, ec20, ec18, ebf8, ec10, ec38. */
-extern int *sPachinko2PaddleGatherTargets[];
+/* Per-lane paddle gather Y rows, indexed by mLaneConfig. */
+const int *sPachinko2PaddleGatherTargets[6] = {
+    data_ov006_0212ec28, data_ov006_0212ec20, data_ov006_0212ec18,
+    data_ov006_0212ebf8, data_ov006_0212ec10, data_ov006_0212ec38,
+};
 
 /* The three pointer-to-member tables the helpers dispatch through. */
 extern Entry sPachinko2CupStateTable[];

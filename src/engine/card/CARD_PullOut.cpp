@@ -26,7 +26,7 @@ void GameCardIREQMCHandler(void);
 }
 
 extern "C" {
-extern int data_020a89a0;          /* set once the card has been pulled */
+extern u8 data_020a89a0[];         /* set once the card has been pulled */
 extern CardCallback data_020a89a4; /* nonzero return: terminate */
 }
 
@@ -60,7 +60,7 @@ namespace IRQ {
 void GameCardIREQMCHandler() {
     CardCallback callback = data_020a89a4;
     int result = 1;
-    data_020a89a0 = result;
+    *(int *)data_020a89a0 = result;
     if (callback)
         result = callback();
     if (result == 0)
@@ -69,3 +69,7 @@ void GameCardIREQMCHandler() {
 }
 
 }
+
+/* The pulled-out flag and the game callback word after it. One object;
+   data_020a89a4 is an interior label. */
+u8 data_020a89a0[8];

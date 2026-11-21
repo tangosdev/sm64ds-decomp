@@ -31,7 +31,7 @@ enum {
     wchar_argument
 };
 
-extern unsigned short data_02086a58[];
+extern const unsigned short data_02086a58[];
 
 #define isdigit_(c) ((c) < 0 || (c) >= 128 ? 0 : data_02086a58[c] & 8)
 

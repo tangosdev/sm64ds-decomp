@@ -38,7 +38,7 @@
  *   declares it.
  * - UpdateModelTransform is the same model-matrix rebuild as the sibling
  *   daObjClock_c::UpdateModelTransform (ov013 0x02111430).
- * - g_profile_CLOCK_HURIKO is overlay .data, not licensed to this TU.
+ * - g_profile_CLOCK_HURIKO is this file's profile, next to the class typeinfo.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -46,6 +46,7 @@ enum d_a_obj_clock_huriko_AssetId { ASSET_C2_HURIKO_BMD = 0x05b3 };
 
 #include "daObjClockHuriko_c.h"
 #include "SharedFilePtr.h"
+#include "SpawnInfo.h"
 #include "Sound.h"
 #include "math/MtxStack.h"
 
@@ -154,3 +155,53 @@ s32 daObjClockHuriko_c::CleanupResources() {
 /* File-scope object: the pendulum model's SharedFilePtr, the one
  * construction __sinit_d_a_obj_clock_huriko.cpp performs. */
 ClockHurikoModelFilePtr data_ov013_02112280(ASSET_C2_HURIKO_BMD);
+
+/* Pendulum animation tables and payload, stored in .data ahead of the
+ * class RTTI. Every relocated word names the symbol it loads. */
+
+extern u32 data_ov013_02111784;
+extern u32 data_ov013_02111794;
+extern u32 data_ov013_021117bc;
+extern u32 data_ov013_021117cc;
+extern u32 data_ov013_021117d4;
+extern u32 data_ov013_021117dc;
+extern u32 data_ov013_0211178c;
+extern u32 data_ov013_0211179c;
+extern u32 data_ov013_021117a4;
+extern u32 data_ov013_021117ac;
+extern u32 data_ov013_021117b4;
+extern u32 data_ov013_021117c4;
+extern u32 data_ov013_021117e4;
+extern u32 data_ov013_021117ec;
+extern u32 data_ov013_021117f8;
+extern u32 data_ov013_02111804;
+extern u32 data_ov013_02111814;
+extern u32 data_ov013_02111824;
+extern u32 data_ov013_02111834;
+extern u32 data_ov013_02111860;
+extern u32 data_ov013_02111890;
+extern u32 data_ov013_021118d0;
+extern u32 data_ov013_02111918;
+extern u32 data_ov013_0211196c;
+extern u32 data_ov013_021119cc;
+extern u32 data_ov013_02111a3c;
+extern u32 data_ov013_02111ae4;
+extern u32 data_ov013_02111b94;
+extern u32 data_ov013_02111c54;
+extern u32 data_ov013_02111d28;
+extern u32 data_ov013_02111e18;
+extern u32 data_ov013_02111f18;
+
+/* 0x02111780..0x021120e0: the pendulum animation tables and payload, one
+ * object ahead of the class RTTI. The four zero bytes at 0x02111928 are
+ * the alignment pad between the two table groups. Relocated words name
+ * the symbol they load. */
+
+extern "C" SpawnInfo<daObjClockHuriko_c> g_profile_CLOCK_HURIKO = {daObjClockHuriko_c_classInit,
+                                                                   294,
+                                                                   164,
+                                                                   0x00000006,
+                                                                   0x00064000,
+                                                                   0x000fa000,
+                                                                   0x00c80000,
+                                                                   0x00640000};

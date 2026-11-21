@@ -18,24 +18,25 @@ enum daObjFl_Koma_D_c_AssetId { ASSET_FL_KOMA_D_BMD = 0x05f5, ASSET_FL_KOMA_D_KC
  */
 
 // What stays:
-// - data_ov022_02113da4 is the model/collision/CLPS row between typeinfo
-//   at 02113d98 and the type name at 02113db0. Not owned here. The two
-//   handles it points at are defined at the bottom of this file;
-//   __sinit_d_a_obj_fl_koma_d.cpp constructs them.
-// - g_profile_FL_KOMA_D lives outside this TU.
+// - g_profile_FL_KOMA_D, the typeinfo at 0x02113d98, and the type name at
+//   0x02113db0 stay compiler-emitted. The model/collision/CLPS row between
+//   them is defined at the bottom of this file. The two handles it points
+//   at are this file's .bss; __sinit_d_a_obj_fl_koma_d.cpp constructs them.
 // - #pragma defer_codegen off stays on line 2. Dropping it still matches
 //   each body, but the four functions emit in reverse ROM order.
 // - An inline empty destructor still matches D1 and D0, but the ordinal
 //   pair flips, D2 is not emitted, and 13 RTTI/vtable symbols come out
 //   unlicensed.
 
+#include "SpawnInfo.h"
 #include "daObjFl_Koma_D_c.h"
 #include "SharedFilePtr.h"
 
 #include "ResourceDescriptor.h"
 
-/* This descriptor matches the shared helpers in d_a_obj_kaitendai.cpp. */
-extern ResourceDescriptor data_ov022_02113da4;
+/* This descriptor matches the shared helpers in d_a_obj_kaitendai.cpp.
+ * Defined at the bottom, after the handles it points at. */
+extern "C" ResourceDescriptor data_ov022_02113da4;
 
 daObjFl_Koma_D_c::~daObjFl_Koma_D_c() {}
 
@@ -77,3 +78,22 @@ struct KomaDCollisionFilePtr : SharedFilePtr {
  * destructors; the registration nodes are compiler temporaries. */
 KomaDModelFilePtr gFlKomaDModelFile(ASSET_FL_KOMA_D_BMD);
 KomaDCollisionFilePtr gFlKomaDCollisionFile(ASSET_FL_KOMA_D_KCL);
+
+/* 0x02113da4..0x02113db0. Words at 0x02113da8 and 0x02113dac are the
+ * collision handle and the ov064 CLPS block; both are kind:load pointers. */
+extern CLPS_Block data_ov064_0211bb4c;
+
+ResourceDescriptor data_ov022_02113da4 = {
+    &gFlKomaDModelFile,
+    &gFlKomaDCollisionFile,
+    &data_ov064_0211bb4c,
+};
+
+extern "C" SpawnInfo<daObjFl_Koma_D_c> g_profile_FL_KOMA_D = {daObjFl_Koma_D_c_classInit,
+                                                              80,
+                                                              288,
+                                                              0x00000002,
+                                                              0x00060000,
+                                                              0x00380000,
+                                                              0x02000000,
+                                                              0x00000000};

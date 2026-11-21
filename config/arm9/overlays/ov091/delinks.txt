@@ -2,7 +2,14 @@
     .rodata     start:0x021344e8 end:0x02134524 kind:rodata align:4
     .init       start:0x02134524 end:0x02134b68 kind:code align:4
     .ctor       start:0x02134b68 end:0x02134b80 kind:rodata align:4
-    .data start:0x02134ba0 end:0x02135100 kind:data align:32
+    .data start:0x02134ba0 end:0x02134c30 kind:data align:32
+    .data.updownTable start:0x02134c30 end:0x02134c54 kind:data align:4
+    .data.updownMid start:0x02134c54 end:0x02134cdc kind:data align:4
+    .data.updownPath start:0x02134cdc end:0x02134e44 kind:data align:4
+    .data.lift2Main start:0x02134e44 end:0x02134e64 kind:data align:4
+    .data.updownTail start:0x02134e64 end:0x02135024 kind:data align:4
+    .data.simpleLift start:0x02135024 end:0x02135078 kind:data align:4
+    .data.liftPad start:0x02135078 end:0x02135100 kind:data align:4
     .data.dsnClps start:0x02135100 end:0x02135120 kind:data align:4
     .data.w135120 start:0x02135120 end:0x02135440 kind:data align:32
     .bss        start:0x02135440 end:0x021356e0 kind:bss align:32
@@ -13,6 +20,8 @@ src/game/actors/d_a_obj_rotate_updown_lift.cpp:
     .ctor start:0x02134b68 end:0x02134b6c
     .bss start:0x02135440 end:0x02135490
     .data start:0x02134ba0 end:0x02134bc4
+    .data.updownTable start:0x02134c30 end:0x02134c54
+    .data.updownPath start:0x02134cdc end:0x02134e44
     .rodata start:0x021344e8 end:0x021344f4
 
 src/game/actors/d_a_obj_rotate_updown_lift_shadow.cpp:
@@ -24,7 +33,7 @@ src/game/actors/d_a_linelift2.cpp:
     .text start:0x02131c14 end:0x02132404
     .init start:0x021345dc end:0x021346e8
     .ctor start:0x02134b6c end:0x02134b70
-    .data start:0x02134e44 end:0x02134e64
+    .data.lift2Main start:0x02134e44 end:0x02134e64
     .rodata start:0x021344f4 end:0x02134504
     .bss start:0x02135490 end:0x021354f8
 
@@ -35,6 +44,7 @@ src/game/actors/d_a_obj_simple_lift.cpp:
     .ctor start:0x02134b70 end:0x02134b74
     .bss start:0x021354f8 end:0x02135610
     .rodata start:0x02134504 end:0x02134524
+    .data.simpleLift start:0x02135024 end:0x02135078
 
 src/game/actors/d_a_dsn.cpp:
     complete

@@ -149,6 +149,12 @@ struct KuriKingBoneIdx {
 };
 KuriKingBoneIdx data_ov074_02122e24 = {{1, 8, 10}};
 
+/* Body scales, largest first, in the order the defeat sequence walks them. */
+float data_ov074_02122e4c[4] = {12288.0f, 9557.0f, 6826.0f, 4096.0f};
+
+extern char data_ov074_02122f3c[];
+extern char data_ov074_02122f38[];
+
 static inline int IsInYoshiMouth(dActor_c *actor) {
     return (actor->mFlags & 0x40000) != 0;
 }
@@ -166,11 +172,21 @@ static inline int IsActorID(dActor_c *actor, int id) {
 }
 void UnloadKeyModels(int i);
 void LoadKeyModels(int idx);
-extern BTA_File *data_ov074_02122e5c[];
 /* Boss-overlay resource blobs, linked into the co-resident 0x0211xxxx
    overlay; ov074's image has no copy, so these bind cross-module. */
 extern BMA_File data_ov010_021123f4;
 extern BTA_File data_ov010_021124ac;
+extern BTA_File data_ov009_02112404;
+extern BTA_File data_ov009_0211244c;
+extern BTA_File data_ov010_02112494;
+extern BTA_File data_ov010_021124c4;
+extern BTA_File data_ov010_02112464;
+extern BTA_File data_ov009_02112434;
+/* The BTA file each body size's texture-SRT pass loads. */
+BTA_File *data_ov074_02122e5c[7] = {
+    &data_ov009_02112404, &data_ov009_0211244c, &data_ov010_02112494, &data_ov010_021124c4,
+    &data_ov010_02112464, &data_ov009_02112434, &data_ov010_021124ac,
+};
 extern "C" int func_02037e20(int *p);
 extern "C" unsigned int func_0201277c(unsigned int a);
 u8 data_ov074_02122d80[4] = {16, 9, 6, 3};
@@ -181,6 +197,17 @@ extern KrbAnimationFileHandle data_ov084_02130cc8;
 extern KuriKingModelFilePtr gKurikingModelModelFile;
 extern KuriKingTexSeqFilePtr gKurikingAngerTextureSequenceFile;
 extern KuriKingAnimationFilePtr data_ov074_02123030;
+extern KuriKingAnimationFilePtr gKurikingAngerAnimationFile;
+extern KuriKingAnimationFilePtr gKurikingDamageBAnimationFile;
+extern KuriKingAnimationFilePtr gKurikingDamageFAnimationFile;
+extern KuriKingAnimationFilePtr gKurikingDownStartAnimationFile;
+extern KuriKingAnimationFilePtr gKurikingDownAnimationFile;
+extern KuriKingAnimationFilePtr gKurikingSerchWaitAnimationFile;
+extern KuriKingAnimationFilePtr gKurikingTurnAnimationFile;
+extern KuriKingAnimationFilePtr gKurikingWalkAnimationFile;
+extern KuriKingAnimationFilePtr gKurikingWalkEndAnimationFile;
+extern KuriKingAnimationFilePtr gKurikingWalkStartAnimationFile;
+extern KuriKingAnimationFilePtr gKurikingSpawnAnimationFile;
 extern SharedFilePtr *const sKurikingMinionAnimationFiles[7];
 extern SharedFilePtr *const sKurikingAnimationFiles[12];
 
@@ -1376,18 +1403,34 @@ void daKuriKing_c::UpdateAnimation() {
 /* The animation table behind data_ov074_02122f34: one record per clip --
  * the SharedFilePtr that holds the BCA_File, the matching BTA_File for the
  * texture transformer, and SetAnim's animation index. */
-struct KuriKingAnimFile { u16 fileID; u8 numRefs; void *filePtr; };
 struct KuriKingAnimEntry {
-    KuriKingAnimFile *anim;
+    SharedFilePtr *anim;
     BTA_File *btaFile;
     int animArg;
 };
-extern KuriKingAnimEntry data_ov074_02122f34[];
+/* One record per clip, in the order PlayAnim indexes them. The last record is
+   the null terminator. */
+KuriKingAnimEntry data_ov074_02122f34[14] = {
+    {&gKurikingAngerAnimationFile, &data_ov009_02112404, 0x40000000},
+    {&gKurikingDamageBAnimationFile, &data_ov009_0211244c, 0x40000000},
+    {&gKurikingDamageFAnimationFile, &data_ov009_0211244c, 0x40000000},
+    {&gKurikingDownStartAnimationFile, &data_ov010_02112464, 0x40000000},
+    {&gKurikingDownAnimationFile, &data_ov010_021124c4, 0},
+    {&gKurikingSerchWaitAnimationFile, &data_ov009_02112434, 0},
+    {&gKurikingTurnAnimationFile, &data_ov010_021124ac, 0x40000000},
+    {&data_ov074_02123030, &data_ov010_021124ac, 0},
+    {&gKurikingWalkAnimationFile, &data_ov010_021124ac, 0},
+    {&gKurikingWalkEndAnimationFile, &data_ov010_021124ac, 0x40000000},
+    {&gKurikingWalkStartAnimationFile, &data_ov010_021124ac, 0x40000000},
+    {&gKurikingSpawnAnimationFile, &data_ov009_02112404, 0x40000000},
+    {&data_ov074_02123030, &data_ov010_021124ac, 0x40000000},
+    {0, 0, 0},
+};
 
 /* Is clip `idx` the one currently playing: compare its file pointer with the
  * dExtAnmModel_c's. */
 int daKuriKing_c::IsAnimPlaying(int idx) {
-    KuriKingAnimFile *anim = data_ov074_02122f34[idx].anim;
+    SharedFilePtr *anim = data_ov074_02122f34[idx].anim;
     return this->mAnmModel.file == anim->filePtr;
 }
 

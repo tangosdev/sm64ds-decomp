@@ -161,6 +161,17 @@ OamAttr data_ov006_02137598[1] = {{0x40f8, 0x81f0, 0x314a, 0xffff}};
 OamAttr data_ov006_02137590[1] = {{0x40f8, 0x81f0, 0x310a, 0xffff}};
 OamAttr *sHanaWigglerFieldSprites[] = {data_ov006_02137598, data_ov006_02137590};
 
+/* The per-language text sprites, in GetGameLanguage order. */
+extern OamAttr *sMgTextSpritesEnglish[];
+extern OamAttr *sMgTextSpritesSpanish[];
+extern OamAttr *sMgTextSpritesFrench[];
+extern OamAttr *sMgTextSpritesGerman[];
+extern OamAttr *sMgTextSpritesItalian[];
+OamAttr **sHanaTextSpritesByLanguage[5] = {
+    sMgTextSpritesEnglish, sMgTextSpritesSpanish, sMgTextSpritesFrench,
+    sMgTextSpritesGerman,  sMgTextSpritesItalian,
+};
+
 extern short sHanaPickedCount;
 extern unsigned short sHanaPickedIds[];
 extern unsigned short sHanaUsedIds[];

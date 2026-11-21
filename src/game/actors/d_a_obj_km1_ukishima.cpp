@@ -31,6 +31,7 @@ enum d_a_obj_km1_ukishima_AssetId {
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "math/CalcLib.h"
+#include "SpawnInfo.h"
 
 /* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
  * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
@@ -53,7 +54,20 @@ struct CLPS_Block;
 
 extern Km1UkishimaClsnFilePtr data_ov043_021125e0;  /* the KCL  */
 extern Km1UkishimaModelFilePtr data_ov043_021125e8; /* the BMD  */
-extern CLPS_Block data_ov043_02111c00;              /* the CLPS block SetFile is handed */
+
+/* 'CLPS' collision-property block: tag, count/stride header, entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+
+/* The island's floor and wall pair. */
+CLPS_Block data_ov043_02111c00 = {
+    0x53504c43,
+    0x00020008,
+    {0x00000fc0, 0x000000ff, 0x00002fc0, 0x000000ff, 0xffffffff, 0xffffffff},
+};
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -141,3 +155,12 @@ s32 daObjKm1_Ukishima_c::CleanupResources() {
  * file 1626. The compiler registers each destructor beside the object. */
 Km1UkishimaModelFilePtr data_ov043_021125e8(ASSET_KM1_UKISHIMA_BMD);
 Km1UkishimaClsnFilePtr data_ov043_021125e0(ASSET_KM1_UKISHIMA_KCL);
+
+extern "C" SpawnInfo<daObjKm1_Ukishima_c> g_profile_KM1_UKISHIMA = {daObjKm1_Ukishima_c_classInit,
+                                                                    135,
+                                                                    176,
+                                                                    0x00000002,
+                                                                    0x00000000,
+                                                                    0x00300000,
+                                                                    0x01000000,
+                                                                    0x00000000};

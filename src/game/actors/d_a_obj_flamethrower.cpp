@@ -65,15 +65,25 @@ enum {
 };
 
 extern signed char gCurrentSublevel;
-/* Second particle parameter per segment: 0xe61 + i * 0x689. */
-extern short data_ov095_02136f98[];
 
-/* data_ov095_02136f80 (decl_common.h) is the per-segment scale,
- * 0x1000 + i * 0x745: collision radius and height are that times
- * 0x14 and 0x28, and the particle call takes it too.
- * data_ov095_02136fb0 is the local-Z placement, fx12, 0x28000 +
- * i * 0x122c8, rotated by mTransform and added to the previous
+/* data_ov095_02136f80 is the per-segment scale, 0x1000 + i * 0x745:
+ * collision radius and height are that times 0x14 and 0x28, and the
+ * particle call takes it too. data_ov095_02136fb0 is the local-Z
+ * placement, fx12, 0x28000 + i * 0x122c8, rotated by mTransform and
+ * added to the previous
  * segment. */
+extern const s16 data_ov095_02136f80[12] = {
+    0x1000, 0x1745, 0x1e8a, 0x25cf, 0x2d14, 0x3459, 0x3b9e, 0x42e3, 0x4a28, 0x516d, 0x58b2, 0x5ff7,
+};
+
+extern const s16 data_ov095_02136f98[12] = {
+    0x0e61, 0x14ea, 0x1b73, 0x21fc, 0x2885, 0x2f0e, 0x3597, 0x3c20, 0x42a9, 0x4932, 0x4fbb, 0x5644,
+};
+
+extern const s32 data_ov095_02136fb0[12] = {
+    0x28000, 0x3a2c8, 0x4c590, 0x5e858, 0x70b20, 0x82de8,
+    0x950b0, 0xa7378, 0xb9640, 0xcb908, 0xddbd0, 0xefe98,
+};
 
 /* The implicit constructor builds twelve collision cylinders and twelve
  * flame positions in member order. Vector3's empty default constructor

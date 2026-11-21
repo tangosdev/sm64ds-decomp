@@ -15,9 +15,8 @@
  * the retail D1/D0 pair first and emits no D2 body.
  *
  * Notes:
- * - data_ov009_02112bc4 / 02112c38 BTA/CLPS blocks: this TU consumes
- *   them, overlay .data owns them. The model/KCL handles and the three
- *   spawn tables are defined here.
+ * - The model/KCL handles, the three spawn tables and the BTA/CLPS blocks
+ *   this class loads are defined here.
  * - g_profile_MC_WATER stays outside the licensed .text.
  */
 
@@ -26,16 +25,65 @@
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "SaveBlock.h"
+#include "private/BTA_File.h"
+#include "SpawnInfo.h"
 
 struct BMD_File;
-struct BTA_File;
 struct KCL_File;
-struct CLPS_Block;
 
-extern BTA_File data_ov009_02112bc4;
-extern CLPS_Block data_ov009_02112c38;
+/* 'CLPS' collision-property block: tag, count/stride header, entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+
 extern unsigned char gGameMode;
 extern int gWaterHeight;
+
+/* Interior labels of the texture-SRT keys defined below. */
+extern fx32 data_ov009_02112234[];
+extern u16 data_ov009_0211222c[];
+extern fx32 data_ov009_021122ec[];
+extern BTAMaterialRecord data_ov009_02112238[];
+
+/* The water plane's texture animation: 0x5b frames, constant scale and
+   translation, one material. */
+BTA_File data_ov009_02112bc4 = {
+    0x5b, 0, data_ov009_02112234, data_ov009_0211222c, data_ov009_021122ec,
+    1,    0, data_ov009_02112238,
+};
+
+/* Floor properties for the block ahead of the water plane. */
+CLPS_Block data_ov009_02112c18 = {
+    0x53504c43,
+    0x00010008,
+    {0x00000fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
+
+/* The water surface's collision properties: one floor entry. */
+CLPS_Block data_ov009_02112c38 = {
+    0x53504c43,
+    0x00010008,
+    {0x00000fe0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+};
+
+/* Texture-SRT keys and the static blocks that sit against this class's
+   BTA and CLPS. Placeholder names kept; tables stay in hex. */
+extern u32 data_ov009_02112b7c[];
+extern u32 data_ov009_02112c9c[];
+extern u32 data_ov009_02112dcc[];
+extern u32 data_ov009_02112b6c[];
+extern u32 data_ov009_02112bac[];
+extern u32 data_ov009_02112228[];
+extern u32 data_ov009_02112270[];
+extern u32 data_ov009_02112254[];
+extern u32 data_ov009_02112e7c[];
+extern u32 data_ov009_02112b74[];
+extern u32 data_ov009_02112b88[];
+extern u32 data_ov009_02112b94[];
+extern u32 data_ov009_02112b64[];
+extern u32 data_ov009_02112b68[];
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daObjMcWater_c_AssetId { ASSET_MC_WATER_BMD = 0x0693, ASSET_MC_WATER_KCL = 0x0694 };
@@ -176,3 +224,6 @@ void daObjMcWater_c::SpawnWaterfalls() {
    body out of line here instead flips them to D0-before-D1 and the isolation
    step rejects the object.
  */
+
+extern "C" SpawnInfo<daObjMcWater_c> g_profile_MC_WATER = {
+    daObjMcWater_c_classInit, 338, 338, 0x00000000, 0x00000000, 0x00320000, 0x01f40000, 0x00050000};

@@ -33,6 +33,9 @@ enum d_a_obj_c1_trap_AssetId { ASSET_C1_TRAP_BMD = 0x05af, ASSET_C1_TRAP_KCL = 0
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
+extern u32 data_ov010_021121c0[];
+extern u32 data_ov010_02112318[];
+
 typedef void (daObjC1_Trap_c::*TrapState)();
 
 struct TrapStateRec {
@@ -53,6 +56,16 @@ struct TrapModelFilePtr : SharedFilePtr {
 struct TrapCollisionFilePtr : SharedFilePtr {
     TrapCollisionFilePtr(u32 fileID);
     ~TrapCollisionFilePtr();
+};
+
+/* The block the door's mesh collider takes. CLPS.h keeps CLPS_Block opaque:
+   an eight-byte header whose halfword at +4 is the entry stride, then one
+   eight-byte CLPS per collider class. */
+struct CLPS_Block {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    CLPS entries[2];
 };
 
 extern CLPS_Block data_ov010_021122f8;
@@ -320,3 +333,52 @@ TrapStateRec data_ov010_02112d28 = {
     &daObjC1_Trap_c::StateClosed,  &daObjC1_Trap_c::StateOpening,  &daObjC1_Trap_c::StateOpen,
     &daObjC1_Trap_c::StateClosing, &daObjC1_Trap_c::StateHeldOpen,
 };
+
+/* Course words. data_ov010_021121c0 abuts the CLPS block below;
+ * data_ov010_02112318 runs up to the state descriptors. */
+extern u32 data_ov010_021121c0[];
+extern u32 data_ov010_021121c4[];
+extern u32 data_ov010_021121cc[];
+extern u32 data_ov010_021121dc[];
+extern u32 data_ov010_021121fc[];
+extern u32 data_ov010_02112204[];
+extern u32 data_ov010_0211220c[];
+extern u32 data_ov010_0211221c[];
+extern u32 data_ov010_0211222c[];
+extern u32 data_ov010_0211223c[];
+extern u32 data_ov010_02112248[];
+extern u32 data_ov010_02112288[];
+extern u32 data_ov010_02112580[];
+extern u32 data_ov010_0211261c[];
+extern u32 data_ov010_02112790[];
+extern u32 data_ov010_02112864[];
+extern u32 data_ov010_02112948[];
+
+/* 0x02112318..0x02112a78 (1888 bytes, 472 words) */
+extern u32 data_ov010_02112214[];
+extern u32 data_ov010_02112268[];
+extern u32 data_ov010_021122b8[];
+extern u32 data_ov010_021121d4[];
+extern u32 data_ov010_02112398[];
+extern u32 data_ov010_021123d8[];
+extern u32 data_ov010_02112338[];
+extern u32 data_ov010_02112234[];
+extern u32 data_ov010_021121e4[];
+extern u32 data_ov010_02112278[];
+extern u32 data_ov010_02112420[];
+extern u32 data_ov010_021121f4[];
+extern u32 data_ov010_02112258[];
+extern u32 data_ov010_02112224[];
+extern u32 data_ov010_02112358[];
+extern u32 data_ov010_021122d8[];
+extern u32 data_ov010_02112520[];
+extern u32 data_ov010_02112470[];
+extern u32 data_ov010_021126d0[];
+extern u32 data_ov010_021121ec[];
+extern u32 data_ov010_021124c0[];
+extern u32 data_ov010_02112318[];
+
+/* Door shut, then door held open. The all-ones words the cartridge pads the
+   block out to 32 bytes with are not part of the object. */
+CLPS_Block data_ov010_021122f8 = {
+    0x53504c43, 8, 2, {{0x04000fc1, 0x000000ff}, {0x00000fc1, 0x000000ff}}};

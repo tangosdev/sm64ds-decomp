@@ -182,7 +182,6 @@ _ZTS16daObjRc_Tikuwa_c kind:data(any) addr:0x02113cc0
 data_ov036_02113ccc kind:data(any) addr:0x02113ccc ambiguous
 g_profile_RC_TIKUWA kind:data(any) addr:0x02113cd4 ambiguous
 data_ov036_02113cec kind:data(any) addr:0x02113cec ambiguous
-data_ov036_02113cf4 kind:data(any) addr:0x02113cf4 ambiguous
 _ZTV16daObjRc_Tikuwa_c kind:data(any) addr:0x02113cf8
 data_ov036_02113d30 kind:data(any) addr:0x02113d30 ambiguous
 data_ov036_02113d78 kind:data(any) addr:0x02113d78
@@ -191,7 +190,6 @@ _ZTS18daObjRc_Guruguru_c kind:data(any) addr:0x02113d90
 g_profile_RC_GURUGURU kind:data(any) addr:0x02113da8 ambiguous
 data_ov036_02113dc4 kind:data(any) addr:0x02113dc4 ambiguous
 _ZTV18daObjRc_Guruguru_c kind:data(any) addr:0x02113dcc
-data_ov036_02113e00 kind:data(any) addr:0x02113e00 ambiguous
 _ZTI16daObjRc_Dorifu_c kind:data(any) addr:0x02113e4c
 _ZTS16daObjRc_Dorifu_c kind:data(any) addr:0x02113e58
 g_profile_RC_DORIFU kind:data(any) addr:0x02113e6c ambiguous

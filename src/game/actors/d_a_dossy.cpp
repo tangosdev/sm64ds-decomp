@@ -66,6 +66,12 @@ s16 atan2(s32, s32);
 
 typedef enum { FALSE = 0, TRUE = 1 } BOOL;
 
+/* The collision-property block InitResources hands to dBgW_Kc::SetFile: the
+   0x20-byte record whose header and entries dBgW_Kc reads. */
+struct CLPS_Block {
+    u32 words[8];
+};
+
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
    model handle constructs through func_02017acc and destroys through
    func_02017ab4; the animation handles construct through
@@ -114,7 +120,7 @@ extern SharedFilePtr *const data_ov065_0211c08c[7] = {
     &gDossyArmLCollisionFile, &gDossyArmRCollisionFile, &gDossyLegLCollisionFile,
     &gDossyLegRCollisionFile,
 };
-extern void *data_ov065_0211cd68[];
+extern CLPS_Block *data_ov065_0211cd68[7];
 extern SharedFilePtr data_ov002_0210d9c0;
 
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
@@ -194,7 +200,7 @@ int daDossy_c::InitResources()
     for (j = 0; j < 7; j++) {
         KCL_File *kcl = dBgW_Kc::LoadFile(*data_ov065_0211c08c[j]);
         mPlatforms[j].mClsn.dBgW_KcMbg::SetFile(kcl, mPlatforms[j].mClsnNextMat, 0x1000, mAngle.y,
-                                                *(CLPS_Block *)data_ov065_0211cd68[j]);
+                                                *data_ov065_0211cd68[j]);
         if ((unsigned)j <= 2) {
             mPlatforms[j].mClsn.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
             if (j == 2)
@@ -655,4 +661,31 @@ extern "C" StateFunc data_ov065_0211d7fc[3] = {
     &daDossy_c::UpdateSwim,
     &daDossy_c::UpdateHeadDown,
     &daDossy_c::UpdateHeadUp,
+};
+
+/* The seven collision-property blocks InitResources gives the platforms, and
+   the table that picks one per platform. Platforms 0..2 select blocks 5..3,
+   whose third word is 0x00041fc0 (a different wall property); the others
+   select the 0x00000fc0 blocks. */
+CLPS_Block data_ov065_0211cec4[7] = {
+    {0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff,
+     0xffffffff},
+    {0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff,
+     0xffffffff},
+    {0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff,
+     0xffffffff},
+    {0x53504c43, 0x00010008, 0x00041fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff,
+     0xffffffff},
+    {0x53504c43, 0x00010008, 0x00041fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff,
+     0xffffffff},
+    {0x53504c43, 0x00010008, 0x00041fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff,
+     0xffffffff},
+    {0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff,
+     0xffffffff},
+};
+
+CLPS_Block *data_ov065_0211cd68[7] = {
+    &data_ov065_0211cec4[5], &data_ov065_0211cec4[4], &data_ov065_0211cec4[3],
+    &data_ov065_0211cec4[2], &data_ov065_0211cec4[1], &data_ov065_0211cec4[0],
+    &data_ov065_0211cec4[6],
 };

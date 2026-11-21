@@ -171,23 +171,26 @@ OamAttr **sMgCoinsDeltaSprites[] = {
     sMgTextSpritesEnglish, sMgTextSpritesSpanish, sMgTextSpritesFrench,
     sMgTextSpritesGerman,  sMgTextSpritesItalian,
 };
-extern short gMgCoinsStatus; /* 1 when a sequence finishes; 2, 3, 4 while one runs */
-extern int sMgCoinsDelta;   /* the count MgCoins_DrawDelta shows */
-extern int sMgCoinsBetPlaced;   /* set once by MgCoins_PlaceBet */
-extern int sMgCoinsSoundPending;   /* the sequence's sound is still to play */
-extern int sMgCoinsLastLostAlt;   /* last sprite MgCoins_StepLoseOneMore stepped */
-extern int sMgCoinsPayoutLeft;   /* count MgCoins_StartPayout lays out */
-extern int sMgCoinsToStep;   /* sprites still to step */
-extern int sMgCoinsIndex;   /* index of the sprite being stepped */
-extern int sMgCoinsWait;   /* frames until the next step */
-extern int sMgCoinsLastReturned;   /* last sprite MgCoins_StepRefund stepped */
-extern int sMgCoinsLastSpent;   /* last sprite MgCoins_StepSpend stepped */
-extern int sMgCoinsLaunchPending;   /* a MgCoins_StepLaunchQuick run is pending */
-extern int sMgCoinsLastLost;   /* last sprite MgCoins_StepLose stepped */
-extern int gMgCoinsInPlay;   /* sprites in play */
-extern int sMgCoinsSlowLaunches;   /* MgCoins_StepLaunchQuick steps this many with a delay */
-extern void (*sMgCoinsStep)(); /* the current step; 0 when idle */
-extern int sMgCoinsDeltaShown;   /* nonzero: MgCoins_Draw shows the count */
+short gMgCoinsStatus;      /* 1 when a sequence finishes; 2, 3, 4 while one runs */
+int sMgCoinsDelta;         /* the count MgCoins_DrawDelta shows */
+int sMgCoinsBetPlaced;     /* set once by MgCoins_PlaceBet */
+int sMgCoinsSoundPending;  /* the sequence's sound is still to play */
+int sMgCoinsLastLostAlt;   /* last sprite MgCoins_StepLoseOneMore stepped */
+int sMgCoinsPayoutLeft;    /* count MgCoins_StartPayout lays out */
+int sMgCoinsToStep;        /* sprites still to step */
+int sMgCoinsIndex;         /* index of the sprite being stepped */
+int sMgCoinsWait;          /* frames until the next step */
+int sMgCoinsLastReturned;  /* last sprite MgCoins_StepRefund stepped */
+int sMgCoinsLastSpent;     /* last sprite MgCoins_StepSpend stepped */
+int sMgCoinsLaunchPending; /* a MgCoins_StepLaunchQuick run is pending */
+int sMgCoinsLastLost;      /* last sprite MgCoins_StepLose stepped */
+int gMgCoinsInPlay;        /* sprites in play */
+int sMgCoinsSlowLaunches;  /* MgCoins_StepLaunchQuick steps this many with a delay */
+void (*sMgCoinsStep)();    /* the current step; 0 when idle */
+int sMgCoinsDeltaShown;    /* nonzero: MgCoins_Draw shows the count */
+/* The address of sMgCoins[0].mVisible; the ROM indexes the
+   array's visible bytes from it. */
+extern unsigned char sMgCoinsVisible[];
 extern int gGlobalTimer;
 }
 extern void MgCoins_StepPayoutFinish(void);

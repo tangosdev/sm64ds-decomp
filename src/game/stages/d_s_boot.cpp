@@ -34,3 +34,7 @@ dScBoot_c::~dScBoot_c()
 dScBoot_c *dScBoot_c_classInit(void) {
     return new dScBoot_c();
 }
+
+/* The boot job func_0201a244 starts; dScBoot_c::Behavior polls it. It sits
+   between func_0202345c's 0x10-byte run and d_s_stage_methods' bss. */
+u8 sBootJobDone[4];

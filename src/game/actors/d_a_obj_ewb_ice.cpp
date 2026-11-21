@@ -143,8 +143,10 @@ extern "C" {
 void func_02012694(unsigned int id, const Vector3 *pos);
 
 extern int gLevelMinY;
-extern u8 data_ov073_02123420[];
-extern u8 data_ov073_02123424[];
+/* Per-variant spawn counters. The ROM gives each a four-byte slot even
+ * though the code steps a byte. */
+u8 data_ov073_02123420[4];
+u8 data_ov073_02123424[4];
 extern char data_ov073_021231bc[];
 extern char data_ov073_021231c0[];
 extern char data_ov073_021231c4[];

@@ -126,12 +126,6 @@ extern SharedFilePtr *const data_ov095_02136f74[3] = {
 extern CLPS_Block *data_ov095_021375a4[];
 /* The state table, indexed by mState. */
 extern State data_ov095_02137910[];
-/* The ROM PMF constants the state table copies from (unlicensed .data). */
-extern State data_ov095_02137594;
-extern State data_ov095_0213757c;
-extern State data_ov095_02137584;
-extern State data_ov095_0213758c;
-extern State data_ov095_0213759c;
 
 daUdlift_c *daUdlift_c_classInit_UDLIFT_TERESA() {
     return new daUdlift_c();
@@ -410,9 +404,6 @@ UdliftCollisionFilePtr gRcRift02CollisionFile(ASSET_RC_RIFT02_KCL);
  * initializer never touches the sixth slot; it is zeros. The claim has to
  * span it because dsd sizes the trailing symbol to the section end. */
 State data_ov095_02137910[6] = {
-    data_ov095_02137594,
-    data_ov095_0213757c,
-    data_ov095_02137584,
-    data_ov095_0213758c,
-    data_ov095_0213759c,
+    &daUdlift_c::StateWait, &daUdlift_c::StateMoveUp,       &daUdlift_c::StateMoveDown,
+    &daUdlift_c::StateStop, &daUdlift_c::StateStopAtBottom,
 };

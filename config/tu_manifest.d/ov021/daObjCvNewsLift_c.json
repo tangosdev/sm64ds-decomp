@@ -9,18 +9,14 @@
     "contiguous linker run: 0x21111a0..0x2111ec4, 8 function(s), from build/tu_map.json (tools/tu_map.py); extended by hand through 0x21121e8 (see notes)",
     "class label(s): daObjCvNewsLift_c",
     "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "The current reconstructed TU now owns the204-byte platform-yaw/profile/RTTI/vtable group. Consumers and exact native bytes establish roles and extents, not a recovered historical source filename or original TU boundary. Native initializer and CLPS blocks remain outside this assignment."
+    "The current reconstructed TU now owns the204-byte platform-yaw/profile/RTTI/vtable group. Consumers and exact native bytes establish roles and extents, not a recovered historical source filename or original TU boundary. Native initializer remains outside this assignment.",
+    "The two native CLPS blocks the mesh colliders take are now defined in this TU (0x02113a60, 0x02113a80). Each owns its 16-byte header+entry; the all-ones words that pad each block to 32 bytes stay unclaimed."
   ],
   "sections": [
     {
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x021121e8"
-    },
-    {
-      "name": ".rodata",
-      "start": "0x02114740",
-      "end": "0x02114748"
     },
     {
       "name": ".init",
@@ -31,6 +27,23 @@
       "name": ".ctor",
       "start": "0x02113734",
       "end": "0x02113738"
+    },
+    {
+      "name": ".data.cvLiftClps",
+      "input_section": ".data",
+      "start": "0x02113a60",
+      "end": "0x02113a70"
+    },
+    {
+      "name": ".data.cvLiftPlatClps",
+      "input_section": ".data",
+      "start": "0x02113a80",
+      "end": "0x02113a90"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x02114740",
+      "end": "0x02114748"
     },
     {
       "name": ".data",
@@ -179,6 +192,20 @@
     }
   ],
   "data": [
+    {
+      "symbol": "data_ov021_02113a60",
+      "address": "0x02113a60",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block the main mesh collider takes: CLPS header with stride 8 and one entry (0xfc0, 0xff), read by dBgW_Kc::SetFile"
+    },
+    {
+      "symbol": "data_ov021_02113a80",
+      "address": "0x02113a80",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "CLPS block the four platform colliders take: CLPS header with stride 8 and one entry (0x1fc0, 0xff)"
+    },
     {
       "symbol": "_ZTI17daObjCvNewsLift_c",
       "address": "0x02114748",
@@ -434,6 +461,20 @@
           "start": "0x021149a0",
           "end": "0x02114a50",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.cvLiftClps",
+          "start": "0x02113a60",
+          "end": "0x02113a70",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.cvLiftPlatClps",
+          "start": "0x02113a80",
+          "end": "0x02113a90",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {

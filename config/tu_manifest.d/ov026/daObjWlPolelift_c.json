@@ -32,6 +32,18 @@
       "name": ".bss",
       "start": "0x02113ea0",
       "end": "0x02113eb4"
+    },
+    {
+      "name": ".data.data_ov026_02113a90",
+      "input_section": ".data",
+      "start": "0x02113a90",
+      "end": "0x02113aa8"
+    },
+    {
+      "name": ".data.wlLate",
+      "input_section": ".data",
+      "start": "0x02113aa8",
+      "end": "0x02113b5c"
     }
   ],
   "functions": [
@@ -99,7 +111,6 @@
       "ordinal": 8
     }
   ],
-  "data": [],
   "bss": [
     {
       "symbol": "data_ov026_02113ea0",
@@ -162,20 +173,16 @@
         "_ZTS7dBase_c",
         "_ZTI8dActor_c",
         "_ZTS8dActor_c",
-        "_ZTI17daObjWlPolelift_c",
-        "_ZTS17daObjWlPolelift_c",
-        "_ZTV17daObjWlPolelift_c"
+        "_ZTI17daObjWlPolelift_c"
       ],
       "dataExternalized": [
         "_ZTI17daObjWlPolelift_c",
         "_ZTI7dBase_c",
         "_ZTI7fBase_c",
         "_ZTI8dActor_c",
-        "_ZTS17daObjWlPolelift_c",
         "_ZTS7dBase_c",
         "_ZTS7fBase_c",
-        "_ZTS8dActor_c",
-        "_ZTV17daObjWlPolelift_c"
+        "_ZTS8dActor_c"
       ]
     },
     "criteria": {
@@ -231,6 +238,20 @@
           "start": "0x02113ea0",
           "end": "0x02113eb4",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.data_ov026_02113a90",
+          "start": "0x02113a90",
+          "end": "0x02113aa8",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.wlLate",
+          "start": "0x02113aa8",
+          "end": "0x02113b5c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -338,27 +359,6 @@
       "canonical_module": "arm9",
       "canonical_address": "0x0208e384",
       "reason": "Vague-linkage type-name string for the direct base dActor_c. Cartridge copy at arm9:0x0208e384, outside this entry's .text claim."
-    },
-    {
-      "symbol": "_ZTI17daObjWlPolelift_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov026",
-      "canonical_address": "0x02113a90",
-      "reason": "This class's own typeinfo record, vague-linkage. The cartridge copy at ov026:0x02113a90 is inside this module's .data but OUTSIDE the 0x021111a0..0x021116c8 .text run this entry claims. It is an __si_class_type_info whose base pointer is arm9:0x0208e390 = _ZTI8dActor_c."
-    },
-    {
-      "symbol": "_ZTS17daObjWlPolelift_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov026",
-      "canonical_address": "0x02113aa8",
-      "reason": "This class's own type-name string. The cartridge copy at ov026:0x02113aa8 is the length-prefixed '17daObjWlPolelift_c' -- the ROM's own spelling, not a coined one. Text-only TU; the ROM blob owns the address."
-    },
-    {
-      "symbol": "_ZTV17daObjWlPolelift_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov026",
-      "canonical_address": "0x02113ae0",
-      "reason": "This class's own vtable, emitted because the inline destructor makes the first declared non-inline virtual (InitResources, defined here) the key function. The cartridge's public address point is ov026:0x02113ae0, outside the .text run; the emitted storage starts eight bytes earlier, which is why the factory's vptr store is spelled &_ZTV17daObjWlPolelift_c[2]. The address in config/arm9/overlays/ov026/symbols.txt is unchanged."
     }
   ],
   "init": [
@@ -482,6 +482,401 @@
       "addend": 0,
       "target_module": "ov026",
       "target_address": "0x02113ea8"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113abc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z27daObjWlPolelift_c_classInitv",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x02111678"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113adc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI17daObjWlPolelift_c",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x02113a90"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113afc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113af4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113af0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113ae8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113ae4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjWlPolelift_cD0Ev",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x021111e0"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjWlPolelift_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x02111308"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113af8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjWlPolelift_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x02111330"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113aec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjWlPolelift_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x021112e4"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113ae0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjWlPolelift_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x02111598"
+    },
+    {
+      "section": ".data.wlLate",
+      "source": "0x02113b20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN17daObjWlPolelift_cD1Ev",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x021111a0"
+    },
+    {
+      "section": ".data.data_ov026_02113a90",
+      "source": "0x02113a90",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data.data_ov026_02113a90",
+      "source": "0x02113a94",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS17daObjWlPolelift_c",
+      "addend": 0,
+      "target_module": "ov026",
+      "target_address": "0x02113aa8"
+    },
+    {
+      "section": ".data.data_ov026_02113a90",
+      "source": "0x02113a98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI8dActor_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208e390"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "_ZTI17daObjWlPolelift_c",
+      "address": "0x02113a90",
+      "size": "0xc",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "data_ov026_02113a9c",
+      "address": "0x02113a9c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "collider offset (0, 0x28000, 0) between the typeinfo and the name"
+    },
+    {
+      "symbol": "_ZTS17daObjWlPolelift_c",
+      "address": "0x02113aa8",
+      "size": "0x14",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "g_profile_WL_POLELIFT",
+      "address": "0x02113abc",
+      "size": "0x1c",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "_ZTV17daObjWlPolelift_c",
+      "address": "0x02113ae0",
+      "size": "0x84",
+      "evidence": "compiler emission of the class key function",
+      "emitted_storage_address": "0x02113ad8",
+      "address_point_bias": "0x8"
     }
   ]
 }

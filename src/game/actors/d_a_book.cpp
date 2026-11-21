@@ -31,6 +31,7 @@
  * obj_check_attacks and obj_die_if_health_non_positive; the rest are coined.
  */
 
+#include "SpawnInfo.h"
 #include "common.h"
 #include "nitro/fx/fx.h"
 #include "nitro/fx/fx_trig.h"
@@ -51,7 +52,6 @@ namespace cstd {
 s16 atan2(s32, s32);
 }
 
-
 /* Actor IDs from the ROM's actor table (symbols/actor_debug_names.tsv). */
 enum {
     kPlayerActorId = 0xbf,
@@ -63,18 +63,18 @@ enum {
 
 /* Sound IDs, named by when they play. */
 enum {
-    kSfxSwitchPush = 0xb5,  /* BOOK_SWITCH starts sliding forward */
-    kSfxImpact = 0xc5,      /* a flying book hits ground or wall */
-    kSfxTakeOff = 0x166     /* a book starts to move */
+    kSfxSwitchPush = 0xb5, /* BOOK_SWITCH starts sliding forward */
+    kSfxImpact = 0xc5,     /* a flying book hits ground or wall */
+    kSfxTakeOff = 0x166    /* a book starts to move */
 };
 
 /* What GetHitType found when it looked at the collider. */
 enum {
     HIT_NONE = 0,
-    HIT_ATTACKED = 1,       /* hit by an attack, or bumped from below */
-    HIT_METAL_PLAYER = 2,   /* touched by a metal player */
+    HIT_ATTACKED = 1,     /* hit by an attack, or bumped from below */
+    HIT_METAL_PLAYER = 2, /* touched by a metal player */
     HIT_TOUCHED_PLAYER = -1,
-    HIT_STOMPED = -2        /* jumped on */
+    HIT_STOMPED = -2 /* jumped on */
 };
 
 /* How fast a launched book travels: 50 units a frame. */
@@ -113,13 +113,9 @@ extern "C" BookAnimationFileHandle data_ov020_02114ab0;
 /* One native destructor definition emits both ROM variants. D1 destroys the
  * class-typed members in reverse declaration order, then dEnemyBase_c; D0 is
  * the same destruction followed by the inherited actor-heap operator delete. */
-daBook_c::~daBook_c()
-{
-}
+daBook_c::~daBook_c() {}
 
-daBookGen_c::~daBookGen_c()
-{
-}
+daBookGen_c::~daBookGen_c() {}
 
 /* Points the book at the closest player: mAimYaw and mAimPitch are the angles
  * from the book to the player, mAimRoll a constant quarter turn. */
@@ -220,7 +216,8 @@ int daBook_c::CheckAttacks() {
         Die();
         return 1;
     }
-    if (r != HIT_STOMPED) return 0;
+    if (r != HIT_STOMPED)
+        return 0;
     mTouchedPlayer->Bounce(0x28000);
     Die();
     return 1;
@@ -312,8 +309,7 @@ void daBook_c::UpdateSwitchBook() {
         mState = STATE_SWITCH_RETRACT;
         mStateTimer = 0;
         return;
-    case STATE_SWITCH_RETRACT:
-    {
+    case STATE_SWITCH_RETRACT: {
         /* waits out mStateTimer, then slides back 4 units a frame until it
          * is 40 units behind its home position */
         if (mStateTimer != 0) {
@@ -328,8 +324,7 @@ void daBook_c::UpdateSwitchBook() {
         mdCcAcPos_c.flags &= ~1;
         return;
     }
-    case STATE_SWITCH_READY:
-    {
+    case STATE_SWITCH_READY: {
         /* an attack or a metal-player touch turns the collider on (clears
          * flags bit 0) and starts the push */
         if (GetHitType() <= 0)
@@ -339,8 +334,7 @@ void daBook_c::UpdateSwitchBook() {
         Sound::PlayBank0(kSfxSwitchPush, mCamSpacePos);
         return;
     }
-    case STATE_SWITCH_PUSH:
-    {
+    case STATE_SWITCH_PUSH: {
         /* slides forward 10 units a frame; once home, checks the push order
          * and tells the partner this book was pushed */
         mPos.z += 0xa000;
@@ -357,8 +351,7 @@ void daBook_c::UpdateSwitchBook() {
         mState = STATE_SWITCH_DONE;
         return;
     }
-    case STATE_SWITCH_DONE:
-    {
+    case STATE_SWITCH_DONE: {
         /* if the partner cleared this book's bit, retract and try again;
          * phase 2 sends the book off along +x until x reaches -1500 units,
          * phase 3 removes it at once */
@@ -567,7 +560,7 @@ void daBook_c::StateWait() {
     mHorzSpeed = 0x5000;
     mStateTimer = 0;
     {
-        u32* p234 = &mdCcAcPos_c.flags;
+        u32 *p234 = &mdCcAcPos_c.flags;
         *p234 = *p234 & ~1;
     }
     func_0201267c(kSfxTakeOff, &mCamSpacePos);
@@ -627,8 +620,7 @@ void daBook_c::UpdateModelMatrix() {
     DropShadowRadHeight(mShadowModel, mShadowMat, mScale.x * 0x64, 0x12c000, 0xf);
 }
 
-int daBook_c::CleanupResources()
-{
+int daBook_c::CleanupResources() {
     data_ov020_02114aa0.Release();
     data_ov020_02114ab8.Release();
     data_ov020_02114aa8.Release();
@@ -637,16 +629,14 @@ int daBook_c::CleanupResources()
     return 1;
 }
 
-int daBookGen_c::CleanupResources()
-{
+int daBookGen_c::CleanupResources() {
     data_ov020_02114aa0.Release();
     data_ov020_02114ab8.Release();
     UnloadBlueCoinModel();
     return 1;
 }
 
-int daBook_c::Render()
-{
+int daBook_c::Render() {
     /* mFlags bit 0x40000 is one of the Yoshi-mouth states */
     bool isHidden = mFlags & 0x40000;
     if (isHidden != 0)
@@ -660,8 +650,7 @@ int daBook_c::Render()
     return 1;
 }
 
-int daBook_c::Behavior()
-{
+int daBook_c::Behavior() {
     func_0200f760(&mdCcAcPos_c);
     if (UpdateYoshiEat(mWithMeshClsn) != 0) {
         /* Yoshi released the book (mEatenByYoshi, mSpitOutTimer == 5): save the
@@ -696,8 +685,7 @@ int daBook_c::Behavior()
  * a SHOOT_BOOK from its own position, with its mPrevAngle triple as the
  * rotation, at a player who is within 600 units horizontally and within 0x2000
  * (45 degrees) of the way it faces. A shot clears mSpawnTimer. */
-int daBookGen_c::Behavior()
-{
+int daBookGen_c::Behavior() {
     if (mSpawnTimer > 40) {
         daPly_c *player = ClosestPlayer();
         if (player != 0) {
@@ -729,8 +717,7 @@ int daBookGen_c::Behavior()
  * the shot and killer books take the player's attacks, the killer book also
  * Yoshi's tongue, and the switch takes punch, kick, breakdance and slide
  * kick. */
-int daBook_c::InitResources()
-{
+int daBook_c::InitResources() {
     dExtSimpleModel_c::LoadFile(data_ov020_02114aa0);
     dExtSimpleModel_c::LoadFile(data_ov020_02114ab8);
     dExtFrameCtrl_c::LoadFile(data_ov020_02114aa8);
@@ -789,8 +776,7 @@ int daBook_c::InitResources()
     return 1;
 }
 
-int daBookGen_c::InitResources()
-{
+int daBookGen_c::InitResources() {
     mSpawnTimer = 0;
     dExtSimpleModel_c::LoadFile(data_ov020_02114aa0);
     dExtSimpleModel_c::LoadFile(data_ov020_02114ab8);
@@ -799,16 +785,14 @@ int daBookGen_c::InitResources()
 }
 
 /* KILLER_BOOK cannot be aimed at with an egg; the others report 0x19000. */
-s32 daBook_c::OnAimedAtWithEgg()
-{
+s32 daBook_c::OnAimedAtWithEgg() {
     if (IsActorID(this, kKillerBookActorId))
         return 0;
     return 0x19000;
 }
 
 /* KILLER_BOOK answers 2, the others 0. */
-s32 daBook_c::OnYoshiTryEat()
-{
+s32 daBook_c::OnYoshiTryEat() {
     return IsActorID(this, kKillerBookActorId) ? 2 : 0;
 }
 
@@ -834,3 +818,33 @@ BookModelFilePtr data_ov020_02114aa0(0x2c8);
 BookModelFilePtr data_ov020_02114ab8(0x2cb);
 BookAnimationFileHandle data_ov020_02114aa8(0x2c9);
 BookAnimationFileHandle data_ov020_02114ab0(0x2ca);
+
+extern "C" SpawnInfo<daBook_c> g_profile_KILLER_BOOK = {daBook_c_classInit_KILLER_BOOK,
+                                                        327,
+                                                        328,
+                                                        0x10000002,
+                                                        0x00064000,
+                                                        0x00064000,
+                                                        0x01000000,
+                                                        0x01000000};
+
+extern "C" SpawnInfo<daBookGen_c> g_profile_BOOK_GENERATOR = {
+    daBookGen_c_classInit, 328, 329, 0x00000001, 0x00064000, 0x00064000, 0x01000000, 0x01000000};
+
+extern "C" SpawnInfo<daBook_c> g_profile_BOOK_SWITCH = {daBook_c_classInit_BOOK_SWITCH,
+                                                        213,
+                                                        54,
+                                                        0x00000002,
+                                                        0x00064000,
+                                                        0x00064000,
+                                                        0x01000000,
+                                                        0x01000000};
+
+extern "C" SpawnInfo<daBook_c> g_profile_SHOOT_BOOK = {daBook_c_classInit_SHOOT_BOOK,
+                                                       325,
+                                                       327,
+                                                       0x00000002,
+                                                       0x00064000,
+                                                       0x00064000,
+                                                       0x01000000,
+                                                       0x01000000};

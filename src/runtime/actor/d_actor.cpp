@@ -956,7 +956,13 @@ dActor_c *dActor_c::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
 
 extern unsigned char data_0209f2c0;
 /* WDW's water level, 0..2 */
-extern int data_02075244[];
+/* WDW's water heights by level, in 20.12; GetWaterHeightWDW indexes it by
+   the level. */
+extern const int data_02075244[3] = {
+    0x2d000,
+    0x3e8000,
+    0xabe000,
+};
 /* the water height for each level */
 
 /* In area 0 of sublevel 0x15 (WDW), the current water height; anywhere else,
@@ -1257,3 +1263,10 @@ bool dActor_c::DetectRaycastClsn(Vector3 &start, Vector3 &end, bool storeHitPos)
     }
     return false;
 }
+
+/* re-hosted arm9 data */
+/* The entry-scene, title-screen, download and actor globals between
+   KuppaScript's state and the actor list: the title cursor and list, the
+   minigame menu row and page, the view matrix and its inverse, the actor
+   update masks. Interior labels keep their symbols.txt addresses. */
+u8 data_0209b2e4[0x184];

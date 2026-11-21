@@ -32,7 +32,8 @@
       "end": "0x021335cc"
     },
     {
-      "name": ".data",
+      "name": ".data.gap60",
+      "input_section": ".data",
       "start": "0x0213dc4c",
       "end": "0x0213dd34"
     },
@@ -40,6 +41,12 @@
       "name": ".bss",
       "start": "0x021427bc",
       "end": "0x021428c8"
+    },
+    {
+      "name": ".data.data_ov006_0213e1fc",
+      "input_section": ".data",
+      "start": "0x0213e1fc",
+      "end": "0x0213e244"
     }
   ],
   "functions": [
@@ -751,6 +758,13 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "PMF record {_ZN12dScMgPanel_c16Banner_StateIdleEv, 0}, copied into sPanelBannerStateTable; mwcc numbers it @2266, which arm9 already defines, so the manifest renames it to @8807"
+    },
+    {
+      "symbol": "data_ov006_0213e1fc",
+      "address": "0x0213e1fc",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "the six-column board's y coordinate per cell, reached as sPanelPuzzleYPerMode[2] from the unclaimed cartridge table; no relocations; the eight bytes at 0x0213e244 are _ZTV12dScMgPanel_c's ABI header and stay ROM"
     }
   ],
   "bss": [
@@ -932,7 +946,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -964,7 +978,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.gap60",
           "start": "0x0213dc4c",
           "end": "0x0213dd34",
           "differingBytes": 0,
@@ -975,11 +989,18 @@
           "start": "0x021427bc",
           "end": "0x021428c8",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.data_ov006_0213e1fc",
+          "start": "0x0213e1fc",
+          "end": "0x0213e244",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 111
+          "LICENSED": 112
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -990,23 +1011,23 @@
           {
             "section": ".init",
             "original": [
-              206
+              207
             ],
             "desired": [
-              206
+              207
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              204
+              205
             ],
             "desired": [
-              204
+              205
             ]
           },
           {
-            "section": ".data",
+            "section": ".data.gap60",
             "original": [
               123,
               125,
@@ -1035,20 +1056,20 @@
               176,
               178,
               180,
-              183,
-              185
+              184,
+              186
             ],
             "desired": [
               125,
               129,
               127,
-              183,
+              184,
               133,
               131,
               162,
               135,
               169,
-              185,
+              186,
               155,
               164,
               149,
@@ -1080,24 +1101,33 @@
               168,
               175,
               182,
-              186
+              187
             ],
             "desired": [
               182,
               122,
               175,
-              186,
+              187,
               157,
               148,
               168,
               139
+            ]
+          },
+          {
+            "section": ".data.data_ov006_0213e1fc",
+            "original": [
+              183
+            ],
+            "desired": [
+              183
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".data",
+              "section": ".data.gap60",
               "original": [
                 123,
                 125,
@@ -1126,20 +1156,20 @@
                 176,
                 178,
                 180,
-                183,
-                185
+                184,
+                186
               ],
               "desired": [
                 125,
                 129,
                 127,
-                183,
+                184,
                 133,
                 131,
                 162,
                 135,
                 169,
-                185,
+                186,
                 155,
                 164,
                 149,
@@ -1188,8 +1218,8 @@
                 176,
                 178,
                 180,
-                183,
-                185
+                184,
+                186
               ]
             },
             {
@@ -1202,13 +1232,13 @@
                 168,
                 175,
                 182,
-                186
+                187
               ],
               "desired": [
                 182,
                 122,
                 175,
-                186,
+                187,
                 157,
                 148,
                 168,
@@ -1222,7 +1252,7 @@
                 168,
                 175,
                 182,
-                186
+                187
               ]
             }
           ],
@@ -2067,7 +2097,7 @@
       "target_address": "0x021427bc"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dc4c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2077,7 +2107,7 @@
       "target_address": "0x0210713c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dc54",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2087,7 +2117,7 @@
       "target_address": "0x02106fdc"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dc5c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2097,7 +2127,7 @@
       "target_address": "0x0210709c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dc64",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2107,7 +2137,7 @@
       "target_address": "0x02107858"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dc6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2117,7 +2147,7 @@
       "target_address": "0x02106eb8"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dc74",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2127,7 +2157,7 @@
       "target_address": "0x02106f44"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dc7c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2137,7 +2167,7 @@
       "target_address": "0x02104fb4"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dc84",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2147,7 +2177,7 @@
       "target_address": "0x02106ca4"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dc8c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2157,7 +2187,7 @@
       "target_address": "0x02104c08"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dc9c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2167,7 +2197,7 @@
       "target_address": "0x021051dc"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dca4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2177,7 +2207,7 @@
       "target_address": "0x02104ecc"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dcac",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2187,7 +2217,7 @@
       "target_address": "0x02105730"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dcb4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2197,7 +2227,7 @@
       "target_address": "0x02104ec8"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dcbc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2207,7 +2237,7 @@
       "target_address": "0x02104ac0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dcc4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2217,7 +2247,7 @@
       "target_address": "0x0210500c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dccc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2227,7 +2257,7 @@
       "target_address": "0x02106bc0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dcd4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2237,7 +2267,7 @@
       "target_address": "0x0210508c"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dcdc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2247,7 +2277,7 @@
       "target_address": "0x02105670"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dce4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2257,7 +2287,7 @@
       "target_address": "0x02106aa8"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dcec",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2267,7 +2297,7 @@
       "target_address": "0x021053a8"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dcf4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2277,7 +2307,7 @@
       "target_address": "0x02104a10"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dcfc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2287,7 +2317,7 @@
       "target_address": "0x02106a08"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dd04",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2297,7 +2327,7 @@
       "target_address": "0x02104bb0"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dd0c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2307,7 +2337,7 @@
       "target_address": "0x021071d4"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dd14",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2317,7 +2347,7 @@
       "target_address": "0x02106bac"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dd1c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2327,7 +2357,7 @@
       "target_address": "0x02106910"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dd24",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -2337,7 +2367,7 @@
       "target_address": "0x02104920"
     },
     {
-      "section": ".data",
+      "section": ".data.gap60",
       "source": "0x0213dd2c",
       "type": "R_ARM_ABS32",
       "kind": "load",

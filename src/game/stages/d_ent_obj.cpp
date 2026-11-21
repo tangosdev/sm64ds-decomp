@@ -1015,3 +1015,9 @@ EntAnimSlot *data_ov075_0211c688[4] = {
     (EntAnimSlot *)&data_ov075_0211d38c,
     0,
 };
+
+/* Animation-sequence selector. -1 asks the next Update to pick a fresh pattern
+ * index; otherwise StatePose uses it to choose a handle from
+ * data_ov075_0211c688 and shifts it right by two. Zero-filled storage, so it
+ * sits in .bss immediately ahead of the animation file handles. */
+int data_ov075_0211d380;

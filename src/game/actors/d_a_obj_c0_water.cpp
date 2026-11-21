@@ -190,3 +190,7 @@ C0WaterCollisionFilePtr data_ov012_021124c8(1452);
 
 /* The BMD material this file's record drives. */
 char data_ov012_02111bc4[12] = "obj_water";
+
+extern "C" {
+u32 data_ov012_021124f0[4];
+}

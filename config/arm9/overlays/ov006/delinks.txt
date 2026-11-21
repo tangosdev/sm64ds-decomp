@@ -377,7 +377,22 @@
     .data.pmf_Esp3D_c start:0x0213c764 end:0x0213c78c kind:data align:4
     .data.gap53 start:0x0213c78c end:0x0213c794 kind:data align:4
     .data.pmf_Esp3D_d start:0x0213c794 end:0x0213c7bc kind:data align:4
-    .data start:0x0213c7bc end:0x021402e0 kind:data align:4
+    .data.gap54 start:0x0213c7bc end:0x0213ca9c kind:data align:4
+    .data.sHanaTextSpritesByLanguage start:0x0213ca9c end:0x0213cab0 kind:data align:4
+    .data.gap55 start:0x0213cab0 end:0x0213cbc8 kind:data align:4
+    .data.sJumpNcgByLanguage start:0x0213cbc8 end:0x0213cbdc kind:data align:4
+    .data.gap56 start:0x0213cbdc end:0x0213cce0 kind:data align:4
+    .data.sJump2NcgByLanguage start:0x0213cce0 end:0x0213ccf4 kind:data align:4
+    .data.gap57 start:0x0213ccf4 end:0x0213cee0 kind:data align:4
+    .data.sLuigiPlaceLimits start:0x0213cee0 end:0x0213cf08 kind:data align:4
+    .data.gap58 start:0x0213cf08 end:0x0213d40c kind:data align:4
+    .data.data_ov006_0213d40c start:0x0213d40c end:0x0213d45c kind:data align:4
+    .data.sMemory2CardFrameSprites start:0x0213d45c end:0x0213d4cc kind:data align:4
+    .data.gap59 start:0x0213d4cc end:0x0213db9c kind:data align:4
+    .data.sPachinko2PaddleGatherTargets start:0x0213db9c end:0x0213dbb4 kind:data align:4
+    .data.gap60 start:0x0213dbb4 end:0x0213e1fc kind:data align:4
+    .data.data_ov006_0213e1fc start:0x0213e1fc end:0x0213e244 kind:data align:4
+    .data start:0x0213e244 end:0x021402e0 kind:data align:4
     .bss        start:0x021402e0 end:0x021430a0 kind:bss align:32
 src/minigames/unit020bfec0.cpp:
     complete
@@ -625,7 +640,7 @@ src/minigames/d_mg3d_esp_anim_set.cpp:
     .rodata.sEsp3DCardsPerDifficulty start:0x0212e588 end:0x0212e58c
     .rodata.data_ov006_0212e58c start:0x0212e58c end:0x0212e594
     .rodata.sEsp3DResultSfx start:0x0212e594 end:0x0212e5a8
-    .data start:0x0213c85c end:0x0213c88c
+    .data.gap54 start:0x0213c85c end:0x0213c88c
     .data.data_ov006_021339fc start:0x021339fc end:0x02133a04
     .data.data_ov006_02133a04 start:0x02133a04 end:0x02133a0c
     .data.data_ov006_02133a0c start:0x02133a0c end:0x02133a14
@@ -653,7 +668,8 @@ src/minigames/d_s_mg_hanachan_methods.cpp:
     .text start:0x020ea280 end:0x020ede18
     .init start:0x02130df8 end:0x02130e9c
     .ctor start:0x021335a0 end:0x021335a4
-    .data start:0x0213c95c end:0x0213ca7c
+    .data.gap54 start:0x0213c95c end:0x0213ca7c
+    .data.sHanaTextSpritesByLanguage start:0x0213ca9c end:0x0213cab0
     .bss start:0x02142018 end:0x02142044
     .rodata.sHanaRoundPatterns start:0x0212e80c end:0x0212e820
     .rodata.sHanaFieldWigglerCounts start:0x0212e820 end:0x0212e848
@@ -685,7 +701,8 @@ src/minigames/d_s_mg_jump_methods.cpp:
     .text start:0x020edec0 end:0x020eeafc
     .init start:0x02130e9c end:0x02130f00
     .ctor start:0x021335a4 end:0x021335a8
-    .data start:0x0213cb4c end:0x0213cb8c
+    .data.gap55 start:0x0213cb4c end:0x0213cb8c
+    .data.sJumpNcgByLanguage start:0x0213cbc8 end:0x0213cbdc
     .bss start:0x02142188 end:0x021421b0
 
 src/minigames/d_s_mg_jump.cpp:
@@ -697,7 +714,8 @@ src/minigames/d_s_mg_jump2.cpp:
     .text start:0x020eebe8 end:0x020efc0c
     .init start:0x02130f00 end:0x02130f64
     .ctor start:0x021335a8 end:0x021335ac
-    .data start:0x0213cc74 end:0x0213cca4
+    .data.gap56 start:0x0213cc74 end:0x0213cca4
+    .data.sJump2NcgByLanguage start:0x0213cce0 end:0x0213ccf4
     .bss start:0x021421c4 end:0x021421ec
 
 src/minigames/d_s_mg_luigi.cpp:
@@ -705,7 +723,8 @@ src/minigames/d_s_mg_luigi.cpp:
     .text start:0x020efc0c end:0x020f3834
     .init start:0x02130f64 end:0x021311c8
     .ctor start:0x021335ac end:0x021335b0
-    .data start:0x0213cd8c end:0x0213ce54
+    .data.gap57 start:0x0213cd8c end:0x0213ce54
+    .data.sLuigiPlaceLimits start:0x0213cee0 end:0x0213cf08
     .bss start:0x021421ec end:0x021422a4
     .rodata.sLuigiTouchSfx start:0x0212e848 end:0x0212e850
     .rodata.sLuigiCurtainX start:0x0212e850 end:0x0212e858
@@ -728,7 +747,7 @@ src/minigames/d_s_mg_luigi.cpp:
 
 src/minigames/d_s_mg_memory.cpp:
     complete
-    .data start:0x0213cfc0 end:0x0213d248
+    .data.gap58 start:0x0213cfc0 end:0x0213d248
     .text start:0x020f3834 end:0x020f5564
     .init start:0x021311c8 end:0x021314e4
     .ctor start:0x021335b0 end:0x021335b4
@@ -739,7 +758,9 @@ src/minigames/d_s_mg_memory2.cpp:
     .text start:0x020f5564 end:0x020f7634
     .init start:0x021314e4 end:0x021318a0
     .ctor start:0x021335b4 end:0x021335b8
-    .data start:0x0213d248 end:0x0213d338
+    .data.gap58 start:0x0213d248 end:0x0213d338
+    .data.data_ov006_0213d40c start:0x0213d40c end:0x0213d45c
+    .data.sMemory2CardFrameSprites start:0x0213d45c end:0x0213d4cc
     .bss start:0x021423a8 end:0x021424ec
     .rodata.sMemory2Tables start:0x0212e8e8 end:0x0212e954
 
@@ -749,7 +770,7 @@ src/minigames/d_s_mg_m_carlo.cpp:
     .init start:0x021318a0 end:0x0213195c
     .ctor start:0x021335b8 end:0x021335bc
     .bss start:0x0214250c end:0x02142558
-    .data start:0x0213d5e0 end:0x0213d600
+    .data.gap59 start:0x0213d5e0 end:0x0213d600
 
 src/minigames/d_s_mg_m_carlo2.cpp:
     complete
@@ -763,7 +784,7 @@ src/minigames/d_s_mg_pachinko.cpp:
     .text start:0x020fa75c end:0x020ff420
     .init start:0x02131a38 end:0x02131cd0
     .ctor start:0x021335c0 end:0x021335c4
-    .data start:0x0213d878 end:0x0213d948
+    .data.gap59 start:0x0213d878 end:0x0213d948
     .bss start:0x02142604 end:0x021426cc
 
 src/minigames/d_s_mg_pachinko2.cpp:
@@ -824,14 +845,16 @@ src/minigames/d_s_mg_pachinko2.cpp:
     .data.data_ov006_02138cd8 start:0x02138cd8 end:0x02138cf0
     .data.data_ov006_02138cf0 start:0x02138cf0 end:0x02138d08
     .data.sPachinko2BallCountSprites start:0x02138d08 end:0x02138d28
-    .data start:0x0213da5c end:0x0213db9c
+    .data.gap59 start:0x0213da5c end:0x0213db9c
+    .data.sPachinko2PaddleGatherTargets start:0x0213db9c end:0x0213dbb4
 
 src/minigames/d_s_mg_panel.cpp:
     complete
     .text start:0x0210428c end:0x0210788c
     .init start:0x02131fa4 end:0x021322bc
     .ctor start:0x021335c8 end:0x021335cc
-    .data start:0x0213dc4c end:0x0213dd34
+    .data.gap60 start:0x0213dc4c end:0x0213dd34
+    .data.data_ov006_0213e1fc start:0x0213e1fc end:0x0213e244
     .bss start:0x021427bc end:0x021428c8
 
 src/minigames/d_s_mg_roulette_methods.cpp:
@@ -927,7 +950,7 @@ src/minigames/d_s_mg_teresa.cpp:
     .data.data_ov006_0213a904 start:0x0213a904 end:0x0213a924
     .data.data_ov006_0213a924 start:0x0213a924 end:0x0213a944
     .data.data_ov006_0213a944 start:0x0213a944 end:0x0213a964
-    .data start:0x0213f8d4 end:0x0213f9e4
+    .data start:0x0213f8d4 end:0x0213fa04
 
 src/minigames/d_s_mg_trampoline.cpp:
     complete
@@ -976,7 +999,7 @@ src/minigames/d_s_mg_bsc.cpp:
     .init start:0x0213326c end:0x021333e0
     .ctor start:0x021335e0 end:0x021335e4
     .bss start:0x02142f94 end:0x02143004
-    .data start:0x0213fd0c end:0x0213fe8c
+    .data start:0x0213fd0c end:0x0213fec0
 
 src/minigames/d_s_mg_snowball.cpp:
     complete

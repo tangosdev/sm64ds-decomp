@@ -623,3 +623,8 @@ void ModelComponents::Render(Matrix4x3 *mat, Vector3 *vec) {
         } while (i < modelFile->numBones);
     }
 }
+
+/* The model and render globals: model components, texture sequences, material
+   changers and the actor spawn tables. data_020a4bbc is the texture-image
+   parameter mode this TU writes; the rest are interior labels. */
+u8 data_020a4bb8[0x340c];

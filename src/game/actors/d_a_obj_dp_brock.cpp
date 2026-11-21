@@ -56,7 +56,13 @@ struct BrockCollisionFilePtr : SharedFilePtr {
    block handed to dBgW_KcMbg::SetFile. */
 extern BrockModelFilePtr data_ov025_02113ab8;
 extern BrockCollisionFilePtr data_ov025_02113ab0;
-extern CLPS_Block data_ov025_02112ce8;
+
+struct CLPS_Block {
+    u32 words[8];
+};
+
+CLPS_Block data_ov025_02112ce8 = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
+                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
 
 /* mState values, how long each lasts, and the 20.12 step.
  * kVertStep is 5.0 per frame. A full drop is that times

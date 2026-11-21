@@ -30,6 +30,7 @@ enum daObjC1Peach_c_AssetId {
     ASSET_C1_PEACH_BMD = 0x05ae
 };
 
+#include "SpawnInfo.h"
 #include "daObjC1Peach_c.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
@@ -110,3 +111,14 @@ void daObjC1Peach_c::UpdateModelTransform()
  * registers a destructor node for it. mwcc emits
  * __sinit_d_a_obj_c1_peach.cpp from this definition. */
 C1PeachModelFilePtr gC1PeachModelFile(ASSET_C1_PEACH_BMD);
+
+extern "C" SpawnInfo<daObjC1Peach_c> g_profile_C1_PEACH = {
+    daObjC1Peach_c_classInit, 38, 325, 0x00000000, 0x00000000, 0x00001000, 0x00000000, 0x00000000};
+
+extern "C" {
+u32 data_ov010_02112d78[2];
+}
+
+#pragma explicit_zero_data on
+extern "C" u32 data_ov010_02112ce4[7] = {0, 0, 0, 0, 0, 0, 0};
+#pragma explicit_zero_data off

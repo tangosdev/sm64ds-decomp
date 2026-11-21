@@ -36,12 +36,12 @@
     {
       "name": ".rodata",
       "start": "0x021302ec",
-      "end": "0x021302f4"
+      "end": "0x0213035c"
     },
     {
       "name": ".bss",
       "start": "0x02130df4",
-      "end": "0x02130ec8"
+      "end": "0x02130ee0"
     }
   ],
   "functions": [
@@ -311,6 +311,34 @@
       "address": "0x021302ec",
       "size": "0x8",
       "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_ov084_021302f4",
+      "address": "0x021302f4",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "six shared animation handles, reached indirectly so this TU owns the pointer list"
+    },
+    {
+      "symbol": "data_ov084_0213030c",
+      "address": "0x0213030c",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-frame particle reach"
+    },
+    {
+      "symbol": "data_ov084_02130320",
+      "address": "0x02130320",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-frame particle height"
+    },
+    {
+      "symbol": "data_ov084_02130334",
+      "address": "0x02130334",
+      "size": "0x28",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-frame particle Y offset"
     }
   ],
   "bss": [
@@ -418,6 +446,13 @@
       "size": "0x48",
       "binding": "STB_GLOBAL",
       "evidence": "nine state member pointers that the initializer fills from the nine literals; Behavior indexes it"
+    },
+    {
+      "symbol": "data_ov084_02130ec8",
+      "address": "0x02130ec8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "six words of section-tail storage no function reads"
     }
   ],
   "notes": [
@@ -764,22 +799,22 @@
           "firstDiff": null
         },
         {
-          "section": ".bss",
-          "start": "0x02130df4",
-          "end": "0x02130ec8",
-          "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
           "section": ".rodata",
           "start": "0x021302ec",
-          "end": "0x021302f4",
+          "end": "0x0213035c",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02130df4",
+          "end": "0x02130ee0",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 54
+          "LICENSED": 60
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -790,89 +825,108 @@
           {
             "section": ".init",
             "original": [
-              104
+              112
             ],
             "desired": [
-              104
+              112
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              102
+              110
             ],
             "desired": [
-              102
+              110
             ]
           },
           {
             "section": ".data",
             "original": [
-              5,
-              7,
+              6,
+              8,
               10,
-              13,
-              16,
-              18,
-              20,
-              24,
-              27,
-              33,
+              12,
+              14,
+              19,
+              23,
+              26,
+              31,
+              34,
               47,
-              52,
-              55
+              58,
+              62
             ],
             "desired": [
-              20,
-              5,
-              7,
+              8,
+              14,
               10,
-              13,
-              27,
-              18,
-              16,
-              24,
-              33,
+              26,
+              12,
+              6,
+              31,
+              19,
+              23,
+              34,
               47,
-              52,
-              55
+              58,
+              62
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              25,
+              53,
+              54,
+              56,
+              60
+            ],
+            "desired": [
+              25,
+              56,
+              54,
+              53,
+              60
             ]
           },
           {
             "section": ".bss",
             "original": [
-              9,
-              12,
-              15,
+              5,
+              16,
+              21,
               22,
-              23,
-              26,
-              31,
-              36,
-              37,
-              40,
+              28,
+              29,
+              30,
               41,
+              44,
+              45,
               46,
               49,
               50,
-              54
+              51,
+              55,
+              61
             ],
             "desired": [
-              23,
+              30,
               22,
-              26,
-              9,
-              31,
-              12,
-              15,
-              40,
-              41,
+              5,
+              16,
+              28,
+              21,
+              29,
+              51,
               46,
-              49,
-              37,
+              44,
+              45,
               50,
-              36,
-              54
+              41,
+              49,
+              61,
+              55
             ]
           }
         ],
@@ -881,109 +935,136 @@
             {
               "section": ".data",
               "original": [
-                5,
-                7,
+                6,
+                8,
                 10,
-                13,
-                16,
-                18,
-                20,
-                24,
-                27,
-                33,
+                12,
+                14,
+                19,
+                23,
+                26,
+                31,
+                34,
                 47,
-                52,
-                55
+                58,
+                62
               ],
               "desired": [
-                20,
-                5,
-                7,
+                8,
+                14,
                 10,
-                13,
-                27,
-                18,
-                16,
-                24,
-                33,
+                26,
+                12,
+                6,
+                31,
+                19,
+                23,
+                34,
                 47,
-                52,
-                55
+                58,
+                62
               ],
               "slots": [
-                5,
-                7,
+                6,
+                8,
                 10,
-                13,
-                16,
-                18,
-                20,
-                24,
-                27,
-                33,
+                12,
+                14,
+                19,
+                23,
+                26,
+                31,
+                34,
                 47,
-                52,
-                55
+                58,
+                62
+              ]
+            },
+            {
+              "section": ".rodata",
+              "original": [
+                25,
+                53,
+                54,
+                56,
+                60
+              ],
+              "desired": [
+                25,
+                56,
+                54,
+                53,
+                60
+              ],
+              "slots": [
+                25,
+                53,
+                54,
+                56,
+                60
               ]
             },
             {
               "section": ".bss",
               "original": [
-                9,
-                12,
-                15,
+                5,
+                16,
+                21,
                 22,
-                23,
-                26,
-                31,
-                36,
-                37,
-                40,
+                28,
+                29,
+                30,
                 41,
+                44,
+                45,
                 46,
                 49,
                 50,
-                54
+                51,
+                55,
+                61
               ],
               "desired": [
-                23,
+                30,
                 22,
-                26,
-                9,
-                31,
-                12,
-                15,
-                40,
-                41,
+                5,
+                16,
+                28,
+                21,
+                29,
+                51,
                 46,
-                49,
-                37,
+                44,
+                45,
                 50,
-                36,
-                54
+                41,
+                49,
+                61,
+                55
               ],
               "slots": [
-                9,
-                12,
-                15,
+                5,
+                16,
+                21,
                 22,
-                23,
-                26,
-                31,
-                36,
-                37,
-                40,
+                28,
+                29,
+                30,
                 41,
+                44,
+                45,
                 46,
                 49,
                 50,
-                54
+                51,
+                55,
+                61
               ]
             }
           ],
-          "symbolIndices": 28,
+          "symbolIndices": 34,
           "sectionLinks": 0,
-          "sectionInfos": 12,
+          "sectionInfos": 13,
           "error": null
         },
         "errors": null
@@ -2117,6 +2198,66 @@
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020100dc"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021302f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e14",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e14"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021302f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e24",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e24"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x021302fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e0c",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e0c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02130300",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130df4",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130df4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02130304",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e04",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e04"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02130308",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov084_02130e1c",
+      "addend": 0,
+      "target_module": "ov084",
+      "target_address": "0x02130e1c"
     }
   ]
 }

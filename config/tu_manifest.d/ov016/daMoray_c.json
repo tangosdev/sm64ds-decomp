@@ -30,7 +30,7 @@
     {
       "name": ".data",
       "start": "0x02114878",
-      "end": "0x021148c8"
+      "end": "0x02114908"
     },
     {
       "name": ".data.morayBend",
@@ -265,6 +265,31 @@
       "evidence": "compiler PMF record for daMoray_c::StateLungeMain"
     },
     {
+      "symbol": "_ZTS9daMoray_c",
+      "address": "0x021148c8",
+      "size": "0xb",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "_ZTI9daMoray_c",
+      "address": "0x021148d4",
+      "size": "0xc",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "g_profile_MORAY",
+      "address": "0x021148e0",
+      "size": "0x1c",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "data_ov016_021148fc",
+      "address": "0x021148fc",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "twelve zero bytes between the profile and the bend table"
+    },
+    {
       "symbol": "data_ov016_02114908",
       "address": "0x02114908",
       "size": "0x48",
@@ -398,21 +423,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov016",
       "canonical_address": "0x02114958",
-      "reason": "The out-of-line destructor is the key function, so this TU emits the vtable. Public address point ov016:0x02114958 is in .data, outside the licensed text span 0x021111a0..0x0211260c. D1 and D0 store this vptr; text-only production discards the emitted copy and retains cartridge data."
-    },
-    {
-      "symbol": "_ZTI9daMoray_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov016",
-      "canonical_address": "0x021148d4",
-      "reason": "This class's __si_class_type_info, dragged in with the vtable. Cartridge copy ov016:0x021148d4. Its base word is _ZTI12dEnemyBase_c."
-    },
-    {
-      "symbol": "_ZTS9daMoray_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov016",
-      "canonical_address": "0x021148c8",
-      "reason": "Type-name string 9daMoray_c at ov016:0x021148c8."
+      "reason": "The out-of-line destructor is the key function, so this TU emits the vtable. Public address point ov016:0x02114958 is in .data.morayTail, outside this entry's claims. D1 and D0 store this vptr; production discards the emitted copy and retains the cartridge vtable."
     },
     {
       "symbol": "_ZTI12dEnemyBase_c",
@@ -596,7 +607,7 @@
         {
           "section": ".data",
           "start": "0x02114878",
-          "end": "0x021148c8",
+          "end": "0x02114908",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -986,6 +997,46 @@
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x02111758"
+    },
+    {
+      "section": ".data",
+      "source": "0x021148d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x021148d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS9daMoray_c",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x021148c8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021148dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI12dEnemyBase_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021081c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021148e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z19daMoray_c_classInitv",
+      "addend": 0,
+      "target_module": "ov016",
+      "target_address": "0x02112588"
     },
     {
       "section": ".init",

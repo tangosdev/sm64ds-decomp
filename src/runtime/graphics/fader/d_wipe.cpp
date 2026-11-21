@@ -34,7 +34,9 @@
 
 void Wipe_HBlankHandler(void);
 
-extern u8           data_0209f5f8;   /* which display engine the wipe covers */
+extern "C" {
+u8 data_0209f5f8[0x18]; /* display engine, fresh-line flag, and the two table cursors */
+}
 extern volatile u8  data_0209f5fc;   /* the next HBlank has a fresh line */
 extern volatile u32 data_0209f608;   /* table index the IRQ reads */
 extern volatile u32 data_0209f60c;   /* table index the CPU fills */
@@ -229,7 +231,7 @@ void dWipe_c::EnableWindows() {
 
     GX_SetVisibleWnd(GX_WNDMASK_W0 | GX_WNDMASK_W1);
 
-    if (data_0209f5f8 != 0) {
+    if (data_0209f5f8[0] != 0) {
         GXS_SetVisibleWnd(GX_WNDMASK_NONE);
     } else {
         GXS_SetVisibleWnd(GX_WNDMASK_W0 | GX_WNDMASK_W1);

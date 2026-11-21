@@ -36,6 +36,7 @@ enum d_a_obj_wc_obj03_AssetId {
 #include "SharedFilePtr.h"
 #include "Sound.h"
 #include "math/MtxStack.h"
+#include "SpawnInfo.h"
 
 /* 8-byte file handle. The model uses func_02017acc / func_02017ab4. The
  * spelling is local; the manifest aliases the generated names to those ROM
@@ -207,3 +208,6 @@ void daObjWc_Obj03_c::CheckClsnWithPlayer()
  */
 
 WcObj03ModelFilePtr data_ov029_02114270(ASSET_WC_OBJ03_BMD);
+
+extern "C" SpawnInfo<daObjWc_Obj03_c> g_profile_WC_OBJ03 = {
+    daObjWc_Obj03_c_classInit, 97, 273, 0x00000002, 0x00000000, 0x00040000, 0x01000000, 0x00000000};

@@ -13,6 +13,7 @@
  * 0x021124e8, under defer_codegen off. D2 is not in the ROM.
  */
 
+#include "SpawnInfo.h"
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
@@ -52,8 +53,8 @@ int daObjFlMaruta_c::InitResources()
     return this->InitResourcesFrom((ResourceDescriptor *)&data_ov022_02112c9c);
 }
 
-int *daObjFlMaruta_c_classInit(void) {
-    return (int *)new daObjFlMaruta_c;
+daObjFlMaruta_c *daObjFlMaruta_c_classInit(void) {
+    return new daObjFlMaruta_c;
 }
 
 /* File-scope objects at the end of this file construct the two resource
@@ -79,3 +80,6 @@ extern const int data_ov022_02112c98[1] = {0x7d0000};
 extern const ResourceDescriptor data_ov022_02112c9c = {&gFlLogModelFile, &gFlLogCollisionFile,
                                                        &data_ov064_0211bbcc};
 }
+
+extern "C" SpawnInfo<daObjFlMaruta_c> g_profile_FL_MARUTA = {
+    daObjFlMaruta_c_classInit, 70, 278, 0x00000002, 0x00000000, 0x00500000, 0x02000000, 0x00000000};

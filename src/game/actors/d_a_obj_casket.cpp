@@ -267,6 +267,10 @@ void daObjCasket_c::UpdateModelTransform() {
 CasketModelFilePtr data_ov071_021230d0(ASSET_CASKET_BMD);
 CasketCollisionFilePtr data_ov071_021230d8(ASSET_CASKET_KCL);
 
+/* The state names the table points at. */
+char data_ov071_02122e64[8] = "WAIT";
+char data_ov071_02122e6c[8] = "STANDUP";
+
 CasketState data_ov071_02122ecc[] = {
     {data_ov071_02122e74, data_ov071_02122e8c, data_ov071_02122e64},
     {data_ov071_02122e84, data_ov071_02122e7c, data_ov071_02122e6c},

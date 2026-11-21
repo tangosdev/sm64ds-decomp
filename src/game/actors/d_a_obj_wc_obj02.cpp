@@ -24,6 +24,7 @@ enum d_a_obj_wc_obj02_AssetId { ASSET_WC_OBJ02_BMD = 0x06ce, ASSET_WC_OBJ02_KCL 
 #include "daObjWc_Obj02_c.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
+#include "SpawnInfo.h"
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
@@ -176,3 +177,6 @@ int daObjWc_Obj02_c::CleanupResources() {
    from these: one ctor veneer plus destructor registration per handle. */
 WcObj02ModelFilePtr data_ov029_02114250(ASSET_WC_OBJ02_BMD);
 WcObj02CollisionFilePtr data_ov029_02114248(ASSET_WC_OBJ02_KCL);
+
+extern "C" SpawnInfo<daObjWc_Obj02_c> g_profile_WC_OBJ02 = {
+    daObjWc_Obj02_c_classInit, 96, 272, 0x00000002, 0x00000000, 0x00100000, 0x01000000, 0x01000000};

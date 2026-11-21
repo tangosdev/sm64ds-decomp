@@ -39,11 +39,44 @@ enum d_a_obj_rc_dorifu_AssetId {
 #include "daObjRc_Dorifu_c.h"
 #include "SpawnInfo.h"
 
-extern CLPS_Block data_ov036_02112be8;
-extern CLPS_Block data_ov036_02112c08;
-extern CLPS_Block data_ov036_02112a88;
-extern CLPS_Block data_ov036_02112b88;
-extern CLPS_Block data_ov036_02112ae8;
+/* 'CLPS' collision-property block: tag, count/stride header, entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+
+/* The five drifting-stair collision blocks; each pairs a floor entry with a
+   wall entry under it. */
+CLPS_Block data_ov036_02112a88 = {
+    0x53504c43,
+    0x00020008,
+    {0x00000fc0, 0x000000ff, 0x00004fc0, 0x000000ff, 0xffffffff, 0xffffffff},
+};
+
+CLPS_Block data_ov036_02112b88 = {
+    0x53504c43,
+    0x00020008,
+    {0x00000fc0, 0x000000ff, 0x00004fc0, 0x000000ff, 0xffffffff, 0xffffffff},
+};
+
+CLPS_Block data_ov036_02112c08 = {
+    0x53504c43,
+    0x00020008,
+    {0x00000fc0, 0x000000ff, 0x00004fc0, 0x000000ff, 0xffffffff, 0xffffffff},
+};
+
+CLPS_Block data_ov036_02112be8 = {
+    0x53504c43,
+    0x00020008,
+    {0x00000fc0, 0x000000ff, 0x00002fc0, 0x000000ff, 0xffffffff, 0xffffffff},
+};
+
+CLPS_Block data_ov036_02112ae8 = {
+    0x53504c43,
+    0x00020008,
+    {0x00000fc0, 0x000000ff, 0x00004fc0, 0x000000ff, 0xffffffff, 0xffffffff},
+};
 
 /* File-scope objects at the end of this file construct the ten resource
  * handles (model files 1690/1692/1694/1696/1698, collision files

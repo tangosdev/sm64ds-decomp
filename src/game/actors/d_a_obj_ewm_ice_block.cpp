@@ -169,9 +169,25 @@ EwmIceBlockModelFilePtr gEwmIceBrockModelFile(ASSET_EWM_ICE_BROCK_BMD);      /* 
 EwmIceBlockCollisionFilePtr gEwmIceBrockCollisionFile(ASSET_EWM_ICE_BROCK_KCL);  /* collision */
 
 extern CLPS_Block data_ov064_0211bbec;
+extern u32 data_ov056_02112be0;
+extern u32 data_ov056_02112bec;
+extern u32 data_ov056_02112c24;
 
 EwmIceFileTable data_ov056_02113314 = {
     &gEwmIceBrockModelFile,
     &gEwmIceBrockCollisionFile,
     &data_ov064_0211bbec,
 };
+
+/* 0x021115cc..0x02112b48: the ice block animation asset payload, one
+ * object. The gaps between the five records are cartridge alignment
+ * bytes carried as part of the same object. */
+
+extern "C" {
+u32 data_ov056_02113428[6];
+}
+
+/* File tables that sit in front of this class's profile. */
+extern u32 data_ov056_021115d0;
+extern u32 data_ov056_02111624;
+extern int data_ov056_02111a60[];

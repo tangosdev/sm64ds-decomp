@@ -33,7 +33,7 @@
     {
       "name": ".data",
       "start": "0x021341e4",
-      "end": "0x021341f4"
+      "end": "0x0213420c"
     },
     {
       "name": ".bss",
@@ -166,6 +166,20 @@
       "size": "0x8",
       "binding": "STB_GLOBAL",
       "evidence": "compiler temporary for the state record's init pointer-to-member; retail first word is 0x02132a58"
+    },
+    {
+      "symbol": "_ZTS9daManta_c",
+      "address": "0x021341f4",
+      "size": "0xb",
+      "binding": "STB_LOPROC",
+      "evidence": "class name string; reaching the cylinder offset forces the class's own RTTI name into this claim"
+    },
+    {
+      "symbol": "data_ov090_02134200",
+      "address": "0x02134200",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "collision-cylinder offset (0, -0x3c000, 0x50000)"
     }
   ],
   "bss": [
@@ -523,7 +537,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -557,7 +571,7 @@
         {
           "section": ".data",
           "start": "0x021341e4",
-          "end": "0x021341f4",
+          "end": "0x0213420c",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -570,7 +584,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 22
+          "LICENSED": 24
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -581,30 +595,34 @@
           {
             "section": ".init",
             "original": [
-              59
+              60
             ],
             "desired": [
-              59
+              60
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              57
+              58
             ],
             "desired": [
-              57
+              58
             ]
           },
           {
             "section": ".data",
             "original": [
               35,
-              37
+              37,
+              40,
+              43
             ],
             "desired": [
               37,
-              35
+              35,
+              43,
+              40
             ]
           },
           {
@@ -631,15 +649,21 @@
               "section": ".data",
               "original": [
                 35,
-                37
+                37,
+                40,
+                43
               ],
               "desired": [
                 37,
-                35
+                35,
+                43,
+                40
               ],
               "slots": [
                 35,
-                37
+                37,
+                40,
+                43
               ]
             },
             {
@@ -667,7 +691,7 @@
               ]
             }
           ],
-          "symbolIndices": 7,
+          "symbolIndices": 9,
           "sectionLinks": 0,
           "sectionInfos": 2,
           "error": null
@@ -762,13 +786,6 @@
       "canonical_module": "ov090",
       "canonical_address": "0x0213420c",
       "reason": "Compiler-emitted class typeinfo is externalized to its canonical ov090:0x0213420c bytes outside the TU-owned code, PMF data, initializer and BSS ranges."
-    },
-    {
-      "symbol": "_ZTS9daManta_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov090",
-      "canonical_address": "0x021341f4",
-      "reason": "Compiler-emitted type-name string is externalized to its canonical ov090:0x021341f4 bytes. Intact-object ownership includes the initializer and its storage, while metadata remains canonical externalized output."
     },
     {
       "symbol": "_ZTV9daManta_c",

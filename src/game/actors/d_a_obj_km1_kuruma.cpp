@@ -11,11 +11,8 @@
  * daObjKm1_Kuruma_c_classInit is reconstructed (RTTI daObjKm1_Kuruma_c,
  * KM1_KURUMA registry). Retail does not store that spelling.
  *
- * Notes:
- * - data_ov043_02112418 is overlay data this TU does not own; the BMD/KCL
- *   SharedFilePtrs and CLPS_Block are still data_ov043_*.
- * - g_profile_KM1_KURUMA is overlay data; its definition here is a
- *   deadstripped duplicate.
+ * data_ov043_02112418 sits between this class's typeinfo and its name.
+ * g_profile_KM1_KURUMA follows the name and precedes the vtable.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -44,6 +41,9 @@ struct Km1KurumaCollisionFilePtr : SharedFilePtr {
 
 extern daObjKuruma_c::Resources data_ov043_02112418;
 
+/* The CLPS block the record's third word names; it stays overlay data. */
+extern struct CLPS_Block data_ov043_02111b80;
+
 daObjKm1_Kuruma_c *daObjKm1_Kuruma_c_classInit() {
     return new daObjKm1_Kuruma_c();
 }
@@ -70,3 +70,11 @@ s32 daObjKm1_Kuruma_c::CleanupResources() {
  * Definition order is the retail initializer's construction order. */
 Km1KurumaModelFile gKm1KurumaModelFile(ASSET_KM1_KURUMA_BMD);
 Km1KurumaCollisionFilePtr gKm1KurumaCollisionFile(ASSET_KM1_KURUMA_KCL);
+
+/* The resource record both InitResources and CleanupResources hand to the
+   shared ov002 helpers: model handle, collision handle, CLPS block. */
+daObjKuruma_c::Resources data_ov043_02112418 = {
+    &gKm1KurumaModelFile,
+    &gKm1KurumaCollisionFile,
+    &data_ov043_02111b80,
+};

@@ -1,0 +1,110 @@
+{
+ "id": "arm9/func_02019dfc",
+ "module": "arm9",
+ "source": "src/unnamed/arm9/0201/func_02019dfc.c",
+ "promoted_source": "src/unnamed/arm9/0201/func_02019dfc.c",
+ "status": "promoted",
+ "production_mode": "intact-object",
+ "boundary_confidence": "high",
+ "boundary_evidence": [
+  "The OS/IRQ boot flags, the two PM backlight switches this file saves and the IRQ handler state that follows them."
+ ],
+ "sections": [
+  {
+   "name": ".text",
+   "start": "0x02019dfc",
+   "end": "0x02019ebc"
+  },
+  {
+   "name": ".bss",
+   "start": "0x0209d4d4",
+   "end": "0x0209d528"
+  }
+ ],
+ "functions": [
+  {
+   "symbol": "func_02019dfc",
+   "address": "0x02019dfc",
+   "size": "0x64",
+   "legacy_source": "src/unnamed/arm9/0201/func_02019dfc.c",
+   "ordinal": 0
+  },
+  {
+   "symbol": "func_02019e60",
+   "address": "0x02019e60",
+   "size": "0x5c",
+   "legacy_source": "src/unnamed/arm9/0201/func_02019dfc.c",
+   "ordinal": 1
+  }
+ ],
+ "data": [],
+ "rodata": [],
+ "bss": [
+  {
+   "symbol": "data_0209d4d4",
+   "address": "0x0209d4d4",
+   "size": "0x54",
+   "binding": "STB_GLOBAL",
+   "evidence": "The OS/IRQ boot flags, the two PM backlight switches this file saves and the IRQ handler state that follows them."
+  }
+ ],
+ "compiler_only_output": [],
+ "notes": [
+  "Two functions, .text 0x02019dfc..0x02019ebc; the .bss run is 0x0209d4d4..0x0209d528."
+ ],
+ "verification": {
+  "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "linkcheck": {
+   "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
+   "result": "scratch-data-verified",
+   "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
+   "phases": {
+    "delink": true,
+    "lcf": true,
+    "compile": true,
+    "link": true,
+    "checkModules": true,
+    "checkSymbols": true,
+    "rom": true
+   },
+   "tuRange": {
+    "start": "0x02019dfc",
+    "end": "0x02019ebc",
+    "differingBytes": 0,
+    "firstDiff": null
+   },
+   "tuRanges": [
+    {
+     "section": ".text",
+     "start": "0x02019dfc",
+     "end": "0x02019ebc",
+     "differingBytes": 0,
+     "firstDiff": null
+    },
+    {
+     "section": ".bss",
+     "start": "0x0209d4d4",
+     "end": "0x0209d528",
+     "comparison": "NOBITS -- symbol/module gates"
+    }
+   ],
+   "objectAudit": {
+    "counts": {
+     "LICENSED": 3
+    },
+    "emittedTextOrderIsRomAscending": true,
+    "nonLicensedSymbols": [],
+    "unlicensedSections": []
+   },
+   "symbolCheckNewVsBaseline": [],
+   "symbolCheckErrors": [],
+   "symbolCheckBaselineErrors": [],
+   "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+   "rom": {
+    "bytes": 16777216,
+    "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "matchesStockRom": true
+   }
+  }
+ }
+}

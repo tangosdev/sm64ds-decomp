@@ -19,6 +19,11 @@
       "end": "0x0211c600"
     },
     {
+      "name": ".rodata",
+      "start": "0x0211e1c0",
+      "end": "0x0211e26c"
+    },
+    {
       "name": ".init",
       "start": "0x0211e29c",
       "end": "0x0211e3cc"
@@ -29,14 +34,14 @@
       "end": "0x0211e700"
     },
     {
+      "name": ".data",
+      "start": "0x0211e7e0",
+      "end": "0x0211e828"
+    },
+    {
       "name": ".bss",
       "start": "0x0211edc0",
       "end": "0x0211ee98"
-    },
-    {
-      "name": ".rodata",
-      "start": "0x0211e1c0",
-      "end": "0x0211e26c"
     }
   ],
   "functions": [
@@ -720,7 +725,15 @@
       "ordinal": 96
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "sBooHitRotations",
+      "address": "0x0211e7e0",
+      "size": "0x48",
+      "binding": "STB_GLOBAL",
+      "evidence": "34-step recoil angle ramp followed by the class typeinfo pointer"
+    }
+  ],
   "bss": [
     {
       "symbol": "_ZGVsCourtyardBooTripletPositions$2361",
@@ -1161,6 +1174,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x0211e1c0",
+          "end": "0x0211e26c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".init",
           "start": "0x0211e29c",
           "end": "0x0211e3cc",
@@ -1175,22 +1195,22 @@
           "firstDiff": null
         },
         {
+          "section": ".data",
+          "start": "0x0211e7e0",
+          "end": "0x0211e828",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x0211edc0",
           "end": "0x0211ee98",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".rodata",
-          "start": "0x0211e1c0",
-          "end": "0x0211e26c",
-          "differingBytes": 0,
-          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 118
+          "LICENSED": 126
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1199,139 +1219,199 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".init",
+            "section": ".rodata",
             "original": [
-              245
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11
             ],
             "desired": [
-              245
+              5,
+              8,
+              9,
+              7,
+              6,
+              11,
+              10
+            ]
+          },
+          {
+            "section": ".init",
+            "original": [
+              254
+            ],
+            "desired": [
+              254
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              243
+              252
             ],
             "desired": [
-              243
+              252
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              220
+            ],
+            "desired": [
+              220
             ]
           },
           {
             "section": ".bss",
             "original": [
-              160,
-              161,
-              162,
-              163,
-              164,
-              199,
-              200,
-              201,
-              202,
-              203,
-              204,
-              205,
+              167,
+              168,
+              169,
+              170,
+              171,
               206,
               207,
               208,
               209,
               210,
               211,
-              212
+              212,
+              213,
+              214,
+              215,
+              216,
+              217,
+              218,
+              219
             ],
             "desired": [
-              160,
-              200,
-              212,
-              210,
-              206,
-              208,
-              202,
-              204,
-              162,
-              163,
-              199,
-              161,
-              201,
-              203,
-              205,
+              167,
               207,
+              219,
+              217,
+              213,
+              215,
               209,
               211,
-              164
+              169,
+              170,
+              206,
+              168,
+              208,
+              210,
+              212,
+              214,
+              216,
+              218,
+              171
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".bss",
+              "section": ".rodata",
               "original": [
-                160,
-                161,
-                162,
-                163,
-                164,
-                199,
-                200,
-                201,
-                202,
-                203,
-                204,
-                205,
-                206,
-                207,
-                208,
-                209,
-                210,
-                211,
-                212
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
               ],
               "desired": [
-                160,
-                200,
-                212,
-                210,
-                206,
-                208,
-                202,
-                204,
-                162,
-                163,
-                199,
-                161,
-                201,
-                203,
-                205,
-                207,
-                209,
-                211,
-                164
+                5,
+                8,
+                9,
+                7,
+                6,
+                11,
+                10
               ],
               "slots": [
-                160,
-                161,
-                162,
-                163,
-                164,
-                199,
-                200,
-                201,
-                202,
-                203,
-                204,
-                205,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                167,
+                168,
+                169,
+                170,
+                171,
                 206,
                 207,
                 208,
                 209,
                 210,
                 211,
-                212
+                212,
+                213,
+                214,
+                215,
+                216,
+                217,
+                218,
+                219
+              ],
+              "desired": [
+                167,
+                207,
+                219,
+                217,
+                213,
+                215,
+                209,
+                211,
+                169,
+                170,
+                206,
+                168,
+                208,
+                210,
+                212,
+                214,
+                216,
+                218,
+                171
+              ],
+              "slots": [
+                167,
+                168,
+                169,
+                170,
+                171,
+                206,
+                207,
+                208,
+                209,
+                210,
+                211,
+                212,
+                213,
+                214,
+                215,
+                216,
+                217,
+                218,
+                219
               ]
             }
           ],
-          "symbolIndices": 19,
+          "symbolIndices": 26,
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null
@@ -1679,6 +1759,16 @@
       "addend": 0,
       "target_module": "ov063",
       "target_address": "0x0211ee68"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211e824",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI7daTrs_c",
+      "addend": 0,
+      "target_module": "ov063",
+      "target_address": "0x0211e738"
     }
   ],
   "undefined_symbol_aliases": [
@@ -1709,6 +1799,13 @@
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
       "evidence": "retail destructor registration destination and the animation file-handle wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "data_ov063_0211e7e0_typeinfo",
+      "canonical_symbol": "_ZTI7daTrs_c",
+      "canonical_module": "ov063",
+      "canonical_address": "0x0211e738",
+      "evidence": "the angle ramp trailing word is the class typeinfo pointer; the canonical record is the gap at 0x0211e738"
     }
   ],
   "symbol_binding_rewrites": [

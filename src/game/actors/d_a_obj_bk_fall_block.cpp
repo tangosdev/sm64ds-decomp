@@ -76,3 +76,10 @@ ResourceDescriptor data_ov015_02114880 = {
     &gBkDownBCollisionFile,
     &data_ov015_021136b4,
 };
+
+extern "C" {
+u32 data_ov015_02114afc[1];
+}
+
+/* The read-only table that begins where this class's code ends. */
+extern u32 data_ov015_02113458[];

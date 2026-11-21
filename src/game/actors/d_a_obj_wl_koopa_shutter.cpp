@@ -23,9 +23,13 @@ enum daObjWlKoopaShutter_c_AssetId {
     ASSET_WL_KUPA_SHUTTER_KCL = 0x06da
 };
 
+#include "SpawnInfo.h"
 #include "daObjWlKoopaShutter_c.h"
 #include "SharedFilePtr.h"
 #include "SaveBlock.h"
+
+extern u32 data_ov026_021132b0[];
+extern u32 data_ov026_02113600[];
 
 /* BSS file homes (symbols.txt); Init loads them, Cleanup releases them.
  * The ctor/dtor are the ROM's SharedFilePtr veneer pairs (func_02017acc /
@@ -47,10 +51,19 @@ struct CLPS_Block {
     u32 words[2];
 };
 
-CLPS_Block data_ov026_02112f74 = {
-    0x53504c43,
-    0x00010008,
-};
+extern "C" CLPS_Block data_ov026_02112f74;
+
+/* The pointer table that follows the CLPS in this overlay's .data. */
+extern u32 data_ov026_02112e60[];
+extern u32 data_ov026_02112e70[];
+extern u32 data_ov026_02112e90[];
+extern u32 data_ov026_02112eb0[];
+extern u32 data_ov026_02112ec0[];
+extern u32 data_ov026_02112ed0[];
+extern u32 data_ov026_021132b0[];
+extern u32 data_ov026_02113600[];
+
+/* Tables that pointer block names. */
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */
@@ -106,3 +119,13 @@ daObjWlKoopaShutter_c *daObjWlKoopaShutter_c_classInit() {
  * file. */
 KoopaShutterModelFilePtr BowserShutter_ModelFile(ASSET_WL_KUPA_SHUTTER_BMD);    /* model */
 KoopaShutterCollisionFilePtr BowserShutter_ClsnFile(ASSET_WL_KUPA_SHUTTER_KCL); /* collision */
+
+extern "C" SpawnInfo<daObjWlKoopaShutter_c> g_profile_WL_KOOPA_SHUTTER = {
+    daObjWlKoopaShutter_c_classInit,
+    91,
+    252,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000,
+    0x00000000};

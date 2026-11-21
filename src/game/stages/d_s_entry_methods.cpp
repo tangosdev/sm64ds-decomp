@@ -152,7 +152,7 @@ extern "C" u8 GetParentCourseIndex(void);
 extern "C" u8 func_020200b8(void);
 extern "C" void func_02020078(u32 flags);
 extern "C" void func_0202029c(u32 idx);
-extern s8 data_ov075_0211c6ec[];
+extern s8 data_ov075_0211c6ec[4];
 extern u8 gGameMode;
 extern u8 data_0209b2e4;
 
@@ -231,7 +231,7 @@ extern dScEntry_c::StepSet data_ov075_0211d828;
 extern dScEntry_c::StepSet data_ov075_0211d870;
 extern dScEntry_c::StepSet data_ov075_0211d888;
 extern dScEntry_c::StepSet data_ov075_0211d8e8;
-extern short data_ov075_0211b5d4[];
+extern const short data_ov075_0211b5d4[6];
 
 void dScEntry_c::TallyRoundWinners() {
     int max;

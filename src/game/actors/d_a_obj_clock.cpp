@@ -171,3 +171,7 @@ void daObjClock_c::UpdateModelTransform() {
  * __sinit_d_a_obj_clock.cpp performs, in retail order. */
 ClockModelFilePtr data_ov013_0211229c(0x5b1);
 ClockModelFilePtr data_ov013_02112294(0x5b2);
+
+extern "C" {
+u32 data_ov013_021122bc[1];
+}

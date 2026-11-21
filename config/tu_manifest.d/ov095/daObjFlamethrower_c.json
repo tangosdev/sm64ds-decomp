@@ -4,6 +4,7 @@
   "source": "src/game/actors/d_a_obj_flamethrower.cpp",
   "promoted_source": "src/game/actors/d_a_obj_flamethrower.cpp",
   "status": "promoted",
+  "production_mode": "intact-object",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x213682c..0x2136ed4, 4 function(s), from build/tu_map.json (tools/tu_map.py)",
@@ -16,6 +17,11 @@
       "name": ".text",
       "start": "0x0213682c",
       "end": "0x02136f58"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x02136f80",
+      "end": "0x02136fe0"
     }
   ],
   "functions": [
@@ -214,7 +220,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/ov095-daObjFlamethrower_c/link (gitignored)",
       "phases": {
         "delink": true,
@@ -222,12 +228,12 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
         "start": "0x0213682c",
-        "end": "0x02136ed4",
+        "end": "0x02136f58",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -235,21 +241,42 @@
         {
           "section": ".text",
           "start": "0x0213682c",
-          "end": "0x02136ed4",
+          "end": "0x02136f58",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02136f80",
+          "end": "0x02136fe0",
           "differingBytes": 0,
           "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 4
+          "LICENSED": 8
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
+        "groups": [
+          {
+            "section": ".rodata",
+            "original": [
+              17,
+              18,
+              19
+            ],
+            "desired": [
+              17,
+              18,
+              19
+            ]
+          }
+        ],
         "objisolate": null,
         "errors": null
       },
@@ -265,5 +292,28 @@
       },
       "linkerOutput": null
     }
-  }
+  },
+  "rodata": [
+    {
+      "symbol": "data_ov095_02136f80",
+      "address": "0x02136f80",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-segment scale, 0x1000 + i * 0x745"
+    },
+    {
+      "symbol": "data_ov095_02136f98",
+      "address": "0x02136f98",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "second particle parameter, 0xe61 + i * 0x689"
+    },
+    {
+      "symbol": "data_ov095_02136fb0",
+      "address": "0x02136fb0",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-segment local-Z placement, 0x28000 + i * 0x122c8"
+    }
+  ]
 }

@@ -49,7 +49,31 @@ extern "C" dScMgMemory2_cState sMemory2RoundTable[];
 
 extern "C" {
 extern void Hud_RenderSprite(OamAttr *a0, int a1, int a2, int a3, int a4);
-extern u16 sMemory2CardFrameSprites[];
+/* The third difficulty's card resting positions: four rows of five x/y
+ * screen pairs, bottom row first. sMemory2CardPositionsPerDifficulty[2]. */
+u16 data_ov006_0213d40c[40] = {
+    0x0040, 0x00a8, 0x0060, 0x00a8, 0x0080, 0x00a8, 0x00a0, 0x00a8, 0x00c0, 0x00a8,
+    0x0040, 0x0078, 0x0060, 0x0078, 0x0080, 0x0078, 0x00a0, 0x0078, 0x00c0, 0x0078,
+    0x0040, 0x0048, 0x0060, 0x0048, 0x0080, 0x0048, 0x00a0, 0x0048, 0x00c0, 0x0048,
+    0x0040, 0x0018, 0x0060, 0x0018, 0x0080, 0x0018, 0x00a0, 0x0018, 0x00c0, 0x0018,
+};
+/* Sprite index per card value and flip frame (value * 5 + frame): values
+ * 1..10 are {0, 1, 2, match frame, match frame}; value 0 and the last word
+ * are zero. */
+u16 sMemory2CardFrameSprites[56] = {
+    0, 0, 0, 0,  0,  // card back
+    0, 1, 2, 4,  3,  // value 1
+    0, 1, 2, 6,  5,  // value 2
+    0, 1, 2, 8,  7,  // value 3
+    0, 1, 2, 10, 9,  // value 4
+    0, 1, 2, 12, 11, // value 5
+    0, 1, 2, 14, 13, // value 6
+    0, 1, 2, 16, 15, // value 7
+    0, 1, 2, 18, 17, // value 8
+    0, 1, 2, 20, 19, // value 9
+    0, 1, 2, 22, 21, // value 10
+    0,               // unused
+};
 extern OamAttr *sMemory2CardSprites[];
 extern const s32 sMemory2FlyAwayLimitPerMode[3] = {
     4,

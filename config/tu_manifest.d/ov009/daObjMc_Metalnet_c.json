@@ -31,6 +31,17 @@
       "name": ".bss",
       "start": "0x02113e88",
       "end": "0x02113eb0"
+    },
+    {
+      "name": ".data.data_ov009_02112bf8",
+      "input_section": ".data",
+      "start": "0x02112bf8",
+      "end": "0x02112c18"
+    },
+    {
+      "name": ".data",
+      "start": "0x02113a98",
+      "end": "0x02113b60"
     }
   ],
   "functions": [
@@ -91,7 +102,41 @@
       "ordinal": 7
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov009_02112bf8",
+      "address": "0x02112bf8",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "the net's collision properties: one floor entry"
+    },
+    {
+      "symbol": "_ZTI18daObjMc_Metalnet_c",
+      "address": "0x02113a98",
+      "size": "0xc",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "_ZTS18daObjMc_Metalnet_c",
+      "address": "0x02113aa4",
+      "size": "0x15",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "g_profile_MC_METALNET",
+      "address": "0x02113abc",
+      "size": "0x1c",
+      "evidence": "compiler emission of the class key function"
+    },
+    {
+      "symbol": "_ZTV18daObjMc_Metalnet_c",
+      "address": "0x02113ae0",
+      "size": "0x88",
+      "evidence": "compiler emission of the class key function",
+      "emitted_storage_address": "0x02113ad8",
+      "address_point_bias": "0x8"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov009_02113e88",
@@ -210,7 +255,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -246,11 +291,25 @@
           "start": "0x02113e88",
           "end": "0x02113eb0",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.data_ov009_02112bf8",
+          "start": "0x02112bf8",
+          "end": "0x02112c18",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02113a98",
+          "end": "0x02113b60",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 14
+          "LICENSED": 15
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -261,19 +320,19 @@
           {
             "section": ".init",
             "original": [
-              44
+              45
             ],
             "desired": [
-              44
+              45
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              42
+              43
             ],
             "desired": [
-              42
+              43
             ]
           },
           {
@@ -289,6 +348,15 @@
               8,
               14,
               21
+            ]
+          },
+          {
+            "section": ".data.data_ov009_02112bf8",
+            "original": [
+              24
+            ],
+            "desired": [
+              24
             ]
           }
         ],
@@ -313,27 +381,6 @@
       "symbol": "_ZN10dBgActor_cD2Ev",
       "disposition": "deadstrip",
       "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained. Folding the factory to return new daObjMc_Metalnet_c() is what emits it; the previous hand-rolled fBase_c::operator new / dBgActor_c C2 / vptr store did not."
-    },
-    {
-      "symbol": "_ZTI18daObjMc_Metalnet_c",
-      "disposition": "deadstrip-data",
-      "reason": "Emitted as vague linkage because this TU defines EVERY virtual function of the class, so there is no other candidate key function and no declaration order suppresses the emission (see the destructor note in include/daObjMc_Metalnet_c.h). the class's own single-inheritance type_info record -- three words at ov009:0x02113a98, the __si_class_type_info vptr 0x0209a764, &_ZTS 0x02113aa4 and the direct base _ZTI10dBgActor_c 0x021089ec, read from the overlay image via tools/modules.py. That address lies in ov009's .data, outside this entry's only licensed range (.text 0x02111dc4-0x02112078), so dsd supplies the ROM data independently; tools/romdata_check.py word-compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
-      "canonical_module": "ov009",
-      "canonical_address": "0x02113a98"
-    },
-    {
-      "symbol": "_ZTS18daObjMc_Metalnet_c",
-      "disposition": "deadstrip-data",
-      "reason": "Emitted as vague linkage because this TU defines EVERY virtual function of the class, so there is no other candidate key function and no declaration order suppresses the emission (see the destructor note in include/daObjMc_Metalnet_c.h). the class's own type-name string \"18daObjMc_Metalnet_c\u0000\", 21 bytes at ov009:0x02113aa4 with four bytes of zero padding to the next word. That address lies in ov009's .data, outside this entry's only licensed range (.text 0x02111dc4-0x02112078), so dsd supplies the ROM data independently; tools/romdata_check.py word-compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
-      "canonical_module": "ov009",
-      "canonical_address": "0x02113aa4"
-    },
-    {
-      "symbol": "_ZTV18daObjMc_Metalnet_c",
-      "disposition": "deadstrip-data",
-      "reason": "Emitted as vague linkage because this TU defines EVERY virtual function of the class, so there is no other candidate key function and no declaration order suppresses the emission (see the destructor note in include/daObjMc_Metalnet_c.h). the class's own vtable. The cartridge's ADDRESS POINT is ov009:0x02113ae0; the emitted object starts two words earlier at 0x02113ad8 with the ABI preamble (0x00000000 offset-to-top, 0x02113a98 &_ZTI), and runs 34 words through the last slot at 0x02113b5c, immediately followed at 0x02113b60 by the next class's own RTTI record. Word[2] at the address point is 0x02111f40 (InitResources, slot 0) and word[33] is 0x020ee55c (dBgActor_c::Kill, the un-overridden slot 31) -- a 32-slot table, the same shape as the sibling dBgActor_c classes. That address lies in ov009's .data, outside this entry's only licensed range (.text 0x02111dc4-0x02112078), so dsd supplies the ROM data independently; tools/romdata_check.py word-compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
-      "canonical_module": "ov009",
-      "canonical_address": "0x02113ae0"
     },
     {
       "symbol": "_ZTI7dBase_c",
@@ -562,6 +609,376 @@
       "addend": 0,
       "target_module": "ov009",
       "target_address": "0x02113e98"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113a9c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS18daObjMc_Metalnet_c",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113aa4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113aa0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dBgActor_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021089ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113a98",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113abc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_Z28daObjMc_Metalnet_c_classInitv",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02112048"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113adc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI18daObjMc_Metalnet_c",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02113a98"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b1c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b18",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b58",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b54",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b50",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b4c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b48",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b44",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b40",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b3c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b38",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b34",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b30",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b2c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b28",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b08",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113afc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113af4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113af0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ae8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ae4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b5c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dBgActor_c4KillEv",
+      "addend": 0,
+      "target_module": "overlays(2,7)",
+      "target_address": "0x020ee55c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b24",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjMc_Metalnet_cD0Ev",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02111e08"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjMc_Metalnet_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02111ea4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjMc_Metalnet_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02111ea8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113af8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjMc_Metalnet_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02111ed0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113aec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjMc_Metalnet_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02111e60"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113ae0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjMc_Metalnet_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02111f40"
+    },
+    {
+      "section": ".data",
+      "source": "0x02113b20",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN18daObjMc_Metalnet_cD1Ev",
+      "addend": 0,
+      "target_module": "ov009",
+      "target_address": "0x02111dc4"
     }
   ],
   "symbol_binding_rewrites": [

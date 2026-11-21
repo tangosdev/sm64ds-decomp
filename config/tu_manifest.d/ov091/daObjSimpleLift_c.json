@@ -37,6 +37,12 @@
       "name": ".rodata",
       "start": "0x02134504",
       "end": "0x02134524"
+    },
+    {
+      "name": ".data.simpleLift",
+      "input_section": ".data",
+      "start": "0x02135024",
+      "end": "0x02135078"
     }
   ],
   "functions": [
@@ -132,7 +138,15 @@
       "ordinal": 12
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov091_02135024",
+      "address": "0x02135024",
+      "size": "0x54",
+      "binding": "STB_GLOBAL",
+      "evidence": "seven 12-byte asset rows {model, collision, CLPS}, one per registry profile"
+    }
+  ],
   "rodata": [
     {
       "symbol": "data_ov091_02134504",
@@ -481,6 +495,13 @@
           "section": ".rodata",
           "start": "0x02134504",
           "end": "0x02134524",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.simpleLift",
+          "start": "0x02135024",
+          "end": "0x02135078",
           "differingBytes": 0,
           "firstDiff": null
         }
@@ -1499,6 +1520,216 @@
       "addend": 0,
       "target_module": "ov091",
       "target_address": "0x02135604"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135024",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm1DeruModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135520"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135028",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm1DeruCollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135538"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x0213502c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov008_02111be0",
+      "addend": 0,
+      "target_module": "overlays(8,12,13,17,23,24,33,35,41,43,47,53,54,56)",
+      "target_address": "0x02111be0"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135030",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3Deru01ModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135560"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135034",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3Deru01CollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x021354f8"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135038",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov008_02111b34",
+      "addend": 0,
+      "target_module": "overlays(8,13,17,23,24,33,41,43,47,52,53,54,55,56)",
+      "target_address": "0x02111b34"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x0213503c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3Deru02ModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135528"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135040",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm3Deru02CollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135518"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135044",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov008_02111b74",
+      "addend": 0,
+      "target_module": "overlays(8,13,17,23,24,33,41,43,47,53,54,55,56)",
+      "target_address": "0x02111b74"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135048",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gRcRift01ModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135558"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x0213504c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gRcRift01CollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135550"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135050",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov022_02112b08",
+      "addend": 0,
+      "target_module": "overlays(18,22,24,26,29,32,35,36,45,56)",
+      "target_address": "0x02112b08"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135054",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm2Rift01ModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135510"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135058",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm2Rift01CollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135540"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x0213505c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_02112530",
+      "addend": 0,
+      "target_module": "overlays(10,24,26,35,43,45,47,52,53,56)",
+      "target_address": "0x02112530"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135060",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm2Rift02ModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135548"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135064",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gKm2Rift02CollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135500"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135068",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov010_02112590",
+      "addend": 0,
+      "target_module": "overlays(10,22,24,26,35,43,45,47,52,56)",
+      "target_address": "0x02112590"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x0213506c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkTransbarModelFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135508"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135070",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gBkTransbarCollisionFile",
+      "addend": 0,
+      "target_module": "ov091",
+      "target_address": "0x02135530"
+    },
+    {
+      "section": ".data.simpleLift",
+      "source": "0x02135074",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov009_02113554",
+      "addend": 0,
+      "target_module": "overlays(9,14,15,16,18,19,20,22,24,25,26,27,29,32,36)",
+      "target_address": "0x02113554"
     }
   ],
   "symbol_binding_rewrites": [

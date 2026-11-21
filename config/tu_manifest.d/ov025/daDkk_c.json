@@ -33,6 +33,18 @@
       "name": ".bss",
       "start": "0x02113a88",
       "end": "0x02113ab0"
+    },
+    {
+      "name": ".data.dkkClps",
+      "start": "0x02112d28",
+      "end": "0x02112d48",
+      "input_section": ".data"
+    },
+    {
+      "name": ".data.dkkTail",
+      "start": "0x02113814",
+      "end": "0x0211382c",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -100,7 +112,22 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov025_02112d28",
+      "address": "0x02112d28",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "Donkey Kong's collision-property block handed to dBgW_KcMbg::SetFile"
+    },
+    {
+      "symbol": "data_ov025_02113814",
+      "address": "0x02113814",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "the file table mFileTable points at: model, collision, CLPS, then the two shadow extents"
+    }
+  ],
   "bss": [
     {
       "symbol": "gDonkakuModelFile",
@@ -240,7 +267,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -276,11 +303,25 @@
           "start": "0x02113a88",
           "end": "0x02113ab0",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.dkkClps",
+          "start": "0x02112d28",
+          "end": "0x02112d48",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data.dkkTail",
+          "start": "0x02113814",
+          "end": "0x0211382c",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 15
+          "LICENSED": 17
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -291,38 +332,84 @@
           {
             "section": ".init",
             "original": [
-              53
+              56
             ],
             "desired": [
-              53
+              56
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              51
+              54
             ],
             "desired": [
-              51
+              54
             ]
           },
           {
             "section": ".bss",
             "original": [
               5,
-              6,
-              23,
-              24
+              8,
+              13,
+              22
             ],
             "desired": [
+              8,
               5,
-              6,
-              23,
-              24
+              13,
+              22
+            ]
+          },
+          {
+            "section": ".data.dkkClps",
+            "original": [
+              29
+            ],
+            "desired": [
+              29
+            ]
+          },
+          {
+            "section": ".data.dkkTail",
+            "original": [
+              27
+            ],
+            "desired": [
+              27
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                8,
+                13,
+                22
+              ],
+              "desired": [
+                8,
+                5,
+                13,
+                22
+              ],
+              "slots": [
+                5,
+                8,
+                13,
+                22
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -644,6 +731,36 @@
       "addend": 0,
       "target_module": "ov025",
       "target_address": "0x021129dc"
+    },
+    {
+      "section": ".data.dkkTail",
+      "source": "0x02113814",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDonkakuModelFile",
+      "addend": 0,
+      "target_module": "ov025",
+      "target_address": "0x02113a88"
+    },
+    {
+      "section": ".data.dkkTail",
+      "source": "0x02113818",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "gDonkakuCollisionFile",
+      "addend": 0,
+      "target_module": "ov025",
+      "target_address": "0x02113a90"
+    },
+    {
+      "section": ".data.dkkTail",
+      "source": "0x0211381c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov025_02112d28",
+      "addend": 0,
+      "target_module": "ov025",
+      "target_address": "0x02112d28"
     }
   ]
 }

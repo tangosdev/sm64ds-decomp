@@ -40,6 +40,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjFl_Ring_c_AssetId { ASSET_FL_RING_BMD = 0x060e, ASSET_FL_RING_KCL = 0x060f };
 
+#include "SpawnInfo.h"
 #include "daObjFl_Ring_c.h"
 #include "SharedFilePtr.h"
 #include "daObj_volcanoCannon_c.h"
@@ -211,3 +212,40 @@ s32 daObjFl_Ring_c::CleanupResources() {
  * destructors; the registration nodes are compiler temporaries. */
 RingModelFilePtr gFlRingModelFile(ASSET_FL_RING_BMD);
 RingCollisionFilePtr gFlRingCollisionFile(ASSET_FL_RING_KCL);
+
+extern "C" SpawnInfo<daObjFl_Ring_c> g_profile_FL_RING = {
+    daObjFl_Ring_c_classInit, 71, 279, 0x00000002, 0x00000000, 0x00780000, 0x02000000, 0x00000000};
+
+/* Course .data that ends at this class's typeinfo. The file table
+ * data_ov022_02113cc8 is the last three words. A named section keeps
+ * it ahead of the compiler's .data (typeinfo, profile, vtable).
+ * Interior labels stay in symbols.txt. */
+extern "C" u32 data_ov022_02113360[];
+extern "C" u32 data_ov022_02113318[];
+extern "C" u32 data_ov022_02113160[];
+extern "C" u32 data_ov022_021131f8[];
+extern "C" u32 data_ov022_02112954[];
+extern "C" const u32 data_ov022_02112950[];
+extern "C" u32 data_ov022_02112974[];
+extern "C" u32 data_ov022_02112958[];
+extern "C" u32 data_ov022_02113298[];
+extern "C" u32 data_ov022_02113148[];
+extern "C" u32 data_ov022_0211317c[];
+extern "C" u32 data_ov022_021136f8[];
+extern "C" u32 data_ov022_021133a8[];
+extern "C" u32 data_ov022_021131a8[];
+extern "C" u32 data_ov022_021131b8[];
+extern "C" u32 data_ov022_02113150[];
+extern "C" u32 data_ov022_021131c8[];
+extern "C" u32 data_ov022_02113158[];
+extern "C" u32 data_ov022_021131d8[];
+extern "C" u32 data_ov022_02113260[];
+extern "C" u32 data_ov022_02113210[];
+extern "C" u32 data_ov022_02113170[];
+extern "C" u32 data_ov022_02113244[];
+extern "C" u32 data_ov022_021132d8[];
+extern "C" u32 data_ov022_021131e8[];
+extern "C" u32 data_ov022_02113198[];
+extern "C" u32 data_ov022_02113144[];
+extern "C" u32 data_ov022_02113188[];
+extern "C" u32 data_ov064_0211bbac[];

@@ -89,6 +89,17 @@ struct TrsBone {
 typedef char TrsBone_size_must_be_0x34[sizeof(TrsBone) == 0x34 ? 1 : -1];
 #endif
 
+/* The 34-step hit-recoil angle table and the typeinfo word that follows it
+   in .data. MoveDuringHit and the spin state index the angles by the state
+   timer. */
+struct TrsAngleTable {
+    s16 angles[34];
+    const void *typeinfo;
+};
+#ifndef SM64DS_PLATFORM_PC
+typedef char TrsAngleTable_size_must_be_0x48[sizeof(TrsAngleTable) == 0x48 ? 1 : -1];
+#endif
+
 extern "C" {
 /* shared engine entry points without a header declaration */
 
@@ -156,7 +167,7 @@ extern const s16 data_ov063_0211e1c0[4] = {0x380, 0x240, 0x180, 0x0};
 extern const int data_ov063_0211e1d0[3] = {0x1000, 0xfa0, 0xee0};
 extern int gMusicVolume;
 extern u8 data_0209d660;
-extern short sBooHitRotations[];
+extern TrsAngleTable sBooHitRotations;
 }
 void func_02012694(unsigned int a, const Vector3 *p);
 extern void func_020167a4(dExtAnmModel_c *model);
@@ -2272,7 +2283,7 @@ int daTrs_c::UpdateDuringNonlethalHit(int speed) {
         SetMoveYawForDuringHit(1);
     t = mStateTimer;
     if (t < 0x20) {
-        MoveDuringHit(1, ((speed * sBooHitRotations[t]) << 12) / 5000);
+        MoveDuringHit(1, ((speed * sBooHitRotations.angles[t]) << 12) / 5000);
     } else if (t < 0x30) {
         ShakeAfterHit();
     } else {
@@ -2292,7 +2303,7 @@ int daTrs_c::UpdateAfterBouncedOn(int arg) {
         SetMoveYawForDuringHit(0);
     t = mStateTimer;
     if (t < 0x20) {
-        MoveDuringHit(0, ((arg * sBooHitRotations[t]) << 12) / 5000);
+        MoveDuringHit(0, ((arg * sBooHitRotations.angles[t]) << 12) / 5000);
     } else {
         mdCcAcPos_c.flags &= ~1;
         ResetAfterHit();
@@ -2321,8 +2332,8 @@ void daTrs_c::MoveDuringHit(int cond, int val) {
     if (cond == 0)
         return;
 
-    mAngle.y += sBooHitRotations[mStateTimer];
-    mAngle.z += sBooHitRotations[mStateTimer];
+    mAngle.y += sBooHitRotations.angles[mStateTimer];
+    mAngle.z += sBooHitRotations.angles[mStateTimer];
 }
 
 void daTrs_c::SetMoveYawForDuringHit(int cond) {
@@ -3183,3 +3194,15 @@ TrsAnimationResFileHandle data_ov063_0211eddc(ASSET_TERESA_WAIT_BCA);
 TrsAnimationResFileHandle data_ov063_0211ede4(ASSET_BOSS_TERESA_WAIT_BCA);
 TrsAnimationResFileHandle data_ov063_0211edd4(ASSET_BOSS_TERESA_FIRE_BCA);
 TrsAnimationResFileHandle data_ov063_0211edcc(ASSET_BOSS_TERESA_FIRE_ST_BCA);
+
+/* The recoil angle ramp and the trailing class typeinfo pointer. */
+extern char data_ov063_0211e7e0_typeinfo[];
+TrsAngleTable sBooHitRotations = {
+    {
+        0x179f, 0x1620, 0x14ac, 0x1346, 0x11eb, 0x109e, 0x0f5d, 0x0e28, 0x0d01,
+        0x0be6, 0x0ad7, 0x09d5, 0x08df, 0x07f7, 0x071a, 0x064b, 0x0588, 0x04d1,
+        0x0427, 0x038a, 0x02f9, 0x0275, 0x01fd, 0x0192, 0x0134, 0x00e2, 0x009d,
+        0x0064, 0x0038, 0x0019, 0x0004, 0x0000, 0x0000, 0x0000,
+    },
+    &data_ov063_0211e7e0_typeinfo,
+};

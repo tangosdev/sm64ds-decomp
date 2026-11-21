@@ -53,6 +53,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_rc_hane_AssetId { ASSET_RC_HANE_BMD = 0x06a6 };
 
+#include "SpawnInfo.h"
 #include "common.h"
 #include "daObjRc_Hane_c.h"
 #include "dExtSimpleModel_c.h"
@@ -217,3 +218,6 @@ s32 daObjRc_Hane_c::CleanupResources() {
 
 /* File 1702. The compiler registers func_02017ab4 beside the object. */
 RcHaneModelFilePtr data_ov036_02114070(ASSET_RC_HANE_BMD);
+
+extern "C" SpawnInfo<daObjRc_Hane_c> g_profile_RC_HANE = {
+    daObjRc_Hane_c_classInit, 125, 255, 0x00000002, 0x00000000, 0x001f4000, 0x01f40000, 0x01f40000};

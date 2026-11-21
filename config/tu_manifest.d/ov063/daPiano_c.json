@@ -37,7 +37,7 @@
     {
       "name": ".bss",
       "start": "0x0211ef80",
-      "end": "0x0211efdc"
+      "end": "0x0211efe0"
     }
   ],
   "functions": [
@@ -247,6 +247,13 @@
       "size": "0x20",
       "binding": "STB_GLOBAL",
       "evidence": "the 2x2 pointer-to-member state table the two state dispatchers at 0x0211ddf0 and 0x0211de38 index; the initializer copies the four descriptors into it"
+    },
+    {
+      "symbol": "data_ov063_0211efdc",
+      "address": "0x0211efdc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "tail bss word of the piano unit"
     }
   ],
   "notes": [
@@ -464,7 +471,7 @@
         {
           "section": ".bss",
           "start": "0x0211ef80",
-          "end": "0x0211efdc",
+          "end": "0x0211efe0",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],

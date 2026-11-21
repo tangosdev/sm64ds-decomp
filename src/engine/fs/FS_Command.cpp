@@ -23,7 +23,7 @@
 
 extern "C" {
 
-extern int (*fsi_default_command[])(FSFile *p_file);
+extern int (*const fsi_default_command[])(FSFile *p_file);
 
 void FSi_CutFromList(FSFile *elem);
 

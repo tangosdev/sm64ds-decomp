@@ -12,8 +12,8 @@
  * that spelling.
  *
  * Notes:
- * - The two start-angle halfwords 02113b18 / 02113b1c sit 8 bytes before
- *   typeinfo at 02113b20; they are not owned here.
+ * - The two start-angle slots 02113b18 / 02113b1c and the CLPS block
+ *   02112bc8 are defined here.
  * - g_profile_RC_KAITEN lives outside this TU.
  */
 
@@ -42,19 +42,35 @@ struct RcKaitendaiCollisionFilePtr : SharedFilePtr {
     ~RcKaitendaiCollisionFilePtr();
 };
 
-extern s16 data_ov036_02113b18;
+/* 'CLPS' collision-property block: tag, count/stride header, entries. */
+struct CLPS_Block {
+    u32 tag;
+    u32 header;
+    u32 entries[6];
+};
+
+/* The spinning disc's floor and wall pair. */
+CLPS_Block data_ov036_02112bc8 = {
+    0x53504c43,
+    0x00020008,
+    {0x01000fc0, 0x000000ff, 0x01000fc4, 0x000000ff, 0xffffffff, 0xffffffff},
+};
+
+/* Start angles: the ordinary disc, and the variant param1's low byte selects.
+   Retail gives each one a 4-byte data slot; the tail halfword is zero. */
+s16 data_ov036_02113b18[2] = {0x138};
+s16 data_ov036_02113b1c[2] = {-0x270};
+
 extern ResourceDescriptor data_ov036_02113b2c;
-extern struct CLPS_Block data_ov036_02112bc8;
-extern s16 data_ov036_02113b1c;
 
 daObjRc_Kaitendai_c *daObjRc_Kaitendai_c_classInit() {
     return new daObjRc_Kaitendai_c();
 }
 
 s32 daObjRc_Kaitendai_c::InitResources() {
-    s16 angle = data_ov036_02113b18;
+    s16 angle = data_ov036_02113b18[0];
     if ((param1 & 0xff) == 1)
-        angle = data_ov036_02113b1c;
+        angle = data_ov036_02113b1c[0];
     return InitResourcesFrom(&data_ov036_02113b2c, angle);
 }
 

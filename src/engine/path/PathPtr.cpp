@@ -22,14 +22,17 @@
 #include "PathPtr.h"
 #include "common.h"
 
-extern PathDef *PATH_DEFS;  /* the level's PathDef table */
-extern Vector3_16 *PATH_NODES; /* flat node positions, three s16 each */
-extern int NUM_PATHS;       /* entries in PATH_DEFS */
-
 extern "C" {
 void func_02018434(const char *path, int dst, int size);
 extern char data_020994d4[];
-extern char gBuildTimeString[];
+/* PATH_DEFS through the administrator name buffer, then the two words that
+ * finish the claimed BSS run at 0x020a0db8. One claim, the symbols.txt names. */
+PathDef *PATH_DEFS;
+Vector3_16 *PATH_NODES;
+int NUM_PATHS;
+char gBuildTimeString[0x20];
+int gGlobalTimer;
+int data_020a0db4;
 }
 
 void func_0203ad84(void) {

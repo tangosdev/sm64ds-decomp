@@ -2,9 +2,9 @@
 
 extern WBTBlockInfoList *func_02065ae0(void);
 extern int func_02065bc0(void);
-extern int data_0209a064;
-extern int data_0209a068;
-extern int data_0209a06c;
+int data_0209a064 = -1;
+int data_0209a068 = -1;
+int data_0209a06c = -1;
 
 int func_0206491c(unsigned int key, int val)
 {

@@ -43,6 +43,7 @@ enum daWater_Tatumaki_c_AssetId {
 
 #pragma defer_codegen off
 
+#include "SpawnInfo.h"
 #include "daWater_Tatumaki_c.h"
 #include "dActor_c.h"
 #include "common.h"
@@ -94,6 +95,13 @@ extern "C" TatumakiAnimFileHandle gWaterTatumakiAnimationFile; /* water_tatumaki
 extern daWater_Tatumaki_c::State sSpinState;                   /* spin, waiting to catch */
 extern daWater_Tatumaki_c::State sDragState;                   /* drag the player down */
 extern BTA_File sWhirlpoolBta;
+
+/* Key words sWhirlpoolBta points at. The header stays in the course-data run. */
+extern "C" u32 data_ov026_02112dd0[];
+extern "C" u32 data_ov026_02112de8[];
+extern "C" const u32 data_ov026_02112490[] = {0x00000000};
+
+extern "C" const u32 data_ov026_021124a4[] = {0x00000800, 0x00001000};
 
 /* local extern: no shared header declares these. */
 extern "C" {
@@ -342,3 +350,12 @@ daWater_Tatumaki_c::State sDragState = {
     &daWater_Tatumaki_c::InitStateDrag,
     &daWater_Tatumaki_c::StateDrag,
 };
+
+extern "C" SpawnInfo<daWater_Tatumaki_c> g_profile_WATER_TATUMAKI = {daWater_Tatumaki_c_classInit,
+                                                                     246,
+                                                                     104,
+                                                                     0x00000002,
+                                                                     0x01000000,
+                                                                     0x01000000,
+                                                                     0x01000000,
+                                                                     0x01000000};

@@ -19,3 +19,7 @@ void func_0203bbc0(void)
     if (TP_RequestAutoSamplingStart(0, 4, (TPData *)data_020a0df8, 9) != 0)
         OS_Terminate();
 }
+
+/* The nine-entry auto-sampling ring func_0203b9bc reads. One object; the
+   player-slot and heap words the ROM keeps after it are interior labels. */
+volatile TPData data_020a0df8[23];

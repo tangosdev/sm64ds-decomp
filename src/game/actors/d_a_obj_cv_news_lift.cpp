@@ -86,6 +86,16 @@ Vector3 gNewsLiftPlatformOffsets[4] = {
     Vector3(-0xc8000, 0x32000, 0),
 };
 
+/* The two one-entry blocks the lift body and its button platform hand to
+   SetFile. CLPS.h keeps CLPS_Block opaque: an eight-byte header whose
+   halfword at +4 is the entry stride, then one eight-byte CLPS. */
+struct CLPS_Block {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    CLPS entries[1];
+};
+
 extern CLPS_Block data_ov021_02113a60;
 extern CLPS_Block data_ov021_02113a80;
 
@@ -506,3 +516,8 @@ void daObjCvNewsLift_c::UpdateClsnTransforms() {
 /* Typed registry descriptor; priorities, flags and clip ranges match retail. */
 extern "C" SpawnInfo<daObjCvNewsLift_c> g_profile_CV_NEWS_LIFT = {
     daObjCvNewsLift_c_classInit, 0x44, 0x8b, 6, 0, 0x2a8000, 0x1900000, 0x1900000};
+
+/* Lift body and button platform. The all-ones words the cartridge pads each
+   block out to 32 bytes with are not part of either object. */
+CLPS_Block data_ov021_02113a60 = {0x53504c43, 8, 1, {{0x00000fc0, 0x000000ff}}};
+CLPS_Block data_ov021_02113a80 = {0x53504c43, 8, 1, {{0x00001fc0, 0x000000ff}}};

@@ -176,20 +176,20 @@ void func_02012694(unsigned int id, const Vector3 *pos);
 int SurfaceInfo_TestFlag0x20(int *p);
 extern u8 gNumVsStarsCollected;
 extern u8 *gVsStarSpawnOrder;
+extern const u8 data_ov084_02130204[4];
+extern const int data_ov084_02130208[4];
+extern const int data_ov084_02130218[4];
+extern const int data_ov084_02130228[4];
+extern const int data_ov084_02130238[4];
+extern const int data_ov084_02130248[4];
+extern const int data_ov084_02130258[4];
+extern const int data_ov084_02130268[4];
 extern BMA_File data_ov084_0213088c;
 extern BMA_File data_ov084_0213089c;
-extern int data_ov084_02130248[];
-extern u8 data_ov084_02130204[];
-extern int data_ov084_02130228[];
-extern int data_ov084_02130268[];
 extern "C" int Math_Function_0203b14c(int *v, int target, int a, int b, int c);
 extern s8 gCurrentSublevel;
 void LoadSilverStarAndNumber(void);
 extern SharedFilePtr *const sKuriboAnimationFiles[7];
-extern int data_ov084_02130258[];
-extern int data_ov084_02130208[];
-extern int data_ov084_02130238[];
-extern int data_ov084_02130218[];
 
 daKrb_c::~daKrb_c() {}
 
@@ -1876,3 +1876,69 @@ SharedFilePtr *const sKuriboAnimationFiles[7] = {
     &data_ov084_02130ce8,         &data_ov084_02130ce0, &data_ov084_02130cd0, &data_ov084_02130cc0,
     &gKuriboRecoverAnimationFile, &data_ov084_02130cc8, &data_ov084_02130cf0,
 };
+
+/* The Goomba's material animation (BMA). The two files share the colour-key
+ * debug string below; each carries its own key stream and material table. */
+char data_ov084_02130880[12] = "kuribo_all";
+extern const u8 data_ov084_02130174[4] = {0x1f, 0x10, 0x00, 0x00};
+extern const u8 data_ov084_02130178[20] = {
+    0x00, 0x03, 0x0c, 0x16, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f,
+    0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x10, 0x00, 0x00,
+};
+extern const BMAMaterialRecord data_ov084_0213018c = {
+    0xffff,
+    0,
+    (char *)data_ov084_02130880,
+    {
+        {1, 1, 0},
+        {1, 0, 4},
+        {1, 0, 4},
+        {1, 0, 0x11},
+        {1, 0, 0x11},
+        {1, 0, 0x11},
+        {1, 0, 0},
+        {1, 0, 0},
+        {1, 0, 0},
+        {1, 0, 0},
+        {1, 0, 0},
+        {1, 0, 0},
+        {1, 0, 4},
+    },
+};
+extern const BMAMaterialRecord data_ov084_021301c8 = {
+    0xffff,
+    0,
+    (char *)data_ov084_02130880,
+    {
+        {1, 0, 0},
+        {1, 0, 0},
+        {1, 0, 0},
+        {1, 0, 1},
+        {1, 0, 1},
+        {1, 0, 1},
+        {1, 0, 2},
+        {1, 0, 2},
+        {1, 0, 2},
+        {1, 0, 2},
+        {1, 0, 2},
+        {1, 0, 2},
+        {1, 0, 0},
+    },
+};
+BMA_File data_ov084_0213088c = {
+    0x11, 0, (u8 *)data_ov084_02130178, 1, 0, (BMAMaterialRecord *)&data_ov084_0213018c,
+};
+BMA_File data_ov084_0213089c = {
+    0x2, 0, (u8 *)data_ov084_02130174, 1, 0, (BMAMaterialRecord *)&data_ov084_021301c8,
+};
+
+/* Per-type tables: dive hit power, walk speed range, chase speed range,
+ * jump speed, launch speed, and the two per-frame particle paths. */
+extern const u8 data_ov084_02130204[4] = {0, 1, 2, 1};
+extern const int data_ov084_02130208[4] = {0x28000, 0x64000, 0xe0000, 0x64000};
+extern const int data_ov084_02130218[4] = {0x110, 0xd6, 0x111, 0xd6};
+extern const int data_ov084_02130228[4] = {0xaaa, 0x2000, 0x4aaa, 0x6000};
+extern const int data_ov084_02130238[4] = {-0xaaa, -0x2000, -0x4aaa, -0x2000};
+extern const int data_ov084_02130248[4] = {0x8000, 0x10000, 0x20000, 0x10000};
+extern const int data_ov084_02130258[4] = {0x555, 0x1000, 0x2555, 0x1000};
+extern const int data_ov084_02130268[4] = {0xa800, 0x15000, 0x15000, 0x15000};

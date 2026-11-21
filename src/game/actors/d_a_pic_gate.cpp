@@ -70,8 +70,8 @@ u32   func_02045ad8(const void *src, u32 size);
 unsigned int func_02045a50(const void *src, unsigned int size);
 
 extern Matrix4x3 gViewMtx;
-extern const daPicGate_c::WaveParams data_ov080_021277a8[];
-extern SharedFilePtr *data_ov080_0212775c[];
+extern const daPicGate_c::WaveParams data_ov080_021277a8[7];
+extern SharedFilePtr *const data_ov080_0212775c[19];
 extern unsigned char data_ov080_02128688[];
 extern unsigned char data_ov080_0212869c[];
 

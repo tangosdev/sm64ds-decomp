@@ -324,7 +324,7 @@ extern "C" {
 /* Foreign callees and data. */
 
 extern int __aeabi_idiv(int a, int b);
-extern s16 data_02086384[];
+extern const s16 data_02086384[];
 extern int data_020a4d44;
 extern unsigned int sCaptureLock;
 extern unsigned int sAlarmLock;

@@ -17,6 +17,11 @@ extern "C" {
 /* local extern: no header declares the CLPS water test (CLPS.h only
    documents it); d_bg_ch_sph_crr_query.cpp defines it with this
    signature. */
+
+/* The default CLPS entry (data_020a0c78, 8 bytes) precedes the enabled
+   colliders, one slot per dBgW instance (dBgW.h). The linker defines
+   data_020a0c80 at 0x020a0c80, inside this object's .bss run. */
+u8 data_020a0c78[0x68];
 }
 extern int SurfaceInfo_TestFlag0x20(int *clpsWords);
 

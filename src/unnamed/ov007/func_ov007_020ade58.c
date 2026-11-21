@@ -3,8 +3,8 @@
 #include "Ov007Display.h"
 #include "Ov007Item.h"
 #include "Ov007MenuMem.h"
-extern Ov007ItemLayout data_ov007_020ccbc4[];
-extern u8 data_ov007_020ccb7d[];
+extern const Ov007ItemLayout data_ov007_020ccbc4[];
+extern const u8 data_ov007_020ccb7d[];
 
 extern Ov007Item *func_ov007_020aea6c(int id, Ov007ItemLayout *layout, Ov007HitBox *hitBox);
 extern Ov007OamNode *func_ov007_020c11ac(int n);
@@ -14,16 +14,7 @@ extern void Sprite_SetAnimation(Ov007OamNode *node, int animIndex, int mode, int
 
 /* data_ov007_020ccb7c: one 8-byte row per item. data_ov007_020ccb7d is
  * the same table's animCount byte, read by its own symbol. */
-typedef struct Ov007NodeSprites {
-    u8 bank;      /* 0x00: index into the display's spriteBanks */
-    u8 animCount; /* 0x01: the node's animation count (func_ov007_020c11ac) */
-    char pad_02[2];
-    u8 *animIndices; /* 0x04: per animation, its index in the bank */
-} Ov007NodeSprites;
-
-typedef char Ov007NodeSprites_size_must_be_0x8[sizeof(Ov007NodeSprites) == 0x8 ? 1 : -1];
-
-extern Ov007NodeSprites data_ov007_020ccb7c[];
+extern const Ov007NodeSprites data_ov007_020ccb7c[];
 
 /* Builds item node `index` (func_ov007_020b6d40 builds nine): the item, with
  * its layout row from data_ov007_020ccbc4 and no hit box, and its OAM node
@@ -37,7 +28,7 @@ Ov007ItemNode *func_ov007_020ade58(int index) {
     Ov007SpriteBank **sl;
     int sb;
 
-    s->item = func_ov007_020aea6c(index, &data_ov007_020ccbc4[index], 0);
+    s->item = func_ov007_020aea6c(index, (Ov007ItemLayout *)&data_ov007_020ccbc4[index], 0);
     r4 = func_ov007_020c11ac(data_ov007_020ccb7d[index * 8]);
     s->node = r4;
 
@@ -74,7 +65,7 @@ Ov007ItemNode *func_ov007_020ade58(int index) {
     sl = r6->spriteBanks;
     for (sb = 0; sb < r4->animCount; sb++) {
         u16 state = s->item->id;
-        Ov007NodeSprites *entry = &data_ov007_020ccb7c[state];
+        const Ov007NodeSprites *entry = &data_ov007_020ccb7c[state];
         int r7 = entry->bank;
 
         if (state == 1 && sb >= 4) {

@@ -32,6 +32,12 @@
       "name": ".bss",
       "start": "0x02113ab0",
       "end": "0x02113ad8"
+    },
+    {
+      "name": ".data.brockClps",
+      "start": "0x02112ce8",
+      "end": "0x02112d08",
+      "input_section": ".data"
     }
   ],
   "functions": [
@@ -99,7 +105,15 @@
       "ordinal": 8
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_ov025_02112ce8",
+      "address": "0x02112ce8",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "the breakable rock's collision-property block handed to dBgW_KcMbg::SetFile"
+    }
+  ],
   "bss": [
     {
       "symbol": "data_ov025_02113ab0",
@@ -221,7 +235,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -257,11 +271,18 @@
           "start": "0x02113ab0",
           "end": "0x02113ad8",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".data.brockClps",
+          "start": "0x02112ce8",
+          "end": "0x02112d08",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 15
+          "LICENSED": 16
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -272,19 +293,19 @@
           {
             "section": ".init",
             "original": [
-              47
+              48
             ],
             "desired": [
-              47
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              45
+              46
             ],
             "desired": [
-              45
+              46
             ]
           },
           {
@@ -300,6 +321,15 @@
               8,
               14,
               21
+            ]
+          },
+          {
+            "section": ".data.brockClps",
+            "original": [
+              24
+            ],
+            "desired": [
+              24
             ]
           }
         ],

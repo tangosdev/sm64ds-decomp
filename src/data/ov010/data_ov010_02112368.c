@@ -1,7 +1,0 @@
-/* ov010 .data at 0x02112368 (48 bytes). */
-#include "types.h"
-
-u32 data_ov010_02112368[12] = {
-    0xf501002a, 0xf0c4fed4, 0x2aaa0000, 0x43550000, 0xf966002a, 0xf0c4fed4,
-    0xd5560000, 0x43550000, 0xf74f004b, 0xf48cfeed, 0x8000ffff, 0x070e0000,
-};

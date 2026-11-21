@@ -23,6 +23,7 @@ enum daObjWlSubmarine_c_AssetId {
     ASSET_WL_SUBMARINE_KCL = 0x06dd
 };
 
+#include "SpawnInfo.h"
 #include "daObjWlSubmarine_c.h"
 #include "SharedFilePtr.h"
 #include "SaveBlock.h"
@@ -47,10 +48,7 @@ struct CLPS_Block {
     u32 words[10];
 };
 
-CLPS_Block data_ov026_02112fd4 = {
-    0x53504c43, 0x00040008, 0x00000fc5, 0x000000ff, 0x00004fc4,
-    0x000000ff, 0x01000fc4, 0x000000ff, 0x01000fc5, 0x000000ff,
-};
+extern "C" CLPS_Block data_ov026_02112fd4;
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */
@@ -102,3 +100,12 @@ daObjWlSubmarine_c *daObjWlSubmarine_c_classInit() {
  * file. */
 SubmarineModelFilePtr Submarine_ModelFile(ASSET_WL_SUBMARINE_BMD);    /* model */
 SubmarineCollisionFilePtr Submarine_ClsnFile(ASSET_WL_SUBMARINE_KCL); /* collision */
+
+extern "C" SpawnInfo<daObjWlSubmarine_c> g_profile_WL_SUBMARINE = {daObjWlSubmarine_c_classInit,
+                                                                   90,
+                                                                   251,
+                                                                   0x00000000,
+                                                                   0x00000000,
+                                                                   0x01000000,
+                                                                   0x00000000,
+                                                                   0x00000000};
