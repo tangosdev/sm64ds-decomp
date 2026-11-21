@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""The three tiers: how much of the game is MATCHED, LINKED and PORTED.
+"""How much of the game is MATCHED and LINKED.
 
-One percentage cannot describe this project, because "done" means three
-different things and they move independently:
+The README progress block shows those two bars. PORTED, the count of functions
+whose translation unit the PC port linked, is no longer printed: the port
+lives in its own repository. ``ported()`` still reads the stamped list so
+chaos-db's JSON can carry the figure; ``--write-readme`` does not.
 
   MATCHED    the C compiles to the ROM's exact bytes. Provably the original
              logic. This is the number the README bar and the treemap show.
@@ -11,18 +13,12 @@ different things and they move independently:
              the link byte-compares it against the cartridge. A matched
              function served from gap bytes (the ROM's own bytes) is matched
              but NOT linked. Computed live from committed config, no stamp.
-  PORTED     the function's translation unit actually reaches the PC port's
-             binary, replacing the host stand-in that was there before.
 
 They are deliberately not a funnel: a function can be MATCHED and LINKED while
 still being unreadable, and readability work never changes the matched bytes.
-PORTED is measured on a port build and can lag the other two.
 
 Bars count functions. MATCHED counts against the dsd function universe.
 LINKED counts universe functions covered by an enrolled ``complete`` range.
-PORTED counts functions whose translation unit the port build links, read from
-config/port_linked_functions.txt. A stamp without that list falls back to
-matched translation units and labels the count accordingly.
 
 Usage:
     python tools/tiers.py                 # human-readable table
@@ -338,15 +334,14 @@ def matched_caption(m):
             f"(hand-written in the original, not C)")
 
 
-def _ported_noun(k):
-    """What PORTED counted: functions, or (an older stamp) matched translation units."""
-    return "functions" if k.get("unit") == "functions" else "matched TUs"
-
-
 def bar_block(t, preserved_matched=None):
-    """The single fenced block shown under the README "## Progress" heading."""
+    """The single fenced block shown under the README "## Progress" heading.
+
+    MATCHED and LINKED only. The stamped PORTED figure stays in ``collect()``
+    for chaos-db and is not a row here.
+    """
     rows = []
-    m, k, p = t["matched"], t["linked"], t.get("ported")
+    m, k = t["matched"], t["linked"]
     if m:
         rows.append(f"MATCHED    {bar(m['matched'], m['functions'])}  "
                     f"{m['pct']:4.1f}%   {m['matched']:,} / {m['functions']:,} functions")
@@ -361,9 +356,6 @@ def bar_block(t, preserved_matched=None):
     if k:
         rows.append(f"LINKED     {bar(k['linked'], k['of'])}  "
                     f"{k['pct']:4.1f}%   {k['linked']:,} / {k['of']:,} functions")
-    if p:
-        rows.append(f"PORTED     {bar(p['ported'], p['of'])}  "
-                    f"{p['pct']:4.1f}%   {p['ported']:,} / {p['of']:,} {_ported_noun(p)}")
     return "```\n" + "\n".join(rows) + "\n```"
 
 
@@ -394,7 +386,7 @@ def write_readme(t):
 
 
 def report(t):
-    m, k, p = t["matched"], t["linked"], t.get("ported")
+    m, k = t["matched"], t["linked"]
     out = []
     if m:
         out.append(f"MATCHED    {m['matched']:,} / {m['functions']:,} functions  "
@@ -410,13 +402,6 @@ def report(t):
                    f"{k['pct']:.1f}%   (live: enrolled in the ROM build)")
     else:
         out.append("LINKED     (no function-authors.json)")
-    if p:
-        flag = "  STALE" if p["stale"] else ""
-        out.append(f"PORTED     {p['ported']:,} / {p['of']:,} {_ported_noun(p)}  "
-                   f"{p['pct']:.1f}%   (stamped {p['measuredAt']} from {p['branch']}"
-                   f" @ {p['commit']}){flag}")
-    else:
-        out.append("PORTED     (no usable stamp in config/port_linkage.json)")
     return "\n".join(out)
 
 

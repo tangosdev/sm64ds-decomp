@@ -19,7 +19,7 @@ then filtered by the shared byte-gate policy), so the number is reproducible on 
 fresh checkout with no ROM and no local state - which is what the hosted
 update-chaos-data.yml workflow needs.
 
-The README progress block is owned by tools/tiers.py (MATCHED + LINKED + PORTED
+The README progress block is owned by tools/tiers.py (MATCHED + LINKED
 in one fenced block). This tool never writes README.md.
 """
 import json
