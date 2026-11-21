@@ -604,6 +604,55 @@ class RomDataRatchet(unittest.TestCase):
         out = VM.rom_data_regressions(base, head)
         self.assertTrue(any("lost 1 exact symbol" in reason for reason in out))
 
+    def test_a_label_inside_a_larger_verified_object_is_not_a_loss(self):
+        """`data_ov*` names a word inside a profile or a CLPS block. One object
+        proves those bytes. The label is not a second object the source lost."""
+        base = self.data(verified=(("ov009", "data_ov009_02112c08", 0x02112c08, 16),
+                                   ("ov009", "data_ov009_02112bf8", 0x02112bf8, 32)),
+                         verified_bytes=32)
+        head = self.data(verified=(("ov009", "data_ov009_02112bf8", 0x02112bf8, 32),),
+                         verified_bytes=32)
+        self.assertEqual(VM.rom_data_regressions(base, head), [])
+
+    def test_several_labels_inside_one_object_are_not_losses(self):
+        base = self.data(verified=(("ov010", "data_ov010_02112aa4", 0x02112aa4, 4),
+                                   ("ov010", "data_ov010_02112aa8", 0x02112aa8, 4),
+                                   ("ov010", "_ZTI14daObjC1_Trap_c", 0x02112aa0, 12)),
+                         verified_bytes=12)
+        head = self.data(verified=(("ov010", "_ZTI14daObjC1_Trap_c", 0x02112aa0, 12),),
+                         verified_bytes=12)
+        self.assertEqual(VM.rom_data_regressions(base, head), [])
+
+    def test_a_range_split_across_two_verified_objects_is_not_a_loss(self):
+        base = self.data(verified=(("ov009", "data_ov009_02113a00", 0x02113a00, 24),),
+                         verified_bytes=24)
+        head = self.data(verified=(("ov009", "g_profile_MC_WATER", 0x021139f4, 16),
+                                   ("ov009", "data_ov009_02113a04", 0x02113a04, 20)),
+                         verified_bytes=36)
+        self.assertEqual(VM.rom_data_regressions(base, head), [])
+
+    def test_a_vtable_preamble_label_is_not_a_loss(self):
+        """The checker scores `_ZTV` at the slot array. The eight bytes in front
+        of it are the emitted offset-to-top and typeinfo."""
+        base = self.data(verified=(("ov010", "data_ov010_02112adc", 0x02112adc, 8),
+                                   ("ov010", "_ZTV14daObjC1_Trap_c", 0x02112ae4, 0x80)),
+                         verified_bytes=0x80)
+        head = self.data(verified=(("ov010", "_ZTV14daObjC1_Trap_c", 0x02112ae4, 0x80),),
+                         verified_bytes=0x80)
+        self.assertEqual(VM.rom_data_regressions(base, head), [])
+
+    def test_a_label_running_through_type_name_padding_is_not_a_loss(self):
+        base = self.data(verified=(("ov022", "data_ov022_02113cec", 0x02113cec, 8),))
+        head = self.data(verified=(("ov022", "_ZTS14daObjFl_Ring_c", 0x02113ce0, 17),))
+        self.assertEqual(VM.rom_data_regressions(base, head), [])
+
+    def test_a_partly_covered_range_is_still_a_loss(self):
+        base = self.data(verified=(("ov009", "data_ov009_02112c08", 0x02112c08, 16),))
+        head = self.data(verified=(("ov009", "data_ov009_02112bf8", 0x02112c08, 8),))
+        out = VM.rom_data_regressions(base, head)
+        self.assertTrue(any("lost 1 exact symbol" in reason for reason in out))
+        self.assertIn("ov009:data_ov009_02112c08", "; ".join(out))
+
     def test_a_replacement_proving_fewer_bytes_is_still_a_loss(self):
         """Same address, less of it proven: the anchor is address AND extent, so a
         shorter arrival cannot stand in for what the base actually verified."""
