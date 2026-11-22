@@ -16,29 +16,29 @@ extern "C" {
  * two (pulled back to at most 0x30000 from the eye), and turns off the line
  * to the target by up to 0x2000, less as the target gets farther than 0x200000
  * from the player. The pitch is clamped to +-0x2800. */
-int func_02005110(dCamera_c *cam) {
+int dCamera_c::func_02005110() {
     Vector3 eye;
     Vector3 aim;
     Vector3 *target;
     s32 horzAngle;
     s32 eyeDist;
     {
-        Vector3 *p = &cam->mTargetPlayer->mPos;
+        Vector3 *p = &this->mTargetPlayer->mPos;
         eye.x = p->x;
         eye.y = p->y;
         eye.z = p->z;
         eye.y += 0x64000;
     }
     eyeDist = 0x48000;
-    target = cam->mLookTarget;
+    target = this->mLookTarget;
     if (target == 0) {
         aim.x = eye.x;
         aim.y = eye.y;
         aim.z = eye.z;
-        if (((daPly_c *)cam->mTargetPlayer)->mOwlFarCamera != 0) {
+        if (((daPly_c *)this->mTargetPlayer)->mOwlFarCamera != 0) {
             eyeDist = 0xd0000;
         }
-        horzAngle = cam->mTargetPlayer->mAngle.y;
+        horzAngle = this->mTargetPlayer->mAngle.y;
     } else {
         Vector3 diff;
         Vector3 sum;
@@ -63,8 +63,8 @@ int func_02005110(dCamera_c *cam) {
         }
         fall = 0x2000;
         {
-            Vector3 *playerPos = &cam->mTargetPlayer->mPos;
-            s32 fallDist = Vec3_Dist(cam->mLookTarget, playerPos);
+            Vector3 *playerPos = &this->mTargetPlayer->mPos;
+            s32 fallDist = Vec3_Dist(this->mLookTarget, playerPos);
             s32 t = fallDist - 0x200000;
             if (t > 0) {
                 s16 scaled = (((((s64)t) << 2) + 0x800) >> 12);
@@ -74,12 +74,12 @@ int func_02005110(dCamera_c *cam) {
                 fall -= scaled;
             }
         }
-        s16 diffAngle = Vec3_HorzAngle(cam->mLookTarget, &eye) - cam->mAngleY;
+        s16 diffAngle = Vec3_HorzAngle(this->mLookTarget, &eye) - this->mAngleY;
         fall = (diffAngle >= 0) ? (-fall) : (fall);
         /* Does nothing, but without it the build does not match the ROM. */
         if ((!newAim.x) && (!newAim.x)) {
         }
-        horzAngle = (s16)(Vec3_HorzAngle(cam->mLookTarget, &eye) + fall);
+        horzAngle = (s16)(Vec3_HorzAngle(this->mLookTarget, &eye) + fall);
     }
     {
         s32 vert = Vec3_VertAngle(&aim, &eye);
@@ -88,12 +88,12 @@ int func_02005110(dCamera_c *cam) {
         } else if (vert > 0x2800) {
             vert = 0x2800;
         }
-        cam->ApproachLookAtAndAngles(&aim, horzAngle, vert);
+        this->ApproachLookAtAndAngles(&aim, horzAngle, vert);
     }
     {
-        u32 r = cam->ScaleDistByFov(eyeDist);
-        if (cam->ApproachDist(r) == 0) {
-            cam->ClampPosAboveTarget();
+        u32 r = this->ScaleDistByFov(eyeDist);
+        if (this->ApproachDist(r) == 0) {
+            this->ClampPosAboveTarget();
         }
     }
     return 1;
