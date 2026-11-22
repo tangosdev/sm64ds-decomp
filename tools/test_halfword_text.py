@@ -69,22 +69,30 @@ def _elf_text(size, align, name="sym", fill=0):
     """A relocatable ARM ELF with one ``.text`` and, for a function, one symbol."""
     text = bytes([fill]) * size
     if name.startswith("_dsd"):
-        shstr = b"\0.text\0.shstrtab\0"
+        # A gap carries a symbol table so a function can be moved into it.
+        strtab = b"\0"
+        shstr = b"\0.text\0.symtab\0.strtab\0.shstrtab\0"
         text_off = 52
-        shstr_off = text_off + size
+        sym_off = text_off + size
+        str_off = sym_off + 32
+        shstr_off = str_off + len(strtab)
         shoff = shstr_off + len(shstr)
         header = struct.pack(
             "<16sHHIIIIIHHHHHH",
             b"\x7fELF\x01\x01\x01" + b"\x00" * 9,
-            1, 40, 1, 0, 0, shoff, 0, 52, 0, 0, 40, 3, 2)
-        def sheader(sec_name, kind, flags, offset, sec_size, sec_align):
+            1, 40, 1, 0, 0, shoff, 0, 52, 0, 0, 40, 5, 4)
+        def sheader(sec_name, kind, flags, offset, sec_size, sec_align, link=0, info=0,
+                    entsize=0):
             return struct.pack("<IIIIIIIIII", sec_name, kind, flags, 0, offset,
-                               sec_size, 0, 0, sec_align, 0)
+                               sec_size, link, info, sec_align, entsize)
+        section_sym = struct.pack("<IIIBBH", 0, 0, 0, 3, 0, 1)
         return b"".join((
-            header, text, shstr,
+            header, text, b"\x00" * 16, section_sym, strtab, shstr,
             sheader(0, 0, 0, 0, 0, 0),
             sheader(1, 1, 6, text_off, size, align),
-            sheader(7, 3, 0, shstr_off, len(shstr), 1),
+            sheader(7, 2, 0, sym_off, 32, 4, link=3, info=2, entsize=16),
+            sheader(15, 3, 0, str_off, len(strtab), 1),
+            sheader(23, 3, 0, shstr_off, len(shstr), 1),
         ))
     sym_name = pathlib.Path(name).stem.encode("ascii")
     strtab = b"\0" + sym_name + b"\0"
@@ -168,24 +176,22 @@ class ApplyTests(unittest.TestCase):
             )
             lcf.write_bytes(original.encode("latin-1"))
             report = HT.apply(lcf, root / "objects.txt", config)
-            self.assertEqual(lcf.read_bytes().decode("latin-1"), original)
+            rendered = lcf.read_text(encoding="latin-1")
+            self.assertNotIn("stub.o(", rendered)
+            self.assertLess(rendered.index("_dsd_gap@main_0.o(.text)"),
+                            rendered.index("ARM9_TEXT_END = .;"))
             self.assertEqual(report["patchedObjects"], 1)
-            self.assertEqual(report["alignmentSwitches"], 0)
-            def text_of(path):
-                with open(path, "rb") as handle:
-                    elf = ELFFile(handle)
-                    return elf.get_section_by_name(".text").data()
-            self.assertEqual(text_of(objects / "stub.o"), b"\x11\x11" + b"\x22" * 4 + b"\x33\x33")
-            self.assertEqual(text_of(objects / "_dsd_gap@main_0.o"), b"\x11" * 4)
-            self.assertEqual(text_of(objects / "_dsd_gap@main_1.o"), b"\x33" * 4)
-            with open(objects / "stub.o", "rb") as handle:
-                stub = ELFFile(handle)
-                text = stub.get_section_by_name(".text")
-                self.assertEqual(text.header["sh_addralign"], 4)
-                func = next(sym for sym in stub.get_section_by_name(".symtab").iter_symbols()
+            with open(objects / "_dsd_gap@main_0.o", "rb") as handle:
+                host = ELFFile(handle)
+                self.assertEqual(host.get_section_by_name(".text").data(),
+                                 b"\x11" * 6 + b"\x22" * 4 + b"\x33\x33")
+                func = next(sym for sym in host.get_section_by_name(".symtab").iter_symbols()
                             if sym.name == "stub")
-                self.assertEqual(func["st_value"], 2)
+                self.assertEqual(func["st_value"], 6)
                 self.assertEqual(func["st_size"], 4)
+            with open(objects / "_dsd_gap@main_1.o", "rb") as handle:
+                self.assertEqual(ELFFile(handle).get_section_by_name(".text").data(),
+                                 b"\x33" * 4)
 
     def test_arm9_edges_land_on_words(self):
         pieces = HT.code_pieces(REPO / "config" / "arm9" / "delinks.txt")[".text"]

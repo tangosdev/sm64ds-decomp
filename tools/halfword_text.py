@@ -404,6 +404,142 @@ def _apply_edit(info, piece, trim_start, trim_end, prefix, suffix):
     return None
 
 
+
+def _normalize(data):
+    """Lay section bytes out in header order so the linker's offset walk is boring."""
+    elf = ELFFile(io.BytesIO(data))
+    endian = "<" if elf.little_endian else ">"
+    sections = list(elf.iter_sections())
+    out = bytearray(data[:52])
+    offsets = [0] * len(sections)
+    for index, sec in enumerate(sections):
+        if index == 0 or sec["sh_type"] == "SHT_NULL" or sec["sh_type"] == "SHT_NOBITS":
+            continue
+        align = sec["sh_addralign"] or 1
+        while len(out) % align:
+            out.append(0)
+        offsets[index] = len(out)
+        out.extend(data[sec["sh_offset"]:sec["sh_offset"] + sec["sh_size"]])
+    while len(out) % 4:
+        out.append(0)
+    shoff = len(out)
+    shentsize = elf["e_shentsize"]
+    old_shoff = elf["e_shoff"]
+    for index, sec in enumerate(sections):
+        raw = bytearray(data[old_shoff + index * shentsize:
+                             old_shoff + (index + 1) * shentsize])
+        if offsets[index]:
+            struct.pack_into(endian + "I", raw, 16, offsets[index])
+        out.extend(raw)
+    out[:52] = data[:52]
+    struct.pack_into(endian + "I", out, 32, shoff)
+    return bytes(out)
+
+
+def _set_text(info, new_bytes):
+    new_off = len(info["data"])
+    info["data"].extend(new_bytes)
+    _pack_section(info, new_off, len(new_bytes))
+    info["offset"] = new_off
+    info["size"] = len(new_bytes)
+
+
+def _function_export(info):
+    """``(name, size, thumb)`` of the one global function in this section."""
+    name, size, thumb = None, None, False
+    symtab = info["symtab"]
+    if symtab is None:
+        raise HalfwordLinkError(f"{info['path']} has no symbol table")
+    for sym in symtab.iter_symbols():
+        if sym["st_shndx"] != info["index"]:
+            continue
+        if sym.name == "$t":
+            thumb = True
+        elif (sym["st_info"]["type"] == "STT_FUNC"
+              and sym["st_info"]["bind"] == "STB_GLOBAL"):
+            name, size = sym.name, sym["st_size"]
+    if not name:
+        raise HalfwordLinkError(f"{info['path']} has no global function symbol")
+    return name, size, thumb
+
+
+def _bump_reloc_symbols(info, threshold, delta):
+    """Keep relocations pointed at the same symbols after ``delta`` locals are inserted."""
+    if not delta:
+        return
+    elf = ELFFile(io.BytesIO(bytes(info["data"])))
+    endian = "<" if info["little"] else ">"
+    for sec in elf.iter_sections():
+        if sec["sh_type"] not in ("SHT_REL", "SHT_RELA"):
+            continue
+        entry = sec["sh_entsize"] or (8 if sec["sh_type"] == "SHT_REL" else 12)
+        base = sec["sh_offset"]
+        for index in range(sec["sh_size"] // entry):
+            at = base + index * entry + 4
+            word = struct.unpack_from(endian + "I", info["data"], at)[0]
+            symbol = word >> 8
+            if symbol >= threshold:
+                struct.pack_into(endian + "I", info["data"], at,
+                                 ((symbol + delta) << 8) | (word & 0xFF))
+
+
+def _add_export(info, name, value, size, thumb):
+    """Define ``name`` in this section at ``value``. A Thumb body also gets ``$t``."""
+    symtab = info["symtab"]
+    if symtab is None:
+        raise HalfwordLinkError(f"{info['path']} has no symbol table")
+    strtab = None
+    elf = ELFFile(io.BytesIO(info["data"]))
+    for sec in elf.iter_sections():
+        if sec.header["sh_type"] == "SHT_STRTAB" and sec.name == ".strtab":
+            strtab = sec
+            break
+    if strtab is None:
+        raise HalfwordLinkError(f"{info['path']} has no string table")
+    endian = "<" if info["little"] else ">"
+    strings = bytearray(info["data"][strtab["sh_offset"]:
+                                      strtab["sh_offset"] + strtab["sh_size"]])
+    def add_name(text):
+        if not text:
+            return 0
+        off = len(strings)
+        strings.extend(text.encode("ascii") + b"\0")
+        return off
+    new_locals = []
+    if thumb:
+        new_locals.append(struct.pack(endian + "IIIBBH", add_name("$t"), value, 0, 0, 0,
+                                      info["index"]))
+    # Inserting locals in front of the globals renumbers every later symbol.
+    # Relocations still name the old indexes, so move those with the symbols.
+    _bump_reloc_symbols(info, symtab["sh_info"], len(new_locals))
+    new_global = struct.pack(endian + "IIIBBH", add_name(name), value, size, 0x12, 0,
+                             info["index"])
+    old = []
+    entry = symtab["sh_entsize"] or 16
+    base = symtab["sh_offset"]
+    raw = info["data"][base:base + symtab["sh_size"]]
+    for index in range(0, len(raw), entry):
+        old.append(bytes(raw[index:index + entry]))
+    first_global = symtab["sh_info"]
+    symbols = old[:first_global] + new_locals + old[first_global:] + [new_global]
+    blob = b"".join(symbols)
+    sym_off = len(info["data"])
+    info["data"].extend(blob)
+    str_off = len(info["data"])
+    info["data"].extend(strings)
+    shentsize = info["shentsize"]
+    shoff = info["shoff"]
+    # Section header index is the enumerate index elftools uses.
+    for index, sec in enumerate(elf.iter_sections()):
+        header = shoff + index * shentsize
+        if sec.name == symtab.name and sec["sh_offset"] == symtab["sh_offset"]:
+            struct.pack_into(endian + "II", info["data"], header + 16, sym_off, len(blob))
+            struct.pack_into(endian + "I", info["data"], header + 28,
+                             first_global + len(new_locals))
+        elif sec.name == ".strtab" and sec["sh_offset"] == strtab["sh_offset"]:
+            struct.pack_into(endian + "II", info["data"], header + 16, str_off, len(strings))
+
+
 def _code_inputs(lcf_path):
     """``(section, kind, name)`` for every .text and .init input, in order."""
     text = pathlib.Path(lcf_path).read_bytes().decode("latin-1")
@@ -423,11 +559,49 @@ def _code_inputs(lcf_path):
     return rows
 
 
-def apply(lcf_path, objects_txt, config_root):
-    """Fold halfword edges into the function objects. The script is not edited.
+def _drop_inputs(lcf_path, objects_txt, dropped):
+    """Remove absorbed inputs from the script and object list. Returns the script."""
+    path = pathlib.Path(lcf_path)
+    text = path.read_bytes().decode("latin-1")
+    newline = "\r\n" if "\r\n" in text else "\n"
+    kept = []
+    for line in text.splitlines():
+        inp = INPUT_RE.match(line)
+        if inp and (inp.group(3), inp.group(2)) in dropped:
+            continue
+        kept.append(line)
+    rendered = newline.join(kept) + newline
+    if rendered != text:
+        path.write_bytes(rendered.encode("latin-1"))
+    referenced = set()
+    for line in kept:
+        inp = INPUT_RE.match(line)
+        if inp:
+            referenced.add(inp.group(2))
+    obj_path = pathlib.Path(objects_txt)
+    obj_text = obj_path.read_bytes().decode("latin-1")
+    obj_nl = "\r\n" if "\r\n" in obj_text else "\n"
+    obj_kept = []
+    for line in obj_text.splitlines():
+        name = pathlib.Path(line.strip()).name
+        if line.strip() and name not in referenced and any(
+                kind_name[1] == name for kind_name in dropped):
+            continue
+        obj_kept.append(line)
+    obj_rendered = obj_nl.join(obj_kept) + obj_nl
+    if obj_rendered != obj_text:
+        obj_path.write_bytes(obj_rendered.encode("latin-1"))
+    return rendered
 
-    Returns a report. An empty script, or one with no code inputs, is unchanged
-    and does not need the object list.
+
+def apply(lcf_path, objects_txt, config_root):
+    """Move a halfword function into the gap in front of it.
+
+    The linker keeps every input section on a word. A two-byte stub therefore
+    cannot be its own input: it is appended to the ROM gap that already ends at
+    its address, and the stub's object is dropped from the script. The symbol
+    keeps the ROM address because it points into that gap. A function that
+    already starts on a word only absorbs the two-byte gap after it.
     """
     inputs = _code_inputs(lcf_path)
     if not inputs:
@@ -449,6 +623,8 @@ def apply(lcf_path, objects_txt, config_root):
     for section, kind, name in inputs:
         grouped.setdefault(section, {".text": [], ".init": []})[kind].append(name)
     patched = []
+    dropped = set()
+    dirty = {}
     for section, by_kind in grouped.items():
         table = pieces_for(section)
         if table is None:
@@ -462,6 +638,7 @@ def apply(lcf_path, objects_txt, config_root):
             edits = absorption_edits(pieces)
             if not any(trim_start or trim_end for trim_start, trim_end in edits):
                 continue
+            section_kind = kind
             loaded = []
             for (trim_start, trim_end), name, (piece_kind, start, _end, stem) in zip(
                     edits, names, pieces):
@@ -478,26 +655,61 @@ def apply(lcf_path, objects_txt, config_root):
                 if path is None:
                     raise HalfwordLinkError(f"{name} is not listed in the object file")
                 loaded.append(_text_section(path, kind))
-            donated = {}
-            for info, piece, (trim_start, trim_end) in zip(loaded, pieces, edits):
-                if piece[0] != "gap" or not (trim_start or trim_end):
+            bodies = []
+            starts = []
+            for info, (_kind, start, end, _stem) in zip(loaded, pieces):
+                if info is None:
+                    bodies.append(None)
+                    starts.append(start)
                     continue
-                head, tail = _apply_edit(info, piece, trim_start, trim_end, None, None)
-                donated[id(info)] = (head, tail)
-            for info, piece, (trim_start, trim_end) in zip(loaded, pieces, edits):
-                if piece[0] != "src" or not (trim_start or trim_end):
+                blob = bytes(info["data"][info["offset"]:info["offset"] + info["size"]])
+                if len(blob) != end - start:
+                    raise HalfwordLinkError(
+                        f"{info['path']} contributes 0x{len(blob):x} bytes "
+                        f"for 0x{start:08x}..0x{end:08x}")
+                bodies.append(blob)
+                starts.append(start)
+            for index, (kind, start, end, stem) in enumerate(pieces):
+                prefix, suffix = edits[index]
+                if kind != "src" or not (prefix or suffix):
                     continue
-                prefix = suffix = b""
-                # The bytes were taken from the neighboring gaps above.
-                if trim_start:
-                    prev = donated[id(loaded[pieces.index(piece) - 1])]
-                    prefix = prev[1]
-                if trim_end:
-                    nxt = donated[id(loaded[pieces.index(piece) + 1])]
-                    suffix = nxt[0]
-                _apply_edit(info, piece, trim_start, trim_end, prefix, suffix)
-                patched.append(str(info["path"]))
-            for info, (trim_start, trim_end) in zip(loaded, edits):
-                if trim_start or trim_end:
-                    info["path"].write_bytes(info["data"])
-    return {"patchedObjects": len(patched), "alignmentSwitches": 0, "objects": patched}
+                tail = b""
+                if suffix:
+                    nxt = bodies[index + 1]
+                    if nxt is None or len(nxt) < suffix:
+                        raise HalfwordLinkError(
+                            f"the gap after {stem} cannot spare {suffix} bytes")
+                    tail = nxt[:suffix]
+                    bodies[index + 1] = nxt[suffix:]
+                    starts[index + 1] += suffix
+                    _shift_symbols(loaded[index + 1], -suffix, suffix)
+                    _shift_relocations(loaded[index + 1], -suffix, suffix)
+                if prefix:
+                    host = index - 1
+                    if starts[host] + len(bodies[host]) != start:
+                        raise HalfwordLinkError(
+                            f"{stem} at 0x{start:08x} does not sit at the end of the gap")
+                    offset = len(bodies[host])
+                    bodies[host] = bodies[host] + bodies[index] + tail
+                    export_name, export_size, thumb = _function_export(loaded[index])
+                    _add_export(loaded[host], export_name, offset, export_size, thumb)
+                    _set_text(loaded[host], bodies[host])
+                    dirty[loaded[host]["path"]] = loaded[host]
+                    dropped.add((section_kind, names[index]))
+                    patched.append(export_name)
+                else:
+                    bodies[index] = bodies[index] + tail
+                    _set_text(loaded[index], bodies[index])
+                    dirty[loaded[index]["path"]] = loaded[index]
+                    patched.append(stem)
+                if suffix and not bodies[index + 1]:
+                    dropped.add((section_kind, names[index + 1]))
+                elif suffix:
+                    _set_text(loaded[index + 1], bodies[index + 1])
+                    dirty[loaded[index + 1]["path"]] = loaded[index + 1]
+    for info in dirty.values():
+        info["path"].write_bytes(_normalize(info["data"]))
+    if dropped:
+        _drop_inputs(lcf_path, objects_txt, dropped)
+    return {"patchedObjects": len(patched), "alignmentSwitches": 0,
+            "objects": patched}
