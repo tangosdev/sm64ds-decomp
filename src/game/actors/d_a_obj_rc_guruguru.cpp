@@ -151,22 +151,13 @@ RcGuruguruModelFilePtr gRcGuruguruModelFile(ASSET_RC_GURUGURU_BMD);         /* m
 RcGuruguruCollisionFilePtr gRcGuruguruCollisionFile(ASSET_RC_GURUGURU_KCL); /* collision */
 
 /* 0x02112aa8 is a single-entry floor block. 0x02112ac8 is the two-entry
-   block SetFile receives. 0x02112ac0 and 0x02112adc keep the symbols.txt
-   names of the tails. */
-u32 data_ov036_02112aa8[6] = {
-    0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff, 0xffffffff, 0xffffffff,
+   block SetFile receives. Each block includes the all-ones tail that
+   symbols.txt still names. */
+u32 data_ov036_02112aa8[8] = {
+    0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
 };
-u32 data_ov036_02112ac0[2] = {
-    0xffffffff,
-    0xffffffff,
-};
-u32 data_ov036_02112ac8[5] = {
-    0x53504c43, 0x00020008, 0x01000fc0, 0x000000ff, 0x01000fc4,
-};
-u32 data_ov036_02112adc[3] = {
-    0x000000ff,
-    0xffffffff,
-    0xffffffff,
+u32 data_ov036_02112ac8[8] = {
+    0x53504c43, 0x00020008, 0x01000fc0, 0x000000ff, 0x01000fc4, 0x000000ff, 0xffffffff, 0xffffffff,
 };
 
 RcGuruguruAssets data_ov036_02113d78 = {

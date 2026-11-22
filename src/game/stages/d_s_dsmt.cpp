@@ -395,29 +395,22 @@ Ov007MenuHooks data_ov007_02103290 = {
 extern unsigned short data_ov007_02104c28;
 }
 
-/* The item-node animation index arrays. func_ov007_020ade58 reaches them only
- * through data_ov007_020ccb7c's animIndices pointers, and each keeps its ROM
- * symbol. The ROM orders them item0, item7, item4, item8, items3And6, item2,
- * item5, item1; mwcc does not emit separate constants in declaration order,
- * so the manifest records the emitted address of each and the production link
- * puts them back in ROM order. Items 3 and 6 share one array. */
-extern "C" const u8 data_ov007_020ccb54[4] = {0, 0, 0, 0}; /* item 0 */
-extern "C" const u8 data_ov007_020ccb58[4] = {0, 0, 0, 0}; /* item 7 */
-extern "C" const u8 data_ov007_020ccb5c[4] = {1, 0, 0, 0}; /* item 4 */
-extern "C" const u8 data_ov007_020ccb60[4] = {0, 0, 0, 0}; /* item 8 */
-extern "C" const u8 data_ov007_020ccb64[4] = {0, 0, 0, 0}; /* items 3 and 6 */
-extern "C" const u8 data_ov007_020ccb68[4] = {4, 0, 0, 0}; /* item 2 */
-extern "C" const u8 data_ov007_020ccb6c[4] = {2, 0, 0, 0}; /* item 5 */
-extern "C" const u8 data_ov007_020ccb70[12] = {0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 0, 0}; /* item 1 */
+/* Animation-index bytes, ROM order, one array from 0x020ccb54 up to
+ * data_ov007_020ccb7c. func_ov007_020ade58 reaches a row only through that
+ * table's animIndices word. */
+extern "C" const u8 data_ov007_020ccb54[40] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    4, 0, 0, 0, 2, 0, 0, 0, 0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 0, 0,
+};
 
 /* One row per menu item: the sprite bank, the node's animation count and the
- * array above whose indices select entries in that bank. */
+ * index bytes above that select entries in that bank. */
 extern "C" const Ov007NodeSprites data_ov007_020ccb7c[9] = {
-    {5, 1, {0}, data_ov007_020ccb54}, {0, 10, {0}, data_ov007_020ccb70},
-    {0, 1, {0}, data_ov007_020ccb68}, {3, 1, {0}, data_ov007_020ccb64},
-    {3, 1, {0}, data_ov007_020ccb5c}, {3, 1, {0}, data_ov007_020ccb6c},
-    {3, 1, {0}, data_ov007_020ccb64}, {4, 1, {0}, data_ov007_020ccb58},
-    {0, 1, {0}, data_ov007_020ccb60},
+    {5, 1, {0}, data_ov007_020ccb54},      {0, 10, {0}, &data_ov007_020ccb54[28]},
+    {0, 1, {0}, &data_ov007_020ccb54[20]}, {3, 1, {0}, &data_ov007_020ccb54[16]},
+    {3, 1, {0}, &data_ov007_020ccb54[8]},  {3, 1, {0}, &data_ov007_020ccb54[24]},
+    {3, 1, {0}, &data_ov007_020ccb54[16]}, {4, 1, {0}, &data_ov007_020ccb54[4]},
+    {0, 1, {0}, &data_ov007_020ccb54[12]},
 };
 
 /* The nine item placement rows func_ov007_020ade58 hands

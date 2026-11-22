@@ -113,30 +113,16 @@
     {
       "symbol": "data_ov036_02112aa8",
       "address": "0x02112aa8",
-      "size": "0x18",
+      "size": "0x20",
       "binding": "STB_GLOBAL",
-      "evidence": "single-entry floor CLPS; no ov036 relocation targets it"
-    },
-    {
-      "symbol": "data_ov036_02112ac0",
-      "address": "0x02112ac0",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "tail of the 0x02112aa8 CLPS block"
+      "evidence": "single-entry floor CLPS including its all-ones tail; no ov036 relocation targets it"
     },
     {
       "symbol": "data_ov036_02112ac8",
       "address": "0x02112ac8",
-      "size": "0x14",
+      "size": "0x20",
       "binding": "STB_GLOBAL",
-      "evidence": "two-entry CLPS block named by data_ov036_02113d78"
-    },
-    {
-      "symbol": "data_ov036_02112adc",
-      "address": "0x02112adc",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "tail of the 0x02112ac8 CLPS block"
+      "evidence": "two-entry CLPS block named by data_ov036_02113d78, including its all-ones tail"
     },
     {
       "symbol": "_ZTI18daObjRc_Guruguru_c",

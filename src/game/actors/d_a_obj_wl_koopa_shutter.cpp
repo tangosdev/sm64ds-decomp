@@ -45,15 +45,10 @@ struct KoopaShutterCollisionFilePtr : SharedFilePtr {
 extern KoopaShutterCollisionFilePtr BowserShutter_ClsnFile;
 
 struct CLPS_Block {
-    u32 words[2];
+    u32 words[24];
 };
 
-CLPS_Block data_ov026_02112f74 = {
-    0x53504c43,
-    0x00010008,
-};
-
-/* The pointer table that follows the CLPS in this overlay's .data. */
+/* CLPS header and the pointer table that follows it. */
 extern u32 data_ov026_02112e60[];
 extern u32 data_ov026_02112e70[];
 extern u32 data_ov026_02112e90[];
@@ -63,7 +58,8 @@ extern u32 data_ov026_02112ed0[];
 extern u32 data_ov026_021132b0[];
 extern u32 data_ov026_02113600[];
 
-u32 data_ov026_02112f7c[] = {
+CLPS_Block data_ov026_02112f74 = {
+    0x53504c43, 0x00010008,
     0x00000fc0, 0x000000ff,
     0xffffffff, 0xffffffff,
     0xffffffff, 0xffffffff,

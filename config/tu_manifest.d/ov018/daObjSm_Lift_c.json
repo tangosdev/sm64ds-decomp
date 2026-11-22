@@ -122,16 +122,9 @@
     {
       "symbol": "data_ov018_02112f48",
       "address": "0x02112f48",
-      "size": "0x10",
+      "size": "0x20",
       "binding": "STB_GLOBAL",
-      "evidence": "first of two back-to-back CLPS blocks: CLPS header, layer 2, entry 0x00000fc5"
-    },
-    {
-      "symbol": "data_ov018_02112f58",
-      "address": "0x02112f58",
-      "size": "0x10",
-      "binding": "STB_GLOBAL",
-      "evidence": "second CLPS block: entry 0x01000fc5, all-ones terminator"
+      "evidence": "CLPS block: header, two entries, all-ones tail"
     }
   ],
   "bss": [

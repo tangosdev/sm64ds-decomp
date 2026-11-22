@@ -438,16 +438,9 @@
     {
       "symbol": "data_ov034_0211414c",
       "address": "0x0211414c",
-      "size": "0x30",
+      "size": "0x50",
       "binding": "STB_GLOBAL",
-      "evidence": "first three of the five entrance records"
-    },
-    {
-      "symbol": "data_ov034_0211417c",
-      "address": "0x0211417c",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "last two of the five entrance records"
+      "evidence": "five entrance records"
     },
     {
       "symbol": "data_ov034_0211419c",
@@ -1143,7 +1136,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov034-daHanachan_c/daHanachan_c.o (gitignored)",
+    "object": "build/tu/ov034-daHanachan_c/d_a_hanachan.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 35,
     "functions_declared": 35,
@@ -1151,11 +1144,15 @@
       "requested": [
         "_ZN12daHanachan_cD2Ev",
         "_ZN7Vector3D1Ev",
-        "_ZN8Vector3sD1Ev"
+        "_ZN8Vector3sD1Ev",
+        "_ZN7Vector3C1Ev",
+        "_ZN8Vector3sC1Ev"
       ],
       "deadstripped": [
         "_ZN12daHanachan_cD2Ev",
+        "_ZN7Vector3C1Ev",
         "_ZN7Vector3D1Ev",
+        "_ZN8Vector3sC1Ev",
         "_ZN8Vector3sD1Ev"
       ],
       "droppedSections": [
@@ -1163,23 +1160,25 @@
         10,
         11,
         12,
-        147,
-        148,
-        149,
-        150,
-        151,
-        152,
-        153,
-        154,
-        155,
-        156,
-        157,
-        158,
-        159,
-        160,
-        161,
-        162,
-        163
+        75,
+        76,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -1206,6 +1205,26 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV12daHanachan_c"
+      ],
+      "canonicalDuplicates": [
+        {
+          "symbol": "_ZN7Vector3C1Ev",
+          "canonicalSymbol": "func_0203d384",
+          "module": "arm9",
+          "address": "0x0203d384",
+          "size": 4,
+          "bodySha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": 0
+        },
+        {
+          "symbol": "_ZN8Vector3sC1Ev",
+          "canonicalSymbol": "func_0203d73c",
+          "module": "arm9",
+          "address": "0x0203d73c",
+          "size": 4,
+          "bodySha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f",
+          "relocations": 0
+        }
       ]
     },
     "criteria": {

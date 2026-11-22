@@ -16,9 +16,9 @@
  *   or 4 CoastHome (big bar), 5 WaitHome, 6 TravelOut.
  * - mSpeed.x is dActor_c's X speed (velocity at 0xa4/a8/ac),
  *   not a field of this class.
- * - Resource table is two { model, KCL, CLPS } rows. Init must
- *   keep the three column symbols 02114534/38/3c; a typed
- *   ResourceDescriptor[2] size-DIFF Init and changes reloc destinations.
+ * - Resource table is two { model, KCL, CLPS } rows, one six-pointer
+ *   array at 02114534. A typed ResourceDescriptor[2] size-DIFF Init
+ *   and changes reloc destinations.
  *   sinit file IDs 0x58b / 0x58c / 0x58d / 0x58e. The registry profiles
  *   g_profile_BK_DOSSUNBAR_L / _S remain outside the owned ranges.
  * - dBgW_Kc::SetDepthByDir / SetDepthDir are the mesh collider's ITCM
@@ -78,11 +78,8 @@ extern StateEntry data_ov015_021144a8;
 extern StateEntry data_ov015_021144b8;
 extern StateEntry data_ov015_021144a0;
 
-/* Three column symbols of one two-row {model, KCL, CLPS} table.
-   A typed ResourceDescriptor[2] changes Init reloc destinations. */
-extern SharedFilePtr *data_ov015_02114534;
-extern SharedFilePtr *data_ov015_02114538;
-extern void *data_ov015_0211453c[4];
+/* Six pointers, two rows of {model, KCL, CLPS}. */
+extern SharedFilePtr *data_ov015_02114534[6];
 
 /* local extern: arm9 math and MeshCollider helpers with no shared header. */
 extern "C" {
@@ -113,10 +110,11 @@ s32 daObjBk_Dossunbar_c::InitResources() {
     UpdateClsnPosAndRot();
 
     int j = mVariant * 0xc;
-    KCL_File *kclFile = dBgW_Kc::LoadFile(**(SharedFilePtr **)((char *)&data_ov015_02114538 + j));
+    KCL_File *kclFile =
+        dBgW_Kc::LoadFile(**(SharedFilePtr **)((char *)&data_ov015_02114534[1] + j));
     (&mMeshCollider)
         ->dBgW_KcMbg::SetFile((kclFile), *(&mClsnMat), 0x1000, mAngle.y,
-                              *(CLPS_Block *)(*(void **)((char *)&data_ov015_0211453c + j)));
+                              *(CLPS_Block *)(*(void **)((char *)&data_ov015_02114534[2] + j)));
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithVelocity);
 
     Vector3 depthDir;
@@ -151,7 +149,7 @@ s32 daObjBk_Dossunbar_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
     (*(SharedFilePtr **)((char *)&data_ov015_02114534 + mVariant * 0xc))->Release();
-    (*(SharedFilePtr **)((char *)&data_ov015_02114538 + mVariant * 0xc))->Release();
+    (*(SharedFilePtr **)((char *)&data_ov015_02114534[1] + mVariant * 0xc))->Release();
     return 1;
 }
 
@@ -308,13 +306,9 @@ CLPS_Block data_ov015_021135b4 = {0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff
                                   0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
 CLPS_Block data_ov015_02113634 = {0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff,
                                   0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
-SharedFilePtr *data_ov015_02114534 = &gBkDossunbarSModelFile;
-SharedFilePtr *data_ov015_02114538 = &gBkDossunbarSCollisionFile;
-void *data_ov015_0211453c[4] = {
-    &data_ov015_021135b4,
-    &gBkDossunbarLModelFile,
-    &gBkDossunbarLCollisionFile,
-    &data_ov015_02113634,
+SharedFilePtr *data_ov015_02114534[6] = {
+    &gBkDossunbarSModelFile, &gBkDossunbarSCollisionFile, (SharedFilePtr *)&data_ov015_021135b4,
+    &gBkDossunbarLModelFile, &gBkDossunbarLCollisionFile, (SharedFilePtr *)&data_ov015_02113634,
 };
 
 StateEntry data_ov015_02114a24[7] = {

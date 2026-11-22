@@ -351,51 +351,9 @@
     {
       "symbol": "data_ov070_021226bc",
       "address": "0x021226bc",
-      "size": "0xe0",
+      "size": "0x440",
       "binding": "STB_GLOBAL",
-      "evidence": "spit BCA scale keys, 56 s32 fixed at 1.0"
-    },
-    {
-      "symbol": "data_ov070_0212279c",
-      "address": "0x0212279c",
-      "size": "0x3c",
-      "binding": "STB_GLOBAL",
-      "evidence": "spit BCA scale keys continued, 15 s32 fixed at 1.0"
-    },
-    {
-      "symbol": "data_ov070_021227d8",
-      "address": "0x021227d8",
-      "size": "0xc0",
-      "binding": "STB_GLOBAL",
-      "evidence": "idle BCA scale keys, 48 s32 fixed at 1.0"
-    },
-    {
-      "symbol": "data_ov070_02122898",
-      "address": "0x02122898",
-      "size": "0xbc",
-      "binding": "STB_GLOBAL",
-      "evidence": "idle BCA scale keys continued, 47 s32 fixed at 1.0"
-    },
-    {
-      "symbol": "data_ov070_02122954",
-      "address": "0x02122954",
-      "size": "0x14",
-      "binding": "STB_GLOBAL",
-      "evidence": "idle BCA scale keys continued, 5 s32 fixed at 1.0"
-    },
-    {
-      "symbol": "data_ov070_02122968",
-      "address": "0x02122968",
-      "size": "0x104",
-      "binding": "STB_GLOBAL",
-      "evidence": "idle BCA translation keys, 65 s32"
-    },
-    {
-      "symbol": "data_ov070_02122a6c",
-      "address": "0x02122a6c",
-      "size": "0x90",
-      "binding": "STB_GLOBAL",
-      "evidence": "idle BCA translation keys continued, 36 s32"
+      "evidence": "272-word keyframe pool: scale keys fixed at 1.0, then idle translation keys"
     }
   ],
   "bss": [
@@ -1149,8 +1107,8 @@
       "source": "0x021234cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov070_021227d8",
-      "addend": 0,
+      "symbol": "data_ov070_021226bc",
+      "addend": 284,
       "target_module": "ov070",
       "target_address": "0x021227d8"
     },
@@ -1169,8 +1127,8 @@
       "source": "0x021234d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov070_02122968",
-      "addend": 0,
+      "symbol": "data_ov070_021226bc",
+      "addend": 684,
       "target_module": "ov070",
       "target_address": "0x02122968"
     },
