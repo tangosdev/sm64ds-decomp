@@ -1,4 +1,3 @@
-//cpp
 #include "private/throw_context.h"
 
 extern "C" int __throw_catch_compare(const unsigned char *throwtype, const unsigned char *catchtype,

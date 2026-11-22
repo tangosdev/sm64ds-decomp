@@ -69,14 +69,20 @@ class ResolveCppFlags(unittest.TestCase):
         self.assertEqual(match.resolve_cpp_flags(f, self.C99), self.C99)
 
     def test_a_marker_further_down_does_not_count(self):
-        """fdiff/swarm read the FIRST bytes; a //cpp on line 2 is a comment, not a marker."""
-        f = self.write("f.cpp", "int f(void);" + chr(10) + "//cpp" + chr(10))
+        """A //cpp on line 2 of a .c file is a comment, not a marker."""
+        f = self.write("f.c", "int f(void);" + chr(10) + "//cpp" + chr(10))
         self.assertEqual(match.resolve_cpp_flags(f, self.C99), self.C99)
+
+    def test_cpp_extension_is_cpp_without_a_marker(self):
+        f = self.write("g.cpp", "int f(void) { return 0; }" + chr(10))
+        out = match.resolve_cpp_flags(f, self.C99)
+        self.assertIn("-lang c++", out)
+        self.assertNotIn("-lang c99", out)
 
     def test_missing_candidate_defers_to_compile_c(self):
         """An unreadable path must not raise here -- compile_c reports it with a clearer
-        message. It is also not C++, so the C flags come back unchanged."""
-        missing = self.tmp / "nope.cpp"
+        message. A missing .c file is not C++, so the C flags come back unchanged."""
+        missing = self.tmp / "nope.c"
         self.assertEqual(match.resolve_cpp_flags(missing, self.C99), self.C99)
 
     def test_default_flags_are_c99_and_carry_no_exceptions_flag(self):

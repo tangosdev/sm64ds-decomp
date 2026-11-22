@@ -1,4 +1,3 @@
-//cpp
 #include "MWCPlusLib.h"
 
 /* The exception index table: data_020737a8 up to the start of .init. */

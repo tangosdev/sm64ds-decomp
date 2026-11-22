@@ -48,7 +48,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 
 import match as M                                                    # noqa: E402
-from rombuild import CFLAGS, MW, VERSION, VERSIONS_FILE, versions    # noqa: E402
+from rombuild import CFLAGS, MW, VERSION, VERSIONS_FILE, source_is_cpp, versions    # noqa: E402
 
 # The build's default, re-exported so a caller never has to name a version literal.
 DEFAULT_VERSION = VERSION
@@ -121,13 +121,10 @@ def compiler_for(rel, func=None):
 
 
 def flags_for(path, text=None):
-    """The build's flags for this file: `rombuild.CFLAGS`, C++ when the file says so.
+    """The build's flags for this file: `rombuild.CFLAGS`, C++ when the build is.
 
-    The `//cpp` first-line marker is the whole test, matching `rombuild.compile_one`.
-    Deliberately NOT `suffix == ".cpp" or ...` as the calling tools used to do: the
-    build does not look at the extension, so neither may a check that claims to predict
-    the build. (Every committed .cpp does carry the marker, and 53 committed .c files
-    carry it too and are compiled as C++ because of it.)
+    Same rule as `rombuild.compile_one`: a `.cpp` file is C++, and a `.c` file
+    is C++ when its first line is `//cpp`.
     """
     p = pathlib.Path(str(path))
     if text is None:
@@ -135,7 +132,7 @@ def flags_for(path, text=None):
             text = p.read_text(encoding="utf-8", errors="ignore")
         except OSError:
             text = ""
-    return CFLAGS.replace("-lang c99", "-lang c++") if text.startswith("//cpp") else CFLAGS
+    return CFLAGS.replace("-lang c99", "-lang c++") if source_is_cpp(p, text) else CFLAGS
 
 
 def target_bytes(label, addr, size):

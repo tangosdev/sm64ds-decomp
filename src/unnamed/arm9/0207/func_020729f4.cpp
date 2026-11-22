@@ -1,4 +1,3 @@
-//cpp
 #include "types.h"
 #include "private/arm9_action_walk.h"
 /* std::terminate takes no arguments. The default arm still passes the

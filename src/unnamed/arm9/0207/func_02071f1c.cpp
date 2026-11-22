@@ -1,4 +1,3 @@
-//cpp
 #include "private/throw_context.h"
 
 /* ThrowContext, ActionIterator and CatchInfo are shared

@@ -1,4 +1,3 @@
-//cpp
 #include "types.h"
 #include "private/throw_context.h"
 

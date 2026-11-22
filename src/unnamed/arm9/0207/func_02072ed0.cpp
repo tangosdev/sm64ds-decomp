@@ -1,4 +1,3 @@
-//cpp
 #include "MWCPlusLib.h"
 
 /* EH runtime: binary search of count index entries for the one whose

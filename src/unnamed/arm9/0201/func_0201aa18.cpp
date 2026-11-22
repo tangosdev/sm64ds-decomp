@@ -1,4 +1,3 @@
-//cpp
 #include "private/watchdog_alarm.h"
 
 /* The watchdog's constructor (private/watchdog_alarm.h): create the alarm

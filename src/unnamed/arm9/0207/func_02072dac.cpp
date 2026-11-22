@@ -1,4 +1,3 @@
-//cpp
 #include "MWCPlusLib.h"
 
 extern int func_02071844(ActionIterator *info, int pc);

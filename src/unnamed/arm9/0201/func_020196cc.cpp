@@ -1,4 +1,3 @@
-//cpp
 #include "nitro/spi/pm.h"
 
 /* leftover: LevelRng::~LevelRng() is these four bytes and also emits D2,

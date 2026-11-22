@@ -1,4 +1,3 @@
-//cpp
 #include "Vector2.h"
 #include "Vector2Math.h"
 extern "C" {

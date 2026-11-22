@@ -1,4 +1,3 @@
-//cpp
 /* Load-bearing: the ROM build passes -Cpp_exceptions off, and the
    .exceptix record at 0x0207391c (func_02072014, length 0x154)
    exists only because this pragma turns exceptions back on. */

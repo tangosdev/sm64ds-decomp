@@ -1,4 +1,3 @@
-//cpp
 #include "types.h"
 #include "private/throw_context.h"
 /* C++ exception runtime: unwind one frame. Reload every register the frame

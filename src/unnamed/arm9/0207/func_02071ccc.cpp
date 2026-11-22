@@ -1,4 +1,3 @@
-//cpp
 /* Load-bearing: the ROM build passes -Cpp_exceptions off. This function's
    .text matches with exceptions left off, the same as the C body it replaces. */
 #include "types.h"

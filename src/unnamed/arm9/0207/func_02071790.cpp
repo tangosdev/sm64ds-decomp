@@ -1,4 +1,3 @@
-//cpp
 #include "private/throw_context.h"
 
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match. This function was assembly

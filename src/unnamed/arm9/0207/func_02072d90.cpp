@@ -1,4 +1,3 @@
-//cpp
 #include "private/arm9_action_walk.h"
 
 /* EH runtime: the current action's opcode, the low 5 bits of the byte at
