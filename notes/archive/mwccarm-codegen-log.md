@@ -4663,8 +4663,8 @@ diverge" into "these four webs are rotated by one", which is a claim a sweep can
 
 ### 6bq addendum: the siege on func_ov074_02121380, and three bugs its audit controls found
 
-The cylinder rebuild came back as the highest-value crack on the board once the port
-seating showed the boss's Behavior calls it unconditionally. It did not fall. What the
+The cylinder rebuild came back as the highest-value crack on the board once it was
+clear the boss's Behavior calls it unconditionally. It did not fall. What the
 second pass is worth recording is which of the new levers reached it and which did not,
 and one correction to the first pass's own evidence.
 

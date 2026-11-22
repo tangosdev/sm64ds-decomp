@@ -117,8 +117,8 @@ def linked(authors_path=None, config_root=None):
     """LINKED, live: enrolled functions over the function universe.
 
     Returns ``linked`` / ``of`` / ``pct`` / ``unit`` (always ``"functions"``).
-    The universe is the function-authors.json keys (``module:0xaddr``, the same
-    keys the port list uses); a function counts when its address falls inside
+    The universe is the function-authors.json keys (``module:0xaddr``). A function
+    counts when its address falls inside
     a ``complete`` .text/.init range of its module's delinks.txt. Ranges claimed
     by a deliberate-divergence path never count (see the mods rule in
     enroll.py). None when function-authors.json is absent.

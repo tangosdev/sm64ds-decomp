@@ -306,10 +306,7 @@ proof. Whole-tree build data separately reports 696 VERIFIED, 220 PARTIAL,
 four DIFFERS and 397 UNNAMED — 705, 224, four and 387 on the merged tree; it
 is not an all-tree metadata clearance on either.
 
-The host `port/slice_gate9.txt` already includes the native dActor constructor.
-The obsolete HAL constructor wrapper duplicated that owner and called a raw C2
-bridge no longer defined by the source. Removing only that wrapper resolves both
-the duplicate dActor constructor and invented raw-C2 dependency. The native
+The native
 constructor retains its real `mActorListNode(this)` initialization. `actor_trap`
 is truthfully `[[noreturn]]` because it always aborts; no result or suppressed
 warning was added. Both focused x86 `/Od` and actual Release `/O2 /Ob2 /DNDEBUG`

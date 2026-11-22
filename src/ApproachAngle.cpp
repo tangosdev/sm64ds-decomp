@@ -11,7 +11,6 @@
  *   matches with plain `/`, so the call there is gone.
  */
 
-/* The host smoke build has no divider. ApproachAngle calls it by hand. */
 extern "C" int __aeabi_idiv(int a, int b);
 
 extern "C" int ApproachAngle(short *cur, short target, int divisor, int band, int maxStep)

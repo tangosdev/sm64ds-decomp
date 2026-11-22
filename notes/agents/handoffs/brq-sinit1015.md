@@ -46,5 +46,4 @@ python tools/check_decl_agreement.py --changed 53dc648eaf7d24847f461a193a3f81203
 python tools/tiers_ratchet.py --check
 python tools/check_rename_ledger.py --repo .
 python tools/check_dead_references.py
-python tools/port_refcheck.py
 ```

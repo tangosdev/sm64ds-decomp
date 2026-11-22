@@ -25,6 +25,5 @@ This handoff records the producer result. The queue records the immutable output
 - `python tools/rombuild.py -j16 --no-rom`: exit 0; 11,395/11,395 source-built functions match; 482/482 source-owned data claims match; 106/106 modules exact; no mismatches.
 - `python tools/prepush_linkcheck.py --files src/game/actors/d_a_obj_mario_cap.cpp`: 31 verified, one `BLIND-14` warning for the unlicensed `__sinit`, zero blockers.
 - `python tools/check_decl_agreement.py --changed origin/main`: exit 0; no new declaration disagreements or local redeclarations.
-- `python tools/port_refcheck.py`: exit 0; all 217 references resolve.
 - `python tools/source_style.py --base origin/main`: exit 0; zero findings and zero deferrals. (Pinned clang-format 19.1.7.)
 - Independent review should retain the partial reconstruction scope and the documented `__sinit` exception.

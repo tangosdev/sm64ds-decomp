@@ -218,7 +218,7 @@ that would actually pay — we have 3,863 named functions to harvest from.
 
 **G4.8 — Adoption risk if we take the 3 names.** [high] `sig apply` without `--dry`
 writes `symbols.txt`. Even a 3-symbol rename is the shape memory flags for attribution
-permutation and rename shadowing. Route: bracket `eligible.py`, run `port_refcheck.py`,
+permutation and rename shadowing. Route: bracket `eligible.py`,
 and keep the two conflicts out of the same commit as the three additions.
 
 ---
@@ -511,7 +511,7 @@ the SyncDsd'd decompilation of [func_ov006_020dbe9c](../src/minigames/d_s_mg_coi
 Nine resolutions convert module-less phantom externs into real symbols across 6-12 files
 each (`func_020ada40` appears in 12 files, `func_020aea30` in 10, `func_020adc74` in 6).
 That is squarely `[[symbol-rename-shadowing]]` and `[[attribution-permutation-bug]]`
-territory: bracket `eligible.py`, run `port_refcheck.py`, and keep G8.2 in its own commit
+territory: bracket `eligible.py`, and keep G8.2 in its own commit
 since it changes behaviour-relevant meaning rather than just a name.
 
 ---
@@ -592,7 +592,6 @@ files, then `enroll.py --complete-list` promoted the newly eligible names.
 | `rombuild.py` source-built | 10,854 fns, 88.68% of code bytes | **10,880 fns, 89.75%** |
 | reproducing / mismatching | 10,854 / 0 | **10,880 / 0** |
 | module fidelity | 106/106 exact | **106/106 exact, 100.000000%** |
-| `port_refcheck.py` | — | 393 checked, 0 stale |
 | `the old credit check` | — | 11330 tracked, 0 changed, 0 lost |
 
 **G10.1 — The langmode ratchet fails, and it is not this change.** [high] `--check`

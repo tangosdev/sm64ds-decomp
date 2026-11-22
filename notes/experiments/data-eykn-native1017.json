@@ -121,7 +121,6 @@
     "standalone": "25/25MATCH,relocclean; raw standalone classifies native initializer as1unlicensed,0compilerpolicyerrors; normalTU licenses it",
     "source_style": "0findings,0deferrals,pinnedclang-format19.1.7",
     "declaration_agreement": "no new disagreements or local header redeclarations",
-    "port_references": "247/247 resolve",
     "independent_review": "pending exact immutable candidate",
     "publication": "pending; no merge"
   },
@@ -171,7 +170,7 @@
       "id": "R2",
       "kind": "reconstruction",
       "location": "src/_ZN8daEykn_c13InitResourcesEv.cpp -> src/actors/daEykn_c.cpp",
-      "reason": "Verified: file deleted, function is the TU's last, delinks .text end 0x02121734 -> 0x021219cc equals the tu_map cut end 0x21219cc and the symbols.txt row (0x02121734 size 0x298). Its .text section and relocations are identical to the base stand-alone object. prepush_attribution: credit andrewboudreau intact. port_refcheck and dead refs clean; the only remaining path mentions are the manifest legacy_source record and banked decl-baseline keys (R12).",
+      "reason": "Verified: file deleted, function is the TU's last, delinks .text end 0x02121734 -> 0x021219cc equals the tu_map cut end 0x21219cc and the symbols.txt row (0x02121734 size 0x298). Its .text section and relocations are identical to the base stand-alone object. prepush_attribution: credit andrewboudreau intact. dead refs clean; the only remaining path mentions are the manifest legacy_source record and banked decl-baseline keys (R12).",
       "summary": "InitResources lived outside the TU and was not linked"
     },
     {

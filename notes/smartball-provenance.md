@@ -202,8 +202,8 @@ eleven child headers and the fifteen `.cpp` bodies that reach these fields by
 name; the whole ROM still reproduces (11,059 / 11,059, module fidelity
 106/106).
 
-Nothing outside `src/` spells these fields: the family has no `src_tu/` or
-`port/` presence, and every `.c` file in it (the eleven constructors and the
+Nothing outside `src/` spells these fields: the family has no `src_tu/`
+presence, and every `.c` file in it (the eleven constructors and the
 free helpers) reaches the object by raw offset off a `char *`, so a rename
 cannot reach them. That was checked by grep before the rename, not assumed.
 

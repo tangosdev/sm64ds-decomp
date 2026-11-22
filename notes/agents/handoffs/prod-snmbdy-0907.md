@@ -333,9 +333,8 @@ these exact trees; neither is a cached report from an earlier base.
   covered by `pr_linkcheck` above — two changed headers, 917 files fanned out and
   checked, and by the full-ROM build, which compiles every enrolled consumer.
 
-- Port/path/reference and other applicable static gates, each exit 0 unless said
+- Static gates, each exit 0 unless said
   otherwise:
-  `port_refcheck.py` 423 references checked, 0 stale.
   `check_rename_ledger.py` "every mangled/vtable row agrees with its module's
   symbols.txt", 2025 rows checked; coverage limit stated by the tool itself —
   1532 coined rows are out of scope and unchecked.
@@ -374,7 +373,7 @@ these exact trees; neither is a cached report from an earlier base.
   calls, on a committed CI-shaped test merge built locally with `git commit-tree`
   so that its FIRST parent is the base, exactly as the validator requires. Base
   `516a883c4708af0157769d834af59225d27301a4`, PR head this branch's tip, both ROM
-  reports regenerated at those trees, plus the `pr_linkcheck` and `port_refcheck`
+  reports regenerated at those trees, plus the `pr_linkcheck`
   JSON above. **Exit 0, status Passed, "Committed merge introduces no
   reconstruction or attribution regression."**
   Byte-verified functions 11,164 / 11,347 (+0); byte-verified code bytes 2,126,760

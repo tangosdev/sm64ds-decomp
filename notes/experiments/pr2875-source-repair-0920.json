@@ -8540,15 +8540,6 @@
       "exit_code": 0,
       "log": "build/memory-final/references.log"
     },
-    "port": {
-      "command": [
-        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
-        "-B",
-        "tools/port_refcheck.py"
-      ],
-      "exit_code": 0,
-      "log": "build/memory-final/port.log"
-    },
     "declarations": {
       "command": [
         "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",

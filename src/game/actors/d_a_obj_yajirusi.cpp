@@ -23,9 +23,8 @@
  *
  * NOTES:
  * - Particle::System::NewSimple and Matrix4x3_FromRotationY are still
- *   declared locally. The port's gate-9 slice compiles this TU for the
- *   host, and Particle__System.h / math/MtxStack.h have not been tried
- *   there.
+ *   declared locally. This file does not include Particle__System.h or
+ *   math/MtxStack.h.
  * - dBgW::SetClipOffsetY / dBgW::SetClipRadius store the collider words at +0x10
  *   and +0x0c (0xc0000 / 0xe0000, the profile ranges). Those names belong
  *   to dBgW.
@@ -73,7 +72,7 @@ struct ArrowSignAssets {
     CLPS_Block *clps;
 };
 
-/* local extern: see the banner; the port builds this TU for the host. */
+/* local extern: this file does not include the header that declares it. */
 extern "C" void Matrix4x3_FromRotationY(void *mtx, int angle);
 void func_02012694(unsigned int id, const Vector3 *pos);
 

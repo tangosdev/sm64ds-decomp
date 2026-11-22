@@ -31,9 +31,8 @@
 # unit's declaration against ANOTHER's definition. That cross-TU contract is the gap
 # this job fills, and all of it.
 #
-# IT IS WORTH FIXING because the host port compiles these same files with a compiler
-# that DOES check across the tree, where `signature-mismatch` is the largest non-trivial
-# failure bucket. The runtime cost varies: `int` against `void` on ARM usually means the
+# IT IS WORTH FIXING because a wrong declaration is invisible to the byte gates.
+# The runtime cost varies: `int` against `void` on ARM usually means the
 # caller reads a dead r0, while a wrong arity, a mismatched pointer or a struct return
 # can genuinely put caller and callee on different frame layouts. A mismatched return
 # type does NOT universally imply stack corruption.

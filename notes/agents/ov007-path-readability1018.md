@@ -18,7 +18,7 @@ Allocator `020c2c68` allocates 0x30 bytes, stores representation and flags at 0/
 
 `020c26fc` stores the indices returned by `020c3054` at 0x0c/0x0e and 0x12/0x14. These are indices of coordinate extrema, not bounding coordinates. The third slots are only known to be cleared. Signed 16-bit index slots follow the existing short stores; the store instructions alone do not recover signedness uniquely. Alternate point storage is left opaque: only its 12-byte stride is needed here.
 
-The size assertion is for the 32-bit target ABI. It does not establish 64-bit host compatibility or independently prove every field offset. The allocator/consumer evidence establishes the layout; relocated byte checks establish the offsets actually accessed by the three edited functions. No current `port/` reference names these three sources.
+The size assertion is for the 32-bit target ABI. It does not establish 64-bit compatibility or independently prove every field offset. The allocator/consumer evidence establishes the layout; relocated byte checks establish the offsets actually accessed by the three edited functions.
 
 This is a bounded source improvement, not recovery of an original class or TU. The other engine consumers retain their existing views. The lower allocator's integer-address return and differing pointer declarations require a separate consumer-wide repair; this change preserves that existing interface. The portrait-controller reconstruction and its draft PRs are separate work.
 
@@ -32,7 +32,6 @@ python tools/prepush_linkcheck.py --range 3d76ff61c15e9e00d6d9ea317f4400aa164976
 python tools/check_decl_agreement.py --changed 3d76ff61c15e9e00d6d9ea317f4400aa1649764b
 python tools/tubuild.py linkcheck --baseline --module ov007 -j16
 python tools/rombuild.py -j16
-python tools/port_refcheck.py
 ```
 
 The header has exactly three source consumers. Initial strict verification reproduces all three functions (300 bytes) and their relocation destinations, with zero warnings; the declaration ratchet introduces no new disagreements. Final runtime and independent review results belong to the exact commit's queue receipt and PR checks. Existing baseline symbol diagnostics are distinct from new errors. Publication does not authorize a merge.

@@ -142,7 +142,6 @@ verification belongs in separately recorded evidence, not a self-SHA amendment.
 | `python tools/affected_src.py include/daPkn_c.h` | exit 0; sole consumer is this complete TU; header unchanged | `final.affected.log` |
 | `python tools/prepush_linkcheck.py --files src/game/actors/d_a_pkn.cpp include/daPkn_c.h` | exit 0 but two basename NO-SYM warnings; **not counted as verification** | `final.prepush-files.log/json` |
 | `python tools/romdata_check.py --files src/game/actors/d_a_pkn.cpp --json build/pkn-proof/final.romdata.json` | exit 0; 5 VERIFIED / 6 PARTIAL / 0 DIFFERS / 0 UNNAMED | `final.romdata.log/json` |
-| `python tools/port_refcheck.py` | exit 0; 423 references, no stale references | `final.port.log` |
 | `python tools/rombuild.py -j16 --no-rom --report-json build/pkn-proof/final.rom.json --data-json build/pkn-proof/final.data.json` | exit 0; 106/106 modules exact; production analysis PASS | `final.rom.log/json` |
 
 The unmodified input was first checked with the same TU and full production

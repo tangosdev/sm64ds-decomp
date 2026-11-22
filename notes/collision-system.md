@@ -34,14 +34,6 @@ Same symbol, same `srcPath` field: the better attempt overwrote the draft, was b
 and was never committed back to `notes/`. Nothing is lost — it is 27,216 chars of C++
 sitting in `nearmiss/db.jsonl` today. **[P]**
 
-**3. There is a second, independent collision implementation on an unlanded branch.**
-`origin/port-mount-noseat-cluster` (1,143 commits ahead of `main`, last touched
-2026-08-17) carries `port/unmatched/MeshCollider_DetectClsn_Sphere.cpp` — a 682-line host
-transcription of the same 0x1bc8 function, read block-by-block off the ITCM disassembly
-with every block annotated by its ROM address. It is **not** byte-verified, but it *runs*:
-port gate 8 executes it against the real castle-grounds KCL. The two lines diverged
-2026-08-04 and neither contains the other's work. See §5.
-
 ---
 
 ## 2. The naming wall
@@ -185,8 +177,8 @@ every collider in the game (`0x01ffb870 asr r1,r5,#6`; `DetectClsn(dBgCh_Lin&)` 
 same at 0x01ffb110). Routing the conversion through the collider's own `dBgW_Kc+0x2c`
 instead reduces correctly for the level and for nothing else — `dBgW_KcMbg::SetFile`
 leaves those words at 1.0, so every actor-owned collider runs its walk in world units
-against a file-unit mesh and answers no to everything. Found on the port line, where the
-symptom was that no ray could find the moat. **[P, port]**
+against a file-unit mesh and answers no to everything. The symptom is that no ray
+can find the moat. **[P]**
 
 A CLPS entry is 8 bytes; the bit layout is fully decoded from the matched accessors —
 `w0 & 0x1f`, `(w0>>6)&0x3f`, `(w0>>12)&7`, `(w0>>15)&0xf`, `(w0>>19)&0x1f` (**surface
@@ -294,39 +286,19 @@ twins *are* correctly bannered. Banner all eight or fix all eight. **[P]**
 
 ---
 
-## 5. The port line, and why it matters here
-
-`origin/port-mount-noseat-cluster` runs collision on the host. Port **gate 8**
-(`port/slice_gate8.txt`, `port/tests/smoke_clsn.cpp`) loads the castle-grounds KCL through
-the real card seam, wires the CLPS block, and casts vertical rays through the mesh,
-asserting that floor hits come back with upward normals and hit points inside the probe
-column. **Gate 9** puts a real actor's `dBgW_KcMbg` through the same path.
-
-This is a **behavioural oracle the matching tree does not have**. A byte gate proves a
-function reproduces the ROM; it cannot tell you an unmatched draft is *logically* right.
-Gate 8 can, and did — the unit-basis bug in §3.3 was caught by Mario failing to swim in
-the moat, not by any byte comparison.
-
-Three things on that branch are harvestable into `main` with no byte risk:
+## 5. Layout facts the matched headers still lack
 
 1. **A fully typed `dBgCh_SphCrr` layout**, every offset pinned to the matched function that
    writes it and backed by an `offsetof` assert: `resolvedPush` 0x4c, `pushMin` 0x58,
-   `pushMax` 0x64, `wallHeight` 0xec, `bestFloorNormal` 0xfc, `maxNormalY` 0x108. `main`
-   still carries all six as `unk_*`. It also derives three more flag bits (gate, no-slope,
-   no-corner) from `func_02037b5c`, a function `main`'s header never consulted.
-   *(That file's own claim that `main` has "neither the centre nor the radius" is stale —
-   `main` has both at 0x3c/0x48.)*
+   `pushMax` 0x64, `wallHeight` 0xec, `bestFloorNormal` 0xfc, `maxNormalY` 0x108. The
+   tree still carries all six as `unk_*`. Three more flag bits (gate, no-slope,
+   no-corner) come from `func_02037b5c`, a function the header never consulted.
+   *(An earlier claim that the tree has "neither the centre nor the radius" is stale —
+   both are at 0x3c/0x48.)*
 2. **The unit-basis rule** (§3.3).
-3. **A vtable-shape constraint.** `CylinderClsn` declares its destructor first, so MSVC
-   collapses the Itanium D1/D0 pair into one slot and every virtual past it lands one slot
-   low — `GetPos` indexes what is `D0` in a ROM-shaped table. The ROM shape is
-   `[0] D1, [1] D0, [2] GetPos, [3] GetOwnerID`, and the matched grab test
-   `daPly_c::StartClimb` (formerly `func_ov002_020caf98`; ROM ordinal 239 of the ov002/daPly_c TU, now in [src/game/player/d_a_ply_methods.cpp](../src/game/player/d_a_ply_methods.cpp)) calls slot 2 for `GetPos`, confirming it. Any host or portable
-   build must keep the ROM shape and dispatch by explicit slot.
-
-The 1,143-commit gap is mostly the class-rename campaign, which the port branch predates —
-it still spells `Actor`, `Platform`, `Enemy`. Reconciling the whole branch is a separate
-project. Harvesting the three items above is not.
+3. **The vtable slot order.** The ROM shape is
+   `[0] D1, [1] D0, [2] GetPos, [3] GetOwnerID`. The matched grab test
+   `daPly_c::StartClimb` (formerly `func_ov002_020caf98`; ROM ordinal 239 of the ov002/daPly_c TU, now in [src/game/player/d_a_ply_methods.cpp](../src/game/player/d_a_ply_methods.cpp)) calls slot 2 for `GetPos`, confirming it.
 
 ---
 
@@ -462,7 +434,7 @@ of needing the root `langmode-baseline.json` override the tree spent six cycles 
 (#1632, deleted in #1615).
 
 Byte-neutral throughout: rombuild **106/106 exact, 100.000000%, 0 mismatching** after every
-slice, `check_references` 45 vs baseline 45, `port_refcheck` 393/0 before and after, and
+slice, `check_references` 45 vs baseline 45, and
 **154 renamed with credit intact, 0 changed, 0 lost**.
 
 Two measurable side effects, both the point of the exercise: rombuild's "unnamed by config"
@@ -509,7 +481,6 @@ Sequencing, from the tree's own scar tissue:
   the count.
 - Check `config/rombuild-versions.txt` before renaming (currently one unrelated pin, so
   this should be clear).
-- `port_refcheck.py` is blind to mangled names — run it, but do not treat it as coverage.
 - Who matched a function stays the row in `function-authors.json`. A rename does not change it.
 
 Suggested order, easiest first: `dCc*` (4 classes, self-contained, headers already good) →
@@ -525,7 +496,7 @@ types) → `dBgCh*` (5, the multiple-inheritance family, largest blast radius, d
 - **2b.** Type `CLPS` and `CLPS_Block`; the bit layout is already decoded (§3.3). Give
   `data_020a0c78`, `data_020a0c80` and `data_0209cee8` typed declarations.
 - **2c.** Promote the four query headers to real classes with their bases, virtuals and
-  size asserts (§3.1–3.2). Harvest the `dBgCh_SphCrr` field names from the port branch (§5).
+  size asserts (§3.1–3.2). Name the `dBgCh_SphCrr` fields listed in §5.
 - **2d.** Correct `dBgCh_Lin.h` to its real span and add the `dM3dGSph` member at 0x64.
 
 Every header edit here needs the `eligible.py` bracket — a shared-header change reaches
@@ -865,8 +836,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   Lazy split materialisation is the signature of a CSE'd repeated expression, so both
   bounds are now written out in full at all six comparison sites. The two tests
   recorded here previously (move `t`/`u` later; give them their own `lo`/`hi` locals)
-  both used named locals and so could not have found it. Came from the independent
-  port transcription and was ROM-verified before use.
+  both used named locals and so could not have found it. It was ROM-verified before use.
 
   ### The axis dot: operand order AND term order
 
@@ -1375,8 +1345,8 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   calls went **-552 / -468 / -556 / -560 to -36 / +48 / -40 / -44**, and `delete` in the
   alignment counts collapsed **159 to 25**.
 
-  The two readings each held half the truth and neither had it whole: the port
-  transcription had the corner **pairing** right (A=e1e2, B=e2e3, C=e3e1); the banked
+  The two readings each held half the truth and neither had it whole: one
+  reading had the corner **pairing** right (A=e1e2, B=e2e3, C=e3e1); the banked
   draft had the **two-entries-per-corner** sharing right. A branch-target census settles
   it — `0x1ffc63c`/`0x1ffc750`/`0x1ffc89c` have exactly two sources each.
 
@@ -1661,7 +1631,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   ```
   `--module itcm`, never `arm9/itcm`.
 
-- **3c. DONE** — cross-read of the port transcription (§5) against the banked draft; the
+- **3c. DONE** — cross-read of the annotated transcription (§5) against the banked draft; the
   result is folded into 3b above. It was worth the hour: neither reading was right about
   block layout, and the ROM's own branch-target census was the adjudicator, not either
   document.
@@ -1739,9 +1709,6 @@ and its body still defined that name. Re-keyed and re-spelled; it compiles and s
 - **Phase 3b may not close.** It has resisted five sweeps. The plan deliberately puts 3a
   first so that effort produces a match either way, and 0a means 3b starts 25 instructions
   ahead of where the notes suggest.
-- **The port branch is 1,143 commits of divergence.** §5 recommends harvesting three
-  specific artefacts, not merging. Do not let this become a branch-reconciliation project
-  by accident.
 
 ## 10. Reproducing every number here
 
@@ -1759,9 +1726,6 @@ grep -n dBgCh_SphCrr config/match_attempts.jsonl
 python tools/fdiff.py --c src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp \
   --name _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr \
   --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 --align
-# the port line
-git show origin/port-mount-noseat-cluster:port/unmatched/MeshCollider_DetectClsn_Sphere.cpp | head -60
-git show origin/port-mount-noseat-cluster:port/slice_gate8.txt
 ```
 
 Do not run `rombuild.py` concurrently with `eligible.py` — they share `build/` and invent

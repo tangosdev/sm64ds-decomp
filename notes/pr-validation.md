@@ -11,7 +11,6 @@ one misleading percentage:
 | Module fidelity | Linked executable-module bytes equal retail | Stock head must pass, unless base and head have the same recorded pre-existing build failure |
 | Contributor lineage | The first matcher still owns a surviving match after moves/renames | Reported when it changes or disappears; never blocks the merge |
 | Relocations | Affected source reproduces bytes and names the correct destinations | No WRONG or NO-REPRO |
-| Port references | `port/`'s manifests and symbol bridges still name files and symbols that exist | No stale reference (optional phase) |
 
 `tools/rombuild.py` emits the build/fidelity artifact. `tools/validate_merge.py` compares
 two committed revisions, combines the build artifacts with `pr_linkcheck` JSON, and emits
@@ -29,21 +28,17 @@ The compiler and ROM remain on the private worker. For each relay job:
    uncommitted move has no lineage.
 3. Run `python tools/rombuild.py --profile stock --report-json build/head-rom.json`.
 4. Run `python tools/pr_linkcheck.py --base <baseSha> --json build/link.json --md build/link.md`.
-5. There used to be a port reference check here. It left with `port/`, which now lives
-   in its own repository (https://github.com/tangosdev/sm64ds-pc-port). A base without
-   the tool simply reports no port row, so a worker that still has the step skips it.
-6. Run:
+5. Run:
 
    ```sh
    python tools/validate_merge.py --base <baseSha> --head HEAD \
      --require-merge-commit --expected-pr-head <headSha> \
      --base-rom-report build/base-rom.json \
      --head-rom-report build/head-rom.json --link-report build/link.json \
-     --port-refcheck-report build/port.json \
      --out build/validate-report.json --markdown build/validate-report.md
    ```
 
-7. Return `status`, `summary`, `details` (the existing per-file table), and the new
+6. Return `status`, `summary`, `details` (the existing per-file table), and the new
    `reportMarkdown` field to the relay. The public GitHub workflow remains unable to run
    PR code or access ROM material; it only renders the worker's result.
 

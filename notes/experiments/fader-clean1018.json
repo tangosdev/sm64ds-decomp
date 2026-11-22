@@ -130,9 +130,7 @@
   "other_checks": {
     "declaration_agreement": "--changed base: no new disagreements; whole scan 6935 -> 6933, no baseline edit",
     "source_style": "0 findings, 0 formatting deferrals",
-    "port_refcheck": "247 references resolve",
-    "dead_references": "no new dead references, no broken Markdown links",
-    "msvc_smoke": "VS18 Win32 Release smoke built and all math/Timer/fader checks passed"
+    "dead_references": "no new dead references, no broken Markdown links"
   },
   "remaining": [
     "G2x argument-width interface needs callee/caller provenance and matching study.",

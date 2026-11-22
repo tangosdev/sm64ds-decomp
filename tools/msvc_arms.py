@@ -1,20 +1,9 @@
 #!/usr/bin/env python3
 """The text of a source file as mwccarm sees it: `_MSC_VER` arms dropped.
 
-The PC port compiles some decomp translation units with MSVC, and a few of them carry
-a host-only arm:
-
-    #ifdef _MSC_VER
-    extern "C" Model *_ZN5ModelD0Ev(Model *thiz) { ... }   // what MSVC builds
-    #else
-    Model::~Model() { ... }                                 // what the ROM is built from
-    #endif
-
-mwccarm never defines `_MSC_VER`, so the ROM is built from the `#else` side alone. The
-scoreboards that read source as text (tools/langmode_audit.py for the language-mode
-counts) are questions about the decomp
-source, so they read the file through `mwcc_side()`: the side mwccarm compiles, and
-nothing the host build alone sees.
+mwccarm never defines `_MSC_VER`, so those arms are blanked and the `#else` side is
+what the ROM is built from. Scoreboards that read source as text
+(tools/langmode_audit.py) go through `mwcc_side()`.
 
 Only `_MSC_VER` is evaluated, and only in shapes whose answer does not depend on any
 other macro:
