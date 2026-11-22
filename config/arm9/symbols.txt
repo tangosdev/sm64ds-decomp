@@ -25,7 +25,7 @@ BuildInfo kind:data(any) addr:0x02004ad8
 _ZN9dCamera_c13func_02005000Ev kind:function(arm,size=0x60) addr:0x02005000
 _ZN9dCamera_c13func_02005060Ev kind:function(arm,size=0x38) addr:0x02005060
 _ZN9dCamera_c13func_02005098Ev kind:function(arm,size=0x44) addr:0x02005098
-_Z13func_020050dcP9dCamera_c kind:function(arm,size=0x34) addr:0x020050dc
+_ZN9dCamera_c13func_020050dcEv kind:function(arm,size=0x34) addr:0x020050dc
 _Z13func_02005110P9dCamera_c kind:function(arm,size=0x214) addr:0x02005110
 _Z13func_02005324Pv kind:function(arm,size=0x24) addr:0x02005324
 _ZN9dScBoot_c20UpdateButtonPalettesEv kind:function(arm,size=0xd0) addr:0x02005348
