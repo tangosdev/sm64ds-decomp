@@ -60,7 +60,7 @@ enum daSanbo_c_AssetId {
 enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
 
 extern "C" {
-extern void func_02038414(void *p);
+
 }
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
@@ -366,7 +366,7 @@ int daSanbo_c::UpdateKnockback() {
         if (p1)
             p1->callbackScale = 0x7fff;
     }
-    func_02038414(&mWithMeshClsn);
+    mWithMeshClsn.func_02038414();
     if (mWithMeshClsn.JustHitGround() != 0)
         PoofAndDestroy();
     return 1;
@@ -448,7 +448,7 @@ int daSanbo_c::UpdateMegaKill() {
     if (IsActorID(this, SANBO_HEAD))
         mAngle.x = (mAngle.x - 0x1000);
     UpdatePos(&mdCcAc_c);
-    func_02038414(&mWithMeshClsn);
+    mWithMeshClsn.func_02038414();
     if (mWithMeshClsn.JustHitGround() || !DecIfAbove0_Byte(&mTimer))
         PoofAndDestroy();
     return 1;
@@ -497,7 +497,7 @@ void daSanbo_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     Vector3 n0;
     Vector3 n1;
 
-    func_02038414(clsn);
+    clsn->func_02038414();
     if (clsn->IsOnGround()) {
         static_cast<dBgPi *>(clsn->GetFloorResult())->surface.CopyNormalTo(n0);
         if (n0.y != 0) {

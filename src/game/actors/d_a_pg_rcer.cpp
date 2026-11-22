@@ -32,7 +32,7 @@ extern "C" {
 
 extern unsigned char data_0209d684;                /* talk-script choice */
 
-extern void func_02038414(void *clsn);
+
 
 }
 extern unsigned char NumStars(void);
@@ -588,7 +588,7 @@ void daPgRcer_c::UpdateModelMatrix() {
 int daPgRcer_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     Vector3 floorNormal;
     Vector3 wallNormal;
-    func_02038414(clsn);
+    clsn->func_02038414();
     if (clsn->IsOnGround()) {
         clsn->GetFloorResult()->surface.CopyNormalTo(floorNormal);
         if (floorNormal.y != 0) {

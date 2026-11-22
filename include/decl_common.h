@@ -628,7 +628,6 @@ extern void func_0203083c(void);
 extern void func_02030aa4(int);
 extern void Message_DrawCenteredLineVS(int, int);
 extern void func_02035550(void *);
-extern void func_02038414(void*);
 extern void func_02039db8(void *, struct Vector3 *, struct Vector3 *);
 extern void func_0203aa10(void *, Vector3 *, Vector3 *);
 extern void func_0203aa74(void *, Vector3 *, Vector3 *);

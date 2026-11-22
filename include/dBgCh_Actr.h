@@ -196,6 +196,8 @@ struct dBgCh_Actr : dBgCh {
     s32 TouchesWater() const;      /* SurfaceInfo flag 0x20 on mSphereClsn.surface */
     /* Snap the actor onto a nearby dBgCh_Gnd surface. */
     void func_020371fc();
+    /* Tail-call veneer to UpdateDiscreteNoLava_2. */
+    void func_02038414();
 };
 
 #ifndef SM64DS_PLATFORM_PC

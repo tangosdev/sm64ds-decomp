@@ -392,8 +392,8 @@ extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *self) {
 
 /* func_02038414 @ 0x2038414 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateDiscreteNoLava_2 (0x2036ee4).
  * r0 (the dBgCh_Actr) passes straight through to the member. */
-extern "C" void func_02038414(void *self) {
-    ((dBgCh_Actr *)self)->UpdateDiscreteNoLava_2();
+void dBgCh_Actr::func_02038414() {
+    UpdateDiscreteNoLava_2();
 }
 
 /* func_02038408 @ 0x2038408 (arm9) -- tail-call veneer to dBgCh_Actr::UpdateContinuousExceptSlot0 (0x2036acc).
