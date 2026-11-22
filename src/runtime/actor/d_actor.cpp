@@ -1190,7 +1190,7 @@ int PlaySmallSecretSound(dActor_c *actor, u16 *counter) {
 }
 }
 
-int func_0200f7f0(dActor_c *actor, u16 *counter) {
+int dActor_c::func_0200f7f0(u16 *counter) {
     if (*counter < 105) {
         Sound::PlaySub(0x21, 0x14, 0x7f, 0x6b000, 0);
         *counter += 1;

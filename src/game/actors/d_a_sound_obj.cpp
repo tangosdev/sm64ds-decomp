@@ -78,7 +78,7 @@ extern int gSubSoundID;                   /* current sub-sound ID, owned by Soun
 extern int gMusicVolume;                  /* MUSIC_VOLUME_LSL_12 */
 extern int gSubVolume;                    /* MESSAGE_SOUND_VOLUME_LSL_12 */
 }
-extern int func_0200f7f0(dActor_c *actor, u16 *counter);
+
 int func_ov002_020f9468(daSoundObj_c *self, u16 *counter);
 int func_ov002_020f93a8(daSoundObj_c *self, u16 *counter);
 
@@ -96,7 +96,10 @@ struct SoundObjStarter {
 
 SoundObjStarter data_ov002_0210c010 = {(int)&Sound::PlaySmallSecretSound, 0};
 SoundObjStarter data_ov002_0210c018 = {(int)&func_ov002_020f9468, 0};
-SoundObjStarter data_ov002_0210c020 = {(int)&func_0200f7f0, 0};
+/* Code address of the member. A pointer-to-member is not an int, and the
+   starter stores the raw entry point with a zero this-adjust. */
+extern "C" int _ZN8dActor_c13func_0200f7f0EPt(dActor_c *, u16 *);
+SoundObjStarter data_ov002_0210c020 = {(int)&_ZN8dActor_c13func_0200f7f0EPt, 0};
 SoundObjStarter data_ov002_0210c028 = {(int)&func_ov002_020f9468, 0};
 SoundObjStarter data_ov002_0210c030 = {(int)&func_ov002_020f93a8, 0};
 SoundObjStarter data_ov002_0210c038 = {(int)&func_ov002_020f9468, 0};

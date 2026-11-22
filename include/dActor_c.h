@@ -237,6 +237,7 @@ struct dActor_c : dBase_c {
     /* MakeVanishLuigiWork again, taking the cylinder by pointer; the ROM keeps
        both copies. */
     void func_0200f760(dCc_c *clsn);
+    int func_0200f7f0(u16 *);
     /* The player behind the cylinder's last hit, if that hit carried hitFlags
        0x1000 and the player then grabbed this actor; otherwise null. */
     daPly_c *func_02010304(dCc_c *clsn);
