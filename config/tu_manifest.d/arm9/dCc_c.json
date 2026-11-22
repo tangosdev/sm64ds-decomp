@@ -35,7 +35,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "_Z13func_02014f5cP5dCc_cj",
+      "symbol": "_ZN5dCc_c13func_02014f5cEj",
       "address": "0x02014f5c",
       "size": "0x00000048",
       "legacy_source": "src/func_02014f5c.c",

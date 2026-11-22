@@ -431,7 +431,7 @@
       "ordinal": 58
     },
     {
-      "symbol": "func_0204ffcc",
+      "symbol": "_ZN1C13func_0204ffccEv",
       "address": "0x0204ffcc",
       "legacy_source": "src/func_0204ffcc.c",
       "size": "0x0000003c",

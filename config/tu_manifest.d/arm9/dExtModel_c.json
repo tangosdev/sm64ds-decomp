@@ -675,14 +675,14 @@
       "ordinal": 47
     },
     {
-      "symbol": "_Z13func_0201628cii",
+      "symbol": "_ZN15dExtAnm2Model_c13func_0201628cEi",
       "address": "0x0201628c",
       "size": "0x00000018",
       "legacy_source": "src/engine/model/d_ext_anm2_model.cpp",
       "ordinal": 48
     },
     {
-      "symbol": "_Z13func_020162a4ii",
+      "symbol": "_ZN15dExtAnm2Model_c13func_020162a4Ei",
       "address": "0x020162a4",
       "size": "0x00000020",
       "legacy_source": "src/engine/model/d_ext_anm2_model.cpp",
@@ -808,7 +808,7 @@
       "ordinal": 66
     },
     {
-      "symbol": "_Z13func_020167a4P14dExtAnmModel_c",
+      "symbol": "_ZN14dExtAnmModel_c13func_020167a4Ev",
       "address": "0x020167a4",
       "size": "0x00000020",
       "legacy_source": "src/engine/model/d_ext_anm_model.cpp",
@@ -878,28 +878,28 @@
       "ordinal": 76
     },
     {
-      "symbol": "func_020169d8",
+      "symbol": "_ZN17dExtSimpleModel_c13func_020169d8Eij",
       "address": "0x020169d8",
       "size": "0x0000001c",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
       "ordinal": 77
     },
     {
-      "symbol": "_Z13func_020169f4P17dExtSimpleModel_ci",
+      "symbol": "_ZN17dExtSimpleModel_c13func_020169f4Ei",
       "address": "0x020169f4",
       "size": "0x00000010",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
       "ordinal": 78
     },
     {
-      "symbol": "func_02016a04",
+      "symbol": "_ZN17dExtSimpleModel_c13func_02016a04Ei",
       "address": "0x02016a04",
       "size": "0x00000010",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
       "ordinal": 79
     },
     {
-      "symbol": "func_02016a14",
+      "symbol": "_ZN17dExtSimpleModel_c13func_02016a14Ei",
       "address": "0x02016a14",
       "size": "0x00000010",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",
@@ -934,7 +934,7 @@
       "ordinal": 84
     },
     {
-      "symbol": "func_02016aac",
+      "symbol": "_ZN17dExtSimpleModel_c13func_02016aacEii",
       "address": "0x02016aac",
       "size": "0x00000010",
       "legacy_source": "src/engine/model/d_ext_simple_model.cpp",

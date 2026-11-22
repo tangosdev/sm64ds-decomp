@@ -515,7 +515,7 @@
       "ordinal": 66
     },
     {
-      "symbol": "Trmp3DMario_EnterWalkIn",
+      "symbol": "_ZN18dMgTrmpln3DMario_c23Trmp3DMario_EnterWalkInEv",
       "address": "0x020cc9fc",
       "size": "0x000000e4",
       "legacy_source": "src/func_ov006_020cc9fc.cpp",

@@ -391,7 +391,7 @@
       "ordinal": 52
     },
     {
-      "symbol": "func_020371fc",
+      "symbol": "_ZN10dBgCh_Actr13func_020371fcEv",
       "address": "0x020371fc",
       "size": "0x0000011c",
       "legacy_source": "src/func_020371fc.cpp",

@@ -141,7 +141,7 @@
       "ordinal": 48
     },
     {
-      "symbol": "_Z13func_020078c4P9dCamera_cPh",
+      "symbol": "_ZN9dCamera_c13func_020078c4EPh",
       "address": "0x020078c4",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0200/func_020078c4.c",
@@ -162,7 +162,7 @@
       "ordinal": 51
     },
     {
-      "symbol": "_Z13func_02007a8cP9dCamera_cPh",
+      "symbol": "_ZN9dCamera_c13func_02007a8cEPh",
       "address": "0x02007a8c",
       "size": "0x00000080",
       "legacy_source": "src/unnamed/arm9/0200/func_02007a8c.c",
@@ -176,7 +176,7 @@
       "ordinal": 53
     },
     {
-      "symbol": "_Z13func_02007b98P9dCamera_cPh",
+      "symbol": "_ZN9dCamera_c13func_02007b98EPh",
       "address": "0x02007b98",
       "size": "0x0000007c",
       "legacy_source": "src/unnamed/arm9/0200/func_02007b98.c",
@@ -218,119 +218,119 @@
       "ordinal": 59
     },
     {
-      "symbol": "_Z13func_02007e5cP9dCamera_cPh",
+      "symbol": "_ZN9dCamera_c13func_02007e5cEPh",
       "address": "0x02007e5c",
       "size": "0x000000b8",
       "legacy_source": "src/unnamed/arm9/0200/func_02007e5c.c",
       "ordinal": 60
     },
     {
-      "symbol": "_Z13func_02007f14P9dCamera_cPh",
+      "symbol": "_ZN9dCamera_c13func_02007f14EPh",
       "address": "0x02007f14",
       "size": "0x000000b8",
       "legacy_source": "src/unnamed/arm9/0200/func_02007f14.c",
       "ordinal": 61
     },
     {
-      "symbol": "_Z13func_02007fccP9dCamera_cPh",
+      "symbol": "_ZN9dCamera_c13func_02007fccEPh",
       "address": "0x02007fcc",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/arm9/0200/func_02007fcc.cpp",
       "ordinal": 62
     },
     {
-      "symbol": "_Z13func_02008008P9dCamera_cPh",
+      "symbol": "_ZN9dCamera_c13func_02008008EPh",
       "address": "0x02008008",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_02008008.c",
       "ordinal": 63
     },
     {
-      "symbol": "_Z13func_02008028P9dCamera_c",
+      "symbol": "_ZN9dCamera_c13func_02008028Ev",
       "address": "0x02008028",
       "size": "0x00000058",
       "legacy_source": "src/unnamed/arm9/0200/func_02008028.c",
       "ordinal": 64
     },
     {
-      "symbol": "_Z13func_02008080P9dCamera_c",
+      "symbol": "_ZN9dCamera_c13func_02008080Ev",
       "address": "0x02008080",
       "size": "0x00000030",
       "legacy_source": "src/unnamed/arm9/0200/func_02008080.c",
       "ordinal": 65
     },
     {
-      "symbol": "_Z13func_020080b0P9dCamera_c",
+      "symbol": "_ZN9dCamera_c13func_020080b0Ev",
       "address": "0x020080b0",
       "size": "0x00000040",
       "legacy_source": "src/unnamed/arm9/0200/func_020080b0.c",
       "ordinal": 66
     },
     {
-      "symbol": "_Z13func_020080f0P9dCamera_c",
+      "symbol": "_ZN9dCamera_c13func_020080f0Ev",
       "address": "0x020080f0",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0200/func_020080f0.c",
       "ordinal": 67
     },
     {
-      "symbol": "_Z13func_0200814cP9dCamera_c",
+      "symbol": "_ZN9dCamera_c13func_0200814cEv",
       "address": "0x0200814c",
       "size": "0x000000b4",
       "legacy_source": "src/unnamed/arm9/0200/func_0200814c.c",
       "ordinal": 68
     },
     {
-      "symbol": "_Z13func_02008200P9dCamera_cPhi",
+      "symbol": "_ZN9dCamera_c13func_02008200EPhi",
       "address": "0x02008200",
       "size": "0x000000a0",
       "legacy_source": "src/unnamed/arm9/0200/func_02008200.c",
       "ordinal": 69
     },
     {
-      "symbol": "_Z13func_020082a0P9dCamera_cPhi",
+      "symbol": "_ZN9dCamera_c13func_020082a0EPhi",
       "address": "0x020082a0",
       "size": "0x00000058",
       "legacy_source": "src/unnamed/arm9/0200/func_020082a0.c",
       "ordinal": 70
     },
     {
-      "symbol": "_Z13func_020082f8P9dCamera_cPhii",
+      "symbol": "_ZN9dCamera_c13func_020082f8EPhii",
       "address": "0x020082f8",
       "size": "0x00000114",
       "legacy_source": "src/unnamed/arm9/0200/func_020082f8.cpp",
       "ordinal": 71
     },
     {
-      "symbol": "_Z13func_0200840cP9dCamera_cPh",
+      "symbol": "_ZN9dCamera_c13func_0200840cEPh",
       "address": "0x0200840c",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0200/func_0200840c.cpp",
       "ordinal": 72
     },
     {
-      "symbol": "_Z13func_02008450P9dCamera_cPh",
+      "symbol": "_ZN9dCamera_c13func_02008450EPh",
       "address": "0x02008450",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0200/func_02008450.c",
       "ordinal": 73
     },
     {
-      "symbol": "_Z13func_02008474P9dCamera_cPhii",
+      "symbol": "_ZN9dCamera_c13func_02008474EPhii",
       "address": "0x02008474",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/arm9/0200/func_02008474.c",
       "ordinal": 74
     },
     {
-      "symbol": "_Z13func_020084b0P9dCamera_cPhii",
+      "symbol": "_ZN9dCamera_c13func_020084b0EPhii",
       "address": "0x020084b0",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0200/func_02008474.c",
       "ordinal": 75
     },
     {
-      "symbol": "_Z13func_02008500P9dCamera_cPh",
+      "symbol": "_ZN9dCamera_c13func_02008500EPh",
       "address": "0x02008500",
       "size": "0x00000050",
       "legacy_source": "src/unnamed/arm9/0200/func_02008474.c",
@@ -365,21 +365,21 @@
       "ordinal": 80
     },
     {
-      "symbol": "func_02008a70",
+      "symbol": "_ZN9dCamera_c13func_02008a70Ev",
       "address": "0x02008a70",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0200/func_02008a70.c",
       "ordinal": 81
     },
     {
-      "symbol": "func_02008abc",
+      "symbol": "_ZN9dCamera_c13func_02008abcEv",
       "address": "0x02008abc",
       "size": "0x0000004c",
       "legacy_source": "src/unnamed/arm9/0200/func_02008abc.c",
       "ordinal": 82
     },
     {
-      "symbol": "func_02008b08",
+      "symbol": "_ZN9dCamera_c13func_02008b08Ev",
       "address": "0x02008b08",
       "size": "0x00000044",
       "legacy_source": "src/unnamed/arm9/0200/func_02008b08.cpp",
@@ -449,77 +449,77 @@
       "ordinal": 92
     },
     {
-      "symbol": "func_02009414",
+      "symbol": "_ZN9dCamera_c13func_02009414Ev",
       "address": "0x02009414",
       "size": "0x00000094",
       "legacy_source": "src/unnamed/arm9/0200/func_02009414.c",
       "ordinal": 93
     },
     {
-      "symbol": "func_020094a8",
+      "symbol": "_ZN9dCamera_c13func_020094a8Ev",
       "address": "0x020094a8",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0200/func_020094a8.c",
       "ordinal": 94
     },
     {
-      "symbol": "func_020094c0",
+      "symbol": "_ZN9dCamera_c13func_020094c0Ev",
       "address": "0x020094c0",
       "size": "0x00000024",
       "legacy_source": "src/unnamed/arm9/0200/func_020094c0.c",
       "ordinal": 95
     },
     {
-      "symbol": "func_020094e4",
+      "symbol": "_ZN9dCamera_c13func_020094e4Ev",
       "address": "0x020094e4",
       "size": "0x0000005c",
       "legacy_source": "src/unnamed/arm9/0200/func_020094e4.c",
       "ordinal": 96
     },
     {
-      "symbol": "func_02009540",
+      "symbol": "_ZN9dCamera_c13func_02009540Ev",
       "address": "0x02009540",
       "size": "0x00000084",
       "legacy_source": "src/unnamed/arm9/0200/func_02009540.cpp",
       "ordinal": 97
     },
     {
-      "symbol": "func_020095c4",
+      "symbol": "_ZN9dCamera_c13func_020095c4Ev",
       "address": "0x020095c4",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_020095c4.c",
       "ordinal": 98
     },
     {
-      "symbol": "func_020095e4",
+      "symbol": "_ZN9dCamera_c13func_020095e4Ev",
       "address": "0x020095e4",
       "size": "0x00000208",
       "legacy_source": "src/unnamed/arm9/0200/func_020095e4.c",
       "ordinal": 99
     },
     {
-      "symbol": "func_020097ec",
+      "symbol": "_ZN9dCamera_c13func_020097ecEv",
       "address": "0x020097ec",
       "size": "0x00000070",
       "legacy_source": "src/unnamed/arm9/0200/func_020097ec.c",
       "ordinal": 100
     },
     {
-      "symbol": "func_0200985c",
+      "symbol": "_ZN9dCamera_c13func_0200985cEv",
       "address": "0x0200985c",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_0200985c.c",
       "ordinal": 101
     },
     {
-      "symbol": "func_0200987c",
+      "symbol": "_ZN9dCamera_c13func_0200987cEv",
       "address": "0x0200987c",
       "size": "0x0000003c",
       "legacy_source": "src/unnamed/arm9/0200/func_0200987c.c",
       "ordinal": 102
     },
     {
-      "symbol": "func_020098b8",
+      "symbol": "_ZN9dCamera_c13func_020098b8Ev",
       "address": "0x020098b8",
       "size": "0x00000028",
       "legacy_source": "src/unnamed/arm9/0200/func_020098b8.c",
@@ -540,7 +540,7 @@
       "ordinal": 105
     },
     {
-      "symbol": "func_02009aa8",
+      "symbol": "_ZN9dCamera_c13func_02009aa8Ev",
       "address": "0x02009aa8",
       "size": "0x00000288",
       "legacy_source": "src/unnamed/arm9/0200/func_02009aa8.c",
@@ -554,49 +554,49 @@
       "ordinal": 107
     },
     {
-      "symbol": "func_02009d70",
+      "symbol": "_ZN9dCamera_c13func_02009d70Ev",
       "address": "0x02009d70",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_02009d70.c",
       "ordinal": 108
     },
     {
-      "symbol": "func_02009d90",
+      "symbol": "_ZN9dCamera_c13func_02009d90Ev",
       "address": "0x02009d90",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_02009d90.c",
       "ordinal": 109
     },
     {
-      "symbol": "func_02009db0",
+      "symbol": "_ZN9dCamera_c13func_02009db0Ev",
       "address": "0x02009db0",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_02009db0.c",
       "ordinal": 110
     },
     {
-      "symbol": "func_02009dd0",
+      "symbol": "_ZN9dCamera_c13func_02009dd0Ev",
       "address": "0x02009dd0",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_02009dd0.c",
       "ordinal": 111
     },
     {
-      "symbol": "func_02009df0",
+      "symbol": "_ZN9dCamera_c13func_02009df0Ev",
       "address": "0x02009df0",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_02009df0.c",
       "ordinal": 112
     },
     {
-      "symbol": "func_02009e10",
+      "symbol": "_ZN9dCamera_c13func_02009e10Ev",
       "address": "0x02009e10",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_02009e10.c",
       "ordinal": 113
     },
     {
-      "symbol": "func_02009e30",
+      "symbol": "_ZN9dCamera_c13func_02009e30Ev",
       "address": "0x02009e30",
       "size": "0x00000020",
       "legacy_source": "src/unnamed/arm9/0200/func_02009e30.c",
@@ -1253,19 +1253,19 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "sPrevTurnInput$1925",
+      "from": "sPrevTurnInput$1903",
       "to": "sPrevTurnInput$1927",
-      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sPrevTurnInput$1929 to sPrevTurnInput$1928 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). | re-keyed -1 when IsTargetNearStarMarker, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size) Re-keyed from sPrevTurnInput$1917 to sPrevTurnInput$1912 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from sPrevTurnInput$1917 to sPrevTurnInput$1853 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sPrevTurnInput$1848 to sPrevTurnInput$1840 when d_camera.cpp took nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx in place of its local FX_SinCosTable_ declaration, read the controller records as ControllerInput fields, and Behavior, Render, func_0200bec4, func_0200c394, func_0200c66c and func_02009e70 traded their m2c temporaries for named locals and file-local inlines (measured from the compiled object). Re-keyed from sPrevTurnInput$1840 to sPrevTurnInput$1857 when the state-entry/helper definitions left the extern \"C\" block and their C-linkage declarations joined the sibling block, which moved the compiler-numbered statics with the added declarations (measured from the compiled object). Re-keyed from sPrevTurnInput$1857 to sPrevTurnInput$1947 when the camera took NitroSDK's G3_ViewPort from nitro/gx/g3imm_cmd.h in place of a raw VIEWPORT write (measured from the compiled object). Re-keyed from sPrevTurnInput$1947 to sPrevTurnInput$1946 when dCamera_c::State moved up beside the CamPmfHost shadow so UpdateState reads mState->exec (measured from the compiled object: the only symbol of its name and size). Re-keyed when three unused volatile int dummies left StartDanceCutscene, func_0200d064 and func_02009d90. The compiled object now emits sPrevTurnInput$1946, sScriptOps$2643 and _ZGVsScriptOps$2643. Those three functions still match. Re-keyed from sPrevTurnInput$1946 to sPrevTurnInput$1954 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sPrevTurnInput$1923 to sPrevTurnInput$1920 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sPrevTurnInput$1920 to sPrevTurnInput$1922 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sPrevTurnInput$1926 to sPrevTurnInput$1925 func_0200c66c's Vector3 *pos alias local folded into the parameter (#821 r11) shifted the uniquifier counter (measured from the compiled object)."
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sPrevTurnInput$1929 to sPrevTurnInput$1928 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). | re-keyed -1 when IsTargetNearStarMarker, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size) Re-keyed from sPrevTurnInput$1917 to sPrevTurnInput$1912 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from sPrevTurnInput$1917 to sPrevTurnInput$1853 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sPrevTurnInput$1848 to sPrevTurnInput$1840 when d_camera.cpp took nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx in place of its local FX_SinCosTable_ declaration, read the controller records as ControllerInput fields, and Behavior, Render, func_0200bec4, func_0200c394, func_0200c66c and func_02009e70 traded their m2c temporaries for named locals and file-local inlines (measured from the compiled object). Re-keyed from sPrevTurnInput$1840 to sPrevTurnInput$1857 when the state-entry/helper definitions left the extern \"C\" block and their C-linkage declarations joined the sibling block, which moved the compiler-numbered statics with the added declarations (measured from the compiled object). Re-keyed from sPrevTurnInput$1857 to sPrevTurnInput$1947 when the camera took NitroSDK's G3_ViewPort from nitro/gx/g3imm_cmd.h in place of a raw VIEWPORT write (measured from the compiled object). Re-keyed from sPrevTurnInput$1947 to sPrevTurnInput$1946 when dCamera_c::State moved up beside the CamPmfHost shadow so UpdateState reads mState->exec (measured from the compiled object: the only symbol of its name and size). Re-keyed when three unused volatile int dummies left StartDanceCutscene, func_0200d064 and func_02009d90. The compiled object now emits sPrevTurnInput$1946, sScriptOps$2643 and _ZGVsScriptOps$2643. Those three functions still match. Re-keyed from sPrevTurnInput$1946 to sPrevTurnInput$1954 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sPrevTurnInput$1923 to sPrevTurnInput$1920 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sPrevTurnInput$1920 to sPrevTurnInput$1922 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sPrevTurnInput$1926 to sPrevTurnInput$1925 func_0200c66c's Vector3 *pos alias local folded into the parameter (#821 r11) shifted the uniquifier counter (measured from the compiled object). Re-keyed from sPrevTurnInput$1925 to sPrevTurnInput$1903 when the folded free helpers became dCamera_c methods (measured from the compiled object)."
     },
     {
-      "from": "_ZGVsScriptOps$2605",
+      "from": "_ZGVsScriptOps$2583",
       "to": "_ZGVsScriptOps$2629",
-      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from _ZGVsScriptOps$2633 to _ZGVsScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from _ZGVsScriptOps$2632 to _ZGVsScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types). | re-keyed -1 when IsTargetNearStarMarker, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size) Re-keyed from _ZGVsScriptOps$2619 to _ZGVsScriptOps$2614 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from _ZGVsScriptOps$2619 to _ZGVsScriptOps$2555 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsScriptOps$2550 to _ZGVsScriptOps$2532 when d_camera.cpp took nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx in place of its local FX_SinCosTable_ declaration, read the controller records as ControllerInput fields, and Behavior, Render, func_0200bec4, func_0200c394, func_0200c66c and func_02009e70 traded their m2c temporaries for named locals and file-local inlines (measured from the compiled object). Re-keyed from _ZGVsScriptOps$2532 to _ZGVsScriptOps$2549 when the state-entry/helper definitions left the extern \"C\" block and their C-linkage declarations joined the sibling block, which moved the compiler-numbered statics with the added declarations (measured from the compiled object). Re-keyed from _ZGVsScriptOps$2549 to _ZGVsScriptOps$2639 when the camera took NitroSDK's G3_ViewPort from nitro/gx/g3imm_cmd.h in place of a raw VIEWPORT write (measured from the compiled object). Re-keyed from _ZGVsScriptOps$2639 to _ZGVsScriptOps$2638 when dCamera_c::State moved up beside the CamPmfHost shadow so UpdateState reads mState->exec (measured from the compiled object: the only symbol of its name and size). Re-keyed from _ZGVsScriptOps$2652 to _ZGVsScriptOps$2646 when the dual-name union fields and locals of #5404 went back to one name and a visible cast at the use site (measured from the compiled object, paired by relocation reference sites). Re-keyed when three unused volatile int dummies left StartDanceCutscene, func_0200d064 and func_02009d90. The compiled object now emits sPrevTurnInput$1946, sScriptOps$2643 and _ZGVsScriptOps$2643. Those three functions still match. Re-keyed from _ZGVsScriptOps$2643 to _ZGVsScriptOps$2651 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsScriptOps$2651 to _ZGVsScriptOps$2648 when #5487's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsScriptOps$2604 to _ZGVsScriptOps$2601 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsScriptOps$2601 to _ZGVsScriptOps$2603 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to _ZGVsScriptOps$2602 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from _ZGVsScriptOps$2606 to _ZGVsScriptOps$2605 func_0200c66c's Vector3 *pos alias local folded into the parameter (#821 r11) shifted the uniquifier counter (measured from the compiled object)."
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from _ZGVsScriptOps$2633 to _ZGVsScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from _ZGVsScriptOps$2632 to _ZGVsScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types). | re-keyed -1 when IsTargetNearStarMarker, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size) Re-keyed from _ZGVsScriptOps$2619 to _ZGVsScriptOps$2614 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from _ZGVsScriptOps$2619 to _ZGVsScriptOps$2555 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsScriptOps$2550 to _ZGVsScriptOps$2532 when d_camera.cpp took nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx in place of its local FX_SinCosTable_ declaration, read the controller records as ControllerInput fields, and Behavior, Render, func_0200bec4, func_0200c394, func_0200c66c and func_02009e70 traded their m2c temporaries for named locals and file-local inlines (measured from the compiled object). Re-keyed from _ZGVsScriptOps$2532 to _ZGVsScriptOps$2549 when the state-entry/helper definitions left the extern \"C\" block and their C-linkage declarations joined the sibling block, which moved the compiler-numbered statics with the added declarations (measured from the compiled object). Re-keyed from _ZGVsScriptOps$2549 to _ZGVsScriptOps$2639 when the camera took NitroSDK's G3_ViewPort from nitro/gx/g3imm_cmd.h in place of a raw VIEWPORT write (measured from the compiled object). Re-keyed from _ZGVsScriptOps$2639 to _ZGVsScriptOps$2638 when dCamera_c::State moved up beside the CamPmfHost shadow so UpdateState reads mState->exec (measured from the compiled object: the only symbol of its name and size). Re-keyed from _ZGVsScriptOps$2652 to _ZGVsScriptOps$2646 when the dual-name union fields and locals of #5404 went back to one name and a visible cast at the use site (measured from the compiled object, paired by relocation reference sites). Re-keyed when three unused volatile int dummies left StartDanceCutscene, func_0200d064 and func_02009d90. The compiled object now emits sPrevTurnInput$1946, sScriptOps$2643 and _ZGVsScriptOps$2643. Those three functions still match. Re-keyed from _ZGVsScriptOps$2643 to _ZGVsScriptOps$2651 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsScriptOps$2651 to _ZGVsScriptOps$2648 when #5487's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsScriptOps$2604 to _ZGVsScriptOps$2601 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsScriptOps$2601 to _ZGVsScriptOps$2603 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to _ZGVsScriptOps$2602 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from _ZGVsScriptOps$2606 to _ZGVsScriptOps$2605 func_0200c66c's Vector3 *pos alias local folded into the parameter (#821 r11) shifted the uniquifier counter (measured from the compiled object). Re-keyed from _ZGVsScriptOps$2605 to _ZGVsScriptOps$2583 when the folded free helpers became dCamera_c methods (measured from the compiled object)."
     },
     {
-      "from": "sScriptOps$2605",
+      "from": "sScriptOps$2583",
       "to": "sScriptOps$2629",
-      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sScriptOps$2633 to sScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from sScriptOps$2632 to sScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types). | re-keyed -1 when IsTargetNearStarMarker, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size) Re-keyed from sScriptOps$2619 to sScriptOps$2614 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from sScriptOps$2619 to sScriptOps$2555 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sScriptOps$2550 to sScriptOps$2532 when d_camera.cpp took nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx in place of its local FX_SinCosTable_ declaration, read the controller records as ControllerInput fields, and Behavior, Render, func_0200bec4, func_0200c394, func_0200c66c and func_02009e70 traded their m2c temporaries for named locals and file-local inlines (measured from the compiled object). Re-keyed from sScriptOps$2532 to sScriptOps$2549 when the state-entry/helper definitions left the extern \"C\" block and their C-linkage declarations joined the sibling block, which moved the compiler-numbered statics with the added declarations (measured from the compiled object). Re-keyed from sScriptOps$2549 to sScriptOps$2639 when the camera took NitroSDK's G3_ViewPort from nitro/gx/g3imm_cmd.h in place of a raw VIEWPORT write (measured from the compiled object). Re-keyed from sScriptOps$2639 to sScriptOps$2638 when dCamera_c::State moved up beside the CamPmfHost shadow so UpdateState reads mState->exec (measured from the compiled object: the only symbol of its name and size). Re-keyed from sScriptOps$2652 to sScriptOps$2646 when the dual-name union fields and locals of #5404 went back to one name and a visible cast at the use site (measured from the compiled object, paired by relocation reference sites). Re-keyed when three unused volatile int dummies left StartDanceCutscene, func_0200d064 and func_02009d90. The compiled object now emits sPrevTurnInput$1946, sScriptOps$2643 and _ZGVsScriptOps$2643. Those three functions still match. Re-keyed from sScriptOps$2643 to sScriptOps$2651 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sScriptOps$2651 to sScriptOps$2648 when #5487's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sScriptOps$2604 to sScriptOps$2601 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sScriptOps$2601 to sScriptOps$2603 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to sScriptOps$2602 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from sScriptOps$2606 to sScriptOps$2605 func_0200c66c's Vector3 *pos alias local folded into the parameter (#821 r11) shifted the uniquifier counter (measured from the compiled object)."
+      "evidence": "compiler temp; turning the camera's free helpers into dCamera_c members drops their per-file forward declarations and named-parameter signatures from d_camera.cpp, lowering this uniquifier (paired with the base object by shape, section and size) Re-keyed when the local OAM, G3i and G2x shadows were retired for include/OAM.h, include/G3i.h and include/G2x.h (#4570). Re-keyed from sScriptOps$2633 to sScriptOps$2632 when the file-local POD vector twin was retired for NitroSDK VecFx32 (one fewer compiler-numbered type) and shifted this local number (#4570). Re-keyed from sScriptOps$2632 to sScriptOps$2630 when d_camera.cpp's two anonymous path typedefs (CamPathPoint, CamPathTable) were retired for include/CutsceneSpline.h (two fewer compiler-numbered types). | re-keyed -1 when IsTargetNearStarMarker, UpdateParallelTrackingCamera, UpdateSpiralStairsCamera and Mode8DirectionsCamera became dCamera_c members (measured in the compiled object: sPrevTurnInput$1917, sScriptOps$2619 and _ZGVsScriptOps$2619, each the only symbol of its name and size) Re-keyed from sScriptOps$2619 to sScriptOps$2614 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from sScriptOps$2619 to sScriptOps$2555 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sScriptOps$2550 to sScriptOps$2532 when d_camera.cpp took nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx in place of its local FX_SinCosTable_ declaration, read the controller records as ControllerInput fields, and Behavior, Render, func_0200bec4, func_0200c394, func_0200c66c and func_02009e70 traded their m2c temporaries for named locals and file-local inlines (measured from the compiled object). Re-keyed from sScriptOps$2532 to sScriptOps$2549 when the state-entry/helper definitions left the extern \"C\" block and their C-linkage declarations joined the sibling block, which moved the compiler-numbered statics with the added declarations (measured from the compiled object). Re-keyed from sScriptOps$2549 to sScriptOps$2639 when the camera took NitroSDK's G3_ViewPort from nitro/gx/g3imm_cmd.h in place of a raw VIEWPORT write (measured from the compiled object). Re-keyed from sScriptOps$2639 to sScriptOps$2638 when dCamera_c::State moved up beside the CamPmfHost shadow so UpdateState reads mState->exec (measured from the compiled object: the only symbol of its name and size). Re-keyed from sScriptOps$2652 to sScriptOps$2646 when the dual-name union fields and locals of #5404 went back to one name and a visible cast at the use site (measured from the compiled object, paired by relocation reference sites). Re-keyed when three unused volatile int dummies left StartDanceCutscene, func_0200d064 and func_02009d90. The compiled object now emits sPrevTurnInput$1946, sScriptOps$2643 and _ZGVsScriptOps$2643. Those three functions still match. Re-keyed from sScriptOps$2643 to sScriptOps$2651 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sScriptOps$2651 to sScriptOps$2648 when #5487's changes composed with the batch (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sScriptOps$2604 to sScriptOps$2601 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sScriptOps$2601 to sScriptOps$2603 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to sScriptOps$2602 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from sScriptOps$2606 to sScriptOps$2605 func_0200c66c's Vector3 *pos alias local folded into the parameter (#821 r11) shifted the uniquifier counter (measured from the compiled object). Re-keyed from sScriptOps$2605 to sScriptOps$2583 when the folded free helpers became dCamera_c methods (measured from the compiled object)."
     }
   ],
   "relocations": [

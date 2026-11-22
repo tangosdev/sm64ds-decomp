@@ -110,7 +110,7 @@
       "ordinal": 12
     },
     {
-      "symbol": "func_02045e44",
+      "symbol": "_ZN15ModelComponents13func_02045e44Eji",
       "address": "0x02045e44",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0204/func_02045e44.c",
@@ -194,7 +194,7 @@
       "ordinal": 24
     },
     {
-      "symbol": "_Z13func_02046208Pvji",
+      "symbol": "_ZN15ModelComponents13func_02046208Eji",
       "address": "0x02046208",
       "size": "0x0000002c",
       "legacy_source": "src/unnamed/arm9/0204/func_02046208.c",
