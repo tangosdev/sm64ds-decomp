@@ -1,0 +1,17 @@
+/* claimed-storage */
+/* arm9 .exception 0x020736f4..0x020737a8. 11 storage addresses, one object. */
+#include "types.h"
+
+#pragma define_section claimsec ".exception" ".exception" ".exception" far_data
+#pragma section claimsec begin
+#pragma explicit_zero_data on
+u32 data_020736f4[] = {
+    0x0009ff00, 0x00000000, 0xc801ff00, 0x00000000, 0x40300f00, 0x8e000e80, 0x98010300, 0x00000000,
+    0xd001ff00, 0x1a901d70, 0x1a508001, 0x00008e00, 0xb0010700, 0x00000000, 0x00608f40, 0x30160090,
+    0x8c002400, 0x00000000, 0x008d00b8, 0x00908f40, 0x58220090, 0x00203000, 0x40101044, 0x00008c00,
+    0x00b80000, 0x0000000c, 0x30800100, 0x300d008d, 0x0000008d, 0x00709f40, 0x581600a8, 0x8c002408,
+    0x00000000, 0x008d00d8, 0x0080ff40, 0x581600e8, 0x8c002618, 0x00000000, 0x8d008401, 0x00000000,
+    0x00608f40, 0x30160078, 0x8c002400, 0x00000000, 0x008d00a0,
+};
+#pragma explicit_zero_data off
+#pragma section claimsec end

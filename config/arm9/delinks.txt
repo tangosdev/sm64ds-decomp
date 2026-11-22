@@ -2832,3 +2832,110 @@ src/typeinfo.cpp:
     complete
     .text start:0x0207359c end:0x020736f4
 
+src/data/arm9/data_arm9_020736f4.c:
+    complete
+    .exception start:0x020736f4 end:0x020737a8
+
+src/data/arm9/data_arm9_020737a8.c:
+    complete
+    .exceptix start:0x020737a8 end:0x02073a24
+
+src/data/arm9/data_arm9_02086bc0.c:
+    complete
+    .data start:0x02086bc0 end:0x02086fcc
+
+src/data/arm9/data_arm9_020874cc.c:
+    complete
+    .data start:0x020874cc end:0x0208751c
+
+src/data/arm9/data_arm9_0208a170.c:
+    complete
+    .data start:0x0208a170 end:0x0208a178
+
+src/data/arm9/data_arm9_0208c178.c:
+    complete
+    .data start:0x0208c178 end:0x0208e420
+
+src/data/arm9/data_arm9_0208e4b8.c:
+    complete
+    .data start:0x0208e4b8 end:0x0208ea50
+
+src/data/arm9/data_arm9_0208eb54.c:
+    complete
+    .data start:0x0208eb54 end:0x0208ecd8
+
+src/data/arm9/data_arm9_0208ecf4.c:
+    complete
+    .data start:0x0208ecf4 end:0x0208ee50
+
+src/data/arm9/data_arm9_0208ee5c.c:
+    complete
+    .data start:0x0208ee5c end:0x0208ee64
+
+src/data/arm9/data_arm9_0208ee80.c:
+    complete
+    .data start:0x0208ee80 end:0x020914a0
+
+src/data/arm9/data_arm9_020914a8.c:
+    complete
+    .data start:0x020914a8 end:0x02092110
+
+src/data/arm9/data_arm9_0209213c.c:
+    complete
+    .data start:0x0209213c end:0x02092654
+
+src/data/arm9/data_arm9_02092660.c:
+    complete
+    .data start:0x02092660 end:0x020926d0
+
+src/data/arm9/data_arm9_02092718.c:
+    complete
+    .data start:0x02092718 end:0x0209289c
+
+src/data/arm9/data_arm9_0209435c.c:
+    complete
+    .data start:0x0209435c end:0x0209444c
+
+src/data/arm9/data_arm9_020945f0.c:
+    complete
+    .data start:0x020945f0 end:0x020991c0
+
+src/data/arm9/data_arm9_020991e0.c:
+    complete
+    .data start:0x020991e0 end:0x02099224
+
+src/data/arm9/data_arm9_0209927c.c:
+    complete
+    .data start:0x0209927c end:0x02099290
+
+src/data/arm9/data_arm9_020992e4.c:
+    complete
+    .data start:0x020992e4 end:0x020992f8
+
+src/data/arm9/data_arm9_02099360.c:
+    complete
+    .data start:0x02099360 end:0x02099370
+
+src/data/arm9/data_arm9_020993bc.c:
+    complete
+    .data start:0x020993bc end:0x02099d28
+
+src/data/arm9/data_arm9_02099e70.c:
+    complete
+    .data start:0x02099e70 end:0x02099f28
+
+src/data/arm9/data_arm9_02099f48.c:
+    complete
+    .data start:0x02099f48 end:0x02099fd4
+
+src/data/arm9/data_arm9_02099fe4.c:
+    complete
+    .data start:0x02099fe4 end:0x0209a064
+
+src/data/arm9/data_arm9_0209a084.c:
+    complete
+    .data start:0x0209a084 end:0x0209a628
+
+src/data/arm9/data_arm9_0209a6fc.c:
+    complete
+    .data start:0x0209a6fc end:0x0209b000
