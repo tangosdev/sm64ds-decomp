@@ -1388,6 +1388,36 @@ struct daPly_c : dActor_c {
     void func_ov002_020e63a4();
     void func_ov002_020e640c();
     void func_ov002_020e6780();
+
+    void func_ov002_020bcdf0();
+    int func_ov002_020bec84(unsigned int);
+    void func_ov002_020c3dbc();
+    void func_ov002_020c3e8c();
+    void func_ov002_020c3f2c();
+    int func_ov002_020c51d0(Vector3 *);
+    int func_ov002_020c56f0(unsigned char);
+    int func_ov002_020ca0f4();
+    int func_ov002_020ca78c();
+    int func_ov002_020cc16c(daShl_c *);
+    void func_ov002_020cd190();
+    int func_ov002_020cd28c();
+    int func_ov002_020cf700();
+    void func_ov002_020d2e74();
+    int func_ov002_020d5ab4();
+    int func_ov002_020d5cec();
+    int func_ov002_020d600c();
+    int func_ov002_020d85fc(daPly_c *, int);
+    void func_ov002_020d8838();
+    int func_ov002_020d9298();
+    void func_ov002_020db54c(int, int, short);
+    int func_ov002_020db5f4(dActor_c *);
+    int func_ov002_020db674(int, int, int);
+    void func_ov002_020dc09c();
+    int func_ov002_020de328();
+    int func_ov002_020df7f4();
+    void func_ov002_020df8f0();
+    int func_ov002_020e10a8();
+    void func_ov002_020e25d4();
 };
 
 /* Hold both claims with the compiler rather than a comment. State's 0x18 is

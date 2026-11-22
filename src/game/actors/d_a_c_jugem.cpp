@@ -206,7 +206,7 @@ int daC_Jugem_c::StateIntroMain() {
             mAngle.x = 0;
             daPly_c *player = ClosestPlayer();
             if (player != 0) {
-                func_ov002_020c3e8c(player);
+                (player)->func_ov002_020c3e8c();
                 gSaveBlock.file.flags2 |= FILE_FLAGS2_INTRO_DONE;
             }
             SetState(data_ov085_021307e0);
@@ -366,7 +366,7 @@ int daC_Jugem_c::StateGuideMain()
         Message::func_0201f32c(2);
         break;
     case 20:
-        func_ov002_020c3f2c(p);
+        (p)->func_ov002_020c3f2c();
         break;
     case 40:
         data_0209d66c = 1;

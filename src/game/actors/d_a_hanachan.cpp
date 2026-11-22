@@ -327,7 +327,7 @@ void daHanachan_c::StateDamageMain()
 
     ApproachLinear(mPlayer->mAngle.y, Vec3_HorzAngle(&mSegmentPos[0], &mPlayer->mPos), 0x100);
 
-    func_ov002_020c51d0(talk, &st);
+    (talk)->func_ov002_020c51d0(&st);
 
     if (!mAnmModels[0].Finished())
         return;

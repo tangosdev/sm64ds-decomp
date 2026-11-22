@@ -152,7 +152,7 @@ void daTor_c::State1()
             mAngleToPlayer = angle;
             ApproachLinear(mPrevAngle.y, mAngleToPlayer, 0x200);
             /* ov002 helper wraps daPly_c::IsState(tornado): still being carried. */
-            if (mCaughtActor != 0 && func_ov002_020de328(mCaughtActor) != 0)
+            if (mCaughtActor != 0 && ((daPly_c *)mCaughtActor)->func_ov002_020de328() != 0)
                 ++mTriggerCount;
         } else {
             ApproachLinear(mPrevAngle.y, mAngleToHome, 0x200);

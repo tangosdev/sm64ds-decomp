@@ -136,7 +136,7 @@ int BgChEvt::func_ov002_020ef070(dActor_c *mover) {
     line.SetObjAndLine(start, end, mover);
     if (line.DetectClsn()) {
         if (IsActorID(mover, 0xbf))
-            func_ov002_020d8838((daPly_c *)mover);
+            ((daPly_c *)mover)->func_ov002_020d8838();
         dBgPi hit(line);
         if (hit.GetClsnID() != -1) {
             dActor_c *owner = dActor_c::FindWithID(hit.GetClsnID());
@@ -177,7 +177,7 @@ int BgChEvt::func_ov002_020eeeb8(dActor_c *mover) {
 
     if (line.DetectClsn()) {
         if (IsActorID(mover, 0xbf))
-            func_ov002_020d8838((daPly_c *)mover);
+            ((daPly_c *)mover)->func_ov002_020d8838();
 
         dBgPi hit(line);
         if (hit.GetClsnID() != -1) {

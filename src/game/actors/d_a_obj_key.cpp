@@ -638,7 +638,7 @@ void daObjKey_c::StateDrop()
 
 /* Last-star path. Hands the collector to ov002 and removes the star. */
 void daObjKey_c::func_ov089_02131dcc(daPly_c &player) {
-    func_ov002_020c3dbc(&player);
+    (&player)->func_ov002_020c3dbc();
     Event::SetBit(EVENT_KEY);
     MarkForDestruction();
 }

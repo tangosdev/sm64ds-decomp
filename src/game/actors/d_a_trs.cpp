@@ -1145,7 +1145,7 @@ void daTrs_c::UpdateKeyBooIntro() {
         neg = -1;
         w.x = w.x * neg;
         w.y = w.y + 0xc8000;
-        func_ov002_020c51d0(this->mTalkPlayer, &w);
+        (this->mTalkPlayer)->func_ov002_020c51d0(&w);
         if (this->mOpacity == 0xff) {
             this->mSubState += 1;
             this->mTargetOpacity = 0xff;

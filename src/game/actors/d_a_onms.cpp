@@ -43,6 +43,7 @@ enum daOnms_c_AssetId {
 #pragma defer_codegen off
 
 #include "daOnms_c.h"
+#include "daPly_c.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
 #include "SharedFilePtr.h"
@@ -168,7 +169,7 @@ int daOnms_c::StateBounce()
 
     daPly_c *player = ClosestPlayer();
     if (player != 0) {
-        if (func_ov002_020de328(player) != 0) {
+        if ((player)->func_ov002_020de328() != 0) {
             mdCcAcPos_c.vulnFlags |= 0x400000;
             mdCcAcPos_c.flags |= 4;
         } else {
