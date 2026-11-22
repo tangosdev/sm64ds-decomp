@@ -108,8 +108,8 @@ extern "C" u16 data_ov007_020cccd8[];  /* 020cdb04: rotations */
 extern "C" fx32 data_ov007_020d147c[]; /* 020cdb04: translations */
 extern "C" BTAMaterialRecord data_ov007_020ce8c4[];
 extern const BTA_File *data_ov007_020d7ee8[3][3]; /* [set]: animation data in the overlay */
-extern void *data_ov007_02103348[3];           /* data_ov007_020ccc68[set + 2], loaded */
-extern void *data_ov007_02103354[3];           /* data_ov007_020ccc68[figureIndex], loaded */
+extern void *data_ov007_02103348[3];              /* data_ov007_020ccc68[set + 2], loaded */
+extern void *data_ov007_02103354[3];              /* data_ov007_020ccc68[figureIndex], loaded */
 
 void func_02044efc(struct BMD_File *bmd);
 extern "C" void func_ov007_020b3edc(int idx);

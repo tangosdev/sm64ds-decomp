@@ -399,17 +399,17 @@ extern unsigned short data_ov007_02104c28;
  * data_ov007_020ccb7c. func_ov007_020ade58 reaches a row only through that
  * table's animIndices word. */
 extern "C" const u8 data_ov007_020ccb54[40] = {
-    0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0,
-    0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    4, 0, 0, 0, 2, 0, 0, 0, 0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 0, 0,
 };
 
 /* One row per menu item: the sprite bank, the node's animation count and the
  * index bytes above that select entries in that bank. */
 extern "C" const Ov007NodeSprites data_ov007_020ccb7c[9] = {
-    {5, 1, {0}, data_ov007_020ccb54},       {0, 10, {0}, &data_ov007_020ccb54[28]},
-    {0, 1, {0}, &data_ov007_020ccb54[20]},  {3, 1, {0}, &data_ov007_020ccb54[16]},
-    {3, 1, {0}, &data_ov007_020ccb54[8]},   {3, 1, {0}, &data_ov007_020ccb54[24]},
-    {3, 1, {0}, &data_ov007_020ccb54[16]},  {4, 1, {0}, &data_ov007_020ccb54[4]},
+    {5, 1, {0}, data_ov007_020ccb54},      {0, 10, {0}, &data_ov007_020ccb54[28]},
+    {0, 1, {0}, &data_ov007_020ccb54[20]}, {3, 1, {0}, &data_ov007_020ccb54[16]},
+    {3, 1, {0}, &data_ov007_020ccb54[8]},  {3, 1, {0}, &data_ov007_020ccb54[24]},
+    {3, 1, {0}, &data_ov007_020ccb54[16]}, {4, 1, {0}, &data_ov007_020ccb54[4]},
     {0, 1, {0}, &data_ov007_020ccb54[12]},
 };
 

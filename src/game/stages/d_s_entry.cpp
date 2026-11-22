@@ -542,11 +542,12 @@ OamAttr data_ov075_0211d144[36] = {
     {0x4000, 0x81e8, 0x9194, 0x0000}, {0x0000, 0x4008, 0x9198, 0x0000},
     {0x4010, 0x41e8, 0x91d4, 0x0000}, {0x4010, 0x0008, 0x91d8, 0xffff},
 };
-OamAttr *data_ov075_0211c954[5] = {data_ov075_0211cac4, &data_ov075_0211cac4[4], &data_ov075_0211cac4[8],
-                                   &data_ov075_0211cac4[12], data_ov075_0211d084};
-OamAttr *data_ov075_0211cb64[8] = {data_ov075_0211c890, data_ov075_0211d144, data_ov075_0211c778,
-                                   &data_ov075_0211d144[9], data_ov075_0211c708, &data_ov075_0211d144[18],
-                                   data_ov075_0211c6f0, &data_ov075_0211d144[27]};
+OamAttr *data_ov075_0211c954[5] = {data_ov075_0211cac4, &data_ov075_0211cac4[4],
+                                   &data_ov075_0211cac4[8], &data_ov075_0211cac4[12],
+                                   data_ov075_0211d084};
+OamAttr *data_ov075_0211cb64[8] = {
+    data_ov075_0211c890, data_ov075_0211d144,      data_ov075_0211c778, &data_ov075_0211d144[9],
+    data_ov075_0211c708, &data_ov075_0211d144[18], data_ov075_0211c6f0, &data_ov075_0211d144[27]};
 }
 
 #pragma defer_codegen on

@@ -59,8 +59,7 @@ extern u32 data_ov026_021132b0[];
 extern u32 data_ov026_02113600[];
 
 CLPS_Block data_ov026_02112f74 = {
-    0x53504c43,
-    0x00010008,
+    0x53504c43, 0x00010008,
     0x00000fc0, 0x000000ff,
     0xffffffff, 0xffffffff,
     0xffffffff, 0xffffffff,

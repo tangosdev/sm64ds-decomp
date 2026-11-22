@@ -110,7 +110,8 @@ s32 daObjBk_Dossunbar_c::InitResources() {
     UpdateClsnPosAndRot();
 
     int j = mVariant * 0xc;
-    KCL_File *kclFile = dBgW_Kc::LoadFile(**(SharedFilePtr **)((char *)&data_ov015_02114534[1] + j));
+    KCL_File *kclFile =
+        dBgW_Kc::LoadFile(**(SharedFilePtr **)((char *)&data_ov015_02114534[1] + j));
     (&mMeshCollider)
         ->dBgW_KcMbg::SetFile((kclFile), *(&mClsnMat), 0x1000, mAngle.y,
                               *(CLPS_Block *)(*(void **)((char *)&data_ov015_02114534[2] + j)));
@@ -306,12 +307,8 @@ CLPS_Block data_ov015_021135b4 = {0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff
 CLPS_Block data_ov015_02113634 = {0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff,
                                   0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
 SharedFilePtr *data_ov015_02114534[6] = {
-    &gBkDossunbarSModelFile,
-    &gBkDossunbarSCollisionFile,
-    (SharedFilePtr *)&data_ov015_021135b4,
-    &gBkDossunbarLModelFile,
-    &gBkDossunbarLCollisionFile,
-    (SharedFilePtr *)&data_ov015_02113634,
+    &gBkDossunbarSModelFile, &gBkDossunbarSCollisionFile, (SharedFilePtr *)&data_ov015_021135b4,
+    &gBkDossunbarLModelFile, &gBkDossunbarLCollisionFile, (SharedFilePtr *)&data_ov015_02113634,
 };
 
 StateEntry data_ov015_02114a24[7] = {
