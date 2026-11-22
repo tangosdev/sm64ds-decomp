@@ -280,8 +280,6 @@ struct S82 {
     /* 0x50 */ char *narc;         /* the file func_0204ef9c checked for 'NARC' */
     /* 0x54 */ NarcFatBlock *f54;  /* its FATB block */
     /* 0x58 */ unsigned char *f58; /* its FIMG data */
-
-    int func_0204ee10();
 };
 struct HeapAllocator_205212c {
     char pad0[8];
@@ -393,6 +391,7 @@ extern void SND_AssignWaveArc(struct SNDBankData *bank, int index, struct SNDWav
 
 /* In-span forward declarations. */
 extern int func_0204eda4(int r0, char* a, u32 idx);
+extern int func_0204ee10(struct S82 *self);
 extern int func_0204ede8(struct S82 *o, unsigned int i);
 extern int func_0204ee40(struct S82 *self, char *name, char *p);
 extern int func_0204ef9c(void* p);
@@ -2419,10 +2418,10 @@ extern "C" int func_0204ee40(struct S82 *self, char *name, char *p) {
     return 0;
 }
 
-int S82::func_0204ee10() {
-    if (!FS_UnloadArchive(&arc))
+extern "C" int func_0204ee10(struct S82 *self) {
+    if (!FS_UnloadArchive(&self->arc))
         return 0;
-    FS_ReleaseArchiveName(&arc);
+    FS_ReleaseArchiveName(&self->arc);
     return 1;
 }
 
