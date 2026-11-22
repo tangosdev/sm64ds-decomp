@@ -2981,7 +2981,7 @@ matched: yes</title></rect><rect x="189.23" y="197.38" width="14.57" height="5.1
 module: arm9
 addr: 0x020196cc
 size: 112 bytes
-matched: yes</title></rect><rect x="203.80" y="197.38" width="0.52" height="5.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0201973c
+matched: yes</title></rect><rect x="203.80" y="197.38" width="0.52" height="5.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_0201973cv
 module: arm9
 addr: 0x0201973c
 size: 4 bytes
@@ -3141,7 +3141,7 @@ matched: yes</title></rect><rect x="308.34" y="202.53" width="2.18" height="8.62
 module: arm9
 addr: 0x0201a9fc
 size: 28 bytes
-matched: yes</title></rect><rect x="310.52" y="202.53" width="4.36" height="8.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0201aa18
+matched: yes</title></rect><rect x="310.52" y="202.53" width="4.36" height="8.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_0201aa18P13WatchdogAlarm
 module: arm9
 addr: 0x0201aa18
 size: 56 bytes
@@ -3165,7 +3165,7 @@ matched: yes</title></rect><rect x="9.51" y="211.15" width="2.25" height="7.14" 
 module: arm9
 addr: 0x0201aad4
 size: 24 bytes
-matched: yes</title></rect><rect x="11.76" y="211.15" width="2.25" height="7.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0201aaec
+matched: yes</title></rect><rect x="11.76" y="211.15" width="2.25" height="7.14" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_0201aaecP13WatchdogAlarm
 module: arm9
 addr: 0x0201aaec
 size: 24 bytes
@@ -11973,7 +11973,7 @@ matched: yes</title></rect><rect x="221.11" y="900.02" width="5.06" height="1.59
 module: arm9
 addr: 0x02071784
 size: 12 bytes
-matched: yes</title></rect><rect x="221.11" y="901.61" width="5.06" height="6.37" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02071790
+matched: yes</title></rect><rect x="221.11" y="901.61" width="5.06" height="6.37" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12ThrowContext13func_02071790EP14ActionIteratori
 module: arm9
 addr: 0x02071790
 size: 48 bytes
@@ -11981,19 +11981,19 @@ matched: yes</title></rect><rect x="221.11" y="907.97" width="5.06" height="10.0
 module: arm9
 addr: 0x020717c0
 size: 76 bytes
-matched: yes</title></rect><rect x="221.11" y="918.06" width="5.06" height="7.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0207180c
+matched: yes</title></rect><rect x="221.11" y="918.06" width="5.06" height="7.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_0207180cPh
 module: arm9
 addr: 0x0207180c
 size: 56 bytes
-matched: yes</title></rect><rect x="221.11" y="925.49" width="5.06" height="4.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02071844
+matched: yes</title></rect><rect x="221.11" y="925.49" width="5.06" height="4.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02071844P14ActionIteratori
 module: arm9
 addr: 0x02071844
 size: 32 bytes
-matched: yes</title></rect><rect x="221.11" y="929.73" width="5.06" height="22.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02071864
+matched: yes</title></rect><rect x="221.11" y="929.73" width="5.06" height="22.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12ThrowContext13func_02071864EP14ActionIterator
 module: arm9
 addr: 0x02071864
 size: 172 bytes
-matched: yes</title></rect><rect x="221.11" y="952.55" width="5.06" height="13.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02071910
+matched: yes</title></rect><rect x="221.11" y="952.55" width="5.06" height="13.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12ThrowContext13func_02071910EPv
 module: arm9
 addr: 0x02071910
 size: 100 bytes
@@ -12021,7 +12021,7 @@ matched: yes</title></rect><rect x="221.11" y="981.73" width="5.06" height="13.2
 module: arm9
 addr: 0x020719ec
 size: 100 bytes
-matched: yes</title></rect><rect x="226.16" y="900.02" width="10.42" height="10.81" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02071a50
+matched: yes</title></rect><rect x="226.16" y="900.02" width="10.42" height="10.81" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02071a50PhPi
 module: arm9
 addr: 0x02071a50
 size: 168 bytes
@@ -12037,7 +12037,7 @@ matched: yes</title></rect><rect x="226.16" y="926.27" width="10.42" height="14.
 module: arm9
 addr: 0x02071be8
 size: 228 bytes
-matched: yes</title></rect><rect x="226.16" y="940.94" width="10.42" height="7.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02071ccc
+matched: yes</title></rect><rect x="226.16" y="940.94" width="10.42" height="7.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12ThrowContext13func_02071cccEii
 module: arm9
 addr: 0x02071ccc
 size: 112 bytes
@@ -12045,11 +12045,11 @@ matched: yes</title></rect><rect x="226.16" y="948.15" width="10.42" height="30.
 module: arm9
 addr: 0x02071d3c
 size: 480 bytes
-matched: yes</title></rect><rect x="226.16" y="979.04" width="10.42" height="6.95" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02071f1c
+matched: yes</title></rect><rect x="226.16" y="979.04" width="10.42" height="6.95" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12ThrowContext13func_02071f1cEP14ActionIteratorP15ExSpecificationPh
 module: arm9
 addr: 0x02071f1c
 size: 108 bytes
-matched: yes</title></rect><rect x="226.16" y="985.99" width="10.42" height="9.01" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02071f88
+matched: yes</title></rect><rect x="226.16" y="985.99" width="10.42" height="9.01" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02071f88PvP15ExSpecification
 module: arm9
 addr: 0x02071f88
 size: 140 bytes
@@ -12065,15 +12065,15 @@ matched: yes</title></rect><rect x="298.71" y="900.02" width="22.71" height="27.
 module: arm9
 addr: 0x020729f4
 size: 924 bytes
-matched: yes</title></rect><rect x="236.59" y="927.31" width="5.67" height="3.31" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02072d90
+matched: yes</title></rect><rect x="236.59" y="927.31" width="5.67" height="3.31" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10ActionWalk13func_02072d90Ev
 module: arm9
 addr: 0x02072d90
 size: 28 bytes
-matched: yes</title></rect><rect x="236.59" y="930.63" width="5.67" height="34.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02072dac
+matched: yes</title></rect><rect x="236.59" y="930.63" width="5.67" height="34.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02072daciP14ActionIterator
 module: arm9
 addr: 0x02072dac
 size: 292 bytes
-matched: yes</title></rect><rect x="236.59" y="965.18" width="5.67" height="12.78" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02072ed0
+matched: yes</title></rect><rect x="236.59" y="965.18" width="5.67" height="12.78" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02072ed0P12EHIndexEntryij
 module: arm9
 addr: 0x02072ed0
 size: 108 bytes
