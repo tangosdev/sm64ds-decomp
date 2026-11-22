@@ -58,6 +58,7 @@ struct dThIcon_c {
     virtual void Behavior();
     virtual void Render();
     void Press();
+    int TouchArea_Update(int);
 };
 
 #ifndef SM64DS_PLATFORM_PC

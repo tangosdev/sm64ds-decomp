@@ -81,7 +81,6 @@ extern unsigned char gSubScreenLayers;
 /* 1 while the backlight is on. TurnBacklightOn / Off write it. */
 extern unsigned char gBacklightEnabled;
 }
-int TouchArea_Update(void *icon, int touch);
 void PsOpt_PlaceIcon(dMgPsOpt_c::TouchIcon_c *icon, int style, int variant, short x, short y);
 
 /* One icon's half extents. The destructor is the shared empty arm9 one
@@ -170,7 +169,7 @@ u8 dMgPsOpt_c::Update() {
 
     switch (state) {
     case kPanelOpen:
-        if (TouchArea_Update(&mIcons[kIconBack], -1)) {
+        if (mIcons[kIconBack].TouchArea_Update(-1)) {
             /* Back: pulse the button, then let state 2 run the delay down. */
             mIcons[kIconBack].Press();
             mCloseTimer = 20;
@@ -183,9 +182,9 @@ u8 dMgPsOpt_c::Update() {
                 int changed = 0;
                 int mode = GetSoundMode();
 
-                if (TouchArea_Update(&mIcons[kIconSoundMode], -1) ||
-                    TouchArea_Update(&mIcons[kIconSoundNext], -1) ||
-                    TouchArea_Update(&mIcons[kIconSoundLabel], -1)) {
+                if (mIcons[kIconSoundMode].TouchArea_Update(-1) ||
+                    mIcons[kIconSoundNext].TouchArea_Update(-1) ||
+                    mIcons[kIconSoundLabel].TouchArea_Update(-1)) {
                     if (mode == 2)
                         mode = 0;
                     else
@@ -193,7 +192,7 @@ u8 dMgPsOpt_c::Update() {
                     mIcons[kIconSoundNext].mOn = 0;
                     mIcons[kIconSoundNext].Press();
                     changed = 1;
-                } else if (TouchArea_Update(&mIcons[kIconSoundPrev], -1)) {
+                } else if (mIcons[kIconSoundPrev].TouchArea_Update(-1)) {
                     if (mode == 0)
                         mode = 2;
                     else
@@ -215,11 +214,11 @@ u8 dMgPsOpt_c::Update() {
                 /* On turns the backlight on, off turns it off, the caption toggles. */
                 int dir = 0;
 
-                if (TouchArea_Update(&mIcons[kIconLightOn], -1)) {
+                if (mIcons[kIconLightOn].TouchArea_Update(-1)) {
                     dir = -1;
-                } else if (TouchArea_Update(&mIcons[kIconLightOff], -1)) {
+                } else if (mIcons[kIconLightOff].TouchArea_Update(-1)) {
                     dir = 1;
-                } else if (TouchArea_Update(&mIcons[kIconLightLabel], -1)) {
+                } else if (mIcons[kIconLightLabel].TouchArea_Update(-1)) {
                     dir = (mIcons[kIconLightOn].mOn != 0) ? 1 : -1;
                 }
 

@@ -28,7 +28,7 @@
       "ordinal": 0
     },
     {
-      "symbol": "_Z16TouchArea_UpdatePvi",
+      "symbol": "_ZN9dThIcon_c16TouchArea_UpdateEi",
       "address": "0x020ab450",
       "size": "0x000000fc",
       "legacy_source": "src/TouchArea_Update.c",
