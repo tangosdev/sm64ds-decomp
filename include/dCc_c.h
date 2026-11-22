@@ -112,6 +112,8 @@ struct dCc_c {
        by the prev/next rewiring; the original member spelling is not. */
     void Unlink();
     void Update();
+    /* Offer the collider to the player when the hit owner is the player. */
+    void func_02014f5c(u32);
     static void Process();
 
     /* The head of the active collider list (arm9 .bss 0x0209cee8). Update()
