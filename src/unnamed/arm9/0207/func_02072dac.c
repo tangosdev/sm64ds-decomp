@@ -1,4 +1,6 @@
+//cpp
 #include "MWCPlusLib.h"
+extern "C" {
 
 extern int func_02071844(ActionIterator *info, int pc);
 extern struct EHIndexEntry *func_02072ed0(struct EHIndexEntry *base, int count, unsigned int key);
@@ -47,4 +49,5 @@ void func_02072dac(int pc, ActionIterator *info) {
         acc = tmp + (unsigned int)length;
     } while (end > acc);
     info->mAction = info->mActionTable + actionOffset;
+}
 }

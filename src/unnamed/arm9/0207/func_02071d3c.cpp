@@ -12,13 +12,10 @@ void terminate();
 
 extern "C" {
 
-extern unsigned char func_02072d90(struct ActionWalk *c);
 extern u8 *func_02071a50(u8 *p, int *out);
 extern u8 *ReadSignedVarInt(u8 *p, int *out);
 extern int __throw_catch_compare(const u8 *throwtype, const u8 *catchtype, int *offset_result);
 extern int func_02071f88(void *a, ExSpecification *spec);
-extern void func_02071f1c(ThrowContext *context, ActionIterator *it, ExSpecification *spec,
-                          unsigned char *action);
 }
 
 extern unsigned char func_020729f4(struct ActionWalk *c);
@@ -47,7 +44,7 @@ u8 *ThrowContext::func_02071d3c(struct ActionCursor *src, int *flag) {
     buf.unknown_14 = src->unknown_14;
     buf.mThrow = *this;
 
-    state = func_02072d90(&buf);
+    state = buf.func_02072d90();
 
     for (;; state = func_020729f4(&buf)) {
         switch (state) {
@@ -73,7 +70,7 @@ u8 *ThrowContext::func_02071d3c(struct ActionCursor *src, int *flag) {
             p = ReadSignedVarInt(p, &spec.mCatchInfoRef);
             spec.mSpecs = p;
             if (func_02071f88((void *)this->mThrowType, &spec) == 0) {
-                func_02071f1c(this, &src->iterator, &spec, buf.iterator.mAction);
+                func_02071f1c(&src->iterator, &spec, buf.iterator.mAction);
             }
             continue;
         }

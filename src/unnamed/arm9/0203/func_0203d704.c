@@ -1,5 +1,7 @@
+//cpp
 #include "Vector2.h"
 #include "Vector2Math.h"
+extern "C" {
 
 /* Empty. func_0201a054 calls it during boot, between PXI_Init and
    ClearSaveBlock. */
@@ -19,4 +21,5 @@ void func_0203d704(Vector2 *o, Vector2 *a, Vector2 *b) {
     int ax = a->x, bx = b->x, ay = a->y, by = b->y;
     o->x = ax + bx;
     o->y = ay + by;
+}
 }

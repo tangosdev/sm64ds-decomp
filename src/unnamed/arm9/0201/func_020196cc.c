@@ -1,4 +1,6 @@
+//cpp
 #include "nitro/spi/pm.h"
+extern "C" {
 
 struct LevelRng;
 
@@ -24,4 +26,5 @@ void func_020196cc(void) {
     }
     func_0203b9b4((int *)&data_0209d4b8, 1234);
     SetSoundMode(data_0209d4b4);
+}
 }

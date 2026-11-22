@@ -1,3 +1,4 @@
+//cpp
 #include "private/watchdog_alarm.h"
 
 /* The watchdog alarm's destructor, which __sinit_func_0201a96c.cpp registers:

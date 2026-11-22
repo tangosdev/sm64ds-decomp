@@ -1,4 +1,6 @@
+//cpp
 #include "MWCPlusLib.h"
+extern "C" {
 
 /* The exception index table: data_020737a8 up to the start of .init. */
 extern struct EHIndexEntry data_020737a8;
@@ -13,4 +15,5 @@ int func_02071844(ActionIterator *info, int pc) {
     info->indexBegin = &data_020737a8;
     info->indexEnd = (struct EHIndexEntry *)ARM9_INIT_START;
     return 1;
+}
 }

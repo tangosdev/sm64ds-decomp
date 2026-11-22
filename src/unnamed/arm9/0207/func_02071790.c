@@ -1,3 +1,5 @@
+//cpp
+extern "C" {
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match. This function was assembly
 // in the original (SDK/runtime primitive: block copy, matrix/math, CP15, context
 // switch, etc.), so there is no C to decompile it to -- the asm block is the
@@ -26,4 +28,5 @@ asm void func_02071790(struct ThrowContext *context, struct ActionIterator *iter
     ldr r12, [r0, #0x64]
     sub sp, sp, r12
     mov pc, r2
+}
 }

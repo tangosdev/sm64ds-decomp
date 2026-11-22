@@ -10,9 +10,7 @@ void terminate();
 }
 extern "C" {
 
-extern void *func_02071910(ThrowContext *c, void *s);
 extern void func_02072dac(int x, ActionIterator *b);
-extern void func_02071864(ThrowContext *t, ActionIterator *it);
 extern u8 *ReadSignedVarInt(u8 *p, int *out);
 extern u8 *func_02071a50(u8 *p, int *out);
 }
@@ -39,12 +37,12 @@ u8 func_020729f4(ActionWalk *c) {
                 break;
             }
         }
-        x = func_02071910(frame, c);
+        x = frame->func_02071910(c);
         func_02072dac((int)x, &c->iterator);
         if (c->iterator.mActionTable == 0) {
             std::terminate();
         }
-        func_02071864(frame, &c->iterator);
+        frame->func_02071864(&c->iterator);
         if (c->iterator.mAction == 0) {
             continue;
         }

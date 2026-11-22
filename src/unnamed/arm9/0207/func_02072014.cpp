@@ -8,11 +8,6 @@ namespace std {
 void terminate();
 }
 
-extern "C" {
-
-extern unsigned char func_02072d90(struct ActionWalk *c);
-}
-
 extern unsigned char func_020729f4(struct ActionWalk *c);
 extern "C" {
 
@@ -35,7 +30,7 @@ CatchInfo *func_02072014(ThrowContext *c, struct ActionCursor *cursor) {
     l.unknown_14 = cursor->unknown_14;
     l.mThrow = *c;
 
-    sel = func_02072d90(&l);
+    sel = l.func_02072d90();
     for (;;) {
         switch (sel) {
         case 1:

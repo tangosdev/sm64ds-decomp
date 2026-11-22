@@ -1,4 +1,6 @@
+//cpp
 #include "MWCPlusLib.h"
+extern "C" {
 
 /* EH runtime: binary search of count index entries for the one whose
    [start, start + (sizeFlags & ~1)] range holds key. Returns 0 when none does.
@@ -18,4 +20,5 @@ struct EHIndexEntry *func_02072ed0(struct EHIndexEntry *base, int count, unsigne
         }
     }
     return 0;
+}
 }
