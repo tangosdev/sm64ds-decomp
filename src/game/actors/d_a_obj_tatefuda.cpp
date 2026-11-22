@@ -694,12 +694,14 @@ void daObjTatefuda_c::Talk()
         case 2:
             if (ApproachLinear(player->mAngle.y, (mAngle.y + 0x8000), 0x800) != 0) {
                 if (mPoundsLeft == 1) {
-                    if (func_ov002_020bec84(player, 1) != 0
-                        || func_ov002_020bec84(player, 0) != 0) {
+                    if ((player)->func_ov002_020bec84(1) != 0 ||
+                        (player)->func_ov002_020bec84(0) != 0) {
                         player->func_ov002_020bec9c(2, 0x40000000, 0x1000, 0);
-                    } else if (func_ov002_020bec84(player, 2) != 0 && player->FinishedAnim() != 0) {
+                    } else if ((player)->func_ov002_020bec84(2) != 0 &&
+                               player->FinishedAnim() != 0) {
                         player->func_ov002_020bec9c(3, 0x40000000, 0x1000, 0);
-                    } else if (func_ov002_020bec84(player, 3) != 0 && player->FinishedAnim() != 0) {
+                    } else if ((player)->func_ov002_020bec84(3) != 0 &&
+                               player->FinishedAnim() != 0) {
                         player->ShowMessage2(*this, (s16)msgId, &msgPos, 0, 1);
                     }
                 } else {

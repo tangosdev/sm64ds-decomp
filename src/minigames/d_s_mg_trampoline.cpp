@@ -19,8 +19,8 @@
  * PaintSquare as well.
  *
  * leftovers:
- * - The score pool (TrmpFx_Unlink..TrmpFx_InitPool) stays free:
- *   it works on the file-scope live-list globals, not one object, and
+ * - TrmpFx_Spawn, ClearAll, UpdateAll and DrawAll stay free: no object
+ *   receiver. InitPool, Link and Unlink are TrmpScorePopup methods.
  *   TrmpFx_Spawn is the entry dMgTrmpln2Mario_c calls.
  * - ov004 helpers and most data symbols are unnamed.
  */
@@ -61,6 +61,7 @@ extern int sTrmpRowScreenY[];
 
 OamAttr data_ov006_02134f28[1] = {{0x00f0, 0x81f0, 0x101c, 0xffff}};
 OamAttr *sTrmpRowMarkerSprite = data_ov006_02134f28;
+/* Named parameters keep the PMF @NNN literals stable once these are methods. */
 void TrmpFx_Link(TrmpScorePopup *entry);
 
 extern TrmpScorePopup *sTrmpFxList;
@@ -333,7 +334,7 @@ s32 dScMgTrampoline_c::InitResources() {
     Camera_UpdateMatrices(&mCameras[1]);
     if (Trmp3DMario_InitPool((unsigned char *)mMarios, 4) == 0)
         return 0;
-    TrmpFx_InitPool(mScorePopups, 5);
+    mScorePopups->TrmpFx_InitPool(5);
     TrmpLine::LoadTextures();
     Mg_SetTopScreenYOffset(0x10);
     StartRound(-1);
@@ -527,7 +528,7 @@ void dScMgTrampoline_c::StatePlay() {
                 int i;
                 for (i = 0; i < 4; i++) {
                     if (Trmp3DMario_IsOffstage(&mMarios[i])) {
-                        Trmp3DMario_EnterWalkIn(&mMarios[i]);
+                        mMarios[i].Trmp3DMario_EnterWalkIn();
                         break;
                     }
                 }
@@ -925,9 +926,8 @@ void dScMgTrampoline_c::PaintSquare(int cx, int cy, int colour, int size) {
     }
 }
 
-/* .c-derived member: C linkage for the whole block */
-void TrmpFx_InitPool(TrmpScorePopup *records, int count) {
-    sTrmpFxPool = records;
+void TrmpScorePopup::TrmpFx_InitPool(int count) {
+    sTrmpFxPool = this;
     sTrmpFxCount = count;
 }
 
@@ -970,13 +970,12 @@ void TrmpFx_DrawAll(void) {
     } while (node != 0);
 }
 
-/* .c-derived member: C linkage for the whole block */
-void TrmpFx_Link(TrmpScorePopup *entry) {
+void TrmpScorePopup::TrmpFx_Link() {
     TrmpScorePopup *node;
-    entry->next = sTrmpFxList;
-    sTrmpFxList = entry;
-    node = entry->next;
-    int targetY = entry->y - 0x10000;
+    next = sTrmpFxList;
+    sTrmpFxList = this;
+    node = next;
+    int targetY = y - 0x10000;
     while (node) {
         node->targetY = targetY;
         node = node->next;
@@ -984,17 +983,16 @@ void TrmpFx_Link(TrmpScorePopup *entry) {
     }
 }
 
-/* .c-derived member: C linkage for the whole block */
-void TrmpFx_Unlink(TrmpScorePopup *node) {
+void TrmpScorePopup::TrmpFx_Unlink() {
     TrmpScorePopup *prev = sTrmpFxList;
-    if (prev == node) {
-        sTrmpFxList = node->next;
+    if (prev == this) {
+        sTrmpFxList = next;
         return;
     }
     TrmpScorePopup *cur = prev->next;
     while (cur) {
-        if (cur == node) {
-            prev->next = node->next;
+        if (cur == this) {
+            prev->next = next;
             return;
         }
         prev = cur;
@@ -1013,7 +1011,7 @@ void TrmpScorePopup::Spawn(int y, int number) {
     life = 0x80;
     active = 1;
     this->number = number;
-    TrmpFx_Link(this);
+    this->TrmpFx_Link();
 }
 
 void TrmpScorePopup::Update() {
@@ -1021,7 +1019,7 @@ void TrmpScorePopup::Update() {
         return;
     }
     if (ApproachLinear2(life, 0, 1)) {
-        TrmpFx_Unlink(this);
+        this->TrmpFx_Unlink();
         active = 0;
     }
     x += speed.x;

@@ -295,7 +295,7 @@ int daBombking_c::TickThrowPlayer() {
     if (CheckKnockbackHit() == 1) {
         DetonateSpawnedBombs();
         if (this->mHeldActor != 0) {
-            func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngle.y);
+            (this->mHeldActor)->func_ov002_020db54c(0, 0x50000, this->mAngle.y);
             this->mTalkingPlayer = this->mHeldActor;
             this->mHeldActor = 0;
         }
@@ -303,7 +303,7 @@ int daBombking_c::TickThrowPlayer() {
     }
     if ((&this->mBlendAnmModel)->WillHitFrame(0x14)) {
         if (this->mHeldActor != 0) {
-            func_ov002_020db54c(this->mHeldActor, 0x28000, 0x50000, this->mAngle.y);
+            (this->mHeldActor)->func_ov002_020db54c(0x28000, 0x50000, this->mAngle.y);
             this->mTalkingPlayer = this->mHeldActor;
             this->mHeldActor = 0;
             func_02012694(0x131, &this->mCamSpacePos);
@@ -331,7 +331,7 @@ int daBombking_c::TickCarryPlayer() {
     if (CheckKnockbackHit() == 1) {
         DetonateSpawnedBombs();
         if (this->mHeldActor != 0) {
-            func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngle.y);
+            (this->mHeldActor)->func_ov002_020db54c(0, 0x50000, this->mAngle.y);
             this->mTalkingPlayer = this->mHeldActor;
             this->mHeldActor = 0;
         }
@@ -387,7 +387,7 @@ int daBombking_c::TickGrabPlayer() {
     if (CheckKnockbackHit() == 1 || (this->mHeldActor != 0 && this->mHeldActor->GetHealth() == 0)) {
         DetonateSpawnedBombs();
         if (this->mHeldActor != 0) {
-            func_ov002_020db54c(this->mHeldActor, 0, 0x50000, this->mAngle.y);
+            (this->mHeldActor)->func_ov002_020db54c(0, 0x50000, this->mAngle.y);
             this->mTalkingPlayer = this->mHeldActor;
             this->mHeldActor = 0;
         }
@@ -1054,7 +1054,7 @@ int daBombking_c::TickChase() {
                                 KingBobOmb_SetState(data_ov078_0212707c);
                             }
                         }
-                    } else if (func_ov002_020db5f4(player, this) != 0) {
+                    } else if ((player)->func_ov002_020db5f4(this) != 0) {
                         this->mHeldActor = player;
                         this->mHorzSpeed = 0;
                         KingBobOmb_SetState(data_ov078_0212706c);

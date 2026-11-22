@@ -132,6 +132,9 @@ struct BMD_File {
     /* 0x34 - the four-pointer skinning block func_02044dc4/func_02044e50
        read (struct Sub in ModelComponents.cpp); all four fixed up on load */
     void *skin;
+#ifdef __cplusplus
+    void func_02044efc();
+#endif
 };
 
 typedef char BMD_DisplayList_size_must_be_0x10[sizeof(struct BMD_DisplayList) == 0x10 ? 1 : -1];

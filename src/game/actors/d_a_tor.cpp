@@ -152,7 +152,7 @@ void daTor_c::State1()
             mAngleToPlayer = angle;
             ApproachLinear(mPrevAngle.y, mAngleToPlayer, 0x200);
             /* ov002 helper wraps daPly_c::IsState(tornado): still being carried. */
-            if (mCaughtActor != 0 && func_ov002_020de328(mCaughtActor) != 0)
+            if (mCaughtActor != 0 && ((daPly_c *)mCaughtActor)->func_ov002_020de328() != 0)
                 ++mTriggerCount;
         } else {
             ApproachLinear(mPrevAngle.y, mAngleToHome, 0x200);
@@ -264,7 +264,7 @@ int daTor_c::InitResources()
 {
     mAnmModel.SetFile(dExtSimpleModel_c::LoadFile(gSandTornadoModelFile), 1, 0x15);
     dExtFrameCtrl_c::LoadFile(gSandTornadoAnimationFile);
-    func_02016aac(&mAnmModel, 0x16, 1);
+    mAnmModel.func_02016aac(0x16, 1);
     mAnmModel.SetAnim((BCA_File *)((void *)gSandTornadoAnimationFile.filePtr), 0, 0x1000, 0);
     dExtAnmTexSRT_c::Prepare(*(BMD_File *)gSandTornadoModelFile.filePtr, data_ov024_02112968);
     mTextureTransformer.SetFile(data_ov024_02112968, 0, 0x1000, 0);

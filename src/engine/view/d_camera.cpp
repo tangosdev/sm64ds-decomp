@@ -1518,42 +1518,11 @@ extern struct CamMode data_0208710c;
 extern struct CamMode data_0208724c;
 extern struct CamMode data_0208729c;
 extern struct CamMode data_020874cc;
-extern "C" {
-/* Siblings defined below. */
-int func_02009414(dCamera_c *cam);
-int func_020094a8(dCamera_c *cam);
-int func_02008b08(dCamera_c *cam);
-short func_02008abc(dCamera_c *cam);
-short func_02008a70(dCamera_c *cam);
-}
-
 extern "C" void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, int mag, short ang,
                                      short angY);
 extern "C" void Vec3fGetDistAndAngle(const Vector3 *v0, const Vector3 *v1, int *outDist,
                                      short *outVertAng, short *outHorzAng);
 void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int stepX, int stepY, int stepZ);
-extern "C" {
-/* State entries and helpers defined below. The declarations carry the C
-   linkage their ROM symbols need. */
-int func_02009e30(dCamera_c *cam);
-int func_02009e10(dCamera_c *cam);
-int func_02009df0(dCamera_c *cam);
-int func_02009dd0(dCamera_c *cam);
-int func_02009db0(dCamera_c *cam);
-int func_02009d90(dCamera_c *cam);
-int func_02009d70(dCamera_c *cam);
-int func_02009aa8(dCamera_c *cam);
-int func_020098b8(dCamera_c *cam);
-void func_0200987c(dCamera_c *cam);
-int func_0200985c(dCamera_c *cam);
-int func_020097ec(dCamera_c *cam);
-int func_020095e4(dCamera_c *cam);
-int func_020095c4(dCamera_c *cam);
-int func_02009540(dCamera_c *cam);
-int func_020094e4(dCamera_c *cam);
-void func_020094c0(dCamera_c *cam);
-}
-
 /* The turn-by-buttons follow (mode data_0208733c), Super Mario 64's
    mode_8_directions_camera: the yaw is mBaseAngleY plus mBaseAngleOffset
    (s8DirModeBaseYaw plus s8DirModeYawOffset there), the 0x100/0x200 buttons
@@ -2519,38 +2488,38 @@ int dCamera_c::func_02009e50() {
     return 1;
 }
 
-int func_02009e30(dCamera_c *cam) {
-    cam->SetMode(0);
+int dCamera_c::func_02009e30() {
+    this->SetMode(0);
     return 1;
 }
 
-int func_02009e10(dCamera_c *cam) {
-    cam->SetMode(6);
+int dCamera_c::func_02009e10() {
+    this->SetMode(6);
     return 1;
 }
 
-int func_02009df0(dCamera_c *cam) {
-    cam->SetMode(2);
+int dCamera_c::func_02009df0() {
+    this->SetMode(2);
     return 1;
 }
 
-int func_02009dd0(dCamera_c *cam) {
-    cam->SetMode(3);
+int dCamera_c::func_02009dd0() {
+    this->SetMode(3);
     return 1;
 }
 
-int func_02009db0(dCamera_c *cam) {
-    cam->SetMode(4);
+int dCamera_c::func_02009db0() {
+    this->SetMode(4);
     return 1;
 }
 
-int func_02009d90(dCamera_c *cam) {
-    cam->SetMode(7);
+int dCamera_c::func_02009d90() {
+    this->SetMode(7);
     return 1;
 }
 
-int func_02009d70(dCamera_c *cam) {
-    cam->SetMode(0x10);
+int dCamera_c::func_02009d70() {
+    this->SetMode(0x10);
     return 1;
 }
 
@@ -2568,31 +2537,31 @@ int dCamera_c::func_02009d30() {
    and pos along with the player and turn to data_02086e90 behind it;
    afterwards follow its facing, with the stylus axes adding up to 0x2000 of
    yaw (the rest turns the player) and 0x1c00 of pitch. */
-int func_02009aa8(dCamera_c *cam) {
+int dCamera_c::func_02009aa8() {
     Vector3 lookAtGoal;
     Vector3 delta;
     Vector3 src;
 
     src = data_02086e90;
 
-    Vec3_RotateYAndTranslate(&lookAtGoal, &cam->mTargetPlayer->mPos, cam->mTargetPlayer->mAngle.y,
+    Vec3_RotateYAndTranslate(&lookAtGoal, &this->mTargetPlayer->mPos, this->mTargetPlayer->mAngle.y,
                              &src);
 
-    if (cam->mTurningToTarget != 0) {
+    if (this->mTurningToTarget != 0) {
         int arrived;
 
-        Vec3_Sub(&delta, &cam->mTargetPlayer->mPos, &cam->mTargetPos);
-        VEC_Add(&cam->lookAt, &delta, &cam->lookAt);
-        VEC_Add(&cam->pos, &delta, &cam->pos);
+        Vec3_Sub(&delta, &this->mTargetPlayer->mPos, &this->mTargetPos);
+        VEC_Add(&this->lookAt, &delta, &this->lookAt);
+        VEC_Add(&this->pos, &delta, &this->pos);
 
-        cam->mTargetPos = cam->mTargetPlayer->mPos;
+        this->mTargetPos = this->mTargetPlayer->mPos;
 
-        arrived = cam->ApproachLookAtAndAngles(&lookAtGoal, cam->mTargetAngleY, 0);
+        arrived = this->ApproachLookAtAndAngles(&lookAtGoal, this->mTargetAngleY, 0);
         if (arrived != 0)
-            cam->mTurningToTarget = 0;
+            this->mTurningToTarget = 0;
 
-        cam->mLookAtOffset.x = 0;
-        cam->mLookAtOffset.z = 0;
+        this->mLookAtOffset.x = 0;
+        this->mLookAtOffset.z = 0;
     } else {
         s16 newAngle;
         s16 yawInput, pitchInput;
@@ -2601,16 +2570,16 @@ int func_02009aa8(dCamera_c *cam) {
         int clamped;
         s16 pitch;
 
-        newAngle = cam->mTargetPlayer->mAngle.y + 0x8000;
-        cam->mAngleY += newAngle - cam->mTargetAngleY;
-        cam->mTargetAngleY = newAngle;
+        newAngle = this->mTargetPlayer->mAngle.y + 0x8000;
+        this->mAngleY += newAngle - this->mTargetAngleY;
+        this->mTargetAngleY = newAngle;
 
-        cam->lookAt = lookAtGoal;
+        this->lookAt = lookAtGoal;
 
         yawInput = data_0209f498[gActivePlayerSlot].nx;
-        cam->mAngleY -= FX_MUL(yawInput, 0x200);
+        this->mAngleY -= FX_MUL(yawInput, 0x200);
 
-        yawDelta = (s16)(cam->mAngleY - newAngle);
+        yawDelta = (s16)(this->mAngleY - newAngle);
         if (yawDelta < -0x2000) {
             clamped = -0x2000;
         } else {
@@ -2622,24 +2591,24 @@ int func_02009aa8(dCamera_c *cam) {
         }
         excess = yawDelta - clamped;
 
-        cam->mTargetPlayer->mAngle.y += excess;
-        cam->mTargetAngleY += excess;
+        this->mTargetPlayer->mAngle.y += excess;
+        this->mTargetAngleY += excess;
 
         pitchInput = data_0209f498[gActivePlayerSlot].ny;
-        cam->mAngleX += FX_MUL(pitchInput, 0x200);
+        this->mAngleX += FX_MUL(pitchInput, 0x200);
 
-        pitch = cam->mAngleX;
+        pitch = this->mAngleX;
         if (pitch < -CAM_LOOK_PITCH_MAX) {
             pitch = -CAM_LOOK_PITCH_MAX;
         } else if (pitch > CAM_LOOK_PITCH_MAX) {
             pitch = CAM_LOOK_PITCH_MAX;
         }
-        cam->mAngleX = pitch;
+        this->mAngleX = pitch;
     }
 
-    cam->ApproachDist(cam->ScaleDistByFov(0x48000));
-    cam->mFlags |= CAM_FLAG_WALL_REVERSE;
-    cam->ClampPosAboveTarget();
+    this->ApproachDist(this->ScaleDistByFov(0x48000));
+    this->mFlags |= CAM_FLAG_WALL_REVERSE;
+    this->ClampPosAboveTarget();
 
     return 1;
 }
@@ -2703,35 +2672,35 @@ int dCamera_c::func_020098e0() {
 }
 
 /* Entry to state 0x13: arm mStateTimer, which func_0200987c counts down. */
-int func_020098b8(dCamera_c *cam) {
-    cam->SetMode(0x13);
-    cam->mStateTimer = 28;
+int dCamera_c::func_020098b8() {
+    this->SetMode(0x13);
+    this->mStateTimer = 28;
     return 1;
 }
 
 /* State 0x13: follow until mStateTimer runs out, then switch to state
    0x14. */
-void func_0200987c(dCamera_c *cam) {
-    if (DecIfAbove0_Short(&cam->mStateTimer) == 0) {
-        cam->SetMode(0x14);
+void dCamera_c::func_0200987c() {
+    if (DecIfAbove0_Short(&this->mStateTimer) == 0) {
+        this->SetMode(0x14);
     }
-    cam->func_02009e70();
+    this->func_02009e70();
 }
 
-int func_0200985c(dCamera_c *cam) {
-    cam->SetMode(0x17);
+int dCamera_c::func_0200985c() {
+    this->SetMode(0x17);
     return 1;
 }
 
 /* Entry to the first-person state: pos at the player, facing its way. */
-int func_020097ec(dCamera_c *cam) {
-    cam->SetMode(0x18);
-    cam->pos = cam->mTargetPlayer->mPos;
-    cam->mBehindAngleY = cam->mTargetPlayer->mAngle.y + 0x8000;
-    cam->mAngleY = cam->mBehindAngleY;
-    cam->mTargetAngleY = 0;
-    cam->mAngleX = cam->mTargetPlayer->mAngle.x;
-    cam->mInputScale = 0;
+int dCamera_c::func_020097ec() {
+    this->SetMode(0x18);
+    this->pos = this->mTargetPlayer->mPos;
+    this->mBehindAngleY = this->mTargetPlayer->mAngle.y + 0x8000;
+    this->mAngleY = this->mBehindAngleY;
+    this->mTargetAngleY = 0;
+    this->mAngleX = this->mTargetPlayer->mAngle.x;
+    this->mInputScale = 0;
     return 1;
 }
 
@@ -2739,121 +2708,121 @@ int func_020097ec(dCamera_c *cam) {
    within 0x4000 of mBehindAngleY) and the pitch, with the turning sound, and
    lookAt is rebuilt 0x280000 in front of pos. The player faces away from the
    camera. */
-int func_020095e4(dCamera_c *cam) {
+int dCamera_c::func_020095e4() {
     Vector3 v;
     int step;
     short prevTargetYaw, prevPitch;
 
     FUN_02029ab0();
-    func_02008b08(cam);
+    this->func_02008b08();
 
     if (data_0209f498[gActivePlayerSlot].mag != 0) {
         step = (data_0209f498[gActivePlayerSlot].mode == 2) ? 0x240 : 0x200;
-        prevTargetYaw = cam->mTargetAngleY;
+        prevTargetYaw = this->mTargetAngleY;
         {
-            int a = func_02008abc(cam);
-            cam->mTargetAngleY -= FX_MUL(step, a);
+            int a = this->func_02008abc();
+            this->mTargetAngleY -= FX_MUL(step, a);
         }
         {
-            int angle = cam->mTargetAngleY;
+            int angle = this->mTargetAngleY;
             if (angle < -0x4000)
                 angle = -0x4000;
             else if (angle > 0x4000)
                 angle = 0x4000;
-            cam->mTargetAngleY = angle;
+            this->mTargetAngleY = angle;
         }
-        cam->mAngleY = cam->mBehindAngleY + cam->mTargetAngleY;
-        prevPitch = cam->mAngleX;
-        cam->mAngleX += FX_MUL(step, func_02008a70(cam));
+        this->mAngleY = this->mBehindAngleY + this->mTargetAngleY;
+        prevPitch = this->mAngleX;
+        this->mAngleX += FX_MUL(step, this->func_02008a70());
         {
-            int angle = cam->mAngleX;
+            int angle = this->mAngleX;
             if (angle < 0)
                 angle = 0;
             else if (angle > 0x38e3)
                 angle = 0x38e3;
-            cam->mAngleX = angle;
+            this->mAngleX = angle;
         }
-        if (cam->mTargetAngleY != prevTargetYaw || cam->mAngleX != prevPitch) {
-            cam->mTurnSound = Sound_PlayIfNotActive(cam->mTurnSound, 3, 0x181, 0);
+        if (this->mTargetAngleY != prevTargetYaw || this->mAngleX != prevPitch) {
+            this->mTurnSound = Sound_PlayIfNotActive(this->mTurnSound, 3, 0x181, 0);
         }
     }
 
     SetVec(v, 0, 0, -0x280000);
-    Matrix4x3_FromTranslation(&gScratchMtx, cam->pos.x, cam->pos.y, cam->pos.z);
-    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, cam->mAngleY);
-    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, cam->mAngleX);
-    MTX_MultVec43(&v, &gScratchMtx, &cam->lookAt);
-    cam->mTargetPlayer->mAngle.y = cam->mAngleY - 0x8000;
+    Matrix4x3_FromTranslation(&gScratchMtx, this->pos.x, this->pos.y, this->pos.z);
+    Matrix4x3_ApplyInPlaceToRotationY(&gScratchMtx, this->mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&gScratchMtx, this->mAngleX);
+    MTX_MultVec43(&v, &gScratchMtx, &this->lookAt);
+    this->mTargetPlayer->mAngle.y = this->mAngleY - 0x8000;
     return 1;
 }
 
-int func_020095c4(dCamera_c *cam) {
-    cam->SetMode(0x1d);
+int dCamera_c::func_020095c4() {
+    this->SetMode(0x1d);
     return 1;
 }
 
 /* The exit-viewing state: turn toward mLookTargetPos, carry it toward
    data_02086ea8 turned by mTargetAngleY around mLookTarget, and orbit at
    0x300000. */
-int func_02009540(dCamera_c *cam) {
-    cam->ApproachLookAtAndAngles(&cam->mLookTargetPos, cam->mTargetAngleY, 0);
+int dCamera_c::func_02009540() {
+    this->ApproachLookAtAndAngles(&this->mLookTargetPos, this->mTargetAngleY, 0);
 
     Vector3 goal;
     Vector3 offset = data_02086ea8;
 
-    Vec3_RotateYAndTranslate(&goal, cam->mLookTarget, cam->mTargetAngleY, &offset);
+    Vec3_RotateYAndTranslate(&goal, this->mLookTarget, this->mTargetAngleY, &offset);
 
-    ApproachLinear(cam->mLookTargetPos, goal, 0x8000);
+    ApproachLinear(this->mLookTargetPos, goal, 0x8000);
 
-    cam->ApproachDist(0x300000);
+    this->ApproachDist(0x300000);
 
     return 1;
 }
 
-int func_020094e4(dCamera_c *cam) {
-    cam->SetMode(0x1f);
+int dCamera_c::func_020094e4() {
+    this->SetMode(0x1f);
     Vector3 offset = data_02086eb4;
-    Vec3_RotateYAndTranslate(&cam->pos, &cam->mTargetPos, cam->mTargetPlayer->mAngle.y, &offset);
+    Vec3_RotateYAndTranslate(&this->pos, &this->mTargetPos, this->mTargetPlayer->mAngle.y, &offset);
     return 1;
 }
 
 /* Frame the target player as the focus actor for this frame (Behavior
    clears it again) and follow. */
-void func_020094c0(dCamera_c *cam) {
-    cam->mFocusActor = cam->mTargetPlayer;
-    cam->mFlags |= CAM_FLAG_SNAP_POS;
-    cam->func_02009e70();
+void dCamera_c::func_020094c0() {
+    this->mFocusActor = this->mTargetPlayer;
+    this->mFlags |= CAM_FLAG_SNAP_POS;
+    this->func_02009e70();
 }
 
-int func_020094a8(dCamera_c *cam) {
-    cam->mPathIndex = 0;
-    cam->mPathProgress = 0;
+int dCamera_c::func_020094a8() {
+    this->mPathIndex = 0;
+    this->mPathProgress = 0;
     return 1;
 }
 
 /* Walk pos along mPosPath and lookAt along mLookAtPath (MovePointAlongSpline,
    sharing one segment index and progress), then re-aim. Returns 0 once
    either path has run out. */
-int func_02009414(dCamera_c *cam) {
+int dCamera_c::func_02009414() {
     int ok = 1;
-    CutsceneSpline *posPath = cam->mPosPath;
+    CutsceneSpline *posPath = this->mPosPath;
 
     if (posPath != 0) {
-        ok = MovePointAlongSpline(&cam->pos, &cam->mPathIndex, &cam->mPathProgress, posPath);
+        ok = MovePointAlongSpline(&this->pos, &this->mPathIndex, &this->mPathProgress, posPath);
     }
 
-    CutsceneSpline *lookAtPath = cam->mLookAtPath;
+    CutsceneSpline *lookAtPath = this->mLookAtPath;
     if (lookAtPath != 0) {
-        if (MovePointAlongSpline(&cam->lookAt, &cam->mPathIndex, &cam->mPathProgress, lookAtPath) ==
-            0) {
+        if (MovePointAlongSpline(&this->lookAt, &this->mPathIndex, &this->mPathProgress,
+                                 lookAtPath) == 0) {
             ok = 0;
         }
     }
 
-    cam->mAngleY = Vec3_HorzAngle(&cam->lookAt, &cam->pos);
-    cam->mAngleX = Vec3_VertAngle(&cam->lookAt, &cam->pos);
+    this->mAngleY = Vec3_HorzAngle(&this->lookAt, &this->pos);
+    this->mAngleX = Vec3_VertAngle(&this->lookAt, &this->pos);
 
-    cam->UpdateTargetPos();
+    this->UpdateTargetPos();
     return ok;
 }
 
@@ -3127,22 +3096,22 @@ int MovePointAlongSpline(Vector3 *pos, s16 *segment, s32 *progress, CutsceneSpli
 
 /* Ease mInputScale toward the active player's camera-input entry: slowly
    while it is nonzero, quickly back to 0. */
-int func_02008b08(dCamera_c *cam) {
+int dCamera_c::func_02008b08() {
     s16 dest = data_0209f498[gActivePlayerSlot].mag;
-    return ApproachLinear2(cam->mInputScale, dest, dest != 0 ? 0xa0 : 0x400);
+    return ApproachLinear2(this->mInputScale, dest, dest != 0 ? 0xa0 : 0x400);
 }
 
 /* The camera's horizontal input axis, scaled by mInputScale. */
-short func_02008abc(dCamera_c *cam) {
+short dCamera_c::func_02008abc() {
     short axis = data_0209f498[gActivePlayerSlot].nx;
-    short scale = cam->mInputScale;
+    short scale = this->mInputScale;
     return FX_MUL(axis, scale);
 }
 
 /* The camera's vertical input axis, scaled by mInputScale. */
-short func_02008a70(dCamera_c *cam) {
+short dCamera_c::func_02008a70() {
     short axis = data_0209f498[gActivePlayerSlot].ny;
-    short scale = cam->mInputScale;
+    short scale = this->mInputScale;
     return FX_MUL(axis, scale);
 }
 
@@ -3221,91 +3190,91 @@ int RunCameraCommand(dCamera_c *cam, u8 *command, int first, int last) {
 }
 
 /* Script op: set lookAt from three whole-unit shorts. */
-int func_02008500(dCamera_c *cam, u8 *data) {
-    SetVec(cam->lookAt, ReadUnalignedShort(data) << 12, ReadUnalignedShort(data + 2) << 12,
+int dCamera_c::func_02008500(u8 *data) {
+    SetVec(this->lookAt, ReadUnalignedShort(data) << 12, ReadUnalignedShort(data + 2) << 12,
            ReadUnalignedShort(data + 4) << 12);
     return 1;
 }
 
 /* Script op: set pos from three whole-unit shorts. */
-s32 func_020084b0(dCamera_c *cam, u8 *data, int a, int b) {
-    SetVec(cam->pos, ReadUnalignedShort(data) << 12, ReadUnalignedShort(data + 2) << 12,
+s32 dCamera_c::func_020084b0(u8 *data, int a, int b) {
+    SetVec(this->pos, ReadUnalignedShort(data) << 12, ReadUnalignedShort(data + 2) << 12,
            ReadUnalignedShort(data + 4) << 12);
     return 1;
 }
 
 /* Script op: set lookAt, then pos. */
-int func_02008474(dCamera_c *cam, u8 *data, int a, int b) {
-    func_02008500(cam, data);
-    return func_020084b0(cam, data + 6, a, b);
+int dCamera_c::func_02008474(u8 *data, int a, int b) {
+    this->func_02008500(data);
+    return this->func_020084b0(data + 6, a, b);
 }
 
 /* Script op: set mFovAngle. */
-int func_02008450(dCamera_c *cam, u8 *data) {
-    cam->mFovAngle = ReadUnalignedUshort(data);
+int dCamera_c::func_02008450(u8 *data) {
+    this->mFovAngle = ReadUnalignedUshort(data);
     return 1;
 }
 
 /* Script op: step mFovAngle toward a target by a rate. */
-int func_0200840c(dCamera_c *cam, u8 *data) {
+int dCamera_c::func_0200840c(u8 *data) {
     short v1 = ReadUnalignedShort(data);
     short v2 = ReadUnalignedShort(data + 2);
-    ApproachLinear2(cam->mFovAngle, v1, v2);
+    ApproachLinear2(this->mFovAngle, v1, v2);
     return 1;
 }
 
 /* Script op: grow the viewport from the given rectangle to the full screen
    over frames lo..hi, keeping mAspect in step. */
-int func_020082f8(dCamera_c *cam, u8 *src, int lo, int hi) {
+int dCamera_c::func_020082f8(u8 *src, int lo, int hi) {
     fx32 slope = FX_Div((gKuppaScriptFrame - lo) << 12, (hi - lo) << 12);
-    cam->mViewport[0] = (FX_MUL((src[0] << 12), slope) >> 12);
-    cam->mViewport[1] = (FX_MUL((src[1] << 12), slope) >> 12);
-    cam->mViewport[2] = ((FX_MUL(((src[2] - 0xff) << 12), slope) >> 12) + 0xff);
-    cam->mViewport[3] = ((FX_MUL(((src[3] - 0xbf) << 12), slope) >> 12) + 0xbf);
-    cam->mAspect = FX_Div(((cam->mViewport[2] - cam->mViewport[0]) + 1) << 12,
-                          ((cam->mViewport[3] - cam->mViewport[1]) + 1) << 12);
+    this->mViewport[0] = (FX_MUL((src[0] << 12), slope) >> 12);
+    this->mViewport[1] = (FX_MUL((src[1] << 12), slope) >> 12);
+    this->mViewport[2] = ((FX_MUL(((src[2] - 0xff) << 12), slope) >> 12) + 0xff);
+    this->mViewport[3] = ((FX_MUL(((src[3] - 0xbf) << 12), slope) >> 12) + 0xbf);
+    this->mAspect = FX_Div(((this->mViewport[2] - this->mViewport[0]) + 1) << 12,
+                           ((this->mViewport[3] - this->mViewport[1]) + 1) << 12);
     return 1;
 }
 
 /* Script op: on its first frame, reset the path walk and take the lookAt
    and pos paths; every frame, walk them. */
-int func_020082a0(dCamera_c *cam, u8 *src, int id) {
+int dCamera_c::func_020082a0(u8 *src, int id) {
     if (id == gKuppaScriptFrame) {
-        func_020094a8(cam);
-        cam->mLookAtPath = (CutsceneSpline *)ReadUnalignedInt(src);
-        cam->mPosPath = (CutsceneSpline *)ReadUnalignedInt(src + 4);
+        this->func_020094a8();
+        this->mLookAtPath = (CutsceneSpline *)ReadUnalignedInt(src);
+        this->mPosPath = (CutsceneSpline *)ReadUnalignedInt(src + 4);
     }
-    func_02009414(cam);
+    this->func_02009414();
     return 1;
 }
 
 /* Script op: from the first frame, ease savedLookAt.y toward a height
    between the script player's ground and its position, and keep lookAt.y
    at least that high. */
-int func_02008200(dCamera_c *cam, u8 *data, int first) {
+int dCamera_c::func_02008200(u8 *data, int first) {
     daPly_c *a;
     int diff, val, target;
     if (first == gKuppaScriptFrame)
-        cam->savedLookAt.y = 0x190000;
+        this->savedLookAt.y = 0x190000;
     a = (daPly_c *)KuppaScript::FindScriptPlayer(0);
     diff = a->mPos.y - a->mGroundY;
     val = FX_MUL(diff, 0x1199);
     target = a->mGroundY + 0x50000 + val;
-    Math_Function_0203b0fc(&cam->savedLookAt.y, target, 0xa3, CAM_NO_STEP_LIMIT);
-    if (cam->lookAt.y < cam->savedLookAt.y)
-        cam->lookAt.y = cam->savedLookAt.y;
+    Math_Function_0203b0fc(&this->savedLookAt.y, target, 0xa3, CAM_NO_STEP_LIMIT);
+    if (this->lookAt.y < this->savedLookAt.y)
+        this->lookAt.y = this->savedLookAt.y;
     return 1;
 }
 
 /* Script op: aim lookAt ahead of the script player, nearer the further it
    is below pos. */
-int func_0200814c(dCamera_c *cam) {
+int dCamera_c::func_0200814c() {
     dActor_c *a;
     int diff, absdiff, val;
     Vector3 v;
 
     a = KuppaScript::FindScriptPlayer(0);
-    diff = a->mPos.y - cam->pos.y;
+    diff = a->mPos.y - this->pos.y;
     SetVec(v, 0, 0x50000, diff);
     absdiff = diff < 0 ? -diff : diff;
     val = FX_MUL(absdiff, -0x199);
@@ -3313,66 +3282,66 @@ int func_0200814c(dCamera_c *cam) {
     if (val > -0x64000)
         v.z = -0x64000;
     if (diff > -0x300000)
-        Vec3_RotateYAndTranslate(&cam->lookAt, &a->mPos, a->mAngle.y, &v);
+        Vec3_RotateYAndTranslate(&this->lookAt, &a->mPos, a->mAngle.y, &v);
     return 1;
 }
 
 /* Script op: ease pos.y and lookAt.y toward heights above demo actor 0x13. */
-int func_020080f0(dCamera_c *cam) {
+int dCamera_c::func_020080f0() {
     dActor_c *actor = KuppaScript::FindDemoActor(0x13);
     Vector3 *pos = &actor->mPos;
     int v1 = pos->y;
-    Math_Function_0203b0fc(&cam->pos.y, v1 + 0x23000, 0x51, CAM_NO_STEP_LIMIT);
+    Math_Function_0203b0fc(&this->pos.y, v1 + 0x23000, 0x51, CAM_NO_STEP_LIMIT);
     int v2 = pos->y;
-    Math_Function_0203b0fc(&cam->lookAt.y, v2 + 0x7d000, 0x266, CAM_NO_STEP_LIMIT);
+    Math_Function_0203b0fc(&this->lookAt.y, v2 + 0x7d000, 0x266, CAM_NO_STEP_LIMIT);
     return 1;
 }
 
 /* Script op: lookAt at demo actor 0x13, mScriptParam above it. */
-int func_020080b0(dCamera_c *cam) {
+int dCamera_c::func_020080b0() {
     dActor_c *obj = KuppaScript::FindDemoActor(0x13);
     Vector3 *base = &obj->mPos;
 
-    SetVec(cam->lookAt, base->x, base->y + cam->mScriptParam, base->z);
+    SetVec(this->lookAt, base->x, base->y + this->mScriptParam, base->z);
     return 1;
 }
 
 /* Script op: raise pos by demo actor 0x13's height. */
-int func_02008080(dCamera_c *cam) {
+int dCamera_c::func_02008080() {
     dActor_c *a;
     int *dst;
 
     a = KuppaScript::FindDemoActor(0x13);
-    dst = &cam->pos.y;
+    dst = &this->pos.y;
     *dst = *dst + a->mPos.y;
     return 1;
 }
 
 /* Script op: walk the paths, then ease pos.y toward demo actor 0x13's
    height above where the walk left it. */
-int func_02008028(dCamera_c *cam) {
+int dCamera_c::func_02008028() {
     fx32 y;
     dActor_c *obj;
 
-    y = cam->pos.y;
-    func_02009414(cam);
+    y = this->pos.y;
+    this->func_02009414();
     obj = KuppaScript::FindDemoActor(0x13);
-    Math_Function_0203b0fc(&y, cam->pos.y + obj->mPos.y, 0x11e, CAM_NO_STEP_LIMIT);
-    cam->pos.y = y;
+    Math_Function_0203b0fc(&y, this->pos.y + obj->mPos.y, 0x11e, CAM_NO_STEP_LIMIT);
+    this->pos.y = y;
     return 1;
 }
 
 /* Script op: set mScriptParam. */
-int func_02008008(dCamera_c *cam, u8 *data) {
-    cam->mScriptParam = ReadUnalignedSignedInt(data);
+int dCamera_c::func_02008008(u8 *data) {
+    this->mScriptParam = ReadUnalignedSignedInt(data);
     return 1;
 }
 
 /* Script op: step mScriptParam toward a target by a rate. */
-int func_02007fcc(dCamera_c *cam, u8 *data) {
+int dCamera_c::func_02007fcc(u8 *data) {
     int v1 = ReadUnalignedSignedInt(data);
     int v2 = ReadUnalignedSignedInt(data + 4);
-    ApproachLinear(cam->mScriptParam, v1, v2);
+    ApproachLinear(this->mScriptParam, v1, v2);
     return 1;
 }
 
@@ -3386,26 +3355,26 @@ static inline void ApproachVecAsymptotic(Vector3 &cur, const Vector3 &goal, cons
 
 /* Script op: step each lookAt axis toward a whole-unit target by its own
    rate. */
-int func_02007f14(dCamera_c *cam, u8 *data) {
+int dCamera_c::func_02007f14(u8 *data) {
     Vector3 goal;
     Vector3 rate;
     SetVec(goal, ReadUnalignedShort(data) << 12, ReadUnalignedShort(data + 2) << 12,
            ReadUnalignedShort(data + 4) << 12);
     SetVec(rate, ReadUnalignedShort(data + 6), ReadUnalignedShort(data + 8),
            ReadUnalignedShort(data + 0xa));
-    ApproachVecAsymptotic(cam->lookAt, goal, rate);
+    ApproachVecAsymptotic(this->lookAt, goal, rate);
     return 1;
 }
 
 /* Script op: the same for pos. */
-int func_02007e5c(dCamera_c *cam, u8 *data) {
+int dCamera_c::func_02007e5c(u8 *data) {
     Vector3 goal;
     Vector3 rate;
     SetVec(goal, ReadUnalignedShort(data) << 12, ReadUnalignedShort(data + 2) << 12,
            ReadUnalignedShort(data + 4) << 12);
     SetVec(rate, ReadUnalignedShort(data + 6), ReadUnalignedShort(data + 8),
            ReadUnalignedShort(data + 0xa));
-    ApproachVecAsymptotic(cam->pos, goal, rate);
+    ApproachVecAsymptotic(this->pos, goal, rate);
     return 1;
 }
 
@@ -3476,14 +3445,14 @@ extern "C" void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, fx32 ma
 
 /* Script op: step lookAt toward the target player's position plus a
    whole-unit offset. */
-int func_02007b98(dCamera_c *cam, u8 *data) {
+int dCamera_c::func_02007b98(u8 *data) {
     struct Vector3 v;
     int b;
     SetVec(v, ReadUnalignedShort(data) << 12, ReadUnalignedShort(data + 2) << 12,
            ReadUnalignedShort(data + 4) << 12);
     b = data[6] << 4;
-    VEC_Add(&v, &cam->mTargetPlayer->mPos, &v);
-    func_02007cec(&cam->lookAt, &v, b);
+    VEC_Add(&v, &this->mTargetPlayer->mPos, &v);
+    func_02007cec(&this->lookAt, &v, b);
     return 1;
 }
 
@@ -3506,15 +3475,15 @@ int FocusInFrontOfMario(dCamera_c *cam, u8 *rec) {
 
 /* Script op: orbit pos around the target player (func_020070e8); a yaw of
    -1 means mOrbitTargetYaw. */
-int func_02007a8c(dCamera_c *cam, u8 *data) {
+int dCamera_c::func_02007a8c(u8 *data) {
     fx32 distTarget = ReadUnalignedShort(data) << 12;
     int distStep = data[2] << 4;
     short vertTarget = ReadUnalignedShort(data + 3);
     short vertDiv = data[5];
     short horzTarget = ReadUnalignedShort(data + 6);
     if (horzTarget == -1)
-        horzTarget = cam->mOrbitTargetYaw;
-    func_020070e8(cam, distTarget, distStep, vertTarget, vertDiv, horzTarget, data[8]);
+        horzTarget = this->mOrbitTargetYaw;
+    func_020070e8(this, distTarget, distStep, vertTarget, vertDiv, horzTarget, data[8]);
     return 1;
 }
 
@@ -3556,10 +3525,10 @@ int RotateAndMoveVec3f(dCamera_c *cam, u8 *p) {
 }
 
 /* Script op: turn mFovAngle toward a target. */
-int func_020078c4(dCamera_c *cam, u8 *data) {
+int dCamera_c::func_020078c4(u8 *data) {
     short v = ReadUnalignedShort(data);
     unsigned char b = data[2];
-    ApproachAngle(&cam->mFovAngle, v, b, 0x4000, 0);
+    ApproachAngle(&this->mFovAngle, v, b, 0x4000, 0);
     return 1;
 }
 

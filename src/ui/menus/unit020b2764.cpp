@@ -112,7 +112,6 @@ extern const BTA_File *data_ov007_020d7ee8[3][3]; /* [set]: animation data in th
 extern void *data_ov007_02103348[3];           /* data_ov007_020ccc80[set], loaded */
 extern void *data_ov007_02103354[3];           /* data_ov007_020ccc68[figureIndex], loaded */
 
-void func_02044efc(struct BMD_File *bmd);
 extern "C" void func_ov007_020b3edc(int idx);
 extern "C" void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020b7708(int idx, void *pos);
@@ -150,7 +149,7 @@ Ov007Model *func_ov007_020b2bd4(int figureIndex, int stage) {
         data_ov007_02103348[i] = func_ov007_020b3f20(setFiles[i]);
         data_ov007_02103354[i] = func_ov007_020b3f20(figureFiles[i]);
     }
-    func_02044efc((struct BMD_File *)file);
+    ((BMD_File *)file)->func_02044efc();
     model = func_ov007_020bc6d4(file, 6);
     func_ov007_020bc6b4(model, data_ov007_02103348, 3);
     func_ov007_020bc5fc(model, data_ov007_02103354, 3);

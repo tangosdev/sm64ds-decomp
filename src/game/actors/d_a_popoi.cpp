@@ -558,8 +558,8 @@ int daPopoi_c::UpdateGrabState() {
                         if (a->mIsMega == 0) {
                             if (!IsNoControl(a)) {
                                 if (a->GetHurtState() < 0) {
-                                    if (func_ov002_020db674(a, 0x28000, 0x70000,
-                                                            (short)(mAngle.y + 0x8000)) != 0) {
+                                    if ((a)->func_ov002_020db674(0x28000, 0x70000,
+                                                                 (short)(mAngle.y + 0x8000)) != 0) {
                                         mCaughtPlayer = 0;
                                         func_02012694(daPopoi_SND_THROW_PLAYER, &mCamSpacePos);
                                     }

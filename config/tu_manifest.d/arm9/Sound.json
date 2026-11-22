@@ -65,7 +65,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "_Z13func_020116c4P11SndRegTableiiPK7Vector3is",
+      "symbol": "_ZN11SndRegTable13func_020116c4EiiPK7Vector3is",
       "address": "0x020116c4",
       "legacy_source": "src/func_020116c4.c",
       "size": "0x000000d8",
@@ -107,7 +107,7 @@
       "ordinal": 7
     },
     {
-      "symbol": "_Z13func_02011a28P11SndRegTable",
+      "symbol": "_ZN11SndRegTable13func_02011a28Ev",
       "address": "0x02011a28",
       "legacy_source": "src/func_02011a28.c",
       "size": "0x00000034",
@@ -121,28 +121,28 @@
       "ordinal": 9
     },
     {
-      "symbol": "_Z13func_02011aa0Pv",
+      "symbol": "_ZN11SndRegEntry13func_02011aa0Ev",
       "address": "0x02011aa0",
       "legacy_source": "src/func_02011aa0.c",
       "size": "0x00000024",
       "ordinal": 10
     },
     {
-      "symbol": "_Z13func_02011ac4PviiiPK7Vector3is",
+      "symbol": "_ZN11SndRegEntry13func_02011ac4EiiiPK7Vector3is",
       "address": "0x02011ac4",
       "legacy_source": "src/func_02011ac4.c",
       "size": "0x00000034",
       "ordinal": 11
     },
     {
-      "symbol": "_Z13func_02011af8PviiiPK7Vector3s",
+      "symbol": "_ZN11SndRegEntry13func_02011af8EiiiPK7Vector3s",
       "address": "0x02011af8",
       "legacy_source": "src/func_02011af8.c",
       "size": "0x00000040",
       "ordinal": 12
     },
     {
-      "symbol": "_Z13func_02011b38Pviiis",
+      "symbol": "_ZN11SndRegEntry13func_02011b38Eiiis",
       "address": "0x02011b38",
       "legacy_source": "src/func_02011b38.c",
       "size": "0x00000044",
@@ -905,9 +905,9 @@
   "compiler_only_output": [],
   "defined_symbol_renames": [
     {
-      "from": "@2050",
+      "from": "@2042",
       "to": "data_0208e498",
-      "evidence": "compiler string literal: the one literal in this TU (func_020133bc's archive path), numbered @2050 by mwcc, keeps its configured address name Re-keyed from @2050 to @2048 after SndRegTable's two this-alias locals were removed (measured from the compiled object). Re-keyed from @2048 to @2050 when the Matrix4x3 union (#821 r69) composed with the r71-r78 stack (#821 r79a) (measured from the compiled object)."
+      "evidence": "compiler string literal: the one literal in this TU (func_020133bc's archive path), numbered @2050 by mwcc, keeps its configured address name Re-keyed from @2050 to @2048 after SndRegTable's two this-alias locals were removed (measured from the compiled object). Re-keyed from @2048 to @2050 when the Matrix4x3 union (#821 r69) composed with the r71-r78 stack (#821 r79a) (measured from the compiled object). Re-keyed from @2050 to @2042 when the folded free helpers became SndRegTable and SndRegEntry methods (measured from the compiled object)."
     }
   ],
   "notes": [

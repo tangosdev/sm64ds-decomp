@@ -91,7 +91,7 @@ u32 TrimModelFile(void *ptr);
 extern "C" void func_02045e2c(int obj, int i, BCA_File *a, int b);
 /* local extern: blends verts toward the old pose in Virtual10/UpdateVerts
    while blendWeight is still below 1.0. Definition takes char *. */
-extern "C" void func_0204531c(ModelComponents *data, int weight);
+
 /* local extern: no header declares it; sizes the mBlendBuffer blend buffer off the
    file: numBones matrices. */
 extern "C" int func_020462bc(void *file);
@@ -327,8 +327,8 @@ void dExtSimpleModel_c::SetPolygonID(int id) {
     data.SetPolygonID(id);
 }
 
-extern "C" void func_02016aac(char *self, int id, int index) {
-    ((dExtSimpleModel_c *)self)->data.SetMaterialPolygonID(id, index);
+void dExtSimpleModel_c::func_02016aac(int id, int index) {
+    data.SetMaterialPolygonID(id, index);
 }
 
 void dExtModel_c::ApplyOpacity(u32 opacity, u32) {
@@ -353,20 +353,20 @@ void dExtSimpleModel_c::ShowMaterial(int boneID, int listIdx) {
     mats[ids[listIdx]].flags &= 0x7fffffff;
 }
 
-extern "C" void func_02016a14(dExtSimpleModel_c *self, int color) {
-    self->data.SetDiffuse(color);
+void dExtSimpleModel_c::func_02016a14(int color) {
+    data.SetDiffuse(color);
 }
 
-extern "C" void func_02016a04(dExtSimpleModel_c *self, int color) {
-    self->data.SetAmbient(color);
+void dExtSimpleModel_c::func_02016a04(int color) {
+    data.SetAmbient(color);
 }
 
-void func_020169f4(dExtSimpleModel_c *self, int color) {
-    self->data.SetEmission(color);
+void dExtSimpleModel_c::func_020169f4(int color) {
+    data.SetEmission(color);
 }
 
-extern "C" void func_020169d8(dExtSimpleModel_c *self, int index, unsigned int value) {
-    self->data.SetMaterialEmission(value, index);
+void dExtSimpleModel_c::func_020169d8(int index, unsigned int value) {
+    data.SetMaterialEmission(value, index);
 }
 
 /* ---------------------------------------------------------------------------
@@ -410,9 +410,9 @@ void dExtAnmModel_c::Virtual18(u32 mat, const Vector3 *scale) {
 
 /* Refresh bones without touching verts -- UpdateVerts' first half kept
    file-local; daMoray_c calls it on a dExtBlendAnmModel_c*. */
-void func_020167a4(dExtAnmModel_c *self) {
-    s32 frame = self->currFrame;
-    self->data.UpdateBones(self->file, (u32)(frame << 4) >> 16);
+void dExtAnmModel_c::func_020167a4() {
+    s32 frame = currFrame;
+    data.UpdateBones(file, (u32)(frame << 4) >> 16);
 }
 
 void dExtAnmModel_c::SetAnim(BCA_File *animFile, int flags, fx32 speed, u16 startFrame) {
@@ -478,7 +478,7 @@ void dExtBlendAnmModel_c::UpdateVerts() {
     s32 frame = currFrame;
     data.UpdateBones(file, (u32)(frame << 4) >> 16);
     if (blendWeight < 0x1000) {
-        func_0204531c(&data, blendWeight);
+        data.func_0204531c(blendWeight);
     } else {
         data.UpdateVertsUsingBones();
     }
@@ -488,7 +488,7 @@ void dExtBlendAnmModel_c::Virtual10(Matrix4x3 &mat) {
     s32 frame = currFrame;
     data.UpdateBones(file, (u32)(frame << 4) >> 16);
     if (blendWeight < 0x1000) {
-        func_0204531c(&data, blendWeight);
+        data.func_0204531c(blendWeight);
     } else {
         dExtSimpleModel_c::Virtual10(mat);
     }
@@ -560,16 +560,14 @@ void dExtAnm2Model_c::Func_020162C4(BCA_File *animFile, int flags, fx32 speed, u
 /* Pose bone `bone` from the second animation at its current frame. daPly_c
    calls it on a body model with bone 8; the int `self` keeps daPly_c's
    declaration and this definition in agreement. */
-void func_020162a4(int self, int bone) {
-    dExtAnm2Model_c *model = (dExtAnm2Model_c *)self;
-    s32 frame = model->otherAnim.currFrame;
-    func_02045e2c((int)&model->data, bone, model->otherFile, (u32)(frame << 4) >> 16);
+void dExtAnm2Model_c::func_020162a4(int bone) {
+    s32 frame = otherAnim.currFrame;
+    func_02045e2c((int)&data, bone, otherFile, (u32)(frame << 4) >> 16);
 }
 
 /* Release bone `bone` back to the primary animation (no file, frame 0). */
-void func_0201628c(int self, int bone) {
-    dExtAnm2Model_c *model = (dExtAnm2Model_c *)self;
-    func_02045e2c((int)&model->data, bone, 0, 0);
+void dExtAnm2Model_c::func_0201628c(int bone) {
+    func_02045e2c((int)&data, bone, 0, 0);
 }
 
 /* otherAnim.Copy(src) upcasts src to its dExtFrameCtrl_c BASE (+0x50): the

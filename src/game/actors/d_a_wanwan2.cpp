@@ -452,6 +452,7 @@ void daWanwan2_c::func_ov100_021437d4() {
    recovered as "RollingIronBall_Kill" / "daIbl_c::Kill, from vtable slot
    identity": the pointer-to-member constant that holds it follows daIbl_c's
    vtable directly, and that is the whole of the old claim. Was a C source. */
+// leftover: member form DIFFs
 int func_ov100_02143aa4(daWanwan2_c *c) {
     c->mAnmModel.speed = 0x1000; /* 1.0 */
     c->mAnmModel.Advance();
@@ -464,6 +465,7 @@ int func_ov100_02143aa4(daWanwan2_c *c) {
 /* -------------------------------------------------------------------------- */
 /* The walking state's enter member (data_ov100_02148000): start the walk
    animation from data_ov100_021486ac. Was a C source. */
+// leftover: member form DIFFs
 int func_ov100_02143ae0(daWanwan2_c *c) {
     c->mAnmModel.SetAnim((BCA_File *)data_ov100_021486ac.filePtr, 0, 0x1000, 0);
     return 1;

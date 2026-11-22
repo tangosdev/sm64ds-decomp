@@ -84,6 +84,10 @@ typedef struct ThrowContext {
      * func_02071864 */
     char *mFP;
     ThrowFrame mFrame; /* 0x1c */
+#ifdef __cplusplus
+    u8 *func_02071d3c(struct ActionCursor *, int *);
+    void func_02072168(ActionIterator *, char *);
+#endif
 } ThrowContext;
 
 typedef char ThrowContext_args_pushed_must_be_at_0x6a

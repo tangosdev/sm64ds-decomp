@@ -47,7 +47,7 @@
       "ordinal": 1
     },
     {
-      "symbol": "_Z20TitleScrollLevelListPv",
+      "symbol": "_ZN10dScTitle_c20TitleScrollLevelListEv",
       "address": "0x020ad6ec",
       "size": "0x000000b4",
       "legacy_source": "src/func_ov003_020ad6ec.c",

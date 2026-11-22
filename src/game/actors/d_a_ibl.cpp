@@ -90,7 +90,6 @@ enum {
 enum { daIbl_PTCL_BREAK = 0xf };
 
 void func_02012694(unsigned int a, const Vector3 *p);
-extern "C" void func_02038414(void *p);
 
 extern signed char gCurrentSublevel;
 extern int gLevelMinY;
@@ -204,7 +203,8 @@ void daIbl_c::UpdateWallAndFloor() {
     mHitWall = 0;
     if (gCurrentSublevel == 0x19)
         func_020383f0(&mWithMeshClsn);
-    else func_02038414(&mWithMeshClsn);
+    else
+        mWithMeshClsn.func_02038414();
     if (mWithMeshClsn.IsOnWall() != 0) {
         ((SurfaceInfo *)((char *)mWithMeshClsn.GetWallResult() + 4))->CopyNormalTo(mWallNormal);
         short a = cstd::atan2(mWallNormal.x, mWallNormal.z);

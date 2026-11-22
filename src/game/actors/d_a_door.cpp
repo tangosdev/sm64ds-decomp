@@ -812,7 +812,7 @@ void daDoor_c::func_ov100_02145070(int v) {
 int daDoor_c::func_ov100_02145080(daPly_c *player) {
     if (param1 != DOOR_LAST_KEY_MODEL) {
         if (mTimer == 0) {
-            if (func_ov002_020ca78c(player) != 0) {
+            if ((player)->func_ov002_020ca78c() != 0) {
                 Sound::PlaySub(0x2b, 0, 0x7f, 0x15666, 0);
                 mTimer = 120;
             }

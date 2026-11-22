@@ -86,6 +86,7 @@ struct dExtAnmModel_c : dExtSimpleModel_c, dExtFrameCtrl_c {
     dExtAnmModel_c();
     void SetAnim(BCA_File *animFile, int flags, fx32 speed, u16 startFrame);
     void Copy(const dExtAnmModel_c &src, char *newFile);
+    void func_020167a4();
 };
 
 typedef char dExtAnmModel_c_size_must_be_0x64[sizeof(dExtAnmModel_c) == 0x64 ? 1 : -1];

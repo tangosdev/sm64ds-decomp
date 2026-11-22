@@ -10051,7 +10051,7 @@ ov002	0x020fe154	dMeter_c_classInit	_Z18dMeter_c_classInitv	C++ linkage; symbols
 ov002	0x020fefcc	daPropeller_Heyho_Fire_c_classInit	_Z34daPropeller_Heyho_Fire_c_classInitv	C++ linkage; symbols.txt emits this name
 ov003	0x020b04f0	dScStarSel_c_classInit	_Z22dScStarSel_c_classInitv	C++ linkage; symbols.txt emits this name
 ov003	0x020adc10	dScTitle_c_classInit	_Z20dScTitle_c_classInitv	C++ linkage; symbols.txt emits this name
-ov003	0x020ad6ec	TitleScrollLevelList	_Z20TitleScrollLevelListPv	C++ linkage; symbols.txt emits this name
+ov003	0x020ad6ec	TitleScrollLevelList	_ZN10dScTitle_c20TitleScrollLevelListEv	C++ linkage; symbols.txt emits this name
 ov003	0x020adcbc	TitlePrintLevelRow	_Z18TitlePrintLevelRowiii	C++ linkage; symbols.txt emits this name
 ov003	0x020adc74	TitlePrintString	_Z16TitlePrintStringPaii	C++ linkage; symbols.txt emits this name
 ov003	0x020b1118	dScGameOver_c_classInit	_Z23dScGameOver_c_classInitv	C++ linkage; symbols.txt emits this name
@@ -10510,9 +10510,9 @@ arm9	0x02038298	dBgS_ChkPolySafe	_Z16dBgS_ChkPolySafePv	C++ linkage; symbols.txt
 arm9	0x02038234	dBgS_RideCallBack	_Z17dBgS_RideCallBackii	C++ linkage; symbols.txt emits this name
 arm9	0x02038324	dBgS_MoveBgCrrPos	_Z17dBgS_MoveBgCrrPosPviii	C++ linkage; symbols.txt emits this name
 arm9	0x0203cbf0	func_0203cbf0	_Z13func_0203cbf0Pv	C++ linkage; symbols.txt emits this name
-arm9	0x02011a28	_Z13func_02011a28Pc	_Z13func_02011a28P11SndRegTable	the parameter is the sound-object registry at data_0209b53c; the body walks its entries, so it is SndRegTable*, not char* (was _ZN11SndRegTable13func_02011a28Ev)
+arm9	0x02011a28	_Z13func_02011a28Pc	_ZN11SndRegTable13func_02011a28Ev	the parameter is the sound-object registry at data_0209b53c; the body walks its entries, so it is SndRegTable*, not char* (was _ZN11SndRegTable13func_02011a28Ev)
 arm9	0x02011698	_Z13func_02011698PcS_	_Z13func_02011698P11SndRegTableP11SndRegEntry	links an entry into the registry hash bucket: the parameters are SndRegTable* and SndRegEntry*, not char* (was _ZN11SndRegTable13func_02011698EP11SndRegEntry)
-arm9	0x020116c4	_Z13func_020116c4PciiPK7Vector3is	_Z13func_020116c4P11SndRegTableiiPK7Vector3is	allocates an entry in the sound-object registry; the first parameter is SndRegTable*, not char* (was _ZN11SndRegTable13func_020116c4EiiPK7Vector3is)
+arm9	0x020116c4	_Z13func_020116c4PciiPK7Vector3is	_ZN11SndRegTable13func_020116c4EiiPK7Vector3is	allocates an entry in the sound-object registry; the first parameter is SndRegTable*, not char* (was _ZN11SndRegTable13func_020116c4EiiPK7Vector3is)
 arm9	0x02011934	_Z13func_02011934Pci	_Z13func_02011934P11SndRegTablei	finds an entry by id in the sound-object registry; the first parameter is SndRegTable*, not char* (was _ZN11SndRegTable13func_02011934Ei)
 ov006	0x0210c208	_Z14SlotLamp_ClearPc	_Z14SlotLamp_ClearP8SlotLamp	clears a SlotLamp; the parameter is SlotLamp*, not char*
 ov006	0x0210c2b0	_Z15SlotBlink_ClearPc	_Z15SlotBlink_ClearP9SlotBlink	clears a SlotBlink; the parameter is SlotBlink*, not char*
@@ -10641,7 +10641,7 @@ ov006	0x02107d80	_Z18RouletteBoard_DrawPc	_Z18RouletteBoard_DrawP13RouletteBoard
 ov006	0x02108cc0	_Z18RouletteRacer_DrawPc	_Z18RouletteRacer_DrawP13RouletteRacer	parameter retype: the char * was a RouletteRacer (its one caller, Render, passes &mRacers[i]; the body already read it as a RouletteRacer); code bytes unchanged (#821 r109)
 ov060	0x02115a84	_ZN7daKpa_c13BounceEffectsEPc	_ZN7daKpa_c13BounceEffectsEPt	parameter retype: counter is the u16 mStepCounter (all three callers pass &mStepCounter; the body read it through unsigned short casts); code bytes unchanged (#821 r109)
 ov006	0x020ea3d0	_Z16StarPopup_UpdatePc	_Z16StarPopup_UpdatePi	parameter retype: the char * was the scene's s32 mTimeLeft (its one caller, dScMgHanachan_c's update, passes &mTimeLeft; the body stepped it through an (int *) cast); code bytes unchanged (#821 r109)
-arm9	0x020169f4	_Z13func_020169f4Pci	_Z13func_020169f4P17dExtSimpleModel_ci	parameter retype: self is the dExtSimpleModel_c it sets the emission colour on (its one caller, Trmp2Spinner_Init, passes the spinner's mModel at +0), as its neighbours func_02016a14/02016a04/020169d8 take since #821 r108; code bytes unchanged (#821 r109)
+arm9	0x020169f4	_Z13func_020169f4Pci	_ZN17dExtSimpleModel_c13func_020169f4Ei	parameter retype: self is the dExtSimpleModel_c it sets the emission colour on (its one caller, Trmp2Spinner_Init, passes the spinner's mModel at +0), as its neighbours func_02016a14/02016a04/020169d8 take since #821 r108; code bytes unchanged (#821 r109)
 ov002	0x020c37a4	_ZN7daPly_c19func_ov002_020c37a4EPc	_ZN7daPly_c19func_ov002_020c37a4EPK7Vector3	parameter retype: the char * is the offset Vec3_RotateYAndTranslate adds after turning by mAngle.y, which the body cast to const Vector3 * (JumboStarCutsceneFlying passes its Vector3 particleOffset); code bytes unchanged (#821 r109)
 arm9	0x0204c24c	func_0204c24c	SPLUtil_DrawXYPlane	pret pokeplatinum SPL coinage (lib/spl/src/spl_draw.c), body for body less pret's offset arguments: the unit XY quad, entry 0 of the plane table at 0x02099fb4
 arm9	0x0204c194	func_0204c194	SPLUtil_DrawXZPlane	pret pokeplatinum SPL coinage (lib/spl/src/spl_draw.c), body for body less pret's offset arguments: the unit XZ quad, entry 1 of the plane table at 0x02099fb4
@@ -11281,7 +11281,7 @@ ov002	0x020df840	_ZN7daPly_c19func_ov002_020df840EPvP7Vector3	_ZN7daPly_c19func_
 ov002	0x020e0ccc	_ZN7daPly_c19func_ov002_020e0cccEPv	_ZN7daPly_c19func_ov002_020e0cccEP8dActor_c	parameter retype: void * -> dActor_c * (callers pass mHeldObj / mObjInMouth; the body cast it back); code bytes unchanged
 ov002	0x020ad660	_ZN12dEnemyBase_c19func_ov002_020ad660EPvS0_i	_ZN12dEnemyBase_c19func_ov002_020ad660EP10dBgCh_ActrP17dExtSimpleModel_ci	parameter retype: void *, void * -> dBgCh_Actr *, dExtSimpleModel_c * (every caller passes its dBgCh_Actr and dExtSimpleModel_c members or 0; both alias locals fold into the parameters); code bytes unchanged
 ov006	0x020c4684	_Z14Heyho_InitPoolPvi	_Z14Heyho_InitPoolP5Heyhoi	parameter retype: void * -> Heyho * (both jump scenes pass their Heyho mHeyhos[6]; the body cast it back); code bytes unchanged
-ov006	0x02120d8c	_Z15TrmpFx_InitPoolPvi	_Z15TrmpFx_InitPoolP14TrmpScorePopupi	parameter retype: void * -> TrmpScorePopup * (both trampoline scenes pass their TrmpScorePopup mScorePopups[5]; the body cast it back); code bytes unchanged
+ov006	0x02120d8c	_Z15TrmpFx_InitPoolPvi	_ZN14TrmpScorePopup15TrmpFx_InitPoolEi	parameter retype: void * -> TrmpScorePopup * (both trampoline scenes pass their TrmpScorePopup mScorePopups[5]; the body cast it back); code bytes unchanged
 ov006	0x020c8a9c	_Z13Puff_ClearAllii	_Z13Puff_ClearAlliPP7OamAttr	parameter retype: int -> OamAttr ** (the trampoline scenes pass their per-language puff sprite tables, the rest 0; the body cast it back into sPuffXTable); code bytes unchanged
 arm9	0x020a9db0	data_020a9db0	sDmaNo	BW2 decomp's reconstruction of NitroSDK mb_wm_base.c (public), whose function order this TU's 0x0206879c..0x0206a318 run follows; the u16 DMA channel MB_Init stores and the MI_DmaCopy16 and WM_Initialize calls take; that file's static, read only in this TU
 arm9	0x020a9db4	data_020a9db4	sWmWork	BW2 decomp's reconstruction of NitroSDK mb_wm_base.c (public), whose function order this TU's 0x0206879c..0x0206a318 run follows; the WmWork pointer MB_Init carves from the caller's buffer and every WM callback dereferences (ntrtwl's p_mbi_param); that file's static, read only in this TU

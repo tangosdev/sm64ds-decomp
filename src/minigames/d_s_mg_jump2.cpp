@@ -394,7 +394,7 @@ s32 dScMgJump2_c::Render() {
     {
         ModelComponents *components = &mModel.data;
         material = (MaterialScrollView *)components->materials;
-        func_02045e44(components, 1, 0);
+        components->func_02045e44(1, 0);
     }
     material->textureOffsetT = mTextureOffsetT;
     mModel.Render((Vector3 *)&scale);

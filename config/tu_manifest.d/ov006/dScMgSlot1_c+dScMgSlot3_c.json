@@ -1348,44 +1348,44 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@1821",
+      "from": "@1819",
       "to": "pmf_Slot3_StateJudge",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateJudge, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xc0 loads 0x0213e4e0 in the ROM) and by its own relocation target (dScMgSlot3_c::StateJudge at 0x0210adac). Re-keyed from @1823 to @1825 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1821 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateJudge, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xc0 loads 0x0213e4e0 in the ROM) and by its own relocation target (dScMgSlot3_c::StateJudge at 0x0210adac). Re-keyed from @1823 to @1825 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1821 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1821 to @1819 when this TU's folded C helpers became methods (measured from the compiled object)."
+    },
+    {
+      "from": "@1815",
+      "to": "pmf_Slot3_StateIntro",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateIntro, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xb8 loads 0x0213e520 in the ROM) and by its own relocation target (dScMgSlot3_c::StateIntro at 0x0210b1fc). Re-keyed from @1819 to @1821 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1817 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1817 to @1815 when this TU's folded C helpers became methods (measured from the compiled object)."
     },
     {
       "from": "@1817",
-      "to": "pmf_Slot3_StateIntro",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateIntro, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xb8 loads 0x0213e520 in the ROM) and by its own relocation target (dScMgSlot3_c::StateIntro at 0x0210b1fc). Re-keyed from @1819 to @1821 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1817 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
-    },
-    {
-      "from": "@1819",
       "to": "pmf_Slot3_StateSpin",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateSpin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xbc loads 0x0213e530 in the ROM) and by its own relocation target (dScMgSlot3_c::StateSpin at 0x0210af64). Re-keyed from @1821 to @1823 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1819 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateSpin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xbc loads 0x0213e530 in the ROM) and by its own relocation target (dScMgSlot3_c::StateSpin at 0x0210af64). Re-keyed from @1821 to @1823 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1819 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1819 to @1817 when this TU's folded C helpers became methods (measured from the compiled object)."
     },
     {
-      "from": "@1823",
+      "from": "@1821",
       "to": "pmf_Slot3_StatePayout",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StatePayout, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xc4 loads 0x0213e538 in the ROM) and by its own relocation target (dScMgSlot3_c::StatePayout at 0x0210ac3c). Re-keyed from @1825 to @1827 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1823 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
-    },
-    {
-      "from": "@1827",
-      "to": "pmf_Slot3_StateWait",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateWait, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xcc loads 0x0213e548 in the ROM) and by its own relocation target (dScMgSlot3_c::StateWait at 0x0210ac38). Re-keyed from @1829 to @1831 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1827 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StatePayout, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xc4 loads 0x0213e538 in the ROM) and by its own relocation target (dScMgSlot3_c::StatePayout at 0x0210ac3c). Re-keyed from @1825 to @1827 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1823 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1823 to @1821 when this TU's folded C helpers became methods (measured from the compiled object)."
     },
     {
       "from": "@1825",
-      "to": "pmf_Slot3_StatePayout_2",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StatePayout, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xc8 loads 0x0213e550 in the ROM) and by its own relocation target (dScMgSlot3_c::StatePayout at 0x0210ac3c). Re-keyed from @1827 to @1829 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1825 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "to": "pmf_Slot3_StateWait",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateWait, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xcc loads 0x0213e548 in the ROM) and by its own relocation target (dScMgSlot3_c::StateWait at 0x0210ac38). Re-keyed from @1829 to @1831 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1827 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1827 to @1825 when this TU's folded C helpers became methods (measured from the compiled object)."
     },
     {
-      "from": "@1831",
-      "to": "pmf_Slot3_StateDone",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateDone, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xd4 loads 0x0213e578 in the ROM) and by its own relocation target (dScMgSlot3_c::StateDone at 0x0210ab90). Re-keyed from @1833 to @1835 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1831 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "from": "@1823",
+      "to": "pmf_Slot3_StatePayout_2",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StatePayout, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xc8 loads 0x0213e550 in the ROM) and by its own relocation target (dScMgSlot3_c::StatePayout at 0x0210ac3c). Re-keyed from @1827 to @1829 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1825 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1825 to @1823 when this TU's folded C helpers became methods (measured from the compiled object)."
     },
     {
       "from": "@1829",
+      "to": "pmf_Slot3_StateDone",
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateDone, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xd4 loads 0x0213e578 in the ROM) and by its own relocation target (dScMgSlot3_c::StateDone at 0x0210ab90). Re-keyed from @1833 to @1835 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1831 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1831 to @1829 when this TU's folded C helpers became methods (measured from the compiled object)."
+    },
+    {
+      "from": "@1827",
       "to": "pmf_Slot3_StateGameOver",
-      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateGameOver, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xd0 loads 0x0213e580 in the ROM) and by its own relocation target (dScMgSlot3_c::StateGameOver at 0x0210ab94). Re-keyed from @1831 to @1833 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1829 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: __sinit_d_s_mg_slots.cpp assigns &dScMgSlot3_c::StateGameOver, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (__sinit_d_s_mg_slots.cpp+0xd0 loads 0x0213e580 in the ROM) and by its own relocation target (dScMgSlot3_c::StateGameOver at 0x0210ab94). Re-keyed from @1831 to @1833 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed to @1829 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1829 to @1827 when this TU's folded C helpers became methods (measured from the compiled object)."
     }
   ]
 }

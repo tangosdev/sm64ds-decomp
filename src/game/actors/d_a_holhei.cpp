@@ -622,7 +622,7 @@ int daHolhei_c::St_Throw_Init() {
    animation finishes, clear the cylinder bit and leave. */
 int daHolhei_c::St_Throw_Main() {
     if (mHeld != 0 && mModel.WillHitFrame(0x14)) {
-        func_ov002_020db54c(mHeld, 0x28000, 0x50000, mAngle.y);
+        (mHeld)->func_ov002_020db54c(0x28000, 0x50000, mAngle.y);
         mHeld = 0;
         func_02012694(0x126, &mCamSpacePos);
     }
@@ -679,7 +679,7 @@ void daHolhei_c::HandleCylinderHit() {
         ChangeState(&data_ov062_0211dea0);
         return;
     }
-    if (func_ov002_020db5f4(player, this) == 0)
+    if ((player)->func_ov002_020db5f4(this) == 0)
         return;
     mHeld = player;
     mHorzSpeed = 0;

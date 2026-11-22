@@ -87,14 +87,14 @@ static inline int IsPlayer(dActor_c *actor) {
     return actor->actorID == PLAYER_ACTOR_ID;
 }
 
-void func_02014f5c(dCc_c *self, u32 id) {
+void dCc_c::func_02014f5c(u32 id) {
     dActor_c *actor = dActor_c::FindWithID(id);
     if (actor && IsPlayer(actor))
-        static_cast<daPly_c *>(actor)->StartClimb(self);
+        static_cast<daPly_c *>(actor)->StartClimb(this);
 }
 
 void func_02014f44(u32 id, dCc_c *self) {
-    func_02014f5c(self, id);
+    self->func_02014f5c(id);
 }
 
 void dCc_c::Process() {

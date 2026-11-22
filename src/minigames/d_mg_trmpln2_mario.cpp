@@ -21,8 +21,8 @@
  * offset, so they keep their char* pool and the MARIO2/MARIO3D view macro.
  * Their C-linkage declarations live in dMgTrmplnShared.h, which the scenes
  * include too; this file defines them without a linkage wrapper.
- * Trmp3DMario_EnterWalkIn and Trmp3DMario_IsOffstage are the scene's entry
- * points for one Mario and take a dMgTrmpln3DMario_c *.
+ * Trmp3DMario_EnterWalkIn is dMgTrmpln3DMario_c's method. IsOffstage is the
+ * scene's free entry point for one Mario and takes a dMgTrmpln3DMario_c *.
  * Helper prototypes with no owning header (Puff_*, Sound_PlayBank1Panned,
  * TrmpFx_Spawn, Vec3_MulScalar) stay TU-local until include/ owns them;
  * TrmpItem::UpdateWithJumper and
@@ -785,8 +785,8 @@ int dMgTrmpln2Mario_c::Load() {
     if (sMgMainCamera != 0)
         Camera_ProjectToScreen16(sMgMainCamera, &mPos, mScreenPos);
     mGravityStep = 0;
-    func_02016a14(&mAnmModel, 0x73ff);
-    func_02016a04(&mAnmModel, 0x3e52);
+    mAnmModel.func_02016a14(0x73ff);
+    mAnmModel.func_02016a04(0x3e52);
     EnterHidden();
     return ret;
 }
@@ -1763,22 +1763,22 @@ void dMgTrmpln3DMario_c::StateWalkIn() {
     JumpOff();
 }
 
-void Trmp3DMario_EnterWalkIn(dMgTrmpln3DMario_c *mario) {
-    mario->mGravityStep = 0;
-    mario->mPos.y = sTrmpRowHeights[0];
-    mario->mPos.z = 0;
-    mario->mPrevPos.x = mario->mPos.x;
-    mario->mPrevPos.y = mario->mPos.y;
-    mario->mPrevPos.z = mario->mPos.z;
-    mario->mVel.x = 0x1800;
-    mario->mVel.y = 0;
-    mario->mVel.z = 0;
-    mario->mRotY = 0x4000;
-    mario->mAnmModel.SetAnim(sTrmpAnimWalk, 0, 0x800, 0);
-    if (mario->mState != &dMgTrmpln3DMario_c::StateOnGround) {
+void dMgTrmpln3DMario_c::Trmp3DMario_EnterWalkIn() {
+    mGravityStep = 0;
+    mPos.y = sTrmpRowHeights[0];
+    mPos.z = 0;
+    mPrevPos.x = mPos.x;
+    mPrevPos.y = mPos.y;
+    mPrevPos.z = mPos.z;
+    mVel.x = 0x1800;
+    mVel.y = 0;
+    mVel.z = 0;
+    mRotY = 0x4000;
+    mAnmModel.SetAnim(sTrmpAnimWalk, 0, 0x800, 0);
+    if (mState != &dMgTrmpln3DMario_c::StateOnGround) {
         sTrmpMariosInPlay += 1;
     }
-    mario->mState = &dMgTrmpln3DMario_c::StateWalkIn;
+    mState = &dMgTrmpln3DMario_c::StateWalkIn;
 }
 
 void dMgTrmpln3DMario_c::StateOnGround() {
@@ -1814,7 +1814,7 @@ void dMgTrmpln3DMario_c::StateOnGround() {
 
     if (mAnmModel.file == sTrmpAnimTurnEnd) {
         if (mAnmModel.Finished() != 0)
-            Trmp3DMario_EnterWalkIn(this);
+            this->Trmp3DMario_EnterWalkIn();
     }
 }
 
@@ -1871,8 +1871,8 @@ int dMgTrmpln3DMario_c::Load() {
     if (sMgMainCamera != 0)
         Camera_ProjectToScreen16(sMgMainCamera, &mPos, mScreenPos);
     mGravityStep = 0;
-    func_02016a14(&mAnmModel, 0x6bff);
-    func_02016a04(&mAnmModel, 0x21d);
+    mAnmModel.func_02016a14(0x6bff);
+    mAnmModel.func_02016a04(0x21d);
     EnterOffstage();
     return ret;
 }

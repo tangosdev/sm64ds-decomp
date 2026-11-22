@@ -120,7 +120,6 @@ extern int Mg_RenderSubSpriteScaled(void *a0, int a1, int a2, int a3, int a4, in
                                     unsigned short a6);
 }
 extern int Sound_PlayIfNotActive(int, int, int, short);
-int TouchArea_Update(void *c, int x);
 
 /* Slot1's one-cell sprites. Six 16x16 symbol icons, the payout line's
  * sSlot1Sprites[mMatchedSymbol + 6]; the last is also drawn once per wild
@@ -983,7 +982,7 @@ void dScMgSlot1_c::betIcon_c::Render() {
 
 void dScMgSlot1_c::betIcon_c::Behavior() {
     int val;
-    if (TouchArea_Update(this, -1))
+    if (this->TouchArea_Update(-1))
         OnTouch();
     val = BET_ICON(this)->mPayoutTicks;
     if (val != 0) {

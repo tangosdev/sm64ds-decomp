@@ -265,14 +265,14 @@
       "ordinal": 10
     },
     {
-      "symbol": "_Z13TrmpFx_UnlinkP14TrmpScorePopup",
+      "symbol": "_ZN14TrmpScorePopup13TrmpFx_UnlinkEv",
       "address": "0x02120b7c",
       "size": "0x0000004c",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
       "ordinal": 11
     },
     {
-      "symbol": "_Z11TrmpFx_LinkP14TrmpScorePopup",
+      "symbol": "_ZN14TrmpScorePopup11TrmpFx_LinkEv",
       "address": "0x02120bc8",
       "size": "0x00000040",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",
@@ -307,7 +307,7 @@
       "ordinal": 16
     },
     {
-      "symbol": "_Z15TrmpFx_InitPoolP14TrmpScorePopupi",
+      "symbol": "_ZN14TrmpScorePopup15TrmpFx_InitPoolEi",
       "address": "0x02120d8c",
       "size": "0x0000001c",
       "legacy_source": "src/actors/d_sc_mg_trampoline.cpp",

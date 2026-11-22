@@ -143,6 +143,9 @@ struct ModelComponents {
     void SetAmbient(unsigned int);
     void SetMaterialEmission(unsigned int, int);
     void SetEmission(unsigned int);
+    void func_02046208(unsigned int, int);
+    void func_02045e44(unsigned int, int);
+    void func_0204531c(int);
 };
 
 struct dExtModel_c {

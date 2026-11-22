@@ -5,7 +5,8 @@
  * them. The Marios are dMgTrmpln3DMario_c (Trampoline, pool of 4) and
  * dMgTrmpln2Mario_c (Trampoline2, pool of 5); the pool base is walked by byte
  * offset, so the pool walkers take it as void* / unsigned char*, while
- * Trmp3DMario_EnterWalkIn and Trmp3DMario_IsOffstage take one Mario. The pool's
+ * Trmp3DMario_IsOffstage takes one Mario. EnterWalkIn is
+ * dMgTrmpln3DMario_c::Trmp3DMario_EnterWalkIn. The pool's
  * init / reset / draw family (and Trmp2Mario_SetTuning) is declared in
  * decl_common.h.
  *
@@ -27,7 +28,6 @@ void Trmp2Mario_PlaceAtStart(void);
 void Trmp2Mario_UpdateAll(void);
 
 /* Trampoline (dMgTrmpln3DMario_c). */
-void Trmp3DMario_EnterWalkIn(struct dMgTrmpln3DMario_c *);
 int Trmp3DMario_IsOffstage(struct dMgTrmpln3DMario_c *);
 int Trmp3DMario_CountFinished(void);
 void Trmp3DMario_StartAll(void);

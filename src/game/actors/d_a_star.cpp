@@ -1168,7 +1168,7 @@ void daStar_c::StateCollectBegin() {
             Sound::ChangeMusicVolume(0, 0x7f000);
         }
     } else {
-        if (func_ov002_020ca0f4(common) != 0) {
+        if ((common)->func_ov002_020ca0f4() != 0) {
             int *s = &mPlayer->mPos.x;
             mPos.x = s[0];
             mPos.y = s[1];

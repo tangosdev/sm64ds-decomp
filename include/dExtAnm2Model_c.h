@@ -42,6 +42,8 @@ struct dExtAnm2Model_c : dExtAnmModel_c {
     /* --- non-virtual --- */
     void Copy(const dExtAnm2Model_c &src, char *newFile, BCA_File *newOtherFile);
     void Func_020162C4(BCA_File *animFile, int flags, fx32 speed, u16 startFrame);
+    void func_020162a4(int);
+    void func_0201628c(int);
 };
 
 typedef char dExtAnm2Model_c_size_must_be_0x78[sizeof(dExtAnm2Model_c) == 0x78 ? 1 : -1];

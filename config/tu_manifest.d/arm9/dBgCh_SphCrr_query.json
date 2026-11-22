@@ -350,7 +350,7 @@
       "ordinal": 46
     },
     {
-      "symbol": "func_02038414",
+      "symbol": "_ZN10dBgCh_Actr13func_02038414Ev",
       "address": "0x02038414",
       "size": "0x0000000c",
       "legacy_source": "src/unnamed/arm9/0203/func_02038414.c",

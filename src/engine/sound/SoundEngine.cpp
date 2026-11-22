@@ -262,6 +262,7 @@ struct C {
        this goes on at 0x44 */
     /* 0x34 */ unsigned char chans[16];
     void func_0204fce8(void *);
+    void func_0204ffcc();
 };
 struct E
 {
@@ -390,8 +391,8 @@ extern void SND_AssignWaveArc(struct SNDBankData *bank, int index, struct SNDWav
 
 /* In-span forward declarations. */
 extern int func_0204eda4(int r0, char* a, u32 idx);
-extern int func_0204ede8(struct S82 *o, unsigned int i);
 extern int func_0204ee10(struct S82 *self);
+extern int func_0204ede8(struct S82 *o, unsigned int i);
 extern int func_0204ee40(struct S82 *self, char *name, char *p);
 extern int func_0204ef9c(void* p);
 extern void func_0204efe0(void);
@@ -436,7 +437,6 @@ extern void func_0204fe5c(struct C *c, int volume);
 extern void func_0204fed0(struct C *c);
 extern void func_0204ff48(struct C *p);
 extern void func_0204ff9c(struct C *o);
-extern void func_0204ffcc(struct C *c);
 extern void func_02050008(struct C *o);
 extern void func_02050038(void *arg);
 extern void AlarmCallback(void *arg);
@@ -580,7 +580,7 @@ extern "C" void func_020522c4(void) {
             } else {
                 if ((flags << 29) >> 31) {
                     if (stream->startReady != 0) {
-                        func_0204ffcc(stream);
+                        stream->func_0204ffcc();
                         {
                             stream->uf0 |= 2;
                             stream->uf0 &= ~4;
@@ -1756,9 +1756,9 @@ extern "C" void func_02050008(struct C *o) {
     o->chanCount = 0;
 }
 
-extern "C" void func_0204ffcc(struct C *c) {
-    SND_StartTimer(c->f2c, 0, 1 << c->f28, 0);
-    c->fc |= 2;
+void C::func_0204ffcc() {
+    SND_StartTimer(f2c, 0, 1 << f28, 0);
+    fc |= 2;
 }
 
 extern "C" void func_0204ff9c(struct C *o) {

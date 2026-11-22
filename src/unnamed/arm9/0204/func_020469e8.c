@@ -1,3 +1,4 @@
+//cpp
 #include "types.h"
 #include "dExtModel_c.h"
 #include "private/BTA_File.h"
@@ -23,10 +24,7 @@ struct MaterialState {
     char pad_1c[0x30 - 0x1c];
 };
 
-/* Spelled as Model4.cpp defines it. */
-extern void func_02045e44(void *self, unsigned int value, int index);
-
-void func_020469e8(struct ModelComponents *model, BTA_File *file, int frame) {
+extern "C" void func_020469e8(struct ModelComponents *model, BTA_File *file, int frame) {
     int i;
     for (i = 0; i < file->numMaterialRecords; i++) {
         BTAMaterialRecord *rec = &file->materialRecords[i];
@@ -34,7 +32,7 @@ void func_020469e8(struct ModelComponents *model, BTA_File *file, int frame) {
         if (rec->materialId == 0xffff)
             OS_Terminate();
         mat = &((struct MaterialState *)model->materials)[rec->materialId];
-        func_02045e44(model, 1, rec->materialId);
+        model->func_02045e44(1, rec->materialId);
         if (rec->scaleS.numKeys == 1)
             mat->texScaleS = file->keyScales[rec->scaleS.firstKey];
         else

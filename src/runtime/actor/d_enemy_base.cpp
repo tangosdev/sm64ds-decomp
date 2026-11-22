@@ -99,13 +99,6 @@ dEnemyBase_c::~dEnemyBase_c()
 
    On a floor that does not limit movement, the vertical velocity is re-derived
    so the motion stays in the floor plane. */
-/* local extern: func_02038414, the tail-call veneer to
-   dBgCh_Actr::UpdateDiscreteNoLava_2, is the one veneer dBgCh_Actr.h does
-   not declare -- decl_common.h already spells it with a void *. */
-extern "C" {
-extern void func_02038414(dBgCh_Actr *);
-}
-
 void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr &clsn, unsigned int sel) {
     switch (sel) {
     case 1:
@@ -115,7 +108,7 @@ void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr &clsn, unsigned int sel) {
         dBgCh_Actr_UpdateDiscreteNoLava_veneer(&clsn);
         break;
     case 3:
-        func_02038414(&clsn);
+        clsn.func_02038414();
         break;
     default:
         dBgCh_Actr_UpdateContinuous_Veneer(&clsn);

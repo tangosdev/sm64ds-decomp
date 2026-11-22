@@ -680,7 +680,7 @@ void daYegg_c::ExecuteFollowPlayer() {
         Matrix4x3_FromRotationZXYExt(&gScratchMtx, mEasedAngleX, mEasedAngleY, mEasedAngleZ);
         MTX_MultVec43(&in, &gScratchMtx, &out);
 
-        if (mPlayer->mClimbClsn != 0 || func_ov002_020cf700(mPlayer) != 0 ||
+        if (mPlayer->mClimbClsn != 0 || (mPlayer)->func_ov002_020cf700() != 0 ||
             mPlayer->func_ov002_020d0d2c() != 0) {
             if (mWithMeshClsn.IsOnGround() != 0) {
                 mGoalAngleX = mPlayer->mAngle.x;
@@ -946,7 +946,7 @@ void daYegg_c::UpdateShadow() {
     mShadowMtx.t.x = mPos.x >> 3;
     mShadowMtx.t.y = mPos.y >> 3;
     mShadowMtx.t.z = mPos.z >> 3;
-    if (!IsInYoshiMouth(this) && mPlayer->mClimbClsn == 0 && !func_ov002_020cf700(mPlayer) &&
+    if (!IsInYoshiMouth(this) && mPlayer->mClimbClsn == 0 && !(mPlayer)->func_ov002_020cf700() &&
         !mPlayer->func_ov002_020d0d2c()) {
         if (func_ov002_020ec654() == 0) {
             DropShadowRadHeight(mShadowModel, mShadowMtx, r4, r5 + 0x28000, 0xf);

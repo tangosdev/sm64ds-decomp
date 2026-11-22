@@ -86,16 +86,10 @@ extern void func_020123c8(NNSSndHandle *handle, int type, int code, const Vector
 extern int func_02011dcc(NNSSndHandle *handle, int x);
 extern void func_02011c54(void);
 extern void func_02011b7c(void);
-extern void func_02011b38(void *c, int a1, int a2, int a3, short a5);
-extern void func_02011af8(void *c, int a1, int a2, int a3, const Vector3 *s0, short s1);
-extern void func_02011ac4(void *c, int a1, int a2, int a3, const Vector3 *s0, int s1, short s2);
-extern int func_02011aa0(void *c);
 struct SndRegTable;
 struct SndRegEntry;
-extern void func_02011a28(SndRegTable *c);
 extern void func_020119c8(void *base);
 extern void *func_02011934(SndRegTable *table, int id);
-extern int func_020116c4(SndRegTable *c, int a1, int a2, const Vector3 *a3, int s0, short s1);
 extern void func_02011698(SndRegTable *table, SndRegEntry *n);
 extern int func_02011654(char *table, char *n);
 extern int Player_PlaySoundEffect(NNSSndHandle *handle, int seqArcNo, int index);
@@ -209,6 +203,11 @@ typedef struct SndRegEntry {
     NNSSndHandle handle;      /* 0x08 */
     struct SndRegEntry *prev; /* 0x0c - bucket chain, toward the head */
     struct SndRegEntry *next; /* 0x10 - bucket chain, away from the head */
+
+    void func_02011b38(int a1, int a2, int a3, short a5);
+    void func_02011af8(int a1, int a2, int a3, const Vector3 *s0, short s1);
+    void func_02011ac4(int a1, int a2, int a3, const Vector3 *s0, int s1, short s2);
+    int func_02011aa0();
 } SndRegEntry;
 
 void func_02011a5c(void *vc);
@@ -222,6 +221,8 @@ typedef struct SndRegTable {
 
     int func_0201179c(int a1, int a2, const Vector3 *a3, short s1);
     int func_0201186c(int a1, int a2, short a3);
+    void func_02011a28();
+    int func_020116c4(int a1, int a2, const Vector3 *a3, int s0, short s1);
 
     SndRegTable() {
         func_02011a5c(this);
@@ -267,7 +268,7 @@ void func_020133bc(void) {
     NNS_SndHandleInit(&sMusicHandle);
     NNS_SndHandleInit(&sSubHandle);
     NNS_SndHandleInit(&data_0209b4a4);
-    func_02011a28(&data_0209b53c);
+    data_0209b53c.func_02011a28();
     func_02048f34(&sSndArc);
     func_020506fc(2);
     func_02049cd8(&data_0209baa0, 0x1000, 0);
@@ -758,7 +759,7 @@ extern "C" int func_0201226c(int a0, int a1, int a2, const Vector3 *a3, int a4, 
         func_02048c30(&p->handle, a3, a4);
         return p->id;
     }
-    return func_020116c4(&data_0209b53c, a1, a2, a3, a4, a5);
+    return data_0209b53c.func_020116c4(a1, a2, a3, a4, a5);
 }
 
 extern "C" int func_02012194(int handle, int a1, int a2, int a3, int s0, const Vector3 *s1,
@@ -990,30 +991,28 @@ void func_02011b7c(void) {
     sSavedMusicVolume = -1;
 }
 
-void func_02011b38(void *c, int a1, int a2, int a3, short a5) {
-    SndRegEntry *e = (SndRegEntry *)c;
-    e->id = a1;
-    e->fadeFrames = a5;
-    e->inUse = 1;
-    e->prev = 0;
-    e->next = 0;
-    Player_PlaySoundEffect(&e->handle, a2, a3);
+void SndRegEntry::func_02011b38(int a1, int a2, int a3, short a5) {
+    id = a1;
+    fadeFrames = a5;
+    inUse = 1;
+    prev = 0;
+    next = 0;
+    Player_PlaySoundEffect(&handle, a2, a3);
 }
 
-void func_02011af8(void *c, int a1, int a2, int a3, const Vector3 *s0, short s1) {
-    func_02011b38(c, a1, a2, a3, s1);
-    func_020123c8(&((SndRegEntry *)c)->handle, a2, a3, s0);
+void SndRegEntry::func_02011af8(int a1, int a2, int a3, const Vector3 *s0, short s1) {
+    func_02011b38(a1, a2, a3, s1);
+    func_020123c8(&handle, a2, a3, s0);
 }
 
-void func_02011ac4(void *c, int a1, int a2, int a3, const Vector3 *s0, int s1, short s2) {
-    func_02011b38(c, a1, a2, a3, s2);
-    func_02048c30(&((SndRegEntry *)c)->handle, s0, s1);
+void SndRegEntry::func_02011ac4(int a1, int a2, int a3, const Vector3 *s0, int s1, short s2) {
+    func_02011b38(a1, a2, a3, s2);
+    func_02048c30(&handle, s0, s1);
 }
 
-int func_02011aa0(void *c) {
-    SndRegEntry *e = (SndRegEntry *)c;
-    NNS_SndPlayerStopSeq(&e->handle, e->fadeFrames);
-    e->id = 0;
+int SndRegEntry::func_02011aa0() {
+    NNS_SndPlayerStopSeq(&handle, fadeFrames);
+    id = 0;
     return 0;
 }
 
@@ -1030,8 +1029,8 @@ void func_02011a5c(void *vc) {
     for (i = 0; i < 16; i++) c->buckets[i] = 0;
 }
 
-void func_02011a28(SndRegTable *c) {
-    SndRegEntry *p = c->entries;
+void SndRegTable::func_02011a28() {
+    SndRegEntry *p = entries;
     int i;
     for (i = 0; i < 64; i++) {
         NNS_SndHandleInit(&p->handle);
@@ -1091,7 +1090,7 @@ int SndRegTable::func_0201186c(int a1, int a2, short a3) {
             if (counter == 0) {
                 counter += 1;
             }
-            func_02011b38(&entries[cursor], counter, a1, a2, a3);
+            entries[cursor].func_02011b38(counter, a1, a2, a3);
             func_02011698(this, &entries[cursor]);
             return counter;
         }
@@ -1107,7 +1106,7 @@ int SndRegTable::func_0201179c(int a1, int a2, const Vector3 *a3, short s1) {
             counter += 1;
             if (counter == 0)
                 counter += 1;
-            func_02011af8(&entries[cursor], counter, a1, a2, a3, s1);
+            entries[cursor].func_02011af8(counter, a1, a2, a3, s1);
             func_02011698(this, &entries[cursor]);
             return counter;
         }
@@ -1116,16 +1115,16 @@ int SndRegTable::func_0201179c(int a1, int a2, const Vector3 *a3, short s1) {
     return 0;
 }
 
-int func_020116c4(SndRegTable *c, int a1, int a2, const Vector3 *a3, int s0, short s1) {
-    SndRegTable *reg = c;
+int SndRegTable::func_020116c4(int a1, int a2, const Vector3 *a3, int s0, short s1) {
+    SndRegTable *reg = this;
     int i;
     for (i = 0; i < 64; i++) {
         if (reg->entries[reg->cursor].id == 0) {
             reg->counter = reg->counter + 1;
             if (reg->counter == 0)
                 reg->counter = reg->counter + 1;
-            func_02011ac4(&reg->entries[reg->cursor], reg->counter, a1, a2, a3, s0, s1);
-            func_02011698(c, &reg->entries[reg->cursor]);
+            reg->entries[reg->cursor].func_02011ac4(reg->counter, a1, a2, a3, s0, s1);
+            func_02011698(this, &reg->entries[reg->cursor]);
             return reg->counter;
         }
         reg->cursor = (u8)((reg->cursor + 1) % 64);
@@ -1161,7 +1160,7 @@ int func_02011654(char *table, char *n) {
     if (next) {
         next->prev = prev;
     }
-    return func_02011aa0(n);
+    return ((SndRegEntry *)n)->func_02011aa0();
 }
 
 /* re-hosted arm9 data */

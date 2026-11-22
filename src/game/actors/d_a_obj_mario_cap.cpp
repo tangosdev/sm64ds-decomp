@@ -265,7 +265,7 @@ static inline int IsInYoshiMouth(dActor_c *actor) {
 }
 
 void func_02013a88(void);
-void func_020167a4(dExtAnmModel_c *model);
+
 int func_ov002_020f030c(int x);
 
 daObjMarioCap_c *daObjMarioCap_c_classInit(void) {
@@ -532,7 +532,7 @@ int daObjMarioCap_c::Behavior()
     mAnmModel.Advance();
 
     if (mAnmModel.file != 0) {
-        func_020167a4(&mAnmModel);
+        mAnmModel.func_020167a4();
         mAnmModel.UpdateVerts();
     }
 

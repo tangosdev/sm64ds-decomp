@@ -59,8 +59,6 @@ static const int kAnimSpeed = 0x800; /* SetAnim speed every install uses */
 extern "C" {
 
 void func_02012718(int a, int b);
-void func_02016a14(dExtSimpleModel_c *self, int color);
-void func_02016a04(dExtSimpleModel_c *self, int color);
 
 /* Tuning words, read as plain ints. */
 int sJump3DBounceVy = 0x5000;
@@ -816,8 +814,8 @@ int dMgJump3DMario_c::LoadResources()
 
     t = gCurrentScene->actorID == 0x175;
     if (t != 0) {
-        func_02016a14(&mAnmModel, 0x7fff);
-        func_02016a04(&mAnmModel, 0x210);
+        mAnmModel.func_02016a14(0x7fff);
+        mAnmModel.func_02016a04(0x210);
     }
     mAnmModel.SetAnim(sJump3DAnimJump, 0x40000000, kAnimSpeed, 0);
 

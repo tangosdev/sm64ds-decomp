@@ -194,6 +194,10 @@ struct dBgCh_Actr : dBgCh {
     dBgPi *GetFloorResult() const; /* func_02037938(&mSphereClsn) -- mClsnResult1 */
     dBgPi *GetWallResult() const;  /* func_020378dc(&mSphereClsn) -- mClsnResult2 */
     s32 TouchesWater() const;      /* SurfaceInfo flag 0x20 on mSphereClsn.surface */
+    /* Snap the actor onto a nearby dBgCh_Gnd surface. */
+    void func_020371fc();
+    /* Tail-call veneer to UpdateDiscreteNoLava_2. */
+    void func_02038414();
 };
 
 typedef char dBgCh_Actr_size_must_be_0x1bc[
@@ -214,6 +218,5 @@ void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *); /* UpdateDiscreteNoLa
    collision each frame, defined in src/engine/collision/d_bg_ch_actr.cpp;
    their method names are not recovered. */
 void func_02037318(dBgCh_Actr *);            /* latch mGroundNormal */
-extern "C" void func_020371fc(dBgCh_Actr *); /* snap onto a dBgCh_Gnd surface */
 
 #endif /* DBGCH_ACTR_H */

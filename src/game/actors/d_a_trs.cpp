@@ -166,7 +166,7 @@ extern u8 data_0209d660;
 extern TrsAngleTable sBooHitRotations;
 }
 void func_02012694(unsigned int a, const Vector3 *p);
-extern void func_020167a4(dExtAnmModel_c *model);
+
 #include "daLuigi_c.h"
 extern u16 func_02011d14(void);
 
@@ -322,7 +322,7 @@ void daTrs_c::UpdatePose() {
         Matrix4x3_FromTranslation(&gScratchMtx, t1.x, t1.y, t1.z);
         this->mAnmModel.mat4x3 = gScratchMtx;
         this->mAnmModel.ApplyOpacity((u8)(this->mOpacity >> 3), 1);
-        func_020167a4(&this->mAnmModel);
+        this->mAnmModel.func_020167a4();
         {
             TrsBone *m = (TrsBone *)this->mAnmModel.data.bones;
             m->rotX = this->mAngle.x;
@@ -386,7 +386,7 @@ void daTrs_c::func_ov063_021166ac() {
         Matrix4x3_FromTranslation(&gScratchMtx, t1.x, t1.y, t1.z);
         this->mAnmModel.mat4x3 = gScratchMtx;
         this->mAnmModel.ApplyOpacity((u8)(this->mOpacity >> 3), 1);
-        func_020167a4(&this->mAnmModel);
+        this->mAnmModel.func_020167a4();
         {
             TrsBone *p = (TrsBone *)this->mAnmModel.data.bones;
             p->rotX = this->mAngle.x;
@@ -1141,7 +1141,7 @@ void daTrs_c::UpdateKeyBooIntro() {
         neg = -1;
         w.x = w.x * neg;
         w.y = w.y + 0xc8000;
-        func_ov002_020c51d0(this->mTalkPlayer, &w);
+        (this->mTalkPlayer)->func_ov002_020c51d0(&w);
         if (this->mOpacity == 0xff) {
             this->mSubState += 1;
             this->mTargetOpacity = 0xff;

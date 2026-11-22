@@ -74,9 +74,7 @@ struct WalkPath {
 };
 
 /* local extern: address-named arm9 routines, no owning header. */
-extern "C" void func_020169d8(dExtSimpleModel_c *, int, unsigned int);
-extern "C" void func_02016a04(dExtSimpleModel_c *, int);
-extern "C" void func_02016a14(dExtSimpleModel_c *, int);
+
 int func_02017ab4(int);
 unsigned int func_02012174(unsigned int, unsigned int);
 extern "C" {
@@ -271,8 +269,8 @@ void FlowerFace::Draw() {
 
     G3_LightVector(GX_LIGHTID_0, light.x, light.y, light.z);
 
-    func_02016a14(&mModel, 0x2bff);
-    func_02016a04(&mModel, 0x1211);
+    mModel.func_02016a14(0x2bff);
+    mModel.func_02016a04(0x1211);
 
     mModel.mat4x3 = data_ov006_0213aee8;
 
@@ -644,7 +642,7 @@ void Presenter::Draw() {
     fillLight.x = 0;
     fillLight.y = 0;
     fillLight.z = -0xff8;
-    func_02016a04(&mFace, 0x3d6d);
+    mFace.func_02016a04(0x3d6d);
     func_0203cd80(&keyLight, -0x2000);
     func_0203ccd4(&keyLight, 0x2000);
     func_0203cd80(&fillLight, 0x4200);
@@ -1058,8 +1056,8 @@ void Dealer::Draw() {
     G3_LightVector(GX_LIGHTID_0, keyLight.x, keyLight.y, keyLight.z);
     G3_LightVector(GX_LIGHTID_1, spinLight.x, spinLight.y, spinLight.z);
 
-    func_02016a14(&mModel, 0x7fff);
-    func_02016a04(&mModel, 0x4210);
+    mModel.func_02016a14(0x7fff);
+    mModel.func_02016a04(0x4210);
 
     {
         short pattern = mLampPattern;
@@ -1075,9 +1073,9 @@ void Dealer::Draw() {
         }
     }
 
-    func_020169d8(&mTable, 0, (unsigned short)(lamp[0] | (lamp[1] << 5) | (lamp[2] << 10)));
-    func_020169d8(&mTable, 4, 0x6318);
-    func_020169d8(&mTable, 5, (unsigned short)(lamp[1] | (lamp[2] << 5) | (lamp[0] << 10)));
+    mTable.func_020169d8(0, (unsigned short)(lamp[0] | (lamp[1] << 5) | (lamp[2] << 10)));
+    mTable.func_020169d8(4, 0x6318);
+    mTable.func_020169d8(5, (unsigned short)(lamp[1] | (lamp[2] << 5) | (lamp[0] << 10)));
 
     mModel.Render(0);
     mWalker.Draw();

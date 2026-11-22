@@ -144,7 +144,7 @@ struct GmchDrawReg { GmchDrawReg(Vector3 &v) { v.x = 0; v.y = 0x2000; v.z = 0; }
  * GmchDrawReg supplies the draw offset's .init stores so the plain Vector3
  * earns its registered destructor instead of constant initialization. */
 extern "C" {
-extern void func_02038414(void *clsn);
+
 
 }
 
@@ -295,7 +295,7 @@ void daGmch_c::CheckPlayerContact()
 void daGmch_c::ApplySlopeToVertSpeed(dBgCh_Actr *clsn) {
     Vector3 floorNormal;
     Vector3 wallNormal;
-    func_02038414(clsn);
+    clsn->func_02038414();
     if (clsn->IsOnGround()) {
         clsn->GetFloorResult()->surface.CopyNormalTo(floorNormal);
         if (floorNormal.y != 0) {
@@ -368,7 +368,7 @@ int daGmch_c::UpdateState8()
     mAngle.x = mAngle.x - 0x1000;
     mAnmModel.Advance();
     UpdatePos(&mdCcAc_c);
-    func_02038414(&mWithMeshClsn);
+    mWithMeshClsn.func_02038414();
     if (mWithMeshClsn.JustHitGround() != 0 || DecIfAbove0_Byte(&mTimer) == 0) {
         SpawnCoinsAndDie();
     }
@@ -397,7 +397,7 @@ int daGmch_c::EnterState8()
 /* The angle reset is on the IsOnGround path, not the JustHitGround one. */
 int daGmch_c::UpdateState7()
 {
-    func_02038414(&mWithMeshClsn);
+    mWithMeshClsn.func_02038414();
     mAngle.x = mAngle.x + 0x1000;
     if (mWithMeshClsn.JustHitGround() != 0) {
         mSpeed.y = mSpeed.y * -0x3c / 100;

@@ -444,7 +444,7 @@ void daShl_c::HandlePlayerTouch() {
         return;
     if (hit & 0x26fe0)
         return;
-    if (func_ov002_020cc16c(player, this) != 1)
+    if ((player)->func_ov002_020cc16c(this) != 1)
         return;
     OnJumpedOn(player);
 }

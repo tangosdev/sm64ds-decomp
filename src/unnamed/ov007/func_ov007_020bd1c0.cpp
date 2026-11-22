@@ -1,6 +1,7 @@
 //cpp
 #include "types.h"
 #include "Ov007Work.h"
+#include "Ov007Camera.h"
 #include "Ov007Settings.h"
 #include "Ov007Light.h"
 #include "Ov007Texture.h"
@@ -23,7 +24,7 @@ extern "C" void func_ov007_020b22e0(void *tex, void *file, int i);
 extern "C" void func_ov007_020b1fa4(int self);
 extern "C" void func_ov007_020bd4a0(int r0);
 extern "C" void func_ov007_020b2998(void);
-extern "C" void func_ov007_020bfbdc(void *self);
+
 extern "C" void func_ov007_020b77ac(void);
 extern "C" void PickerScene_Create(int a, int b);
 extern "C" void func_ov007_020bf428(void);
@@ -65,7 +66,7 @@ extern "C" void func_ov007_020bd1c0(int n) {
         func_ov007_020bd4a0(0);
         func_ov007_020b2998();
         gMenuWork->modelGrowth = 0;
-        func_ov007_020bfbdc(gMenuWork->cameras[0]);
+        gMenuWork->cameras[0]->func_ov007_020bfbdc();
         func_ov007_020bd4a0(1);
         ((Ov007Texture *)gMenuWork->textures[8])->func_ov007_020c14b8();
         ((Ov007Texture *)gMenuWork->textures[7])->func_ov007_020c14b8();
@@ -77,7 +78,7 @@ extern "C" void func_ov007_020bd1c0(int n) {
     case 1:
         func_ov007_020b1fa4(2);
         func_ov007_020bd4a0(0);
-        func_ov007_020bfbdc(gMenuWork->cameras[0]);
+        gMenuWork->cameras[0]->func_ov007_020bfbdc();
         func_ov007_020bd4a0(1);
         ((Ov007Texture *)gMenuWork->textures[1])->func_ov007_020c14b8();
         ((Ov007Texture *)gMenuWork->textures[3])->func_ov007_020c14b8();
@@ -89,7 +90,7 @@ extern "C" void func_ov007_020bd1c0(int n) {
         G3X_SetShading(GX_SHADING_HIGHLIGHT);
         func_ov007_020bce70(4, 0);
         func_ov007_020bd4a0(0);
-        func_ov007_020bfbdc(gMenuWork->cameras[0]);
+        gMenuWork->cameras[0]->func_ov007_020bfbdc();
         func_ov007_020bd4a0(1);
         ((Ov007Texture *)gMenuWork->textures[2])->func_ov007_020c14b8();
         ((Ov007Texture *)gMenuWork->textures[0])->func_ov007_020c14b8();

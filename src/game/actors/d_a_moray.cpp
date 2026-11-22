@@ -100,11 +100,9 @@ int SublevelToLevel(int sub);
 /* UpdateBones(model.data, model.file, frame). Inlining that grows Render
    0x8c -> 0x9c. */
 /* Blend the posed bones by blendWeight. No named method. */
-void func_0204531c(ModelComponents *data, s32 weight);
 }
 int IsStarCollected(int level, int star);
 void func_02012694(unsigned int id, const Vector3 *pos);
-void func_020167a4(dExtAnmModel_c *model);
 
 /* Render's per-segment bend table, one 0xc record per body bone.
  * The six ROM records are {0, 0, scale} with scales 1,1,1,1,-1,0.
@@ -598,7 +596,7 @@ s32 daMoray_c::Render()
     MorayRenderStep *step;
     ModelBone *bone;
 
-    func_020167a4(&mBlendAnmModel);
+    mBlendAnmModel.func_020167a4();
     bone = mBlendAnmModel.data.bones + 1;
     step = data_ov016_02114908;
     for (i = 1; i < 7; i++) {
@@ -608,7 +606,7 @@ s32 daMoray_c::Render()
         step++;
         bone++;
     }
-    func_0204531c(&mBlendAnmModel.data, mBlendAnmModel.blendWeight);
+    mBlendAnmModel.data.func_0204531c(mBlendAnmModel.blendWeight);
     mBlendAnmModel.dExtSimpleModel_c::Render(0);
     return 1;
 }

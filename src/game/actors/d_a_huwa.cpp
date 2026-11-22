@@ -175,7 +175,7 @@ void daHuwa_c::HandleCylinderHit() {
     }
 
     if ((mdCcAc_c.hitFlags & kHitAttack) != 0) {
-        if (func_ov002_020e10a8(player) == 0) {
+        if ((player)->func_ov002_020e10a8() == 0) {
             KillWithCoins();
             return;
         }

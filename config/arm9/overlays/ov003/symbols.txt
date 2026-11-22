@@ -1,6 +1,6 @@
 _ZN10dScTitle_cD1Ev kind:function(arm,size=0x3c) addr:0x020ad660
 _ZN10dScTitle_cD0Ev kind:function(arm,size=0x50) addr:0x020ad69c
-_Z20TitleScrollLevelListPv kind:function(arm,size=0xb4) addr:0x020ad6ec
+_ZN10dScTitle_c20TitleScrollLevelListEv kind:function(arm,size=0xb4) addr:0x020ad6ec
 _ZN10dScTitle_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020ad7a0
 _ZN10dScTitle_c6RenderEv kind:function(arm,size=0x70) addr:0x020ad7a4
 _ZN10dScTitle_c8BehaviorEv kind:function(arm,size=0x26c) addr:0x020ad814

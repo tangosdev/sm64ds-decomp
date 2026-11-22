@@ -78,30 +78,33 @@ void func_02037318(dBgCh_Actr *clsn) {
 /* The ground-snap step run once per landing: when the sphere query flagged a
    floor hit and the actor is close to a dBgCh_Gnd probed surface, snap the
    actor's position onto it and raise the on-ground state. */
-extern "C" void func_020371fc(dBgCh_Actr *clsn) {
-    if ((clsn->mSphereClsn.flags & 1) == 0) return;
-    if ((clsn->mSphereClsn.flags & 8) == 0) return;
-    if ((clsn->mFlags & 0x100) == 0) return;
-    if (clsn->mGroundNormal.y >= 0xf20)
+void dBgCh_Actr::func_020371fc() {
+    if ((mSphereClsn.flags & 1) == 0)
         return;
-    if (((daPly_c *)clsn->mActor)->IsInAir())
+    if ((mSphereClsn.flags & 8) == 0)
+        return;
+    if ((mFlags & 0x100) == 0)
+        return;
+    if (mGroundNormal.y >= 0xf20)
+        return;
+    if (((daPly_c *)mActor)->IsInAir())
         return;
     {
         Vector3 probe;
-        Vector3 *actorPos = &clsn->mActor->mPos;
+        Vector3 *actorPos = &mActor->mPos;
         dBgCh_Gnd ground;
         probe.x = actorPos->x;
-        probe.y = actorPos->y + clsn->mRadius;
+        probe.y = actorPos->y + mRadius;
         probe.z = actorPos->z;
-        ground.SetObjAndPos(probe, clsn->mActor);
+        ground.SetObjAndPos(probe, mActor);
         if (ground.DetectClsn() != 0) {
             int groundY = ground.clsnY;
             int diff = actorPos->y - groundY;
-            if (diff > 0 && diff < (clsn->mRadius << 1)) {
+            if (diff > 0 && diff < (mRadius << 1)) {
                 actorPos->y = groundY;
-                clsn->mSphereClsn.flags |= 4;
-                clsn->mSphereClsn.mClsnResult1 = ground;
-                clsn->SetGroundFlag();
+                mSphereClsn.flags |= 4;
+                mSphereClsn.mClsnResult1 = ground;
+                SetGroundFlag();
             }
         }
     }

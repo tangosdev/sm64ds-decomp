@@ -3228,6 +3228,7 @@ void cMgSmartball_object_c::SetVel(Vector2 *velocity) {
     mVel.y = velocity->y;
 }
 
+// leftover: member form DIFFs
 void CopyObjectVel(void *a, void *b) {
     int *out = (int *)a;
     cMgSmartball_object_c *object = (cMgSmartball_object_c *)b;
@@ -3239,6 +3240,7 @@ void GetObjectDelta(Vector2 *a, cMgSmartball_object_c *b) {
     Vec2_Sub(a, &b->mCurrent, &b->mSnapshot);
 }
 
+// leftover: member form DIFFs
 void CopyObjectPos(void *a, void *b) {
     int *out = (int *)a;
     cMgSmartball_object_c *object = (cMgSmartball_object_c *)b;

@@ -15,8 +15,7 @@
  * in the object. No optimisation pragma is needed.
  *
  * The field names are coined (see include/dThIcon_c.h); the cartridge
- * carries none. TouchArea_Update stays a free function: the
- * ov004/ov006/ov075 callers declare it taking the icon as a void *.
+ * carries none. TouchArea_Update is dThIcon_c::TouchArea_Update.
  */
 
 #include "dThIcon_c.h"
@@ -68,32 +67,31 @@ void dThIcon_c::Render() {}
 /* Test player `player`'s pen (the local player when negative) against the
  * icon's box. Fires per mTouchKind: 1 on a touch that begins inside, 2 when
  * the pen enters. Records whether the pen is inside for the next frame. */
-int TouchArea_Update(void *c, int player) {
+int dThIcon_c::TouchArea_Update(int player) {
     int fired;
     int inside;
     int dx, dy;
     int kind;
-    dThIcon_c *icon = reinterpret_cast<dThIcon_c *>(c);
 
-    if (icon->mReady == 0)
+    if (this->mReady == 0)
         return 0;
     if (player < 0)
         player = func_0203da9c();
     fired = 0;
     inside = 0;
     if (gTouchInfo[player].held != 0) {
-        dx = gTouchInfo[player].x - icon->mX;
-        dy = gTouchInfo[player].y - icon->mY;
-        if (dx >= -icon->mHalfW && dx <= icon->mHalfW && dy >= -icon->mHalfH && dy <= icon->mHalfH)
+        dx = gTouchInfo[player].x - this->mX;
+        dy = gTouchInfo[player].y - this->mY;
+        if (dx >= -this->mHalfW && dx <= this->mHalfW && dy >= -this->mHalfH && dy <= this->mHalfH)
             inside = 1;
     }
     if (inside != 0) {
-        kind = icon->mTouchKind;
+        kind = this->mTouchKind;
         /* The unsigned index is load-bearing; a signed one DIFFs. */
-        if ((kind == 1 && gTouchInfo[player].edge != 0) || (kind == 2 && icon->mPenInside == 0))
+        if ((kind == 1 && gTouchInfo[player].edge != 0) || (kind == 2 && this->mPenInside == 0))
             fired = 1;
     }
-    icon->mPenInside = inside;
+    this->mPenInside = inside;
     return fired;
 }
 

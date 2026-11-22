@@ -267,7 +267,7 @@ int daOwl_c::UpdateCarrying() {
     }
 
     rider = mRider;
-    if (rider != 0 && func_ov002_020df7f4(rider) == 1) {
+    if (rider != 0 && (rider)->func_ov002_020df7f4() == 1) {
         OWL_TIMER(this) = 0xa;
         mAnmModel.SetAnim((BCA_File *)data_ov094_02136af8.filePtr, 0, 0x1000, 0);
     }
@@ -288,7 +288,7 @@ int daOwl_c::UpdateCarrying() {
 
     rider = mRider;
     /* The second null test is dead, but the ROM keeps it as a real cmp. */
-    if (rider == 0 || (rider != 0 && func_ov002_020df7f4(rider) < 0)) {
+    if (rider == 0 || (rider != 0 && (rider)->func_ov002_020df7f4() < 0)) {
         mRider = 0;
         unk_3e8 = 0;
         mStateTimer = 0;

@@ -132,7 +132,6 @@ extern const int sVsPlayerExitX[16] = {0,       1843200, 1843200, 1843200, -2048
                                        -491520, -163840, 163840,  491520};
 }
 unsigned int func_02012174(unsigned int a, unsigned int b);
-void func_020167a4(dExtAnmModel_c *model);
 
 /* A pointer-to-member row: the two per-figure state tables are arrays of
  * these. __sinit_ov075_0211b5e0 fills them, which fixes each index:
@@ -505,9 +504,9 @@ void UnknownVsPlayer::Render() {
     BMD_File *file;
     BMD_Material *mat;
 
-    func_020167a4(&mModel);
+    mModel.func_020167a4();
     RestoreBoneTranslations();
-    func_0204531c(&mModel.data, mModel.blendWeight);
+    mModel.data.func_0204531c(mModel.blendWeight);
 
     {
         ModelComponents *components = &mModel.data;
