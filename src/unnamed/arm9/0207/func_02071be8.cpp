@@ -15,12 +15,13 @@ extern void func_02071864(ThrowContext *t, ActionIterator *it);
 }
 
 extern struct CatchInfo *func_02072014(ThrowContext *c, struct ActionCursor *cursor);
-extern unsigned char *func_02071d3c(ThrowContext *self, struct ActionCursor *src, int *flag);
+
 extern "C" {
 
 extern unsigned char *func_02071a50(unsigned char *p, int *out);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 }
+
 
 extern "C" void func_02072168(ThrowContext *c, ActionIterator *s, char *end);
 extern "C" {
@@ -53,7 +54,7 @@ extern "C" void func_02071be8(ThrowContext *s) {
     } else {
         s->mCatchInfo = func_02072014(s, &ctx);
     }
-    q = func_02071d3c(s, &ctx, &local0);
+    q = s->func_02071d3c(&ctx, &local0);
     blk[0] = q[1] | (q[2] << 8) | (q[3] << 16) | (q[4] << 24);
     ReadSignedVarInt(func_02071a50(q + 5, &blk[1]), &blk[2]);
     func_02072168(s, &ctx.iterator, (char *)q);

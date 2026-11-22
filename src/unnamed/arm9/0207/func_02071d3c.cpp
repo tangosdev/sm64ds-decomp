@@ -39,13 +39,13 @@ struct ExCatchBlock {
    specification: a thrown type it does not list (func_02071f88) goes to
    func_02071f1c. Actions 1 and 14, and any unknown action, call the
    terminate path (std::terminate). The other actions are skipped. */
-u8 *func_02071d3c(ThrowContext *self, struct ActionCursor *src, int *flag) {
+u8 *ThrowContext::func_02071d3c(struct ActionCursor *src, int *flag) {
     struct ActionWalk buf;
     int state;
 
     buf.iterator = src->iterator;
     buf.unknown_14 = src->unknown_14;
-    buf.mThrow = *self;
+    buf.mThrow = *this;
 
     state = func_02072d90(&buf);
 
@@ -58,7 +58,7 @@ u8 *func_02071d3c(ThrowContext *self, struct ActionCursor *src, int *flag) {
             catchBlock.mCatchType = cur[1] | (cur[2] << 8) | (cur[3] << 16) | (cur[4] << 24);
             u8 *p = func_02071a50(cur + 5, &catchBlock.mPCOffset);
             p = ReadSignedVarInt(p, &catchBlock.mCatchInfoRef);
-            if (!__throw_catch_compare((u8 *)self->mThrowType, (u8 *)catchBlock.mCatchType, flag)) {
+            if (!__throw_catch_compare((u8 *)this->mThrowType, (u8 *)catchBlock.mCatchType, flag)) {
                 continue;
             }
             break;
@@ -72,8 +72,8 @@ u8 *func_02071d3c(ThrowContext *self, struct ActionCursor *src, int *flag) {
             p = func_02071a50(p, &spec.mPCOffset);
             p = ReadSignedVarInt(p, &spec.mCatchInfoRef);
             spec.mSpecs = p;
-            if (func_02071f88((void *)self->mThrowType, &spec) == 0) {
-                func_02071f1c(self, &src->iterator, &spec, buf.iterator.mAction);
+            if (func_02071f88((void *)this->mThrowType, &spec) == 0) {
+                func_02071f1c(this, &src->iterator, &spec, buf.iterator.mAction);
             }
             continue;
         }
