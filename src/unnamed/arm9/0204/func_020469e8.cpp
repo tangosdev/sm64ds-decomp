@@ -1,4 +1,3 @@
-//cpp
 #include "types.h"
 #include "dExtModel_c.h"
 #include "private/BTA_File.h"
