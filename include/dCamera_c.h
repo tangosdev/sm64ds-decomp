@@ -356,6 +356,11 @@ struct dCamera_c : dView_c {
     void SetFovAngle(short);
     /* Super Mario 64's set_fov_shake. */
     void SetFovShake(int, int, int);
+    void func_02005000();
+    int func_02005060();
+    int func_02005098();
+    int func_020050dc();
+    int func_02005110();
 };
 
 #ifndef SM64DS_PLATFORM_PC

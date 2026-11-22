@@ -22,7 +22,7 @@ do_autoload kind:function(arm,size=0x70) addr:0x0200497c
 AutoloadCallback kind:function(arm,size=0x4) addr:0x020049ec
 init_cp15 kind:function(arm,size=0xe8) addr:0x020049f0
 BuildInfo kind:data(any) addr:0x02004ad8
-_Z13func_02005000P9dCamera_c kind:function(arm,size=0x60) addr:0x02005000
+_ZN9dCamera_c13func_02005000Ev kind:function(arm,size=0x60) addr:0x02005000
 _Z13func_02005060P9dCamera_c kind:function(arm,size=0x38) addr:0x02005060
 _Z13func_02005098P9dCamera_c kind:function(arm,size=0x44) addr:0x02005098
 _Z13func_020050dcP9dCamera_c kind:function(arm,size=0x34) addr:0x020050dc
