@@ -53,6 +53,7 @@ enum daWbm_c_AssetId {
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
+#include "WbmCarryOffset.h"
 #include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -75,9 +76,6 @@ extern SharedFilePtr data_ov002_0210da38;
 /* Carry-offset rows the block actor reads, then the five fragments' launch angles.
  * Vector3's ctor would move this out of .rodata, so the row is a POD triple.
  * Interior labels stay in symbols.txt. */
-struct WbmCarryOffset {
-    fx32 x, y, z;
-};
 extern const WbmCarryOffset data_ov098_0213bf60[4] = {
     {0x00028000, 0x00000000, 0x0002d000},
     {0x00028000, 0x00000000, 0x00046000},

@@ -5,6 +5,7 @@
 #ifndef DECL_COMMON_H
 #define DECL_COMMON_H
 #include "common.h"
+#include "WbmCarryOffset.h"
 
 /* C linkage. These declare ROM symbols by their exact final names, so a C++
    translation unit including this header must not mangle them -- a bare
@@ -292,11 +293,6 @@ extern int data_ov075_0211d650[];
 extern void *gKeyModelFiles[];
 extern int data_ov091_021344e8[];
 extern int data_ov094_02136a1c[];
-struct WbmCarryOffset {
-    fx32 x;
-    fx32 y;
-    fx32 z;
-};
 extern const struct WbmCarryOffset data_ov098_0213bf60[];
 extern int data_ov100_02148008[3];
 extern int data_ov100_02148710;
