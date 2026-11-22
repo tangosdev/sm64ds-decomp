@@ -157,6 +157,44 @@ def linked(authors_path=None, config_root=None):
             "pct": round(100.0 * got / len(universe), 2)}
 
 
+# ------------------------------------------------------------------ MATCHED
+
+
+def matched(db_path=None):
+    """MATCHED from chaos-db.json, the file the bar and treemap also read.
+
+    Returns None when the db is absent rather than recomputing it: a second
+    implementation of the matched rule is a second source of truth, and this
+    repo has already paid for one of those (the itcm undercount).
+    """
+    p = pathlib.Path(db_path) if db_path else (REPO / "chaos-db.json")
+    if not p.is_file():
+        return None
+    try:
+        db = json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    st = db.get("stats") or {}
+    tot, got = st.get("totalFunctions"), st.get("matchedFunctions")
+    if not tot:
+        return None
+    return {
+        "matched": got,
+        "functions": tot,
+        "pct": round(100.0 * got / tot, 2),
+        "matchedBytes": st.get("matchedBytes"),
+        "totalBytes": st.get("totalBytes"),
+        "bytePct": (round(100.0 * st["matchedBytes"] / st["totalBytes"], 2)
+                    if st.get("totalBytes") else None),
+        # The assembly subset, read from the same db for the same reason MATCHED is:
+        # recomputing it here would be a second source of truth. Absent from a db
+        # generated before the field existed, and every consumer treats that as
+        # "do not print the line" rather than as zero.
+        "handAsm": st.get("handAsmFunctions"),
+        "handAsmBytes": st.get("handAsmBytes"),
+    }
+
+
 # ------------------------------------------------------------------- output
 
 

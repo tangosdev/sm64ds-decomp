@@ -189,6 +189,12 @@ INLINE_METHOD = re.compile(
     r"(?::\s*\w+\([^;{}]*\)(?:\s*,\s*\w+\([^;{}]*\))*\s*)?(?:\{|$)")
 # lines inside a struct body that are legitimately not declarations
 IGNORABLE = re.compile(r"^\s*($|/\*|\*|//|\}|#)")
+# `} mModels; /* 0x0dc */` -- a nested struct that is also a member. The `};`
+# form is a type only and occupies nothing. Group 2 is the bracket text so
+# ARR_DIMS can read every bound; group 3 is the offset comment.
+NESTED_MEMBER = re.compile(
+    r"^\s*\}\s*(\w+)\s*((?:\[[^\]]*\])*)\s*;"
+    r"(?:\s*/\*\s*(0x[0-9a-fA-F]+))?")
 
 
 def _code_without_comments_or_strings(line, in_block_comment=False):
@@ -733,6 +739,7 @@ def main(argv, repo=None):
         off, bad, n, skipped, pending = 0, 0, 0, [], []
         trusted = True
         started = in_comment = unmodelled = nested = skip_other = False
+        nested_type = None
         in_union = in_ustruct = False
         u_start = u_end = u_members = 0
         skip_body = 0
@@ -882,6 +889,47 @@ def main(argv, repo=None):
             if nested:
                 if re.match(r"^\s*\};", line):
                     nested = False
+                    nested_type = None
+                    continue
+                # `struct Models { ... } mModels; /* 0x0dc */` is a member, not a
+                # type. The closer is `} name;`, so the `};` test above never
+                # saw it and the class's own `};` was what cleared `nested`.
+                # daPly_c.h then walked off the end of the class into its size
+                # asserts. The member takes the nested type's asserted size.
+                member = NESTED_MEMBER.match(line)
+                if member:
+                    nested = False
+                    mname, arr, decl = member.groups()
+                    typ = nested_type
+                    nested_type = None
+                    w = _qualified_size(expected, typ) if typ else None
+                    if w is None and typ:
+                        w = SZ.get(typ)
+                    if w is None:
+                        skipped.append(f"{lineno}: {line.strip()}")
+                        trusted = False
+                        continue
+                    dims = [int(d, 0) if d[0].isdigit() else consts.get(d)
+                            for d in ARR_DIMS.findall(arr or "")]
+                    if None in dims:
+                        skipped.append(f"{lineno}: {line.strip()}")
+                        trusted = False
+                        continue
+                    a = ALIGN.get(typ, min(w, 4))
+                    if off % a:
+                        off += a - (off % a)
+                    if decl is not None and trusted:
+                        n += 1
+                        if int(decl, 16) != off:
+                            pending.append(
+                                f"  MISMATCH {path}:{lineno} {mname}: comment {decl}, "
+                                f"computed 0x{off:03x}")
+                            bad += 1
+                    arr_n = 1
+                    for d in dims:
+                        arr_n *= d
+                    off += w * arr_n
+                    continue
                 continue
             # A nested FORWARD declaration -- `struct State;` inside Camera -- is a type
             # too, and occupies no space either. It shows up when a class handles its
@@ -931,7 +979,18 @@ def main(argv, repo=None):
                 continue
             if re.match(r"^\s*(?:struct|union|class)\s+\w+\s*;\s*$", line):
                 continue
-            if re.match(r"^\s*(?:struct|class) \w+\s*(?::\s*(?:public\s+)?[\w:]+\s*)?\{", line):
+            opened = re.match(
+                r"^\s*(?:struct|class) (\w+)\s*(?::\s*(?:public\s+)?[\w:]+\s*)?\{", line)
+            if opened:
+                # A one-line nested type closes on this same line
+                # (`struct StateEntry { State init; State exec; };` in
+                # daObjSwitch_c.h). Leaving `nested` set swallowed every later
+                # field, and the class's own `};` was what cleared it, so the
+                # size assert after the class was read as a field. Same rule
+                # as the one-line enum below.
+                if "};" in line:
+                    continue
+                nested_type = opened.group(1)
                 nested = True
                 continue
             # A nested ENUM is a type too -- it names constants and occupies nothing --
