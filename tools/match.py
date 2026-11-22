@@ -339,9 +339,8 @@ def compare(target: bytes, cand: bytes, relocs: set, verbose: bool = True):
 def resolve_cpp_flags(cfile, flags):
     """The flag set `cfile` must actually be compiled with, given the requested `flags`.
 
-    Auto-detect C++ the same way fdiff/swarm do: a leading //cpp marker means compile with
-    -lang c++ instead of the default -lang c99, so C++ candidates stop failing to compile
-    (the file is already .cpp, so it compiles in place - no temp copy needed).
+    Auto-detect C++ the same way the ROM build does: a .cpp file, or a .c file
+    whose first line is //cpp, compiles with -lang c++ instead of -lang c99.
 
     `-Cpp_exceptions off` then rides along with C++ mode HOWEVER THAT MODE WAS REACHED,
     because the build compiles every C++ source with it and without it a source holding an
@@ -357,10 +356,11 @@ def resolve_cpp_flags(cfile, flags):
     the difference on purpose.
     """
     try:
-        is_cpp_source = cfile.read_text(encoding="utf-8").startswith("//cpp")
+        text = cfile.read_text(encoding="utf-8")
+        is_cpp_source = cfile.suffix == ".cpp" or text.startswith("//cpp")
     except OSError:
         # a missing/unreadable candidate surfaces later at compile_c with a clearer error
-        is_cpp_source = False
+        is_cpp_source = cfile.suffix == ".cpp"
     if is_cpp_source and "-lang c99" in flags:
         flags = flags.replace("-lang c99", "-lang c++")
     if "-lang c++" in flags and "-Cpp_exceptions" not in flags:
@@ -401,8 +401,6 @@ def main():
     cfile = pathlib.Path(args.c)
     if args.cpp_check and cfile.is_file():
         text = cfile.read_text(encoding="utf-8", errors="ignore")
-        if cfile.suffix == ".cpp" and not text.startswith("//cpp"):
-            print(f"  [cpp-check] Warning: {cfile.name} is a .cpp file but lacks '//cpp' header on line 1")
         if text.startswith("//cpp") and cfile.suffix == ".c":
             print(f"  [cpp-check] Warning: {cfile.name} has '//cpp' header but extension is .c (should be .cpp)")
         if cfile.stem.startswith("_Z") and args.func and args.func != cfile.stem:

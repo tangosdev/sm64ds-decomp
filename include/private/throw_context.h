@@ -87,6 +87,11 @@ typedef struct ThrowContext {
 #ifdef __cplusplus
     u8 *func_02071d3c(struct ActionCursor *, int *);
     void func_02072168(ActionIterator *, char *);
+    void func_02071864(ActionIterator *);
+    void *func_02071910(void *);
+    void func_02071ccc(int, int);
+    void func_02071f1c(ActionIterator *, ExSpecification *, unsigned char *);
+    void func_02071790(ActionIterator *, int);
 #endif
 } ThrowContext;
 

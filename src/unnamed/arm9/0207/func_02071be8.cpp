@@ -1,4 +1,3 @@
-//cpp
 /* Load-bearing: the ROM build passes -Cpp_exceptions off, and the
    .exceptix record at 0x020738ec (func_02071be8, length 0xe4)
    exists only because this pragma turns exceptions back on. */
@@ -8,25 +7,12 @@ namespace std {
 void terminate();
 }
 
-extern "C" {
-
 extern void func_02072dac(int handle, ActionIterator *ctx);
-extern void func_02071864(ThrowContext *t, ActionIterator *it);
-}
 
 extern struct CatchInfo *func_02072014(ThrowContext *c, struct ActionCursor *cursor);
 
-extern "C" {
-
 extern unsigned char *func_02071a50(unsigned char *p, int *out);
-extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
-}
-
-extern "C" {
-
-extern void func_02071ccc(ThrowContext *s, int off, int add);
-extern void func_02071790(ThrowContext *context, ActionIterator *iterator, int pad);
-}
+extern "C" unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 
 /* EH runtime: the throw driver that __rethrow branches to. It finds the
    action table for the throw's return address (func_02072dac) and calls the
@@ -46,7 +32,7 @@ extern "C" void func_02071be8(ThrowContext *s) {
     if (ctx.iterator.mActionTable == 0) {
         std::terminate();
     }
-    func_02071864(s, &ctx.iterator);
+    s->func_02071864(&ctx.iterator);
     if (s->mThrowType != 0) {
         s->mCatchInfo = 0;
     } else {
@@ -56,6 +42,6 @@ extern "C" void func_02071be8(ThrowContext *s) {
     blk[0] = q[1] | (q[2] << 8) | (q[3] << 16) | (q[4] << 24);
     ReadSignedVarInt(func_02071a50(q + 5, &blk[1]), &blk[2]);
     s->func_02072168(&ctx.iterator, (char *)q);
-    func_02071ccc(s, blk[2], local0);
-    func_02071790(s, &ctx.iterator, ctx.iterator.mFuncStart + blk[1]);
+    s->func_02071ccc(blk[2], local0);
+    s->func_02071790(&ctx.iterator, ctx.iterator.mFuncStart + blk[1]);
 }

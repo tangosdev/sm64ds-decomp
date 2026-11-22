@@ -48,8 +48,6 @@ void func_0201a8b4(void *);
 u8 func_0201a96c(WatchdogAlarm *, int);
 u8 func_0201a9ec(WatchdogAlarm *);
 void func_0201a9fc(WatchdogAlarm *);
-WatchdogAlarm *func_0201aa18(WatchdogAlarm *);
-WatchdogAlarm *func_0201aaec(WatchdogAlarm *);
 
 void func_0201aa50(OSAlarm *, long long, OSAlarmHandler, void *);
 void func_0201aaa4(OSAlarm *);
@@ -60,5 +58,10 @@ OSAlarm *func_0201aad4(OSAlarm *);
 #ifdef __cplusplus
 }
 #endif
+
+/* C++ linkage. The constructor and destructor match these bodies and also
+   emit C2 and D2, and the next function starts where each of these ends. */
+WatchdogAlarm *func_0201aa18(WatchdogAlarm *);
+WatchdogAlarm *func_0201aaec(WatchdogAlarm *);
 
 #endif

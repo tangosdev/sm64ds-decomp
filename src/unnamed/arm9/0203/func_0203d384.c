@@ -23,7 +23,6 @@ void func_0203d388(Vector2 *v, s16 angle) {
     v->y = FX_MUL(s, x) + FX_MUL(c, y);
 }
 
-/* Vector3's empty constructor. daDpLift_c passes it to __cxa_vec_ctor
-   and d_a_ply_methods.cpp to __cxa_vec_new (argument shape: count, size, padding,
-   ctor, dtor); see Vector2.h. */
+/* leftover: Vector3::Vector3() is inline in types.h. This file also builds a
+   local Vector2, so compiling it as C++ emits that constructor. */
 void func_0203d384(void) {}

@@ -650,7 +650,7 @@ def _compile(rel, tmpdir):
     src = REPO / rel
     flags = RB.CFLAGS
     try:
-        if src.read_text(encoding="utf-8").startswith("//cpp"):
+        if RB.source_is_cpp(src, src.read_text(encoding="utf-8")):
             flags = flags.replace("-lang c99", "-lang c++")
     except OSError:
         return None

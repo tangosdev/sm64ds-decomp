@@ -64,7 +64,7 @@ BUILD = REPO / "build"
 from rombuild import VERSION  # noqa: E402  (default compiler)
 # Imported, never copied: classifying with different flags than the build compiles with
 # would pass files the build then breaks on.
-from rombuild import CFLAGS  # noqa: E402
+from rombuild import CFLAGS, source_is_cpp  # noqa: E402
 
 ANYSYM = re.compile(r"^(\S+)\s+kind:")
 HEADER_SECTION = re.compile(r"^\s+\.(\w+)\s+start:0x")
@@ -169,7 +169,8 @@ def classify(job):
     obj.parent.mkdir(parents=True, exist_ok=True)
     flags = CFLAGS
     try:
-        if src.read_text(encoding="utf-8", errors="ignore").startswith("//cpp"):
+        text = src.read_text(encoding="utf-8", errors="ignore")
+        if source_is_cpp(src, text):
             flags = flags.replace("-lang c99", "-lang c++")
     except OSError:
         return rel, name, "unreadable source", []

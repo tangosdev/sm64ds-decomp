@@ -69,6 +69,17 @@ import dsd_pin as DSP  # noqa: E402
 import data_section_routes as DSR  # noqa: E402
 import initialized_boundaries as IB  # noqa: E402
 
+
+def source_is_cpp(path, text):
+    """True when mwccarm should compile this source as C++.
+
+    A `.cpp` file is C++. A `.c` file is C++ only when it starts with `//cpp`,
+    which is how the older one-function files selected the language.
+    """
+    if pathlib.Path(str(path)).suffix == ".cpp":
+        return True
+    return text.startswith("//cpp")
+
 # Default compiler for the ROM build — same as the matching pin (tools/match.py
 # CANONICAL / notes/rom-build.md). config/rombuild-versions.txt carries per-file
 # exceptions that still need a 1.2/* service pack.
@@ -1300,9 +1311,9 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
         return rel, None, "tu-derived"
     version = (vers or {}).get(pathlib.Path(rel).stem, VERSION)
     flags = CFLAGS
-    # A leading //cpp marker means C++, matched to how match.py/fdiff compile it.
+    # .cpp is C++. A .c file is C++ only when its first line is //cpp.
     try:
-        if src.read_text(encoding="utf-8").startswith("//cpp"):
+        if source_is_cpp(src, src.read_text(encoding="utf-8")):
             flags = flags.replace("-lang c99", "-lang c++")
     except OSError:
         pass

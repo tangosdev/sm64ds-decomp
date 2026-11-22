@@ -21,6 +21,9 @@ struct ActionWalk {
     ActionIterator iterator; /* 0x00..0x13 */
     int unknown_14;
     ThrowContext mThrow; /* 0x18 */
+#ifdef __cplusplus
+    unsigned char func_02072d90();
+#endif
 };
 
 typedef char

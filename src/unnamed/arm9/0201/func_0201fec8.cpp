@@ -93,7 +93,7 @@ void func_0201fec8(void)
 }
 
 /* One s32 seeded to 1. The empty destructor is func_0201973c, already
-   defined in func_020196cc.c, so this declaration is not emitted. */
+   defined in func_020196cc.cpp, so this declaration is not emitted. */
 extern "C" void func_0203b9b4(int *p, int v);
 #include "LevelRng.h"
 
