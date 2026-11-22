@@ -9,8 +9,7 @@
  * (func_02072168), hand the exception to the handler's CatchInfo and jump to
  * the handler (func_02071790). action is the specification's action, where
  * the unwind stops. */
-void ThrowContext::func_02071f1c(ActionIterator *it, ExSpecification *spec,
-                                 unsigned char *action) {
+void ThrowContext::func_02071f1c(ActionIterator *it, ExSpecification *spec, unsigned char *action) {
     CatchInfo *catchInfo;
     int off;
 
