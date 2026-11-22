@@ -37,3 +37,7 @@ src/game/actors/d_a_pg_bby.cpp:
     .ctor start:0x02122714 end:0x02122718
     .data start:0x021229f4 end:0x02122b0c
     .bss start:0x02122c94 end:0x02122dcc
+
+src/data/ov072/data_ov072_02122b0c.c:
+    complete
+    .data start:0x02122b0c end:0x02122b20

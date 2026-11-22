@@ -57,3 +57,35 @@ src/game/actors/d_a_slide_box.cpp:
     .ctor start:0x02113acc end:0x02113ad0
     .data.slideBox start:0x02113bac end:0x02113bcc
     .bss start:0x02114e6c end:0x02114ea0
+
+src/data/ov016/data_ov016_02113ae0.c:
+    complete
+    .data.slideBox start:0x02113ae0 end:0x02113bac
+
+src/data/ov016/data_ov016_02113bcc.c:
+    complete
+    .data.hasira_head start:0x02113bcc end:0x02113bec
+
+src/data/ov016/data_ov016_02113c0c.c:
+    complete
+    .data.hasira_mid start:0x02113c0c end:0x02113c4c
+
+src/data/ov016/data_ov016_02113c8c.c:
+    complete
+    .data.hasira start:0x02113c8c end:0x02113cac
+
+src/data/ov016/data_ov016_02113ccc.c:
+    complete
+    .data.hasira start:0x02113ccc end:0x02114878
+
+src/data/ov016/data_ov016_02114958.c:
+    complete
+    .data.morayTail start:0x02114958 end:0x021149d4
+
+src/data/ov016/data_ov016_021149dc.c:
+    complete
+    .data.morayTail start:0x021149dc end:0x02114b8c
+
+src/data/ov016/data_ov016_02114b98.c:
+    complete
+    .data.morayTail start:0x02114b98 end:0x02114d20

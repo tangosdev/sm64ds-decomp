@@ -48,3 +48,19 @@ src/game/actors/d_a_kp_fr.cpp:
     .init start:0x02123030 end:0x021230a4
     .ctor start:0x021230b0 end:0x021230b4
     .bss start:0x021236ec end:0x0212370c
+
+src/data/ov070/data_ov070_021230c0.c:
+    complete
+    .data start:0x021230c0 end:0x02123120
+
+src/data/ov070/data_ov070_0212320c.c:
+    complete
+    .data.brqPmf start:0x0212320c end:0x0212323c
+
+src/data/ov070/data_ov070_02123334.c:
+    complete
+    .data.gap1334 start:0x02123334 end:0x021234c4
+
+src/data/ov070/data_ov070_0212370c.c:
+    complete
+    .bss start:0x0212370c end:0x02123720

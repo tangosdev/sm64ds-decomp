@@ -80,3 +80,7 @@ src/unnamed/ov026/data_ov026_02112ffc.c:
     .data start:0x02112ffc end:0x021132b0
     .data.data_ov026_02113450 start:0x02113450 end:0x02113600
     .data.data_ov026_021137c0 start:0x021137c0 end:0x02113a90
+
+src/data/ov026/data_ov026_02113dd0.c:
+    complete
+    .data.wlLate start:0x02113dd0 end:0x02113de0

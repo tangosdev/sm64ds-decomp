@@ -48,3 +48,31 @@ src/game/actors/d_a_obj_km3_dorifu.cpp:
     .data.km3DorifuMidClps start:0x02111bb4 end:0x02111bd4
     .data start:0x02112508 end:0x02112530
     .bss start:0x02112658 end:0x02112720
+
+src/data/ov047/data_ov047_021119e0.c:
+    complete
+    .data_pre start:0x021119e0 end:0x02111a74
+
+src/data/ov047/data_ov047_02111ad4.c:
+    complete
+    .data.before_km3_axle_clps start:0x02111ad4 end:0x02111b54
+
+src/data/ov047/data_ov047_02111b64.c:
+    complete
+    .data_mid start:0x02111b64 end:0x02111bb4
+
+src/data/ov047/data_ov047_02111bd4.c:
+    complete
+    .data.w11bd4 start:0x02111bd4 end:0x02111bf4
+
+src/data/ov047/data_ov047_02111c14.c:
+    complete
+    .data start:0x02111c14 end:0x0211224c
+
+src/data/ov047/data_ov047_021124cc.c:
+    complete
+    .data start:0x021124cc end:0x02112508
+
+src/data/ov047/data_ov047_02112530.c:
+    complete
+    .data start:0x02112530 end:0x021125e0

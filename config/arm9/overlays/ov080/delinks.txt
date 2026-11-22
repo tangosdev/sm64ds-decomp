@@ -48,3 +48,15 @@ src/game/actors/d_a_pic_gate_methods.cpp:
 src/game/actors/d_a_obj_maruta.cpp:
     complete
     .text start:0x02126fbc end:0x0212766c
+
+src/data/ov080/data_ov080_02127fb0.c:
+    complete
+    .data start:0x02127fb0 end:0x0212812c
+
+src/data/ov080/data_ov080_0212815c.c:
+    complete
+    .data start:0x0212815c end:0x02128214
+
+src/data/ov080/data_ov080_02128274.c:
+    complete
+    .data start:0x02128274 end:0x021283c0

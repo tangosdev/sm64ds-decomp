@@ -11,3 +11,19 @@ src/game/actors/d_a_obj_fm_battan.cpp:
     .ctor start:0x02111b14 end:0x02111b18
     .data start:0x02111fa0 end:0x02112064
     .bss start:0x02112080 end:0x021120a8
+
+src/data/ov023/data_ov023_02111760.c:
+    complete
+    .rodata start:0x02111760 end:0x02111aa8
+
+src/data/ov023/data_ov023_02111b20.c:
+    complete
+    .data start:0x02111b20 end:0x02111fa0
+
+src/data/ov023/data_ov023_02112064.c:
+    complete
+    .data start:0x02112064 end:0x02112080
+
+src/data/ov023/data_ov023_021120a8.c:
+    complete
+    .bss start:0x021120a8 end:0x021120c0

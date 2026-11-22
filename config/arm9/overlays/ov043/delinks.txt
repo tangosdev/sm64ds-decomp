@@ -59,3 +59,23 @@ src/game/actors/d_a_obj_km1_dorifu.cpp:
 src/unnamed/ov043/data_ov043_02111ca0.c:
     complete
     .data start:0x02111ca0 end:0x02112270
+
+src/data/ov043/data_ov043_02111b00.c:
+    complete
+    .data.gap0 start:0x02111b00 end:0x02111b60
+
+src/data/ov043/data_ov043_02111b80.c:
+    complete
+    .data.gap1 start:0x02111b80 end:0x02111ba0
+
+src/data/ov043/data_ov043_02111bd4.c:
+    complete
+    .data.gap2b start:0x02111bd4 end:0x02111c00
+
+src/data/ov043/data_ov043_02111c20.c:
+    complete
+    .data.gap2c start:0x02111c20 end:0x02111c40
+
+src/data/ov043/data_ov043_021125dc.c:
+    complete
+    .data start:0x021125dc end:0x021125e0

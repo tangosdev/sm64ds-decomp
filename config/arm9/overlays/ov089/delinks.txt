@@ -16,3 +16,7 @@ src/game/actors/d_a_obj_key.cpp:
     .ctor start:0x02132af4 end:0x02132af8
     .data start:0x02132b00 end:0x02132b40
     .bss start:0x02132c40 end:0x02132d40
+
+src/data/ov089/data_ov089_02132b40.c:
+    complete
+    .data start:0x02132b40 end:0x02132c40
