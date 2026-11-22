@@ -68,10 +68,7 @@ struct daPropeller_Heyho_Fire_c : dEnemyBase_c {
     void UpdateModelMatrix(); /* ov002 0x020fed7c */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char
     daPropeller_Heyho_Fire_c_size_must_be_0x35c[sizeof(daPropeller_Heyho_Fire_c) == 0x35c ? 1 : -1];
-#endif
 
 #endif /* DAPROPELLER_HEYHO_FIRE_C_H */

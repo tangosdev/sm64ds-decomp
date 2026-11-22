@@ -73,12 +73,10 @@ struct dScMgPanel_Particle {
     u8 pad_17;
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char dScMgPanel_Banner_size_must_be_0x10[sizeof(dScMgPanel_Banner) == 0x10 ? 1 : -1];
 typedef char dScMgPanel_Shake_size_must_be_0xc[sizeof(dScMgPanel_Shake) == 0xc ? 1 : -1];
 typedef char dScMgPanel_Scroll_size_must_be_0x14[sizeof(dScMgPanel_Scroll) == 0x14 ? 1 : -1];
 typedef char dScMgPanel_Particle_size_must_be_0x18[sizeof(dScMgPanel_Particle) == 0x18 ? 1 : -1];
-#endif
 
 struct dScMgPanel_c : dScMgBase_c {
     virtual ~dScMgPanel_c();
@@ -236,9 +234,6 @@ struct dScMgPanel_c : dScMgBase_c {
     void Scene_StateInit();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgPanel_c_size_must_be_0x4fec[sizeof(dScMgPanel_c) == 0x4fec ? 1 : -1];
-#endif
 
 #endif

@@ -52,8 +52,8 @@ spot itself is #2037, which `broken_links` below closes by resolving every markd
 link against `os.path.dirname()` of its own file.
 
 FAIL-CLOSED, NO BASELINE. Measured over all 106 markdown prose files at `cbc6a4df5`:
-183 relative links, of which exactly ONE did not resolve -- `port/docs/opie-assessment.md`
-naming `roadmap.md`, which lives at `notes/roadmap.md`. One offender is a fix, not a
+183 relative links, of which exactly ONE did not resolve: a relative link named
+`roadmap.md` from the wrong directory. One offender is a fix, not a
 ratchet, so it was corrected in the same change and this check carries no accepted-offender
 list. The repo-rooted scan needs one because its false-positive population is large;
 this one does not, and a baseline nobody needs is a place for real breakage to hide.

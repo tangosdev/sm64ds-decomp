@@ -63,9 +63,6 @@ struct dM3dGSph {
     void SetCentre(const Vector3 &centre);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dM3dGSph_size_must_be_0x14[sizeof(dM3dGSph) == 0x14 ? 1 : -1];
-#endif
 
 #endif /* DM3DGSPH_H */

@@ -86,10 +86,8 @@ typedef struct ThrowContext {
     ThrowFrame mFrame; /* 0x1c */
 } ThrowContext;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char ThrowContext_args_pushed_must_be_at_0x6a
     [(int)&((ThrowContext *)0)->mFrame.mArgsPushed == 0x6a ? 1 : -1];
 typedef char ThrowContext_must_be_0x70_bytes[sizeof(ThrowContext) == 0x70 ? 1 : -1];
-#endif
 
 #endif

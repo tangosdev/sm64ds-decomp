@@ -70,9 +70,6 @@ struct daPukupuku_c : dEnemyBase_c {
     u8 pad_386[0x2];   /* to the ROM's 0x388 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daPukupuku_c_size_must_be_0x388[sizeof(daPukupuku_c) == 0x388 ? 1 : -1];
-#endif
 
 #endif /* DAPUKUPUKU_C_H */

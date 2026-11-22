@@ -48,9 +48,6 @@ struct daObjSeesaw_c : dBgActor_c {
     static void StoodOnCallback(void *, daObjSeesaw_c *, dActor_c *); /* ov095 0x02135e90 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjSeesaw_c_size_must_be_0x328[sizeof(daObjSeesaw_c) == 0x328 ? 1 : -1];
-#endif
 
 #endif /* DAOBJSEESAW_C_H */

@@ -211,7 +211,6 @@ the `St` substitution fall out for free.
 |---|---|
 | ROM rebuild | **byte-identical**, `d1506e90…c478e8` before and after |
 | module fidelity | 106/106 exact, 100.000000% (unchanged) |
-| `port_refcheck` | 394 references, 0 stale |
 | `evidence_hierarchy` `symbols_zti` | **0 -> 426** |
 
 426 rather than 429 because 3 of the deferred ten are `_ZTI` records; the other 7 are
@@ -503,7 +502,7 @@ at `0x4b0`, both its own, well below its first named field at `0xdc8`. An earlie
 said that space "is the base's", which its own provenance list disproves.
 
 Verified: ROM rebuild is byte-identical to the Phase-1 baseline
-(`d1506e90…c478e8`), 106/106 modules exact, `port_refcheck` clean. These five files have
+(`d1506e90…c478e8`), 106/106 modules exact. These five files have
 no consumers yet, so they cannot move codegen — they are the scaffold that stops the next
 person re-deriving what is already known.
 

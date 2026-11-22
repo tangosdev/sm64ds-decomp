@@ -18,8 +18,6 @@ typedef struct Ov007LayerSlot {
     u8 kind;                      /* 0x08: func_ov007_020b6d40's slot index, 0..7 */
 } Ov007LayerSlot;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007LayerSlot_size_must_be_0xc[sizeof(Ov007LayerSlot) == 0xc ? 1 : -1];
-#endif
 
 #endif

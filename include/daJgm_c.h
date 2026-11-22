@@ -18,11 +18,8 @@ struct DaJgmStateHandlers {
     DaJgmStateHandler update;
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char DaJgmStateHandlers_size_must_be_0x10[
     sizeof(DaJgmStateHandlers) == 0x10 ? 1 : -1];
-#endif
 
 /* Lakitu (JUGEM 265) -- ov077/daJgm_c.
  *
@@ -104,10 +101,7 @@ private:
     void UpdateHoverBob();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daJgm_c_size_must_be_0x420[
     sizeof(daJgm_c) == 0x420 ? 1 : -1];
-#endif
 
 #endif /* DAJGM_C_H */

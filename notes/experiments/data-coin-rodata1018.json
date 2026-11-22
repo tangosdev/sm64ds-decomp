@@ -1118,7 +1118,7 @@
       "kind": "reconstruction",
       "location": "src/d_s_mg_bomroom.c, src/d_s_mg_curling.c, src/d_s_mg_curling2.c, src/d_s_mg_pachinko.c, src/d_s_mg_panel.c, src/d_s_mg_teresa.c",
       "owner": "issue 3171 coordinator",
-      "reason": "Deliberate and required by the task: a rename would flip each factory's row under the filename rule in tools/check_profile_campaign.py, whose output is identical at base and candidate. rombuild, match.py, eligible.py and port/CMakeLists.txt all honour the marker, and theme 4 records the convention. A rename to .cpp belongs with a profile-registry update or the TU promotion that absorbs each factory.",
+      "reason": "Deliberate and required by the task: a rename would flip each factory's row under the filename rule in tools/check_profile_campaign.py, whose output is identical at base and candidate. rombuild, match.py and eligible.py all honour the marker, and theme 4 records the convention. A rename to .cpp belongs with a profile-registry update or the TU promotion that absorbs each factory.",
       "summary": "The six files now hold C++ under a .c name, selected by the //cpp first line."
     },
     "NDT0922-01": {
@@ -1347,7 +1347,7 @@
       "kind": "reconstruction",
       "location": "src/d_s_mg_bomroom.c, src/d_s_mg_curling.c, src/d_s_mg_curling2.c, src/d_s_mg_pachinko.c, src/d_s_mg_panel.c, src/d_s_mg_teresa.c",
       "owner": "issue 3171 coordinator",
-      "reason": "Deliberate and required by the task: a rename would flip each factory's row under the filename rule in tools/check_profile_campaign.py, whose output is identical at base and candidate. rombuild, match.py, eligible.py and port/CMakeLists.txt all honour the marker, and theme 4 records the convention. A rename to .cpp belongs with a profile-registry update or the TU promotion that absorbs each factory.",
+      "reason": "Deliberate and required by the task: a rename would flip each factory's row under the filename rule in tools/check_profile_campaign.py, whose output is identical at base and candidate. rombuild, match.py and eligible.py all honour the marker, and theme 4 records the convention. A rename to .cpp belongs with a profile-registry update or the TU promotion that absorbs each factory.",
       "summary": "The six files now hold C++ under a .c name, selected by the //cpp first line."
     },
     {

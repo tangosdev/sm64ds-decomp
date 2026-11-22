@@ -226,8 +226,6 @@ verify, then delete — in that order, and never the last two together.
   an auto-generated `daKpa3Bg_c` header. The branch is also *behind*: it would
   rename six method addresses to `daKpa3Bg_c::*` that `main` has since settled as
   `daKirai_c::*`. Re-derive the `daKpa3Bg_c` half on top of `main`; do not restack.
-- **`port-linux-fwd-sweep`** — unchanged by this re-measurement and still the only
-  Linux host lane. See the port-lane paragraph below for what is on it.
 
 ## Two commits were reachable from nothing
 
@@ -273,21 +271,6 @@ only 6 contested, each with a recommended lineage. No manifest falsely claims
 of an inline-destructor census, now 17 classes rather than the 43 first recorded, and
 stays on the do-not-delete list. Two earlier entries are settled and no longer needed:
 `main` has `~dPathLiftActor_c(){}`, and `WDW_Water` promoted without the inline form.
-
-**The port lane is the one with real unbanked work, and one branch in it is
-irreplaceable.** `port-linux-fwd-sweep` is contained in no other ref and is the only
-Linux/GCC/SDL2 host lane: 20 files exist nowhere else, among them a Linux
-host-platform HAL source, an MSVC-compatibility header, a 155-entry `--defsym`
-alias list and twelve WSL harness scripts. The modern `l3` chain
-is Windows-only. 25 other port branches are strict git ancestors of a surviving tip
-and are safe to retire. Two premises this file inherited were also wrong: the `l1`,
-`l2`, `l3` names are a DAG rather than a line, and the older `port-*` branches conflict
-at 19-37 markers, not the 100-226 first reported — that larger figure belongs to
-`port-0.2.7-hotfix` and the deep chain. The `l3-recon-c` port branch merges today's `main`
-with zero conflicts and is the natural lane trunk. One operational note for whoever
-takes the lane next: the port stack needed a restack at **every** step of the merge
-train, because squash-merging a base detaches the branch stacked above it. Budget for
-that; it will recur on any stacked lane.
 
 **#2392 has landed, so #2360's dependency is cleared.** The dependency was real and
 confirmed from the validator's own message and `tools/validate_merge.py:665-667`:

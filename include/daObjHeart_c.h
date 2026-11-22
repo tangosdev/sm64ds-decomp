@@ -39,8 +39,6 @@ struct daObjHeart_c : dActor_c {
     void UpdateModelMatrix();
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char daObjHeart_c_size_must_be_0x174[sizeof(daObjHeart_c) == 0x174 ? 1 : -1];
-#endif
 
 #endif

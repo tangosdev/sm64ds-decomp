@@ -401,10 +401,7 @@ struct dActor_c {
    retyped without shrinking the pad after it, and gives
    tools/check_header_offsets.py the base size it refuses to guess when
    checking include/daPly_c.h. */
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dActor_c_size_must_be_0xd4[sizeof(struct dActor_c) == 0xd4 ? 1 : -1];
-#endif
 
 /* A bit of the actor update mask (gNextActorUpdateMask, copied each frame to
    gActorUpdateMask): while the mask is non-zero, BeforeBehavior runs only the

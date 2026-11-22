@@ -25,9 +25,6 @@ struct daObjBSwdoor_c : daObjSwdoor_c {
     virtual s32 InitResources();    /* slot 0 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjBSwdoor_c_size_must_be_0x324[sizeof(daObjBSwdoor_c) == 0x324 ? 1 : -1];
-#endif
 
 #endif /* DAOBJBSWDOOR_C_H */

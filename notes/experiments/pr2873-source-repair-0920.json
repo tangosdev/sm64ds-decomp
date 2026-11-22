@@ -2635,11 +2635,6 @@
       "exit_code": 0,
       "output": "check_decl_agreement: 8743 file(s), 38460 extern declaration(s) of 13944 distinct symbol(s), 10608 of which the tree also defines; 2 unparsed declarator(s)\n  17090 disagreement(s) across 3774 symbol(s)   arity=1133  kind=333  linkage=1  mangled=53  param=7997  return=7573\n  --changed 2705c624d2554ee8d21a56641275a2b85cce3a8b: 2 source file(s) changed defining 5 symbol(s), 0 symbol(s) named by a changed config row, 1 file(s) reached through 2 changed type name(s); 5 file(s) in scope once every declaration of those is folded in; 319 disagreement(s) among them\n  no new declaration disagreements\n"
     },
-    "port_refcheck": {
-      "exit_code": 0,
-      "checked": 418,
-      "stale": 0
-    },
     "conflict_accounting": {
       "command": "python -B tools/check_tubuild_conflicts.py ov002/daObjKurumajiku_c",
       "exit_code": 0,

@@ -125,7 +125,7 @@
     "Cartridge RTTI names the class dBgW_Kc and this is its ITCM half (_ZTV7dBgW_Kc's six ITCM-resident slots). The licensed run is .text 0x01ffb07c..0x01ffd97c (14 functions): the field/flag helpers, the two octree accessors, the DetectClsn triple and the three geometry/surface slots -- one TU the way the original engine file was almost certainly shaped.",
     "Plain members emit in reverse source order: the file defines GetSurfaceInfo first and walks the ROM run backwards to SetDepthDir. No lifecycle group exists in ITCM -- it lives in the arm9 TU.",
     "#pragma exceptions off wraps the whole file: it is load-bearing for DetectClsn(dBgCh_SphCrr&) (the verify tools' exceptions-ON regime otherwise shifts a literal-pool word and four stores) and byte-neutral for the rest.",
-    "DetectClsn(dBgCh_Lin&) keeps the compiler-proven shape the port preserves (port/slice_gate9.txt): function-scope SurfaceInfo with explicit dBgPc ctor/dtor calls, the x-body-scoped u16 *leaf walked by *++leaf, and the edge-normal dots spelled inline -- that declaration and scope arrangement is what assigns this to r7, &info to r8 and leaf to fp."
+    "DetectClsn(dBgCh_Lin&) keeps the compiler-proven shape: function-scope SurfaceInfo with explicit dBgPc ctor/dtor calls, the x-body-scoped u16 *leaf walked by *++leaf, and the edge-normal dots spelled inline -- that declaration and scope arrangement is what assigns this to r7, &info to r8 and leaf to fp."
   ],
   "compiler_only_output": [
     {

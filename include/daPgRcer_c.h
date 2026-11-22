@@ -34,10 +34,8 @@ struct daPgRcerState {
     daPgRcerStateMethod behavior;
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char daPgRcerState_size_must_be_0x10[
     sizeof(daPgRcerState) == 0x10 ? 1 : -1];
-#endif
 
 struct daPgRcer_c : dActor_c {
     dExtAnmModel_c mAnmModel;         /* 0x0d4 */
@@ -101,10 +99,7 @@ struct daPgRcer_c : dActor_c {
     void SetState(int state);      /* 0x021122dc */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daPgRcer_c_size_must_be_0x398[
     sizeof(daPgRcer_c) == 0x398 ? 1 : -1];
-#endif
 
 #endif

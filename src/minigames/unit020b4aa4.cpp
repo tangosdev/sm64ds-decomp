@@ -128,9 +128,7 @@ struct Sprite {
     u8 mVisible;       /* 0x22 drawn while nonzero */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Sprite_size_must_be_0x24[sizeof(Sprite) == 0x24 ? 1 : -1];
-#endif
 
 
 extern "C" {

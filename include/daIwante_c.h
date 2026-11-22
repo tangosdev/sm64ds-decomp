@@ -228,9 +228,6 @@ struct daIwante_c : dBgActor_c {
     static void StoodOnCallback(dBgW *collider, dActor_c *owner, dActor_c *other);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Eyerok_size_must_be_0x874[sizeof(daIwante_c) == 0x874 ? 1 : -1];
-#endif
 
 #endif

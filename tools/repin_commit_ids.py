@@ -4,7 +4,7 @@ WHY THIS EXISTS. At 07:50 EDT on 2026-09-13 the whole repository history was rew
 (an identity scrub over four text files: the trees are otherwise identical, but every
 commit got a new id). Nothing in the tree noticed. 121 tracked files spell an OLD commit
 id somewhere -- prose provenance comments ("matched at be9d58ed"), fixture data, and one
-config field (config/port_linkage.json's "commit") -- and one gate is not just stale
+config field -- and one gate is not just stale
 prose: tools/test_check_header_offsets.py's RealHistoryTests run `git diff <sha>^...<sha>`
 against real history, so a pinned old id that no longer resolves fails CI outright
 ("<sha> is not in this clone").

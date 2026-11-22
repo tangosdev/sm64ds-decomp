@@ -96,10 +96,7 @@ struct dScDSMT_c : dScene_c {
     virtual void OnPendingDestroy();                      /* slot 12 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScDSMT_c_size_must_be_0x64[sizeof(dScDSMT_c) == 0x64 ? 1 : -1];
 typedef char graphCallback_c_size_must_be_0x4[sizeof(dScDSMT_c::graphCallback_c) == 0x4 ? 1 : -1];
-#endif
 
 #endif

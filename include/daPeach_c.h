@@ -85,10 +85,7 @@ struct daPeach_c : dActor_c {
     void SetState(int state);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daPeach_c_size_must_be_0x36c[
     sizeof(daPeach_c) == 0x36c ? 1 : -1];
-#endif
 
 #endif

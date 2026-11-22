@@ -68,10 +68,8 @@ typedef struct Ov007Display {
     Ov007OamNode **oamNodes;       /* 0x44: func_ov007_020c11ac nodes */
 } Ov007Display;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Palette_size_must_be_0x8[sizeof(Ov007Palette) == 0x8 ? 1 : -1];
 typedef char Ov007CharRecord_size_must_be_0xc[sizeof(Ov007CharRecord) == 0xc ? 1 : -1];
 typedef char Ov007Display_size_must_be_0x48[sizeof(Ov007Display) == 0x48 ? 1 : -1];
-#endif
 
 #endif

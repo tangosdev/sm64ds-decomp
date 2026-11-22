@@ -106,9 +106,6 @@ struct dScMgJump_c : dScMgD3DBase_c {
     Heyho mHeyhos[6];             /* 0x5294 -- 6 * 0xf0 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgJump_c_size_must_be_0x5834[sizeof(dScMgJump_c) == 0x5834 ? 1 : -1];
-#endif
 
 #endif

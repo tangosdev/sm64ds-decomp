@@ -191,9 +191,6 @@ struct daDoor_c : dActor_c {
 
 /* Holds the chain to the size daDoor_c_classInit's operator new(0x148) call
    evidences. A silently-added member anywhere fails this. */
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daDoor_c_size_must_be_0x148[sizeof(daDoor_c) == 0x148 ? 1 : -1];
-#endif
 
 #endif /* DADOOR_C_H */

@@ -59,10 +59,7 @@ struct daObjCvNewsLift_c : dBgActor_c {
     static void MainMeshCallback(dBgW *clsn, dActor_c *owner, dActor_c *other);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char
     daObjCvNewsLift_c_size_must_be_0xc80[sizeof(struct daObjCvNewsLift_c) == 0xc80 ? 1 : -1];
-#endif
 
 #endif

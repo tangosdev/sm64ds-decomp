@@ -26,11 +26,8 @@ struct daECreate_c : dActor_c {
     virtual int Behavior();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char EnemySpawner_size_must_be_0xe0[
     sizeof(daECreate_c) == 0xe0 ? 1 : -1];
-#endif
 
 typedef daECreate_c EnemySpawner;
 

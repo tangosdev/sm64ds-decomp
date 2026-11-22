@@ -35,8 +35,6 @@ struct TrmpScorePopup {
     void Render();        /* draws the number when active */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char TrmpScorePopup_size_must_be_0x24[sizeof(TrmpScorePopup) == 0x24 ? 1 : -1];
-#endif
 
 #endif

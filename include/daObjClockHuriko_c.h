@@ -124,10 +124,7 @@ struct daObjClockHuriko_c : dActor_c {
 
 /* Holds the chain to the size the factory's operator new(0x128) evidences.
    A silently-added member anywhere fails this. */
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjClockHuriko_c_size_must_be_0x128[sizeof(daObjClockHuriko_c) == 0x128 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

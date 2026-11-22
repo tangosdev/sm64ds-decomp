@@ -206,8 +206,8 @@ only knew C1.
 
 The rename touched: `config/arm9/symbols.txt`, the file itself (git mv +
 its own definition), `config/arm9/delinks.txt` (enrolment path), the three
-caller `.c` files' hand-spelled externs, the header prose, and
-`port/slice_gate4b.txt`. Expect the same list for any future variant-label
+caller `.c` files' hand-spelled externs, and the header prose.
+Expect the same list for any future variant-label
 correction, and expect `layout_check` to catch a missed delinks rename.
 
 Related rename, same PR family: the vtable object at 0x0208e87c carried the
@@ -234,8 +234,8 @@ Nothing anywhere constructs a standalone `fBase_c` — it is pure machinery
 with no complete-object instantiation site — so the C1 label was never
 contradicted until derived constructors were migrated for real. Renamed to
 `_ZN7fBase_cC2Ev` across symbols.txt, the file itself (git mv), delinks,
-17 caller files' externs, `include/fBase_c.h`, `tu_manifest.json`, and
-`port/hal/actor_vtables.cpp`. Eligible 11064 → 11065; ROM 106/106 exact.
+17 caller files' externs, `include/fBase_c.h`, and `tu_manifest.json`.
+Eligible 11064 → 11065; ROM 106/106 exact.
 
 The naming pass did not initially change the function's hand-written asm. That
 follow-up is now complete: `_ZN7fBase_cC2Ev.cpp` defines a real

@@ -6,9 +6,7 @@
  * from G3X_Init at the top of the run. Every function is the SDK's, under
  * its SDK name with C linkage (include/nitro/gx/g3x.h; ntrtwl/NitroSDK
  * libraries/gx/src/g3x.c). The file's last function, the asm FIFO flush
- * GXi_NopClearFifo128_ (0x020553c0), stays its own source:
- * port/tools/hostgen.py skips any file that holds an asm block, and the port
- * hostgens this one.
+ * GXi_NopClearFifo128_ (0x020553c0), is its own source: it is an asm primitive.
  * G3X_GetBoxTestResult, G3X_GetVectorMtx, G3X_GetClipMtx,
  * G3X_SetEdgeColorTable, G3X_SetDisp1DotDepth and the position/vector test
  * getters are not in this ROM. pret/pokediamond's GX_g3x.c has no
@@ -18,13 +16,6 @@
  * InitTable's split volatile zeroing (init for a, store for b) is as
  * built: merging b into an init reschedules the body. GXi_DmaId is the
  * shared render DMA channel (named at its GX.cpp use).
- *
- * PC port: smoke_gx builds G3X_ClearFifo from this file through
- * port/tools/hostgen.py, which emits the whole file and routes each literal
- * MMIO dereference through the host's register model. G3X_ClearFifo keeps
- * its literal addresses for that reason (a register macro from a header
- * would reach the host unrewritten). The rest calls SDK code the host build
- * doesn't link, so it sits under #ifndef _MSC_VER.
  */
 #include "nitro/gx/g3x.h"
 #include "nitro/gx/g3imm.h"
@@ -38,7 +29,6 @@ extern int GXi_DmaId;
 void GXi_NopClearFifo128_(unsigned addr);
 }
 
-#ifndef _MSC_VER
 
 /* The SDK's g3x.h inlines this file uses that the shared header leaves out
  * (an inline body there renumbers its includers' @NNN symbols). */
@@ -93,7 +83,6 @@ void G3X_Reset(void) {
     reg_G3_TEXPLTT_BASE = 0;
 }
 
-#endif
 
 // Flushes the geometry FIFO, then waits until the engine is idle.
 void G3X_ClearFifo(void) {
@@ -102,7 +91,6 @@ void G3X_ClearFifo(void) {
         ;
 }
 
-#ifndef _MSC_VER
 
 void G3X_InitMtxStack(void) {
     int PV_level, PJ_level;
@@ -209,5 +197,3 @@ int G3X_GetMtxStackLevelPJ(int *level) {
 void G3X_SetHOffset(int hOffset) {
     REG_BG0OFS = hOffset;
 }
-
-#endif

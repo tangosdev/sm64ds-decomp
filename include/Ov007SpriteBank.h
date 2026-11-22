@@ -48,11 +48,9 @@ typedef struct Ov007SpriteBank {
     Ov007CellAnim *anims; /* 0x0c */
 } Ov007SpriteBank;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007CellEntry_size_must_be_0x6[sizeof(Ov007CellEntry) == 0x6 ? 1 : -1];
 typedef char Ov007Cell_size_must_be_0x8[sizeof(Ov007Cell) == 0x8 ? 1 : -1];
 typedef char Ov007CellAnim_size_must_be_0x10[sizeof(Ov007CellAnim) == 0x10 ? 1 : -1];
 typedef char Ov007SpriteBank_size_must_be_0x10[sizeof(Ov007SpriteBank) == 0x10 ? 1 : -1];
-#endif
 
 #endif

@@ -169,9 +169,6 @@ struct dBgW {
    dScStage_c::ResetMeshColliders clear entries, and the query TUs walk it. */
 extern "C" dBgW *gActiveMeshColliders[];
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgW_size_must_be_0x20[sizeof(dBgW) == 0x20 ? 1 : -1];
-#endif
 
 #endif /* DBGW_H */

@@ -1219,7 +1219,7 @@ def check_refs(args):
 
     Renames are recoverable because the ADDRESS is still in the name: func_020124c4 is
     Sound_PlayIfNotActive now, and resolving by address rather than by name is the same
-    rule the port uses when main renames something under it.
+    rule that keeps a renamed symbol attached to the same ROM address.
     """
     names, by_addr = _config_symbols()
     db = load_db()

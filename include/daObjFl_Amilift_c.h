@@ -63,9 +63,6 @@ struct daObjFl_Amilift_c : dBgActor_c {
     };
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjFl_Amilift_c_size_must_be_0x368[sizeof(daObjFl_Amilift_c) == 0x368 ? 1 : -1];
-#endif
 
 #endif /* DAOBJFL_AMILIFT_C_H */

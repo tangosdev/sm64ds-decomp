@@ -42,14 +42,12 @@ typedef struct Ov007BootArgs {
 #endif
 } Ov007BootArgs;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char
     Ov007BootArgs_messages_must_be_at_0x9c[(int)&((Ov007BootArgs *)0)->messages == 0x9c ? 1 : -1];
 /* It lives at data_0209b340 (data_0209b34b, 0209b34e and 0209b3d8 are its
  * fileUsed, highestUnlockedPlusOne and level1dStars). The next symbol past
  * it is 0xac bytes in, but nothing in ov007 reads past messages. */
 typedef char Ov007BootArgs_size_must_be_0xa0[sizeof(Ov007BootArgs) == 0xa0 ? 1 : -1];
-#endif
 
 /* The 0x3c-byte record func_ov007_020b6a84 allocates (Ov007Work's
  * settings). */
@@ -71,9 +69,7 @@ typedef struct Ov007Settings {
     char pad_3b;
 } Ov007Settings;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Settings_size_must_be_0x3c[sizeof(Ov007Settings) == 0x3c ? 1 : -1];
-#endif
 
 /* func_ov007_020b7138's first argument: the hooks dScDSMT_c hands the menu
  * (data_ov007_02103290). */

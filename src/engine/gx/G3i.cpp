@@ -11,12 +11,6 @@
  * G3_LoadTexMtxEnv, the TU's first function, selects the texture matrix mode
  * and loads a 4x4 matrix, the first twelve words shifted left by 4.
  *
- * PC port: the port builds this file through port/tools/hostgen.py, which
- * routes each literal MMIO dereference through the host's register model
- * (the divider and the geometry ports act on the write). The SDK's ioreg
- * names are therefore defined here as literal dereferences rather than taken
- * from nitro/hw/registers.h, whose macros reach the host unrewritten.
- *
  * PerspectiveW_ and LookAt_ stream their matrix through a port pointer
  * bound inside the draw branch: the ROM holds that address in a register
  * across the divider and VEC calls, and writing reg_G3_MTX_LOAD_* at each

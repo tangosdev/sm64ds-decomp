@@ -24,78 +24,6 @@ struct daPly_c;
 #include "common.h"
 #include "dExtSimpleModel_c.h"
 #include "dExtShadowModel_c.h"
-
-#if defined(SM64DS_PLATFORM_PC) && defined(_MSC_VER)
-#include <stddef.h>
-/* mwccarm reuses dBgActor_c's two bytes of tail padding, placing this class's
-   first derived storage at 0x31e. MSVC starts after sizeof(dBgActor_c)==0x320,
-   which shifts the derived fields and grows the object to 0x384 even though
-   daObjYajirusi_c_classInit_YAJIRUSI_R allocates exactly 0x380. The port supplies its vtable
-   manually, so use a flat host view with every exercised field pinned to the
-   ROM offset. The matching build below retains the real inheritance. */
-struct daObjYajirusi_c {
-    void *vtable;                      /* 0x000 */
-    u8  pad_004[0x8];
-    u16 actorID;                       /* 0x00c */
-    u8  pad_00e[0x4e];
-    /* dActor_c's position, camera-space position and angle, at dActor_c's own
-       offsets (include/dActor_c.h). The flat view drops the inheritance but
-       src/game/actors/d_a_obj_yajirusi.cpp still reads these three fields by
-       name, so they are pinned here rather than buried in padding. */
-    Vector3 mPos; /* 0x05c */
-    u8  pad_068[0xc];
-    Vector3 mCamSpacePos; /* 0x074 */
-    u8 pad_080[0xc];
-    Vector3_16 mAngle; /* 0x08c */
-    u8 pad_092[0x42];
-    dExtSimpleModel_c mModel;          /* 0x0d4 */
-    dBgW_KcMbg mMeshCollider;          /* 0x124 */
-    Matrix4x3 mClsnMat;                /* 0x2ec */
-    u8  pad_31c[0x4];
-    dExtShadowModel_c mShadowModel;          /* 0x320 */
-    Matrix4x3 mShadowMat;                    /* 0x348 */
-    u8 pad_378[0x4];
-    u8 mVariant;                        /* 0x37c */
-    u8  pad_37d[0x3];
-
-    ~daObjYajirusi_c();
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
-    int OnAttacked1(dActor_c &other);
-    void OnHitByMegaChar(daPly_c &player);
-    void Kill();
-
-    /* INHERITED, AND THEREFORE THE PORT'S TO BIND. Kill() calls both of these
-       unqualified; on the ARM they come from dActor_c and fBase_c, which the
-       flat view cannot derive from without moving every field. Declared here so
-       the translation unit still compiles for the host, non-virtual so no slot
-       and no field moves. They resolve to _ZN8dActor_c19DisappearPoofDustAtERK7Vector3
-       and _ZN7fBase_c19MarkForDestructionEv, which is an /alternatename the port
-       can write; without these two declarations the file cannot be compiled at
-       all. */
-    void DisappearPoofDustAt(const Vector3 &pos);
-    void MarkForDestruction();
-
-    /* Shadow matrix at +0x348. */
-    void UpdateShadowMatrix();
-};
-
-static_assert(offsetof(daObjYajirusi_c, actorID) == 0x00c, "daObjYajirusi_c actorID");
-static_assert(offsetof(daObjYajirusi_c, mPos) == 0x05c, "daObjYajirusi_c mPos");
-static_assert(offsetof(daObjYajirusi_c, mCamSpacePos) == 0x074, "daObjYajirusi_c mCamSpacePos");
-static_assert(offsetof(daObjYajirusi_c, mAngle) == 0x08c, "daObjYajirusi_c mAngle");
-static_assert(offsetof(daObjYajirusi_c, mModel) == 0x0d4, "daObjYajirusi_c mModel");
-static_assert(offsetof(daObjYajirusi_c, mMeshCollider) == 0x124, "daObjYajirusi_c collider");
-static_assert(offsetof(daObjYajirusi_c, mClsnMat) == 0x2ec, "daObjYajirusi_c matrix");
-static_assert(offsetof(daObjYajirusi_c, mShadowModel) == 0x320, "daObjYajirusi_c shadow");
-static_assert(offsetof(daObjYajirusi_c, mShadowMat) == 0x348, "daObjYajirusi_c +0x348");
-static_assert(offsetof(daObjYajirusi_c, mVariant) == 0x37c, "daObjYajirusi_c +0x37c");
-static_assert(sizeof(daObjYajirusi_c) == 0x380, "daObjYajirusi_c host size");
-
-#else
-
 #include "dBgActor_c.h"
 
 struct daObjYajirusi_c : dBgActor_c {
@@ -142,7 +70,5 @@ struct daObjYajirusi_c : dBgActor_c {
 };
 
 typedef char daObjYajirusi_c_size_must_be_0x380[sizeof(daObjYajirusi_c) == 0x380 ? 1 : -1];
-
-#endif /* SM64DS_PLATFORM_PC && _MSC_VER */
 
 #endif /* DAOBJYAJIRUSI_C_H */

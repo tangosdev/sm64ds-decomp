@@ -21,9 +21,6 @@ struct daObjRc_Kaitendai_c : daObjKaitendai_c {
     virtual s32 InitResources();    /* slot 0 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjRc_Kaitendai_c_size_must_be_0x320[sizeof(daObjRc_Kaitendai_c) == 0x320 ? 1 : -1];
-#endif
 
 #endif /* DAOBJRC_KAITENDAI_C_H */

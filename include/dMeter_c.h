@@ -124,9 +124,6 @@ struct dMeter_c : dBase_c {
     u8 pad_079[0x3];
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char HUD_size_must_be_0x7c[sizeof(dMeter_c) == 0x7c ? 1 : -1];
-#endif
 
 #endif /* DMETER_C_H */

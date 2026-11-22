@@ -7727,15 +7727,6 @@
       "exit_code": 0,
       "log": "build/luigi-final/references.log"
     },
-    "port": {
-      "command": [
-        "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
-        "-B",
-        "tools/port_refcheck.py"
-      ],
-      "exit_code": 0,
-      "log": "build/luigi-final/port.log"
-    },
     "declarations": {
       "command": [
         "C:\\Users\\andre\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",

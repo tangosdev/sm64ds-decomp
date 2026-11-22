@@ -82,11 +82,8 @@ struct cMgSmartball_propeller_c : cMgSmartball_object_c {
     CollisionVertex mVertices[8]; /* 0x038..0x077, rebuilt from the angle */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char cMgSmartball_propeller_CollisionVertex_size_must_be_0x8
     [sizeof(cMgSmartball_propeller_c::CollisionVertex) == 0x8 ? 1 : -1];
 typedef char cMgSmartball_propeller_c_size_must_be_0x78[sizeof(cMgSmartball_propeller_c) == 0x78 ? 1 : -1];
-#endif
 
 #endif

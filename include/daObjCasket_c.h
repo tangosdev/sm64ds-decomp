@@ -46,9 +46,6 @@ struct daObjCasket_c : dBgActor_c {
     void RunState();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjCasket_c_size_must_be_0x32c[sizeof(struct daObjCasket_c) == 0x32c ? 1 : -1];
-#endif
 
 #endif

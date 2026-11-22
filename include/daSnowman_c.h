@@ -123,9 +123,6 @@ struct daSnowman_c : dEnemyBase_c {
     void UpdateModelMatrices();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daSnowman_c_size_must_be_0x46c[sizeof(daSnowman_c) == 0x46c ? 1 : -1];
-#endif
 
 #endif /* DASNOWMAN_C_H */

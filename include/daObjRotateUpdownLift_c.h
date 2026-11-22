@@ -95,9 +95,6 @@ struct daObjRotateUpdownLift_c : dBgActor_c {
     void OnHitByMegaChar(daPly_c &player); /* slot 27 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjRotateUpdownLift_c_size_must_be_0x3a8[sizeof(daObjRotateUpdownLift_c) == 0x3a8 ? 1 : -1];
-#endif
 
 #endif

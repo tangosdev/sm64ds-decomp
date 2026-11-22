@@ -78,8 +78,7 @@ Prior file-consolidation discussion correctly rejected merging files merely to r
 1. Give the recovered C++ a truthful and usable organization.
 2. Give vtables, RTTI, globals, and static initialization a meaningful owner.
 3. Allow whole-object and whole-TU verification in addition to function verification.
-4. Make a future host build consume coherent classes and subsystems rather than thousands of compiler-oriented fragments.
-5. Provide the structural evidence required by global-data migration.
+4. Provide the structural evidence required by global-data migration.
 
 This is not a formatting cleanup. It generalizes the build's trusted unit from "one source object containing exactly one function" to "one source object containing exactly the functions and data ranges licensed by a recovered TU manifest."
 

@@ -38,10 +38,7 @@ template <class T> struct SpawnInfo {
     fx32 farDistance;
 };
 
-/* 0x1c with 32-bit pointers; the PC port's 64-bit pointers widen classInit. */
-#ifndef SM64DS_PLATFORM_PC
 typedef char SpawnInfo_size_must_be_0x1c[sizeof(SpawnInfo<void>) == 0x1c ? 1 : -1];
-#endif
 
 /* BaseSpawnInfo, the 0x08 base profile: the descriptor a scene or other
  * non-actor process registers. It is SpawnInfo's first three fields, the ones
@@ -57,8 +54,6 @@ template <class T> struct BaseSpawnInfo {
     u16 renderPriority;
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char BaseSpawnInfo_size_must_be_0x08[sizeof(BaseSpawnInfo<void>) == 0x08 ? 1 : -1];
-#endif
 
 #endif /* SPAWNINFO_H */

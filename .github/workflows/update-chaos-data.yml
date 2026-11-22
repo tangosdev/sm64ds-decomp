@@ -25,8 +25,6 @@ on:
       # pad_layout_audit.py computes langmode's header_shadows, so editing it re-banks.
       - "tools/pad_layout_audit.py"
       # tiers.py renders the README tier block, so editing it must republish.
-      # The LINKED stamp needs no line of its own:
-      # config/** already covers config/port_linkage.json.
       - "tools/tiers.py"
       # data_tiers.py renders the README DATA line from complete delinks claims.
       - "tools/data_tiers.py"
@@ -160,9 +158,8 @@ jobs:
         # refresh commit below (which already includes nearmiss/db.jsonl).
         run: python tools/nearmiss_db.py dedupe
       - name: Refresh README progress block
-        # MATCHED reads chaos-db.json. LINKED is read from the stamp in
-        # config/port_linkage.json and is deliberately NOT recomputed: it needs an
-        # MSVC port build this runner does not have. DATA is the next step.
+        # MATCHED reads chaos-db.json. LINKED is computed from delinks.txt.
+        # DATA is the next step.
         # README.md is already in the refresh commit's file list below.
         run: python tools/tiers.py --write-readme --from-db _chaos_data/chaos-db.json
       - name: Refresh README data block

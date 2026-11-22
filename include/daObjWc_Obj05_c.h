@@ -69,10 +69,7 @@ struct daObjWc_Obj05_c : dBgActor_c {
     static void StoodOnCallback(void *, daObjWc_Obj05_c *, dActor_c *); /* ov029 0x02111e60 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjWc_Obj05_c_size_must_be_0x330[sizeof(daObjWc_Obj05_c) == 0x330 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

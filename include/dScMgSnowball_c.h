@@ -95,10 +95,7 @@ struct SnowSpray {
     u8 pad21[3];
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SnowSpray_size_must_be_0x24[sizeof(SnowSpray) == 0x24 ? 1 : -1];
-#endif
 
 /* One of the 50 snow bits at 0xbe94 (mBits). Trivial: neither structor
    touches the array, Bit_InitAll seeds every field. */
@@ -131,10 +128,7 @@ struct dScMgSnowball_bit {
     u8 pad21[3];
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgSnowball_bit_size_must_be_0x24[sizeof(dScMgSnowball_bit) == 0x24 ? 1 : -1];
-#endif
 
 struct dScMgSnowball_c : dScMgSingle3DBase_c {
     dScMgSnowball_c();
@@ -272,9 +266,6 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     dScMgSnowball_bit mBits[BIT_NUM]; /* 0xbe94 -- 50 * 0x24, see file banner */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgSnowball_c_size_must_be_0xc59c[sizeof(dScMgSnowball_c) == 0xc59c ? 1 : -1];
-#endif
 
 #endif

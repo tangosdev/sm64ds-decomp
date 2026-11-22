@@ -99,9 +99,6 @@ struct daEykn_c : dActor_c {
 #endif
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daEykn_c_size_must_be_0x218[sizeof(struct daEykn_c) == 0x218 ? 1 : -1];
-#endif
 
 #endif

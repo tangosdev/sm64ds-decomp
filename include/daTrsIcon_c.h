@@ -32,11 +32,8 @@ struct daTrsIcon_c : dActor_c {
     void SpawnTrackedStar(const Vector3 &pos);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daTrsIcon_c_size_must_be_0xd8[
     sizeof(struct daTrsIcon_c) == 0xd8 ? 1 : -1];
-#endif
 
 daTrsIcon_c *daTrsIcon_c_classInit();
 

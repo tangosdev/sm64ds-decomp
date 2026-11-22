@@ -72,10 +72,7 @@ struct CLPS {
 #endif
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char CLPS_size_must_be_0x8[sizeof(struct CLPS) == 0x8 ? 1 : -1];
-#endif
 
 /* The block a level or actor hands to dBgW_Kc::SetFile: an 8-byte header
  * whose halfword at +4 is the entry stride, then N entries. Kept opaque because

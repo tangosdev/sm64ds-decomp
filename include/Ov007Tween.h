@@ -20,9 +20,7 @@ typedef struct Ov007Tween {
     s32 to;    /* 0x18 -- target: mode 0 end value, mode 1 destination */
 } Ov007Tween;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Tween_size_must_be_0x1c[sizeof(Ov007Tween) == 0x1c ? 1 : -1];
-#endif
 
 /* The 0x2c-byte vector tween func_ov007_020c8f64 allocates and
  * func_ov007_020c8de0 updates: Ov007Tween's first five fields, then the
@@ -38,8 +36,6 @@ typedef struct Ov007VecTween {
     Vector3 to;   /* 0x20 */
 } Ov007VecTween;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007VecTween_size_must_be_0x2c[sizeof(Ov007VecTween) == 0x2c ? 1 : -1];
-#endif
 
 #endif

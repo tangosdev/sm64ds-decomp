@@ -271,10 +271,9 @@ out of the walk: a count at 0x0c, a table at 0x10 of 8-byte records
 `BMD_DisplayListGroup` and `BMD_DisplayList`, and the function reaches them by
 name instead of with `*(int *)(m + 4)`-style pokes. Byte-identical.
 
-The host port supplies the role: `port/ntr/bmd.cpp` reads `+0x08` of the
-0x10-byte record as a byte size and hands the bytes at `+0x0c` straight to the
-geometry engine, which is why they are `size` and `data`. `+0x00` and `+0x04`
-stay `unk_`.
+`+0x08` of the 0x10-byte record is a byte size and `+0x0c` is the bytes handed
+to the geometry engine, which is why they are `size` and `data`. `+0x00` and
+`+0x04` stay `unk_`.
 
 ### Three names that are not from matched ARM
 
@@ -285,8 +284,7 @@ any of them — the BMD parse itself is still `func_02046564` / `func_020462d0`.
 What matched code proves is only that the word at `+0x00` of each record is a
 file-relative pointer, because `UpdateFileOffsets` rebases it.
 
-The role comes from `port/ntr/bmd.cpp`, which parses these offsets and renders
-Mario correctly out of them: it reads `+0x00` as a name string and gets
+The names are empirical. Parsing the cartridge bytes reads `+0x00` as a name string and gets
 `mat_bm_body` / `mat_bm_eye` / `mat_bm_head` / `mat_bm_head_c`, and indexes
 `textures` with `+0x04` and `palettes` with `+0x08` to get `mario_body` /
 `mario_eye_1` / `mario_head`. Rendering the right pixels out of the real
@@ -295,8 +293,8 @@ reading the ROM's instructions, and a later reader should know which one they
 have. `textureId` and `paletteId` were flat `pad_04[0x20]` before.
 
 `flags` at 0x24 stays as it is. `dExtSimpleModel_c::HideMaterial` ORs bit 31 in and
-`ShowMaterial` clears it, so the field is at least partly a flag word; the port
-reads the same word as the DS specular/emission material colour. Both can be
+`ShowMaterial` clears it, so the field is at least partly a flag word; the same
+word is also the DS specular/emission material colour. Both can be
 true of one register-shaped word, and neither reading is complete, so the
 conservative name stands.
 

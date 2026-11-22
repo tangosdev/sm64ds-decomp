@@ -50,9 +50,6 @@ coordinated v2 fleet.
   not a PR problem** — pull on the box and re-run, never override it.
 - **Near-miss DB / notes / tooling PRs** have no `src` match to byte-check; review for sanity
   and merge.
-- **Renames and the PC port.** The port lives in its own repo
-  ([sm64ds-pc-port](https://github.com/tangosdev/sm64ds-pc-port)) and pins this decomp, so a
-  rename here never blocks a merge. The port absorbs it at its next bump.
 - **Drafts:** never merge someone else's draft. That is the author saying "not ready."
 
 ## 3. How to merge

@@ -45,9 +45,7 @@ struct Jump2Popup : Jump2PopupLink {
     void DrawNumber();         /* draw   */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Jump2PopupLink_size_must_be_0x4[sizeof(Jump2PopupLink) == 0x4 ? 1 : -1];
 typedef char Jump2Popup_size_must_be_0x24[sizeof(Jump2Popup) == 0x24 ? 1 : -1];
-#endif
 
 #endif

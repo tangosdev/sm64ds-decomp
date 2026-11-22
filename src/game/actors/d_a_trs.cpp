@@ -85,9 +85,7 @@ struct TrsBone {
     s16 rotZ; /* 0x1e */
     u8 pad_20[0x14];
 };
-#ifndef SM64DS_PLATFORM_PC
 typedef char TrsBone_size_must_be_0x34[sizeof(TrsBone) == 0x34 ? 1 : -1];
-#endif
 
 /* The 34-step hit-recoil angle table and the typeinfo word that follows it
    in .data. MoveDuringHit and the spin state index the angles by the state
@@ -96,9 +94,7 @@ struct TrsAngleTable {
     s16 angles[34];
     const void *typeinfo;
 };
-#ifndef SM64DS_PLATFORM_PC
 typedef char TrsAngleTable_size_must_be_0x48[sizeof(TrsAngleTable) == 0x48 ? 1 : -1];
-#endif
 
 extern "C" {
 /* shared engine entry points without a header declaration */

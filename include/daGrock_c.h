@@ -90,9 +90,6 @@ struct daGrock_c : dEnemyBase_c {
     void ApplyGravityAndMove();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daGrock_c_size_must_be_0x3c8[sizeof(daGrock_c) == 0x3c8 ? 1 : -1];
-#endif
 
 #endif /* DAGROCK_C_H */

@@ -1620,18 +1620,6 @@
           "log": "build/star-production/references.log"
         },
         {
-          "name": "port",
-          "command": [
-            "python",
-            "-X",
-            "utf8",
-            "tools/port_refcheck.py"
-          ],
-          "exit_code": 0,
-          "seconds": 0.95,
-          "log": "build/star-production/port.log"
-        },
-        {
           "name": "declarations",
           "command": [
             "python",

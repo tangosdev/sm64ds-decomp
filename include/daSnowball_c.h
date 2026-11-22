@@ -86,9 +86,6 @@ struct daSnowball_c : dEnemyBase_c {
     void UpdateModelMatrix();            /* ov081 0x02126224 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daSnowball_c_size_must_be_0x38c[sizeof(daSnowball_c) == 0x38c ? 1 : -1];
-#endif
 
 #endif /* DASNOWBALL_C_H */

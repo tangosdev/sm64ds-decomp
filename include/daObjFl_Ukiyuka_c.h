@@ -25,10 +25,7 @@ struct daObjFl_Ukiyuka_c : daObjUkiyuka_c {
     int InitResources();    /* slot  0 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjFl_Ukiyuka_c_size_must_be_0x330[sizeof(daObjFl_Ukiyuka_c) == 0x330 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

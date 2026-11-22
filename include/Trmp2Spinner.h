@@ -27,8 +27,6 @@ struct Trmp2Spinner {
                        a 0 slot and reuses it */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Trmp2Spinner_size_must_be_0x78[sizeof(Trmp2Spinner) == 0x78 ? 1 : -1];
-#endif
 
 #endif

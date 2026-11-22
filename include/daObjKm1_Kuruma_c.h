@@ -21,9 +21,6 @@ struct daObjKm1_Kuruma_c : daObjKuruma_c {
     int InitResources();    /* slot  0 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjKm1_Kuruma_c_size_must_be_0x320[sizeof(daObjKm1_Kuruma_c) == 0x320 ? 1 : -1];
-#endif
 
 #endif /* DAOBJKM1_KURUMA_C_H */

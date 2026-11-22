@@ -494,9 +494,8 @@ worktree's ignored `build/`; they are not committed.
   -> exit 0 (13 and 7 commented fields, 0 mismatched, spans 0x398 / 0x380).
   The consumers are covered by the range link check above. `include/decl_common.h`
   loses one dead extern; its consumers are covered by the full build.
-- Port/path/reference and other applicable static gates (each exit 0 unless
-  stated): `tools/port_refcheck.py` (402 checked, 0 stale);
-  `tools/check_dead_references.py` (no new dead references, no broken links);
+- Static gates (each exit 0 unless
+  stated): `tools/check_dead_references.py` (no new dead references, no broken links);
   `tools/check_rename_ledger.py --repo .` (1933 rows agree);
   `tools/check_src_tu.py --json build/src_tu_refs.json` (every reference
   resolves); `tools/check_python_names.py`; `tools/check_tubuild_conflicts.py
@@ -603,7 +602,7 @@ worktree's ignored `build/`; they are not committed.
   Gates NOT run for this revision, and why: `rombuild.py`, `tubuild verify`,
   `tubuild linkcheck`, `romdata_check.py`, `prepush_linkcheck.py`,
   `linkcheck.py`, `check_header_offsets.py`, `affected_src.py`,
-  `port_refcheck.py`, `check_rename_ledger.py`, `check_src_tu.py`,
+  `check_rename_ledger.py`, `check_src_tu.py`,
   `check_tubuild_conflicts.py`, `check_profile_campaign.py`,
   `tiers_ratchet.py`, `langmode_audit.py`, `layout_check.py`,
   `cpp_tu_state.py`, `queue_audit.py`, `tu_map.py` and `srcpath.py` -- every

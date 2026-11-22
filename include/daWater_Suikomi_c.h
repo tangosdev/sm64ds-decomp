@@ -53,9 +53,6 @@ struct daWater_Suikomi_c : dEnemyBase_c {
     void func_ov026_02112324(); /* ov026 0x02112324, empty */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daWater_Suikomi_c_size_must_be_0x318[sizeof(daWater_Suikomi_c) == 0x318 ? 1 : -1];
-#endif
 
 #endif /* DAWATER_SUIKOMI_C_H */

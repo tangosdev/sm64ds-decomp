@@ -62,10 +62,7 @@ struct daObjCtRotateBlock_c : dBgActor_c {
     void UpdateModel();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char
     daObjCtRotateBlock_c_size_must_be_0x3d8[sizeof(daObjCtRotateBlock_c) == 0x3d8 ? 1 : -1];
-#endif
 
 #endif

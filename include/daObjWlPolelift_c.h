@@ -92,10 +92,7 @@ struct daObjWlPolelift_c : dActor_c {
     void UpdateModelTransform();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjWlPolelift_c_size_must_be_0x1e4[
     sizeof(daObjWlPolelift_c) == 0x1e4 ? 1 : -1];
-#endif
 
 #endif

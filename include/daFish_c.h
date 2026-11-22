@@ -65,9 +65,6 @@ struct daFish_c : dActor_c {
     void StateWaitForPlayer();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daFish_c_size_must_be_0x160[sizeof(daFish_c) == 0x160 ? 1 : -1];
-#endif
 
 #endif /* DAFISH_C_H */

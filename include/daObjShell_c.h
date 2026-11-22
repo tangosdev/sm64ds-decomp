@@ -51,9 +51,6 @@ struct daObjShell_c : dActor_c {
     void UpdateModelTransform();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjShell_c_size_must_be_0x174[sizeof(struct daObjShell_c) == 0x174 ? 1 : -1];
-#endif
 
 #endif /* DAOBJSHELL_C_H */

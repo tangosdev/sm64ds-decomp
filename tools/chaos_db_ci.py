@@ -13,14 +13,11 @@ Derived the same way as progress.py --write-readme:
   author     function-authors.json, keyed by module and address. That file is the
              only credit record. Git history is not consulted.
   project    tools/chaosviewer.config.json (committed branding/prompt config)
-  tiers      per-function ``ported`` (config/port_linked_functions.txt),
-             ``class`` (demangled owner), and ``tuId`` / ``tuState`` (TU manifest).
-             All four are OPTIONAL and
-             SPARSE: a record carries one only when it is true or known, exactly like
-             ``verified``, and a reader treats an absent key as "no" (or "unknown" for
-             ``ported`` when stats.tiers has no ``ported``).
-             LINKED needs no per-function flag: it is the ``verified`` count,
-             enrolled and byte-compared, over all records.
+  tiers      ``class`` (demangled owner) and ``tuId`` / ``tuState`` (TU manifest).
+             Both are OPTIONAL and SPARSE: a record carries one only when it is
+             known, exactly like ``verified``, and a reader treats an absent key
+             as "no". LINKED needs no per-function flag: it is the ``verified``
+             count, enrolled and byte-compared, over all records.
 
 Not derivable without the ROM (left to local regens): disasm/callee detail
 chunks, coddog sim/sibling. The details/ directory on the chaos-data branch is
@@ -45,7 +42,6 @@ import srcpath as SP  # noqa: E402
 import relocs as RL  # noqa: E402
 import rombuild_check as RBC  # noqa: E402
 import layout_check as LYC  # noqa: E402
-import tiers as TIERS  # noqa: E402
 import bytegate as BG  # noqa: E402
 import demangle as DM  # noqa: E402
 import tu_manifest as TUM  # noqa: E402
@@ -167,50 +163,23 @@ def enrollment_of(label, addr, src_path, enrolled, blocks):
     return "unenrolled" if src_path and src_path in blocks else "no_block"
 
 
-def tier_stats(linked_n=None, total=None, ported_n=None, ported_total=None):
-    """The LINKED + PORTED tiers, flattened for the stats block.
+def tier_stats(linked_n=None, total=None):
+    """The LINKED tier, flattened for the stats block.
 
     Flat rather than nested because the two consumers downstream are a shell
     python one-liner and a C# record, and neither gains anything from
     nesting. MATCHED is not repeated here; it is already the block above.
 
     LINKED counts ROM-enrolled functions: ``linked_n`` verified records out of
-    ``total`` records, so both share one denominator. PORTED is the port-build
-    stamp: when a usable per-function list backs the stamp it counts
-    ``ported_n`` records out of ``ported_total``, and falls back to the stamped
-    count of matched translation units, as before. The stamp's translation-unit
-    figures ride along as ``portedUnits`` / ``portedUnitsOf`` either way.
-
-    Never raises. This runs inside the generator whose output pays the coin
-    ledger. On failure the key is simply absent, and
-    the site falls back to showing MATCHED alone.
+    ``total`` records, so both share one denominator.
     """
-    out = {}
-    if linked_n is not None and total:
-        out.update({
-            "linked": linked_n,
-            "linkedOf": total,
-            "linkedPct": round(100.0 * linked_n / total, 2) if total else 0.0,
-        })
-    try:
-        k = TIERS.ported()
-    except Exception as e:  # noqa: BLE001 - see docstring
-        print(f"  tiers: SKIPPED ({e})")
-        k = None
-    if k:
-        per_function = k["unit"] == "functions" and ported_n is not None and ported_total
-        n, of = (ported_n, ported_total) if per_function else (k["ported"], k["of"])
-        out.update({
-            "ported": n,
-            "portedOf": of,
-            "portedPct": round(100.0 * n / of, 2) if of else 0.0,
-            "portedUnits": k["portedTus"],
-            "portedUnitsOf": k["matchedTus"],
-            "portedMeasuredAt": k["measuredAt"],
-            "portedBranch": k["branch"],
-            "portedCommit": k["commit"],
-        })
-    return out
+    if linked_n is None or not total:
+        return {}
+    return {
+        "linked": linked_n,
+        "linkedOf": total,
+        "linkedPct": round(100.0 * linked_n / total, 2),
+    }
 
 
 def class_of(name):
@@ -255,24 +224,6 @@ def unit_index():
             except (TypeError, ValueError):
                 continue
     return out
-
-
-def ported_functions():
-    """The set of ``module:0xaddr`` keys the port build links, or None if untrusted.
-
-    tiers.ported_functions() holds the rule: config/port_linked_functions.txt is
-    believed only while its ``# commit:`` equals the commit of the stamp in
-    config/port_linkage.json. On a mismatch the per-function flag is left off and
-    the log says why; stats.tiers falls back to the stamp's unit count."""
-    path = REPO / "config" / "port_linked_functions.txt"
-    if not path.is_file():
-        return None
-    stamp = TIERS.ported_stamp(REPO / "config" / "port_linkage.json")
-    keys, why = TIERS.ported_functions(stamp, path)
-    if keys is None:
-        print(f"  ported: per-function list IGNORED ({why}); re-run "
-              f"tools/port_linked_functions.py against the stamped build")
-    return keys
 
 
 FUNC_RE = re.compile(
@@ -408,7 +359,6 @@ def main():
     wont_build = BG.excluded_paths()
     # Read the remaining per-function metadata once.
     units = unit_index()
-    ported_keys = ported_functions()
     tier_n = collections.Counter()
     bytegate_n = collections.Counter()
     enrollment_n = collections.Counter()
@@ -530,10 +480,7 @@ def main():
             rec["enrollment"] = enrollment_of(label, addr, src_path, enrolled, blocks)
             enrollment_n[(rec["enrollment"], matched)] += 1
             # Tier columns, appended after `enrollment` for the same reason: no existing
-            # key moves. Sparse like `verified`: present only when true / known.
-            if ported_keys is not None and rec["id"] in ported_keys:
-                rec["ported"] = True
-                tier_n["ported"] += 1
+            # key moves. Sparse like `verified`: present only when known.
             cls = class_of(name)
             if cls:
                 rec["class"] = cls
@@ -588,9 +535,7 @@ def main():
             # tier that is not in this block does not reach the site at all. It is
             # read from committed provenance with no ROM and no build, which is what
             # keeps this generator CI-safe.
-            "tiers": tier_stats(verified_n, len(functions),
-                           tier_n["ported"] if ported_keys is not None else None,
-                           len(functions)),
+            "tiers": tier_stats(verified_n, len(functions)),
         },
         "functions": functions,
     }
@@ -620,8 +565,8 @@ def main():
         f"{k[0]}{'/matched' if k[1] else ''}={n}"
         for k, n in sorted(enrollment_n.items(), key=lambda kv: (kv[0][0], not kv[0][1]))))
     # Report the remaining optional columns alongside the headline.
-    print(f"  tiers per function: ported={tier_n['ported'] if ported_keys is not None else 'n/a'}, "
-          f"class={tier_n['class']}, in a TU manifest entry={tier_n['tu']}")
+    print(f"  tiers per function: class={tier_n['class']}, "
+          f"in a TU manifest entry={tier_n['tu']}")
     # The policy-D subtraction, in the log next to the number it explains. A silent
     # exclusion is the same mistake the enrollment split was added to fix.
     print("  byte-gate failures (NOT counted matched): " + (", ".join(

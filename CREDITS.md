@@ -4,7 +4,7 @@ This decompilation builds on reverse-engineering knowledge from the SM64DS commu
 
 ## Project lead
 - **tangosdev / Tango** (https://github.com/tangosdev) - most of the matched
-  functions, the tooling and CI, the PC port, and tangOS Console.
+  functions, the tooling and CI, and tangOS Console.
 
 ## Symbol names & struct layouts
 - **SplattyDS / DynamicAllocationDecomp** (https://github.com/SplattyDS/DynamicAllocationDecomp),
@@ -53,9 +53,7 @@ repo. If you contribute, keep this separation: import knowledge, write code.
   one-function leftovers it strands.
 - **ruspecial** (https://github.com/ruspecial) - hand-matched large batches across ov002,
   ov006 and the arm9 BIOS SVC stubs from PR #90 on, banked 174 near-misses with the C++
-  exception-handling and split-symbol triage notes that came out of them (PR #806), and
-  contributed oracle-verified host copies for the two Bowser ov060 holes on the port side
-  (PR #1505).
+  exception-handling and split-symbol triage notes that came out of them (PR #806).
 - **natbree** (https://github.com/natbree) - hand-matched functions in arm9 and ov075,
   including a batch of fifteen (PRs #347, #349, #504).
 - **ai-tdd-labs** (https://github.com/ai-tdd-labs) - hand-matched functions across arm9
@@ -80,8 +78,7 @@ repo. If you contribute, keep this separation: import knowledge, write code.
   reloc slot points at the address `config/**/relocs.txt` records, closing a gap where the
   byte compare wildcards relocated words without checking their destination (PR #47).
   Has since built the independent source review gate and the v2 multi-agent work protocol
-  (`notes/agents/`), and repaired the PC port's smoke build after the constructor
-  migration (PRs #1713, #1748).
+  (`notes/agents/`), and the constructor migration (PRs #1713, #1748).
 - **mitchellcairns** (https://github.com/mitchellcairns) - added the C++ decompilation
   index, the safe renaming tools and the ABI naming guide (PR #861); measured the C/C++
   language-mode gap and added the CI ratchet that stops it growing (PRs #1140, #1141);

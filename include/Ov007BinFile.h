@@ -31,9 +31,7 @@ typedef struct Ov007BinFile {
     void *blockData[16];             /* 0x44: each block's data, past its header */
 } Ov007BinFile;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007BinFile_size_must_be_0x84[sizeof(Ov007BinFile) == 0x84 ? 1 : -1];
-#endif
 
 /* Indexes the blocks of the file at address `file`, passed as an int: either
  * an entry of one of ov007's int tables (func_ov007_020b6d40 reads

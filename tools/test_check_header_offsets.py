@@ -1457,6 +1457,92 @@ class DerivedVptrAndLocalAggregateTests(unittest.TestCase):
         self.assertIn("UNPARSED", out)
 
 
+class NestedTypeCloseTests(unittest.TestCase):
+    """A nested type whose close is not a line of its own used to stick `nested`.
+
+    daObjSwitch_c.h writes `struct StateEntry { ... };` on one line, and
+    daPly_c.h closes Models as `} mModels;`. Either way the class's own `};`
+    was what cleared the flag, the fields were never checked, and the size
+    assert after the class was reported UNPARSED.
+    """
+
+    def _run(self, text, sz=None, qualified=None):
+        saved_sz = dict(C.SZ)
+        saved_align = dict(C.ALIGN)
+        saved_q = dict(C.CLASS_SIZES_QUALIFIED)
+        if sz:
+            C.SZ.update(sz)
+        if qualified:
+            C.CLASS_SIZES_QUALIFIED.update(qualified)
+        try:
+            with tempfile.TemporaryDirectory(prefix="offset_nested_") as tmp:
+                header = pathlib.Path(tmp) / "Widget.h"
+                header.write_text(text, encoding="utf-8")
+                out = io.StringIO()
+                with contextlib.redirect_stdout(out):
+                    rc = C.main([str(header)])
+                return rc, out.getvalue()
+        finally:
+            C.SZ.clear()
+            C.SZ.update(saved_sz)
+            C.ALIGN.clear()
+            C.ALIGN.update(saved_align)
+            C.CLASS_SIZES_QUALIFIED.clear()
+            C.CLASS_SIZES_QUALIFIED.update(saved_q)
+
+    def test_a_one_line_nested_type_does_not_swallow_later_fields(self):
+        rc, out = self._run(
+            "struct Widget {\n"
+            "    struct StateEntry { u32 init; u32 exec; };\n"
+            "    u32 first; /* 0x000 */\n"
+            "    u32 second; /* 0x004 */\n"
+            "};\n"
+            "typedef char Widget_size_must_be_0x8[sizeof(Widget) == 0x8 ? 1 : -1];\n")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("2 commented fields, 0 mismatched, 0 unparsed, struct spans 0x8", out)
+        self.assertNotIn("UNPARSED", out)
+
+    def test_a_nested_member_uses_its_asserted_size(self):
+        rc, out = self._run(
+            "struct Widget {\n"
+            "    struct Models {\n"
+            "        u32 a;\n"
+            "    } mModels; /* 0x000 */\n"
+            "    u32 tail; /* 0x010 */\n"
+            "};\n",
+            qualified={"Widget::Models": 0x10})
+        self.assertEqual(rc, 0, out)
+        self.assertIn("2 commented fields, 0 mismatched, 0 unparsed, struct spans 0x14", out)
+
+    def test_a_wrong_offset_after_a_nested_member_still_fails(self):
+        rc, out = self._run(
+            "struct Widget {\n"
+            "    struct Pack {\n"
+            "        u32 a;\n"
+            "    } mPack; /* 0x000 */\n"
+            "    u32 tail; /* 0x004 */\n"
+            "};\n",
+            sz={"Pack": 0x8})
+        self.assertEqual(rc, 1, out)
+        self.assertIn("MISMATCH", out)
+        self.assertIn("tail", out)
+        self.assertNotIn("UNPARSED", out)
+
+    def test_an_unsized_nested_member_does_not_invent_a_mismatch(self):
+        # A body of known scalars is learned. An unknown member leaves the
+        # nested type unsized, which must fail here rather than shift `tail`.
+        rc, out = self._run(
+            "struct Widget {\n"
+            "    struct Pack {\n"
+            "        Mystery a;\n"
+            "    } mPack; /* 0x000 */\n"
+            "    u32 tail; /* 0x004 */\n"
+            "};\n")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("UNPARSED", out)
+        self.assertIn("mPack", out)
+        self.assertNotIn("MISMATCH", out)
+
 
 if __name__ == "__main__":
     unittest.main()

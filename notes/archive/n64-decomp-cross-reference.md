@@ -255,7 +255,7 @@ confirmed from the double-vptr-store in `_ZN5ActorC2Ev`).
 | Identity | **raw C pointer** (`create_object(const BehaviorScript*)`) — N64 has *no numeric ID system at all* | dense `ActorIDs` table, 391 entries, indexing `ACTOR_SPAWN_TABLE` (T1: `symbols.txt`:[0x02090864](../../config/arm9/symbols.txt), relocs `:2810,12558`) |
 | Update order | 10 fixed named buckets, `sObjectListUpdateOrder[]` ([object_list_processor.c:172](https://github.com/n64decomp/sm64/blob/master/src/game/object_list_processor.c#L172)-[181](https://github.com/n64decomp/sm64/blob/master/src/game/object_list_processor.c#L181)) | continuous per-type `s16 behavPriority` + `s16 renderPriority` in `SpawnInfo`, threaded through two *separate* intrusive lists (`behavNode`/`renderNode`, 0x10 bytes each, at `ActorBase+0x28`/`+0x38`) — DS splits behavior and render ordering; N64 does not |
 
-**The bytecode-VM concept did not survive the port.** And because N64 identifies objects *by pointer*
+**The bytecode VM did not survive into the DS game.** And because N64 identifies objects *by pointer*
 while DS *must* use a numeric table (overlay-relocated code may not be resident when level
 placement data is read), there is no shared axis on which to compare numbering. DS's `ActorIDs`
 clusters related enemies (Goomba 200-202, Koopa 203-205, Bob-omb 206-208, Boo 209-214, Bully

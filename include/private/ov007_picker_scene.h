@@ -44,8 +44,6 @@ typedef struct Ov007PickerScene {
     Ov007Tween *tweens[2]; /* 0x44: func_ov007_020c908c */
 } Ov007PickerScene;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007PickerScene_size_must_be_0x4c[sizeof(Ov007PickerScene) == 0x4c ? 1 : -1];
-#endif
 
 #endif

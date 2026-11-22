@@ -48,9 +48,8 @@ See `notes/source-review-observations.md` for declaration and source-review pitf
 The cross-TU comparison is separate from byte proof; neither establishes that an
 inferred declaration is the original source type.
 
-WHY IT IS WORTH FIXING. The host port compiles these same files with a compiler that
-DOES check across the tree, where `signature-mismatch` is the largest non-trivial
-failure bucket. The runtime cost varies and is not always dramatic: `int` against `void`
+WHY IT IS WORTH FIXING. A wrong declaration is invisible to the byte gates.
+The runtime cost varies and is not always dramatic: `int` against `void`
 on ARM usually means the caller reads a dead r0, while a wrong arity, a mismatched
 pointer or a struct return can genuinely put caller and callee on different frame
 layouts. "Silently smashes the caller's stack" is the worst case, not the rule.

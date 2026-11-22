@@ -12,9 +12,7 @@ registers untouched --
 -- can be decompiled as `int func_02018e3c(void) { int r = func_0205d644(); ... }`
 and be byte-exact, because on ARM the arguments ride through the registers and the
 compiler emits no argument setup either way. The C is wrong all the same: it names
-no parameters and forwards none, so every host that passes arguments on the stack
-(the PC port's cdecl) loses them. Three of these were found by hand -- func_0205d23c
-(a null archive lookup that crashed the port's seven-window session),
+no parameters and forwards none. Three of these were found by hand -- func_0205d23c,
 func_02018e3c/func_0205d644, and the SharedFilePtr::Construct chain -- and each was
 byte-identical once the parameters were spelled and forwarded. Nothing in the byte
 gate, the relocation gate or the link gate can see the difference, so it needs a

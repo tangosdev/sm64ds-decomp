@@ -39,8 +39,6 @@ struct Mascot {
     s32 mLooking;         /* 0xa8 -- set by LookAt, cleared by StopLooking */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Mascot_size_must_be_0xac[sizeof(Mascot) == 0xac ? 1 : -1];
-#endif
 
 #endif

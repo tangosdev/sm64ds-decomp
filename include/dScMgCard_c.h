@@ -112,11 +112,8 @@ struct dMgDilarCardObj_c : dMgCardObj_c {
     virtual s32 GetOffscreenY(); /* slot 2 -- ov006 0x020d9998 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dMgCardObj_c_size_must_be_0x30[sizeof(dMgCardObj_c) == 0x30 ? 1 : -1];
 typedef char dMgDilarCardObj_c_size_must_be_0x30[sizeof(dMgDilarCardObj_c) == 0x30 ? 1 : -1];
-#endif
 
 struct dScMgCard_c : dScMgSingle3DBase_c {
     virtual ~dScMgCard_c() {}
@@ -178,9 +175,6 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
     u8  pad_539b[0x1];        /* 0x539b */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgCard_c_size_must_be_0x539c[sizeof(dScMgCard_c) == 0x539c ? 1 : -1];
-#endif
 
 #endif

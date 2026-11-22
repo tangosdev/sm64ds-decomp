@@ -32,8 +32,6 @@ typedef struct BMA_File {
     BMAMaterialRecord *materialRecords;
 } BMA_File;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char BMAMaterialRecord_size_must_be_0x3c[sizeof(BMAMaterialRecord) == 0x3c ? 1 : -1];
-#endif
 
 #endif

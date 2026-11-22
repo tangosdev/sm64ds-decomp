@@ -63,11 +63,9 @@ struct dMgSoundPop_c {
     u8  dir;          /* +0x23 velX oscillation */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char dMgSoundSprite_c_size_must_be_0x10[sizeof(dMgSoundSprite_c) == 0x10 ? 1 : -1];
 typedef char dMgSoundNote_c_size_must_be_0x14[sizeof(dMgSoundNote_c) == 0x14 ? 1 : -1];
 typedef char dMgSoundPop_c_size_must_be_0x24[sizeof(dMgSoundPop_c) == 0x24 ? 1 : -1];
-#endif
 
 struct dScMgSound_c : dScMgSingle3DBase_c {
     /* The body is empty: the compiler destroys mTable. */
@@ -185,8 +183,6 @@ struct dScMgSound_c : dScMgSingle3DBase_c {
     void ResetRound();
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char dScMgSound_c_size_must_be_0x562c[sizeof(dScMgSound_c) == 0x562c ? 1 : -1];
-#endif
 
 #endif

@@ -98,9 +98,7 @@ struct DsnBaseFileTable {
     int shadowExtentZ;        /* +0x14, DropShadow Z base */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char DsnBaseFileTable_size_must_be_0x18[sizeof(DsnBaseFileTable) == 0x18 ? 1 : -1];
-#endif
 
 struct daDsnBase_c : dBgActor_c {
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
@@ -168,10 +166,7 @@ struct daDsnBase_c : dBgActor_c {
     int WakeNearYoshiEgg();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daDsnBase_c_size_must_be_0x3a0[sizeof(daDsnBase_c) == 0x3a0 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

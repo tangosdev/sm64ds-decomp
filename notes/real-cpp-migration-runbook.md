@@ -32,7 +32,7 @@ Every migrated source must satisfy all of these:
 4. Every affected source still matches after a shared-header change.
 5. The full linked build has zero mismatching functions and all 106 modules are
    exact.
-6. `.c` to `.cpp` renames preserve `port/` references and contributor credit.
+6. `.c` to `.cpp` renames preserve contributor credit.
 7. The language-mode audit improves or stays within its ratchet.
 
 If any gate fails, restore the old source. A plausible near-match does not
@@ -168,8 +168,7 @@ See the [handoff](agents/handoffs/fader-clean1018.md) and
   definition's `int` return and reference parameter, and three matrix declarations
   use `Matrix4x3*`. The entire final 12,920-byte object is identical to baseline:
   SHA-256 `93cfa557e878e4ef846d30012690703b06c50d919cbfc3793f19f8887e270f49`.
-  Those particular alias casts were unnecessary. A host divider forwarder keeps
-  native fader calls working in MSVC; the Win32 Release smoke test passes.
+  Those particular alias casts were unnecessary.
 - Using `G2x.h`'s existing `short` brightness parameter at the currently `int`-typed
   boundary grew `dFdWipe_c::AdvanceFade` from 320 to 328 bytes and
   `dFdColor_c::AdvanceFade` from 148 to 156 bytes. Fifteen plausible native-call
@@ -414,7 +413,7 @@ or rely on a ROM-byte fallback to make the batch green.
 Source migrations and documentation/tooling changes are separate PRs.
 
 A source-migration PR should contain only the coherent migration and required
-companions such as delink paths, header consumers, `port/` references,
+companions such as delink paths, header consumers,
 attribution metadata, and the completed class claim. Its body should list:
 
 - the real classes/methods/destructors migrated;

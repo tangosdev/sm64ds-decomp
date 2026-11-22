@@ -93,10 +93,7 @@ struct daObjSwdoor_c : dBgActor_c {
     u8 mEventBit; /* 0x321 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjSwdoor_c_size_must_be_0x324[sizeof(daObjSwdoor_c) == 0x324 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

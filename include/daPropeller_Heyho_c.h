@@ -145,15 +145,9 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
  * `return new daPropeller_Heyho_c()`, which calls the inherited
  * fBase_c::operator new (`_ZN7fBase_cnwEm`). */
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daPropeller_Heyho_c_State_size_must_be_0x10[
     sizeof(daPropeller_Heyho_c::State) == 0x10 ? 1 : -1];
-#endif
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daPropeller_Heyho_c_size_must_be_0x3e8[
     sizeof(daPropeller_Heyho_c) == 0x3e8 ? 1 : -1];
-#endif
 
 #endif /* DAPROPELLER_HEYHO_C_H */

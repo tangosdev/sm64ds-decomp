@@ -23,10 +23,8 @@ typedef struct MBCommChildBlockHeader {
     } u;
 } MBCommChildBlockHeader;
 
-#ifndef SM64DS_PLATFORM_PC
 /* The SDK packs it to 0x14: 2 + the 0x12-byte request piece. */
 typedef char
     MBCommChildBlockHeader_size_must_be_0x14[sizeof(MBCommChildBlockHeader) == 0x14 ? 1 : -1];
-#endif
 
 #endif

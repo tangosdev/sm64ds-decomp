@@ -202,9 +202,6 @@ struct daBtn_c : dEnemyBase_c {
     void func_ov079_02125504();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daBtn_c_size_must_be_0x610[sizeof(daBtn_c) == 0x610 ? 1 : -1];
-#endif
 
 #endif /* DABTN_C_H */

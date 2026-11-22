@@ -37,9 +37,6 @@ struct daObjAbuku_c : dActor_c {
     virtual ~daObjAbuku_c() {} /* slots 16 (D1), 17 (D0) */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjAbuku_c_size_must_be_0x114[sizeof(daObjAbuku_c) == 0x114 ? 1 : -1];
-#endif
 
 #endif

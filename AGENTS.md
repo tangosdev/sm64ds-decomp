@@ -149,11 +149,6 @@ mentions.
 - Don't add a type to a shared header speculatively. A name in `include/` is a claim
   every consumer agrees on it; a wrong shared type is far more expensive than a local one.
 
-## The PC port
-
-The PC port lives in its own repo, [sm64ds-pc-port](https://github.com/tangosdev/sm64ds-pc-port).
-It pins this decomp and absorbs renames at its own bump.
-
 ## Declaration agreement (an `extern` vs the definition it names)
 
 `mwccarm` never compares one translation unit's `extern` against another's, the ROM

@@ -116,10 +116,7 @@ struct UnknownVsPlayer {
     int Init(unsigned char kind, unsigned char playerNo, int x);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char UnknownVsPlayer_size_must_be_0x158[sizeof(UnknownVsPlayer) == 0x158 ? 1 : -1];
-#endif
 
 struct dEntObj_c : dBase_c {
     enum SceneState { STATE_IDLE = 0, STATE_WAIT_FOR_EXIT, STATE_RUN_OFF_STAGE };
@@ -163,10 +160,7 @@ struct dEntObj_c : dBase_c {
     void SetCamera();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dEntObj_c_size_must_be_0xf48[sizeof(dEntObj_c) == 0xf48 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

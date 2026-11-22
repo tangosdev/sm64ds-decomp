@@ -51,10 +51,7 @@ struct daObjRcBuranko_c : dBgActor_c {
     void UpdateModelMatrix(); /* ov036 0x0211123c */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjRcBuranko_c_size_must_be_0x320[sizeof(daObjRcBuranko_c) == 0x320 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

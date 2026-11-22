@@ -133,7 +133,7 @@ per-function success also does not prove default-build enrollment or preservatio
 of the unisolated object's metadata; those distinctions belong to the canonical
 promotion proof.
 
-## Hardware accesses and the host port
+## Hardware accesses
 
 Hardware-address searches need to recognize both `0x4000208` and `0x04000208`.
 The `0x04` I/O window is only one relevant region: palette RAM, VRAM and OAM use
@@ -142,35 +142,6 @@ a similar constant may be a mask, fixed-point value or unrelated quantity. Names
 should follow existing repository definitions and documented address evidence,
 with descriptive names distinguished from recovered identifiers. A plausible name
 is not evidence of its original spelling or of improper provenance.
-
-The [port's own rules](https://github.com/tangosdev/sm64ds-pc-port/blob/main/port/README.md) retain byte-verified `src/` as the source
-of truth and currently target a 32-bit host first. Host convenience does not justify
-breaking the cartridge build. Conversely, a justified source correction with fresh
-proof is not forbidden simply because the port also benefits. The actual port
-policy describes the platform guards and seams used for host-specific behavior.
-Little-endian agreement or four-byte pointers do not settle aliasing, alignment,
-object lifetime or signed-overflow questions.
-
-[hostgen.py](https://github.com/tangosdev/sm64ds-pc-port/blob/main/port/tools/hostgen.py) transforms selected literal MMIO dereferences
-into `NTR_MMIO` accesses in generated host source. For example:
-
-```cpp
-*(volatile unsigned short *)0x4000280
-```
-
-is a recognized shape. A computed address such as
-`*(volatile u32 *)(0x4000280 + offset)`, or a pointer saved and dereferenced later,
-can escape the textual transform. The mapped latch window may service the memory
-access while a write-triggered register side effect never runs. The changed form,
-its selected host caller and required device behavior determine the impact;
-it is neither an automatic cartridge defect nor universally harmless port debt.
-
-The port lives in its own repository, pins this decomp, and absorbs file moves and
-symbol renames at its own bump, so a rename here is not a defect in the change. Its
-optional [host_frontier.py](https://github.com/tangosdev/sm64ds-pc-port/blob/main/port/tools/host_frontier.py) diagnostic uses the MSVC x86
-syntax-check environment. Missing tools and intentionally substituted assembly
-sources need to be distinguished from new host regressions; no PR-size threshold
-makes that diagnostic an additional acceptance gate.
 
 ## Interpreting configuration and attribution changes
 

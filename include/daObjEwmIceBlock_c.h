@@ -46,10 +46,8 @@ struct daObjEwmIceBlock_c : dBgActor_c {
     virtual s32 Render();
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char daObjEwmIceBlock_c_size_must_be_0x330[
     sizeof(daObjEwmIceBlock_c) == 0x330 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

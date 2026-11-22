@@ -251,14 +251,6 @@
       {
         "command": [
           "python",
-          "tools/port_refcheck.py"
-        ],
-        "exit": 0,
-        "log": "build\\capicon-static-3.log"
-      },
-      {
-        "command": [
-          "python",
           "tools/source_coverage.py",
           "--base",
           "53300e62058b1a3f18e0af75c3e0e1251106af69"

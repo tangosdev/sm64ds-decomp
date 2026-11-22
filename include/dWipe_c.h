@@ -70,10 +70,7 @@ struct dWipe_c : dFdColor_c {
     void DisableWindows();   /* drop the HBlank IRQ, commit pendingType */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dWipe_c_size_must_be_0x2c[sizeof(dWipe_c) == 0x2c ? 1 : -1];
-#endif
 
 /* The one instance, src/runtime/graphics/fader/d_wipe.cpp. */
 extern dWipe_c gSceneWipe;

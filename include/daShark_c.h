@@ -77,9 +77,6 @@ struct daShark_c : dEnemyBase_c {
     u8 pad_394[0xc]; /* 0x394, to the ROM's 0x3a0 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daShark_c_size_must_be_0x3a0[sizeof(daShark_c) == 0x3a0 ? 1 : -1];
-#endif
 
 #endif /* DASHARK_C_H */

@@ -23,10 +23,8 @@ struct ActionWalk {
     ThrowContext mThrow; /* 0x18 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char
     ActionWalk_throw_state_must_start_at_0x18[(int)&((struct ActionWalk *)0)->mThrow == 0x18 ? 1
                                                                                              : -1];
-#endif
 
 #endif

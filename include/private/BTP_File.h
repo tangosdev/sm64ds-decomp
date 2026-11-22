@@ -36,10 +36,8 @@ typedef struct BTP_File {
     BTPSeqRecord *seqRecords;
 } BTP_File;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char BTPNameRecord_size_must_be_8[sizeof(BTPNameRecord) == 8 ? 1 : -1];
 typedef char BTPSeqRecord_size_must_be_0xc[sizeof(BTPSeqRecord) == 0xc ? 1 : -1];
 typedef char BTP_File_size_must_be_0x24[sizeof(BTP_File) == 0x24 ? 1 : -1];
-#endif
 
 #endif

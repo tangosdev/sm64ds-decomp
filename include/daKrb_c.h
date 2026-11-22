@@ -239,9 +239,6 @@ struct daKrb_c : dCapEnemy_c {
     };
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKrb_c_size_must_be_0x478[sizeof(daKrb_c) == 0x478 ? 1 : -1];
-#endif
 
 #endif

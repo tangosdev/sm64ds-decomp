@@ -41,9 +41,6 @@ struct daObjBkKillerdai_c : dBgActor_c {
     virtual void Kill(); /* slot 31 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjBkKillerdai_c_size_must_be_0x324[sizeof(daObjBkKillerdai_c) == 0x324 ? 1 : -1];
-#endif
 
 #endif /* DAOBJBKKILLERDAI_C_H */

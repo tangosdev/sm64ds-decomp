@@ -43,9 +43,6 @@ struct daObjIceBlock_c : dBgActor_c {
     void ReleaseStar();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjIceBlock_c_size_must_be_0x368[sizeof(daObjIceBlock_c) == 0x368 ? 1 : -1];
-#endif
 
 #endif /* DAOBJICEBLOCK_C_H */

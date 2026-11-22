@@ -27,8 +27,6 @@ typedef struct Ov007Light {
     int enabled; /* 0x24: func_ov007_020c241c sets 1; func_ov007_020c232c loads nothing while 0 */
 } Ov007Light;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Light_size_must_be_0x28[sizeof(Ov007Light) == 0x28 ? 1 : -1];
-#endif
 
 #endif

@@ -25,9 +25,6 @@ struct Matrix2x2 {
     s32 m11; /* 0xc */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Matrix2x2_size_must_be_0x10[sizeof(struct Matrix2x2) == 0x10 ? 1 : -1];
-#endif
 
 #endif /* SM64DS_MATRIX2X2_H */

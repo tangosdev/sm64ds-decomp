@@ -88,9 +88,6 @@ struct dExtAnmModel_c : dExtSimpleModel_c, dExtFrameCtrl_c {
     void Copy(const dExtAnmModel_c &src, char *newFile);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dExtAnmModel_c_size_must_be_0x64[sizeof(dExtAnmModel_c) == 0x64 ? 1 : -1];
-#endif
 
 #endif /* DEXTANMMODEL_C_H */

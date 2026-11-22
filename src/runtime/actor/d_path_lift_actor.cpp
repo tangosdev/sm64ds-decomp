@@ -87,13 +87,11 @@ static inline int IsActorID(const dActor_c *actor, int id) {
  * the cartridge's D0-then-D1 order, which no deferred form reaches without a
  * D2 the image does not contain. */
 
-#ifndef _MSC_VER
 /* Not called. Forces the out-of-line copy of the deleting destructor. */
 void dPathLiftActor_c_EmitDeletingDestructor(dPathLiftActor_c *p)
 {
     delete p;
 }
-#endif
 
 /* Not called. Forces the out-of-line copy of the inline destructor. */
 void dPathLiftActor_c_EmitDestructor(dPathLiftActor_c *p)

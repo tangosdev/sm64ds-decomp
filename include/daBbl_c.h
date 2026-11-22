@@ -73,9 +73,6 @@ struct daBbl_c : dEnemyBase_c {
     int SetState(State *state);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daBbl_c_size_must_be_0x31c[sizeof(daBbl_c) == 0x31c ? 1 : -1];
-#endif
 
 #endif /* DABBL_C_H */

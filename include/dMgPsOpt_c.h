@@ -39,12 +39,9 @@ struct dMgPsOpt_c {
     int IsIdle();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dMgPsOpt_TouchIcon_c_size_must_be_0x24[
     sizeof(dMgPsOpt_c::TouchIcon_c) == 0x24 ? 1 : -1];
 typedef char dMgPsOpt_c_size_must_be_0x128[
     sizeof(dMgPsOpt_c) == 0x128 ? 1 : -1];
-#endif
 
 #endif

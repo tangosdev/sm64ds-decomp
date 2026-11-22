@@ -40,12 +40,10 @@
  * D2 the image does not contain. A delete-expression for D0 because
  * dBgActor_c declares Kill, a key function reachable from this class. */
 
-#ifndef _MSC_VER
 /* Not called. Forces the out-of-line copy of the deleting destructor. */
 void daObjSwdoor_c_EmitDeletingDestructor(daObjSwdoor_c *p) {
     delete p;
 }
-#endif
 
 /* Not called. Forces the out-of-line copy of the inline destructor. */
 void daObjSwdoor_c_EmitDestructor(daObjSwdoor_c *p) {

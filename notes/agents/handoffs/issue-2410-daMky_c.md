@@ -138,9 +138,7 @@ Recorded separately, not combined into one score.
   The ov029 static initializer at 02112c10 now lives in [src/game/actors/d_a_obj_wc_obj03.cpp](../../../src/game/actors/d_a_obj_wc_obj03.cpp).
 - Attribution preserved through each move/rename:
   `attribution.json` carries the 44-shard fold's `path#symbol` overrides; that was
-  the input commit's own last change. `tools/port_refcheck.py` reports 402
-  references checked and none stale, so no `port/` reference was stranded by the
-  file move or the rename.
+  the input commit's own last change.
 - Remaining agreed issue scope:
   24 free functions to convert to methods where evidenced, 5 `unk_` fields to name,
   381 raw-offset lines (447 occurrences) to retire, and the `romdata_check` extent
@@ -215,8 +213,7 @@ pinned compiler `tools/mwccarm/2004/b56/mwccarm.exe`.
   carried unchanged from the accepted input and its consumers are covered by the
   full-ROM build above.
 
-- Port/path/reference and other applicable static gates:
-  `python tools/port_refcheck.py` — exit 0, 402 references checked, all resolve.
+- Static gates:
   `python tools/check_dead_references.py` — exit 0, no new dead references, no
   broken markdown links.
   `python tools/check_rename_ledger.py --repo .` — exit 0, "every mangled/vtable
@@ -280,7 +277,7 @@ only part that describes the composition.
   -j16 --no-rom` 11,191/11,191 reproducing, 0 mismatching, module fidelity 106/106
   exact; `tubuild.py verify ov030/daMky_c` 44/44 MATCH; `romdata_check` 4 VERIFIED /
   5 PARTIAL / 0 DIFFERS; `premerge_check.py --base origin/main` all 8 static gates
-  pass on base and merge tree; `check_rename_ledger`, `port_refcheck` (423 refs),
+  pass on base and merge tree; `check_rename_ledger`,
   `check_dead_references`, `cpp_tu_state` and `the old credit check` clean.
   `queue_audit` still reports only the unrelated pre-existing `dScMgAmida_c` row.
 - **Contributor credit.** The first validation run on the composed merge reported

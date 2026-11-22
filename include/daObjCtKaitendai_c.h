@@ -42,10 +42,7 @@ struct daObjCtKaitendai_c : dBgActor_c {
     virtual ~daObjCtKaitendai_c() {}
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjCtKaitendai_c_size_must_be_0x37c[sizeof(daObjCtKaitendai_c) == 0x37c ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

@@ -114,9 +114,6 @@ struct daPkn_c : dEnemyBase_c {
     void TrackClosestPlayer();     /* mClosestPlayer/Dist/AngleY/Airborne */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daPkn_c_size_must_be_0x47c[sizeof(daPkn_c) == 0x47c ? 1 : -1];
-#endif
 
 #endif /* DAPKN_C_H */

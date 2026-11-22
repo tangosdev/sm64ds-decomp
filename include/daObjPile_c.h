@@ -66,9 +66,6 @@ struct daObjPile_c : dBgActor_c {
     void Sink(int flag);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjPile_c_size_must_be_0x330[sizeof(daObjPile_c) == 0x330 ? 1 : -1];
-#endif
 
 #endif
