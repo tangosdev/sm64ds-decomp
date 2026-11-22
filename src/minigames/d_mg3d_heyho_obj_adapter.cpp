@@ -115,8 +115,8 @@ int Heyho::LoadResources() {
     mAnmModel.SetMaterialFlags(2);
     int b = gCurrentScene->actorID == 0x175;
     if (b != 0) {
-        func_02016a14(&mAnmModel, 0x7fff);
-        func_02016a04(&mAnmModel, 0x7d40);
+        mAnmModel.func_02016a14(0x7fff);
+        mAnmModel.func_02016a04(0x7d40);
     }
     UpdateMatrix();
     SetIdle();

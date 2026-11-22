@@ -54,6 +54,8 @@ struct dExtAnm2Model_c : dExtAnmModel_c {
     /* --- non-virtual --- */
     void Copy(const dExtAnm2Model_c &src, char *newFile, BCA_File *newOtherFile);
     void Func_020162C4(BCA_File *animFile, int flags, fx32 speed, u16 startFrame);
+    void func_020162a4(int);
+    void func_0201628c(int);
 };
 
 #ifndef SM64DS_PLATFORM_PC

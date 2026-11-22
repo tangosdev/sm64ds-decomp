@@ -872,9 +872,7 @@ extern int func_01ffa4bc(int a);
 #include "Message.h"
 #include "BgChEvt.h"
 
-extern void func_0201628c(int a, int b);
-extern void func_020162a4(int a, int b);
-extern void func_020167a4(struct dExtAnmModel_c *p);
+
 extern "C" {
 extern void func_02020388(int playerNo);
 }
@@ -19653,7 +19651,7 @@ void daPly_c::func_ov002_020e4768() {
 
     mid = GetBodyModelID(param1 & 0xff, 0);
     comp = mModels.mBodyModels[mid];
-    func_020167a4((struct dExtAnmModel_c *)(void *)comp);
+    comp->func_020167a4();
 
     func_ov002_020e640c();
 
@@ -19702,7 +19700,7 @@ dExtAnm2Model_c *daPly_c::GetBodyModel() {
 int daPly_c::func_ov002_020e4990() {
     int id;
     id = GetBodyModelID(param1 & 0xff, 0);
-    func_0201628c((int)mModels.mBodyModels[id], 8);
+    mModels.mBodyModels[id]->func_0201628c(8);
     if (!IsHoldingObject(this))
         return 0;
     if (IsAnim(0x30) || IsAnim(0x2f) || IsAnim(0x33) || IsAnim(0x18) || IsAnim(0x8a) ||
@@ -19712,7 +19710,7 @@ int daPly_c::func_ov002_020e4990() {
         IsAnim(0xb0))
         return 0;
     id = GetBodyModelID(param1 & 0xff, 0);
-    func_020162a4((int)mModels.mBodyModels[id], 8);
+    mModels.mBodyModels[id]->func_020162a4(8);
     return 1;
 }
 

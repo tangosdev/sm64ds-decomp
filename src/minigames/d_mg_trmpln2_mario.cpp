@@ -785,8 +785,8 @@ int dMgTrmpln2Mario_c::Load() {
     if (sMgMainCamera != 0)
         Camera_ProjectToScreen16(sMgMainCamera, &mPos, mScreenPos);
     mGravityStep = 0;
-    func_02016a14(&mAnmModel, 0x73ff);
-    func_02016a04(&mAnmModel, 0x3e52);
+    mAnmModel.func_02016a14(0x73ff);
+    mAnmModel.func_02016a04(0x3e52);
     EnterHidden();
     return ret;
 }
@@ -1871,8 +1871,8 @@ int dMgTrmpln3DMario_c::Load() {
     if (sMgMainCamera != 0)
         Camera_ProjectToScreen16(sMgMainCamera, &mPos, mScreenPos);
     mGravityStep = 0;
-    func_02016a14(&mAnmModel, 0x6bff);
-    func_02016a04(&mAnmModel, 0x21d);
+    mAnmModel.func_02016a14(0x6bff);
+    mAnmModel.func_02016a04(0x21d);
     EnterOffstage();
     return ret;
 }

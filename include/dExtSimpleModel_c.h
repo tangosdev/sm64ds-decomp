@@ -80,6 +80,11 @@ struct dExtSimpleModel_c : dExtModel_c {
     void SetMaterialFlags(u32);
     void SetPolygonMode(int mode);
     void LoadAndSetFile(u16 ov0ID, int a, int b);
+    void func_02016aac(int, int);
+    void func_02016a14(int);
+    void func_02016a04(int);
+    void func_020169f4(int);
+    void func_020169d8(int, unsigned int);
 
     /* --- static --- */
     static BMD_File *LoadFile(SharedFilePtr &ptr);
