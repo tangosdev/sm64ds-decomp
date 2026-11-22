@@ -1564,7 +1564,7 @@ s32 dScMgHanachan_c::Render() {
 
 s32 dScMgHanachan_c::Behavior() {
 
-    sHanaSpinAngle = sHanaSpinAngle + 0x800;
+    sHanaSpinAngle[0] = sHanaSpinAngle[0] + 0x800;
     (this->*mPhase)();
     int i = 0;
     if (sHanaFieldWigglerCount > 0) {
