@@ -61,3 +61,26 @@ src/game/actors/d_a_f_ring.cpp:
     .data.ov060Tail start:0x0211ab20 end:0x0211ab30
     .bss start:0x0211b1f8 end:0x0211b234
 
+src/data/ov060/data_ov060_0211a5c0.c:
+    complete
+    .data start:0x0211a5c0 end:0x0211a930
+
+src/data/ov060/data_ov060_0211a948.c:
+    complete
+    .data start:0x0211a948 end:0x0211a980
+
+src/data/ov060/data_ov060_0211a9b0.c:
+    complete
+    .data.ov060Tail start:0x0211a9b0 end:0x0211aa30
+
+src/data/ov060/data_ov060_0211aa50.c:
+    complete
+    .data.ov060Tail start:0x0211aa50 end:0x0211ab20
+
+src/data/ov060/data_ov060_0211ab30.c:
+    complete
+    .data.ov060Tail start:0x0211ab30 end:0x0211abe0
+
+src/data/ov060/data_ov060_0211b234.c:
+    complete
+    .bss start:0x0211b234 end:0x0211b240

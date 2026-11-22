@@ -24,3 +24,7 @@ src/unnamed/ov020/data_ov020.c:
     complete
     .rodata start:0x021134e4 end:0x02113674
     .data start:0x02113780 end:0x02114828
+
+src/data/ov020/data_ov020_021149d8.c:
+    complete
+    .data start:0x021149d8 end:0x021149e4

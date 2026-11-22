@@ -97,3 +97,35 @@ src/game/actors/d_a_obj_shell.cpp:
     .init start:0x0211b698 end:0x0211b72c
     .ctor start:0x0211b754 end:0x0211b758
     .bss start:0x0211c9bc end:0x0211c9f8
+
+src/data/ov064/data_ov064_0211b768.c:
+    complete
+    .data.coinClps start:0x0211b768 end:0x0211baac
+
+src/data/ov064/data_ov064_0211bacc.c:
+    complete
+    .data.amiliftClps start:0x0211bacc end:0x0211bb6c
+
+src/data/ov064/data_ov064_0211bbac.c:
+    complete
+    .data.guraClps start:0x0211bbac end:0x0211bc00
+
+src/data/ov064/data_ov064_0211bc24.c:
+    complete
+    .data start:0x0211bc24 end:0x0211bdac
+
+src/data/ov064/data_ov064_0211bdcc.c:
+    complete
+    .data start:0x0211bdcc end:0x0211bfd8
+
+src/data/ov064/data_ov064_0211c198.c:
+    complete
+    .data start:0x0211c198 end:0x0211c49c
+
+src/data/ov064/data_ov064_0211c4cc.c:
+    complete
+    .data start:0x0211c4cc end:0x0211c660
+
+src/data/ov064/data_ov064_0211c9f8.c:
+    complete
+    .bss start:0x0211c9f8 end:0x0211ca00

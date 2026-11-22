@@ -99,3 +99,15 @@ src/unnamed/ov036/data_ov036_02112c28.c:
     .data.gap0 start:0x02112a00 end:0x02112a88
     .data.gap2 start:0x02112b08 end:0x02112b28
     .data start:0x02112c28 end:0x02113a54
+
+src/data/ov036/data_ov036_02113a54.c:
+    complete
+    .data start:0x02113a54 end:0x02113b18
+
+src/data/ov036/data_ov036_02113b20.c:
+    complete
+    .data.gap5 start:0x02113b20 end:0x02113b2c
+
+src/data/ov036/data_ov036_02113b38.c:
+    complete
+    .data.gap7 start:0x02113b38 end:0x02113bf4

@@ -30,3 +30,23 @@ src/game/actors/d_a_obj_ice_board.cpp:
     .init start:0x02112e00 end:0x02112e6c
     .ctor start:0x02112e74 end:0x02112e78
     .bss start:0x02113c7c end:0x02113ca4
+
+src/data/ov018/data_ov018_02112a74.c:
+    complete
+    .rodata start:0x02112a74 end:0x02112c14
+
+src/data/ov018/data_ov018_02112e80.c:
+    complete
+    .data start:0x02112e80 end:0x02112f48
+
+src/data/ov018/data_ov018_02112f68.c:
+    complete
+    .data start:0x02112f68 end:0x0211394c
+
+src/data/ov018/data_ov018_0211397c.c:
+    complete
+    .data start:0x0211397c end:0x02113bc0
+
+src/data/ov018/data_ov018_02113ca4.c:
+    complete
+    .bss start:0x02113ca4 end:0x02113cc0

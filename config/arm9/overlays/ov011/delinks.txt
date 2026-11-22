@@ -2,3 +2,11 @@
     .ctor       start:0x02111330 end:0x02111330 kind:rodata align:4
     .data       start:0x02111340 end:0x02111760 kind:data align:32
     .bss        start:0x02111760 end:0x02111760 kind:bss align:32
+
+src/data/ov011/data_ov011_021111a0.c:
+    complete
+    .rodata start:0x021111a0 end:0x02111330
+
+src/data/ov011/data_ov011_02111340.c:
+    complete
+    .data start:0x02111340 end:0x02111760

@@ -27,3 +27,23 @@ src/game/actors/d_a_hanachan.cpp:
     .data.hanachanSpeeds start:0x02114488 end:0x02114498
     .data start:0x02114538 end:0x02114614
     .bss start:0x02114620 end:0x021148e0
+
+src/data/ov034/data_ov034_02114358.c:
+    complete
+    .data.gap1 start:0x02114358 end:0x02114408
+
+src/data/ov034/data_ov034_0211445c.c:
+    complete
+    .data.gap2 start:0x0211445c end:0x02114468
+
+src/data/ov034/data_ov034_02114478.c:
+    complete
+    .data.gap3 start:0x02114478 end:0x02114488
+
+src/data/ov034/data_ov034_02114498.c:
+    complete
+    .data.gap4 start:0x02114498 end:0x02114538
+
+src/data/ov034/data_ov034_02114614.c:
+    complete
+    .data.gap5 start:0x02114614 end:0x02114620

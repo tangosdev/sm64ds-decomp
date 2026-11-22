@@ -27,3 +27,27 @@ src/game/actors/d_a_obj_ct_mecha11.cpp:
     .data.m11Clps start:0x02112238 end:0x02112258
     .data.m11Ang start:0x02112b80 end:0x02112b88
     .bss start:0x02112cb0 end:0x02112cd8
+
+src/data/ov035/data_ov035_02111bd0.c:
+    complete
+    .rodata start:0x02111bd0 end:0x02111ef0
+
+src/data/ov035/data_ov035_02112040.c:
+    complete
+    .data.m35Pre start:0x02112040 end:0x021121d8
+
+src/data/ov035/data_ov035_021121dc.c:
+    complete
+    .data.m35Mid start:0x021121dc end:0x02112238
+
+src/data/ov035/data_ov035_02112258.c:
+    complete
+    .data.m35Mid2 start:0x02112258 end:0x02112b80
+
+src/data/ov035/data_ov035_02112b88.c:
+    complete
+    .data.m35Rest start:0x02112b88 end:0x02112c60
+
+src/data/ov035/data_ov035_02112cd8.c:
+    complete
+    .bss start:0x02112cd8 end:0x02112ce0

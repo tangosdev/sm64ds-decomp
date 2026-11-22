@@ -34,3 +34,11 @@ src/game/actors/d_a_pkn.cpp:
     .data start:0x02130ba4 end:0x02130ca4
     .rodata start:0x021302ec end:0x0213035c
     .bss start:0x02130df4 end:0x02130ee0
+
+src/data/ov084/data_ov084_02130ab4.c:
+    complete
+    .data start:0x02130ab4 end:0x02130ba4
+
+src/data/ov084/data_ov084_02130ca4.c:
+    complete
+    .data start:0x02130ca4 end:0x02130cc0
