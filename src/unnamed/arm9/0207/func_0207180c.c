@@ -1,5 +1,4 @@
 //cpp
-extern "C" {
 unsigned char *func_02071a50(unsigned char *p, int *out);
 
 /* EH runtime: skip the header of an exception action table and return the
@@ -15,5 +14,4 @@ unsigned char *func_0207180c(unsigned char *p) {
         p = func_02071a50(p, &skipped);
     }
     return p;
-}
 }

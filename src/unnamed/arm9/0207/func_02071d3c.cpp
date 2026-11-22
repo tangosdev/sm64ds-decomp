@@ -10,13 +10,10 @@ namespace std {
 void terminate();
 }
 
-extern "C" {
-
 extern u8 *func_02071a50(u8 *p, int *out);
-extern u8 *ReadSignedVarInt(u8 *p, int *out);
-extern int __throw_catch_compare(const u8 *throwtype, const u8 *catchtype, int *offset_result);
 extern int func_02071f88(void *a, ExSpecification *spec);
-}
+extern "C" u8 *ReadSignedVarInt(u8 *p, int *out);
+extern "C" int __throw_catch_compare(const u8 *throwtype, const u8 *catchtype, int *offset_result);
 
 extern unsigned char func_020729f4(struct ActionWalk *c);
 

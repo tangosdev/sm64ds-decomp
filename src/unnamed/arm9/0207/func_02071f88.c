@@ -1,13 +1,8 @@
 //cpp
-extern "C" {
-/* func_02071f88 at 0x02071f88
- *
- * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
- */
 #include "private/throw_context.h"
 
-extern int __throw_catch_compare(const unsigned char *throwtype, const unsigned char *catchtype,
-                                 int *offset_result);
+extern "C" int __throw_catch_compare(const unsigned char *throwtype, const unsigned char *catchtype,
+                                     int *offset_result);
 
 int func_02071f88(void *a, ExSpecification *spec) {
     unsigned char *p;
@@ -23,5 +18,4 @@ int func_02071f88(void *a, ExSpecification *spec) {
         p += 4;
     }
     return 0;
-}
 }

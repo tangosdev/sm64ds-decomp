@@ -1,5 +1,4 @@
 //cpp
-extern "C" {
 /* EH runtime: read an unsigned variable-length integer from an exception
    table and return the byte after it. The low bits of the first byte give
    the length: bit 0 clear is one byte (value >> 1), bit 1 clear two bytes
@@ -31,5 +30,4 @@ unsigned char *func_02071a50(unsigned char *p, int *out)
             }
         }
     }
-}
 }

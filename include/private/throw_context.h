@@ -91,6 +91,7 @@ typedef struct ThrowContext {
     void *func_02071910(void *);
     void func_02071ccc(int, int);
     void func_02071f1c(ActionIterator *, ExSpecification *, unsigned char *);
+    void func_02071790(ActionIterator *, int);
 #endif
 } ThrowContext;
 

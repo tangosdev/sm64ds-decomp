@@ -8,12 +8,9 @@
 namespace std {
 void terminate();
 }
-extern "C" {
-
 extern void func_02072dac(int x, ActionIterator *b);
-extern u8 *ReadSignedVarInt(u8 *p, int *out);
 extern u8 *func_02071a50(u8 *p, int *out);
-}
+extern "C" u8 *ReadSignedVarInt(u8 *p, int *out);
 
 u8 func_020729f4(ActionWalk *c) {
     ThrowContext *frame = &c->mThrow;

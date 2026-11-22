@@ -62,10 +62,11 @@ typedef void (*F1)(int);
  * CatchInfo the same way that runtime's catch setup does ('*' pointer types
  * get a copied pointer). Names follow those roles. ActionIterator and
  * CatchInfo are shared (private/throw_context.h). */
-extern void func_02072dac(int a, ActionIterator *s);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
-extern unsigned char *func_02071a50(unsigned char *p, int *out);
 }
+
+extern void func_02072dac(int a, ActionIterator *s);
+extern unsigned char *func_02071a50(unsigned char *p, int *out);
 
 void ThrowContext::func_02072168(ActionIterator *s, char *end) {
     unsigned char op;

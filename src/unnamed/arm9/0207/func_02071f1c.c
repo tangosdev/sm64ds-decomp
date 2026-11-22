@@ -1,6 +1,5 @@
 //cpp
 #include "private/throw_context.h"
-extern "C" void func_02071790(ThrowContext *context, ActionIterator *iterator, int pad);
 
 /* ThrowContext, ActionIterator and CatchInfo are shared
  * (private/throw_context.h). The ExSpecification fields follow the runtime's
@@ -25,5 +24,5 @@ void ThrowContext::func_02071f1c(ActionIterator *it, ExSpecification *spec,
     catchInfo->mDtor = mDtor;
     catchInfo->mStackTop = action;
 
-    func_02071790(this, it, it->mFuncStart + spec->mPCOffset);
+    func_02071790(it, it->mFuncStart + spec->mPCOffset);
 }

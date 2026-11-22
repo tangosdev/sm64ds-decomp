@@ -2,7 +2,7 @@
 #include "types.h"
 #include "private/throw_context.h"
 
-extern "C" u8 *func_02071a50(u8 *src, int *dst);
+u8 *func_02071a50(u8 *src, int *dst);
 
 /* C++ exception runtime: read the frame header at the action table's start.
  * Byte 0 holds the flags (0x20 arguments pushed, 0x40 frame pointer, 0x80
