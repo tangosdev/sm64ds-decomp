@@ -21731,8 +21731,8 @@ int func_02017ab4(int self);
 int SharedFilePtr_Destruct_Anim(int self);
 void *SharedFilePtr_Construct_TexSeq(void *self, unsigned int fileID);
 int SharedFilePtr_Destruct_TexSeq(int self);
-extern "C" {
 void func_0201973c(void);
+extern "C" {
 unsigned short *func_ov002_020e6ad4(unsigned short *);
 
 /* The random-number seed RandomIntInternal draws from. */

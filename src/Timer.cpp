@@ -16,7 +16,7 @@
    seeded to 1 like data_0209e650. The constructor is defined inline here
    the way func_0201fec8.cpp defines it. The destructor is only declared,
    so this file does not emit it: retail registers func_0201973c, the empty
-   destructor defined in func_020196cc.c. */
+   destructor defined in func_020196cc.cpp. */
 extern "C" void func_0203b9b4(int *p, int v);
 #include "LevelRng.h"
 

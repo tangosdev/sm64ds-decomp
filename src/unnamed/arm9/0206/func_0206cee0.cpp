@@ -1,4 +1,3 @@
-//cpp
 #include "types.h"
 #include "nitro/os/spinLock.h"
 

@@ -1,5 +1,11 @@
 #include "nitro/spi/pm.h"
 
+/* leftover: LevelRng::~LevelRng() is these four bytes and also emits D2,
+   which has no address before OS_Terminate. */
+void func_0201973c(void) {}
+
+extern "C" {
+
 struct LevelRng;
 
 extern void func_0203b9b4(int *p, int v);
@@ -7,9 +13,6 @@ extern void SetSoundMode(int mode);
 extern unsigned char gBacklightEnabled;
 extern struct LevelRng data_0209d4b8;
 extern unsigned char data_0209d4b4;
-
-/* Empty. */
-void func_0201973c(void) {}
 
 /* Boot setup (func_0201a054). If both screens' backlights read off
    (PM_GetBackLight), the backlight setting gBacklightEnabled, which
@@ -24,4 +27,5 @@ void func_020196cc(void) {
     }
     func_0203b9b4((int *)&data_0209d4b8, 1234);
     SetSoundMode(data_0209d4b4);
+}
 }

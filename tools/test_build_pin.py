@@ -114,10 +114,11 @@ def test_flags_are_the_builds_flags():
     """`match.DEFAULT_FLAGS` is not the build's flag set -- it lacks `-Cpp_exceptions
     off`. Checking with different flags than the link compiles with can bless a version
     the build then breaks on, the same defect by another route."""
+    cpp = RB.CFLAGS.replace("-lang c99", "-lang c++")
     assert BP.flags_for("x.c", "int f(void);") == RB.CFLAGS
-    assert BP.flags_for("x.cpp", "//cpp\n") == RB.CFLAGS.replace("-lang c99", "-lang c++")
-    # The marker decides, not the extension -- because that is what rombuild does.
-    assert BP.flags_for("x.c", "//cpp\n") == RB.CFLAGS.replace("-lang c99", "-lang c++")
+    assert BP.flags_for("x.cpp", "int f(void);") == cpp
+    assert BP.flags_for("x.cpp", "//cpp\n") == cpp
+    assert BP.flags_for("x.c", "//cpp\n") == cpp
     assert "-Cpp_exceptions off" in BP.flags_for("x.c", "")
 
 

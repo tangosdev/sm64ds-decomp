@@ -29,7 +29,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import match as M           # noqa: E402
 import modules as MOD       # noqa: E402
 import srcpath as SP        # noqa: E402
-from rombuild import CFLAGS, REPO, VERSION, VERSIONS_FILE, versions  # noqa: E402
+from rombuild import CFLAGS, REPO, VERSION, VERSIONS_FILE, source_is_cpp, versions  # noqa: E402
 
 SYM = re.compile(
     r"^(\S+)\s+kind:function\((arm|thumb),size=0x([0-9a-fA-F]+)\)\s+addr:0x([0-9a-fA-F]+)")
@@ -85,9 +85,8 @@ def main():
             return n, None
         # The build's flags, not match.py's defaults: sweeping with different flags
         # than the link compiles with can bless a version the build then breaks on.
-        flags = CFLAGS
-        if src.read_text(encoding="utf-8", errors="ignore").startswith("//cpp"):
-            flags = flags.replace("-lang c99", "-lang c++")
+        text = src.read_text(encoding="utf-8", errors="ignore")
+        flags = CFLAGS.replace("-lang c99", "-lang c++") if source_is_cpp(src, text) else CFLAGS
         if label == "arm9":
             tgt = M.target_bytes(addr, size)
         elif label in mods:

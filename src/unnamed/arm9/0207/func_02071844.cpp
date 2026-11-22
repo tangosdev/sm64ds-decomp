@@ -4,7 +4,7 @@
 extern struct EHIndexEntry data_020737a8;
 /* __sinit_d_camera.cpp, the first contribution in arm9 .init. The C lexer
    cannot spell that dotted linker name; ARM9_INIT_START is that base. */
-extern void ARM9_INIT_START(void);
+extern "C" void ARM9_INIT_START(void);
 
 /* EH runtime: give func_02072dac the bounds of the one exception index
    table and return 1. The code address it also passes (pc) would pick a

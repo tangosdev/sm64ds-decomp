@@ -106,7 +106,7 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN8LevelRngD1Ev",
-      "canonical_symbol": "func_0201973c",
+      "canonical_symbol": "_Z13func_0201973cv",
       "canonical_module": "arm9",
       "canonical_address": "0x0201973c",
       "evidence": "LevelRng's destructor is not emitted. Retail stores func_0201973c, the empty destructor already defined in func_020196cc.c."
@@ -175,7 +175,7 @@
       "source": "0x02074e78",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_0201973c",
+      "symbol": "_Z13func_0201973cv",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0201973c"
