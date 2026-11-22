@@ -77,8 +77,6 @@ void SPLBehavior_ApplyCollisionPlane(const void *obj, Particle::Element *ptcl, V
 void SPLBehavior_ApplyConvergence(const void *obj, Particle::Element *ptcl, Vector3 *acc);
 }
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SPLGravityBehavior_size_must_be_0x8[sizeof(SPLGravityBehavior) == 0x8 ? 1 : -1];
 typedef char SPLRandomBehavior_size_must_be_0x8[sizeof(SPLRandomBehavior) == 0x8 ? 1 : -1];
 typedef char SPLMagnetBehavior_size_must_be_0x10[sizeof(SPLMagnetBehavior) == 0x10 ? 1 : -1];
@@ -88,6 +86,5 @@ typedef char
 typedef char
     SPLConvergenceBehavior_size_must_be_0x10[sizeof(SPLConvergenceBehavior) == 0x10 ? 1 : -1];
 typedef char SPLBehavior_size_must_be_0x8[sizeof(SPLBehavior) == 0x8 ? 1 : -1];
-#endif
 
 #endif

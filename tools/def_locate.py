@@ -329,8 +329,8 @@ class Def:
         self.params = params        # raw text inside the parens
         self.ns = ns                # enclosing namespaces, outermost first
         self.extern_c = extern_c    # C linkage: extern "C" block/decl/line
-        self.dead = dead            # inside an _MSC_VER branch: mwccarm
-                                    # never sees it, so it emits no symbol
+        self.dead = dead            # inside an _MSC_VER branch mwccarm
+                                    # never compiles, so it emits no symbol
         # Enclosing ``namespace`` / ``extern "C"`` frames, outermost first.
         # Each is ``{kind, name, stmt, brace, close}``; ``close`` is filled
         # in when the frame's ``}`` is reached, so a Def built earlier still
@@ -362,7 +362,7 @@ _MSC_NEGATED_RE = re.compile(r'!\s*defined\s*\(?\s*_MSC_VER')
 
 def _dead_regions(text):
     """Byte intervals mwccarm never sees: ``#if``-family branches that are
-    only live with ``_MSC_VER`` defined (host/port code). Unknown conditions
+    compiled only when ``_MSC_VER`` is defined. mwccarm never defines it. Unknown conditions
     are treated as live -- under-claiming death is the safe side."""
     PP = re.compile(r'(?m)^[ \t]*#[ \t]*'
                     r'(ifdef|ifndef|if|elif|else|endif)\b([^\n]*)')
@@ -953,7 +953,7 @@ def bind(path, text=None, owned=None):
 
     bound = {}
     owned_set = set(owned)
-    # host-only definitions (`#ifdef _MSC_VER` arms) emit no ROM symbol; a
+    # `#ifdef _MSC_VER` definitions emit no ROM symbol; a
     # live definition with the same name wins the binding, so dead ones are
     # only considered when no live definition claims the key.
     order = ([d for d in defs if not d.dead]

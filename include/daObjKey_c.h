@@ -75,9 +75,6 @@ struct daObjKey_c : dEnemyBase_c {
     void func_ov089_02131df4(daPly_c &player);             /* 0x02131df4 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjKey_c_size_must_be_0x470[sizeof(daObjKey_c) == 0x470 ? 1 : -1];
-#endif
 
 #endif /* DAOBJKEY_C_H */

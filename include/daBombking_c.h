@@ -160,10 +160,7 @@ struct daBombking_c : dEnemyBase_c {
  * vtable. The factory is `return new daBombking_c()`, which calls the
  * inherited fBase_c::operator new (`_ZN7fBase_cnwEm`). */
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daBombking_c_size_must_be_0x50c[sizeof(daBombking_c) == 0x50c ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

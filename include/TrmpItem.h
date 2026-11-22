@@ -103,8 +103,6 @@ struct TrmpItem {
     Vector2 mUnusedVec[5]; /* 0x1a8 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char TrmpItem_size_must_be_0x1d0[sizeof(TrmpItem) == 0x1d0 ? 1 : -1];
-#endif
 
 #endif

@@ -260,8 +260,7 @@ All commands run in `C:/tmp/sm64ds-sm64ds-yurei` at this tree, on the pinned
 - **`tools/tiers_ratchet.py --check`** -- "CONVERTED ratchet PASS, baseline 2699,
   current 2702, +3 gained, not yet banked". `--update` was NOT run: it appends, so
   a re-run double-banks rows permanently.
-- **`tools/layout_check.py`** -- clean. **`tools/port_refcheck.py`** -- 423
-  references checked, all resolve. **`tools/eligible.py`** -- 11197 / 11273.
+- **`tools/layout_check.py`** -- clean. **`tools/eligible.py`** -- 11197 / 11273.
   **`tools/cpp_tu_state.py`** -- exit 0.
 - **`tools/queue_audit.py`** -- reports exactly the counts it reports on the base
   commit: already_promoted 3, compiler-only 2, shard_count 3, total_lines 3,

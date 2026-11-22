@@ -127,9 +127,6 @@ struct daKpaFire_c : dEnemyBase_c {
     void KeepParticlePair(u32 kind, int resize, int yOffset);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKpaFire_c_size_must_be_0x38c[sizeof(daKpaFire_c) == 0x38c ? 1 : -1];
-#endif
 
 #endif

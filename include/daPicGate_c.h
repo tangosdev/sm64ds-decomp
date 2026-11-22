@@ -113,11 +113,8 @@ struct daPicGate_c : dActor_c {
     void InitProximityRipple();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daPicGate_Vertex_size_must_be_0x18[
     sizeof(daPicGate_c::Vertex) == 0x18 ? 1 : -1];
 typedef char daPicGate_c_size_must_be_0x1bc[sizeof(daPicGate_c) == 0x1bc ? 1 : -1];
-#endif
 
 #endif /* DAPICGATE_C_H */

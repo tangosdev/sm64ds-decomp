@@ -76,9 +76,6 @@ struct daBakubaku_c : dEnemyBase_c {
     void UpdateModelMatrix(); /* model + shadow matrices */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daBakubaku_c_size_must_be_0x438[sizeof(daBakubaku_c) == 0x438 ? 1 : -1];
-#endif
 
 #endif /* DABAKUBAKU_C_H */

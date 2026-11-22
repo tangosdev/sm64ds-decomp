@@ -114,10 +114,7 @@ struct daDsn_c : daDsnBase_c {
     virtual int OnAimedAtWithEgg();               /* slot 29 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daDsn_c_size_must_be_0x3a4[sizeof(daDsn_c) == 0x3a4 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

@@ -222,8 +222,7 @@
   "compiler_only_output": [],
   "notes": [
     "Definitions are written ROM-descending. Default mwccarm deferred codegen emits .text in reverse source order, so emission is ROM-ascending. No file-wide pragma.",
-    "The unnamed helpers keep their address names and C linkage, with the signatures their one-function files defined, so no caller's declaration agreement changes. SharedFilePtr_Construct_TexSeq / _Destruct_TexSeq / _Destruct_Anim / _Destruct_Clsn keep their existing linker names.",
-    "Host build (port/): the refcounting core (func_02017e0c, func_02017c24, LoadFile, Release) compiles for gate 3b. dExtSimpleModel_c::LoadFile and dExtFrameCtrl_c::LoadFile compile only under SM64DS_PORT_GATE4B and dBgW_Kc::LoadFile only under SM64DS_PORT_GATE8, which port/CMakeLists.txt defines on the targets that link those slices. Everything else is under #ifndef _MSC_VER."
+    "The unnamed helpers keep their address names and C linkage, with the signatures their one-function files defined, so no caller's declaration agreement changes. SharedFilePtr_Construct_TexSeq / _Destruct_TexSeq / _Destruct_Anim / _Destruct_Clsn keep their existing linker names."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",

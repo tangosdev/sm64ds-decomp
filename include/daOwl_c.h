@@ -104,9 +104,6 @@ struct daOwl_c : dEnemyBase_c {
     void FollowRiderMatrix();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daOwl_c_size_must_be_0x3f8[sizeof(daOwl_c) == 0x3f8 ? 1 : -1];
-#endif
 
 #endif /* DAOWL_C_H */

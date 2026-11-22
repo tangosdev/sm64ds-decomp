@@ -48,8 +48,6 @@ typedef struct Ov007Transition {
     } fx;
 } Ov007Transition;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Transition_size_must_be_0x34[sizeof(Ov007Transition) == 0x34 ? 1 : -1];
-#endif
 
 #endif

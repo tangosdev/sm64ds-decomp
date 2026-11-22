@@ -72,9 +72,6 @@ struct daWater_Hakidasi_c : dEnemyBase_c {
     s32 mMatchedSlot; /* 0x374 -- buffer slot where mPassedRing was found */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daWater_Hakidasi_c_size_must_be_0x378[sizeof(daWater_Hakidasi_c) == 0x378 ? 1 : -1];
-#endif
 
 #endif /* DAWATER_HAKIDASI_C_H */

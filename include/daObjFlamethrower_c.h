@@ -34,9 +34,6 @@ struct daObjFlamethrower_c : dActor_c {
     virtual int Behavior();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Flamethrower_size_must_be_0x46c[sizeof(struct daObjFlamethrower_c) == 0x46c ? 1 : -1];
-#endif
 
 #endif

@@ -29,9 +29,7 @@ typedef struct Ov007PickerParams {
     int closeFactor;
 } Ov007PickerParams;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007PickerParams_size_must_be_0x20[sizeof(Ov007PickerParams) == 0x20 ? 1 : -1];
-#endif
 
 /* The 0xd0-byte touch picker that func_ov007_020c690c allocates and
  * func_ov007_020c684c resets. The player draws a stroke into `path`. Each
@@ -112,10 +110,8 @@ typedef struct Ov007Picker {
 #endif
 } Ov007Picker;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Picker_size_must_be_0xd0[sizeof(Ov007Picker) == 0xd0 ? 1 : -1];
 typedef char Ov007Picker_camera_must_be_at_0xa8[(int)&((Ov007Picker *)0)->camera == 0xa8 ? 1 : -1];
-#endif
 
 #ifdef __cplusplus
 extern "C" {

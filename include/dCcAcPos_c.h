@@ -58,10 +58,7 @@ struct dCcAcPos_c : dCcAc_c {
     void SetPosRelativeToActor(const Vector3 &offset);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dCcAcPos_c_size_must_be_0x40[
     sizeof(dCcAcPos_c) == 0x40 ? 1 : -1];
-#endif
 
 #endif /* DCCACPOS_C_H */

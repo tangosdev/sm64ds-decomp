@@ -52,11 +52,8 @@ struct dScMgPachinko2_Ball {
     u8 facingRight; /* +0x3e -- moving right; frames +4 */
     u8 pad_3f;      /* +0x3f */
 };
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char
     dScMgPachinko2_Ball_size_must_be_0x40[sizeof(struct dScMgPachinko2_Ball) == 0x40 ? 1 : -1];
-#endif
 
 /* One of the three paddles. State 0..14 dispatches through
    sPachinko2PaddleStateTable; Paddle_Hit parks the current motion in
@@ -148,7 +145,6 @@ struct dScMgPachinko2_Cup {
     u8 pad_1f;
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char
     dScMgPachinko2_Paddle_size_must_be_0x40[sizeof(struct dScMgPachinko2_Paddle) == 0x40 ? 1 : -1];
 typedef char
@@ -158,7 +154,6 @@ typedef char
                                                                                              : -1];
 typedef char
     dScMgPachinko2_Cup_size_must_be_0x20[sizeof(struct dScMgPachinko2_Cup) == 0x20 ? 1 : -1];
-#endif
 
 struct dScMgPachinko2_c : dScMgBase_c {
     virtual ~dScMgPachinko2_c();      /* slots 16 and 17 */
@@ -277,10 +272,7 @@ struct dScMgPachinko2_c : dScMgBase_c {
     u8 pad_567b;
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char
     dScMgPachinko2_c_size_must_be_0x567c[sizeof(struct dScMgPachinko2_c) == 0x567c ? 1 : -1];
-#endif
 
 #endif

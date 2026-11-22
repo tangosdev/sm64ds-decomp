@@ -60,10 +60,7 @@ struct daObjRc_Tikuwa_c : dBgActor_c {
     static void StoodOnCallback(void *, daObjRc_Tikuwa_c *, dActor_c *);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjRc_Tikuwa_c_size_must_be_0x4ec[sizeof(daObjRc_Tikuwa_c) == 0x4ec ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

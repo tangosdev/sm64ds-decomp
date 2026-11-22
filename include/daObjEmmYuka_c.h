@@ -57,10 +57,7 @@ struct daObjEmmYuka_c : dBgActor_c {
     virtual int Render();               /* slot  9 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjEmmYuka_c_size_must_be_0x330[sizeof(daObjEmmYuka_c) == 0x330 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

@@ -32,17 +32,7 @@ struct dExtBlendAnmModel_c : dExtAnmModel_c {
     void *mBlendBuffer; /* 0x6c - pose blend buffer; DoSetFile tail allocates it, D1 frees it */
 
     /* --- vtable order. Do not reorder. --- */
-    /* The destructor pair spelled as two plain virtuals on the host, plus the
-       non-virtual destructor declaration the src/ definitions need; the whole
-       ruling is in include/dExtModel_c.h. Overrides take their base's slots, so
-       these carry the SAME TWO NAMES dExtAnmModel_c declares. */
-#ifdef _MSC_VER
-    virtual void Destructor1();                           /* slot 0 (D1) */
-    virtual void Destructor0();                           /* slot 1 (D0) */
-    ~dExtBlendAnmModel_c();                               /* no slot */
-#else
     virtual ~dExtBlendAnmModel_c(); /* slots 0 (D1), 1 (D0) */
-#endif
     virtual int DoSetFile(char *file, int a, int b);      /* slot 2 */
     virtual void UpdateVerts();                           /* slot 3 */
     virtual void Virtual10(Matrix4x3 &mat);               /* slot 4 */
@@ -62,9 +52,6 @@ struct dExtBlendAnmModel_c : dExtAnmModel_c {
     int InitBlendBuffer(char *); /* DoSetFile's tail (0x020165c4); coined */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dExtBlendAnmModel_c_size_must_be_0x70[sizeof(dExtBlendAnmModel_c) == 0x70 ? 1 : -1];
-#endif
 
 #endif /* DEXTBLENDANMMODEL_C_H */

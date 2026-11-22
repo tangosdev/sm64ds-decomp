@@ -135,9 +135,6 @@ struct daTor_c : dActor_c {
     void State0();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daTor_c_size_must_be_0x370[sizeof(daTor_c) == 0x370 ? 1 : -1];
-#endif
 
 #endif

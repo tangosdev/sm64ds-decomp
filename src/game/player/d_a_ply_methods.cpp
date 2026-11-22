@@ -21732,7 +21732,7 @@ void __register_global_object(void *object, void *destructor, void **node);
 
 int func_02017ab4(int self);
 int SharedFilePtr_Destruct_Anim(int self);
-
+void *SharedFilePtr_Construct_TexSeq(void *self, unsigned int fileID);
 int SharedFilePtr_Destruct_TexSeq(int self);
 extern "C" {
 void func_0201973c(void);
@@ -23267,214 +23267,214 @@ void __sinit_ov002_021019d0(void) {
     data_ov002_0210e830.Construct(0x80bf);
     __register_global_object(&data_ov002_0210e830, (void *)SharedFilePtr_Destruct_Anim,
                              data_ov002_0210fba8);
-    data_ov002_0210e538.SharedFilePtr_Construct_TexSeq(0x8021);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e538, 0x8021);
     __register_global_object(&data_ov002_0210e538, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fbd8);
-    data_ov002_0210e8d0.SharedFilePtr_Construct_TexSeq(0x8022);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e8d0, 0x8022);
     __register_global_object(&data_ov002_0210e8d0, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fbfc);
-    data_ov002_0210e8e8.SharedFilePtr_Construct_TexSeq(ASSET_L_TX_DAMAGE_START_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e8e8, ASSET_L_TX_DAMAGE_START_BTP);
     __register_global_object(&data_ov002_0210e8e8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fc20);
-    data_ov002_0210e540.SharedFilePtr_Construct_TexSeq(ASSET_L_TX_DAMAGE_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e540, ASSET_L_TX_DAMAGE_WAIT_BTP);
     __register_global_object(&data_ov002_0210e540, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fc44);
-    data_ov002_0210e958.SharedFilePtr_Construct_TexSeq(ASSET_L_TX_ED_AMAZED_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e958, ASSET_L_TX_ED_AMAZED_BTP);
     __register_global_object(&data_ov002_0210e958, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fc5c);
-    data_ov002_0210e898.SharedFilePtr_Construct_TexSeq(0x8023);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e898, 0x8023);
     __register_global_object(&data_ov002_0210e898, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fc80);
-    data_ov002_0210e9e8.SharedFilePtr_Construct_TexSeq(0x8024);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e9e8, 0x8024);
     __register_global_object(&data_ov002_0210e9e8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fca4);
-    data_ov002_0210ea70.SharedFilePtr_Construct_TexSeq(ASSET_L_TX_GAS_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210ea70, ASSET_L_TX_GAS_WAIT_BTP);
     __register_global_object(&data_ov002_0210ea70, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fcc8);
-    data_ov002_0210ebd8.SharedFilePtr_Construct_TexSeq(0x8025);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210ebd8, 0x8025);
     __register_global_object(&data_ov002_0210ebd8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fcec);
-    data_ov002_0210eac8.SharedFilePtr_Construct_TexSeq(0x8026);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210eac8, 0x8026);
     __register_global_object(&data_ov002_0210eac8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fd10);
-    data_ov002_0210e460.SharedFilePtr_Construct_TexSeq(ASSET_L_TX_LIE_END_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e460, ASSET_L_TX_LIE_END_BTP);
     __register_global_object(&data_ov002_0210e460, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fd34);
-    data_ov002_0210e910.SharedFilePtr_Construct_TexSeq(ASSET_L_TX_LIE_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e910, ASSET_L_TX_LIE_WAIT_BTP);
     __register_global_object(&data_ov002_0210e910, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fd58);
-    data_ov002_0210e2f0.SharedFilePtr_Construct_TexSeq(ASSET_L_TX_RETURN_DOWN_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e2f0, ASSET_L_TX_RETURN_DOWN_BTP);
     __register_global_object(&data_ov002_0210e2f0, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fd7c);
-    data_ov002_0210ea10.SharedFilePtr_Construct_TexSeq(0x8027);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210ea10, 0x8027);
     __register_global_object(&data_ov002_0210ea10, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fda0);
-    data_ov002_0210e600.SharedFilePtr_Construct_TexSeq(ASSET_L_TX_SLEEP_END_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e600, ASSET_L_TX_SLEEP_END_BTP);
     __register_global_object(&data_ov002_0210e600, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fdc4);
-    data_ov002_0210ec98.SharedFilePtr_Construct_TexSeq(ASSET_L_TX_SLEEP_START_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210ec98, ASSET_L_TX_SLEEP_START_BTP);
     __register_global_object(&data_ov002_0210ec98, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fde8);
-    data_ov002_0210ea88.SharedFilePtr_Construct_TexSeq(ASSET_L_TX_SLEEP_TO_LIE_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210ea88, ASSET_L_TX_SLEEP_TO_LIE_BTP);
     __register_global_object(&data_ov002_0210ea88, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fe0c);
-    data_ov002_0210eca8.SharedFilePtr_Construct_TexSeq(ASSET_L_TX_SLEEP_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210eca8, ASSET_L_TX_SLEEP_WAIT_BTP);
     __register_global_object(&data_ov002_0210eca8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fe30);
-    data_ov002_0210e9d0.SharedFilePtr_Construct_TexSeq(0x8028);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e9d0, 0x8028);
     __register_global_object(&data_ov002_0210e9d0, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fe54);
-    data_ov002_0210eaf0.SharedFilePtr_Construct_TexSeq(0x8035);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210eaf0, 0x8035);
     __register_global_object(&data_ov002_0210eaf0, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fe78);
-    data_ov002_0210ea30.SharedFilePtr_Construct_TexSeq(ASSET_W_TX_DAMAGE_START_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210ea30, ASSET_W_TX_DAMAGE_START_BTP);
     __register_global_object(&data_ov002_0210ea30, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fe9c);
-    data_ov002_0210e660.SharedFilePtr_Construct_TexSeq(ASSET_W_TX_DAMAGE_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e660, ASSET_W_TX_DAMAGE_WAIT_BTP);
     __register_global_object(&data_ov002_0210e660, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fec0);
-    data_ov002_0210eb10.SharedFilePtr_Construct_TexSeq(ASSET_W_TX_ED_AMAZED_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210eb10, ASSET_W_TX_ED_AMAZED_BTP);
     __register_global_object(&data_ov002_0210eb10, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210fee4);
-    data_ov002_0210e670.SharedFilePtr_Construct_TexSeq(0x8036);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e670, 0x8036);
     __register_global_object(&data_ov002_0210e670, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ff08);
-    data_ov002_0210e680.SharedFilePtr_Construct_TexSeq(0x8037);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e680, 0x8037);
     __register_global_object(&data_ov002_0210e680, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ff2c);
-    data_ov002_0210eb38.SharedFilePtr_Construct_TexSeq(ASSET_W_TX_GAS_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210eb38, ASSET_W_TX_GAS_WAIT_BTP);
     __register_global_object(&data_ov002_0210eb38, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ff50);
-    data_ov002_0210e640.SharedFilePtr_Construct_TexSeq(0x8038);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e640, 0x8038);
     __register_global_object(&data_ov002_0210e640, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ff74);
-    data_ov002_0210eb58.SharedFilePtr_Construct_TexSeq(ASSET_W_TX_LIE_END_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210eb58, ASSET_W_TX_LIE_END_BTP);
     __register_global_object(&data_ov002_0210eb58, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ff98);
-    data_ov002_0210e6a0.SharedFilePtr_Construct_TexSeq(ASSET_W_TX_LIE_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e6a0, ASSET_W_TX_LIE_WAIT_BTP);
     __register_global_object(&data_ov002_0210e6a0, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ffbc);
-    data_ov002_0210e3e0.SharedFilePtr_Construct_TexSeq(ASSET_W_TX_RETURN_DOWN_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e3e0, ASSET_W_TX_RETURN_DOWN_BTP);
     __register_global_object(&data_ov002_0210e3e0, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ffe0);
-    data_ov002_0210eb70.SharedFilePtr_Construct_TexSeq(0x8039);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210eb70, 0x8039);
     __register_global_object(&data_ov002_0210eb70, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ed80);
-    data_ov002_0210e6b8.SharedFilePtr_Construct_TexSeq(ASSET_W_TX_SLEEP_END_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e6b8, ASSET_W_TX_SLEEP_END_BTP);
     __register_global_object(&data_ov002_0210e6b8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210eda4);
-    data_ov002_0210eb90.SharedFilePtr_Construct_TexSeq(ASSET_W_TX_SLEEP_START_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210eb90, ASSET_W_TX_SLEEP_START_BTP);
     __register_global_object(&data_ov002_0210eb90, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210edc8);
-    data_ov002_0210e620.SharedFilePtr_Construct_TexSeq(ASSET_W_TX_SLEEP_TO_LIE_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e620, ASSET_W_TX_SLEEP_TO_LIE_BTP);
     __register_global_object(&data_ov002_0210e620, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210edec);
-    data_ov002_0210e3e8.SharedFilePtr_Construct_TexSeq(ASSET_W_TX_SLEEP_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e3e8, ASSET_W_TX_SLEEP_WAIT_BTP);
     __register_global_object(&data_ov002_0210e3e8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ee10);
-    data_ov002_0210eba8.SharedFilePtr_Construct_TexSeq(0x803a);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210eba8, 0x803a);
     __register_global_object(&data_ov002_0210eba8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ee34);
-    data_ov002_0210e3c8.SharedFilePtr_Construct_TexSeq(0x8049);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e3c8, 0x8049);
     __register_global_object(&data_ov002_0210e3c8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ee58);
-    data_ov002_0210e6e0.SharedFilePtr_Construct_TexSeq(ASSET_Y_TX_DAMAGE_START_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e6e0, ASSET_Y_TX_DAMAGE_START_BTP);
     __register_global_object(&data_ov002_0210e6e0, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ee7c);
-    data_ov002_0210ebc8.SharedFilePtr_Construct_TexSeq(ASSET_Y_TX_DAMAGE_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210ebc8, ASSET_Y_TX_DAMAGE_WAIT_BTP);
     __register_global_object(&data_ov002_0210ebc8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210eea0);
-    data_ov002_0210e400.SharedFilePtr_Construct_TexSeq(0x804a);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e400, 0x804a);
     __register_global_object(&data_ov002_0210e400, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210eeb8);
-    data_ov002_0210ecb8.SharedFilePtr_Construct_TexSeq(0x804b);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210ecb8, 0x804b);
     __register_global_object(&data_ov002_0210ecb8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210eedc);
-    data_ov002_0210e708.SharedFilePtr_Construct_TexSeq(ASSET_Y_TX_GAS_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e708, ASSET_Y_TX_GAS_WAIT_BTP);
     __register_global_object(&data_ov002_0210e708, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ef00);
-    data_ov002_0210e408.SharedFilePtr_Construct_TexSeq(0x804c);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e408, 0x804c);
     __register_global_object(&data_ov002_0210e408, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ef24);
-    data_ov002_0210ec00.SharedFilePtr_Construct_TexSeq(ASSET_Y_TX_LIE_END_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210ec00, ASSET_Y_TX_LIE_END_BTP);
     __register_global_object(&data_ov002_0210ec00, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ef48);
-    data_ov002_0210ec10.SharedFilePtr_Construct_TexSeq(ASSET_Y_TX_LIE_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210ec10, ASSET_Y_TX_LIE_WAIT_BTP);
     __register_global_object(&data_ov002_0210ec10, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ef6c);
-    data_ov002_0210e728.SharedFilePtr_Construct_TexSeq(ASSET_Y_TX_RETURN_DOWN_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e728, ASSET_Y_TX_RETURN_DOWN_BTP);
     __register_global_object(&data_ov002_0210e728, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210ef90);
-    data_ov002_0210e3b0.SharedFilePtr_Construct_TexSeq(0x804d);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e3b0, 0x804d);
     __register_global_object(&data_ov002_0210e3b0, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210efa8);
-    data_ov002_0210e738.SharedFilePtr_Construct_TexSeq(ASSET_Y_TX_SLEEP_END_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e738, ASSET_Y_TX_SLEEP_END_BTP);
     __register_global_object(&data_ov002_0210e738, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210efcc);
-    data_ov002_0210ec40.SharedFilePtr_Construct_TexSeq(ASSET_Y_TX_SLEEP_START_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210ec40, ASSET_Y_TX_SLEEP_START_BTP);
     __register_global_object(&data_ov002_0210ec40, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210eff0);
-    data_ov002_0210e250.SharedFilePtr_Construct_TexSeq(ASSET_Y_TX_SLEEP_TO_LIE_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e250, ASSET_Y_TX_SLEEP_TO_LIE_BTP);
     __register_global_object(&data_ov002_0210e250, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f014);
-    data_ov002_0210e430.SharedFilePtr_Construct_TexSeq(0x804e);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e430, 0x804e);
     __register_global_object(&data_ov002_0210e430, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f038);
-    data_ov002_0210e438.SharedFilePtr_Construct_TexSeq(0x804f);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e438, 0x804f);
     __register_global_object(&data_ov002_0210e438, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f05c);
-    data_ov002_0210e770.SharedFilePtr_Construct_TexSeq(0x80ad);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e770, 0x80ad);
     __register_global_object(&data_ov002_0210e770, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f080);
-    data_ov002_0210e788.SharedFilePtr_Construct_TexSeq(ASSET_TX_DAMAGE_START_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e788, ASSET_TX_DAMAGE_START_BTP);
     __register_global_object(&data_ov002_0210e788, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f0a4);
-    data_ov002_0210e450.SharedFilePtr_Construct_TexSeq(ASSET_TX_DAMAGE_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e450, ASSET_TX_DAMAGE_WAIT_BTP);
     __register_global_object(&data_ov002_0210e450, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f0c8);
-    data_ov002_0210e270.SharedFilePtr_Construct_TexSeq(ASSET_TX_ED_KISS_TO_POSE_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e270, ASSET_TX_ED_KISS_TO_POSE_BTP);
     __register_global_object(&data_ov002_0210e270, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f0ec);
-    data_ov002_0210e458.SharedFilePtr_Construct_TexSeq(ASSET_TX_ED_KISS_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e458, ASSET_TX_ED_KISS_WAIT_BTP);
     __register_global_object(&data_ov002_0210e458, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f110);
-    data_ov002_0210e288.SharedFilePtr_Construct_TexSeq(0x80ae);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e288, 0x80ae);
     __register_global_object(&data_ov002_0210e288, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f134);
-    data_ov002_0210e478.SharedFilePtr_Construct_TexSeq(0x80af);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e478, 0x80af);
     __register_global_object(&data_ov002_0210e478, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f158);
-    data_ov002_0210e7e8.SharedFilePtr_Construct_TexSeq(ASSET_TX_GAS_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e7e8, ASSET_TX_GAS_WAIT_BTP);
     __register_global_object(&data_ov002_0210e7e8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f17c);
-    data_ov002_0210e230.SharedFilePtr_Construct_TexSeq(0x80b0);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e230, 0x80b0);
     __register_global_object(&data_ov002_0210e230, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f1a0);
-    data_ov002_0210e800.SharedFilePtr_Construct_TexSeq(ASSET_TX_LIE_END_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e800, ASSET_TX_LIE_END_BTP);
     __register_global_object(&data_ov002_0210e800, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f1d0);
-    data_ov002_0210e1d0.SharedFilePtr_Construct_TexSeq(ASSET_TX_LIE_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e1d0, ASSET_TX_LIE_WAIT_BTP);
     __register_global_object(&data_ov002_0210e1d0, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f1f4);
-    data_ov002_0210e4b8.SharedFilePtr_Construct_TexSeq(ASSET_TX_RETURN_DOWN_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e4b8, ASSET_TX_RETURN_DOWN_BTP);
     __register_global_object(&data_ov002_0210e4b8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f218);
-    data_ov002_0210e1c8.SharedFilePtr_Construct_TexSeq(0x80b1);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e1c8, 0x80b1);
     __register_global_object(&data_ov002_0210e1c8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f248);
-    data_ov002_0210e4d0.SharedFilePtr_Construct_TexSeq(ASSET_TX_SLEEP_END_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e4d0, ASSET_TX_SLEEP_END_BTP);
     __register_global_object(&data_ov002_0210e4d0, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f26c);
-    data_ov002_0210e1e0.SharedFilePtr_Construct_TexSeq(ASSET_TX_SLEEP_START_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e1e0, ASSET_TX_SLEEP_START_BTP);
     __register_global_object(&data_ov002_0210e1e0, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f290);
-    data_ov002_0210e4e8.SharedFilePtr_Construct_TexSeq(ASSET_TX_SLEEP_TO_LIE_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e4e8, ASSET_TX_SLEEP_TO_LIE_BTP);
     __register_global_object(&data_ov002_0210e4e8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f2b4);
-    data_ov002_0210e1e8.SharedFilePtr_Construct_TexSeq(ASSET_TX_SLEEP_WAIT_BTP);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e1e8, ASSET_TX_SLEEP_WAIT_BTP);
     __register_global_object(&data_ov002_0210e1e8, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f2d8);
-    data_ov002_0210e500.SharedFilePtr_Construct_TexSeq(0x80b2);
+    SharedFilePtr_Construct_TexSeq(&data_ov002_0210e500, 0x80b2);
     __register_global_object(&data_ov002_0210e500, (void *)SharedFilePtr_Destruct_TexSeq,
                              data_ov002_0210f2fc);
     PlayerInitStates();

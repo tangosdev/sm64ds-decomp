@@ -296,8 +296,6 @@ struct dScMgTeresa_c : dScMgBase_c {
     u8 mRubLocked;           /* 0x4c27 -- set at time up; UpdateRubbing stops */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgTeresa_c_Reveal_size_must_be_0x20[sizeof(dScMgTeresa_c::Reveal) == 0x20 ? 1 : -1];
 typedef char dScMgTeresa_c_BigBoo_size_must_be_0x1c[sizeof(dScMgTeresa_c::BigBoo) == 0x1c ? 1 : -1];
 typedef char dScMgTeresa_c_Marker_size_must_be_0xc[sizeof(dScMgTeresa_c::Marker) == 0xc ? 1 : -1];
@@ -309,6 +307,5 @@ typedef char dScMgTeresa_c_FoundNumber_size_must_be_0x14[sizeof(dScMgTeresa_c::F
                                                              : -1];
 typedef char dScMgTeresa_c_SmallBoo_size_must_be_0x24[sizeof(dScMgTeresa_c::SmallBoo) == 0x24 ? 1 : -1];
 typedef char dScMgTeresa_c_size_must_be_0x4c28[sizeof(struct dScMgTeresa_c) == 0x4c28 ? 1 : -1];
-#endif
 
 #endif

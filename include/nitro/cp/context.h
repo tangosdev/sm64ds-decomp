@@ -32,8 +32,6 @@ void CPi_RestoreContext(const CPContext *);
 }
 #endif
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char CPContext_size_must_be_0x1c[sizeof(CPContext) == 0x1c ? 1 : -1];
-#endif
 
 #endif /* NITRO_CP_CONTEXT_H */

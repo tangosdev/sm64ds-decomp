@@ -22,9 +22,7 @@ typedef struct Ov007StrokePath {
     void *pointStorage; /* alternate representation: 12 bytes per point */
 } Ov007StrokePath;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007StrokePath_size_must_be_48[sizeof(Ov007StrokePath) == 0x30 ? 1 : -1];
-#endif
 
 enum { OV007_PATH_PLANAR = 0, OV007_PATH_HAS_PROGRESS = 1 };
 

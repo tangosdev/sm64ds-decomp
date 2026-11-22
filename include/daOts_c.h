@@ -113,9 +113,7 @@ struct BullyResourceConfig {
     u32 particleId;   /* +0x30 -- first of two ids func_ov064_0211616c spawns */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char BullyResourceConfig_size_must_be_0x34[sizeof(BullyResourceConfig) == 0x34 ? 1 : -1];
-#endif
 
 struct daOts_c : dEnemyBase_c {
     /* A view of the whole object that names the bytes 0x398..0x3f9, which the
@@ -257,14 +255,11 @@ struct daOts_c : dEnemyBase_c {
     };
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daOts_c_size_must_be_0x398[sizeof(daOts_c) == 0x398 ? 1 : -1];
 /* Tail is a view over the whole object, ending with the last byte this class's
    helpers write (0x3f9); 0x3fa bytes round up to 0x3fc. It is NOT a member
    layout: the children's own fields start at 0x3fa. */
 typedef daOts_c::Tail daOts_c_Tail;
 typedef char daOts_c_Tail_size_must_be_0x3fc[sizeof(daOts_c_Tail) == 0x3fc ? 1 : -1];
-#endif
 
 #endif /* DAOTS_C_H */

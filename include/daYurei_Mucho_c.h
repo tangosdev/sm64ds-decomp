@@ -81,9 +81,6 @@ struct daYurei_Mucho_c : dEnemyBase_c {
  * factory is `return new daYurei_Mucho_c()`, which calls the inherited
  * fBase_c::operator new (`_ZN7fBase_cnwEm`). */
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daYurei_Mucho_c_size_must_be_0x3e4[sizeof(daYurei_Mucho_c) == 0x3e4 ? 1 : -1];
-#endif
 
 #endif /* DAYUREI_MUCHO_C_H */

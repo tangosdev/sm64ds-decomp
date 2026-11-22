@@ -264,9 +264,6 @@ struct daStar_c : dEnemyBase_c {
     void StateLaunch();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char PowerStar_size_must_be_0x4c4[sizeof(daStar_c) == 0x4c4 ? 1 : -1];
-#endif
 
 #endif /* DASTAR_C_H */

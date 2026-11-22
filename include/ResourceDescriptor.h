@@ -15,8 +15,6 @@ struct ResourceDescriptor {
     CLPS_Block *clps;
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char ResourceDescriptor_size_must_be_0x0c[sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
-#endif
 
 #endif

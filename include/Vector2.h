@@ -52,10 +52,7 @@ typedef struct Vector2 {
 } Vector2;
 
 #ifdef __cplusplus
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Vector2_size_must_be_0x8[sizeof(Vector2) == 8 ? 1 : -1];
-#endif
 #endif
 
 #endif

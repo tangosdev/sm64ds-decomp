@@ -70,9 +70,6 @@ struct daBgSnmHed_c : dActor_c {
     void SetState(int state);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SnowmanHead_size_must_be_0x338[sizeof(daBgSnmHed_c) == 0x338 ? 1 : -1];
-#endif
 
 #endif

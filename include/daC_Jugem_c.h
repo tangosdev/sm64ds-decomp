@@ -97,9 +97,6 @@ struct daC_Jugem_c : dEnemyBase_c {
     void UpdateShadowPlayer();   /* ambient variant: own shadow plus one ahead of the player */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daC_Jugem_c_size_must_be_0x2e8[sizeof(daC_Jugem_c) == 0x2e8 ? 1 : -1];
-#endif
 
 #endif /* DAC_JUGEM_C_H */

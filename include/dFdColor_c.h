@@ -59,9 +59,6 @@ inline dFdColor_c::dFdColor_c(fx32 initial) : dFdBrightness_c(initial) {
     color = 0;
 }
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dFdColor_c_size_must_be_0x10[sizeof(dFdColor_c) == 0x10 ? 1 : -1];
-#endif
 
 #endif /* DFDCOLOR_C_H */

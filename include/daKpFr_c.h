@@ -38,11 +38,8 @@ struct daKpFrState {
     daKpFrStateMethod behavior;
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKpFrState_size_must_be_0x10[
     sizeof(daKpFrState) == 0x10 ? 1 : -1];
-#endif
 
 struct daKpFr_c : dActor_c {
     dExtShadowModel_c        mShadowModel;           /* 0x0d4 */
@@ -88,10 +85,7 @@ struct daKpFr_c : dActor_c {
     void SetState(int idx);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKpFr_c_size_must_be_0x330[
     sizeof(daKpFr_c) == 0x330 ? 1 : -1];
-#endif
 
 #endif /* DAKPFR_C_H */

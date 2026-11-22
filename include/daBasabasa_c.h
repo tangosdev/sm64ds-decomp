@@ -88,9 +88,6 @@ struct daBasabasa_c : dEnemyBase_c {
     int ExecutePerch();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daBasabasa_c_size_must_be_0x440[sizeof(daBasabasa_c) == 0x440 ? 1 : -1];
-#endif
 
 #endif /* DABASABASA_C_H */

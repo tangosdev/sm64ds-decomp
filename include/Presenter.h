@@ -106,7 +106,6 @@ struct Presenter {
     s32 mQuiet;       /* 0x1a8 -- while 0 the Play* calls play their sound (func_02012174) */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char PresenterModelFilePtr_size_must_be_0x8[sizeof(PresenterModelFilePtr) == 0x8 ? 1 : -1];
 typedef char
     PresenterAnimationFileHandle_size_must_be_0x8[sizeof(PresenterAnimationFileHandle) == 0x8 ? 1
@@ -114,6 +113,5 @@ typedef char
 typedef char
     PresenterTexSeqFileHandle_size_must_be_0x8[sizeof(PresenterTexSeqFileHandle) == 0x8 ? 1 : -1];
 typedef char Presenter_size_must_be_0x1ac[sizeof(Presenter) == 0x1ac ? 1 : -1];
-#endif
 
 #endif

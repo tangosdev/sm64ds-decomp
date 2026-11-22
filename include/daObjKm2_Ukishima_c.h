@@ -21,9 +21,6 @@ struct daObjKm2_Ukishima_c : daObjUkiyuka_c {
     virtual s32 InitResources();    /* slot 0 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjKm2_Ukishima_c_size_must_be_0x32c[sizeof(daObjKm2_Ukishima_c) == 0x32c ? 1 : -1];
-#endif
 
 #endif /* DAOBJKM2_UKISHIMA_C_H */

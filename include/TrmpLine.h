@@ -88,9 +88,7 @@ struct TrmpLine {
     u8 pad_32a[0x2];        /* 0x32a */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char TrmpLine_Vtx_size_must_be_0xc[sizeof(TrmpLine::Vtx) == 0xc ? 1 : -1];
 typedef char TrmpLine_size_must_be_0x32c[sizeof(TrmpLine) == 0x32c ? 1 : -1];
-#endif
 
 #endif

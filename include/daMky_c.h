@@ -179,11 +179,8 @@ struct daMky_c : dActor_c {
     virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char
     daMky_c_StateFunctions_size_must_be_0x10[sizeof(daMky_c::StateFunctions) == 0x10 ? 1 : -1];
 typedef char daMky_c_size_must_be_0x3cc[sizeof(daMky_c) == 0x3cc ? 1 : -1];
-#endif
 
 #endif

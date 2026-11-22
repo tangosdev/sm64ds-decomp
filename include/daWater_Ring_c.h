@@ -88,9 +88,6 @@ struct daWater_Ring_c : dEnemyBase_c {
     void UpdateModel();               /* 0x02119f1c: matrix and opacity */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daWater_Ring_c_size_must_be_0x390[sizeof(daWater_Ring_c) == 0x390 ? 1 : -1];
-#endif
 
 #endif /* DAWATER_RING_C_H */

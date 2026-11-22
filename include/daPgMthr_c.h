@@ -89,9 +89,6 @@ struct daPgMthr_c : dActor_c {
     void ChangeState(int i);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char MotherPenguin_size_must_be_0x38c[sizeof(daPgMthr_c) == 0x38c ? 1 : -1];
-#endif
 
 #endif

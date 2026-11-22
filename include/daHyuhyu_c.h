@@ -75,10 +75,7 @@ struct daHyuhyu_c : dEnemyBase_c {
     void UpdateModelTransform();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daHyuhyu_c_size_must_be_0x378[sizeof(daHyuhyu_c) == 0x378 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

@@ -78,12 +78,9 @@ struct daObjFloatBoard_c_Resources {
     CLPS_Block *clps;         /* 0x08 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char
     daObjFloatBoard_c_Resources_size_must_be_0x0c[sizeof(daObjFloatBoard_c_Resources) == 0x0c ? 1
                                                                                               : -1];
-#endif
 
 struct daObjFloatBoard_c : dBgActor_c {
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
@@ -133,10 +130,7 @@ struct daObjFloatBoard_c : dBgActor_c {
     virtual int InitResources() = 0; /* slot  0 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjFloatBoard_c_size_must_be_0x348[sizeof(daObjFloatBoard_c) == 0x348 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

@@ -87,9 +87,6 @@ struct daOnms_c : dBgActor_c {
     static const s8  sBankAxis[64];         /* 0x0213208c */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daOnms_c_size_must_be_0x594[sizeof(struct daOnms_c) == 0x594 ? 1 : -1];
-#endif
 
 #endif

@@ -45,7 +45,7 @@ that packaging completes every interface.
 - 147 affected sources were enumerated across the changed headers; the production
   build recompiles affected consumers. Both direct caller linkchecks independently
   report VERIFIED, zero warnings and zero blocking failures.
-- `port_refcheck.py`: 408 references resolve. Converted ratchet passes without
+- Converted ratchet passes without
   backslide exceptions. Commit-range relocation and attribution checks follow
   the immutable checkpoint and are recorded in the worktree build logs.
 - The stock control retains nine existing dsd symbol diagnostics; the intact-TU

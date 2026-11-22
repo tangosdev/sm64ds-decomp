@@ -18,9 +18,6 @@ struct dBgPc {
     ~dBgPc();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgPc_size_must_be_0x14[sizeof(struct dBgPc) == 0x14 ? 1 : -1];
-#endif
 
 #endif /* DBGPC_H */

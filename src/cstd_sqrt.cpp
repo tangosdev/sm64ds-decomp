@@ -17,7 +17,6 @@ int sqrt(unsigned long long x)
 
 /* Zero angles copied by the mascot walker and the ? block. File-local so the
    registration can alias the existing arm9 destructor. */
-#ifndef SM64DS_PLATFORM_PC
 struct ZeroVector3s {
     short x;
     short y;
@@ -28,4 +27,3 @@ struct ZeroVector3s {
 };
 
 ZeroVector3s data_020a0edc;
-#endif

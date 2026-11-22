@@ -31,9 +31,7 @@ typedef struct Ov007SpriteGroup {
     int word14;              /* 0x14: 0 on build */
 } Ov007SpriteGroup;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007SpriteItem_size_must_be_0xc[sizeof(Ov007SpriteItem) == 0xc ? 1 : -1];
 typedef char Ov007SpriteGroup_size_must_be_0x18[sizeof(Ov007SpriteGroup) == 0x18 ? 1 : -1];
-#endif
 
 #endif

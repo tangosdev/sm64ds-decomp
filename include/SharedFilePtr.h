@@ -38,7 +38,7 @@ struct SharedFilePtr {
     void *LoadFile();
     /* Load's return type comes from its DEFINITION, not from a caller:
        src/SharedFilePtr.cpp's Load returns the buffer it just stashed in
-       filePtr. The host seam in port/hal/fs.cpp returns the same pointer. LoadFile only
+       filePtr. LoadFile only
        tests it (`if (!Load()) return 0;`), which is why a wrong `int` here
        went unnoticed. A return type is not part of an Itanium mangled name,
        so this changes no symbol. */
@@ -59,13 +59,9 @@ struct SharedFilePtr {
     void *func_020178cc(unsigned int);
     int func_020178b4();
     void *func_0201787c();
-    void *SharedFilePtr_Construct_TexSeq(unsigned int);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SharedFilePtr_size_must_be_0x8[sizeof(SharedFilePtr) == 0x8 ? 1 : -1];
-#endif
 
 /* The C veneers for the texture-sequence and animation handles; their
  * definitions live in src/SharedFilePtr.cpp. The self parameter is the
@@ -73,6 +69,7 @@ typedef char SharedFilePtr_size_must_be_0x8[sizeof(SharedFilePtr) == 0x8 ? 1 : -
 #ifdef __cplusplus
 extern "C" {
 #endif
+void *SharedFilePtr_Construct_TexSeq(void *, unsigned int);
 int SharedFilePtr_Destruct_Anim(int);
 int SharedFilePtr_Destruct_TexSeq(int);
 #ifdef __cplusplus

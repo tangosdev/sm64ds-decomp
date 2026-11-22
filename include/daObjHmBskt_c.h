@@ -46,9 +46,6 @@ struct daObjHmBskt_c : dBgActor_c {
     int CheckLanding(dBgCh_Actr *);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjHmBskt_c_size_must_be_0x4e0[sizeof(daObjHmBskt_c) == 0x4e0 ? 1 : -1];
-#endif
 
 #endif /* DAOBJHMBSKT_C_H */

@@ -87,9 +87,6 @@ struct daWanwan_c : dEnemyBase_c {
     void UpdateModelTransform();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daWanwan_c_size_must_be_0x620[sizeof(daWanwan_c) == 0x620 ? 1 : -1];
-#endif
 
 #endif /* DAWANWAN_C_H */

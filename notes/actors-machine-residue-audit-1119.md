@@ -201,14 +201,7 @@ that a name would be a guess, and a confident wrong name costs more than
 `func_ov002_020f7780` does: it asserts something no one verified. They need
 real analysis first.
 
-## Two tooling notes for whoever picks this up
-
-The port reference check **no longer exists** in this tree, although
-`AGENTS.md` still lists it as required before a rename or file move. The port
-itself moved to its own repository (#5633), so a rename here is checked by
-that repository's build, not by a script in this one. Symbol renames like the
-ones above do not move files; a file move still needs the port repository's
-build to confirm nothing it points at went missing.
+## A tooling note for whoever picks this up
 
 `python tools/rombuild.py -j16 --no-rom`, the local byte gate `AGENTS.md`
 prescribes, **exits 1 on clean `main`** in this workspace. Measured over three

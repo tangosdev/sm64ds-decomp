@@ -239,18 +239,9 @@ int daObjPushblock_c::CleanupResources() {
  * OnHitByCannonBlastedChar) which DO return values -- the same unfalsifiable
  * shape already analysed for slot 19, where four constrained overrides settle it.
  *
- * Harmless for the ROM build. NOT harmless for the host port: a C++ caller that
- * reads this result gets garbage. If the port ever branches on OnPushed's return,
- * that is the bug, and the fix is upstream in dActor_c.h's slot-25 return type --
- * not a `return 0;` here, which would desync the bytes. */
-/* THE EARLY EXITS ARE SPELT AS NESTED IFS, NOT `return;`. mwccarm accepts a
-   valueless `return` in a non-void function; C++ does not, and no host option
-   reaches it (MSVC C2561). The ROM sets no return value on these paths -- it
-   leaves r0 holding whatever the last call left there and branches straight to
-   the epilogue -- so the faithful shape is a body that reaches its closing
-   brace with nothing to return, which is what the host already accepts for the
-   rest of this family. Byte-identical under 2004/b56: the compiled object is
-   unchanged. */
+ * The ROM sets no return value on the early exits: r0 keeps whatever the last
+ * call left there, and the body falls through to the epilogue. A bare `return`
+ * is not valid C++ in a function that returns int. */
 int daObjPushblock_c::OnPushed(dActor_c &other) {
     dActor_c *pusher = &other;
     if (pusher != 0) {

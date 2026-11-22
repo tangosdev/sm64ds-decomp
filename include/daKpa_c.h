@@ -200,9 +200,6 @@ struct daKpa_c : dActor_c {
     void SpawnShockwave();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Bowser_size_must_be_0x454[sizeof(daKpa_c) == 0x454 ? 1 : -1];
-#endif
 
 #endif

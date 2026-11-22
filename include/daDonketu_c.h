@@ -41,9 +41,6 @@ struct daDonketu_c : daOts_c {
     virtual void PlayDeathSound();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daDonketu_c_size_must_be_0x400[sizeof(daDonketu_c) == 0x400 ? 1 : -1];
-#endif
 
 #endif /* DADONKETU_C_H */

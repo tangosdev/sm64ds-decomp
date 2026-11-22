@@ -41,15 +41,9 @@ extern int AngleDiff(int a, int b);
 }
 extern void ApproachVec3fAsymptotic(Vector3 *self, const Vector3 *src, int sx, int sy, int sz);
 
-#ifdef _MSC_VER
-/* Host definition of the one destructor MSVC emits. The flat D0 name is
- * port/hal/host_d0.cpp. Nothing in this arm reaches mwccarm. */
-dCamera_c::~dCamera_c() {}
-#else
 #pragma defer_codegen off
 
 dCamera_c::~dCamera_c() {}
-#endif
 
 void func_020070e8(dCamera_c *cam, int distTarget, int distStep, short vertTarget, short vertDiv,
                    short horzTarget, short horzDiv) {

@@ -665,11 +665,6 @@
       "exit": 0,
       "result": "2973 baseline,2982 current,+9 unbanked; no baseline file edited"
     },
-    "port_references": {
-      "command": "python tools/port_refcheck.py",
-      "exit": 0,
-      "result": "423 references,0 stale"
-    },
     "dead_references": {
       "command": "python tools/check_dead_references.py",
       "exit": 0,

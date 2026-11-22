@@ -122,9 +122,6 @@ struct daWanwan2_c : dEnemyBase_c {
     int SetState(ChompState *p);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daWanwan2_c_size_must_be_0x7a4[sizeof(daWanwan2_c) == 0x7a4 ? 1 : -1];
-#endif
 
 #endif /* DAWANWAN2_C_H */

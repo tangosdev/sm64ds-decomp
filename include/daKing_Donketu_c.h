@@ -219,11 +219,8 @@ struct daKing_Donketu_c : dEnemyBase_c {
     void UpdateModelAndShadow();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKing_Donketu_c_size_must_be_0x504[
     sizeof(daKing_Donketu_c) == 0x504 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

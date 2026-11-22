@@ -23,12 +23,10 @@
  *     0x0c/0x10: a count, a table of {count, pointer} groups, and 0x10-byte
  *     records whose +0x04 and +0x0c are both file-relative.
  *   * Three names here -- BMD_Material::name / textureId / paletteId, and the
- *     matching BMD_Texture::name and BMD_Palette::name -- come from the host
- *     port instead: port/ntr/bmd.cpp parses these offsets and renders Mario
- *     correctly out of them, naming his four materials mat_bm_body / _eye /
- *     _head / _head_c against textures mario_body / _eye_1 / _head. That is
- *     empirical rather than read out of matched ARM, and it is flagged as such
- *     in notes/system-provenance.md.
+ *     matching BMD_Texture::name and BMD_Palette::name -- are Mario's four
+ *     materials mat_bm_body / _eye / _head / _head_c and textures mario_body /
+ *     _eye_1 / _head. That is empirical rather than read out of matched ARM,
+ *     and it is flagged as such in notes/system-provenance.md.
  *
  * Field NAMES are inferred from that behaviour and cannot change codegen.
  * Offsets and strides are pinned by the bytes. Records keep explicit
@@ -62,8 +60,7 @@ struct BMD_Bone {
 
 /* One 0x10-byte display-list record. dExtSimpleModel_c::UpdateFileOffsets rebases the
    words at +0x04 and +0x0c, which is the evidence that both are file-relative
-   offsets; the host port reads +0x08 as the byte size of the stream at +0x0c
-   and feeds that stream straight to the geometry engine (port/ntr/bmd.cpp). */
+   offsets. size is the byte length of the command stream at data. */
 struct BMD_DisplayList {
     u32 unk_00;
     void *unk_04;          /* 0x04 - file-relative, fixed up on load */
@@ -140,14 +137,11 @@ struct BMD_File {
 #endif
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BMD_DisplayList_size_must_be_0x10[sizeof(struct BMD_DisplayList) == 0x10 ? 1 : -1];
 typedef char BMD_DisplayListGroup_size_must_be_0x8[sizeof(struct BMD_DisplayListGroup) == 0x8 ? 1 : -1];
 typedef char BMD_Bone_size_must_be_0x40[sizeof(struct BMD_Bone) == 0x40 ? 1 : -1];
 typedef char BMD_Material_size_must_be_0x30[sizeof(struct BMD_Material) == 0x30 ? 1 : -1];
 typedef char BMD_Texture_size_must_be_0x14[sizeof(struct BMD_Texture) == 0x14 ? 1 : -1];
 typedef char BMD_Palette_size_must_be_0x10[sizeof(struct BMD_Palette) == 0x10 ? 1 : -1];
-#endif
 
 #endif /* BMD_FILE_H */

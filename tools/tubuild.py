@@ -6660,7 +6660,7 @@ def _record_linkcheck(data, entry, report, baseline):
 _PROMOTE_TRACKERS_LIVE = (
     "config/rombuild-versions.txt", "config/rombuild-exclude.txt",
     "config/layout-known-issues.txt",
-    "config/unresolved-baseline.json", "config/port_linkage.json",
+    "config/unresolved-baseline.json",
     "langmode-baseline.json",
     "stranding-baseline.json",
 )

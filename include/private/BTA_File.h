@@ -39,8 +39,6 @@ typedef struct BTA_File {
     BTAMaterialRecord *materialRecords;
 } BTA_File;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char BTAMaterialRecord_size_must_be_0x1c[sizeof(BTAMaterialRecord) == 0x1c ? 1 : -1];
-#endif
 
 #endif

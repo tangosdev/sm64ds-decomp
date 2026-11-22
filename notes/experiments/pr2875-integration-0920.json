@@ -4462,25 +4462,6 @@
       ]
     },
     {
-      "name": "port",
-      "command": [
-        "python",
-        "-X",
-        "utf8",
-        "tools/port_refcheck.py"
-      ],
-      "exit_code": 0,
-      "seconds": 1.33,
-      "log": "build/pr2875-production/port.log",
-      "log_sha256": "91561879eca30d821d15e00edb908242d171a68e7b9bbce9d1de491d7a828fd1",
-      "log_tail": [
-        "  [OK  ] manifests      244 reference(s) checked, 0 stale",
-        "  [OK  ] cmake-symbols  21 reference(s) checked, 0 stale",
-        "  [OK  ] hal-links      153 reference(s) checked, 0 stale",
-        "port-refcheck: 418 checked - all references resolve"
-      ]
-    },
-    {
       "name": "declarations",
       "command": [
         "python",

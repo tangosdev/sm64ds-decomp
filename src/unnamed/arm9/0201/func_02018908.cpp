@@ -1,11 +1,7 @@
 //cpp
 #include "types.h"
 #include "Heap.h"
-
-/* A mounted .narc archive (src/engine/sound/SoundEngine.cpp). */
-struct S82 {
-    int func_0204ee10();
-};
+#include "private/s82_view.h"
 
 extern "C" {
 

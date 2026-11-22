@@ -34,9 +34,8 @@ Four families are counted:
                      stack for those (+0x14) on every one of the 25 sweep versions at
                      every optimization level. See runbook section 7.
 
-Every src file is read as mwccarm compiles it (msvc_arms.mwcc_side, see _source_text):
-an `#ifdef _MSC_VER` arm is the PC port's host build, not decomp source, so a flat
-`extern "C" ... _ZN5ModelD0Ev(...)` definition inside one is not a hand-spelled symbol.
+Every src file is read as mwccarm compiles it (msvc_arms.mwcc_side, see _source_text).
+An `#ifdef _MSC_VER` arm is blanked, because mwccarm never defines that macro.
 
 Usage:
     python tools/langmode_audit.py                    # human summary
@@ -80,7 +79,7 @@ import srcpath as SP  # noqa: E402
 
 
 def _source_text(path):
-    """A tracked source as mwccarm sees it: `_MSC_VER` host arms dropped.
+    """A tracked source as mwccarm sees it: `_MSC_VER` arms dropped.
 
     Raises OSError like read_text, so every caller keeps its own fallback.
     """

@@ -34,9 +34,7 @@ typedef struct CaptureEffect {
     CaptureEffectWork work;   /* 0x0c */
 } CaptureEffect;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char CaptureEffect_size_must_be_0xcc[sizeof(CaptureEffect) == 0xcc ? 1 : -1];
-#endif
 
 #ifdef __cplusplus
 extern "C" {

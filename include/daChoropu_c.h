@@ -138,9 +138,6 @@ struct daChoropu_c : dActor_c {
     void UpdateModelMatrix(); /* 0x021243d8 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daChoropu_c_size_must_be_0x18c[sizeof(daChoropu_c) == 0x18c ? 1 : -1];
-#endif
 
 #endif

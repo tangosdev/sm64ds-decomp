@@ -441,16 +441,6 @@
           "log": "build\\piano-native-lifecycle1014\\decl-global.log"
         },
         {
-          "name": "port",
-          "command": [
-            "python",
-            "tools/port_refcheck.py"
-          ],
-          "exit_code": 0,
-          "seconds": 1.74,
-          "log": "build\\piano-native-lifecycle1014\\port.log"
-        },
-        {
           "name": "langmode",
           "command": [
             "python",

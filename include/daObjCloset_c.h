@@ -86,9 +86,6 @@ struct daObjCloset_c : dActor_c {
     virtual s32 Behavior();         /* slot  6 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjCloset_c_size_must_be_0x21c[sizeof(daObjCloset_c) == 0x21c ? 1 : -1];
-#endif
 
 #endif

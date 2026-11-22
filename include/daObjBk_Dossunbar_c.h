@@ -49,9 +49,6 @@ struct daObjBk_Dossunbar_c : dBgActor_c {
     virtual ~daObjBk_Dossunbar_c() {}
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjBk_Dossunbar_c_size_must_be_0x338[sizeof(daObjBk_Dossunbar_c) == 0x338 ? 1 : -1];
-#endif
 
 #endif /* DAOBJBK_DOSSUNBAR_C_H */

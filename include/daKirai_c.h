@@ -69,10 +69,7 @@ struct daKirai_c : dActor_c {
     void StateArmed();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKirai_c_size_must_be_0x1b0[sizeof(daKirai_c) == 0x1b0 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

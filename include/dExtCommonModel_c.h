@@ -44,17 +44,7 @@ struct dExtCommonModel_c : dExtModel_c {
     dExtCommonModel_c();
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    /* The destructor pair spelled as two plain virtuals on the host, plus the
-       non-virtual destructor declaration the src/ definitions need; the whole
-       ruling is in include/dExtModel_c.h. Overrides take their base's slots, so
-       these carry the SAME TWO NAMES dExtModel_c declares. */
-#ifdef _MSC_VER
-    virtual void Destructor1();                       /* slot 0 (D1) */
-    virtual void Destructor0();                       /* slot 1 (D0) */
-    ~dExtCommonModel_c();                                   /* no slot */
-#else
     virtual ~dExtCommonModel_c();                           /* slots 0 (D1), 1 (D0) */
-#endif
     virtual int DoSetFile(char *file, int a, int b);  /* slot 2 */
 
     /* --- non-virtual --- */
@@ -63,9 +53,6 @@ struct dExtCommonModel_c : dExtModel_c {
     void SetMaterialFlags(u32 flags); /* ORs flags into every material */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dExtCommonModel_c_size_must_be_0x3c[sizeof(dExtCommonModel_c) == 0x3c ? 1 : -1];
-#endif
 
 #endif /* DEXTCOMMONMODEL_C_H */

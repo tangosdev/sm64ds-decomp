@@ -21,10 +21,7 @@ struct daObjWcObj06_c : daObjFloatBoard_c {
     virtual ~daObjWcObj06_c() {}
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjWcObj06_c_size_must_be_0x348[sizeof(daObjWcObj06_c) == 0x348 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

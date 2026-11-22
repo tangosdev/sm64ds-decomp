@@ -134,10 +134,7 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
    that function's local query object an exact 0x110 stack slot, and compiling
    it against a 0x10c declaration came out one word short of the frame. That
    local is now declared as this real type. */
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgCh_SphCrr_size_must_be_0x110[
     sizeof(dBgCh_SphCrr) == 0x110 ? 1 : -1];
-#endif
 
 #endif

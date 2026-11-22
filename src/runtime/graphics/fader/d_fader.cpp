@@ -9,11 +9,6 @@
  * synthesized variants with the definition, so D2, D0 and D1 land at
  * 0x02017838..0x0201787c in cartridge order.
  *
- * For the host port only the non-hardware members compile; the structors, the
- * GX/CP15/MMIO writers and the dExtSimpleModel_c-/filesystem-touching dFdWipe_c members
- * stay NDS-only behind _MSC_VER, exactly the subset port/slice_gate1.txt and
- * port/hal/shims.cpp already arrange.
- *
  * leftovers:
  * - The 0x400xxxx MMIO addresses stay literal; no shared register-name
  *   header owns them.
@@ -34,7 +29,6 @@
 #include "nitro/os/cache.h"
 int ApproachLinear(fx32 &value, fx32 target, fx32 step);
 
-#ifndef _MSC_VER
 dFader_c::~dFader_c()
 {
 }
@@ -67,7 +61,6 @@ void dFdBrightness_c::AdvanceFade()
     GX_LoadBGPltt(data_0209d3ac, 0, 2);
     GXS_LoadBGPltt(data_0209d3ac, 0, 2);
 }
-#endif
 
 /* Fade out over `frames` frames: the same rate with the sign flipped.
    `extra` is not read. Callers still pass it (always 0). */
@@ -133,7 +126,6 @@ void dFader_c::AdvanceInterp()
     ApproachLinear(currInterp, target, step);
 }
 
-#ifndef _MSC_VER
 dFdColor_c::~dFdColor_c()
 {
 }
@@ -216,8 +208,6 @@ void dFdWipe_c::LoadAndSetFile(u16 ov0ID)
     model.LoadAndSetFile(ov0ID, 0, -1);
 }
 
-/* Host build has no dFdDummy_c structor coverage: port/hal/shims.cpp stands
-   in for the fader-family destructors it exercises. */
 dFdDummy_c::dFdDummy_c()
 {
 }
@@ -225,7 +215,6 @@ dFdDummy_c::dFdDummy_c()
 dFdDummy_c::~dFdDummy_c()
 {
 }
-#endif
 
 /* Vtable slot 2. The whole body is a tail call into the base chain's own
    AdvanceInterp -- `this' rides through in r0 untouched, which is exactly

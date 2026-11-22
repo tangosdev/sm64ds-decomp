@@ -30,9 +30,6 @@ struct daObjFire_c : dActor_c {
     virtual void OnTurnIntoEgg(daPly_c &player); /* slot 19 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjFire_c_size_must_be_0x118[sizeof(daObjFire_c) == 0x118 ? 1 : -1];
-#endif
 
 #endif /* DAOBJFIRE_C_H */

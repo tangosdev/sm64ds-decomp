@@ -342,18 +342,14 @@ extern unsigned char NumStars(void);
 
 /* Empty body: the member/base teardown and the D1/D0 pair are compiler-
  * generated. */
-#ifndef _MSC_VER
 daKpa_c::~daKpa_c()
 {
 }
-#endif
 
 /* Empty body, as for Bowser's. */
-#ifndef _MSC_VER
 daKpaTail_c::~daKpaTail_c()
 {
 }
-#endif
 
 #pragma defer_codegen on
 

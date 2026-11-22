@@ -184,9 +184,6 @@ struct daJango_c : dEnemyBase_c {
     void UpdateModelAndShadow(); /* per-frame matrices */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Klepto_size_must_be_0x490[sizeof(daJango_c) == 0x490 ? 1 : -1];
-#endif
 
 #endif /* DAJANGO_C_H */

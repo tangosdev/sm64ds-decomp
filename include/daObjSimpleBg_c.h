@@ -33,8 +33,6 @@ struct daObjSimpleBg_c : dBgActor_c {
     int Render();
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char daObjSimpleBg_c_size_must_be_0x320[sizeof(daObjSimpleBg_c) == 0x320 ? 1 : -1];
-#endif
 
 #endif /* DAOBJSIMPLEBG_C_H */

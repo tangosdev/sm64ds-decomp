@@ -195,9 +195,6 @@ struct daObjTatefuda_c : dBgActor_c {
     };
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjTatefuda_c_size_must_be_0x5a4[sizeof(daObjTatefuda_c) == 0x5a4 ? 1 : -1];
-#endif
 
 #endif

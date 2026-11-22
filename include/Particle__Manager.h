@@ -106,14 +106,11 @@ struct Manager {
 
 void SetSelfDestructFlag(u32 definitionID);
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SystemDefinition_size_must_be_0x20[
     sizeof(SystemDefinition) == 0x20 ? 1 : -1];
 typedef char TextureEntry_size_must_be_0x14[sizeof(Manager::TextureEntry) == 0x14 ? 1 : -1];
 typedef char Manager_size_must_be_0x3c[
     sizeof(Manager) == 0x3c ? 1 : -1];
-#endif
 
 }
 

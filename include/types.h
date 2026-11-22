@@ -12,31 +12,12 @@ typedef signed int     s32;
 typedef unsigned long long u64;
 typedef signed long long   s64;
 
-/* size_t, which C++ requires as the first parameter of every `operator new`.
-   The two compilers that build this tree spell it differently and each refuses
-   the other's spelling, because the rule is on the TYPE and not on the width --
-   all three candidates are four bytes here. mwccarm rejects
-   `operator new(unsigned int)` with "illegal 'operator' declaration"; 32-bit
-   MSVC rejects `operator new(unsigned long)` with C2821, "first formal
-   parameter to 'operator new' must be 'size_t'". Neither arm below is visible
-   to the other compiler, so no ROM byte moves: mwccarm keeps the `unsigned
-   long` the nine actor headers already declared. */
-#ifdef _MSC_VER
-#include <stddef.h>          /* the host's own size_t, so the host rule holds by definition */
-#else
+/* size_t is unsigned long: that is the spelling mwccarm accepts as the
+   first parameter of operator new. */
 typedef unsigned long size_t;
-#endif
 
-/* Pointer-sized signed integer: an address kept in an integer. The DS build is
-   32-bit only, so mwccarm spells an address `int`; a 64-bit host needs the
-   wider type, which the host's own header owns. Casts through it are byte-free
-   on the DS build (`intptr_t` and `int` are then the same type) and stay
-   correct wherever a pointer no longer fits an `int`. */
-#ifdef _MSC_VER
-#include <stdint.h>
-#else
+/* An address kept in an integer. The cartridge is 32-bit, so this is a signed int. */
 typedef signed int intptr_t;
-#endif
 
 /* NitroSDK's fixed-point scalars (nitro/fx/fx.h): fx32 is 20.12 in an s32,
    fx16 is 4.12 in an s16. Declared here under the same guard as fx.h so every
@@ -103,10 +84,7 @@ inline Vector3::Vector3(fx32 x_, fx32 y_, fx32 z_) : x(x_), y(y_), z(z_) {}
 #ifdef __cplusplus
 /* 0xc, and the ROM agrees twice over: daKing_Donketu_c's arrays stride by 0xc and
    its __cxa_vec_cleanup calls pass 0xc as the element size. */
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Vector3_size_must_be_0xc[sizeof(Vector3) == 0xc ? 1 : -1];
-#endif
 #endif
 
 typedef struct Vector3s {
@@ -128,10 +106,7 @@ typedef struct Vector3s {
 } Vector3s;
 
 #ifdef __cplusplus
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Vector3s_size_must_be_0x6[sizeof(Vector3s) == 6 ? 1 : -1];
-#endif
 #endif
 
 

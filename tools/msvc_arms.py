@@ -1,20 +1,9 @@
 #!/usr/bin/env python3
 """The text of a source file as mwccarm sees it: `_MSC_VER` arms dropped.
 
-The PC port compiles some decomp translation units with MSVC, and a few of them carry
-a host-only arm:
-
-    #ifdef _MSC_VER
-    extern "C" Model *_ZN5ModelD0Ev(Model *thiz) { ... }   // what MSVC builds
-    #else
-    Model::~Model() { ... }                                 // what the ROM is built from
-    #endif
-
-mwccarm never defines `_MSC_VER`, so the ROM is built from the `#else` side alone. The
-scoreboards that read source as text (tools/langmode_audit.py for the language-mode
-counts) are questions about the decomp
-source, so they read the file through `mwcc_side()`: the side mwccarm compiles, and
-nothing the host build alone sees.
+mwccarm never defines `_MSC_VER`, so those arms are blanked and the `#else` side is
+what the ROM is built from. Scoreboards that read source as text
+(tools/langmode_audit.py) go through `mwcc_side()`.
 
 Only `_MSC_VER` is evaluated, and only in shapes whose answer does not depend on any
 other macro:
@@ -28,7 +17,7 @@ plus their `#elif` / `#else` / `#endif`. Any other condition that mentions `_MSC
 (`#if _MSC_VER >= 1300`, one joined with `||`) is left as it is and every side of it is
 read, which is how both tools read every conditional before this module existed;
 `unresolved()` names those lines so a report can say so. Other macros are never
-evaluated: `#if 0`, `SM64DS_PLATFORM_PC` and the rest read exactly as they did.
+evaluated: `#if 0` and every other macro read exactly as they did.
 
 Dropped lines become empty lines, so line numbers stay what they are in the file.
 Directives inside comments or literals are ignored. Files with continued lines or

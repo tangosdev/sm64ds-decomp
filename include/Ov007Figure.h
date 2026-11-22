@@ -37,8 +37,6 @@ struct Ov007Figure {
 #endif
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Figure_size_must_be_0x1c[sizeof(Ov007Figure) == 0x1c ? 1 : -1];
-#endif
 
 #endif

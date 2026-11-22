@@ -41,9 +41,7 @@ struct TreeNode {
     TreeNode *next;   /* 0x48 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char TreeNode_size_must_be_0x4c[sizeof(TreeNode) == 0x4c ? 1 : -1];
-#endif
 
 enum {
     kNumVariants = 5,

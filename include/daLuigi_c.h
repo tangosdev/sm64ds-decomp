@@ -62,10 +62,7 @@ struct daLuigi_c : dActor_c {
     static void func_ov055_02111264();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daLuigi_c_size_must_be_0x20c[sizeof(daLuigi_c) == 0x20c ? 1 : -1];
-#endif
 
 /* One state: two members called with the player, `enter` once by SetState
  * and `execute` every frame by Behavior. d_a_luigi.cpp defines the record;

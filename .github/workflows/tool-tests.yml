@@ -277,11 +277,9 @@ jobs:
 #                                      alias_names, which decides whether a source filed
 #                                      under a second name is found. Also drives the real
 #                                      chaos_db_ci over a fake repo for the counting rule.
-#   test_chaos_db_tiers         (31)   chaos_db_ci.py's per-function tier columns -- converted
-#                                      (per-symbol readings must sum to the stats.tiers
-#                                      headline), linked (the LINKED bar counts functions; a list
-#                                      from another port build than the stamp is refused),
-#                                      class and tuId/tuState.
+#   test_chaos_db_tiers         (15)   chaos_db_ci.py's per-function tier columns:
+#                                      class and tuId/tuState, and the LINKED bar,
+#                                      which counts enrolled functions.
 #   test_check_call_arity       (19)   check_call_arity.py -- the census of calls that
 #                                      pass fewer arguments than the callee declares:
 #                                      the matched-but-wrong signature, invisible to

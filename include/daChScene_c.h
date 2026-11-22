@@ -90,10 +90,7 @@ struct daChScene_c : dActor_c {
     void LoadDestinationLevel();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daChScene_c_size_must_be_0x104[sizeof(daChScene_c) == 0x104 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

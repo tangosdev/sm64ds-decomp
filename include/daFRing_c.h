@@ -70,8 +70,6 @@ struct daFRing_c : dActor_c {
     virtual s32 Render();
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char daFRing_c_size_must_be_0x218[sizeof(daFRing_c) == 0x218 ? 1 : -1];
-#endif
 
 #endif

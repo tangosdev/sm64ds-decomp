@@ -15,10 +15,7 @@ struct SoundPlayerRecord {
     u32 mPlayableSeqCount;          /* 0x018 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SoundPlayerRecord_size_must_be_0x1c[
     sizeof(struct SoundPlayerRecord) == 0x1c ? 1 : -1];
-#endif
 
 #endif

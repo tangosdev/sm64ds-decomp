@@ -150,9 +150,6 @@ struct daPopoi_c : dEnemyBase_c {
     int UpdateTurnAwayState(); /* TurnAway update */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daPopoi_c_size_must_be_0x42c[sizeof(daPopoi_c) == 0x42c ? 1 : -1];
-#endif
 
 #endif /* DAPOPOI_C_H */

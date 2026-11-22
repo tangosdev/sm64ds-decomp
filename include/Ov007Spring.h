@@ -61,11 +61,9 @@ typedef struct Ov007Grid {
     Ov007PointList **columnLists; /* 0x0c: one per column, rows points each */
 } Ov007Grid;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007Follower_size_must_be_0x24[sizeof(Ov007Follower) == 0x24 ? 1 : -1];
 typedef char Ov007Link_size_must_be_0x18[sizeof(Ov007Link) == 0x18 ? 1 : -1];
 typedef char Ov007PointList_size_must_be_0x14[sizeof(Ov007PointList) == 0x14 ? 1 : -1];
 typedef char Ov007Grid_size_must_be_0x10[sizeof(Ov007Grid) == 0x10 ? 1 : -1];
-#endif
 
 #endif

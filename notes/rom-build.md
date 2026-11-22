@@ -6,9 +6,9 @@ else. Then change a line of C, rebuild, and see the change in a running game.
 
 This is the "hybrid link" that ds-decomp is designed for. It does **not** require 100%
 matching first — at 97.9% of functions we can already source-build the overwhelming
-majority and let delinked gap objects supply the residue. Phase 1 of
-[`roadmap.md`](roadmap.md) ("`dsd rom build` turns the source back into the exact retail
-ROM") is the 100% version of the same pipeline; this document is the path to standing
+majority and let delinked gap objects supply the residue. Matching to 100%
+([`roadmap.md`](roadmap.md): "`dsd rom build` turns the source back into the exact retail
+ROM") is the complete version of the same pipeline; this document is the path to standing
 that pipeline up now.
 
 ## Status

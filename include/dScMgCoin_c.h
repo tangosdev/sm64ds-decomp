@@ -24,9 +24,7 @@ struct dScMgCoin_Coin {
     u8 bounces;   /* 0x16 */
     u8 pad17;     /* 0x17 */
 };
-#ifndef SM64DS_PLATFORM_PC
 typedef char dScMgCoin_Coin_size_must_be_0x18[sizeof(dScMgCoin_Coin) == 0x18 ? 1 : -1];
-#endif
 
 /* The running total just under the coins. shown walks up to total. */
 struct dScMgCoin_Score {
@@ -36,9 +34,7 @@ struct dScMgCoin_Score {
     u8 pad06[5]; /* 0x06 */
     u8 running;  /* 0x0b */
 };
-#ifndef SM64DS_PLATFORM_PC
 typedef char dScMgCoin_Score_size_must_be_0x0c[sizeof(dScMgCoin_Score) == 0x0c ? 1 : -1];
-#endif
 
 /* One of the 32 sparkles burst off a coin. */
 struct dScMgCoin_Sparkle {
@@ -53,9 +49,7 @@ struct dScMgCoin_Sparkle {
     u8 sprite;   /* 0x16 */
     u8 pad17;    /* 0x17 */
 };
-#ifndef SM64DS_PLATFORM_PC
 typedef char dScMgCoin_Sparkle_size_must_be_0x18[sizeof(dScMgCoin_Sparkle) == 0x18 ? 1 : -1];
-#endif
 
 /* The number that pops up over a coin that has just settled. */
 /* One of the 40 blocks that hop down the stages (Block_StateHopDown).
@@ -80,9 +74,7 @@ struct dScMgCoin_Block {
        finds the block by it. */
     u8 coin; /* 0x1b */
 };
-#ifndef SM64DS_PLATFORM_PC
 typedef char dScMgCoin_Block_size_must_be_0x1c[sizeof(dScMgCoin_Block) == 0x1c ? 1 : -1];
-#endif
 
 struct dScMgCoin_Popup {
     s32 x;       /* 0x00 */
@@ -93,9 +85,7 @@ struct dScMgCoin_Popup {
     u8 flag;     /* 0x0d */
     u8 pad0e[2]; /* 0x0e */
 };
-#ifndef SM64DS_PLATFORM_PC
 typedef char dScMgCoin_Popup_size_must_be_0x10[sizeof(dScMgCoin_Popup) == 0x10 ? 1 : -1];
-#endif
 
 /* The count-in caption. delay, frameTime, state and sprite are the
    animation; x/y are where it is drawn. */
@@ -111,9 +101,7 @@ struct dScMgCoin_Caption {
     u8 frame;      /* 0x10 */
     u8 pad11[3];   /* 0x11 */
 };
-#ifndef SM64DS_PLATFORM_PC
 typedef char dScMgCoin_Caption_size_must_be_0x14[sizeof(dScMgCoin_Caption) == 0x14 ? 1 : -1];
-#endif
 
 /* The moneybag. One record; the step still takes an index. */
 struct dScMgCoin_Bouncer {
@@ -131,9 +119,7 @@ struct dScMgCoin_Bouncer {
     u8 stage;       /* 0x19 */
     u8 pad1a[2];    /* 0x1a */
 };
-#ifndef SM64DS_PLATFORM_PC
 typedef char dScMgCoin_Bouncer_size_must_be_0x1c[sizeof(dScMgCoin_Bouncer) == 0x1c ? 1 : -1];
-#endif
 
 /* dScMgCoin_c : dScMgBase_c leaf. Slot 18 is StartRound; the old
    mislabel sat on D0. See dScMgBase_c.h. */
@@ -237,9 +223,6 @@ struct dScMgCoin_c : dScMgBase_c {
     u8 mClearedAll; /* 0x51df */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgCoin_c_size_must_be_0x51e0[sizeof(dScMgCoin_c) == 0x51e0 ? 1 : -1];
-#endif
 
 #endif

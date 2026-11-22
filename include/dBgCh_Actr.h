@@ -200,11 +200,8 @@ struct dBgCh_Actr : dBgCh {
     void func_02038414();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgCh_Actr_size_must_be_0x1bc[
     sizeof(dBgCh_Actr) == 0x1bc ? 1 : -1];
-#endif
 
 /* The arm9 tail-call veneers over the Update* members, defined in
    src/engine/collision/d_bg_ch_sph_crr_query.cpp. Each is its own ROM

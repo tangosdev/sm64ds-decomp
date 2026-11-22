@@ -46,10 +46,7 @@ struct daObjFl_KomaU_c : dBgActor_c {
     virtual s32 Render();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjFl_KomaU_c_size_must_be_0x540[sizeof(daObjFl_KomaU_c) == 0x540 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

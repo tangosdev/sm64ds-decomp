@@ -41,9 +41,6 @@ struct daObjIceBoard_c : dBgActor_c {
     virtual ~daObjIceBoard_c() {} /* slots 16, 17 */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjIceBoard_c_size_must_be_0x320[sizeof(daObjIceBoard_c) == 0x320 ? 1 : -1];
-#endif
 
 #endif /* DAOBJICEBOARD_C_H */

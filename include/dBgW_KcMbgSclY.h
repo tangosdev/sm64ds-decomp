@@ -50,10 +50,7 @@ struct dBgW_KcMbgSclY : dBgW_KcMbg {
     void ToWorldSpace(Vector3 *, Vector3 *);
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgW_KcMbgSclY_size_must_be_0x1d0[sizeof(dBgW_KcMbgSclY) == 0x1d0 ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

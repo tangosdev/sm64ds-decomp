@@ -72,9 +72,6 @@ struct daHuwa_c : dEnemyBase_c {
     void UpdateModelTransform();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daHuwa_c_size_must_be_0x39c[sizeof(daHuwa_c) == 0x39c ? 1 : -1];
-#endif
 
 #endif /* DAHUWA_C_H */

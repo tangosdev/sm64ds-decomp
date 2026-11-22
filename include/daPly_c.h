@@ -1425,12 +1425,9 @@ struct daPly_c : dActor_c {
    if this toolchain represented a pmf any other way the offsets above --
    +0x00, +0x08, +0x10, read straight off ChangeState and Behavior -- would
    not line up and this would refuse to compile. */
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Player_size_must_be_0x768[sizeof(struct daPly_c) == 0x768 ? 1 : -1];
 typedef char Player_Models_size_must_be_0x1d0[sizeof(daPly_c::Models) == 0x1d0 ? 1 : -1];
 typedef char Player_State_size_must_be_0x18[sizeof(daPly_c::State) == 0x18 ? 1 : -1];
-#endif
 
 /* Offsets seen through this-pointer but far outside the object (sizeof(daPly_c)
  * is 0x768). These are NOT daPly_c fields and must not be typed as such.

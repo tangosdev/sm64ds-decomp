@@ -25,8 +25,8 @@ bodies to answer that, and langmode_audit ratchets the shadow count from here.
 How a file is read:
   * git-tracked .c/.cpp/.h under src/ and include/; include/nitro (the vendor SDK) is
     left out of the pad counts but its names still count as header definitions.
-  * src/ files go through msvc_arms.mwcc_side, so a PC-port `_MSC_VER` arm is not
-    decomp source. Other `#if` arms are all read, so a struct written twice under
+  * src/ files go through msvc_arms.mwcc_side, so an `#ifdef _MSC_VER` arm is not
+    read. Other `#if` arms are all read, so a struct written twice under
     `#if/#else` counts twice.
   * Comments, string literals and preprocessor lines are blanked before parsing; line
     numbers are kept.

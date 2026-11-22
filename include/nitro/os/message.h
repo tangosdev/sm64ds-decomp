@@ -29,9 +29,7 @@ typedef struct OSMessageQueue {
     s32 usedCount;       /* 0x10 */
 } OSMessageQueue;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char OSMessageQueue_size_must_be_0x14[sizeof(OSMessageQueue) == 0x14 ? 1 : -1];
-#endif
 
 void OS_InitMessageQueue(OSMessageQueue *, OSMessage *, s32);
 int OS_SendMessage(OSMessageQueue *, OSMessage, s32);

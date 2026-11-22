@@ -16,8 +16,6 @@ struct CardBackupSpec {
     char pad_10[0x18];
 };
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char CardBackupSpec_size_must_be_0x28[sizeof(struct CardBackupSpec) == 0x28 ? 1 : -1];
-#endif
 
 #endif

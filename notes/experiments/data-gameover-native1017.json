@@ -528,7 +528,7 @@
     "retired_alias": "data_ov003_020b179c",
     "canonical_symbol": "_ZTV13dScGameOver_c",
     "canonical_address": "0x020b179c",
-    "reason": "Address-derived alias has no source/header/port consumer and no symbol/import/relocation consumer in any object from the completed full-ROM candidate link. Canonical native vtable remains at identical address.",
+    "reason": "Address-derived alias has no source/header consumer and no symbol/import/relocation consumer in any object from the completed full-ROM candidate link. Canonical native vtable remains at identical address.",
     "linked_object_list": "build\\tu\\ov003-dScGameOver_c\\link\\objects.txt",
     "linked_object_list_sha256": "544dc85363809e65bc333a164a5845601818c69f04ab1d5e7441f386a54e2666",
     "objects_scanned": 2714,

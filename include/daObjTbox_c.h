@@ -63,9 +63,6 @@ struct daObjTbox_c : dActor_c {
     void CallStateBehavior();
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjTbox_c_size_must_be_0x178[sizeof(daObjTbox_c) == 0x178 ? 1 : -1];
-#endif
 
 #endif

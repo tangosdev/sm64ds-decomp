@@ -71,10 +71,7 @@ struct daPgDfdr_c : dBgActor_c {
        + 0x7c is 0x020ee55c, identical to dBgActor_c's own slot 31. */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daPgDfdr_c_size_must_be_0x3dc[sizeof(daPgDfdr_c) == 0x3dc ? 1 : -1];
-#endif
 
 #endif /* __cplusplus */
 

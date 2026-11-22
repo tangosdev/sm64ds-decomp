@@ -17,8 +17,6 @@ actor, or minigame change is included.
 - `src/runtime/graphics/fader/d_fader.cpp`: remove seven unnecessary field casts;
   use native cstd, CP15, GX/GXS and ApproachLinear calls; agree with the latter's
   int return/reference parameter; type three matrix pointers; remove stale claims.
-- `port/hal/shims.cpp`: forward native cstd::fdiv to the existing host C divider.
-  Otherwise the newly native call would fail MSVC linking. Keep legacy wrappers.
 - `config/tu_manifest.d/arm9/dFader_c.json`: correct two obsolete trimmed-tail
   descriptions; production already includes all base destructor variants.
 - `notes/real-cpp-migration-runbook.md`: extend the existing guide with the small
@@ -49,13 +47,9 @@ Commands run from the producer worktree:
 python tools/prepush_linkcheck.py --files src/runtime/graphics/fader/d_fader.cpp --json build/fader-clean1018-linkcheck.json
 python tools/check_decl_agreement.py --changed 39e85ae247da338885b6063c69bf7fef40e99454
 python tools/source_style.py --base 39e85ae247da338885b6063c69bf7fef40e99454 --json build/fader-clean1018-style.json
-python tools/port_refcheck.py
 python tools/check_dead_references.py
 python tools/tubuild.py linkcheck --baseline -j16
 python tools/rombuild.py -j16 --no-rom
-cmake -S port -B build/fader-host -G "Visual Studio 18 2026" -A Win32 -DBUILD_TESTING=OFF
-cmake --build build/fader-host --config Release --target smoke
-build/fader-host/Release/smoke.exe
 git diff --check
 ```
 

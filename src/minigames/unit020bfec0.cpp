@@ -184,7 +184,7 @@ inline PresenterAnimationFileHandle::~PresenterAnimationFileHandle() {
     SharedFilePtr_Destruct_Anim((int)this);
 }
 inline PresenterTexSeqFileHandle::PresenterTexSeqFileHandle(u32 fileID) {
-    this->SharedFilePtr_Construct_TexSeq(fileID);
+    SharedFilePtr_Construct_TexSeq(this, fileID);
 }
 inline PresenterTexSeqFileHandle::~PresenterTexSeqFileHandle() {
     SharedFilePtr_Destruct_TexSeq((int)this);

@@ -68,14 +68,11 @@ struct dScMgCurling_bit {
     u8 pad23;
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char
     dScMgCurling_stone_size_must_be_0x2c[sizeof(struct dScMgCurling_stone) == 0x2c ? 1 : -1];
 typedef char
     dScMgCurling_popup_size_must_be_0x10[sizeof(struct dScMgCurling_popup) == 0x10 ? 1 : -1];
 typedef char dScMgCurling_bit_size_must_be_0x24[sizeof(struct dScMgCurling_bit) == 0x24 ? 1 : -1];
-#endif
 
 struct dScMgCurling_c : dScMgBase_c {
     /* Declared, not defined inline -- a leaf, so nothing needs to inline
@@ -170,9 +167,6 @@ struct dScMgCurling_c : dScMgBase_c {
     u8 pad_4eeb;
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgCurling_c_size_must_be_0x4eec[sizeof(struct dScMgCurling_c) == 0x4eec ? 1 : -1];
-#endif
 
 #endif

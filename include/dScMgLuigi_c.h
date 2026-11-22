@@ -27,9 +27,7 @@ struct dScMgLuigi_Penalty {
     u8 phase;  /* +0x12 0 = falling, then holding */
     u8 pad_13;
 };
-#ifndef SM64DS_PLATFORM_PC
 typedef char dScMgLuigi_Penalty_size_must_be_0x14[sizeof(dScMgLuigi_Penalty) == 0x14 ? 1 : -1];
-#endif
 
 /* One curtain panel. Two of them, left then right, stride 0x18 at 0x47a0.
    x slides toward the middle of the screen; state picks the motion and
@@ -46,9 +44,7 @@ struct dScMgLuigi_Curtain {
     u8 state;    /* +0x16 which motion */
     u8 phase;    /* +0x17 step within the motion */
 };
-#ifndef SM64DS_PLATFORM_PC
 typedef char dScMgLuigi_Curtain_size_must_be_0x18[sizeof(dScMgLuigi_Curtain) == 0x18 ? 1 : -1];
-#endif
 
 /* The "got it" pop above the picture that was found. It rises, holds,
    then ticks sparks times, adding one second each, up to 50. */
@@ -63,9 +59,7 @@ struct dScMgLuigi_Reward {
     u8 sparks; /* +0x12 how many +1s ticks are left */
     u8 shown;  /* +0x13 DrawReward */
 };
-#ifndef SM64DS_PLATFORM_PC
 typedef char dScMgLuigi_Reward_size_must_be_0x14[sizeof(dScMgLuigi_Reward) == 0x14 ? 1 : -1];
-#endif
 
 /* The round-end iris. One record, addressed with the same 0x14 stride as
    the penalty marks; only index 0 is used. radius opens until it covers
@@ -79,9 +73,7 @@ struct dScMgLuigi_Iris {
     u8 state;      /* +0x11 which iris step is running */
     u8 pad[2];
 };
-#ifndef SM64DS_PLATFORM_PC
 typedef char dScMgLuigi_Iris_size_must_be_0x14[sizeof(dScMgLuigi_Iris) == 0x14 ? 1 : -1];
-#endif
 
 struct dScMgLuigi_c : dScMgBase_c {
     virtual ~dScMgLuigi_c();
@@ -219,9 +211,6 @@ struct dScMgLuigi_c : dScMgBase_c {
     u8 mWanted; /* 0x545a -- character the poster is asking for */
 };
 
-#ifndef SM64DS_PLATFORM_PC
-/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgLuigi_c_size_must_be_0x545c[sizeof(dScMgLuigi_c) == 0x545c ? 1 : -1];
-#endif
 
 #endif

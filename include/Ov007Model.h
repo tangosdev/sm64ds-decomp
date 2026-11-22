@@ -104,9 +104,7 @@ typedef struct Ov007Model {
     s32 flags;
 } Ov007Model;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char Ov007AnimPlayer_size_must_be_0x1c[sizeof(Ov007AnimPlayer) == 0x1c ? 1 : -1];
 typedef char Ov007Model_size_must_be_0xa0[sizeof(Ov007Model) == 0xa0 ? 1 : -1];
-#endif
 
 #endif

@@ -78,8 +78,6 @@ struct _FILE {
 };
 typedef struct _FILE FILE;
 
-#ifndef SM64DS_PLATFORM_PC
 typedef char FILE_size_must_be_0x4c[sizeof(FILE) == 0x4c ? 1 : -1];
-#endif
 
 #endif /* MSL_FILE_STRUC_H */
