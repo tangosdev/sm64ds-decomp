@@ -50,3 +50,11 @@ src/game/actors/d_a_mc_flag.cpp:
     .ctor start:0x02112b40 end:0x02112b44
     .bss start:0x02113eb0 end:0x02113ee0
     .data start:0x02113b60 end:0x02113c20
+
+src/data/ov009/data_ov009_02112228.c:
+    complete
+    .rodata start:0x02112228 end:0x02112230
+
+src/data/ov009/data_ov009_0211391c.c:
+    complete
+    .data start:0x0211391c end:0x021139d4

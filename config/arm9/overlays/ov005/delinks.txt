@@ -12,3 +12,11 @@ src/minigames/d_s_mini_gm.cpp:
     .rodata start:0x020c2250 end:0x020c2430
     .data.screenoffs start:0x020c2464 end:0x020c2488
     .data start:0x020c24d8 end:0x020c3020
+
+src/data/ov005/data_ov005_020c2440.c:
+    complete
+    .data.early start:0x020c2440 end:0x020c2464
+
+src/data/ov005/data_ov005_020c2490.c:
+    complete
+    .data.vt start:0x020c2490 end:0x020c24d8

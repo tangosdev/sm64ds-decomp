@@ -87,3 +87,15 @@ src/game/actors/d_a_obj_volcano_cannon.cpp:
     .ctor start:0x0211311c end:0x02113120
     .bss start:0x02114690 end:0x021146a0
     .data start:0x02114434 end:0x02114500
+
+src/data/ov022/data_ov022_02113d98.c:
+    complete
+    .data start:0x02113d98 end:0x02113da4
+
+src/data/ov022/data_ov022_021141ac.c:
+    complete
+    .data start:0x021141ac end:0x0211427c
+
+src/data/ov022/data_ov022_02114424.c:
+    complete
+    .data start:0x02114424 end:0x02114434

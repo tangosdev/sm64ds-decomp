@@ -59,3 +59,27 @@ src/game/actors/d_a_piano.cpp:
     .ctor start:0x0211e708 end:0x0211e70c
     .data.piano start:0x0211ecb8 end:0x0211ecf8
     .bss start:0x0211ef80 end:0x0211efe0
+
+src/data/ov063/data_ov063_0211e720.c:
+    complete
+    .data start:0x0211e720 end:0x0211e7e0
+
+src/data/ov063/data_ov063_0211e828.c:
+    complete
+    .data start:0x0211e828 end:0x0211e9ac
+
+src/data/ov063/data_ov063_0211e9cc.c:
+    complete
+    .data start:0x0211e9cc end:0x0211e9e8
+
+src/data/ov063/data_ov063_0211ea10.c:
+    complete
+    .data.tail start:0x0211ea10 end:0x0211eb10
+
+src/data/ov063/data_ov063_0211eb1c.c:
+    complete
+    .data.tail start:0x0211eb1c end:0x0211ebd8
+
+src/data/ov063/data_ov063_0211ecf8.c:
+    complete
+    .data.piano start:0x0211ecf8 end:0x0211edc0

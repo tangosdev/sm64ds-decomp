@@ -10,3 +10,7 @@ src/game/actors/d_a_bombking.cpp:
     .ctor start:0x02126cd4 end:0x02126cd8
     .data start:0x02126ce0 end:0x02126ec8
     .bss start:0x02126ee0 end:0x02127134
+
+src/data/ov078/data_ov078_02126ec8.c:
+    complete
+    .data start:0x02126ec8 end:0x02126ee0

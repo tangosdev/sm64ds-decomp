@@ -92,3 +92,31 @@ src/game/actors/d_a_obj_wc_mizu.cpp:
 src/unnamed/ov029/data_ov029.c:
     complete
     .data start:0x021130cc end:0x02113bdc
+
+src/data/ov029/data_ov029_0211299c.c:
+    complete
+    .rodata start:0x0211299c end:0x021129a0
+
+src/data/ov029/data_ov029_02112ea0.c:
+    complete
+    .data.gap0 start:0x02112ea0 end:0x02112fb8
+
+src/data/ov029/data_ov029_02112fd0.c:
+    complete
+    .data.gap1 start:0x02112fd0 end:0x02112fec
+
+src/data/ov029/data_ov029_0211300c.c:
+    complete
+    .data.w12ea0 start:0x0211300c end:0x0211302c
+
+src/data/ov029/data_ov029_02113ef4.c:
+    complete
+    .data start:0x02113ef4 end:0x02113f00
+
+src/data/ov029/data_ov029_02113f0c.c:
+    complete
+    .data start:0x02113f0c end:0x02113fc4
+
+src/data/ov029/data_ov029_02114098.c:
+    complete
+    .data.gap3 start:0x02114098 end:0x02114220

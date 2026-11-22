@@ -27,3 +27,23 @@ src/game/actors/d_a_mky.cpp:
     .ctor start:0x02114dd8 end:0x02114ddc
     .data start:0x02115ac8 end:0x02115b78
     .bss start:0x02115cd0 end:0x02115ebc
+
+src/data/ov030/data_ov030_02114690.c:
+    complete
+    .rodata start:0x02114690 end:0x0211484c
+
+src/data/ov030/data_ov030_02114de0.c:
+    complete
+    .data start:0x02114de0 end:0x02114ee4
+
+src/data/ov030/data_ov030_02114f04.c:
+    complete
+    .data start:0x02114f04 end:0x02115a04
+
+src/data/ov030/data_ov030_02115a10.c:
+    complete
+    .data start:0x02115a10 end:0x02115ac8
+
+src/data/ov030/data_ov030_02115b78.c:
+    complete
+    .data start:0x02115b78 end:0x02115c80
