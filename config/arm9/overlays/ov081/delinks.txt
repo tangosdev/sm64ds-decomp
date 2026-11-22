@@ -43,3 +43,18 @@ src/game/actors/d_a_obj_ice_block.cpp:
     .ctor start:0x02128834 end:0x02128838
     .bss start:0x02128fd0 end:0x02129000
 
+src/data/ov081/data_ov081_02128840.c:
+    complete
+    .data start:0x02128840 end:0x021288f8
+
+src/data/ov081/data_ov081_021289b0.c:
+    complete
+    .data start:0x021289b0 end:0x02128a6c
+
+src/data/ov081/data_ov081_02128a7c.c:
+    complete
+    .data start:0x02128a7c end:0x02128b38
+
+src/data/ov081/data_ov081_02128c80.c:
+    complete
+    .data start:0x02128c80 end:0x02128d60

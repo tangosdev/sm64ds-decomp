@@ -44,3 +44,31 @@ src/game/actors/d_a_wbm.cpp:
     .init start:0x0213c2b4 end:0x0213c33c
     .ctor start:0x0213c348 end:0x0213c34c
     .bss start:0x0213c91c end:0x0213c948
+
+src/data/ov098/data_ov098_0213bf60.c:
+    complete
+    .rodata start:0x0213bf60 end:0x0213bf90
+
+src/data/ov098/data_ov098_0213c360.c:
+    complete
+    .data.blockHead start:0x0213c360 end:0x0213c380
+
+src/data/ov098/data_ov098_0213c398.c:
+    complete
+    .data.blockHead start:0x0213c398 end:0x0213c4c8
+
+src/data/ov098/data_ov098_0213c4d4.c:
+    complete
+    .data start:0x0213c4d4 end:0x0213c4e0
+
+src/data/ov098/data_ov098_0213c500.c:
+    complete
+    .data start:0x0213c500 end:0x0213c52c
+
+src/data/ov098/data_ov098_0213c5bc.c:
+    complete
+    .data.blockTail start:0x0213c5bc end:0x0213c800
+
+src/data/ov098/data_ov098_0213c948.c:
+    complete
+    .bss start:0x0213c948 end:0x0213c960

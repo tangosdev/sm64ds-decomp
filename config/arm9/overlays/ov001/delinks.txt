@@ -17,3 +17,18 @@ src/ui/hud/d_th_icon.cpp:
     complete
     .text start:0x020ab41c end:0x020ab5f8
 
+src/data/ov001/data_ov001_020ab5f8.c:
+    complete
+    .rodata start:0x020ab5f8 end:0x020ab7e4
+
+src/data/ov001/data_ov001_020ab800.c:
+    complete
+    .data start:0x020ab800 end:0x020ad450
+
+src/data/ov001/data_ov001_020ad478.c:
+    complete
+    .data start:0x020ad478 end:0x020ad620
+
+src/data/ov001/data_ov001_020ad640.c:
+    complete
+    .bss start:0x020ad640 end:0x020ad660

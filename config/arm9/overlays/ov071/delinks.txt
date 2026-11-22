@@ -39,3 +39,23 @@ src/game/actors/d_a_obj_casket.cpp:
     .data.casketStrings start:0x02122e64 end:0x02122e74
     .data.casketMain start:0x02122ecc end:0x02122ef4
     .bss start:0x021230d0 end:0x021230f8
+
+src/data/ov071/data_ov071_02122b60.c:
+    complete
+    .data start:0x02122b60 end:0x02122ca8
+
+src/data/ov071/data_ov071_02122dac.c:
+    complete
+    .data start:0x02122dac end:0x02122e64
+
+src/data/ov071/data_ov071_02122e74.c:
+    complete
+    .data.casketPmf start:0x02122e74 end:0x02122ecc
+
+src/data/ov071/data_ov071_02122ef4.c:
+    complete
+    .data.casketTail start:0x02122ef4 end:0x02122f80
+
+src/data/ov071/data_ov071_021230f8.c:
+    complete
+    .bss start:0x021230f8 end:0x02123100

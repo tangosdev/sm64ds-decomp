@@ -39,3 +39,35 @@ src/game/actors/d_a_obj_c0_water.cpp:
     .data.c0Bta start:0x02111c24 end:0x02111c3c
     .data.c0Clps start:0x02111c90 end:0x02111cb0
     .bss start:0x021124c8 end:0x02112500
+
+src/data/ov012/data_ov012_0211176c.c:
+    complete
+    .rodata.w1176c start:0x0211176c end:0x02111770
+
+src/data/ov012/data_ov012_02111774.c:
+    complete
+    .rodata.w11774 start:0x02111774 end:0x02111778
+
+src/data/ov012/data_ov012_02111794.c:
+    complete
+    .rodata.w11794 start:0x02111794 end:0x0211191c
+
+src/data/ov012/data_ov012_02111b80.c:
+    complete
+    .data.c0Pre start:0x02111b80 end:0x02111bc4
+
+src/data/ov012/data_ov012_02111bd0.c:
+    complete
+    .data.w11bd0 start:0x02111bd0 end:0x02111c24
+
+src/data/ov012/data_ov012_02111c3c.c:
+    complete
+    .data.c0Mid start:0x02111c3c end:0x02111c90
+
+src/data/ov012/data_ov012_02111cb0.c:
+    complete
+    .data.c0Mid2 start:0x02111cb0 end:0x02111cd0
+
+src/data/ov012/data_ov012_02111cf0.c:
+    complete
+    .data.c0Rest start:0x02111cf0 end:0x021124a0

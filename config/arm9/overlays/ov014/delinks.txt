@@ -43,3 +43,23 @@ src/game/actors/d_a_obj_wanwan_shutter.cpp:
     .init start:0x021132fc end:0x02113368
     .ctor start:0x02113370 end:0x02113374
     .bss start:0x021149b8 end:0x021149e0
+
+src/data/ov014/data_ov014_02113380.c:
+    complete
+    .data.gap0 start:0x02113380 end:0x02114688
+
+src/data/ov014/data_ov014_021146a0.c:
+    complete
+    .data.gap_pmf start:0x021146a0 end:0x02114700
+
+src/data/ov014/data_ov014_02114718.c:
+    complete
+    .data.gap1 start:0x02114718 end:0x02114724
+
+src/data/ov014/data_ov014_02114740.c:
+    complete
+    .data.gap2 start:0x02114740 end:0x0211476c
+
+src/data/ov014/data_ov014_021147e4.c:
+    complete
+    .data.gap3 start:0x021147e4 end:0x02114940

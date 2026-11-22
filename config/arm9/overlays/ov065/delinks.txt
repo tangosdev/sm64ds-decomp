@@ -91,3 +91,39 @@ src/game/actors/d_a_obj_ct_mecha09.cpp:
     .ctor start:0x0211cb04 end:0x0211cb08
     .data.afterDossy start:0x0211d520 end:0x0211d530
     .bss start:0x0211d9cc end:0x0211d9f4
+
+src/data/ov065/data_ov065_0211cc60.c:
+    complete
+    .data start:0x0211cc60 end:0x0211cd1c
+
+src/data/ov065/data_ov065_0211cd34.c:
+    complete
+    .data start:0x0211cd34 end:0x0211cd68
+
+src/data/ov065/data_ov065_0211cd84.c:
+    complete
+    .data.afterDossy start:0x0211cd84 end:0x0211cec4
+
+src/data/ov065/data_ov065_0211cfac.c:
+    complete
+    .data.afterDossy start:0x0211cfac end:0x0211d16c
+
+src/data/ov065/data_ov065_0211d174.c:
+    complete
+    .data.afterDossy start:0x0211d174 end:0x0211d26c
+
+src/data/ov065/data_ov065_0211d270.c:
+    complete
+    .data.afterDossy start:0x0211d270 end:0x0211d334
+
+src/data/ov065/data_ov065_0211d338.c:
+    complete
+    .data.afterDossy start:0x0211d338 end:0x0211d520
+
+src/data/ov065/data_ov065_0211d530.c:
+    complete
+    .data.afterDossy start:0x0211d530 end:0x0211d600
+
+src/data/ov065/data_ov065_0211d9f4.c:
+    complete
+    .bss start:0x0211d9f4 end:0x0211da00

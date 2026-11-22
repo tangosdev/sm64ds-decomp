@@ -65,3 +65,26 @@ src/game/actors/d_a_obj_path_lift.cpp:
     .ctor start:0x02147e00 end:0x02147e04
     .bss start:0x02148a54 end:0x02148a7c
 
+src/data/ov100/data_ov100_02147e60.c:
+    complete
+    .data start:0x02147e60 end:0x02147f18
+
+src/data/ov100/data_ov100_02148014.c:
+    complete
+    .data start:0x02148014 end:0x021480d0
+
+src/data/ov100/data_ov100_0214814c.c:
+    complete
+    .data.afterDoorPmf start:0x0214814c end:0x02148204
+
+src/data/ov100/data_ov100_02148480.c:
+    complete
+    .data.afterDoorPmf start:0x02148480 end:0x02148600
+
+src/data/ov100/data_ov100_02148704.c:
+    complete
+    .bss start:0x02148704 end:0x0214870c
+
+src/data/ov100/data_ov100_02148a7c.c:
+    complete
+    .bss start:0x02148a7c end:0x02148a80

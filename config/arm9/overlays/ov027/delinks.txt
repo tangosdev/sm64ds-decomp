@@ -45,3 +45,31 @@ src/game/actors/d_a_snm_bth.cpp:
     .init start:0x02112f70 end:0x02112fc4
     .ctor start:0x02112fd0 end:0x02112fd4
     .bss start:0x02113d04 end:0x02113d1c
+
+src/data/ov027/data_ov027_02112b14.c:
+    complete
+    .rodata start:0x02112b14 end:0x02112ca4
+
+src/data/ov027/data_ov027_02112fe0.c:
+    complete
+    .data.pre start:0x02112fe0 end:0x021130e8
+
+src/data/ov027/data_ov027_02113128.c:
+    complete
+    .data.gap0 start:0x02113128 end:0x021138f4
+
+src/data/ov027/data_ov027_02113930.c:
+    complete
+    .data.gap1 start:0x02113930 end:0x021139c4
+
+src/data/ov027/data_ov027_021139e4.c:
+    complete
+    .data start:0x021139e4 end:0x02113b10
+
+src/data/ov027/data_ov027_02113bcc.c:
+    complete
+    .data start:0x02113bcc end:0x02113be0
+
+src/data/ov027/data_ov027_02113d1c.c:
+    complete
+    .bss start:0x02113d1c end:0x02113d20
