@@ -1,6 +1,6 @@
 //cpp
 #include "private/throw_context.h"
-extern void func_02071790(ThrowContext *context, ActionIterator *iterator, int pad);
+extern "C" void func_02071790(ThrowContext *context, ActionIterator *iterator, int pad);
 
 /* ThrowContext, ActionIterator and CatchInfo are shared
  * (private/throw_context.h). The ExSpecification fields follow the runtime's
