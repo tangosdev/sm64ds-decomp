@@ -17,3 +17,11 @@ src/game/actors/d_a_tor.cpp:
     .init start:0x02137894 end:0x02137900
     .ctor start:0x02137904 end:0x02137908
     .bss start:0x02137ba8 end:0x02137bd0
+
+src/data/ov096/data_ov096_02137a54.c:
+    complete
+    .data start:0x02137a54 end:0x02137b20
+
+src/data/ov096/data_ov096_02137bd0.c:
+    complete
+    .bss start:0x02137bd0 end:0x02137be0

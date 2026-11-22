@@ -369,3 +369,114 @@ src/ov002_handles.cpp:
 
 
 
+src/data/ov002/data_ov002_020ff028.c:
+    complete
+    .rodata start:0x020ff028 end:0x020ff040
+
+src/data/ov002/data_ov002_020ff0a0.c:
+    complete
+    .rodata start:0x020ff0a0 end:0x020ff0b8
+
+src/data/ov002/data_ov002_020ff0d0.c:
+    complete
+    .rodata start:0x020ff0d0 end:0x020ff0d4
+
+src/data/ov002/data_ov002_02100000.c:
+    complete
+    .rodata start:0x02100000 end:0x021000a8
+
+src/data/ov002/data_ov002_021002a0.c:
+    complete
+    .rodata start:0x021002a0 end:0x02100560
+
+src/data/ov002/data_ov002_021081c0.c:
+    complete
+    .data start:0x021081c0 end:0x02108300
+
+src/data/ov002/data_ov002_02108370.c:
+    complete
+    .data start:0x02108370 end:0x021085b8
+
+src/data/ov002/data_ov002_02108674.c:
+    complete
+    .data start:0x02108674 end:0x02108730
+
+src/data/ov002/data_ov002_02108868.c:
+    complete
+    .data start:0x02108868 end:0x02108b5c
+
+src/data/ov002/data_ov002_02108b7c.c:
+    complete
+    .data start:0x02108b7c end:0x02108e14
+
+src/data/ov002/data_ov002_02108fb4.c:
+    complete
+    .data start:0x02108fb4 end:0x021093a0
+
+src/data/ov002/data_ov002_0210945c.c:
+    complete
+    .data start:0x0210945c end:0x02109730
+
+src/data/ov002/data_ov002_021098cc.c:
+    complete
+    .data start:0x021098cc end:0x02109a64
+
+src/data/ov002/data_ov002_02109ab4.c:
+    complete
+    .data start:0x02109ab4 end:0x02109db8
+
+src/data/ov002/data_ov002_0210aa00.c:
+    complete
+    .data start:0x0210aa00 end:0x0210ad38
+
+src/data/ov002/data_ov002_0210ad78.c:
+    complete
+    .data start:0x0210ad78 end:0x0210aeb8
+
+src/data/ov002/data_ov002_0210af68.c:
+    complete
+    .data start:0x0210af68 end:0x0210aff4
+
+src/data/ov002/data_ov002_0210b0ac.c:
+    complete
+    .data start:0x0210b0ac end:0x0210b600
+
+src/data/ov002/data_ov002_0210b9a8.c:
+    complete
+    .data start:0x0210b9a8 end:0x0210b9cc
+
+src/data/ov002/data_ov002_0210b9e4.c:
+    complete
+    .data.w10b9e4 start:0x0210b9e4 end:0x0210ba7c
+
+src/data/ov002/data_ov002_0210babc.c:
+    complete
+    .data.w10babc start:0x0210babc end:0x0210bb5c
+
+src/data/ov002/data_ov002_0210bb7c.c:
+    complete
+    .data.w10bb7c start:0x0210bb7c end:0x0210c010
+
+src/data/ov002/data_ov002_0210c048.c:
+    complete
+    .data.w10bb7c start:0x0210c048 end:0x0210d5f8
+
+src/data/ov002/data_ov002_0210d608.c:
+    complete
+    .data.w10bb7c start:0x0210d608 end:0x0210d9a0
+
+src/data/ov002/data_ov002_02110a48.c:
+    complete
+    .bss start:0x02110a48 end:0x02110a5c
+
+src/data/ov002/data_ov002_02110aec.c:
+    complete
+    .bss start:0x02110aec end:0x02110afc
+
+src/data/ov002/data_ov002_02111144.c:
+    complete
+    .bss start:0x02111144 end:0x02111160
+
+src/data/ov002/data_ov002_02111178.c:
+    complete
+    .bss start:0x02111178 end:0x02111190

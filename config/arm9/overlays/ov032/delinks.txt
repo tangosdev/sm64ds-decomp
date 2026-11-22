@@ -52,3 +52,27 @@ src/game/actors/d_a_obj_td_water.cpp:
 src/unnamed/ov032/data_ov032_02112fd0.c:
     complete
     .data start:0x02112fd0 end:0x0211377c
+
+src/data/ov032/data_ov032_021128f4.c:
+    complete
+    .rodata.w28f4 start:0x021128f4 end:0x021128fc
+
+src/data/ov032/data_ov032_02112900.c:
+    complete
+    .rodata.w2900 start:0x02112900 end:0x0211291c
+
+src/data/ov032/data_ov032_02112938.c:
+    complete
+    .rodata.w2938 start:0x02112938 end:0x02112aa4
+
+src/data/ov032/data_ov032_02112ec0.c:
+    complete
+    .data.tdPre start:0x02112ec0 end:0x02112edc
+
+src/data/ov032/data_ov032_02112ee8.c:
+    complete
+    .data.w12ee8 start:0x02112ee8 end:0x02112f64
+
+src/data/ov032/data_ov032_02112f7c.c:
+    complete
+    .data.tdMid start:0x02112f7c end:0x02112f98

@@ -14,3 +14,11 @@ src/game/actors/d_a_owl.cpp:
     .data start:0x021369c0 end:0x02136a10
     .data.owlVec start:0x02136a1c end:0x02136a28
     .bss start:0x02136ae0 end:0x02136b80
+
+src/data/ov094/data_ov094_02136a10.c:
+    complete
+    .data.owlGap start:0x02136a10 end:0x02136a1c
+
+src/data/ov094/data_ov094_02136a28.c:
+    complete
+    .data.owlRest start:0x02136a28 end:0x02136ae0

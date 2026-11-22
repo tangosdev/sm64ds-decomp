@@ -35,3 +35,18 @@ src/game/actors/d_a_shark.cpp:
     .data start:0x021343a0 end:0x021343b0
     .bss start:0x021345a4 end:0x021345e0
 
+src/data/ov090/data_ov090_02134138.c:
+    complete
+    .data start:0x02134138 end:0x021341e4
+
+src/data/ov090/data_ov090_0213420c.c:
+    complete
+    .data start:0x0213420c end:0x021342b8
+
+src/data/ov090/data_ov090_021342e4.c:
+    complete
+    .data start:0x021342e4 end:0x021343a0
+
+src/data/ov090/data_ov090_021343b0.c:
+    complete
+    .data start:0x021343b0 end:0x02134480
