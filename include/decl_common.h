@@ -325,7 +325,6 @@ extern int func_0203da3c(void);
 extern int func_0203da9c(void);
 extern unsigned short func_0203dae4(int);
 extern int func_0204424c(int);
-extern void func_0204531c(struct ModelComponents *, int);
 extern int func_02045ce0(void);
 extern int func_02045cf0(void);
 extern int func_02045d10(void);

@@ -507,7 +507,7 @@ void UnknownVsPlayer::Render() {
 
     func_020167a4(&mModel);
     RestoreBoneTranslations();
-    func_0204531c(&mModel.data, mModel.blendWeight);
+    mModel.data.func_0204531c(mModel.blendWeight);
 
     {
         ModelComponents *components = &mModel.data;

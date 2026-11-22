@@ -91,7 +91,7 @@ u32 TrimModelFile(void *ptr);
 extern "C" void func_02045e2c(int obj, int i, BCA_File *a, int b);
 /* local extern: blends verts toward the old pose in Virtual10/UpdateVerts
    while blendWeight is still below 1.0. Definition takes char *. */
-extern "C" void func_0204531c(ModelComponents *data, int weight);
+
 /* local extern: no header declares it; sizes the mBlendBuffer blend buffer off the
    file: numBones matrices. */
 extern "C" int func_020462bc(void *file);
@@ -478,7 +478,7 @@ void dExtBlendAnmModel_c::UpdateVerts() {
     s32 frame = currFrame;
     data.UpdateBones(file, (u32)(frame << 4) >> 16);
     if (blendWeight < 0x1000) {
-        func_0204531c(&data, blendWeight);
+        data.func_0204531c(blendWeight);
     } else {
         data.UpdateVertsUsingBones();
     }
@@ -488,7 +488,7 @@ void dExtBlendAnmModel_c::Virtual10(Matrix4x3 &mat) {
     s32 frame = currFrame;
     data.UpdateBones(file, (u32)(frame << 4) >> 16);
     if (blendWeight < 0x1000) {
-        func_0204531c(&data, blendWeight);
+        data.func_0204531c(blendWeight);
     } else {
         dExtSimpleModel_c::Virtual10(mat);
     }

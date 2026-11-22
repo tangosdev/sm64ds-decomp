@@ -193,17 +193,17 @@ void ModelComponents::UpdateBones(BCA_File *file, int frame)
     func_020453c0(modelFile->bones, file, frame);
 }
 
-extern "C" void func_0204531c(ModelComponents *mc, int arg) {
+void ModelComponents::func_0204531c(int arg) {
     unsigned int i;
-    Matrix4x3 *save = mc->transforms;
-    Matrix4x3 *blend = mc->blendTransforms;
+    Matrix4x3 *save = transforms;
+    Matrix4x3 *blend = blendTransforms;
 
-    mc->transforms = blend;
-    mc->UpdateVertsUsingBones();
-    mc->transforms = save;
+    transforms = blend;
+    UpdateVertsUsingBones();
+    transforms = save;
 
-    for (i = 0; i < mc->modelFile->numBones; i++)
-        func_02047910(&mc->transforms[i], &blend[i], &mc->transforms[i], arg);
+    for (i = 0; i < modelFile->numBones; i++)
+        func_02047910(&transforms[i], &blend[i], &transforms[i], arg);
 }
 
 void func_02045178(Matrix4x3 *out, int ax, int ay, int az, int tx, int ty, int tz) {
@@ -278,14 +278,14 @@ void func_02044f74(void *g, struct Node *n)
         func_02044f74(g, n + n->fc);
 }
 
-void func_02044efc(BMD_File *self) {
-    if (!self->numWeightedMatrices)
+void BMD_File::func_02044efc() {
+    if (!numWeightedMatrices)
         return;
-    Matrix4x3 *matrices = ((struct Sub *)self->skin)->blk;
+    Matrix4x3 *matrices = ((struct Sub *)skin)->blk;
     MTX_Identity43_(matrices);
-    func_02044f74(self, (struct Node *)self->bones);
-    for (u32 i = 0; i < self->numBones; i++) {
-        Matrix4x3 *mat = &((struct Sub *)self->skin)->blk[i];
+    func_02044f74(this, (struct Node *)bones);
+    for (u32 i = 0; i < numBones; i++) {
+        Matrix4x3 *mat = &((struct Sub *)skin)->blk[i];
         MTX_Inverse43(mat, mat);
     }
     DC_StoreAll();
