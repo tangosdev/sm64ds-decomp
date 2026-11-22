@@ -448,17 +448,7 @@
     {
       "symbol": "data_ov075_0211c914",
       "address": "0x0211c914",
-      "size": "0x10"
-    },
-    {
-      "symbol": "data_ov075_0211c924",
-      "address": "0x0211c924",
-      "size": "0x10"
-    },
-    {
-      "symbol": "data_ov075_0211c934",
-      "address": "0x0211c934",
-      "size": "0x10"
+      "size": "0x30"
     },
     {
       "symbol": "_ZTVN10dScEntry_c6icon_cE",
@@ -491,28 +481,7 @@
     {
       "symbol": "data_ov075_0211cac4",
       "address": "0x211cac4",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
-    },
-    {
-      "symbol": "data_ov075_0211cae4",
-      "address": "0x211cae4",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
-    },
-    {
-      "symbol": "data_ov075_0211cb04",
-      "address": "0x211cb04",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
-    },
-    {
-      "symbol": "data_ov075_0211cb24",
-      "address": "0x211cb24",
-      "size": "0x20",
+      "size": "0x80",
       "binding": "STB_GLOBAL",
       "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
     },
@@ -538,28 +507,7 @@
     {
       "symbol": "data_ov075_0211d144",
       "address": "0x211d144",
-      "size": "0x48",
-      "binding": "STB_GLOBAL",
-      "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
-    },
-    {
-      "symbol": "data_ov075_0211d18c",
-      "address": "0x211d18c",
-      "size": "0x48",
-      "binding": "STB_GLOBAL",
-      "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
-    },
-    {
-      "symbol": "data_ov075_0211d1d4",
-      "address": "0x211d1d4",
-      "size": "0x48",
-      "binding": "STB_GLOBAL",
-      "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
-    },
-    {
-      "symbol": "data_ov075_0211d21c",
-      "address": "0x211d21c",
-      "size": "0x48",
+      "size": "0x120",
       "binding": "STB_GLOBAL",
       "evidence": "Native OamAttr list terminates after drawing the entry with attr3=0xffff, or pointer table with five/eight consumer-backed entries. Exact object extent and raw prior-definition proof in data-entry-sprites1018; original artwork identifiers remain unknown."
     },
@@ -948,8 +896,8 @@
       "source": "0x211c958",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov075_0211cae4",
-      "addend": 0,
+      "symbol": "data_ov075_0211cac4",
+      "addend": 32,
       "target_module": "ov075",
       "target_address": "0x211cae4"
     },
@@ -958,8 +906,8 @@
       "source": "0x211c95c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov075_0211cb04",
-      "addend": 0,
+      "symbol": "data_ov075_0211cac4",
+      "addend": 64,
       "target_module": "ov075",
       "target_address": "0x211cb04"
     },
@@ -968,8 +916,8 @@
       "source": "0x211c960",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov075_0211cb24",
-      "addend": 0,
+      "symbol": "data_ov075_0211cac4",
+      "addend": 96,
       "target_module": "ov075",
       "target_address": "0x211cb24"
     },
@@ -1018,8 +966,8 @@
       "source": "0x211cb70",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov075_0211d18c",
-      "addend": 0,
+      "symbol": "data_ov075_0211d144",
+      "addend": 72,
       "target_module": "ov075",
       "target_address": "0x211d18c"
     },
@@ -1038,8 +986,8 @@
       "source": "0x211cb78",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov075_0211d1d4",
-      "addend": 0,
+      "symbol": "data_ov075_0211d144",
+      "addend": 144,
       "target_module": "ov075",
       "target_address": "0x211d1d4"
     },
@@ -1058,8 +1006,8 @@
       "source": "0x211cb80",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov075_0211d21c",
-      "addend": 0,
+      "symbol": "data_ov075_0211d144",
+      "addend": 216,
       "target_module": "ov075",
       "target_address": "0x211d21c"
     },

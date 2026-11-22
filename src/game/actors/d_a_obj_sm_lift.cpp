@@ -37,9 +37,9 @@ enum daObjSm_Lift_c_AssetId { ASSET_SM_LIFT_BMD = 0x06b3, ASSET_SM_LIFT_KCL = 0x
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 
-/* Two CLPS blocks the lift hands to its colliders, back to back. */
-int data_ov018_02112f48[4] = {0x53504c43, 0x00020008, 0x00000fc5, 0x000000ff};
-int data_ov018_02112f58[4] = {0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff};
+/* CLPS block the lift hands to its collider, through the all-ones tail. */
+int data_ov018_02112f48[8] = {0x53504c43, 0x00020008, 0x00000fc5, 0x000000ff,
+                              0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff};
 
 extern "C" {
 int AngleDiff(int, int);

@@ -22,8 +22,8 @@
  * func_ov007_020b1718) call it.
  *
  * Which files are loaded: data_ov007_020ccc48[figureIndex] is the model's
- * file; data_ov007_020ccc68[figureIndex] and data_ov007_020ccc80[set] hold
- * the two sets of three animation files, and data_ov007_020d7ee8[set] a
+ * file; data_ov007_020ccc68[figureIndex] and data_ov007_020ccc68[set + 2]
+ * hold the two sets of three animation files, and data_ov007_020d7ee8[set] a
  * third set of three already in the overlay. set is figureIndex, except
  * that figure 0 at strokeStage 0 uses set 2.
  *
@@ -31,7 +31,7 @@
  * unit's .rodata is contiguous: data_ov007_020ccc48 (func_ov007_020b283c,
  * func_ov007_020b2bd4) lies before data_ov007_020ccc50 and
  * data_ov007_020ccc5c (FigureScene_SetScreenBlend), and those before
- * data_ov007_020ccc68 and data_ov007_020ccc80 (func_ov007_020b283c,
+ * data_ov007_020ccc68 (func_ov007_020b283c,
  * func_ov007_020b2bd4). func_ov007_020b2998 references no ov007 data; it is
  * the one caller of func_ov007_020b2bd4 and builds what func_ov007_020b283c
  * frees. func_ov007_020b2bd4 alone uses the bss words
@@ -69,8 +69,7 @@ typedef struct Ov007CornerPair {
 extern const int data_ov007_020ccc48[2];             /* [figureIndex]: model file */
 extern const Ov007CornerPair data_ov007_020ccc50[3]; /* colours at blend 0 */
 extern const Ov007CornerPair data_ov007_020ccc5c[3]; /* colours at blend 0x1000 */
-extern const int data_ov007_020ccc68[][3];           /* [figureIndex]: animation files */
-extern const int data_ov007_020ccc80[3][3];          /* [set]: animation files */
+extern const int data_ov007_020ccc68[][3]; /* [figureIndex] and [set + 2]: animation files */
 /* The three sets of three portable BTA files the model binds directly: the
    record and the arrays its key ranges index. */
 extern const BTA_File data_ov007_020cd9b4;
@@ -109,7 +108,7 @@ extern "C" u16 data_ov007_020cccd8[];  /* 020cdb04: rotations */
 extern "C" fx32 data_ov007_020d147c[]; /* 020cdb04: translations */
 extern "C" BTAMaterialRecord data_ov007_020ce8c4[];
 extern const BTA_File *data_ov007_020d7ee8[3][3]; /* [set]: animation data in the overlay */
-extern void *data_ov007_02103348[3];           /* data_ov007_020ccc80[set], loaded */
+extern void *data_ov007_02103348[3];           /* data_ov007_020ccc68[set + 2], loaded */
 extern void *data_ov007_02103354[3];           /* data_ov007_020ccc68[figureIndex], loaded */
 
 void func_02044efc(struct BMD_File *bmd);
@@ -144,7 +143,7 @@ Ov007Model *func_ov007_020b2bd4(int figureIndex, int stage) {
     else
         set = figureIndex;
     file = func_ov007_020b3f20(data_ov007_020ccc48[figureIndex]);
-    setFiles = data_ov007_020ccc80[set];
+    setFiles = (&data_ov007_020ccc68[2])[set];
     figureFiles = data_ov007_020ccc68[figureIndex];
     for (i = 0; i < 3; i++) {
         data_ov007_02103348[i] = func_ov007_020b3f20(setFiles[i]);
@@ -218,9 +217,9 @@ extern "C" void func_ov007_020b2998(void) {
 
 /* Tears down what func_ov007_020b2998 built, if modelReady is set: releases
  * the files func_ov007_020b2bd4 loaded and frees the model, both figures
- * and the three quads. It indexes both animation tables by set; for set 2
- * that reads data_ov007_020ccc68[2], which is data_ov007_020ccc80[0], where
- * the load used data_ov007_020ccc68[0]. */
+ * and the three quads. It indexes both animation sets by set; for set 2
+ * data_ov007_020ccc68[2] is the set the load took from (&data_ov007_020ccc68[2])[0],
+ * where the load used data_ov007_020ccc68[0]. */
 void func_ov007_020b283c(void) {
     int figureIndex;
     int set;
@@ -235,9 +234,13 @@ void func_ov007_020b283c(void) {
     if (figureIndex == 0 && stage == 0)
         set = 2;
     func_ov007_020b3edc(data_ov007_020ccc48[figureIndex]);
-    for (i = 0; i < 3; i++) {
-        func_ov007_020b3edc(data_ov007_020ccc80[set][i]);
-        func_ov007_020b3edc(data_ov007_020ccc68[set][i]);
+    {
+        const int *setFiles = (&data_ov007_020ccc68[2])[set];
+        const int *figureFiles = data_ov007_020ccc68[set];
+        for (i = 0; i < 3; i++) {
+            func_ov007_020b3edc(setFiles[i]);
+            func_ov007_020b3edc(figureFiles[i]);
+        }
     }
 
     if (gMenuWork->model != 0) {
@@ -302,11 +305,8 @@ extern const Ov007CornerPair data_ov007_020ccc50[3] = {
 extern const Ov007CornerPair data_ov007_020ccc5c[3] = {
     0x7d8a, 0x7fd5, 0x69a4, 0x6b2b, 0x0, 0x0,
 };
-extern const int data_ov007_020ccc68[2][3] = {
-    16, 17, 18, 19, 20, 21,
-};
-extern const int data_ov007_020ccc80[3][3] = {
-    4, 5, 7, 8, 9, 10, 4, 6, 7,
+extern const int data_ov007_020ccc68[5][3] = {
+    16, 17, 18, 19, 20, 21, 4, 5, 7, 8, 9, 10, 4, 6, 7,
 };
 extern const BTA_File data_ov007_020cd9b4 = {
     0x30, 0, data_ov007_020ccd5c, data_ov007_020ccd68, data_ov007_020d042c,

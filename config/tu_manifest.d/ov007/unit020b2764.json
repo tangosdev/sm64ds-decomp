@@ -131,13 +131,7 @@
     {
       "symbol": "data_ov007_020ccc68",
       "address": "0x20ccc68",
-      "size": "0x18",
-      "binding": "STB_GLOBAL"
-    },
-    {
-      "symbol": "data_ov007_020ccc80",
-      "address": "0x20ccc80",
-      "size": "0x24",
+      "size": "0x3c",
       "binding": "STB_GLOBAL"
     },
     {

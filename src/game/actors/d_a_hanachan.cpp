@@ -1293,8 +1293,7 @@ extern HanachanAreaObjsTail data_ov034_021140ec;
 extern HanachanLevelHead data_ov034_021140f8;
 extern HanachanLevelTail data_ov034_02114108;
 extern LVL_Overlay::ObjSubTable data_ov034_02114114[7];
-extern HanachanObj data_ov034_0211414c[3];
-extern HanachanObj data_ov034_0211417c[2];
+extern HanachanObj data_ov034_0211414c[5];
 extern HanachanObj data_ov034_0211419c[3];
 extern HanachanObj data_ov034_021141cc[3];
 extern CLPS_Block data_ov034_021141fc;
@@ -1340,12 +1339,10 @@ LVL_Overlay::ObjSubTable data_ov034_02114114[7] = {
     {10, 1, {0, 0}, &data_ov034_021140c0}, /* exits */
 };
 
-HanachanObj data_ov034_0211414c[3] = {
+HanachanObj data_ov034_0211414c[5] = {
     {0, 0x01f4, 0x03e8, 0x076c, 0, (s16)0x8000, 0, 0},
     {0, 0x01f4, 0x03e8, 0x06a4, 0, (s16)0x8000, 0, 0},
     {0, 0x01f4, 0x03e8, 0x05dc, 0, (s16)0x8000, 0, 0},
-};
-HanachanObj data_ov034_0211417c[2] = {
     {0, 0x01f4, 0x03e8, 0x0514, 0, (s16)0x8000, 0, 0},
     {0, 0, 0x0b86, 0, 0, 0, 0, 0x0278},
 };

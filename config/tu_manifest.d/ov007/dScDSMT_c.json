@@ -920,9 +920,9 @@
       "source": "0x020ccb88",
       "section": ".rodata.dsmtData",
       "kind": "load",
-      "symbol": "data_ov007_020ccb70",
+      "symbol": "data_ov007_020ccb54",
       "type": "R_ARM_ABS32",
-      "addend": 0,
+      "addend": 28,
       "target_address": "0x020ccb70",
       "target_module": "ov007"
     },
@@ -930,9 +930,9 @@
       "source": "0x020ccb90",
       "section": ".rodata.dsmtData",
       "kind": "load",
-      "symbol": "data_ov007_020ccb68",
+      "symbol": "data_ov007_020ccb54",
       "type": "R_ARM_ABS32",
-      "addend": 0,
+      "addend": 20,
       "target_address": "0x020ccb68",
       "target_module": "ov007"
     },
@@ -940,9 +940,9 @@
       "source": "0x020ccb98",
       "section": ".rodata.dsmtData",
       "kind": "load",
-      "symbol": "data_ov007_020ccb64",
+      "symbol": "data_ov007_020ccb54",
       "type": "R_ARM_ABS32",
-      "addend": 0,
+      "addend": 16,
       "target_address": "0x020ccb64",
       "target_module": "ov007"
     },
@@ -950,9 +950,9 @@
       "source": "0x020ccba0",
       "section": ".rodata.dsmtData",
       "kind": "load",
-      "symbol": "data_ov007_020ccb5c",
+      "symbol": "data_ov007_020ccb54",
       "type": "R_ARM_ABS32",
-      "addend": 0,
+      "addend": 8,
       "target_address": "0x020ccb5c",
       "target_module": "ov007"
     },
@@ -960,9 +960,9 @@
       "source": "0x020ccba8",
       "section": ".rodata.dsmtData",
       "kind": "load",
-      "symbol": "data_ov007_020ccb6c",
+      "symbol": "data_ov007_020ccb54",
       "type": "R_ARM_ABS32",
-      "addend": 0,
+      "addend": 24,
       "target_address": "0x020ccb6c",
       "target_module": "ov007"
     },
@@ -970,9 +970,9 @@
       "source": "0x020ccbb0",
       "section": ".rodata.dsmtData",
       "kind": "load",
-      "symbol": "data_ov007_020ccb64",
+      "symbol": "data_ov007_020ccb54",
       "type": "R_ARM_ABS32",
-      "addend": 0,
+      "addend": 16,
       "target_address": "0x020ccb64",
       "target_module": "ov007"
     },
@@ -980,9 +980,9 @@
       "source": "0x020ccbb8",
       "section": ".rodata.dsmtData",
       "kind": "load",
-      "symbol": "data_ov007_020ccb58",
+      "symbol": "data_ov007_020ccb54",
       "type": "R_ARM_ABS32",
-      "addend": 0,
+      "addend": 4,
       "target_address": "0x020ccb58",
       "target_module": "ov007"
     },
@@ -990,9 +990,9 @@
       "source": "0x020ccbc0",
       "section": ".rodata.dsmtData",
       "kind": "load",
-      "symbol": "data_ov007_020ccb60",
+      "symbol": "data_ov007_020ccb54",
       "type": "R_ARM_ABS32",
-      "addend": 0,
+      "addend": 12,
       "target_address": "0x020ccb60",
       "target_module": "ov007"
     },
@@ -1061,58 +1061,9 @@
     {
       "symbol": "data_ov007_020ccb54",
       "address": "0x020ccb54",
-      "size": "0x4",
+      "size": "0x28",
       "binding": "STB_GLOBAL",
-      "evidence": "Item 0's animation index array; data_ov007_020ccb7c[0].animIndices is its only reference (func_ov007_020ade58)."
-    },
-    {
-      "symbol": "data_ov007_020ccb58",
-      "address": "0x020ccb58",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "Item 7's animation index array, referenced by data_ov007_020ccb7c[7].animIndices."
-    },
-    {
-      "symbol": "data_ov007_020ccb5c",
-      "address": "0x020ccb5c",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "Item 4's animation index array, referenced by data_ov007_020ccb7c[4].animIndices."
-    },
-    {
-      "symbol": "data_ov007_020ccb60",
-      "address": "0x020ccb60",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "Item 8's animation index array, referenced by data_ov007_020ccb7c[8].animIndices."
-    },
-    {
-      "symbol": "data_ov007_020ccb64",
-      "address": "0x020ccb64",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "Items 3 and 6 share this animation index array (data_ov007_020ccb7c[3] and [6]); same bank and animation."
-    },
-    {
-      "symbol": "data_ov007_020ccb68",
-      "address": "0x020ccb68",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "Item 2's animation index array, referenced by data_ov007_020ccb7c[2].animIndices."
-    },
-    {
-      "symbol": "data_ov007_020ccb6c",
-      "address": "0x020ccb6c",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "Item 5's animation index array, referenced by data_ov007_020ccb7c[5].animIndices."
-    },
-    {
-      "symbol": "data_ov007_020ccb70",
-      "address": "0x020ccb70",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "Item 1's animation index array, referenced by data_ov007_020ccb7c[1].animIndices; item 1 has ten animations, the other items one."
+      "evidence": "Animation-index bytes 0x020ccb54..0x020ccb7c."
     },
     {
       "symbol": "data_ov007_020ccb7c",

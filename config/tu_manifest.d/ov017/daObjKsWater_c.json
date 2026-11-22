@@ -492,8 +492,8 @@
       "source": "0x02111a64",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov017_021114bc",
-      "addend": 0,
+      "symbol": "data_ov017_021114b8",
+      "addend": 4,
       "target_module": "ov017",
       "target_address": "0x021114bc"
     },
@@ -512,8 +512,8 @@
       "source": "0x02111a6c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov017_021114dc",
-      "addend": 0,
+      "symbol": "data_ov017_021114b8",
+      "addend": 36,
       "target_module": "ov017",
       "target_address": "0x021114dc"
     },
@@ -522,8 +522,8 @@
       "source": "0x02111a74",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov017_021114c0",
-      "addend": 0,
+      "symbol": "data_ov017_021114b8",
+      "addend": 8,
       "target_module": "ov017",
       "target_address": "0x021114c0"
     },
@@ -710,30 +710,9 @@
     {
       "symbol": "data_ov017_021114b8",
       "address": "0x021114b8",
-      "size": "0x4",
+      "size": "0x4d4",
       "binding": "STB_GLOBAL",
-      "evidence": "rotation key of the water texture-SRT animation: the identity angle"
-    },
-    {
-      "symbol": "data_ov017_021114bc",
-      "address": "0x021114bc",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "scale key of the water texture-SRT animation: 0x1000, an unscaled texture"
-    },
-    {
-      "symbol": "data_ov017_021114c0",
-      "address": "0x021114c0",
-      "size": "0x1c",
-      "binding": "STB_GLOBAL",
-      "evidence": "the water's single BTA material record; func_02046b64 fills in its material id"
-    },
-    {
-      "symbol": "data_ov017_021114dc",
-      "address": "0x021114dc",
-      "size": "0x4b0",
-      "binding": "STB_GLOBAL",
-      "evidence": "300 texture-translation keys, one per animation frame, named by the record's transS/transT ranges"
+      "evidence": "rotation key, scale key, one BTA material record, and 300 texture-translation keys"
     }
   ]
 }

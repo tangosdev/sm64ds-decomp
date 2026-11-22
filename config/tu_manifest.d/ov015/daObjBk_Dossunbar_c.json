@@ -246,23 +246,9 @@
     {
       "symbol": "data_ov015_02114534",
       "address": "0x02114534",
-      "size": "0x4",
+      "size": "0x18",
       "binding": "STB_GLOBAL",
-      "evidence": "small-bar model file pointer"
-    },
-    {
-      "symbol": "data_ov015_02114538",
-      "address": "0x02114538",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "small-bar collision file pointer"
-    },
-    {
-      "symbol": "data_ov015_0211453c",
-      "address": "0x0211453c",
-      "size": "0x10",
-      "binding": "STB_GLOBAL",
-      "evidence": "variant resource pointers"
+      "evidence": "six file pointers, two rows of model, KCL, and CLPS"
     }
   ],
   "bss": [

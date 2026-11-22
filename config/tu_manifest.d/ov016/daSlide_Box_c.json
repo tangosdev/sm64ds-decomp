@@ -158,8 +158,7 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated model resource destructor-registration node"
-    }
-  ,
+    },
     {
       "symbol": "data_ov016_02114e94",
       "address": "0x02114e94",
@@ -702,15 +701,9 @@
     {
       "symbol": "data_ov016_0211354c",
       "address": "0x0211354c",
-      "size": "0x4",
-      "binding": "STB_GLOBAL"
-    },
-    {
-      "symbol": "data_ov016_02113550",
-      "address": "0x02113550",
-      "size": "0x18c",
+      "size": "0x190",
       "binding": "STB_GLOBAL",
-      "evidence": "texture keys that follow the four zero bytes this class points at"
+      "evidence": "four zero bytes this class points at, then the texture keys"
     }
   ]
 }

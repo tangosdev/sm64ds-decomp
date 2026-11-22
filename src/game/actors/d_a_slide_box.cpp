@@ -265,9 +265,9 @@ u32 data_ov016_02114e94[3];
 }
 
 /* The four zero bytes this class's data points at, then the texture keys. */
-extern const u32 data_ov016_0211354c = 0;
 extern char data_ov016_02113af8[];
-extern const u32 data_ov016_02113550[99] = {
+extern const u32 data_ov016_0211354c[100] = {
+    0,
     0x00001000, 0x0000ffff, (u32)&data_ov016_02113af8,
     0x00000001, 0x00000001, 0x00000001,
     0x0000005b, 0x0000005b, 0x00000000,

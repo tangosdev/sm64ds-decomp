@@ -112,15 +112,9 @@
     {
       "symbol": "data_ov026_02112f74",
       "address": "0x02112f74",
-      "size": "0x8",
-      "binding": "STB_GLOBAL"
-    },
-    {
-      "symbol": "data_ov026_02112f7c",
-      "address": "0x02112f7c",
-      "size": "0x58",
+      "size": "0x60",
       "binding": "STB_GLOBAL",
-      "evidence": "pointer table that follows this class's CLPS in the overlay .data"
+      "evidence": "CLPS header and the pointer table that follows it"
     },
     {
       "symbol": "data_ov026_021132b0",

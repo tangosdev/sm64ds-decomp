@@ -52,40 +52,33 @@ struct KsWaterClsnFileHandle : SharedFilePtr {
 
 extern KsWaterClsnFileHandle data_ov017_02111c80;
 extern KsWaterModelFilePtr data_ov017_02111c88;
-extern const fx32 data_ov017_021114bc[];
-extern const u16 data_ov017_021114b8[];
-extern const fx32 data_ov017_021114dc[];
-extern const BTAMaterialRecord data_ov017_021114c0[];
+extern const u32 data_ov017_021114b8[];
 extern char data_ov017_02111a18[];
 
 BTA_File data_ov017_02111a60 = {
     300,
     0,
-    (fx32 *)data_ov017_021114bc,
+    (fx32 *)&data_ov017_021114b8[1],
     (u16 *)data_ov017_021114b8,
-    (fx32 *)data_ov017_021114dc,
+    (fx32 *)&data_ov017_021114b8[9],
     1,
     0,
-    (BTAMaterialRecord *)data_ov017_021114c0,
+    (BTAMaterialRecord *)&data_ov017_021114b8[2],
 };
 
-/* The texture-SRT keys and the one material record this file table drives.
- * Retail lays them out contiguously in .rodata: the two single keys, the
- * record, then one translation per animation frame. func_02046b64 patches the
- * record's material id in place, so the file table takes its address through
- * a non-const pointer. */
-
-/* Both keys are the identity value: no texture rotation, no scaling. */
-const u16 data_ov017_021114b8[2] = {0, 0};
-const fx32 data_ov017_021114bc[1] = {0x1000};
-
-const BTAMaterialRecord data_ov017_021114c0[1] = {
-    {0xffff, 0, data_ov017_02111a18, {1, 0}, {1, 0}, {1, 0}, {300, 0}, {300, 0}},
-};
-
-/* Texture translation ramps linearly from 0 to 0x1000 across the 300-frame
- * loop, so the surface scrolls exactly one texture width per cycle. */
-const fx32 data_ov017_021114dc[300] = {
+/* Rotation key, scale key, one material record, then one translation per
+ * frame. func_02046b64 patches the record's material id in place, so the
+ * file table takes its address through a non-const pointer. */
+const u32 data_ov017_021114b8[309] = {
+    0,
+    0x1000,
+    0x0000ffff,
+    (u32)&data_ov017_02111a18,
+    1,
+    1,
+    1,
+    300,
+    300,
     0x00000000, 0x0000000e, 0x0000001b, 0x00000029, 0x00000037, 0x00000044, 0x00000052, 0x00000060,
     0x0000006e, 0x0000007b, 0x00000089, 0x00000097, 0x000000a4, 0x000000b2, 0x000000c0, 0x000000cd,
     0x000000db, 0x000000e9, 0x000000f7, 0x00000104, 0x00000112, 0x00000120, 0x0000012d, 0x0000013b,

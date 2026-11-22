@@ -120,23 +120,7 @@ src/data/arm9/data_0208a0f8.c:
 
 src/data/arm9/data_0208a10c.c:
     complete
-    .data start:0x0208a10c end:0x0208a120
-
-src/data/arm9/data_0208a120.c:
-    complete
-    .data start:0x0208a120 end:0x0208a134
-
-src/data/arm9/data_0208a134.c:
-    complete
-    .data start:0x0208a134 end:0x0208a148
-
-src/data/arm9/data_0208a148.c:
-    complete
-    .data start:0x0208a148 end:0x0208a15c
-
-src/data/arm9/data_0208a15c.c:
-    complete
-    .data start:0x0208a15c end:0x0208a170
+    .data start:0x0208a10c end:0x0208a170
 
 src/unnamed/arm9/0200/func_0200f13c.cpp:
     complete
@@ -703,23 +687,7 @@ src/ui/messages/_ZN7Message8LoadTextEv.cpp:
 
 src/data/arm9/data_020752cc.c:
     complete
-    .rodata start:0x020752cc end:0x020752e8
-
-src/data/arm9/data_020752e8.c:
-    complete
-    .rodata start:0x020752e8 end:0x02075304
-
-src/data/arm9/data_02075304.c:
-    complete
-    .rodata start:0x02075304 end:0x02075320
-
-src/data/arm9/data_02075320.c:
-    complete
-    .rodata start:0x02075320 end:0x0207533c
-
-src/data/arm9/data_0207533c.c:
-    complete
-    .rodata start:0x0207533c end:0x02075358
+    .rodata start:0x020752cc end:0x02075358
 
 src/unnamed/arm9/0201/func_0201fec8.cpp:
     complete
