@@ -88,3 +88,71 @@ src/game/stages/d_s_entry_entry.cpp:
     .ctor start:0x0211c5ac end:0x0211c5b0
     .data.entry_tail start:0x0211d34c end:0x0211d364
     .bss start:0x0211d980 end:0x0211d9c0
+
+src/data/ov075/data_ov075_0211c648.c:
+    complete
+    .data start:0x0211c648 end:0x0211c678
+
+src/data/ov075/data_ov075_0211c6a0.c:
+    complete
+    .data.gap_vt start:0x0211c6a0 end:0x0211c6e8
+
+src/data/ov075/data_ov075_0211c6f8.c:
+    complete
+    .data.entry_sprite_gap0 start:0x0211c6f8 end:0x0211c708
+
+src/data/ov075/data_ov075_0211c710.c:
+    complete
+    .data.entry_sprite_gap1 start:0x0211c710 end:0x0211c720
+
+src/data/ov075/data_ov075_0211c728.c:
+    complete
+    .data.entry_sprite_gap2 start:0x0211c728 end:0x0211c730
+
+src/data/ov075/data_ov075_0211c738.c:
+    complete
+    .data.entry_sprite_gap3 start:0x0211c738 end:0x0211c778
+
+src/data/ov075/data_ov075_0211c780.c:
+    complete
+    .data.entry_sprite_gap4 start:0x0211c780 end:0x0211c7c0
+
+src/data/ov075/data_ov075_0211c7c8.c:
+    complete
+    .data.entry_sprite_gap5 start:0x0211c7c8 end:0x0211c870
+
+src/data/ov075/data_ov075_0211c878.c:
+    complete
+    .data.entry_sprite_gap6 start:0x0211c878 end:0x0211c890
+
+src/data/ov075/data_ov075_0211c898.c:
+    complete
+    .data.entry_sprite_gap7 start:0x0211c898 end:0x0211c8e0
+
+src/data/ov075/data_ov075_0211c968.c:
+    complete
+    .data.entry_sprite_gap8 start:0x0211c968 end:0x0211ca1c
+
+src/data/ov075/data_ov075_0211ca4c.c:
+    complete
+    .data.entry_gap2 start:0x0211ca4c end:0x0211cac4
+
+src/data/ov075/data_ov075_0211cb84.c:
+    complete
+    .data.entry_sprite_gap9 start:0x0211cb84 end:0x0211d084
+
+src/data/ov075/data_ov075_0211d0c4.c:
+    complete
+    .data.entry_sprite_gap10 start:0x0211d0c4 end:0x0211d144
+
+src/data/ov075/data_ov075_0211d264.c:
+    complete
+    .data.entry_sprite_gap11 start:0x0211d264 end:0x0211d2fc
+
+src/data/ov075/data_ov075_0211d364.c:
+    complete
+    .data.entry_tail start:0x0211d364 end:0x0211d380
+
+src/data/ov075/data_ov075_0211d5bc.c:
+    complete
+    .bss start:0x0211d5bc end:0x0211d5c0

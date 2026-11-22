@@ -20,3 +20,7 @@ src/game/actors/d_a_obj_clock.cpp:
     .init start:0x021116f8 end:0x02111760
     .ctor start:0x02111764 end:0x02111768
     .bss start:0x02112294 end:0x021122c0
+
+src/data/ov013/data_ov013_0211227c.c:
+    complete
+    .data start:0x0211227c end:0x02112280
