@@ -1265,6 +1265,10 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
     only value the production build ever uses.
     """
     src = REPO / rel
+    import cartridge_resources as CART
+    override = CART.source_override(rel)
+    if override is not None:
+        src = override
     obj = (pathlib.Path(build_root) if build_root else BUILD) / pathlib.Path(rel).with_suffix(".o")
     obj.parent.mkdir(parents=True, exist_ok=True)
     if prebuilt is not None:
@@ -1283,7 +1287,7 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
         pass
 
     exe = MW / version / "mwccarm.exe"
-    key = (cache.source_key(rel, version, flags, exe)
+    key = (cache.source_key(rel, version, flags, exe, source_path=src)
            if cache and cache.enabled else None)
     if key is not None:
         deps = cache.manifest(key)
