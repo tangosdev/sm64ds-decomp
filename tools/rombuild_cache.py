@@ -201,18 +201,23 @@ class ObjectCache:
                 self._tools[exe] = got
         return got
 
-    def source_key(self, rel, version, flags, exe):
+    def source_key(self, rel, version, flags, exe, source_path=None):
         """Everything about this compile that is knowable without preprocessing.
 
         The path is part of the key even though the bytes are hashed too. Two files
         with identical contents at different paths need not produce identical objects
         -- a compiler is free to record the translation unit's name -- and settling
         that question per mwccarm version is not worth the entry it would save.
+
+        ``source_path`` hashes a build-time input in place of ``repo/rel``. The
+        cartridge resource tables are placeholders in the tree and real bytes only
+        under build/.
         """
         digest = hashlib.sha256()
         digest.update(f"{SCHEMA}\0{rel}\0{version}\0{self.tool_hash(exe)}\0{flags}\0".encode())
+        path = pathlib.Path(source_path) if source_path else (self.repo / rel)
         try:
-            digest.update((self.repo / rel).read_bytes())
+            digest.update(path.read_bytes())
         except OSError:
             return None
         return digest.hexdigest()

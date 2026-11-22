@@ -423,6 +423,12 @@ def main():
                     help="files to link-check in parallel")
     args = ap.parse_args()
 
+    import cartridge_resources as CART
+    try:
+        CART.install()
+    except OSError as exc:
+        raise SystemExit(f"cartridge resources: {exc}") from exc
+
     # This run checks one tree that nothing edits underneath it, so an identical compile
     # can be reused -- and a many-function TU otherwise recompiles once per symbol. See
     # match.memoize_compiles.

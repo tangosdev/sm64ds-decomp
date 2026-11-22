@@ -137,9 +137,6 @@ src/SetNumPlayers.c:
 src/unnamed/arm9/0200/func_0200f468.c:
     complete
     .text start:0x0200f468 end:0x0200f470
-src/data/arm9/data_0208a178.c:
-    complete
-    .data start:0x0208a178 end:0x0208c178
 
 src/engine/view/Graphics3D.cpp:
     complete
@@ -993,10 +990,6 @@ src/data/arm9/data_02075d14.c:
     complete
     .rodata start:0x02075d14 end:0x02075f14
 
-src/data/arm9/data_02075f14.c:
-    complete
-    .rodata start:0x02075f14 end:0x02082158
-
 src/data/arm9/data_0209f648.c:
     complete
     .bss start:0x0209f648 end:0x020a0c5c
@@ -1005,14 +998,9 @@ src/data/arm9/data_020a0ef0.c:
     complete
     .bss start:0x020a0ef0 end:0x020a4b6c
 
-src/data/arm9/data_0209289c.c:
-    complete
-    .data start:0x0209289c end:0x02092d3c
-
 src/Message3.cpp:
     complete
     .text start:0x02030fa8 end:0x02034a78
-    .data start:0x02092d3c end:0x0209435c
 
 src/game/stages/d_s_mb.cpp:
     complete
