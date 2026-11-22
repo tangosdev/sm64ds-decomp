@@ -48,7 +48,7 @@
       "ordinal": 3
     },
     {
-      "symbol": "func_ov007_020bfbdc",
+      "symbol": "_ZN11Ov007Camera19func_ov007_020bfbdcEv",
       "address": "0x020bfbdc",
       "size": "0x00000078",
       "legacy_source": "src/unnamed/ov007/func_ov007_020bfbdc.cpp",

@@ -50,6 +50,9 @@ typedef struct Ov007Camera {
     int wordD0;       /* 0xd0: 0xc00 on reset; no reader found */
     /* 0xd4: a u16 angle; the sine table is indexed with it >> 4 */
     unsigned short fovy;
+#ifdef __cplusplus
+    void func_ov007_020bfbdc();
+#endif
 } Ov007Camera;
 
 #ifndef SM64DS_PLATFORM_PC

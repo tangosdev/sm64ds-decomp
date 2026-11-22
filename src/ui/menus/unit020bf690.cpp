@@ -117,8 +117,7 @@ void ScreenFade_Destroy(void) {
 /* Turns the model to face the screen and puts it 0x1064 in front of the
  * camera: the point (0, 0, -0x1064) taken back through the inverse of the
  * camera's view matrix. */
-extern "C" void func_ov007_020bfbdc(void *self) {
-    Ov007Camera *cam = (Ov007Camera *)self;
+void Ov007Camera::func_ov007_020bfbdc() {
     Ov007Model *model = sScreenFade->model;
     Vector3 vec;
     Matrix4x3 mat;
@@ -130,7 +129,7 @@ extern "C" void func_ov007_020bfbdc(void *self) {
     vec.y = 0;
     vec.x = 0;
     vec.z = -0x1064;
-    MTX_Inverse43(&cam->viewMatrix, &mat);
+    MTX_Inverse43(&this->viewMatrix, &mat);
     MTX_MultVec43(&vec, &mat, &model->pos);
 }
 
