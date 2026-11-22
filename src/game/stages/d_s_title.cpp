@@ -9,7 +9,7 @@
  * established by these consumers. 11 functions,
  * .text 0x020ad660..0x020addfc: the seven dScene_c slots every direct child
  * overrides (0, 3, 6, 9, 12, 16, 17 -- the class adds no new virtual), the
- * free scroll helper TitleScrollLevelList, the factory dScTitle_c_classInit,
+ * scroll helper TitleScrollLevelList, the factory dScTitle_c_classInit,
  * which abuts InitResources at 0x020adc10, and above it the two BG0 text
  * writers only the scroll helper calls. D1/D0 are not written here: the
  * header's inline destructor plus the key function (InitResources) emits
@@ -19,20 +19,9 @@
  * reverse source order. Do not reorder.
  *
  * deslop leftovers:
- * - TitleScrollLevelList is written free here, and that is a reconstruction
- *   choice, not a deduction. The image preserves no original linker symbol
- *   table, so its name, like those of the two BG0 text writers
- *   (TitlePrintLevelRow, TitlePrintString), is coined from what the body
- *   does, and RTTI supplies class identities, not function spellings
- *   (notes/tu-promotion-conventions.md section 1 and
- *   notes/symbol-name-provenance.md). Both call sites hand it this object
- *   and every call to it is inside this class's region: that is evidence to
- *   narrow ownership on later -- call, layout or codegen -- not proof that
- *   the original was free. Its parameter is UNUSED by the body, while both
- *   call sites do load the receiver into r0, so the parameter is kept and
- *   spelled `void *` -- the one spelling neither call site has to cast away
- *   from. Until the ownership is narrowed, the original form stays
- *   uncertain, and the free form is only what this TU reproduces.
+ * - TitleScrollLevelList's name is coined, like TitlePrintLevelRow and
+ *   TitlePrintString. Both call sites pass this, and the method form matches.
+ *   The body does not read the receiver.
  */
 
 #include "dScTitle_c.h"
@@ -120,14 +109,7 @@ extern const TitleLevelEntry sTitleLevelEntries[] = {
     {"Ex Wario Map", 48, 0},   {"Ex Wario Boss", 49, 0},  {"Play Room", 50, 0},
     {"Vs Main", 51, 0},        {"VS Entry", -2, 0},       {"Mini Game", -1, 0},
 };
-/* `void *` is the tree's plurality spelling for this one (it is declared
- * five different ways across five files); the cast at the one call site is
- * free. */
-/* RECONCILED: the two legacy call sites spelt the parameter `int` and
- * `char *`; the body ignores it. `void *` is the spelling neither call site
- * has to cast away from. */
 }
-extern void TitleScrollLevelList(void *self);
 
 /* The stylus went down this frame: held, with the held state just changed
  * (see PlayerInput.h). Int-returning, so the ROM materializes the 0/1 it
@@ -234,7 +216,7 @@ s32 dScTitle_c::InitResources() {
     gMainScreenLayers = 0x11;
     GX_SetVisiblePlane(DISPLAY_LAYER_BG0 | DISPLAY_LAYER_OBJ);
     gFrameStep = 2;
-    TitleScrollLevelList(this);
+    this->TitleScrollLevelList();
     G2_SetBG0Offset(0, 0);
     data_0209ee90[0x340] = 0;
     data_0209ee90[0x341] = 0;
@@ -297,7 +279,7 @@ s32 dScTitle_c::Behavior() {
 
     gTitleCursor = gTitleCursor % 54;
     DecIfAbove0_Short(&mRepeatDelay);
-    TitleScrollLevelList(this);
+    this->TitleScrollLevelList();
     return 1;
 }
 
@@ -322,14 +304,13 @@ void dScTitle_c::OnPendingDestroy() {}
 
 /* [2] 0x020ad6ec -- scrolls the level-list window so the cursor stays on
  * screen: clamps the first shown entry, gTitleListTop, redraws the visible rows
- * through TitlePrintLevelRow, then repaints the caption. Coined name, written
- * free here as a reconstruction choice; see the file header. The parameter is unused
- * by the body, but both call sites load the receiver into r0.
+ * through TitlePrintLevelRow, then repaints the caption. Coined name.
+ * The body does not read this; both call sites still pass the receiver.
  *
  * RECONCILED: decl_common.h already declares gTitleListTop `extern int`, so
  * the legacy `int[]` spelling is dropped in favour of the header's scalar
  * and the `[0]` subscripts became scalar accesses. */
-void TitleScrollLevelList(void *) {
+void dScTitle_c::TitleScrollLevelList() {
     int v = gTitleCursor;
     int nv = v - 10;
     gTitleListTop = nv;

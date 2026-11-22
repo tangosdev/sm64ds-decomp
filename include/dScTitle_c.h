@@ -66,6 +66,7 @@ struct dScTitle_c : dScene_c {
     virtual s32  Behavior();                              /* slot  6 */
     virtual s32  Render();                                /* slot  9 */
     virtual void OnPendingDestroy();                      /* slot 12 */
+    void TitleScrollLevelList();
 };
 
 #ifndef SM64DS_PLATFORM_PC
