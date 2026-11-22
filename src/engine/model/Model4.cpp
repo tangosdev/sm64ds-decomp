@@ -287,9 +287,8 @@ void ModelComponents::SetPolygonMode(int mode) {
         SetMaterialPolygonMode(mode, i);
 }
 
-void func_02046208(void *self, unsigned int value, int index) {
-    ModelComponents *obj = (ModelComponents *)self;
-    BMD_Material *e = &obj->materials[index];
+void ModelComponents::func_02046208(unsigned int value, int index) {
+    BMD_Material *e = &materials[index];
     e->flags &= ~0x1f0000;
     e->flags |= value << 16;
 }
@@ -298,7 +297,7 @@ void ModelComponents::SetAlpha(unsigned int alpha) {
     int i;
     int count = modelFile->numMaterials;
     for (i = 0; i < count; i++)
-        func_02046208(this, alpha, i);
+        func_02046208(alpha, i);
 }
 
 /* The two passes dExtShadowModel_c::RenderAll draws each shadow volume with.
@@ -384,10 +383,10 @@ void ModelComponents::SetEmission(unsigned int color) {
         SetMaterialEmission(color, i);
 }
 
-extern "C" void func_02045e44(void *self, unsigned int value, int index) {
+void ModelComponents::func_02045e44(unsigned int value, int index) {
     struct Element { char pad[0x1c]; unsigned int flags; char pad2[0x30 - 0x1c - 4]; };
     struct Obj { void *pad0; struct Element *arr; };
-    struct Obj *obj = (struct Obj *)self;
+    struct Obj *obj = (struct Obj *)this;
     struct Element *e = &obj->arr[index];
     unsigned int *flags = &e->flags;
     *flags &= ~0xc0000000;

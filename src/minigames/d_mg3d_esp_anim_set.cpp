@@ -109,7 +109,7 @@ extern EspAnimSetModelFilePtr gEspHamonModelFile;
 
 extern EspAnimSetModelFilePtr gEspIrieModelFile;
 
-void func_02046208(void *a, unsigned int b, int c);
+
 
 int func_020179b4(SharedFilePtr *r0, dExtModel_c *r1, int r2);
 extern "C" {
@@ -258,7 +258,7 @@ void dMg3DEspModel_c::Render()
     if (mState == &dMg3DEspModel_c::Idle)
         return;
 
-    func_02046208(&mAnmModel.data, mPolygonID, 0);
+    mAnmModel.data.func_02046208(mPolygonID, 0);
 
     mTextureSequence.currFrame = (unsigned)((mTextureFrame) << 0x11) >> 4;
     mTextureSequence.Update(mAnmModel.data);

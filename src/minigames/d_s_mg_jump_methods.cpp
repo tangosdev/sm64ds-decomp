@@ -462,7 +462,7 @@ s32 dScMgJump_c::Render()
 
         obj = &mModel.data;
         mat = (MaterialState *)obj->materials;
-        func_02045e44(obj, 1, 0);
+        obj->func_02045e44(1, 0);
         mat->texTransT = mAccum;
 
         mModel.Render((Vector3 *)&t);

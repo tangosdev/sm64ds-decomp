@@ -646,7 +646,6 @@ extern void func_0203dafc(int);
    corrected: fLiNdBaPr_c is a real class, so callers should include
    include/fListNode.h and let the destructor be a destructor. The same holds
    for 0x02044104, which is _ZN9fLiNdBa_cD1Ev in the same file. */
-extern void func_02045e44(void*, unsigned int, int);
 extern void SPLManager_LoadResources(void *, void *);
 extern void SPLEmitter_Init(void *, void *, void *);
 extern void SPLList_PushFront(void *, void *);
