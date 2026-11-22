@@ -98,6 +98,7 @@ SoundObjStarter data_ov002_0210c010 = {(int)&Sound::PlaySmallSecretSound, 0};
 SoundObjStarter data_ov002_0210c018 = {(int)&func_ov002_020f9468, 0};
 /* Code address of the member. A pointer-to-member is not an int, and the
    starter stores the raw entry point with a zero this-adjust. */
+// local extern: starter needs the raw entry point, not a pointer-to-member
 extern "C" int _ZN8dActor_c13func_0200f7f0EPt(dActor_c *, u16 *);
 SoundObjStarter data_ov002_0210c020 = {(int)&_ZN8dActor_c13func_0200f7f0EPt, 0};
 SoundObjStarter data_ov002_0210c028 = {(int)&func_ov002_020f9468, 0};
