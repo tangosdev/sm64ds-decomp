@@ -32,6 +32,7 @@ sys.path.insert(0, str(REPO / "tools"))
 import asm_policy as AP  # noqa: E402
 import objisolate as OI  # noqa: E402
 import rombuild_check as RBC  # noqa: E402
+import source_coverage as SC  # noqa: E402
 
 FUNC_RE = re.compile(
     r"^(\S+)\s+kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\).*?addr:0x([0-9a-fA-F]+)")
@@ -1619,18 +1620,47 @@ def _data_name(identity):
     return f"{module or '?'}:{symbol}"
 
 
-def rom_data_regressions(base_data, head_data):
-    """Name data-verification losses that a count-only ratchet can hide."""
+def _waiver_spans(waivers, module):
+    """Half-open address spans a coverage waiver excuses in one module.
+
+    The ROM-data report has no section, so the address is the join. The coverage
+    gate still requires the section. A symbol is excused only when its whole
+    proven extent sits inside the union.
+    """
+    return sorted((start, end) for mod, _section, start, end, _reason in waivers
+                  if mod == module)
+
+
+def rom_data_regressions(base_data, head_data, waivers=()):
+    """Name data-verification losses that a count-only ratchet can hide.
+
+    ``waivers`` are ``source_coverage.load_exceptions`` rows. A range handed back
+    to the cartridge image is a coverage decrease that file already records; the
+    same row excuses the verified symbol and the verified bytes that left with it.
+    """
     if base_data.get("verified") is None:
         return []
     if head_data.get("verified") is None:
         return ["head full-ROM report omitted the ROM-data measurement"]
 
     out = []
+    waived_bytes = 0
     base_verified = _data_symbol_rows(base_data, "verifiedSymbols")
     head_verified = _data_symbol_rows(head_data, "verifiedSymbols")
     if base_verified is not None and head_verified is not None:
         lost = _data_departures(base_verified, head_verified)
+        if waivers and lost:
+            kept = []
+            by_id = {_data_identity(row): row for row in base_verified}
+            for identity in lost:
+                anchor = _data_anchor(by_id.get(identity, {}))
+                if (anchor is not None
+                        and _spans_cover(_waiver_spans(waivers, anchor[0]),
+                                         anchor[1], anchor[1] + anchor[2])):
+                    waived_bytes += anchor[2]
+                    continue
+                kept.append(identity)
+            lost = kept
         if lost:
             names = ", ".join(_data_name(x) for x in lost[:3])
             more = f", +{len(lost) - 3} more" if len(lost) > 3 else ""
@@ -1643,7 +1673,8 @@ def rom_data_regressions(base_data, head_data):
 
     if (base_data.get("verifiedBytes") is not None
             and head_data.get("verifiedBytes") is not None
-            and head_data["verifiedBytes"] < base_data["verifiedBytes"]):
+            and head_data["verifiedBytes"] + waived_bytes
+            < base_data["verifiedBytes"]):
         out.append(
             f"ROM data verified bytes fell from {base_data['verifiedBytes']} to "
             f"{head_data['verifiedBytes']}")
@@ -1956,7 +1987,12 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     # is not allowed to disable the ratchet.
     base_data = base_rom_state.get("romData") or {}
     head_data = head_rom_state.get("romData") or {}
-    reasons.extend(rom_data_regressions(base_data, head_data))
+    try:
+        coverage_waivers = SC.load_exceptions()
+    except ValueError as exc:
+        reasons.append(f"malformed source-coverage waiver: {exc}")
+        coverage_waivers = []
+    reasons.extend(rom_data_regressions(base_data, head_data, coverage_waivers))
     if rom_regression:
         reasons.append("full-ROM result regressed from the base commit")
     if head_rom_state.get("available") and not head_rom_state.get("passed") \

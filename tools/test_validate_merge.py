@@ -664,6 +664,32 @@ class RomDataRatchet(unittest.TestCase):
         self.assertTrue(any("gained 1 differing symbol" in reason for reason in out))
         self.assertIn("ov081:_ZTV5Other", "; ".join(out))
 
+    def test_a_waived_cartridge_range_is_not_a_loss(self):
+        """A coverage waiver records a range handed back to the cartridge image.
+        The symbol and its bytes leave together, and that is the whole decrease."""
+        base = self.data(verified=(("arm9", "data_02075f14", 0x02075f14, 16),
+                                   ("arm9", "Kept", 0x02000000, 4)),
+                         verified_bytes=20)
+        head = self.data(verified=(("arm9", "Kept", 0x02000000, 4),),
+                         verified_bytes=4)
+        waivers = [("arm9", ".rodata", 0x02075f14, 0x02075f24, "cartridge image")]
+        self.assertEqual(VM.rom_data_regressions(base, head, waivers), [])
+
+    def test_a_waiver_does_not_hide_a_symbol_outside_it(self):
+        base = self.data(verified=(("arm9", "data_02075f14", 0x02075f14, 16),))
+        head = self.data(verified=())
+        waivers = [("arm9", ".rodata", 0x02076000, 0x02076010, "other range")]
+        out = VM.rom_data_regressions(base, head, waivers)
+        self.assertTrue(any("lost 1 exact symbol" in reason for reason in out))
+        self.assertTrue(any("verified bytes fell" in reason for reason in out))
+
+    def test_a_waiver_does_not_hide_a_partly_covered_symbol(self):
+        base = self.data(verified=(("arm9", "data_02075f14", 0x02075f14, 16),))
+        head = self.data(verified=())
+        waivers = [("arm9", ".rodata", 0x02075f14, 0x02075f18, "short")]
+        out = VM.rom_data_regressions(base, head, waivers)
+        self.assertTrue(any("lost 1 exact symbol" in reason for reason in out))
+
     def test_a_rename_that_also_breaks_the_data_is_caught_both_ways(self):
         """VERIFIED -> DIFFERS across a rename: the address anchor must not launder
         it. The verified side loses the symbol; the differing side gains one."""
