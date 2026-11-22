@@ -161,7 +161,6 @@ extern int data_ov002_0210f344[3];
 extern int data_ov002_0210f824[];
 extern int data_ov002_0210f89c;
 extern int data_ov002_0210f8cc[3];
-extern int gWaterfallSoundsDisabled;
 extern int data_ov003_020b1650[];
 extern int data_ov003_020b1704[];
 extern int sMgPauseBgNcgByLanguage[];
@@ -253,7 +252,6 @@ extern int data_ov006_021421b4;
    winner here. Every consumer now lives in that one translation unit,
    which declares both with the recovered pointer type, so no declaration
    belongs here either. */
-extern int sTrmpAnyOnLedge;
 extern int data_ov007_02103260;
 extern int data_ov007_02103340;
 extern int data_ov007_02103344;

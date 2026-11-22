@@ -40,4 +40,4 @@ src/game/actors/d_a_obj_bk_kabe.cpp:
     .text start:0x021271e4 end:0x021275dc
     .init start:0x02127acc end:0x02127b88
     .ctor start:0x02127b94 end:0x02127b98
-    .bss start:0x02128340 end:0x02128390
+    .bss start:0x02128340 end:0x021283a0

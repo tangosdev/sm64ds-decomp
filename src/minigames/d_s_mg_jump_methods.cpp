@@ -491,3 +491,9 @@ s32 dScMgJump_c::CleanupResources()
  * sits at 0x02142190, file 0x204 at 0x02142188. */
 MgJumpModelFilePtr gJumpBack01ModelFile(0x203);
 MgJumpModelFilePtr gJumpBack02ModelFile(0x204);
+
+/* Sixteen HanaPopup records, then sJumpBackFile. sJump2Popups heads the next gap. */
+extern "C" {
+unsigned char sHanaPopups[0x144];
+int sJump2Popups[5];
+}

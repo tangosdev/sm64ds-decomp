@@ -72,7 +72,18 @@ enum {
 extern "C" {
 /* dExtSimpleModel_c files: the fragment's, which the other variants load too. */
 extern SharedFilePtr data_ov002_0210da38;
-/* The five fragments' launch angles. */
+/* Carry-offset rows the block actor reads, then the five fragments' launch angles.
+ * Vector3's ctor would move this out of .rodata, so the row is a POD triple.
+ * Interior labels stay in symbols.txt. */
+struct WbmCarryOffset {
+    fx32 x, y, z;
+};
+extern const WbmCarryOffset data_ov098_0213bf60[4] = {
+    {0x00028000, 0x00000000, 0x0002d000},
+    {0x00028000, 0x00000000, 0x00046000},
+    {0x00030000, 0x00010000, 0x00000000},
+    {0x00030000, 0x00000000, 0x0003c000},
+};
 extern const u16 data_ov098_0213bf90[6] = {0x0000, 0x3000, 0x6000, 0x9000, 0xc000, 0x0000};
 }
 
@@ -437,4 +448,9 @@ void daWbm_c::Land()
     mHorzSpeed = 0;
     mBouncePhase = 0;
     func_0201267c(0xd9, &mCamSpacePos);
+}
+
+/* Bound tail of this TU's .bss. One object; interior labels stay in symbols.txt. */
+extern "C" {
+u8 data_ov098_0213c948[0x18];
 }

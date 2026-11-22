@@ -90,4 +90,4 @@ src/game/actors/d_a_obj_ct_mecha09.cpp:
     .init start:0x0211ca74 end:0x0211cae0
     .ctor start:0x0211cb04 end:0x0211cb08
     .data.afterDossy start:0x0211d520 end:0x0211d530
-    .bss start:0x0211d9cc end:0x0211d9f4
+    .bss start:0x0211d9cc end:0x0211da00

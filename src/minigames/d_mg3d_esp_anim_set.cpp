@@ -1392,3 +1392,8 @@ dScMg3DEsp_cState s3DEspFlashTable[3] = {
     &dScMg3DEsp_c::FlashSync,
     &dScMg3DEsp_c::FlashQuick,
 };
+
+/* Hanachan round state through sHanaUsedIds. The spin angle is the first halfword. */
+extern "C" {
+unsigned short sHanaSpinAngle[0x26];
+}

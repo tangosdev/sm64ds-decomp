@@ -36,7 +36,7 @@
     {
       "name": ".bss",
       "start": "0x021423a8",
-      "end": "0x021424ec"
+      "end": "0x0214250c"
     },
     {
       "name": ".rodata.sMemory2Tables",
@@ -691,6 +691,13 @@
       "size": "0x5c",
       "binding": "STB_GLOBAL",
       "evidence": "23 permuted sprite pointers, plain-copied from the ROM constants"
+    },
+    {
+      "symbol": "sMCarloBoardDelay",
+      "address": "0x021424ec",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "board delay, then the card-list words through sMCarloSecondPick"
     }
   ],
   "rodata": [
@@ -909,7 +916,7 @@
         {
           "section": ".bss",
           "start": "0x021423a8",
-          "end": "0x021424ec",
+          "end": "0x0214250c",
           "comparison": "NOBITS -- symbol/module gates"
         },
         {

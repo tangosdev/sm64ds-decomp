@@ -1868,6 +1868,7 @@ src/unnamed/ov007/func_ov007_020c2018.c:
 src/unnamed/ov007/func_ov007_020c2024.c:
     complete
     .text start:0x020c2024 end:0x020c2090
+    .data start:0x02103240 end:0x02103254
 
 
 src/unnamed/ov007/func_ov007_020c2090.c:
@@ -2142,6 +2143,7 @@ src/unnamed/ov007/func_ov007_020c44e4.c:
 src/unnamed/ov007/func_ov007_020c4684.cpp:
     complete
     .text start:0x020c4684 end:0x020c49bc
+    .data start:0x0210325c end:0x02103260
 
 
 src/unnamed/ov007/func_ov007_020c49bc.cpp:

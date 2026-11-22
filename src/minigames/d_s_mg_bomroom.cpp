@@ -2100,3 +2100,8 @@ extern "C" PMF sBomroomTopDoorStateTable[4] = {
     &dScMgBomroom_c::TopDoor_StateOpen,
     &dScMgBomroom_c::TopDoor_StateClosing,
 };
+
+/* sCardSwapRequested at +4, data_ov006_02141770 at +8. */
+extern "C" {
+int sCardSelectLocked[3];
+}

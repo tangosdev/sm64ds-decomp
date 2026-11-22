@@ -35,7 +35,7 @@
     },
     {
       "name": ".rodata",
-      "start": "0x020ff0b8",
+      "start": "0x020ff0a0",
       "end": "0x020ff0d0"
     }
   ],
@@ -673,7 +673,7 @@
         },
         {
           "section": ".rodata",
-          "start": "0x020ff0b8",
+          "start": "0x020ff0a0",
           "end": "0x020ff0d0",
           "differingBytes": 0,
           "firstDiff": null

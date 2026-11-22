@@ -248,10 +248,13 @@ extern McapStatePmf data_ov002_0210957c, data_ov002_02109584;
 extern McapStatePmf data_ov002_0210958c, data_ov002_02109594;
 extern McapStatePmf data_ov002_0210959c, data_ov002_021095a4;
 
-extern SharedFilePtr *data_ov002_020ff0a0[];
-extern SharedFilePtr *data_ov002_020ff0ac[];
+extern SharedFilePtr *const data_ov002_020ff0a0[];
+extern SharedFilePtr *const data_ov002_020ff0ac[];
 extern SharedFilePtr *const data_ov002_020ff0b8[];
 extern SharedFilePtr *const data_ov002_020ff0c4[];
+extern SharedFilePtr data_ov002_0210da40;
+extern SharedFilePtr data_ov002_0210d9a0;
+extern SharedFilePtr data_ov002_0210d9c0;
 }
 
 /* gGameMode is 1 in VS mode: PrepareVsMode stores it. This int-returning
@@ -1367,6 +1370,16 @@ McapStateRec data_ov002_0210df14 = {data_ov002_0210951c, data_ov002_021095a4};
 McapStateRec data_ov002_0210df44 = {data_ov002_02109584, data_ov002_0210953c};
 
 /* Initialized data this file is the only complete referrer for. */
+SharedFilePtr *const data_ov002_020ff0a0[3] = {
+    &data_ov002_0210de48,
+    &data_ov002_0210de60,
+    &data_ov002_0210de50,
+};
+SharedFilePtr *const data_ov002_020ff0ac[3] = {
+    &data_ov002_0210da40,
+    &data_ov002_0210d9a0,
+    &data_ov002_0210d9c0,
+};
 SharedFilePtr *const data_ov002_020ff0b8[3] = {
     &data_ov002_0210de28,
     &data_ov002_0210de08,

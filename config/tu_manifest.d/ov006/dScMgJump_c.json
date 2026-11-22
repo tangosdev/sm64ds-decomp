@@ -40,8 +40,8 @@
     },
     {
       "name": ".bss",
-      "start": "0x02142188",
-      "end": "0x021421b0"
+      "start": "0x02142044",
+      "end": "0x021421c4"
     },
     {
       "name": ".data.sJumpNcgByLanguage",
@@ -245,6 +245,13 @@
   ],
   "bss": [
     {
+      "symbol": "sHanaPopups",
+      "address": "0x02142044",
+      "size": "0x144",
+      "binding": "STB_GLOBAL",
+      "evidence": "sixteen HanaPopup records; sJumpBackFile is the interior label at +0x140"
+    },
+    {
       "symbol": "gJumpBack02ModelFile",
       "address": "0x02142188",
       "size": "0x8",
@@ -271,6 +278,13 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the file-0x204 model handle"
+    },
+    {
+      "symbol": "sJump2Popups",
+      "address": "0x021421b0",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "popup pointer, then sJump2BackFile, sJump2PopupCount and sJump2PopupList"
     }
   ],
   "notes": [
@@ -405,8 +419,8 @@
         },
         {
           "section": ".bss",
-          "start": "0x02142188",
-          "end": "0x021421b0",
+          "start": "0x02142044",
+          "end": "0x021421c4",
           "comparison": "NOBITS -- symbol/module gates"
         },
         {

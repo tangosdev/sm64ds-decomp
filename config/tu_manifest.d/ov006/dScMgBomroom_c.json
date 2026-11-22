@@ -39,7 +39,7 @@
     {
       "name": ".bss",
       "start": "0x02141660",
-      "end": "0x02141768"
+      "end": "0x02141774"
     },
     {
       "name": ".data.sBomroomMarkerLitSprites",
@@ -1355,6 +1355,13 @@
       "size": "0x38",
       "binding": "STB_GLOBAL",
       "evidence": "seven pointer-to-member bomb states; UpdateBombs indexes the table by bomb state"
+    },
+    {
+      "symbol": "sCardSelectLocked",
+      "address": "0x02141768",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three words; sCardSwapRequested at +4 and data_ov006_02141770 at +8"
     }
   ],
   "init": [
@@ -2845,7 +2852,7 @@
         {
           "section": ".bss",
           "start": "0x02141660",
-          "end": "0x02141768",
+          "end": "0x02141774",
           "comparison": "NOBITS -- symbol/module gates"
         },
         {

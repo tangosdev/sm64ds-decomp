@@ -29,7 +29,7 @@
     {
       "name": ".bss",
       "start": "0x02110ac4",
-      "end": "0x02110aec"
+      "end": "0x02110afc"
     }
   ],
   "functions": [
@@ -251,7 +251,7 @@
         {
           "section": ".bss",
           "start": "0x02110ac4",
-          "end": "0x02110aec",
+          "end": "0x02110afc",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],

@@ -17,6 +17,11 @@
       "end": "0x02124b64"
     },
     {
+      "name": ".rodata",
+      "start": "0x02127230",
+      "end": "0x02127240"
+    },
+    {
       "name": ".init",
       "start": "0x02127240",
       "end": "0x0212749c"
@@ -1070,6 +1075,13 @@
           "section": ".text",
           "start": "0x02123740",
           "end": "0x02124b64",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02127230",
+          "end": "0x02127240",
           "differingBytes": 0,
           "firstDiff": null
         },

@@ -38,7 +38,7 @@
     {
       "name": ".bss",
       "start": "0x02142bdc",
-      "end": "0x02142c1c"
+      "end": "0x02142cc0"
     }
   ],
   "functions": [
@@ -493,6 +493,13 @@
       "size": "0x40",
       "binding": "STB_GLOBAL",
       "evidence": "Slot3 state table plain-copied from the eight ROM PMF constants in retail order"
+    },
+    {
+      "symbol": "sSmartballCellOrder",
+      "address": "0x02142c1c",
+      "size": "0xa4",
+      "binding": "STB_GLOBAL",
+      "evidence": "cell order; sSmartballPathBuf is the interior label at +0x24"
     }
   ],
   "notes": [
@@ -683,7 +690,7 @@
         {
           "section": ".bss",
           "start": "0x02142bdc",
-          "end": "0x02142c1c",
+          "end": "0x02142cc0",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],

@@ -16,4 +16,4 @@ src/game/actors/d_a_tor.cpp:
     .text start:0x02136db0 end:0x0213770c
     .init start:0x02137894 end:0x02137900
     .ctor start:0x02137904 end:0x02137908
-    .bss start:0x02137ba8 end:0x02137bd0
+    .bss start:0x02137ba8 end:0x02137be0

@@ -30,7 +30,7 @@
     {
       "name": ".bss",
       "start": "0x02113248",
-      "end": "0x02113270"
+      "end": "0x02113280"
     },
     {
       "name": ".data",
@@ -183,7 +183,7 @@
         {
           "section": ".bss",
           "start": "0x02113248",
-          "end": "0x02113270",
+          "end": "0x02113280",
           "comparison": "NOBITS -- symbol/module gates"
         },
         {

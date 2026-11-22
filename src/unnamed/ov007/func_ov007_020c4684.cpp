@@ -6,7 +6,7 @@
 extern "C" void Texture_BindPalette(Ov007Texture *tex);
 extern "C" void func_ov007_020c49bc(int width, int height, fx32 s0, fx32 t0, int repeatU,
                                     int repeatV, u16 *tilemap, int texWidth);
-extern "C" int data_ov007_0210325c;
+extern "C" int data_ov007_0210325c = 0x1000;
 #include "nitro/gx/g3imm_cmd.h"
 
 /* The NitroSDK immediate-mode commands evaluate their arguments right to
