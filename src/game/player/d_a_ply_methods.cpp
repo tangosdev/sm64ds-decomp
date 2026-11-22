@@ -3960,7 +3960,7 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
         mClsnFlags |= 4;
 
     if (mIsUnderwater == 0)
-        func_020371fc(&mMeshClsn);
+        mMeshClsn.func_020371fc();
 
     if (mClsnFlags & 1) {
         fr = mMeshClsn.GetFloorResult();
