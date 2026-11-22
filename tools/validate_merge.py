@@ -1631,12 +1631,104 @@ def _waiver_spans(waivers, module):
                   if mod == module)
 
 
-def rom_data_regressions(base_data, head_data, waivers=()):
+def _coerce_int(value):
+    """An address or a size from a report row, or None when it is not one.
+
+    A current ``romdata_check`` writes both as ints. A report cached before that,
+    or one that stored the same number as text, still names the symbol.
+    """
+    if isinstance(value, bool) or value is None:
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, str):
+        try:
+            return int(value, 0)
+        except ValueError:
+            return None
+    return None
+
+
+_SYMBOL_ADDR = re.compile(r"^(\S+)\s+.*?addr:(0x[0-9a-fA-F]+)")
+
+
+def _symbol_addresses():
+    """``{(module, name): addr}`` from every ``symbols.txt``.
+
+    Used only when a verified-symbol row has no address of its own. The address
+    in that file is the one the cartridge build already linked; it does not
+    replace an address the report itself measured.
+    """
+    index = {}
+    root = SC.REPO / "config"
+    if not root.is_dir():
+        return index
+    for path in root.rglob("symbols.txt"):
+        module = path.parent.name
+        try:
+            lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+        except OSError:
+            continue
+        for line in lines:
+            match = _SYMBOL_ADDR.match(line.strip())
+            if match and (module, match.group(1)) not in index:
+                index[(module, match.group(1))] = int(match.group(2), 16)
+    return index
+
+
+def _waive_lost_symbols(lost, base_verified, waivers, addresses, base_bytes, head_bytes):
+    """Drop lost symbols a coverage waiver already records, and the bytes they took.
+
+    A row with an address and a size is excused only when its whole extent sits in
+    the waiver. A row the report did not anchor is excused when its configured
+    address sits in a waiver; the byte credit for those rows is capped by the
+    spans that contain them and by the measured decrease, so a second loss outside
+    the waiver still fails both checks.
+    """
+    kept = []
+    known = 0
+    unknown_spans = set()
+    table = addresses
+    by_id = {_data_identity(row): row for row in base_verified}
+    for identity in lost:
+        row = by_id.get(identity, {})
+        module, symbol = identity
+        addr = _coerce_int(row.get("addr"))
+        size = _coerce_int(row.get("bytes"))
+        if addr is None:
+            if table is None:
+                table = _symbol_addresses()
+            addr = table.get((module, symbol))
+        spans = _waiver_spans(waivers, module)
+        if (addr is not None and size is not None
+                and _spans_cover(spans, addr, addr + size)):
+            known += size
+            continue
+        if addr is not None and size is None and any(
+                start <= addr < end for start, end in spans):
+            unknown_spans.update((start, end) for start, end in spans
+                                 if start <= addr < end)
+            continue
+        kept.append(identity)
+    if kept:
+        return kept, known
+    drop = 0
+    if base_bytes is not None and head_bytes is not None:
+        drop = base_bytes - head_bytes
+    budget = known + sum(end - start for start, end in unknown_spans)
+    if drop > 0:
+        return [], min(drop, budget)
+    return [], known
+
+
+def rom_data_regressions(base_data, head_data, waivers=(), addresses=None):
     """Name data-verification losses that a count-only ratchet can hide.
 
     ``waivers`` are ``source_coverage.load_exceptions`` rows. A range handed back
     to the cartridge image is a coverage decrease that file already records; the
     same row excuses the verified symbol and the verified bytes that left with it.
+    ``addresses`` is an optional ``{(module, symbol): addr}`` table for tests; the
+    default reads ``config/**/symbols.txt`` when a row has no address.
     """
     if base_data.get("verified") is None:
         return []
@@ -1650,17 +1742,9 @@ def rom_data_regressions(base_data, head_data, waivers=()):
     if base_verified is not None and head_verified is not None:
         lost = _data_departures(base_verified, head_verified)
         if waivers and lost:
-            kept = []
-            by_id = {_data_identity(row): row for row in base_verified}
-            for identity in lost:
-                anchor = _data_anchor(by_id.get(identity, {}))
-                if (anchor is not None
-                        and _spans_cover(_waiver_spans(waivers, anchor[0]),
-                                         anchor[1], anchor[1] + anchor[2])):
-                    waived_bytes += anchor[2]
-                    continue
-                kept.append(identity)
-            lost = kept
+            lost, waived_bytes = _waive_lost_symbols(
+                lost, base_verified, waivers, addresses,
+                base_data.get("verifiedBytes"), head_data.get("verifiedBytes"))
         if lost:
             names = ", ".join(_data_name(x) for x in lost[:3])
             more = f", +{len(lost) - 3} more" if len(lost) > 3 else ""
