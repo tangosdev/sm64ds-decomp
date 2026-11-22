@@ -17,8 +17,8 @@
  * src/minigames/d_mg_trmpln2_mario.cpp; GetPos, the first declared, is the key
  * function, so that file emits this vtable and typeinfo. Every state handler
  * and helper that receives the record in r0 is a member below; only the
- * module-level pool walkers and the two entry points the scene calls with a
- * byte view (EnterWalkIn, IsOffstage) stay free. The handler pointers the
+ * module-level pool walkers stay free, plus IsOffstage (the scene passes one
+ * Mario). The handler pointers the
  * cartridge's state records hold are {code, 0} pairs, i.e. member pointers
  * with no this-adjustment. Unnamed regions are read or written by one site at
  * most, or sit inside an embedded object. */
@@ -58,6 +58,7 @@ struct dMgTrmpln3DMario_c : dMgTrmpObjAdapter_c {
     void StateOnLedge();     /* 0x020cc724 */
     void EnterOnLedge();     /* 0x020cc8c8 */
     void StateWalkIn();      /* 0x020cc9b8 */
+    void Trmp3DMario_EnterWalkIn(); /* 0x020cc9fc */
     void StateOnGround();    /* 0x020ccae0 */
     void EnterOnGround();    /* 0x020ccc8c */
     void StateOffstage();    /* 0x020ccd64 */

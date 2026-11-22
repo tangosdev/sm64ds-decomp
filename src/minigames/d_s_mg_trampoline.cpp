@@ -527,7 +527,7 @@ void dScMgTrampoline_c::StatePlay() {
                 int i;
                 for (i = 0; i < 4; i++) {
                     if (Trmp3DMario_IsOffstage(&mMarios[i])) {
-                        Trmp3DMario_EnterWalkIn(&mMarios[i]);
+                        mMarios[i].Trmp3DMario_EnterWalkIn();
                         break;
                     }
                 }
