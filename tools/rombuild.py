@@ -1623,7 +1623,7 @@ def main():
             raise BuildError("halfword text placement", 1, str(exc)) from exc
         if report["halfwordText"]["patchedObjects"]:
             print(f"      halfword: {report['halfwordText']['patchedObjects']} "
-                  f"contribution(s) placed at alignment 2")
+                  f"contribution(s) extended to a word boundary")
         print("[4/6] mwldarm")
         run([*launcher(), str(MW / LD_VERSION / "mwldarm.exe"), *LDFLAGS.split(),
              f"@{BUILD / 'objects.txt'}", str(BUILD / "arm9.lcf"),

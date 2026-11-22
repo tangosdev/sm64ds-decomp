@@ -6,12 +6,13 @@ of ARM9) cannot be its own contribution under that rule: the linker inserts
 two bytes and every later address in the module moves. The same thing happens
 to the two-byte gap that follows a Thumb function whose size is 2 mod 4.
 
-Those contributions are still whole sections. This pass runs after dsd has
-generated the linker script and after mwccarm has written the objects. It
-lowers ``sh_addralign`` to 2 on each halfword contribution and switches the
-script to ``ALIGNALL(2)`` for that one object, then back to ``ALIGNALL(4)``
-before the next word-aligned contribution. Data, and every word-aligned
-function, keeps the pinned ``ALIGNALL(4)`` minimum.
+Those contributions stay whole sections, and the linker script is left exactly
+as dsd wrote it. ``ALIGNALL(4)`` is a minimum this linker does not drop for one
+input, so a 2-byte edge would be padded and every later address would move.
+This pass runs after dsd has generated the script and after mwccarm has written
+the objects. It moves the two neighboring gap bytes onto the function object,
+so the object the linker sees starts and ends on a word. The function symbol
+keeps the ROM address: a halfword start is two bytes into that object.
 
 ``tools/linker_alignment.py`` still checks the script dsd emitted. This edit
 is applied after that check, immediately before ``mwldarm``.
@@ -223,22 +224,214 @@ def _objects(objects_txt):
     return rows
 
 
-ASSIGN_RE = re.compile(r"^[ \t]*\.\s*=")
+
+def absorption_edits(pieces):
+    """Bytes to move so every contribution starts and ends on a word.
+
+    Each row is ``(trim_start, trim_end)``. A gap gives those bytes away. A
+    function object receives them, in the same amounts. Both numbers are 0 or
+    2. The linker script is not changed: the objects stay in order, and a gap
+    that gives away all of its bytes is left empty.
+    """
+    edits = [[0, 0] for _piece in pieces]
+    for index, (kind, start, end, stem) in enumerate(pieces):
+        if kind != "src":
+            continue
+        if start % 4 == 2:
+            if index == 0 or pieces[index - 1][0] != "gap" or pieces[index - 1][2] != start:
+                raise HalfwordLinkError(
+                    f"{stem} at 0x{start:08x} does not follow a ROM gap")
+            if pieces[index - 1][2] - pieces[index - 1][1] < 2:
+                raise HalfwordLinkError(
+                    f"the gap before {stem} is shorter than 2 bytes")
+            edits[index - 1][1] += 2
+            edits[index][0] += 2
+        if end % 4 == 2:
+            if (index + 1 == len(pieces) or pieces[index + 1][0] != "gap"
+                    or pieces[index + 1][1] != end):
+                raise HalfwordLinkError(
+                    f"{stem} ending at 0x{end:08x} is not followed by a ROM gap")
+            if pieces[index + 1][2] - pieces[index + 1][1] < 2:
+                raise HalfwordLinkError(
+                    f"the gap after {stem} is shorter than 2 bytes")
+            edits[index][1] += 2
+            edits[index + 1][0] += 2
+    for (kind, start, end, stem), (trim_start, trim_end) in zip(pieces, edits):
+        size = end - start
+        if trim_start + trim_end > size:
+            label = stem or "gap"
+            raise HalfwordLinkError(
+                f"{label} at 0x{start:08x} cannot give away "
+                f"{trim_start + trim_end} of its {size} bytes")
+        if kind == "src":
+            new_start = start - trim_start
+            new_end = end + trim_end
+        else:
+            new_start = start + trim_start
+            new_end = end - trim_end
+        if new_start % 4 or new_end % 4:
+            label = stem or "gap"
+            raise HalfwordLinkError(
+                f"{label} still spans 0x{new_start:08x}..0x{new_end:08x} "
+                "after the gap bytes move")
+    return edits
+
+
+def _text_section(path, section):
+    """The one non-empty ``section`` header, plus the file bytes."""
+    path = pathlib.Path(path)
+    data = bytearray(path.read_bytes())
+    elf = ELFFile(io.BytesIO(data))
+    if elf.elfclass != 32:
+        raise HalfwordLinkError(f"{path} is not a 32-bit object")
+    found = []
+    for index, sec in enumerate(elf.iter_sections()):
+        if sec.name != section or not sec.header["sh_size"]:
+            continue
+        if sec.header["sh_type"] != "SHT_PROGBITS":
+            raise HalfwordLinkError(f"{path} {section} is not progbits")
+        found.append(index)
+    if len(found) != 1:
+        raise HalfwordLinkError(
+            f"{path} has {len(found)} non-empty {section} sections")
+    index = found[0]
+    header = elf.get_section(index).header
+    return {
+        "path": path,
+        "data": data,
+        "index": index,
+        "offset": header["sh_offset"],
+        "size": header["sh_size"],
+        "shoff": elf["e_shoff"],
+        "shentsize": elf["e_shentsize"],
+        "little": elf.little_endian,
+        "symtab": elf.get_section_by_name(".symtab"),
+        "rela": elf.get_section_by_name(".rela" + section),
+    }
+
+
+def _pack_section(info, offset, size):
+    if info["shentsize"] < 36:
+        raise HalfwordLinkError(f"{info['path']} has an unexpected section-header size")
+    endian = "<" if info["little"] else ">"
+    base = info["shoff"] + info["index"] * info["shentsize"]
+    struct.pack_into(endian + "II", info["data"], base + 16, offset, size)
+    struct.pack_into(endian + "I", info["data"], base + 32, 4)
+
+
+def _shift_symbols(info, delta, trim_start):
+    """Move symbols that live in this section. ``delta`` is added to each value.
+
+    A gap that loses its first bytes passes ``trim_start`` and a negative
+    delta of the same size. A symbol inside those bytes is refused. The
+    section symbol stays at 0.
+    """
+    symtab = info["symtab"]
+    if symtab is None:
+        return
+    endian = "<" if info["little"] else ">"
+    entry = symtab.header["sh_entsize"] or 16
+    if entry < 16:
+        raise HalfwordLinkError(f"{info['path']} has a short symbol entry")
+    base = symtab.header["sh_offset"]
+    for index, sym in enumerate(symtab.iter_symbols()):
+        if sym["st_shndx"] != info["index"]:
+            continue
+        if sym["st_info"]["type"] == "STT_SECTION":
+            continue
+        value = sym["st_value"]
+        if trim_start and value < trim_start:
+            if value == 0 and sym["st_size"] == 0 and sym.name in ("", "$t", "$a", "$d"):
+                continue
+            raise HalfwordLinkError(
+                f"{info['path']} symbol {sym.name or index} sits in the "
+                f"{trim_start} bytes moved to the next object")
+        if delta:
+            struct.pack_into(endian + "I", info["data"], base + index * entry + 4,
+                             value + delta)
+
+
+def _shift_relocations(info, delta, trim_start):
+    rela = info["rela"]
+    if rela is None or not delta and not trim_start:
+        return
+    endian = "<" if info["little"] else ">"
+    entry = rela.header["sh_entsize"] or 12
+    if entry < 8:
+        raise HalfwordLinkError(f"{info['path']} has a short relocation entry")
+    base = rela.header["sh_offset"]
+    for index, rel in enumerate(rela.iter_relocations()):
+        offset = rel["r_offset"]
+        if trim_start and offset < trim_start:
+            raise HalfwordLinkError(
+                f"{info['path']} has a relocation in the bytes moved off the gap")
+        if delta:
+            struct.pack_into(endian + "I", info["data"], base + index * entry, offset + delta)
+
+
+def _apply_edit(info, piece, trim_start, trim_end, prefix, suffix):
+    """Rewrite one section. ``prefix``/``suffix`` are bytes to add, or None.
+
+    A gap passes the trim counts and no added bytes. A function passes the
+    bytes taken from its neighboring gaps.
+    """
+    old = bytes(info["data"][info["offset"]:info["offset"] + info["size"]])
+    if len(old) != info["size"]:
+        raise HalfwordLinkError(f"{info['path']} {piece[0]} section is truncated")
+    kind, start, end, stem = piece
+    if info["size"] != end - start:
+        label = stem or "gap"
+        raise HalfwordLinkError(
+            f"{label} at 0x{start:08x} covers 0x{end - start:x} bytes "
+            f"but its object contributes 0x{info['size']:x}")
+    if kind == "gap":
+        if trim_start + trim_end > len(old):
+            raise HalfwordLinkError(f"{info['path']} gap is too small to trim")
+        _shift_symbols(info, -trim_start, trim_start)
+        _shift_relocations(info, -trim_start, trim_start)
+        _pack_section(info, info["offset"] + trim_start, len(old) - trim_start - trim_end)
+        return old[:trim_start], old[len(old) - trim_end:] if trim_end else b""
+    added_head = prefix or b""
+    added_tail = suffix or b""
+    if trim_start != len(added_head) or trim_end != len(added_tail):
+        raise HalfwordLinkError(f"{stem} padding does not match the gap bytes")
+    blob = added_head + old + added_tail
+    new_off = len(info["data"])
+    info["data"].extend(blob)
+    _shift_symbols(info, len(added_head), 0)
+    _shift_relocations(info, len(added_head), 0)
+    _pack_section(info, new_off, len(blob))
+    return None
+
+
+def _code_inputs(lcf_path):
+    """``(section, kind, name)`` for every .text and .init input, in order."""
+    text = pathlib.Path(lcf_path).read_bytes().decode("latin-1")
+    rows = []
+    pending = None
+    for line in text.splitlines():
+        sec = SECTION_RE.match(line)
+        if sec:
+            pending = sec.group(2)
+            continue
+        if pending is not None and SECTION_END_RE.match(line):
+            pending = None
+            continue
+        inp = INPUT_RE.match(line) if pending is not None else None
+        if inp and inp.group(3) in CODE_SECTIONS:
+            rows.append((pending, inp.group(3), inp.group(2)))
+    return rows
 
 
 def apply(lcf_path, objects_txt, config_root):
-    """Rewrite ``lcf_path`` and the halfword objects it links. Return a report.
+    """Fold halfword edges into the function objects. The script is not edited.
 
-    Each object line is emitted where dsd wrote it. ``ALIGNALL`` for one
-    contribution is inserted on the line above that contribution. Buffering a
-    whole ``.text`` run and flushing it at the next input would slide
-    ``ARM9_TEXT_END`` and the ``. = ALIGN`` assignments that sit between the
-    code and the exception tables, and every later overlay origin would move.
+    Returns a report. An empty script, or one with no code inputs, is unchanged
+    and does not need the object list.
     """
-    lcf_path = pathlib.Path(lcf_path)
-    text = lcf_path.read_bytes().decode("latin-1")
-    newline = "\r\n" if "\r\n" in text else "\n"
-    lines = text.splitlines()
+    inputs = _code_inputs(lcf_path)
+    if not inputs:
+        return {"patchedObjects": 0, "alignmentSwitches": 0, "objects": []}
     by_name = {}
     for path in _objects(objects_txt):
         if path.name in by_name:
@@ -252,131 +445,59 @@ def apply(lcf_path, objects_txt, config_root):
             pieces_cache[section] = code_pieces(path) if path is not None else None
         return pieces_cache[section]
 
-    current = 4
-    run_kind = None
-    cursor = None
-    piece_index = {".text": 0, ".init": 0}
-    pending_section = None
-    table = None
-    block_indent = "        "
-    new_lines = []
+    grouped = {}
+    for section, kind, name in inputs:
+        grouped.setdefault(section, {".text": [], ".init": []})[kind].append(name)
     patched = []
-    switches = 0
-
-    def restore_word(indent):
-        """Back to a word before something that is not another code contribution."""
-        nonlocal current, run_kind, cursor, switches
-        if current != 4:
-            new_lines.append(f"{indent}ALIGNALL(4);")
-            current = 4
-            switches += 1
-        run_kind = None
-        cursor = None
-
-    def finish_section():
+    for section, by_kind in grouped.items():
+        table = pieces_for(section)
         if table is None:
-            return
-        for kind in CODE_SECTIONS:
-            got = piece_index[kind]
-            need = len(table[kind])
-            if got != need:
+            raise HalfwordLinkError(f".{section} has code inputs but no delinks.txt")
+        for kind, names in by_kind.items():
+            pieces = table[kind]
+            if len(names) != len(pieces):
                 raise HalfwordLinkError(
-                    f".{pending_section} {kind} has {got} linker inputs and "
-                    f"{need} delinks contributions")
-
-    def take_piece(kind, name, indent):
-        nonlocal current, cursor, run_kind, switches
-        if table is None:
-            raise HalfwordLinkError(
-                f".{pending_section} has {kind} inputs but no delinks.txt")
-        rows = table[kind]
-        index = piece_index[kind]
-        if index >= len(rows):
-            raise HalfwordLinkError(
-                f".{pending_section} {kind} has {index + 1} linker inputs and "
-                f"{len(rows)} delinks contributions")
-        piece = rows[index]
-        piece_index[kind] = index + 1
-        piece_kind, start, _end, stem = piece
-        if piece_kind == "src" and pathlib.Path(name).stem != stem:
-            raise HalfwordLinkError(
-                f"{name} is not the object for {stem} at 0x{start:08x}")
-        if piece_kind == "gap" and not pathlib.Path(name).name.startswith("_dsd_gap"):
-            raise HalfwordLinkError(
-                f"{name} occupies a ROM gap at 0x{start:08x}")
-        path = by_name.get(name)
-        if path is None:
-            raise HalfwordLinkError(f"{name} is not listed in the object file")
-        size, align, indexes, shoff, shentsize, little = _section_info(
-            path, kind, start)
-        if run_kind != kind:
-            # A .text run and an .init run are different address lists, and a
-            # label or assignment may have moved the location counter between
-            # them. The first object of a run is not checked against the
-            # previous contribution.
-            cursor = None
-            run_kind = kind
-        switch, do_patch, current, cursor = plan_step(
-            piece, (size, align), current, cursor)
-        if switch is not None:
-            new_lines.append(f"{indent}ALIGNALL({switch});")
-            switches += 1
-        if do_patch and _force_align(path, indexes, shoff, shentsize, little, 2):
-            patched.append(str(path))
-
-    for line in lines:
-        sec = SECTION_RE.match(line)
-        if sec:
-            if pending_section is not None:
-                restore_word(block_indent)
-                finish_section()
-            new_lines.append(line)
-            pending_section = sec.group(2)
-            current = 4
-            run_kind = None
-            cursor = None
-            piece_index = {".text": 0, ".init": 0}
-            table = pieces_for(pending_section)
-            continue
-        if pending_section is not None and SECTION_END_RE.match(line):
-            restore_word(block_indent)
-            finish_section()
-            pending_section = None
-            table = None
-            new_lines.append(line)
-            continue
-        if pending_section is not None and run_kind is not None and ALIGNALL_RE.match(line):
-            # Inserted by a previous pass. This pass emits the switch again.
-            continue
-        inp = INPUT_RE.match(line) if pending_section is not None else None
-        if inp:
-            block_indent = inp.group(1)
-            kind = inp.group(3)
-            if kind in CODE_SECTIONS:
-                take_piece(kind, inp.group(2), block_indent)
-                new_lines.append(line)
+                    f".{section} {kind} has {len(names)} linker inputs and "
+                    f"{len(pieces)} delinks contributions")
+            edits = absorption_edits(pieces)
+            if not any(trim_start or trim_end for trim_start, trim_end in edits):
                 continue
-            restore_word(block_indent)
-            new_lines.append(line)
-            continue
-        if pending_section is not None and ASSIGN_RE.match(line):
-            indent = re.match(r"^([ \t]*)", line).group(1)
-            block_indent = indent or block_indent
-            restore_word(block_indent)
-            new_lines.append(line)
-            continue
-        matched = ALIGNALL_RE.match(line) if pending_section is not None else None
-        if matched and run_kind is None:
-            current = int(matched.group(2))
-            block_indent = matched.group(1)
-        new_lines.append(line)
-
-    if pending_section is not None:
-        restore_word(block_indent)
-        finish_section()
-
-    rendered = newline.join(new_lines) + newline
-    if rendered != text:
-        lcf_path.write_bytes(rendered.encode("latin-1"))
-    return {"patchedObjects": len(patched), "alignmentSwitches": switches,
-            "objects": patched}
+            loaded = []
+            for (trim_start, trim_end), name, (piece_kind, start, _end, stem) in zip(
+                    edits, names, pieces):
+                if piece_kind == "src" and pathlib.Path(name).stem != stem:
+                    raise HalfwordLinkError(
+                        f"{name} is not the object for {stem} at 0x{start:08x}")
+                if piece_kind == "gap" and not pathlib.Path(name).name.startswith("_dsd_gap"):
+                    raise HalfwordLinkError(
+                        f"{name} occupies a ROM gap at 0x{start:08x}")
+                if not trim_start and not trim_end:
+                    loaded.append(None)
+                    continue
+                path = by_name.get(name)
+                if path is None:
+                    raise HalfwordLinkError(f"{name} is not listed in the object file")
+                loaded.append(_text_section(path, kind))
+            donated = {}
+            for info, piece, (trim_start, trim_end) in zip(loaded, pieces, edits):
+                if piece[0] != "gap" or not (trim_start or trim_end):
+                    continue
+                head, tail = _apply_edit(info, piece, trim_start, trim_end, None, None)
+                donated[id(info)] = (head, tail)
+            for info, piece, (trim_start, trim_end) in zip(loaded, pieces, edits):
+                if piece[0] != "src" or not (trim_start or trim_end):
+                    continue
+                prefix = suffix = b""
+                # The bytes were taken from the neighboring gaps above.
+                if trim_start:
+                    prev = donated[id(loaded[pieces.index(piece) - 1])]
+                    prefix = prev[1]
+                if trim_end:
+                    nxt = donated[id(loaded[pieces.index(piece) + 1])]
+                    suffix = nxt[0]
+                _apply_edit(info, piece, trim_start, trim_end, prefix, suffix)
+                patched.append(str(info["path"]))
+            for info, (trim_start, trim_end) in zip(loaded, edits):
+                if trim_start or trim_end:
+                    info["path"].write_bytes(info["data"])
+    return {"patchedObjects": len(patched), "alignmentSwitches": 0, "objects": patched}

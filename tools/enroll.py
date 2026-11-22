@@ -289,9 +289,10 @@ def candidates():
             # A carved object's section alignment is inherited from the delinks.txt
             # header and cannot be overridden per entry (dsd rejects `align:` there).
             # The generated script starts at ALIGNALL(4). A Thumb function on a
-            # halfword address stays a candidate: tools/halfword_text.py lowers
-            # that one contribution to alignment 2 just before the link. An odd
-            # address, or a halfword function compiled as ARM, still cannot be placed.
+            # halfword address stays a candidate: tools/halfword_text.py folds
+            # the neighboring gap bytes into that object just before the link,
+            # so the linker sees a word-aligned section. An odd address, or a
+            # halfword function compiled as ARM, still cannot be placed.
             if addr % 4 != 0:
                 if (addr % 2 != 0 or mode != "thumb" or not THUMB_PRAGMA.search(
                         f.read_text(encoding="utf-8", errors="ignore"))):

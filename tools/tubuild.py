@@ -6077,7 +6077,7 @@ def cmd_linkcheck(args):
         return 1
     if report["halfwordText"]["patchedObjects"]:
         print(f"      halfword: {report['halfwordText']['patchedObjects']} "
-              f"contribution(s) placed at alignment 2")
+              f"contribution(s) extended to a word boundary")
     print("[5/8] mwldarm (scratch module link)")
     ok, out, dt = _run_dsd([*RB.launcher(), str(RB.MW / RB.LD_VERSION / "mwldarm.exe"),
                             *RB.LDFLAGS.split(), f"@{scratch / 'objects.txt'}",
