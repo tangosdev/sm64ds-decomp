@@ -104,7 +104,6 @@ int SublevelToLevel(int sub);
 int IsStarCollected(int level, int star);
 void func_02012694(unsigned int id, const Vector3 *pos);
 
-
 /* Render's per-segment bend table, one 0xc record per body bone.
  * The six ROM records are {0, 0, scale} with scales 1,1,1,1,-1,0.
  * This loop reads only angleScale. */

@@ -79,9 +79,12 @@ void func_02037318(dBgCh_Actr *clsn) {
    floor hit and the actor is close to a dBgCh_Gnd probed surface, snap the
    actor's position onto it and raise the on-ground state. */
 void dBgCh_Actr::func_020371fc() {
-    if ((mSphereClsn.flags & 1) == 0) return;
-    if ((mSphereClsn.flags & 8) == 0) return;
-    if ((mFlags & 0x100) == 0) return;
+    if ((mSphereClsn.flags & 1) == 0)
+        return;
+    if ((mSphereClsn.flags & 8) == 0)
+        return;
+    if ((mFlags & 0x100) == 0)
+        return;
     if (mGroundNormal.y >= 0xf20)
         return;
     if (((daPly_c *)mActor)->IsInAir())

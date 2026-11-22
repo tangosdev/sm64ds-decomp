@@ -109,8 +109,6 @@ extern EspAnimSetModelFilePtr gEspHamonModelFile;
 
 extern EspAnimSetModelFilePtr gEspIrieModelFile;
 
-
-
 int func_020179b4(SharedFilePtr *r0, dExtModel_c *r1, int r2);
 extern "C" {
 void Mg_SetNextBanner(int);

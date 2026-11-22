@@ -780,8 +780,7 @@ void dScEntry_c::UpdateControlSettings() {
         return;
     }
 
-    if (mIcons[0].TouchArea_Update(-1) != 0 ||
-        (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 0)) {
+    if (mIcons[0].TouchArea_Update(-1) != 0 || (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 0)) {
         mSelectedIcon = 0;
         if (mIcons[0].mOn != 0) {
             SetControllerMode(0);
@@ -799,8 +798,7 @@ void dScEntry_c::UpdateControlSettings() {
         return;
     }
 
-    if (mIcons[1].TouchArea_Update(-1) != 0 ||
-        (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 1)) {
+    if (mIcons[1].TouchArea_Update(-1) != 0 || (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 1)) {
         mSelectedIcon = 1;
         if (mIcons[1].mOn != 0) {
             SetControllerMode(1);
@@ -818,8 +816,7 @@ void dScEntry_c::UpdateControlSettings() {
         return;
     }
 
-    if (mIcons[2].TouchArea_Update(-1) != 0 ||
-        (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 2)) {
+    if (mIcons[2].TouchArea_Update(-1) != 0 || (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 2)) {
         mSelectedIcon = 2;
         if (mIcons[2].mOn != 0) {
             SetControllerMode(2);
@@ -922,8 +919,7 @@ void dScEntry_c::UpdateQuitConfirm() {
     int id;
 
     id = func_0203da9c();
-    if (mIcons[0].TouchArea_Update(id) != 0 ||
-        (CheckMenuConfirm(id) != 0 && mSelectedIcon == 0)) {
+    if (mIcons[0].TouchArea_Update(id) != 0 || (CheckMenuConfirm(id) != 0 && mSelectedIcon == 0)) {
         mIcons[1].mOn = 0;
         mIcons[0].Select();
         if (func_0203d9b4() != 0 && IsMode6(this)) {
@@ -1092,8 +1088,7 @@ void dScEntry_c::UpdateRematchPrompt() {
         return;
     }
     id = func_0203da9c();
-    if (mIcons[0].TouchArea_Update(id) != 0 ||
-        (CheckMenuConfirm(id) != 0 && mSelectedIcon == 0)) {
+    if (mIcons[0].TouchArea_Update(id) != 0 || (CheckMenuConfirm(id) != 0 && mSelectedIcon == 0)) {
         mIcons[1].mOn = 0;
         mIcons[0].Select();
         ChangeStepsAfterDelay(&data_ov075_0211d870, 20);
@@ -1699,8 +1694,7 @@ void dScEntry_c::UpdateSoloConfirm() {
         mStepPhase = mEntObj->func_ov075_02115098(func_0203da9c()) != 0;
     if (mStepPhase == 0)
         return;
-    if (mIcons[0].TouchArea_Update(-1) != 0 ||
-        (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 0)) {
+    if (mIcons[0].TouchArea_Update(-1) != 0 || (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 0)) {
         mIcons[1].mOn = 0;
         mIcons[0].Select();
         SetNumPlayers(1);

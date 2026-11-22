@@ -12,7 +12,7 @@ extern void func_02071790(ThrowContext *context, ActionIterator *iterator, int p
  * the handler (func_02071790). action is the specification's action, where
  * the unwind stops. */
 extern "C" void func_02071f1c(ThrowContext *context, ActionIterator *it, ExSpecification *spec,
-                             unsigned char *action) {
+                              unsigned char *action) {
     CatchInfo *catchInfo;
     int off;
 

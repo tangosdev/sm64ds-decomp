@@ -112,7 +112,6 @@ extern const BTA_File *data_ov007_020d7ee8[3][3]; /* [set]: animation data in th
 extern void *data_ov007_02103348[3];           /* data_ov007_020ccc80[set], loaded */
 extern void *data_ov007_02103354[3];           /* data_ov007_020ccc68[figureIndex], loaded */
 
-
 extern "C" void func_ov007_020b3edc(int idx);
 extern "C" void *func_ov007_020b3f20(int idx);
 extern void func_ov007_020b7708(int idx, void *pos);

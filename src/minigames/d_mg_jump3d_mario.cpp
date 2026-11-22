@@ -60,7 +60,6 @@ extern "C" {
 
 void func_02012718(int a, int b);
 
-
 /* Tuning words, read as plain ints. */
 int sJump3DBounceVy = 0x5000;
 int sJump3DRiseVy = 0x4c00;

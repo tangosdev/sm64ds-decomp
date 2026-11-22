@@ -31,9 +31,6 @@
 extern "C" {
 
 extern unsigned char data_0209d684;                /* talk-script choice */
-
-
-
 }
 extern unsigned char NumStars(void);
 

@@ -873,7 +873,6 @@ extern int func_01ffa4bc(int a);
 #include "Message.h"
 #include "BgChEvt.h"
 
-
 extern "C" {
 extern void func_02020388(int playerNo);
 }
@@ -1482,7 +1481,6 @@ AnimScriptStep *data_ov002_0210a7a0[] = {
 u32 data_ov002_0210a7e8[] = {
     71, 168, 74, 86, 84, 16, 84, 84, 133, 16, 86, 133, 16, 83, 83, 133, 133, 83, 133,
 };
-
 }
 void daPly_c::func_ov002_020bcdf0() {
     AnimScriptStep *base;
@@ -1535,8 +1533,8 @@ void daPly_c::func_ov002_020bcdf0() {
         if (cur.w[0] == 0xbc) {
         particle:
             Vector3 ptclPos(this->mPos.x, this->mPos.y + 0x4b000, this->mPos.z);
-            this->mParticle1 = Particle::System::New(this->mParticle1, 0x36, ptclPos.x,
-                                                       ptclPos.y, ptclPos.z, 0, 0);
+            this->mParticle1 = Particle::System::New(this->mParticle1, 0x36, ptclPos.x, ptclPos.y,
+                                                     ptclPos.z, 0, 0);
         }
     }
 
@@ -14008,7 +14006,6 @@ int daPly_c::func_ov002_020d85fc(daPly_c *arg, int flags) {
     }
     return 0;
 }
-
 
 int daPly_c::func_ov002_020d869c() {
     daPly_c *other;

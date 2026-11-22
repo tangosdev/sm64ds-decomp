@@ -2813,8 +2813,8 @@ int dCamera_c::func_02009414() {
 
     CutsceneSpline *lookAtPath = this->mLookAtPath;
     if (lookAtPath != 0) {
-        if (MovePointAlongSpline(&this->lookAt, &this->mPathIndex, &this->mPathProgress, lookAtPath) ==
-            0) {
+        if (MovePointAlongSpline(&this->lookAt, &this->mPathIndex, &this->mPathProgress,
+                                 lookAtPath) == 0) {
             ok = 0;
         }
     }
@@ -3232,7 +3232,7 @@ int dCamera_c::func_020082f8(u8 *src, int lo, int hi) {
     this->mViewport[2] = ((FX_MUL(((src[2] - 0xff) << 12), slope) >> 12) + 0xff);
     this->mViewport[3] = ((FX_MUL(((src[3] - 0xbf) << 12), slope) >> 12) + 0xbf);
     this->mAspect = FX_Div(((this->mViewport[2] - this->mViewport[0]) + 1) << 12,
-                          ((this->mViewport[3] - this->mViewport[1]) + 1) << 12);
+                           ((this->mViewport[3] - this->mViewport[1]) + 1) << 12);
     return 1;
 }
 

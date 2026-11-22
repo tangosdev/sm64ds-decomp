@@ -1071,7 +1071,6 @@ extern struct Tbl sTrmp2SpinnerSpeeds;
 extern const u16 sTrmp2SpinnerColors[];
 }
 
-
 void Trmp2Spinner_Init(void *r0, int value) {
     Trmp2Spinner *spinner = (Trmp2Spinner *)r0;
     struct Tbl t = sTrmp2SpinnerSpeeds;

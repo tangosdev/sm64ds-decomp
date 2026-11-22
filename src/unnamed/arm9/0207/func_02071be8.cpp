@@ -22,8 +22,6 @@ extern unsigned char *func_02071a50(unsigned char *p, int *out);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
 }
 
-
-
 extern "C" {
 
 extern void func_02071ccc(ThrowContext *s, int off, int add);

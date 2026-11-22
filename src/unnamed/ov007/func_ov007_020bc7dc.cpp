@@ -5,7 +5,6 @@
 
 extern "C" void func_ov007_020c9110(void *p);
 
-
 /* Poses the model from blendAnim's current frame and blends it in with
  * weight blendFrames / blendFrameCount, counting blendFrames down on the
  * frames that step the animations. */

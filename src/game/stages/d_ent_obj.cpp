@@ -133,7 +133,6 @@ extern const int sVsPlayerExitX[16] = {0,       1843200, 1843200, 1843200, -2048
 }
 unsigned int func_02012174(unsigned int a, unsigned int b);
 
-
 /* A pointer-to-member row: the two per-figure state tables are arrays of
  * these. __sinit_ov075_0211b5e0 fills them, which fixes each index:
  *
