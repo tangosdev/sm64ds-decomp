@@ -1,0 +1,74 @@
+/* claimed-storage */
+/* ov006 .data.gap0 0x02133600..0x0213386c. 24 storage addresses, one object. */
+#include "types.h"
+
+extern u32 data_ov006_02133620[];
+extern u32 data_ov006_02133610[];
+extern u32 data_ov006_021337b0[];
+extern u32 data_ov006_02133798[];
+extern u32 data_ov006_02133780[];
+extern u32 data_ov006_02133768[];
+extern u32 data_ov006_02133738[];
+extern u32 data_ov006_02133750[];
+extern u32 data_ov006_02133720[];
+extern u32 data_ov006_02133708[];
+extern u32 data_ov006_021336f0[];
+extern u32 data_ov006_021336d8[];
+extern u32 data_ov006_021336c0[];
+extern u32 data_ov006_021336a8[];
+extern u32 data_ov006_02133690[];
+extern u32 data_ov006_021337c8[];
+extern u32 data_ov006_02133660[];
+extern u32 data_ov006_02133648[];
+extern u32 data_ov006_02133678[];
+extern u32 data_ov006_021337e0[];
+extern u32 data_ov006_02133630[];
+extern u32 data_ov006_021337f8[];
+
+#pragma define_section claimsec ".data.gap0" ".data.gap0" ".data.gap0" far_data
+#pragma section claimsec begin
+#pragma explicit_zero_data on
+u32 data_ov006_02133600[] = {
+    0x41fc80e8, 0x0000011f, 0x01fc8008, 0xffff019f, 0x81f880e8, 0x00000004, 0x41f80008, 0xffff0084,
+    0x81f000e8, 0x00000000, 0x81f04008, 0xffff0080, 0x81f000f0, 0x0000110d, 0x81f000e8, 0x00000112,
+    0x81f04008, 0xffff0192, 0x81f780f0, 0x0000109c, 0x81f880e8, 0x00000116, 0x41f80008, 0xffff0196,
+    0x81f000f0, 0x00001098, 0x81f000e8, 0x00000112, 0x81f04008, 0xffff0192, 0x81f000f0, 0x00002109,
+    0x81f000e8, 0x00000112, 0x81f04008, 0xffff0192, 0x81f000f0, 0x00002092, 0x81f000e8, 0x00000112,
+    0x81f04008, 0xffff0192, 0x81f880f0, 0x00002090, 0x81f880e8, 0x00000116, 0x41f80008, 0xffff0196,
+    0x81f000f0, 0x0000208c, 0x81f000e8, 0x00000112, 0x81f04008, 0xffff0192, 0x81f780f0, 0x0000108a,
+    0x81f880e8, 0x00000116, 0x41f80008, 0xffff0196, 0x81ef00f0, 0x00001086, 0x81f000e8, 0x00000112,
+    0x81f04008, 0xffff0192, 0x81f780f0, 0x0000101c, 0x81f880e8, 0x00000116, 0x41f80008, 0xffff0196,
+    0x81f000f0, 0x00001018, 0x81f000e8, 0x00000112, 0x81f04008, 0xffff0192, 0x81f000f0, 0x00001012,
+    0x81f000e8, 0x00000112, 0x81f04008, 0xffff0192, 0x81f880f0, 0x00001016, 0x81f880e8, 0x00000116,
+    0x41f80008, 0xffff0196, 0x81f880f0, 0x00002010, 0x81f880e8, 0x00000116, 0x41f80008, 0xffff0196,
+    0x81f000f0, 0x0000200c, 0x81f000e8, 0x00000112, 0x81f04008, 0xffff0192, 0x81f880f0, 0x0000200a,
+    0x81f880e8, 0x00000116, 0x41f80008, 0xffff0196, 0x81f000f0, 0x00002006, 0x81f000e8, 0x00000112,
+    0x81f04008, 0xffff0192, 0x81f880f0, 0x00002096, 0x81f880e8, 0x00000116, 0x41f80008, 0xffff0196,
+    0x81f880f0, 0x0000201e, 0x81f880e8, 0x00000116, 0x41f80008, 0xffff0196, 0x81f780f0, 0x0000109e,
+    0x81f880e8, 0x00000116, 0x41f80008, 0xffff0196,
+    (u32)&data_ov006_02133620,
+    (u32)&data_ov006_02133610,
+    (u32)&data_ov006_02133600,
+    (u32)&data_ov006_021337b0,
+    (u32)&data_ov006_02133798,
+    (u32)&data_ov006_02133780,
+    (u32)&data_ov006_02133768,
+    (u32)&data_ov006_02133738,
+    (u32)&data_ov006_02133750,
+    (u32)&data_ov006_02133720,
+    (u32)&data_ov006_02133708,
+    (u32)&data_ov006_021336f0,
+    (u32)&data_ov006_021336d8,
+    (u32)&data_ov006_021336c0,
+    (u32)&data_ov006_021336a8,
+    (u32)&data_ov006_02133690,
+    (u32)&data_ov006_021337c8,
+    (u32)&data_ov006_02133660,
+    (u32)&data_ov006_02133648,
+    (u32)&data_ov006_02133678,
+    (u32)&data_ov006_021337e0,
+    (u32)&data_ov006_02133630,
+    (u32)&data_ov006_021337f8,
+};
+#pragma explicit_zero_data off
+#pragma section claimsec end
