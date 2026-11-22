@@ -40,3 +40,23 @@ src/game/actors/d_a_dp_lift.cpp:
     .ctor start:0x02112b24 end:0x02112b28
     .data.liftClps start:0x02112d08 end:0x02112d28
     .bss start:0x02113ad8 end:0x02113b00
+
+src/data/ov025/data_ov025_02112654.c:
+    complete
+    .rodata start:0x02112654 end:0x02112970
+
+src/data/ov025/data_ov025_02112b40.c:
+    complete
+    .data start:0x02112b40 end:0x02112c28
+
+src/data/ov025/data_ov025_02112c48.c:
+    complete
+    .data start:0x02112c48 end:0x02112ce8
+
+src/data/ov025/data_ov025_02112d48.c:
+    complete
+    .data.dkkTail start:0x02112d48 end:0x02113814
+
+src/data/ov025/data_ov025_0211382c.c:
+    complete
+    .data.dkkTail start:0x0211382c end:0x02113a60

@@ -10,3 +10,11 @@ src/game/actors/d_a_obj_kb1_billboard.cpp:
     .ctor start:0x02111354 end:0x02111358
     .data start:0x021115bc end:0x02111680
     .bss start:0x02111680 end:0x02111694
+
+src/data/ov044/data_ov044_02111360.c:
+    complete
+    .data start:0x02111360 end:0x021115bc
+
+src/data/ov044/data_ov044_02111694.c:
+    complete
+    .bss start:0x02111694 end:0x021116a0

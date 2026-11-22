@@ -183,3 +183,18 @@ src/minigames/d_mg_ps_opt.cpp:
     .bss start:0x020bfda8 end:0x020bfeb8
     .data.psopt start:0x020bca58 end:0x020bcaa0
 
+src/data/ov004/data_ov004_020bbf6c.c:
+    complete
+    .data.gap23 start:0x020bbf6c end:0x020bbf94
+
+src/data/ov004/data_ov004_020bc03c.c:
+    complete
+    .data.gap24 start:0x020bc03c end:0x020bc070
+
+src/data/ov004/data_ov004_020bc0c0.c:
+    complete
+    .data.gap25 start:0x020bc0c0 end:0x020bc150
+
+src/data/ov004/data_ov004_020bfeb8.c:
+    complete
+    .bss start:0x020bfeb8 end:0x020bfec0

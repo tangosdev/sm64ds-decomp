@@ -26,3 +26,15 @@ src/game/actors/d_a_popoi.cpp:
     .ctor start:0x021277d4 end:0x021277d8
     .data start:0x02127a00 end:0x02127a50
     .bss start:0x02127c88 end:0x02127d40
+
+src/data/ov077/data_ov077_02127230.c:
+    complete
+    .rodata start:0x02127230 end:0x02127240
+
+src/data/ov077/data_ov077_021277e0.c:
+    complete
+    .data start:0x021277e0 end:0x021278e8
+
+src/data/ov077/data_ov077_02127a50.c:
+    complete
+    .data start:0x02127a50 end:0x02127b20

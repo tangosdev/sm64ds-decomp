@@ -21,3 +21,18 @@ src/game/actors/d_a_obj_tt_water.cpp:
     .ctor start:0x02111ac4 end:0x02111ac8
     .bss start:0x021124e8 end:0x02112510
 
+src/data/ov033/data_ov033_021116c8.c:
+    complete
+    .rodata start:0x021116c8 end:0x021119e8
+
+src/data/ov033/data_ov033_02111ae0.c:
+    complete
+    .data.gap0 start:0x02111ae0 end:0x02111bfc
+
+src/data/ov033/data_ov033_02111c1c.c:
+    complete
+    .data.gap1 start:0x02111c1c end:0x021124c0
+
+src/data/ov033/data_ov033_02112510.c:
+    complete
+    .bss start:0x02112510 end:0x02112520

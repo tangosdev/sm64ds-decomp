@@ -38,3 +38,15 @@ src/game/actors/d_a_shl.cpp:
     .data start:0x0214e5d4 end:0x0214e614
     .bss start:0x0214ea48 end:0x0214eaa0
     .rodata start:0x0214d70c end:0x0214d714
+
+src/data/ov102/data_ov102_0214e0c0.c:
+    complete
+    .data.meta start:0x0214e0c0 end:0x0214e188
+
+src/data/ov102/data_ov102_0214e1d8.c:
+    complete
+    .data start:0x0214e1d8 end:0x0214e258
+
+src/data/ov102/data_ov102_0214e614.c:
+    complete
+    .data start:0x0214e614 end:0x0214e6e0

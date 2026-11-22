@@ -72,3 +72,31 @@ src/game/actors/d_a_hyuhyu.cpp:
     .init start:0x02134a30 end:0x02134b68
     .ctor start:0x02134b7c end:0x02134b80
     .bss start:0x02135674 end:0x021356e0
+
+src/data/ov091/data_ov091_02134bc4.c:
+    complete
+    .data start:0x02134bc4 end:0x02134bd0
+
+src/data/ov091/data_ov091_02134bdc.c:
+    complete
+    .data start:0x02134bdc end:0x02134c30
+
+src/data/ov091/data_ov091_02134c5c.c:
+    complete
+    .data.updownMid start:0x02134c5c end:0x02134cdc
+
+src/data/ov091/data_ov091_02134e64.c:
+    complete
+    .data.updownTail start:0x02134e64 end:0x02135024
+
+src/data/ov091/data_ov091_02135080.c:
+    complete
+    .data.liftPad start:0x02135080 end:0x02135100
+
+src/data/ov091/data_ov091_02135120.c:
+    complete
+    .data.w135120 start:0x02135120 end:0x02135138
+
+src/data/ov091/data_ov091_02135150.c:
+    complete
+    .data.w135120 start:0x02135150 end:0x02135440
