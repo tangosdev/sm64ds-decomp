@@ -325,9 +325,9 @@ BCA_File *dExtFrameCtrl_c::LoadFile(SharedFilePtr &ptr) {
 #endif
 
 #ifndef _MSC_VER
-extern "C" void *SharedFilePtr_Construct_TexSeq(void *self, unsigned int fileID) {
-    static_cast<SharedFilePtr *>(self)->func_02017e48(fileID);
-    return self;
+void *SharedFilePtr::SharedFilePtr_Construct_TexSeq(unsigned int fileID) {
+    func_02017e48(fileID);
+    return this;
 }
 
 extern "C" int SharedFilePtr_Destruct_TexSeq(int self) {

@@ -59,6 +59,7 @@ struct SharedFilePtr {
     void *func_020178cc(unsigned int);
     int func_020178b4();
     void *func_0201787c();
+    void *SharedFilePtr_Construct_TexSeq(unsigned int);
 };
 
 #ifndef SM64DS_PLATFORM_PC
@@ -72,7 +73,6 @@ typedef char SharedFilePtr_size_must_be_0x8[sizeof(SharedFilePtr) == 0x8 ? 1 : -
 #ifdef __cplusplus
 extern "C" {
 #endif
-void *SharedFilePtr_Construct_TexSeq(void *, unsigned int);
 int SharedFilePtr_Destruct_Anim(int);
 int SharedFilePtr_Destruct_TexSeq(int);
 #ifdef __cplusplus
