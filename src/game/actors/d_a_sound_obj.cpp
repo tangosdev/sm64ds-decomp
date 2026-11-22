@@ -178,6 +178,7 @@ int daSoundObj_c::Behavior()
    precedent and is left bare. */
 static const int kPoolDist = 0x8777;
 
+// leftover: member form DIFFs
 int func_ov002_020f9468(daSoundObj_c *self, u16 *counter) {
     /* The starter shape PlaySecretSound, PlaySmallSecretSound and
        func_0200f7f0 share: the pool fallback is an else-if, so the
@@ -192,6 +193,7 @@ int func_ov002_020f9468(daSoundObj_c *self, u16 *counter) {
     return 0;
 }
 
+// leftover: member form DIFFs
 int func_ov002_020f93a8(daSoundObj_c *self, u16 *counter) {
     if (counter[0] < self->mCounterLimit) {
         int vol = self->mVolume;
