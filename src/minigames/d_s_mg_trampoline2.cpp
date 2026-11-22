@@ -269,7 +269,7 @@ s32 dScMgTrampoline2_c::InitResources() {
     Camera_UpdateMatrices(&mCameras[1]);
     if (Trmp2Mario_InitPool(mMarios, 5) == 0)
         return 0;
-    TrmpFx_InitPool(mScorePopups, 5);
+    mScorePopups->TrmpFx_InitPool(5);
     TrmpLine::LoadTextures();
     TrmpItem::LoadAll((char *)mItems, 10);
     Jump2Popup_InitPool((int)mPopups, 10);

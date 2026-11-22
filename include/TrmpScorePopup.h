@@ -13,8 +13,8 @@
  *
  * The constructor and destructor are the class's own and empty, out of line in
  * src/minigames/d_s_mg_trampoline.cpp (ROM 0x021225a8 and 0x02120938); both
- * scenes hand them to the array helpers. The pool (TrmpFx_*) is free functions
- * over the file-scope live list there. */
+ * scenes hand them to the array helpers. InitPool, Link and Unlink are methods;
+ * Spawn, ClearAll, UpdateAll and DrawAll stay free over the live list. */
 struct TrmpScorePopup {
     TrmpScorePopup();
     ~TrmpScorePopup();
@@ -33,6 +33,10 @@ struct TrmpScorePopup {
     void Spawn(int, int); /* (y, number): fills a slot and links it live */
     void Update();        /* ticks life, eases toward targetY */
     void Render();        /* draws the number when active */
+
+    void TrmpFx_InitPool(int); /* pool base is this; count of slots */
+    void TrmpFx_Link();        /* push this onto the live list */
+    void TrmpFx_Unlink();      /* remove this from the live list */
 };
 
 #ifndef SM64DS_PLATFORM_PC
