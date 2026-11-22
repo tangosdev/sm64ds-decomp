@@ -173,12 +173,16 @@ def install():
     """Fill the tracked placeholders from the cartridge image.
 
     A second call, and a process that finds the files already filled, does
-    nothing. The process that wrote them restores the placeholders at exit.
-    A forked child inherits that registration and must not restore early.
+    nothing. No cartridge image means there is nothing to fill; callers that
+    are not building a ROM keep going. The process that wrote the files
+    restores the placeholders at exit. A forked child inherits that
+    registration and must not restore early.
     """
     global _originals, _owner_pid
     with _lock:
         if _originals is not None or os.getpid() == _owner_pid:
+            return
+        if not (MOD.EXTRACTED / "arm9_dec.bin").is_file():
             return
         paths = [REPO / rel for rel, _symbols in TABLES]
         if not all(path.is_file() for path in paths) or all(_filled(path) for path in paths):
