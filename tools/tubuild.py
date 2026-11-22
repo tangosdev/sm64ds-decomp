@@ -5249,6 +5249,11 @@ def cmd_linkcheck(args):
             raise SystemExit(f"missing {tool} - see notes/setup-mwccarm.md")
     if not (REPO / "extracted" / "dsd" / "config.yaml").is_file():
         raise SystemExit("no extracted ROM - run tools/unpack.py on your own dump first")
+    import cartridge_resources as CART
+    try:
+        CART.install()
+    except OSError as exc:
+        raise SystemExit(f"cartridge resources: {exc}") from exc
 
     # ---------------------------------------------------------------- scratch config
     print("[1/8] scratch configuration")

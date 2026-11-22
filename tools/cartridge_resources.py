@@ -1,12 +1,15 @@
 """Write the arm9 resource tables from the cartridge image at build time.
 
-The tracked sources are placeholders. Their bytes are the cartridge's, so the
-ROM build materializes a compile input under build/ and compiles that. Nothing
-this module writes is meant to be committed.
+The tracked sources are placeholders. A build fills those files in place, compiles
+them, and restores the placeholders before the process exits. Nothing this module
+writes is meant to be committed.
 """
+import atexit
+import os
 import pathlib
 import re
 import struct
+import threading
 
 import modules as MOD
 
@@ -41,6 +44,9 @@ _RELOC = re.compile(r"^from:(0x[0-9a-fA-F]+)\s+kind:load\s+to:(0x[0-9a-fA-F]+)\b
 _image = None
 _names = None
 _relocs = None
+_lock = threading.Lock()
+_originals = None
+_owner_pid = None
 
 
 def _arm9():
@@ -155,8 +161,60 @@ def render(rel):
     return "\n".join(header) + "\n" + "\n".join(bodies)
 
 
+def _filled(path):
+    try:
+        with path.open(encoding="utf-8", errors="replace") as handle:
+            return "Filled from the cartridge image" in handle.read(240)
+    except OSError:
+        return False
+
+
+def install():
+    """Fill the tracked placeholders from the cartridge image.
+
+    A second call, and a process that finds the files already filled, does
+    nothing. The process that wrote them restores the placeholders at exit.
+    A forked child inherits that registration and must not restore early.
+    """
+    global _originals, _owner_pid
+    with _lock:
+        if _originals is not None or os.getpid() == _owner_pid:
+            return
+        paths = [REPO / rel for rel, _symbols in TABLES]
+        if not all(path.is_file() for path in paths) or all(_filled(path) for path in paths):
+            return
+        saved = [(path, path.read_bytes()) for path in paths]
+        try:
+            for rel, path in zip((rel for rel, _symbols in TABLES), paths):
+                path.write_text(render(rel), encoding="utf-8", newline="\n")
+        except Exception:
+            for path, blob in saved:
+                path.write_bytes(blob)
+            raise
+        _originals = saved
+        _owner_pid = os.getpid()
+        atexit.register(restore)
+
+
+def restore():
+    """Put the placeholders back. A forked child leaves that to the parent."""
+    global _originals, _owner_pid
+    with _lock:
+        if _originals is None or os.getpid() != _owner_pid:
+            return
+        saved = _originals
+        _originals = None
+        _owner_pid = None
+    for path, blob in saved:
+        path.write_bytes(blob)
+
+
 def source_override(rel):
-    """Path of the materialized compile input, or None for an ordinary source."""
+    """Path of a materialized compile input, or None for an ordinary source.
+
+    The ROM build fills the tracked file instead of compiling this copy. The
+    copy remains for inspection.
+    """
     text = render(rel)
     if text is None:
         return None
