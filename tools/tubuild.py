@@ -4086,7 +4086,7 @@ def content_tree_sha256(root):
 
 BASELINE_CONTROL_TOOLS = tuple(
     REPO / "tools" / name for name in (
-        "dsd_pin.py", "linker_alignment.py", "data_section_routes.py", "initialized_boundaries.py",
+        "dsd_pin.py", "halfword_text.py", "linker_alignment.py", "data_section_routes.py", "initialized_boundaries.py",
         "lcf_interior.py", "objisolate.py", "reloc_audit.py",
         "rombuild.py", "rombuild_cache.py",
         "rombuild_check.py", "rombuild_profile.py", "tu_manifest.py",
@@ -6066,6 +6066,18 @@ def cmd_linkcheck(args):
         print(f"      lcf: defined {len(defined_interior)} interior row(s) at their ROM "
               f"address ({', '.join(n for n, _a in defined_interior)})")
     report["lcfInteriorDefinitions"] = [n for n, _a in defined_interior]
+    try:
+        import halfword_text as HT
+        report["halfwordText"] = HT.apply(
+            scratch / "arm9.lcf", scratch / "objects.txt", cfg_root)
+    except (OSError, ValueError) as exc:
+        report["halfwordTextError"] = str(exc)
+        _write_link_report(scratch, report)
+        print(f"REFUSED -- halfword text placement: {exc}")
+        return 1
+    if report["halfwordText"]["patchedObjects"]:
+        print(f"      halfword: {report['halfwordText']['patchedObjects']} "
+              f"contribution(s) placed at alignment 2")
     print("[5/8] mwldarm (scratch module link)")
     ok, out, dt = _run_dsd([*RB.launcher(), str(RB.MW / RB.LD_VERSION / "mwldarm.exe"),
                             *RB.LDFLAGS.split(), f"@{scratch / 'objects.txt'}",

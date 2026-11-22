@@ -6,6 +6,10 @@
     .ctor       start:0x02086b60 end:0x02086bbc kind:rodata align:4
     .data       start:0x02086bc0 end:0x0209b000 kind:data align:32
     .bss        start:0x0209b000 end:0x020aa420 kind:bss align:32
+src/SVC_Div.c:
+    complete
+    .text start:0x0200406a end:0x0200406e
+
 src/SVC_WaitIntr.c:
     complete
     .text start:0x020040f4 end:0x020040f8
@@ -14,13 +18,25 @@ src/SVC_SoftReset.c:
     complete
     .text start:0x0200414c end:0x02004150
 
+src/SVC_GetCRC16.c:
+    complete
+    .text start:0x020041d2 end:0x020041d6
+
 src/SVC_UncompressRL16FromDevice.c:
     complete
     .text start:0x02004244 end:0x02004248
 
+src/SVC_Halt.c:
+    complete
+    .text start:0x020042b6 end:0x020042ba
+
 src/SVC_UnpackBits.c:
     complete
     .text start:0x0200432c end:0x02004330
+
+src/SVC_CpuSet.c:
+    complete
+    .text start:0x0200438a end:0x0200438e
 
 src/SVC_Sqrt.c:
     complete
@@ -29,6 +45,38 @@ src/SVC_Sqrt.c:
 src/SVC_UncompressLZ8.c:
     complete
     .text start:0x02004438 end:0x0200443c
+
+src/SVC_IsMmemExpanded.c:
+    complete
+    .text start:0x020044ae end:0x020044b2
+
+src/SVC_CpuSetFast.c:
+    complete
+    .text start:0x0200451e end:0x02004522
+
+src/SVC_UncompressRL8.c:
+    complete
+    .text start:0x0200456e end:0x02004572
+
+src/SVC_UncompressHuffmanFromDevice.c:
+    complete
+    .text start:0x020045e6 end:0x020045ea
+
+src/SVC_UncompressLZ16FromDevice.c:
+    complete
+    .text start:0x02004656 end:0x0200465a
+
+src/SVC_WaitVBlankIntr.c:
+    complete
+    .text start:0x020046c2 end:0x020046c8
+
+src/SVC_WaitByLoop.c:
+    complete
+    .text start:0x0200472a end:0x0200472e
+
+src/SVC_DivRem.c:
+    complete
+    .text start:0x02004782 end:0x02004788
 
 src/_start.c:
     complete
@@ -1731,6 +1779,22 @@ src/MTX_Concat33.c:
 src/MTX_Identity43_.c:
     complete
     .text start:0x020527c0 end:0x020527e8
+
+src/MTX_Scale43_.c:
+    complete
+    .text start:0x020527e8 end:0x020527fe
+
+src/MTX_RotX43_.c:
+    complete
+    .text start:0x02052800 end:0x0205281e
+
+src/MTX_RotY43_.c:
+    complete
+    .text start:0x02052820 end:0x0205283a
+
+src/MTX_RotZ43_.c:
+    complete
+    .text start:0x0205283c end:0x02052856
 
 src/MTX_MultVec43.c:
     complete
