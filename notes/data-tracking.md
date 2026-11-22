@@ -15,8 +15,10 @@ build has proved against the cartridge. It does not replace the byte gates:
 ## The bar
 
 The README has the function lines and one data line. Data is every configured
-storage address: `.data`, `.rodata`, and `.bss`. A complete claim counts,
-whichever section it is in. There is no BSS line.
+storage address: `.data`, `.rodata`, and `.bss`. A few configured ranges
+are outside the progress total. A complete claim counts, whichever section
+it is in.
+There is no BSS line.
 
 The address is the item. Aliases, renames and TU moves do not create a second
 data item. The key is `module:0xaddress`.
