@@ -1187,6 +1187,13 @@
           "firstDiff": null
         },
         {
+          "section": ".data.sWhirlpoolBta",
+          "start": "0x02112f40",
+          "end": "0x02112f58",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".data.wlLate",
           "start": "0x02113cec",
           "end": "0x02113dd0",
