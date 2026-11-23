@@ -8,58 +8,6 @@ src/ui/hud/CapIconMgr.cpp:
     .text start:0x020aa420 end:0x020ab110
     .bss start:0x020ad620 end:0x020ad640
 
-src/unnamed/ov001/data_ov001_020ab800.c:
-    complete
-    .data start:0x020ab800 end:0x020ab850
-
-src/unnamed/ov001/data_ov001_020ab850.c:
-    complete
-    .data start:0x020ab850 end:0x020ab8a0
-
-src/unnamed/ov001/data_ov001_020ab8a0.c:
-    complete
-    .data start:0x020ab8a0 end:0x020ab8e8
-
-src/unnamed/ov001/data_ov001_020ab8e8.c:
-    complete
-    .data start:0x020ab8e8 end:0x020ab938
-
-src/unnamed/ov001/data_ov001_020ab938.c:
-    complete
-    .data start:0x020ab938 end:0x020ab9c8
-
-src/unnamed/ov001/data_ov001_020ab9c8.c:
-    complete
-    .data start:0x020ab9c8 end:0x020abac0
-
-src/unnamed/ov001/data_ov001_020abac0.c:
-    complete
-    .data start:0x020abac0 end:0x020abc34
-
-src/unnamed/ov001/data_ov001_020abc34.c:
-    complete
-    .data start:0x020abc34 end:0x020abd78
-
-src/unnamed/ov001/data_ov001_020abd78.c:
-    complete
-    .data start:0x020abd78 end:0x020ac218
-
-src/unnamed/ov001/data_ov001_020ac218.c:
-    complete
-    .data start:0x020ac218 end:0x020ac64c
-
-src/unnamed/ov001/data_ov001_020ac64c.c:
-    complete
-    .data start:0x020ac64c end:0x020acb68
-
-src/unnamed/ov001/data_ov001_020acb68.c:
-    complete
-    .data start:0x020acb68 end:0x020ad04c
-
-src/unnamed/ov001/data_ov001_020ad04c.c:
-    complete
-    .data start:0x020ad04c end:0x020ad450
-
 src/ui/hud/d_cap_icon.cpp:
     complete
     .text start:0x020ab110 end:0x020ab41c
@@ -69,6 +17,3 @@ src/ui/hud/d_th_icon.cpp:
     complete
     .text start:0x020ab41c end:0x020ab5f8
 
-src/unnamed/ov001/data_ov001_020ab5f8.c:
-    complete
-    .rodata start:0x020ab5f8 end:0x020ab7e4

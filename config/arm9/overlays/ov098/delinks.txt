@@ -44,27 +44,3 @@ src/game/actors/d_a_wbm.cpp:
     .init start:0x0213c2b4 end:0x0213c33c
     .ctor start:0x0213c348 end:0x0213c34c
     .bss start:0x0213c91c end:0x0213c960
-
-src/unnamed/ov098/data_ov098_0213c434.c:
-    complete
-    .data.blockHead start:0x0213c434 end:0x0213c458
-
-src/unnamed/ov098/data_ov098_0213c458.c:
-    complete
-    .data.blockHead start:0x0213c458 end:0x0213c4c8
-
-src/unnamed/ov098/data_ov098_0213c5b4.c:
-    complete
-    .data.blockTail start:0x0213c5b4 end:0x0213c5bc
-
-src/unnamed/ov098/data_ov098_0213c63c.c:
-    complete
-    .data.blockTail start:0x0213c63c end:0x0213c664
-
-src/unnamed/ov098/data_ov098_0213c71c.c:
-    complete
-    .data.blockTail start:0x0213c71c end:0x0213c734
-
-src/unnamed/ov098/data_ov098_0213c78c.c:
-    complete
-    .data.blockTail start:0x0213c78c end:0x0213c800

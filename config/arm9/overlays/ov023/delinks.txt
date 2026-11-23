@@ -4,38 +4,6 @@
     .ctor       start:0x02111b14 end:0x02111b18 kind:rodata align:4
     .data       start:0x02111b20 end:0x02112080 kind:data align:32
     .bss        start:0x02112080 end:0x021120c0 kind:bss align:32
-src/unnamed/ov023/data_ov023_02111b20.c:
-    complete
-    .data start:0x02111b20 end:0x02111b30
-
-src/unnamed/ov023/data_ov023_02111b30.c:
-    complete
-    .data start:0x02111b30 end:0x02111b40
-
-src/unnamed/ov023/data_ov023_02111b40.c:
-    complete
-    .data start:0x02111b40 end:0x02111b60
-
-src/unnamed/ov023/data_ov023_02111b60.c:
-    complete
-    .data start:0x02111b60 end:0x02111bc0
-
-src/unnamed/ov023/data_ov023_02111bc0.c:
-    complete
-    .data start:0x02111bc0 end:0x02111bd4
-
-src/unnamed/ov023/data_ov023_02111bd4.c:
-    complete
-    .data start:0x02111bd4 end:0x02111c20
-
-src/unnamed/ov023/data_ov023_02111c20.c:
-    complete
-    .data start:0x02111c20 end:0x02111c98
-
-src/unnamed/ov023/data_ov023_02111c98.c:
-    complete
-    .data start:0x02111c98 end:0x02111fa0
-
 src/game/actors/d_a_obj_fm_battan.cpp:
     complete
     .text start:0x021111a0 end:0x02111760
@@ -43,23 +11,3 @@ src/game/actors/d_a_obj_fm_battan.cpp:
     .ctor start:0x02111b14 end:0x02111b18
     .data start:0x02111fa0 end:0x02112064
     .bss start:0x02112080 end:0x021120a8
-
-src/unnamed/ov023/data_ov023_02111760.c:
-    complete
-    .rodata start:0x02111760 end:0x02111834
-
-src/unnamed/ov023/data_ov023_02111834.c:
-    complete
-    .rodata start:0x02111834 end:0x0211190c
-
-src/unnamed/ov023/data_ov023_0211190c.c:
-    complete
-    .rodata start:0x0211190c end:0x02111928
-
-src/unnamed/ov023/data_ov023_02111928.c:
-    complete
-    .rodata start:0x02111928 end:0x02111a4c
-
-src/unnamed/ov023/data_ov023_02111a4c.c:
-    complete
-    .rodata start:0x02111a4c end:0x02111aa8

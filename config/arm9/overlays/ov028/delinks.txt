@@ -2,8 +2,3 @@
     .ctor       start:0x02111330 end:0x02111330 kind:rodata align:4
     .data       start:0x02111340 end:0x021116a0 kind:data align:32
     .bss        start:0x021116a0 end:0x021116a0 kind:bss align:32
-
-src/unnamed/ov028/data_ov028.c:
-    complete
-    .rodata start:0x021111a0 end:0x02111330
-    .data start:0x02111340 end:0x021116a0

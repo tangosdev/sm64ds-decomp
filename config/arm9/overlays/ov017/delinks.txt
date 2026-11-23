@@ -20,19 +20,3 @@ src/game/actors/d_a_obj_ks_water.cpp:
     .data.ksWaterName start:0x02111a18 end:0x02111a24
     .data.ksClps start:0x02111a94 end:0x02111ab4
     .bss start:0x02111c80 end:0x02111ca8
-
-src/unnamed/ov017/data_ov017_02111ab4.c:
-    complete
-    .data.ksRest start:0x02111ab4 end:0x02111af4
-
-src/unnamed/ov017/data_ov017_02111af4.c:
-    complete
-    .data.ksRest start:0x02111af4 end:0x02111b2c
-
-src/unnamed/ov017/data_ov017_02111b2c.c:
-    complete
-    .data.ksRest start:0x02111b2c end:0x02111b64
-
-src/unnamed/ov017/data_ov017_02111b64.c:
-    complete
-    .data.ksRest start:0x02111b64 end:0x02111bb4

@@ -4,10 +4,6 @@
     .ctor       start:0x02114dd0 end:0x02114ddc kind:rodata align:4
     .data       start:0x02114de0 end:0x02115c80 kind:data align:32
     .bss        start:0x02115c80 end:0x02115ec0 kind:bss align:32
-src/unnamed/ov030/data_ov030_02114de0.c:
-    complete
-    .data start:0x02114de0 end:0x02114ee4
-
 src/game/actors/d_a_obj_hm_bskt.cpp:
     complete
     .text start:0x021111a0 end:0x0211155c
@@ -15,14 +11,6 @@ src/game/actors/d_a_obj_hm_bskt.cpp:
     .ctor start:0x02114dd0 end:0x02114dd4
     .bss start:0x02115c80 end:0x02115ca8
     .data start:0x02114ee4 end:0x02114f04
-
-src/unnamed/ov030/data_ov030_02114f04.c:
-    complete
-    .data start:0x02114f04 end:0x02115934
-
-src/unnamed/ov030/data_ov030_021159f4.c:
-    complete
-    .data start:0x021159f4 end:0x021159f8
 
 src/game/actors/d_a_obj_hm_maruta.cpp:
     complete
@@ -39,15 +27,3 @@ src/game/actors/d_a_mky.cpp:
     .ctor start:0x02114dd8 end:0x02114ddc
     .data start:0x02115ac8 end:0x02115b78
     .bss start:0x02115cd0 end:0x02115ebc
-
-src/unnamed/ov030/data_ov030_02114690.c:
-    complete
-    .rodata start:0x02114690 end:0x02114824
-
-src/unnamed/ov030/data_ov030_02114824.c:
-    complete
-    .rodata start:0x02114824 end:0x0211484c
-
-src/unnamed/ov030/data_ov030_02115bc8.c:
-    complete
-    .data start:0x02115bc8 end:0x02115bfc

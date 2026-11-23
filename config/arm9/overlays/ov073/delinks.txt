@@ -18,14 +18,3 @@ src/game/actors/d_a_obj_ewb_ice.cpp:
     .ctor start:0x02122f38 end:0x02122f3c
     .bss start:0x02123420 end:0x021234e0
 
-src/unnamed/ov073/data_ov073_0212310c.c:
-    complete
-    .data start:0x0212310c end:0x0212314c
-
-src/unnamed/ov073/data_ov073_021231bc.c:
-    complete
-    .data start:0x021231bc end:0x021231e8
-
-src/unnamed/ov073/data_ov073_02123254.c:
-    complete
-    .data start:0x02123254 end:0x02123280
