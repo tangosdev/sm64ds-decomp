@@ -114,11 +114,13 @@ extern "C" const fx32 data_ov026_02112554[30] = {
 
 /* Whirlpool texture-SRT header. Non-const: Prepare patches the material id. */
 extern "C" BTA_File sWhirlpoolBta = {
-    0x1e, 0,
+    0x1e,
+    0,
     (fx32 *)data_ov026_021124a4,
     (u16 *)data_ov026_02112490,
     (fx32 *)data_ov026_02112554,
-    2, 0,
+    2,
+    0,
     (BTAMaterialRecord *)data_ov026_021124e4,
 };
 

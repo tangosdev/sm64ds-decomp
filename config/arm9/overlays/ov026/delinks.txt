@@ -9,7 +9,7 @@
     .rodata.data_ov026_021125cc start:0x021125cc end:0x02112b7c kind:rodata align:4
     .init       start:0x02112b7c end:0x02112da4 kind:code align:4
     .ctor       start:0x02112da4 end:0x02112db8 kind:rodata align:4
-    .data       start:0x02112dc0 end:0x02112ef8 kind:data align:32
+    .data.data_ov026_02112dc0 start:0x02112dc0 end:0x02112ef8 kind:data align:32
     .data.data_ov026_02112ef8 start:0x02112ef8 end:0x02112f10 kind:data align:4
     .data.data_ov026_02112f10 start:0x02112f10 end:0x02112f28 kind:data align:4
     .data.data_ov026_02112f28 start:0x02112f28 end:0x02112f40 kind:data align:4
@@ -80,7 +80,7 @@ src/unnamed/ov026/data_ov026.c:
     .rodata.data_ov026_021124ac start:0x021124ac end:0x021124e4
     .rodata.data_ov026_0211251c start:0x0211251c end:0x02112554
     .rodata.data_ov026_021125cc start:0x021125cc end:0x02112b7c
-    .data start:0x02112dc0 end:0x02112ef8
+    .data.data_ov026_02112dc0 start:0x02112dc0 end:0x02112ef8
     .data.data_ov026_02112ef8 start:0x02112ef8 end:0x02112f10
     .data.data_ov026_02112f10 start:0x02112f10 end:0x02112f28
     .data.data_ov026_02112f28 start:0x02112f28 end:0x02112f40

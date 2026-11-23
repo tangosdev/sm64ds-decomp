@@ -421,6 +421,8 @@ fx32 data_ov026_021125cc[] = {
 #pragma section rd125cc end
 
 
+#pragma define_section d12dc0 ".data.data_ov026_02112dc0" ".data.data_ov026_02112dc0" ".data.data_ov026_02112dc0" far_data
+#pragma section d12dc0 begin
 /* 0x02112dc0..0x02112ef8. Course rows no class names: file ids, material
  * names, object rows, and the three sub-table headers. The BTA headers
  * that follow are their own sections. */
@@ -446,6 +448,7 @@ u32 data_ov026_02112dc0[] = {
     0x00002d00, (u32)data_ov026_021137c0, 0x00003605, (u32)data_ov026_02113450,
     0x00000160, (u32)data_ov026_02112e80,
 };
+#pragma section d12dc0 end
 
 /* Light/water texture-SRT header. 0x5b frames, two materials. */
 #pragma define_section d12ef8 ".data.data_ov026_02112ef8" ".data.data_ov026_02112ef8" ".data.data_ov026_02112ef8" far_data
