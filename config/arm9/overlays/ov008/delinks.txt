@@ -1,57 +1,7 @@
     .ctor       start:0x021111a0 end:0x021111a0 kind:rodata align:4
-    .data.data_ov008_021111c0 start:0x021111c0 end:0x021111c4 kind:data align:32
-    .data.data_ov008_021111c4 start:0x021111c4 end:0x021111c8 kind:data align:4
-    .data.data_ov008_021111c8 start:0x021111c8 end:0x021111d0 kind:data align:4
-    .data.data_ov008_021111d0 start:0x021111d0 end:0x021111d8 kind:data align:4
-    .data.data_ov008_021111d8 start:0x021111d8 end:0x021111e0 kind:data align:4
-    .data.data_ov008_021111e0 start:0x021111e0 end:0x021111ec kind:data align:4
-    .data.data_ov008_021111ec start:0x021111ec end:0x021111fc kind:data align:4
-    .data.data_ov008_021111fc start:0x021111fc end:0x02111210 kind:data align:4
-    .data.data_ov008_02111210 start:0x02111210 end:0x0211122c kind:data align:4
-    .data.data_ov008_0211122c start:0x0211122c end:0x0211124c kind:data align:4
-    .data.data_ov008_0211124c start:0x0211124c end:0x0211126c kind:data align:4
-    .data.data_ov008_0211126c start:0x0211126c end:0x0211128c kind:data align:4
-    .data.data_ov008_0211128c start:0x0211128c end:0x021112ac kind:data align:4
-    .data.data_ov008_021112ac start:0x021112ac end:0x021112d0 kind:data align:4
-    .data.data_ov008_021112d0 start:0x021112d0 end:0x021112f8 kind:data align:4
-    .data.data_ov008_021112f8 start:0x021112f8 end:0x02111320 kind:data align:4
-    .data.data_ov008_02111320 start:0x02111320 end:0x02111350 kind:data align:4
-    .data.data_ov008_02111350 start:0x02111350 end:0x02111380 kind:data align:4
-    .data.data_ov008_02111380 start:0x02111380 end:0x021113c0 kind:data align:4
-    .data.data_ov008_021113c0 start:0x021113c0 end:0x02111400 kind:data align:4
-    .data.data_ov008_02111400 start:0x02111400 end:0x02111450 kind:data align:4
-    .data.data_ov008_02111450 start:0x02111450 end:0x021114a8 kind:data align:4
-    .data.data_ov008_021114a8 start:0x021114a8 end:0x02111508 kind:data align:4
-    .data.data_ov008_02111508 start:0x02111508 end:0x021115c8 kind:data align:4
-    .data.data_ov008_021115c8 start:0x021115c8 end:0x021118b8 kind:data align:4
-    .data.data_ov008_021118b8 start:0x021118b8 end:0x02111c20 kind:data align:4
+    .data       start:0x021111c0 end:0x02111c20 kind:data align:32
     .bss        start:0x02111c20 end:0x02111c20 kind:bss align:32
+
 src/unnamed/ov008/data_ov008.c:
     complete
-    .data.data_ov008_021111c0 start:0x021111c0 end:0x021111c4
-    .data.data_ov008_021111c4 start:0x021111c4 end:0x021111c8
-    .data.data_ov008_021111c8 start:0x021111c8 end:0x021111d0
-    .data.data_ov008_021111d0 start:0x021111d0 end:0x021111d8
-    .data.data_ov008_021111d8 start:0x021111d8 end:0x021111e0
-    .data.data_ov008_021111e0 start:0x021111e0 end:0x021111ec
-    .data.data_ov008_021111ec start:0x021111ec end:0x021111fc
-    .data.data_ov008_021111fc start:0x021111fc end:0x02111210
-    .data.data_ov008_02111210 start:0x02111210 end:0x0211122c
-    .data.data_ov008_0211122c start:0x0211122c end:0x0211124c
-    .data.data_ov008_0211124c start:0x0211124c end:0x0211126c
-    .data.data_ov008_0211126c start:0x0211126c end:0x0211128c
-    .data.data_ov008_0211128c start:0x0211128c end:0x021112ac
-    .data.data_ov008_021112ac start:0x021112ac end:0x021112d0
-    .data.data_ov008_021112d0 start:0x021112d0 end:0x021112f8
-    .data.data_ov008_021112f8 start:0x021112f8 end:0x02111320
-    .data.data_ov008_02111320 start:0x02111320 end:0x02111350
-    .data.data_ov008_02111350 start:0x02111350 end:0x02111380
-    .data.data_ov008_02111380 start:0x02111380 end:0x021113c0
-    .data.data_ov008_021113c0 start:0x021113c0 end:0x02111400
-    .data.data_ov008_02111400 start:0x02111400 end:0x02111450
-    .data.data_ov008_02111450 start:0x02111450 end:0x021114a8
-    .data.data_ov008_021114a8 start:0x021114a8 end:0x02111508
-    .data.data_ov008_02111508 start:0x02111508 end:0x021115c8
-    .data.data_ov008_021115c8 start:0x021115c8 end:0x021118b8
-    .data.data_ov008_021118b8 start:0x021118b8 end:0x02111c20
-
+    .data start:0x021111c0 end:0x02111c20

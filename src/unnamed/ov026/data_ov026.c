@@ -1,161 +1,87 @@
 /* Overlay 26 course data no one class owns: the light/water BTA keys and the
- * first .data run. sWhirlpoolBta and its keys are in daWater_Tatumaki_c. The
- * Polelift/KoopaShutter/Submarine vtables at 0x02113a90 stay unclaimed.
- *
- * A label another object relocates to is its own global in its own section.
- * An extern to an interior word is not that symbol. */
+ * first .data run. sWhirlpoolBta's keys are in daWater_Tatumaki_c. The
+ * Polelift/KoopaShutter/Submarine vtables at 0x02113a90 stay unclaimed. */
 #include "types.h"
-#include "CLPS.h"
-#include "private/BTA_File.h"
 
-/* Widths the level loaders walk. Same layouts as LVL_Overlay; this file
- * stays C. Rotation is three s16s: Vector3s has a destructor. */
-typedef struct ObjTable {
-    u16 count;
-    u8 pad[2];
-    void *entries;
-} ObjTable;
-
-typedef struct ObjSubTable {
-    u8 categoryAndStar;
-    u8 count;
-    u8 pad[2];
-    void *entries;
-} ObjSubTable;
-
-typedef struct DoorEntry {
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 angle;
-    u16 param;
-    u16 type;
-} DoorEntry;
-
-/* ExitEntry is 0xe. The two bytes after it are zero, up to the next label. */
-typedef struct ExitRow {
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 rotX;
-    s16 rotY;
-    u8 param[4];
-    u16 pad;
-} ExitRow;
-
-/* CamViewObj's 0xe bytes, plus those same two zero bytes. */
-typedef struct ViewRow {
-    u8 type;
-    u8 p1;
-    s16 x;
-    s16 y;
-    s16 z;
-    u8 pad_8[2];
-    s16 angleY;
-    u8 tail[2];
-    u16 pad;
-} ViewRow;
-
-/* LoadFog steps 8 bytes: flag, three colour bytes, near, far. */
-typedef struct FogRow {
-    u8 enabled;
-    u8 r;
-    u8 g;
-    u8 b;
-    u16 nearDist;
-    u16 farDist;
-} FogRow;
-
-typedef struct StandardEntry {
-    u16 raw;
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    u16 param;
-} StandardEntry;
-
-typedef struct SimpleEntry {
-    u16 raw;
-    s16 x;
-    s16 y;
-    s16 z;
-} SimpleEntry;
-
-typedef struct ClpsBlock {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[16];
-    u32 tail[6];
-} ClpsBlock;
-
-typedef char ObjTable_size_must_be_0x8[sizeof(ObjTable) == 8 ? 1 : -1];
-typedef char ObjSubTable_size_must_be_0x8[sizeof(ObjSubTable) == 8 ? 1 : -1];
-typedef char DoorEntry_size_must_be_0xc[sizeof(DoorEntry) == 0xc ? 1 : -1];
-typedef char ExitRow_size_must_be_0x10[sizeof(ExitRow) == 0x10 ? 1 : -1];
-typedef char ViewRow_size_must_be_0x10[sizeof(ViewRow) == 0x10 ? 1 : -1];
-typedef char FogRow_size_must_be_0x8[sizeof(FogRow) == 8 ? 1 : -1];
-typedef char StandardEntry_size_must_be_0x10[sizeof(StandardEntry) == 0x10 ? 1 : -1];
-typedef char SimpleEntry_size_must_be_0x8[sizeof(SimpleEntry) == 8 ? 1 : -1];
-typedef char ClpsBlock_size_must_be_0xa0[sizeof(ClpsBlock) == 0xa0 ? 1 : -1];
-
-/* Defined below. The BTA material rows and the area table name them. */
-extern char data_ov026_02112e20[];
-extern ObjSubTable data_ov026_02112ee0[];
-extern char data_ov026_02112e30[];
-extern char data_ov026_02112e40[];
-extern char data_ov026_02112e50[];
-/* Interior of daObjWlKoopaShutter_c's .data. Not split out of that unit. */
+/* Words the other BTAs and the course table relocate point here.
+ * sWhirlpoolBta's own key words live in daWater_Tatumaki_c. */
+extern u32 data_ov026_02112490[];
+extern u32 data_ov026_02112498[];
+extern u32 data_ov026_0211249c[];
+extern u32 data_ov026_021124a0[];
+extern u32 data_ov026_021124a4[];
+extern u32 data_ov026_021124e4[];
+extern u32 data_ov026_02112554[];
+extern u32 data_ov026_02112738[];
+extern u32 data_ov026_02112dc8[];
+extern u32 data_ov026_02112dd8[];
+extern u32 data_ov026_02112de0[];
+extern u32 data_ov026_02112e20[];
+extern u32 data_ov026_02112e30[];
+extern u32 data_ov026_02112e40[];
+extern u32 data_ov026_02112e50[];
+extern u32 data_ov026_02112e80[];
+extern u32 data_ov026_02112ee0[];
+extern u32 data_ov026_02112ef8[];
+extern u32 data_ov026_02112f10[];
+extern u32 data_ov026_02112f28[];
 extern u32 data_ov026_02112f94[];
-extern ObjSubTable data_ov026_02113014[];
-extern ClpsBlock data_ov026_02113100;
-extern SimpleEntry data_ov026_02113450[];
-extern StandardEntry data_ov026_021137c0[];
-extern BTA_File data_ov026_02112f28;
+extern u32 data_ov026_02113014[];
+extern u32 data_ov026_02113100[];
+extern u32 data_ov026_02113450[];
+extern u32 data_ov026_021137c0[];
 
-/* 0x02112494. BTA rotation key, one u16. The high half is zero. */
-const u16 data_ov026_02112494[2] = {0x0000, 0x0000};
-
-/* 0x02112498. Scale key, fx32 1.0. */
-#pragma define_section rd12498 ".rodata.data_ov026_02112498" ".rodata.data_ov026_02112498" ".rodata.data_ov026_02112498" far_data
-#pragma section rd12498 begin
-fx32 data_ov026_02112498[1] = {0x00001000};
-#pragma section rd12498 end
-
-/* 0x0211249c. Second BTA's scale key. Index 1 reads the next word. */
-#pragma define_section rd1249c ".rodata.data_ov026_0211249c" ".rodata.data_ov026_0211249c" ".rodata.data_ov026_0211249c" far_data
-#pragma section rd1249c begin
-fx32 data_ov026_0211249c[1] = {0x00001000};
-#pragma section rd1249c end
-
-/* 0x021124a0. Second BTA's rotation key. */
-#pragma define_section rd124a0 ".rodata.data_ov026_021124a0" ".rodata.data_ov026_021124a0" ".rodata.data_ov026_021124a0" far_data
-#pragma section rd124a0 begin
-u16 data_ov026_021124a0[2] = {0xfad8, 0x0000};
-#pragma section rd124a0 end
+/* 0x02112494..0x021124a4. The first word is the light/water rotation key. */
+const u32 data_ov026_02112494[] = {
+    0x00000000,
+    0x00001000,
+    0x00001000,
+    0x0000fad8
+};
 
 #pragma define_section rd124ac ".rodata.data_ov026_021124ac" ".rodata.data_ov026_021124ac" ".rodata.data_ov026_021124ac" far_data
 #pragma section rd124ac begin
-BTAMaterialRecord data_ov026_021124ac[] = {
-    {0xffff, 0, (char *)data_ov026_02112e40, {1, 0}, {1, 0}, {1, 0}, {0x5b, 0}, {0x5b, 0}},
-    {0xffff, 0, (char *)data_ov026_02112e20, {1, 0}, {1, 0}, {1, 0}, {0x5b, 0}, {0x5b, 0}},
+u32 data_ov026_021124ac[] = {
+    0x0000ffff,
+    (u32)data_ov026_02112e40,
+    0x00000001,
+    0x00000001,
+    0x00000001,
+    0x0000005b,
+    0x0000005b,
+    0x0000ffff,
+    (u32)data_ov026_02112e20,
+    0x00000001,
+    0x00000001,
+    0x00000001,
+    0x0000005b,
+    0x0000005b
 };
 #pragma section rd124ac end
 
 #pragma define_section rd1251c ".rodata.data_ov026_0211251c" ".rodata.data_ov026_0211251c" ".rodata.data_ov026_0211251c" far_data
 #pragma section rd1251c begin
-BTAMaterialRecord data_ov026_0211251c[] = {
-    {0xffff, 0, (char *)data_ov026_02112e50, {1, 0}, {1, 0}, {1, 0}, {0x5b, 0}, {1, 0}},
-    {0xffff, 0, (char *)data_ov026_02112e30, {1, 0}, {1, 0}, {1, 1}, {0x5b, 0x5b}, {0x5b, 0xb6}},
+u32 data_ov026_0211251c[] = {
+    0x0000ffff,
+    (u32)data_ov026_02112e50,
+    0x00000001,
+    0x00000001,
+    0x00000001,
+    0x0000005b,
+    0x00000001,
+    0x0000ffff,
+    (u32)data_ov026_02112e30,
+    0x00000001,
+    0x00000001,
+    0x00010001,
+    0x005b005b,
+    0x00b6005b
 };
 #pragma section rd1251c end
 
 #pragma define_section rd125cc ".rodata.data_ov026_021125cc" ".rodata.data_ov026_021125cc" ".rodata.data_ov026_021125cc" far_data
 #pragma section rd125cc begin
-fx32 data_ov026_021125cc[] = {
+u32 data_ov026_021125cc[] = {
     0x00000000,
     0x0000002e,
     0x0000005b,
@@ -246,14 +172,7 @@ fx32 data_ov026_021125cc[] = {
     0x00000f77,
     0x00000fa5,
     0x00000fd2,
-    0x00001000
-};
-#pragma section rd125cc end
-
-/* 0x02112738. Second light/water BTA's translation keys. */
-#pragma define_section rd12738 ".rodata.data_ov026_02112738" ".rodata.data_ov026_02112738" ".rodata.data_ov026_02112738" far_data
-#pragma section rd12738 begin
-fx32 data_ov026_02112738[] = {
+    0x00001000,
     0x00000000,
     0xfffffffa,
     0xfffffff2,
@@ -528,232 +447,118 @@ fx32 data_ov026_02112738[] = {
     0x0000000c,
     0x00000000
 };
-#pragma section rd12738 end
+#pragma section rd125cc end
 
 
-/* 0x02112dc0. One minimap-tile file id. LoadMinimapTileObjects reads the u16. */
-#pragma define_section d12dc0 ".data.data_ov026_02112dc0" ".data.data_ov026_02112dc0" ".data.data_ov026_02112dc0" far_data
-#pragma section d12dc0 begin
-u16 data_ov026_02112dc0[2] = {0x07f4, 0x0000};
-#pragma section d12dc0 end
-
-/* 0x02112dc4. Star-camera word. LoadStarCameraObjects reads this u32. */
-#pragma define_section d12dc4 ".data.data_ov026_02112dc4" ".data.data_ov026_02112dc4" ".data.data_ov026_02112dc4" far_data
-#pragma section d12dc4 begin
-u32 data_ov026_02112dc4[1] = {0x00000004};
-#pragma section d12dc4 end
-
-/* 0x02112dc8. Level object table: nine subtables at 0x02113014. */
-#pragma define_section d12dc8 ".data.data_ov026_02112dc8" ".data.data_ov026_02112dc8" ".data.data_ov026_02112dc8" far_data
-#pragma section d12dc8 begin
-ObjTable data_ov026_02112dc8 = {0x0009, {0x00, 0x00}, data_ov026_02113014};
-#pragma section d12dc8 end
-
-/* 0x02112dd0. Whirlpool material name. */
-#pragma define_section d12dd0 ".data.data_ov026_02112dd0" ".data.data_ov026_02112dd0" ".data.data_ov026_02112dd0" far_data
-#pragma section d12dd0 begin
-char data_ov026_02112dd0[8] = "uzumaki";
-#pragma section d12dd0 end
-
-/* 0x02112dd8. Area object table: three subtables at 0x02112ee0. */
-#pragma define_section d12dd8 ".data.data_ov026_02112dd8" ".data.data_ov026_02112dd8" ".data.data_ov026_02112dd8" far_data
-#pragma section d12dd8 begin
-ObjTable data_ov026_02112dd8 = {0x0003, {0x00, 0x00}, data_ov026_02112ee0};
-#pragma section d12dd8 end
-
-/* 0x02112de0. Area object table: eight subtables at 0x02112f94. */
-#pragma define_section d12de0 ".data.data_ov026_02112de0" ".data.data_ov026_02112de0" ".data.data_ov026_02112de0" far_data
-#pragma section d12de0 begin
-ObjTable data_ov026_02112de0 = {0x0008, {0x00, 0x00}, data_ov026_02112f94};
-#pragma section d12de0 end
-
-/* 0x02112de8. Second whirlpool material name. Three zero bytes follow the NUL. */
-#pragma define_section d12de8 ".data.data_ov026_02112de8" ".data.data_ov026_02112de8" ".data.data_ov026_02112de8" far_data
-#pragma section d12de8 begin
-char data_ov026_02112de8[12] = "uzumaki1";
-#pragma section d12de8 end
-
-/* 0x02112df4. One door. */
-#pragma define_section d12df4 ".data.data_ov026_02112df4" ".data.data_ov026_02112df4" ".data.data_ov026_02112df4" far_data
-#pragma section d12df4 begin
-DoorEntry data_ov026_02112df4[1] = {
-    {(s16)0xff6a, 0x0320, 0x00fa, (s16)0xc000, 0x01ea, 0x0000},
-};
-#pragma section d12df4 end
-
-/* 0x02112e00. One exit. param is the big-endian byte quartet. */
-#pragma define_section d12e00 ".data.data_ov026_02112e00" ".data.data_ov026_02112e00" ".data.data_ov026_02112e00" far_data
-#pragma section d12e00 begin
-ExitRow data_ov026_02112e00[1] = {
-    {0x1de2, (s16)0xf9c0, (s16)0xe8c2, 0x0000, 0x0000, {0x01, 0x07, 0xff, 0xff}, 0x0000},
-};
-#pragma section d12e00 end
-
-/* 0x02112e10. One view. */
-#pragma define_section d12e10 ".data.data_ov026_02112e10" ".data.data_ov026_02112e10" ".data.data_ov026_02112e10" far_data
-#pragma section d12e10 begin
-ViewRow data_ov026_02112e10[1] = {
-    {0x02, 0xff, (s16)0xe412, 0x0b22, 0x073a, {0x00, 0x00}, (s16)0x8000, {0x00, 0x00}, 0x0000},
-};
-#pragma section d12e10 end
-
-#pragma define_section d12e20 ".data.data_ov026_02112e20" ".data.data_ov026_02112e20" ".data.data_ov026_02112e20" far_data
-#pragma section d12e20 begin
-char data_ov026_02112e20[16] = "mat_zy_water_0";
-#pragma section d12e20 end
-
-#pragma define_section d12e30 ".data.data_ov026_02112e30" ".data.data_ov026_02112e30" ".data.data_ov026_02112e30" far_data
-#pragma section d12e30 begin
-char data_ov026_02112e30[16] = "mat_zy_water_1";
-#pragma section d12e30 end
-
-#pragma define_section d12e40 ".data.data_ov026_02112e40" ".data.data_ov026_02112e40" ".data.data_ov026_02112e40" far_data
-#pragma section d12e40 begin
-char data_ov026_02112e40[16] = "mat_zz_light_0";
-#pragma section d12e40 end
-
-#pragma define_section d12e50 ".data.data_ov026_02112e50" ".data.data_ov026_02112e50" ".data.data_ov026_02112e50" far_data
-#pragma section d12e50 begin
-char data_ov026_02112e50[16] = "mat_zz_light_1";
-#pragma section d12e50 end
-
-/* Star-filtered standard rows. Category byte 0xc0..0xe0 and 0x40..0xa0. */
-#pragma define_section d12e60 ".data.data_ov026_02112e60" ".data.data_ov026_02112e60" ".data.data_ov026_02112e60" far_data
-#pragma section d12e60 begin
-StandardEntry data_ov026_02112e60[1] = {
-    {0x0091, (s16)0xe2b6, (s16)0xfaf0, 0x06db, 0x0000, 0x0000, 0x0000, 0x7001},
-};
-#pragma section d12e60 end
-
-#pragma define_section d12e70 ".data.data_ov026_02112e70" ".data.data_ov026_02112e70" ".data.data_ov026_02112e70" far_data
-#pragma section d12e70 begin
-StandardEntry data_ov026_02112e70[1] = {
-    {0x0091, (s16)0xe2b6, (s16)0xfaf0, 0x06db, 0x0000, 0x0000, 0x0000, 0x7001},
-};
-#pragma section d12e70 end
-
-#pragma define_section d12e80 ".data.data_ov026_02112e80" ".data.data_ov026_02112e80" ".data.data_ov026_02112e80" far_data
-#pragma section d12e80 begin
-StandardEntry data_ov026_02112e80[1] = {
-    {0x0014, 0x28d2, 0x0546, 0x1004, 0x0003, (s16)0xc000, 0x0000, 0xffff},
-};
-#pragma section d12e80 end
-
-#pragma define_section d12e90 ".data.data_ov026_02112e90" ".data.data_ov026_02112e90" ".data.data_ov026_02112e90" far_data
-#pragma section d12e90 begin
-StandardEntry data_ov026_02112e90[1] = {
-    {0x0091, (s16)0xe2b6, (s16)0xfaf0, 0x06db, 0x0000, 0x0000, 0x0000, 0x7001},
-};
-#pragma section d12e90 end
-
-/* 0x02112ea0. Two fog rows. */
-#pragma define_section d12ea0 ".data.data_ov026_02112ea0" ".data.data_ov026_02112ea0" ".data.data_ov026_02112ea0" far_data
-#pragma section d12ea0 begin
-FogRow data_ov026_02112ea0[2] = {
-    {0x01, 0x57, 0x87, 0xba, 0x2af8, 0xb3b0},
-    {0x01, 0x8c, 0xf7, 0xf7, 0x0000, 0xea60},
-};
-#pragma section d12ea0 end
-
-#pragma define_section d12eb0 ".data.data_ov026_02112eb0" ".data.data_ov026_02112eb0" ".data.data_ov026_02112eb0" far_data
-#pragma section d12eb0 begin
-StandardEntry data_ov026_02112eb0[1] = {
-    {0x0091, (s16)0xe2b6, (s16)0xfaf0, 0x06db, 0x0000, 0x0000, 0x0000, 0x7001},
-};
-#pragma section d12eb0 end
-
-#pragma define_section d12ec0 ".data.data_ov026_02112ec0" ".data.data_ov026_02112ec0" ".data.data_ov026_02112ec0" far_data
-#pragma section d12ec0 begin
-StandardEntry data_ov026_02112ec0[1] = {
-    {0x0091, (s16)0xe2b6, (s16)0xfaf0, 0x06db, 0x0000, 0x0000, 0x0000, 0x7001},
-};
-#pragma section d12ec0 end
-
-#pragma define_section d12ed0 ".data.data_ov026_02112ed0" ".data.data_ov026_02112ed0" ".data.data_ov026_02112ed0" far_data
-#pragma section d12ed0 begin
-StandardEntry data_ov026_02112ed0[1] = {
-    {0x0091, (s16)0xe2b6, (s16)0xfaf0, 0x06db, 0x0000, 0x0000, 0x0000, 0x7001},
-};
-#pragma section d12ed0 end
-
-/* 0x02112ee0. Three sub-table headers for the area table at 0x02112dd8. */
-#pragma define_section d12ee0 ".data.data_ov026_02112ee0" ".data.data_ov026_02112ee0" ".data.data_ov026_02112ee0" far_data
-#pragma section d12ee0 begin
-ObjSubTable data_ov026_02112ee0[3] = {
-    {0x00, 0x2d, {0x00, 0x00}, data_ov026_021137c0},
-    {0x05, 0x36, {0x00, 0x00}, data_ov026_02113450},
-    {0x60, 0x01, {0x00, 0x00}, data_ov026_02112e80},
-};
-#pragma section d12ee0 end
-
-/* Light/water texture-SRT header. 0x5b frames, two materials. */
-#pragma define_section d12ef8 ".data.data_ov026_02112ef8" ".data.data_ov026_02112ef8" ".data.data_ov026_02112ef8" far_data
-#pragma section d12ef8 begin
-BTA_File data_ov026_02112ef8 = {
-    0x5b, 0,
-    (fx32 *)data_ov026_02112498,
-    (u16 *)data_ov026_02112494,
-    (fx32 *)data_ov026_021125cc,
-    2, 0,
-    data_ov026_021124ac,
-};
-#pragma section d12ef8 end
-
-/* Two area rows. The three bytes after the minimap id are not zero. */
-#pragma define_section d12f10 ".data.data_ov026_02112f10" ".data.data_ov026_02112f10" ".data.data_ov026_02112f10" far_data
-#pragma section d12f10 begin
-struct {
-    void *objTable;
-    BTA_File *bta;
-    s8 minimapId;
-    u8 pad[3];
-} data_ov026_02112f10[2] = {
-    {&data_ov026_02112de0, &data_ov026_02112ef8, 0, {0x00, 0xae, 0x0c}},
-    {&data_ov026_02112dd8, &data_ov026_02112f28, 0, {0x00, 0xa9, 0x0e}},
-};
-#pragma section d12f10 end
-
-/* Second light/water texture-SRT header. */
-#pragma define_section d12f28 ".data.data_ov026_02112f28" ".data.data_ov026_02112f28" ".data.data_ov026_02112f28" far_data
-#pragma section d12f28 begin
-BTA_File data_ov026_02112f28 = {
-    0x5b, 0,
-    (fx32 *)data_ov026_0211249c,
-    (u16 *)data_ov026_021124a0,
-    (fx32 *)data_ov026_02112738,
-    2, 0,
-    data_ov026_0211251c,
-};
-#pragma section d12f28 end
-
-/* Level record data_02092208 publishes for this overlay.
- * sWhirlpoolBta, which sat between the second light/water header and this
- * record, is defined in daWater_Tatumaki_c. */
-#pragma define_section d12f58 ".data.data_ov026_02112f58" ".data.data_ov026_02112f58" ".data.data_ov026_02112f58" far_data
-#pragma section d12f58 begin
-struct {
-    ClpsBlock *clps;
-    ObjTable *objTable;
-    u16 modelFileId;
-    u16 kclFileId;
-    u16 minimapTilesFile;
-    u16 minimapPaletteFile;
-    void *areas;
-    u8 areaCount;
-    u8 cameraFlags;
-    s16 minimapScale;
-    u32 skybox;
-} data_ov026_02112f58 = {
-    &data_ov026_02113100,
-    &data_ov026_02112dc8,
-    0x07f5,
-    0x07f3,
-    0x07f6,
-    0x07f7,
-    data_ov026_02112f10,
-    2,
-    0,
-    0x0898,
+/* 0x02112dc0..0x02112f74 (436 bytes, 109 words) */
+u32 data_ov026_02112dc0[] = {
+    0x000007f4,
+    0x00000004,
+    0x00000009,
+    (u32)data_ov026_02113014,
+    0x6d757a75,
+    0x00696b61,
+    0x00000003,
+    (u32)data_ov026_02112ee0,
+    0x00000008,
+    (u32)data_ov026_02112f94,
+    0x6d757a75,
+    0x31696b61,
+    0x00000000,
+    0x0320ff6a,
+    0xc00000fa,
+    0x000001ea,
+    0xf9c01de2,
+    0x0000e8c2,
+    0x07010000,
+    0x0000ffff,
+    0xe412ff02,
+    0x073a0b22,
+    0x80000000,
+    0x00000000,
+    0x5f74616d,
+    0x775f797a,
+    0x72657461,
+    0x0000305f,
+    0x5f74616d,
+    0x775f797a,
+    0x72657461,
+    0x0000315f,
+    0x5f74616d,
+    0x6c5f7a7a,
+    0x74686769,
+    0x0000305f,
+    0x5f74616d,
+    0x6c5f7a7a,
+    0x74686769,
+    0x0000315f,
+    0xe2b60091,
+    0x06dbfaf0,
+    0x00000000,
+    0x70010000,
+    0xe2b60091,
+    0x06dbfaf0,
+    0x00000000,
+    0x70010000,
+    0x28d20014,
+    0x10040546,
+    0xc0000003,
+    0xffff0000,
+    0xe2b60091,
+    0x06dbfaf0,
+    0x00000000,
+    0x70010000,
+    0xba875701,
+    0xb3b02af8,
+    0xf7f78c01,
+    0xea600000,
+    0xe2b60091,
+    0x06dbfaf0,
+    0x00000000,
+    0x70010000,
+    0xe2b60091,
+    0x06dbfaf0,
+    0x00000000,
+    0x70010000,
+    0xe2b60091,
+    0x06dbfaf0,
+    0x00000000,
+    0x70010000,
+    0x00002d00,
+    (u32)data_ov026_021137c0,
+    0x00003605,
+    (u32)data_ov026_02113450,
+    0x00000160,
+    (u32)data_ov026_02112e80,
+    0x0000005b,
+    (u32)data_ov026_02112498,
+    (u32)data_ov026_02112494,
+    (u32)data_ov026_021125cc,
+    0x00000002,
+    (u32)data_ov026_021124ac,
+    (u32)data_ov026_02112de0,
+    (u32)data_ov026_02112ef8,
+    0x0cae0000,
+    (u32)data_ov026_02112dd8,
+    (u32)data_ov026_02112f28,
+    0x0ea90000,
+    0x0000005b,
+    (u32)data_ov026_0211249c,
+    (u32)data_ov026_021124a0,
+    (u32)data_ov026_02112738,
+    0x00000002,
+    (u32)data_ov026_0211251c,
+    0x0000001e,
+    (u32)data_ov026_021124a4,
+    (u32)data_ov026_02112490,
+    (u32)data_ov026_02112554,
+    0x00000002,
+    (u32)data_ov026_021124e4,
+    (u32)data_ov026_02113100,
+    (u32)data_ov026_02112dc8,
+    0x07f307f5,
+    0x07f707f6,
+    (u32)data_ov026_02112f10,
+    0x08980002,
     0x0000001f,
 };
-#pragma section d12f58 end

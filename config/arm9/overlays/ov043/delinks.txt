@@ -1,14 +1,7 @@
     .text       start:0x021111a0 end:0x021117fc kind:code align:32
     .init       start:0x021117fc end:0x02111ae8 kind:code align:4
     .ctor       start:0x02111ae8 end:0x02111af8 kind:rodata align:4
-    .data.data_ov043_02111b00 start:0x02111b00 end:0x02111b04 kind:data align:32
-    .data.data_ov043_02111b04 start:0x02111b04 end:0x02111b08 kind:data align:4
-    .data.data_ov043_02111b08 start:0x02111b08 end:0x02111b10 kind:data align:4
-    .data.data_ov043_02111b10 start:0x02111b10 end:0x02111b18 kind:data align:4
-    .data.data_ov043_02111b18 start:0x02111b18 end:0x02111b24 kind:data align:4
-    .data.data_ov043_02111b24 start:0x02111b24 end:0x02111b34 kind:data align:4
-    .data.data_ov043_02111b34 start:0x02111b34 end:0x02111b44 kind:data align:4
-    .data.data_ov043_02111b44 start:0x02111b44 end:0x02111b60 kind:data align:4
+    .data.gap0 start:0x02111b00 end:0x02111b60 kind:data align:32
     .data.clps0 start:0x02111b60 end:0x02111b78 kind:data align:4
     .data.gap1 start:0x02111b78 end:0x02111ba0 kind:data align:4
     .data.clps1 start:0x02111ba0 end:0x02111bb8 kind:data align:4
@@ -22,14 +15,7 @@
     .data.clps3 start:0x02111c60 end:0x02111c78 kind:data align:4
     .data.gap4 start:0x02111c78 end:0x02111c80 kind:data align:4
     .data.clps4 start:0x02111c80 end:0x02111c98 kind:data align:4
-    .data.gap5 start:0x02111c98 end:0x02111ca0 kind:data align:4
-    .data.data_ov043_02111ca0 start:0x02111ca0 end:0x02111cc8 kind:data align:4
-    .data.data_ov043_02111cc8 start:0x02111cc8 end:0x02111d10 kind:data align:4
-    .data.data_ov043_02111d10 start:0x02111d10 end:0x02111d60 kind:data align:4
-    .data.data_ov043_02111d60 start:0x02111d60 end:0x02111dc0 kind:data align:4
-    .data.data_ov043_02111dc0 start:0x02111dc0 end:0x02111fd0 kind:data align:4
-    .data.data_ov043_02111fd0 start:0x02111fd0 end:0x02112270 kind:data align:4
-    .data       start:0x02112270 end:0x021125e0 kind:data align:4
+    .data start:0x02111c98 end:0x021125e0 kind:data align:4
     .bss        start:0x021125e0 end:0x02112720 kind:bss align:32
 src/game/actors/d_a_obj_km1_ukishima.cpp:
     complete
@@ -72,18 +58,4 @@ src/game/actors/d_a_obj_km1_dorifu.cpp:
 
 src/unnamed/ov043/data_ov043_02111ca0.c:
     complete
-    .data.data_ov043_02111b00 start:0x02111b00 end:0x02111b04
-    .data.data_ov043_02111b04 start:0x02111b04 end:0x02111b08
-    .data.data_ov043_02111b08 start:0x02111b08 end:0x02111b10
-    .data.data_ov043_02111b10 start:0x02111b10 end:0x02111b18
-    .data.data_ov043_02111b18 start:0x02111b18 end:0x02111b24
-    .data.data_ov043_02111b24 start:0x02111b24 end:0x02111b34
-    .data.data_ov043_02111b34 start:0x02111b34 end:0x02111b44
-    .data.data_ov043_02111b44 start:0x02111b44 end:0x02111b60
-    .data.data_ov043_02111ca0 start:0x02111ca0 end:0x02111cc8
-    .data.data_ov043_02111cc8 start:0x02111cc8 end:0x02111d10
-    .data.data_ov043_02111d10 start:0x02111d10 end:0x02111d60
-    .data.data_ov043_02111d60 start:0x02111d60 end:0x02111dc0
-    .data.data_ov043_02111dc0 start:0x02111dc0 end:0x02111fd0
-    .data.data_ov043_02111fd0 start:0x02111fd0 end:0x02112270
-
+    .data start:0x02111ca0 end:0x02112270
