@@ -1,17 +1,14 @@
 /* Overlay 26 course data no one class owns: the light/water BTA keys and the
- * first .data run. sWhirlpoolBta's keys are in daWater_Tatumaki_c. The
+ * first .data run. sWhirlpoolBta and its keys are in daWater_Tatumaki_c. The
  * Polelift/KoopaShutter/Submarine vtables at 0x02113a90 stay unclaimed. */
 #include "types.h"
+#include "private/BTA_File.h"
 
 /* Words the other BTAs and the course table relocate point here.
  * sWhirlpoolBta's own key words live in daWater_Tatumaki_c. */
-extern u32 data_ov026_02112490[];
 extern u32 data_ov026_02112498[];
 extern u32 data_ov026_0211249c[];
 extern u32 data_ov026_021124a0[];
-extern u32 data_ov026_021124a4[];
-extern u32 data_ov026_021124e4[];
-extern u32 data_ov026_02112554[];
 extern u32 data_ov026_02112738[];
 extern u32 data_ov026_02112dc8[];
 extern u32 data_ov026_02112dd8[];
@@ -22,14 +19,12 @@ extern u32 data_ov026_02112e40[];
 extern u32 data_ov026_02112e50[];
 extern u32 data_ov026_02112e80[];
 extern u32 data_ov026_02112ee0[];
-extern u32 data_ov026_02112ef8[];
-extern u32 data_ov026_02112f10[];
-extern u32 data_ov026_02112f28[];
 extern u32 data_ov026_02112f94[];
 extern u32 data_ov026_02113014[];
 extern u32 data_ov026_02113100[];
 extern u32 data_ov026_02113450[];
 extern u32 data_ov026_021137c0[];
+extern BTA_File data_ov026_02112f28;
 
 /* 0x02112494..0x021124a4. The first word is the light/water rotation key. */
 const u32 data_ov026_02112494[] = {
@@ -41,47 +36,23 @@ const u32 data_ov026_02112494[] = {
 
 #pragma define_section rd124ac ".rodata.data_ov026_021124ac" ".rodata.data_ov026_021124ac" ".rodata.data_ov026_021124ac" far_data
 #pragma section rd124ac begin
-u32 data_ov026_021124ac[] = {
-    0x0000ffff,
-    (u32)data_ov026_02112e40,
-    0x00000001,
-    0x00000001,
-    0x00000001,
-    0x0000005b,
-    0x0000005b,
-    0x0000ffff,
-    (u32)data_ov026_02112e20,
-    0x00000001,
-    0x00000001,
-    0x00000001,
-    0x0000005b,
-    0x0000005b
+BTAMaterialRecord data_ov026_021124ac[] = {
+    {0xffff, 0, (char *)data_ov026_02112e40, {1, 0}, {1, 0}, {1, 0}, {0x5b, 0}, {0x5b, 0}},
+    {0xffff, 0, (char *)data_ov026_02112e20, {1, 0}, {1, 0}, {1, 0}, {0x5b, 0}, {0x5b, 0}},
 };
 #pragma section rd124ac end
 
 #pragma define_section rd1251c ".rodata.data_ov026_0211251c" ".rodata.data_ov026_0211251c" ".rodata.data_ov026_0211251c" far_data
 #pragma section rd1251c begin
-u32 data_ov026_0211251c[] = {
-    0x0000ffff,
-    (u32)data_ov026_02112e50,
-    0x00000001,
-    0x00000001,
-    0x00000001,
-    0x0000005b,
-    0x00000001,
-    0x0000ffff,
-    (u32)data_ov026_02112e30,
-    0x00000001,
-    0x00000001,
-    0x00010001,
-    0x005b005b,
-    0x00b6005b
+BTAMaterialRecord data_ov026_0211251c[] = {
+    {0xffff, 0, (char *)data_ov026_02112e50, {1, 0}, {1, 0}, {1, 0}, {0x5b, 0}, {1, 0}},
+    {0xffff, 0, (char *)data_ov026_02112e30, {1, 0}, {1, 0}, {1, 1}, {0x5b, 0x5b}, {0x5b, 0xb6}},
 };
 #pragma section rd1251c end
 
 #pragma define_section rd125cc ".rodata.data_ov026_021125cc" ".rodata.data_ov026_021125cc" ".rodata.data_ov026_021125cc" far_data
 #pragma section rd125cc begin
-u32 data_ov026_021125cc[] = {
+fx32 data_ov026_021125cc[] = {
     0x00000000,
     0x0000002e,
     0x0000005b,
@@ -450,115 +421,100 @@ u32 data_ov026_021125cc[] = {
 #pragma section rd125cc end
 
 
-/* 0x02112dc0..0x02112f74 (436 bytes, 109 words) */
+/* 0x02112dc0..0x02112ef8. Course rows no class names: file ids, material
+ * names, object rows, and the three sub-table headers. The BTA headers
+ * that follow are their own sections. */
 u32 data_ov026_02112dc0[] = {
-    0x000007f4,
-    0x00000004,
-    0x00000009,
-    (u32)data_ov026_02113014,
-    0x6d757a75,
-    0x00696b61,
-    0x00000003,
-    (u32)data_ov026_02112ee0,
-    0x00000008,
-    (u32)data_ov026_02112f94,
-    0x6d757a75,
-    0x31696b61,
-    0x00000000,
-    0x0320ff6a,
-    0xc00000fa,
-    0x000001ea,
-    0xf9c01de2,
-    0x0000e8c2,
-    0x07010000,
-    0x0000ffff,
-    0xe412ff02,
-    0x073a0b22,
-    0x80000000,
-    0x00000000,
-    0x5f74616d,
-    0x775f797a,
-    0x72657461,
-    0x0000305f,
-    0x5f74616d,
-    0x775f797a,
-    0x72657461,
-    0x0000315f,
-    0x5f74616d,
-    0x6c5f7a7a,
-    0x74686769,
-    0x0000305f,
-    0x5f74616d,
-    0x6c5f7a7a,
-    0x74686769,
-    0x0000315f,
-    0xe2b60091,
-    0x06dbfaf0,
-    0x00000000,
-    0x70010000,
-    0xe2b60091,
-    0x06dbfaf0,
-    0x00000000,
-    0x70010000,
-    0x28d20014,
-    0x10040546,
-    0xc0000003,
-    0xffff0000,
-    0xe2b60091,
-    0x06dbfaf0,
-    0x00000000,
-    0x70010000,
-    0xba875701,
-    0xb3b02af8,
-    0xf7f78c01,
-    0xea600000,
-    0xe2b60091,
-    0x06dbfaf0,
-    0x00000000,
-    0x70010000,
-    0xe2b60091,
-    0x06dbfaf0,
-    0x00000000,
-    0x70010000,
-    0xe2b60091,
-    0x06dbfaf0,
-    0x00000000,
-    0x70010000,
-    0x00002d00,
-    (u32)data_ov026_021137c0,
-    0x00003605,
-    (u32)data_ov026_02113450,
-    0x00000160,
-    (u32)data_ov026_02112e80,
-    0x0000005b,
-    (u32)data_ov026_02112498,
-    (u32)data_ov026_02112494,
-    (u32)data_ov026_021125cc,
-    0x00000002,
-    (u32)data_ov026_021124ac,
-    (u32)data_ov026_02112de0,
-    (u32)data_ov026_02112ef8,
-    0x0cae0000,
-    (u32)data_ov026_02112dd8,
-    (u32)data_ov026_02112f28,
-    0x0ea90000,
-    0x0000005b,
-    (u32)data_ov026_0211249c,
-    (u32)data_ov026_021124a0,
-    (u32)data_ov026_02112738,
-    0x00000002,
-    (u32)data_ov026_0211251c,
-    0x0000001e,
-    (u32)data_ov026_021124a4,
-    (u32)data_ov026_02112490,
-    (u32)data_ov026_02112554,
-    0x00000002,
-    (u32)data_ov026_021124e4,
-    (u32)data_ov026_02113100,
-    (u32)data_ov026_02112dc8,
-    0x07f307f5,
-    0x07f707f6,
-    (u32)data_ov026_02112f10,
-    0x08980002,
+    0x000007f4, 0x00000004, 0x00000009, (u32)data_ov026_02113014,
+    0x6d757a75, 0x00696b61, 0x00000003, (u32)data_ov026_02112ee0,
+    0x00000008, (u32)data_ov026_02112f94, 0x6d757a75, 0x31696b61,
+    0x00000000, 0x0320ff6a, 0xc00000fa, 0x000001ea,
+    0xf9c01de2, 0x0000e8c2, 0x07010000, 0x0000ffff,
+    0xe412ff02, 0x073a0b22, 0x80000000, 0x00000000,
+    0x5f74616d, 0x775f797a, 0x72657461, 0x0000305f,
+    0x5f74616d, 0x775f797a, 0x72657461, 0x0000315f,
+    0x5f74616d, 0x6c5f7a7a, 0x74686769, 0x0000305f,
+    0x5f74616d, 0x6c5f7a7a, 0x74686769, 0x0000315f,
+    0xe2b60091, 0x06dbfaf0, 0x00000000, 0x70010000,
+    0xe2b60091, 0x06dbfaf0, 0x00000000, 0x70010000,
+    0x28d20014, 0x10040546, 0xc0000003, 0xffff0000,
+    0xe2b60091, 0x06dbfaf0, 0x00000000, 0x70010000,
+    0xba875701, 0xb3b02af8, 0xf7f78c01, 0xea600000,
+    0xe2b60091, 0x06dbfaf0, 0x00000000, 0x70010000,
+    0xe2b60091, 0x06dbfaf0, 0x00000000, 0x70010000,
+    0xe2b60091, 0x06dbfaf0, 0x00000000, 0x70010000,
+    0x00002d00, (u32)data_ov026_021137c0, 0x00003605, (u32)data_ov026_02113450,
+    0x00000160, (u32)data_ov026_02112e80,
+};
+
+/* Light/water texture-SRT header. 0x5b frames, two materials. */
+#pragma define_section d12ef8 ".data.data_ov026_02112ef8" ".data.data_ov026_02112ef8" ".data.data_ov026_02112ef8" far_data
+#pragma section d12ef8 begin
+BTA_File data_ov026_02112ef8 = {
+    0x5b, 0,
+    (fx32 *)data_ov026_02112498,
+    (u16 *)data_ov026_02112494,
+    (fx32 *)data_ov026_021125cc,
+    2, 0,
+    data_ov026_021124ac,
+};
+#pragma section d12ef8 end
+
+/* Two area rows. The three bytes after the minimap id are not zero. */
+#pragma define_section d12f10 ".data.data_ov026_02112f10" ".data.data_ov026_02112f10" ".data.data_ov026_02112f10" far_data
+#pragma section d12f10 begin
+struct {
+    void *objTable;
+    BTA_File *bta;
+    s8 minimapId;
+    u8 pad[3];
+} data_ov026_02112f10[2] = {
+    {data_ov026_02112de0, &data_ov026_02112ef8, 0, {0x00, 0xae, 0x0c}},
+    {data_ov026_02112dd8, &data_ov026_02112f28, 0, {0x00, 0xa9, 0x0e}},
+};
+#pragma section d12f10 end
+
+/* Second light/water texture-SRT header. */
+#pragma define_section d12f28 ".data.data_ov026_02112f28" ".data.data_ov026_02112f28" ".data.data_ov026_02112f28" far_data
+#pragma section d12f28 begin
+BTA_File data_ov026_02112f28 = {
+    0x5b, 0,
+    (fx32 *)data_ov026_0211249c,
+    (u16 *)data_ov026_021124a0,
+    (fx32 *)data_ov026_02112738,
+    2, 0,
+    data_ov026_0211251c,
+};
+#pragma section d12f28 end
+
+/* Level record data_02092208 publishes for this overlay.
+ * sWhirlpoolBta, which sat between the second light/water header and this
+ * record, is defined in daWater_Tatumaki_c. */
+#pragma define_section d12f58 ".data.data_ov026_02112f58" ".data.data_ov026_02112f58" ".data.data_ov026_02112f58" far_data
+#pragma section d12f58 begin
+struct {
+    u32 *clps;
+    u32 *objTable;
+    u16 modelFileId;
+    u16 kclFileId;
+    u16 minimapTilesFile;
+    u16 minimapPaletteFile;
+    void *areas;
+    u8 areaCount;
+    u8 cameraFlags;
+    s16 minimapScale;
+    u32 skybox;
+} data_ov026_02112f58 = {
+    data_ov026_02113100,
+    data_ov026_02112dc8,
+    0x07f5,
+    0x07f3,
+    0x07f6,
+    0x07f7,
+    data_ov026_02112f10,
+    2,
+    0,
+    0x0898,
     0x0000001f,
 };
+#pragma section d12f58 end
