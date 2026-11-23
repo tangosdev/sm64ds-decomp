@@ -27,7 +27,7 @@
     {
       "name": ".data",
       "start": "0x2103230",
-      "end": "0x2103254"
+      "end": "0x2103240"
     }
   ],
   "functions": [
@@ -142,12 +142,6 @@
       "address": "0x2103234",
       "size": "0xc",
       "binding": "STB_GLOBAL"
-    },
-    {
-      "symbol": "data_ov007_02103240",
-      "address": "0x2103240",
-      "size": "0x14",
-      "binding": "STB_GLOBAL"
     }
   ],
   "rodata": [
@@ -229,14 +223,14 @@
         {
           "section": ".data",
           "start": "0x02103230",
-          "end": "0x02103254",
+          "end": "0x02103240",
           "differingBytes": 0,
           "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 19
+          "LICENSED": 18
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -247,25 +241,23 @@
           {
             "section": ".rodata.menu",
             "original": [
-              5,
+              6,
               8
             ],
             "desired": [
-              5,
+              6,
               8
             ]
           },
           {
             "section": ".data",
             "original": [
-              6,
-              7,
-              9
+              5,
+              7
             ],
             "desired": [
-              6,
-              7,
-              9
+              5,
+              7
             ]
           }
         ],
