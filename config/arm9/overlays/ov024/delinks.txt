@@ -13,3 +13,7 @@ src/game/actors/d_a_obj_dl_pyramid.cpp:
     .ctor start:0x02112874 end:0x02112878
     .data.clps start:0x021129f0 end:0x02112a00
     .bss start:0x02113960 end:0x02113988
+
+src/unnamed/ov024/data_ov024.c:
+    complete
+    .rodata start:0x021118ac end:0x02112808
