@@ -1012,3 +1012,35 @@ src/minigames/d_s_mg_snowball.cpp:
 src/minigames/d_s_mg_flower.cpp:
     complete
     .text start:0x0212a554 end:0x0212b890
+
+src/unnamed/ov006/data_ov006_0212b890.c:
+    complete
+    .rodata.before_coin_tables start:0x0212b890 end:0x0212b8ac
+
+src/unnamed/ov006/data_ov006_0212b8ac.c:
+    complete
+    .rodata.before_coin_tables start:0x0212b8ac end:0x0212c9e4
+
+src/unnamed/ov006/data_ov006_0212c9e4.c:
+    complete
+    .rodata.before_coin_tables start:0x0212c9e4 end:0x0212ddd0
+
+src/unnamed/ov006/data_ov006_0212ddd0.c:
+    complete
+    .rodata.before_coin_tables start:0x0212ddd0 end:0x0212dff8
+
+src/unnamed/ov006/data_ov006_0212dff8.c:
+    complete
+    .rodata.before_coin_tables start:0x0212dff8 end:0x0212e044
+
+src/unnamed/ov006/data_ov006_0212e044.c:
+    complete
+    .rodata.before_coin_tables start:0x0212e044 end:0x0212e1a8
+
+src/unnamed/ov006/data_ov006_0212e1a8.c:
+    complete
+    .rodata.before_coin_tables start:0x0212e1a8 end:0x0212e2c0
+
+src/unnamed/ov006/data_ov006_0212e2c0.c:
+    complete
+    .rodata.before_coin_tables start:0x0212e2c0 end:0x0212e308

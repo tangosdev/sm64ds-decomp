@@ -27,3 +27,79 @@ src/game/actors/d_a_obj_ct_mecha11.cpp:
     .data.m11Clps start:0x02112238 end:0x02112258
     .data.m11Ang start:0x02112b80 end:0x02112b88
     .bss start:0x02112cb0 end:0x02112cd8
+
+src/unnamed/ov035/data_ov035_02112258.c:
+    complete
+    .data.m35Mid2 start:0x02112258 end:0x02112278
+
+src/unnamed/ov035/data_ov035_02112278.c:
+    complete
+    .data.m35Mid2 start:0x02112278 end:0x02112294
+
+src/unnamed/ov035/data_ov035_02112294.c:
+    complete
+    .data.m35Mid2 start:0x02112294 end:0x02112318
+
+src/unnamed/ov035/data_ov035_02112318.c:
+    complete
+    .data.m35Mid2 start:0x02112318 end:0x02112358
+
+src/unnamed/ov035/data_ov035_02112358.c:
+    complete
+    .data.m35Mid2 start:0x02112358 end:0x02112368
+
+src/unnamed/ov035/data_ov035_02112368.c:
+    complete
+    .data.m35Mid2 start:0x02112368 end:0x021123e4
+
+src/unnamed/ov035/data_ov035_021123e4.c:
+    complete
+    .data.m35Mid2 start:0x021123e4 end:0x0211241c
+
+src/unnamed/ov035/data_ov035_0211241c.c:
+    complete
+    .data.m35Mid2 start:0x0211241c end:0x02112434
+
+src/unnamed/ov035/data_ov035_02112434.c:
+    complete
+    .data.m35Mid2 start:0x02112434 end:0x02112494
+
+src/unnamed/ov035/data_ov035_02112494.c:
+    complete
+    .data.m35Mid2 start:0x02112494 end:0x021124c4
+
+src/unnamed/ov035/data_ov035_021124c4.c:
+    complete
+    .data.m35Mid2 start:0x021124c4 end:0x021124e4
+
+src/unnamed/ov035/data_ov035_021124e4.c:
+    complete
+    .data.m35Mid2 start:0x021124e4 end:0x021124f8
+
+src/unnamed/ov035/data_ov035_021124f8.c:
+    complete
+    .data.m35Mid2 start:0x021124f8 end:0x02112570
+
+src/unnamed/ov035/data_ov035_02112570.c:
+    complete
+    .data.m35Mid2 start:0x02112570 end:0x02112968
+
+src/unnamed/ov035/data_ov035_02112968.c:
+    complete
+    .data.m35Mid2 start:0x02112968 end:0x02112a6c
+
+src/unnamed/ov035/data_ov035_02112a6c.c:
+    complete
+    .data.m35Mid2 start:0x02112a6c end:0x02112a84
+
+src/unnamed/ov035/data_ov035_02112a84.c:
+    complete
+    .data.m35Mid2 start:0x02112a84 end:0x02112aa4
+
+src/unnamed/ov035/data_ov035_02112aa4.c:
+    complete
+    .data.m35Mid2 start:0x02112aa4 end:0x02112b00
+
+src/unnamed/ov035/data_ov035_02112b00.c:
+    complete
+    .data.m35Mid2 start:0x02112b00 end:0x02112b80
