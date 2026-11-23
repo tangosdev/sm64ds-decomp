@@ -2,11 +2,11 @@
    of .data at 0x02112380, no code. mwccarm puts every plain initialized
    object in its own same-named input section ordered by size, and the lcf
    can only select by section name, so one TU cannot place separated runs
-   as separate arrays. The whole .rodata range (the zero runs are interior
-   elements) and the whole .data range are one array each; the
+   as separate arrays. The .rodata range stays one union array (its zero
+   runs are interior elements). The .data range is one struct. The
    data_ov053_* rows stay symbols.txt rows and are emitted as lcf labels.
-   A word is either a value or a relocated pointer, so each array is a
-   union and the ROM relocations are .ptr initializers. */
+   A relocated word is a pointer; a word with no agreed record stays raw. */
+#include "CLPS.h"
 #include "types.h"
 
 typedef union Ov053Word {
@@ -446,46 +446,190 @@ const Ov053Word data_ov053_021111a0[1139] = {
     {.value = 0x000001e2},         {.value = 0x000001e3},
 };
 
-/* .data: 0x2112380..0x2112560, 480 bytes. */
-Ov053Word data_ov053_02112380[120] = {
-    {.value = 0x0000072d},         {.value = 0x00000003},         {.ptr = &data_ov053_0211247c},
-    {.value = 0x00000100},         {.ptr = &data_ov053_021123d4}, {.value = 0x5f736167},
-    {.value = 0x0074616d},         {.value = 0x00000001},         {.ptr = &data_ov053_0211238c},
-    {.value = 0x5f74616d},         {.value = 0x65636166},         {.value = 0x00000000},
-    {.value = 0x5f74616d},         {.value = 0x5f657965},         {.value = 0x0000006c},
-    {.value = 0x5f74616d},         {.value = 0x5f657965},         {.value = 0x00000072},
-    {.ptr = &data_ov053_0211239c}, {.ptr = &data_ov053_0211241c}, {.value = 0x06400000},
-    {.value = 0x00000012},         {.value = 0x0000012c},         {.value = 0x00000000},
-    {.value = 0xffff0000},         {.value = 0x00000000},         {.value = 0x054603e8},
-    {.value = 0x80000000},         {.value = 0x05780000},         {.value = 0x0000005a},
-    {.ptr = &data_ov053_0211194c}, {.value = 0x00000001},         {.ptr = &data_ov053_02111384},
-    {.value = 0x0000004b},         {.ptr = &data_ov053_021111d8}, {.ptr = &data_ov053_021111a4},
-    {.ptr = &data_ov053_02111b68}, {.value = 0x00000002},         {.ptr = &data_ov053_02111314},
-    {.value = 0x000000b5},         {.ptr = &data_ov053_021111cc}, {.ptr = &data_ov053_021111b4},
-    {.ptr = &data_ov053_02111dc4}, {.value = 0x00000001},         {.ptr = &data_ov053_021111e0},
-    {.value = 0x0000005a},         {.ptr = &data_ov053_021111d4}, {.ptr = &data_ov053_021111b8},
-    {.ptr = &data_ov053_02112098}, {.value = 0x00000002},         {.ptr = &data_ov053_021111fc},
-    {.value = 0x0000002c},         {.ptr = &data_ov053_021111d0}, {.ptr = &data_ov053_021111a8},
-    {.ptr = &data_ov053_021115ec}, {.value = 0x00000002},         {.ptr = &data_ov053_02111234},
-    {.value = 0x0000001e},         {.ptr = &data_ov053_021111c0}, {.ptr = &data_ov053_021111bc},
-    {.ptr = &data_ov053_021114f8}, {.value = 0x00000002},         {.ptr = &data_ov053_0211126c},
-    {.value = 0x00000204},         {.ptr = &data_ov053_021124dc}, {.value = 0x0000010b},
-    {.ptr = &data_ov053_02112380}, {.value = 0x00000101},         {.ptr = &data_ov053_021123e4},
-    {.value = 0x0000003f},         {.ptr = &data_ov053_021111dc}, {.ptr = &data_ov053_021111b0},
-    {.ptr = &data_ov053_02111750}, {.value = 0x00000002},         {.ptr = &data_ov053_021112a4},
-    {.value = 0x0000001e},         {.ptr = &data_ov053_021111c4}, {.ptr = &data_ov053_021111ac},
-    {.ptr = &data_ov053_02111404}, {.value = 0x00000002},         {.ptr = &data_ov053_0211134c},
-    {.value = 0x00000008},         {.ptr = &data_ov053_021111c8}, {.ptr = &data_ov053_021111a0},
-    {.ptr = &data_ov053_021113c0}, {.value = 0x00000002},         {.ptr = &data_ov053_021112dc},
-    {.value = 0x00000000},         {.value = 0x000003e8},         {.value = 0x00000000},
-    {.value = 0xff070000},         {.value = 0x08980000},         {.value = 0x00000000},
-    {.value = 0x00000000},         {.ptr = &data_ov053_02112514}, {.ptr = &data_ov053_02112384},
-    {.value = 0x072c072e},         {.value = 0x0730072f},         {.ptr = &data_ov053_021123c8},
-    {.value = 0x03200101},         {.value = 0x0000009f},         {.value = 0x53504c43},
-    {.value = 0x00060008},         {.value = 0x00030fc5},         {.value = 0x000000ff},
-    {.value = 0x01030fc0},         {.value = 0x000000ff},         {.value = 0x00038005},
-    {.value = 0x000000ff},         {.value = 0x0003b005},         {.value = 0x000000ff},
-    {.value = 0x00230fc0},         {.value = 0x000000ff},         {.value = 0x02030fc0},
-    {.value = 0x000000ff},         {.value = 0xffffffff},         {.value = 0xffffffff},
-    {.value = 0x00000000},         {.value = 0x00000000},         {.value = 0x00000000},
+typedef struct ClpsBlock {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[6];
+} ClpsBlock;
+
+/* Widths the level loaders walk. Same layouts as LVL_Overlay; this file
+ * stays C. A halfword no loader reads stays raw. */
+typedef struct ObjTable {
+    u16 count;
+    u8 pad[2];
+    void *entries;
+} ObjTable;
+
+typedef struct ObjSubTable {
+    u8 categoryAndStar;
+    u8 count;
+    u8 pad[2];
+    void *entries;
+} ObjSubTable;
+
+typedef struct SimpleEntry {
+    u16 raw;
+    s16 x;
+    s16 y;
+    s16 z;
+} SimpleEntry;
+
+typedef struct StandardEntry {
+    u16 raw;
+    s16 x;
+    s16 y;
+    s16 z;
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    u16 param;
+} StandardEntry;
+
+typedef struct TeleportEntry {
+    s16 x;
+    s16 y;
+    s16 z;
+    u16 param;
+} TeleportEntry;
+
+typedef struct PathNode {
+    s16 x;
+    s16 y;
+    s16 z;
+} PathNode;
+
+/* 0xe: CamViewObj through angleY, plus the two bytes of the 0xe stride. */
+typedef struct ViewEntry {
+    u8 type;
+    u8 p1;
+    s16 x;
+    s16 y;
+    s16 z;
+    u8 pad_8[2];
+    s16 angleY;
+    u8 tail[2];
+} ViewEntry;
+
+typedef struct Area {
+    struct ObjTable *objTable;
+    void *bta;
+    s8 minimapId;
+    u8 pad[3];
+} Area;
+
+typedef struct LevelRec {
+    struct CLPS_Block *clps;
+    struct ObjTable *objTable;
+    u16 modelFileId;
+    u16 kclFileId;
+    u16 minimapTilesFile;
+    u16 minimapPaletteFile;
+    struct Area *areas;
+    u8 areaCount;
+    u8 cameraFlags;
+    s16 minimapScale;
+    u32 skybox;
+} LevelRec;
+
+/* .data 0x02112380..0x02112560. data_02092208[45] is the level
+ * record at 0x021124f8. Its object table is 0x02112384: three rows at
+ * 0x0211247c (two views, one minimap tile, one entrance). The area at
+ * 0x021123c8 points at 0x0211239c, one standard object at 0x021123d4.
+ * 0x02112514 is the CLPS block, stride 8, six entries.
+ * 0x021123f4..0x0211241c has no label spacing that matches a loader
+ * record, so those words stay raw. 0x0211241c..0x0211247c and
+ * 0x02112494..0x021124dc are BTA files (texture-animation containers);
+ * the bytes stay words and the pointers keep their symbols. The
+ * material-name words 0x02112394..0x0211239c and 0x021123a4..0x021123c8
+ * stay raw for the same reason. */
+struct {
+    u16 minimapTile;
+    u16 minimapTilePad;
+    ObjTable at_02112384;
+    ObjSubTable at_0211238c[1];
+    u32 raw_02112394[2];
+    ObjTable at_0211239c;
+    u32 raw_021123a4[9];
+    Area at_021123c8;
+    StandardEntry at_021123d4[1];
+    StandardEntry at_021123e4[1];
+    Ov053Word raw_021123f4[10];
+    Ov053Word bta_0211241c[24];
+    ObjSubTable at_0211247c[3];
+    Ov053Word bta_02112494[18];
+    ViewEntry at_021124dc[2];
+    LevelRec at_021124f8;
+    ClpsBlock at_02112514;
+    u32 raw_0211254c[2];
+    u32 tail[3];
+} data_ov053_02112380 = {
+    0x072d, 0x0000,
+    {0x0003, {0x00, 0x00}, data_ov053_0211247c},
+    {
+        {0x00, 1, {0x00, 0x00}, data_ov053_021123d4},
+    },
+    0x5f736167, 0x0074616d,
+    {0x0001, {0x00, 0x00}, data_ov053_0211238c},
+    0x5f74616d, 0x65636166, 0x00000000, 0x5f74616d, 0x5f657965, 0x0000006c, 0x5f74616d,
+     0x5f657965, 0x00000072,
+    {(struct ObjTable *)data_ov053_0211239c, data_ov053_0211241c, 0, {0x00, 0x40, 0x06}},
+    {
+        {0x0012, (s16)0x0000, (s16)0x012c, (s16)0x0000, (s16)0x0000, (s16)0x0000, (s16)0x0000,
+         0xffff},
+    },
+    {
+        {0x0000, (s16)0x0000, (s16)0x03e8, (s16)0x0546, (s16)0x0000, (s16)0x8000, (s16)0x0000,
+         0x0578},
+    },
+    {
+        {.value = 0x0000005a},{.ptr = &data_ov053_0211194c},{.value = 0x00000001},
+        {.ptr = &data_ov053_02111384},{.value = 0x0000004b},{.ptr = &data_ov053_021111d8},
+        {.ptr = &data_ov053_021111a4},{.ptr = &data_ov053_02111b68},{.value = 0x00000002},
+        {.ptr = &data_ov053_02111314},
+    },
+    {
+        {.value = 0x000000b5},{.ptr = &data_ov053_021111cc},{.ptr = &data_ov053_021111b4},
+        {.ptr = &data_ov053_02111dc4},{.value = 0x00000001},{.ptr = &data_ov053_021111e0},
+        {.value = 0x0000005a},{.ptr = &data_ov053_021111d4},{.ptr = &data_ov053_021111b8},
+        {.ptr = &data_ov053_02112098},{.value = 0x00000002},{.ptr = &data_ov053_021111fc},
+        {.value = 0x0000002c},{.ptr = &data_ov053_021111d0},{.ptr = &data_ov053_021111a8},
+        {.ptr = &data_ov053_021115ec},{.value = 0x00000002},{.ptr = &data_ov053_02111234},
+        {.value = 0x0000001e},{.ptr = &data_ov053_021111c0},{.ptr = &data_ov053_021111bc},
+        {.ptr = &data_ov053_021114f8},{.value = 0x00000002},{.ptr = &data_ov053_0211126c},
+    },
+    {
+        {0x04, 2, {0x00, 0x00}, data_ov053_021124dc},
+        {0x0b, 1, {0x00, 0x00}, &data_ov053_02112380},
+        {0x01, 1, {0x00, 0x00}, data_ov053_021123e4},
+    },
+    {
+        {.value = 0x0000003f},{.ptr = &data_ov053_021111dc},{.ptr = &data_ov053_021111b0},
+        {.ptr = &data_ov053_02111750},{.value = 0x00000002},{.ptr = &data_ov053_021112a4},
+        {.value = 0x0000001e},{.ptr = &data_ov053_021111c4},{.ptr = &data_ov053_021111ac},
+        {.ptr = &data_ov053_02111404},{.value = 0x00000002},{.ptr = &data_ov053_0211134c},
+        {.value = 0x00000008},{.ptr = &data_ov053_021111c8},{.ptr = &data_ov053_021111a0},
+        {.ptr = &data_ov053_021113c0},{.value = 0x00000002},{.ptr = &data_ov053_021112dc},
+    },
+    {
+        {0x00, 0x00, (s16)0x0000, (s16)0x03e8, (s16)0x0000, {0x00, 0x00}, (s16)0x0000, {0x00,
+         0x00}},
+        {0x07, 0xff, (s16)0x0000, (s16)0x0898, (s16)0x0000, {0x00, 0x00}, (s16)0x0000, {0x00,
+         0x00}},
+    },
+    {(struct CLPS_Block *)data_ov053_02112514, (struct ObjTable *)data_ov053_02112384, 0x072e,
+     0x072c, 0x072f, 0x0730,
+     (struct Area *)data_ov053_021123c8, 1, 0x01, (s16)0x0320, 0x0000009f},
+    {0x53504c43, 8, 6, {
+        {0x00030fc5, 0x000000ff},
+        {0x01030fc0, 0x000000ff},
+        {0x00038005, 0x000000ff},
+        {0x0003b005, 0x000000ff},
+        {0x00230fc0, 0x000000ff},
+        {0x02030fc0, 0x000000ff}
+    }},
+    0xffffffff, 0xffffffff,
+    0x00000000, 0x00000000, 0x00000000,
 };
+
+typedef char data_ov053_02112380_size[sizeof data_ov053_02112380 == 0x1e0 ? 1 : -1];
