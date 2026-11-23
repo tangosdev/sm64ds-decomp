@@ -49,12 +49,22 @@ struct CLPS_Block {
 };
 
 /* CLPS header and the pointer table that follows it. */
-extern u32 data_ov026_02112e60[];
-extern u32 data_ov026_02112e70[];
-extern u32 data_ov026_02112e90[];
-extern u32 data_ov026_02112eb0[];
-extern u32 data_ov026_02112ec0[];
-extern u32 data_ov026_02112ed0[];
+typedef struct StandardEntry {
+    u16 raw;
+    s16 x;
+    s16 y;
+    s16 z;
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
+    u16 param;
+} StandardEntry;
+extern StandardEntry data_ov026_02112e60[];
+extern StandardEntry data_ov026_02112e70[];
+extern StandardEntry data_ov026_02112e90[];
+extern StandardEntry data_ov026_02112eb0[];
+extern StandardEntry data_ov026_02112ec0[];
+extern StandardEntry data_ov026_02112ed0[];
 extern u32 data_ov026_021132b0[];
 extern u32 data_ov026_02113600[];
 
