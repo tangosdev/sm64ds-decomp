@@ -4,6 +4,66 @@
     .ctor       start:0x02112b64 end:0x02112b6c kind:rodata align:4
     .data       start:0x02112b80 end:0x02113460 kind:data align:32
     .bss        start:0x02113460 end:0x02113600 kind:bss align:32
+src/unnamed/ov019/data_ov019_02112b80.c:
+    complete
+    .data start:0x02112b80 end:0x02112be8
+
+src/unnamed/ov019/data_ov019_02112be8.c:
+    complete
+    .data start:0x02112be8 end:0x02112c38
+
+src/unnamed/ov019/data_ov019_02112c38.c:
+    complete
+    .data start:0x02112c38 end:0x02112c44
+
+src/unnamed/ov019/data_ov019_02112c44.c:
+    complete
+    .data start:0x02112c44 end:0x02112c84
+
+src/unnamed/ov019/data_ov019_02112c84.c:
+    complete
+    .data start:0x02112c84 end:0x02112ca8
+
+src/unnamed/ov019/data_ov019_02112ca8.c:
+    complete
+    .data start:0x02112ca8 end:0x02112cc4
+
+src/unnamed/ov019/data_ov019_02112cc4.c:
+    complete
+    .data start:0x02112cc4 end:0x02112d48
+
+src/unnamed/ov019/data_ov019_02112d48.c:
+    complete
+    .data start:0x02112d48 end:0x02112d98
+
+src/unnamed/ov019/data_ov019_02112d98.c:
+    complete
+    .data start:0x02112d98 end:0x02112e24
+
+src/unnamed/ov019/data_ov019_02112e24.c:
+    complete
+    .data start:0x02112e24 end:0x02112f2c
+
+src/unnamed/ov019/data_ov019_02112f2c.c:
+    complete
+    .data start:0x02112f2c end:0x02112f58
+
+src/unnamed/ov019/data_ov019_02112f58.c:
+    complete
+    .data start:0x02112f58 end:0x02112fd0
+
+src/unnamed/ov019/data_ov019_02112fd0.c:
+    complete
+    .data start:0x02112fd0 end:0x021130cc
+
+src/unnamed/ov019/data_ov019_021130cc.c:
+    complete
+    .data start:0x021130cc end:0x02113228
+
+src/unnamed/ov019/data_ov019_02113228.c:
+    complete
+    .data start:0x02113228 end:0x02113270
+
 src/game/actors/d_a_pg_rcer.cpp:
     complete
     .text start:0x021111a0 end:0x0211261c

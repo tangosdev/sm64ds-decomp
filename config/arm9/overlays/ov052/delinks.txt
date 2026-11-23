@@ -4,6 +4,66 @@
     .ctor       start:0x02111c3c end:0x02111c44 kind:rodata align:4
     .data       start:0x02111c60 end:0x02112680 kind:data align:32
     .bss        start:0x02112680 end:0x021126e0 kind:bss align:32
+src/unnamed/ov052/data_ov052_02111c60.c:
+    complete
+    .data start:0x02111c60 end:0x02111f44
+
+src/unnamed/ov052/data_ov052_02111f44.c:
+    complete
+    .data start:0x02111f44 end:0x0211208c
+
+src/unnamed/ov052/data_ov052_0211208c.c:
+    complete
+    .data start:0x0211208c end:0x021120f8
+
+src/unnamed/ov052/data_ov052_021120f8.c:
+    complete
+    .data start:0x021120f8 end:0x021121b8
+
+src/unnamed/ov052/data_ov052_021121b8.c:
+    complete
+    .data start:0x021121b8 end:0x02112258
+
+src/unnamed/ov052/data_ov052_02112258.c:
+    complete
+    .data start:0x02112258 end:0x0211227c
+
+src/unnamed/ov052/data_ov052_0211227c.c:
+    complete
+    .data start:0x0211227c end:0x02112294
+
+src/unnamed/ov052/data_ov052_02112294.c:
+    complete
+    .data start:0x02112294 end:0x02112320
+
+src/unnamed/ov052/data_ov052_02112320.c:
+    complete
+    .data start:0x02112320 end:0x02112358
+
+src/unnamed/ov052/data_ov052_02112358.c:
+    complete
+    .data start:0x02112358 end:0x021123e4
+
+src/unnamed/ov052/data_ov052_021123e4.c:
+    complete
+    .data start:0x021123e4 end:0x0211241c
+
+src/unnamed/ov052/data_ov052_0211241c.c:
+    complete
+    .data start:0x0211241c end:0x02112434
+
+src/unnamed/ov052/data_ov052_02112434.c:
+    complete
+    .data start:0x02112434 end:0x02112494
+
+src/unnamed/ov052/data_ov052_02112494.c:
+    complete
+    .data start:0x02112494 end:0x021124c4
+
+src/unnamed/ov052/data_ov052_021124c4.c:
+    complete
+    .data start:0x021124c4 end:0x021124d4
+
 src/game/actors/d_a_obj_emm_log.cpp:
     complete
     .text start:0x021111a0 end:0x02111440
@@ -19,3 +79,27 @@ src/game/actors/d_a_obj_emm_yuka.cpp:
     .ctor start:0x02111c40 end:0x02111c44
     .data start:0x021125a0 end:0x021125ac
     .bss start:0x021126a8 end:0x021126d0
+
+src/unnamed/ov052/data_ov052_02111868.c:
+    complete
+    .rodata start:0x02111868 end:0x0211190c
+
+src/unnamed/ov052/data_ov052_0211190c.c:
+    complete
+    .rodata start:0x0211190c end:0x02111928
+
+src/unnamed/ov052/data_ov052_02111928.c:
+    complete
+    .rodata start:0x02111928 end:0x02111a4c
+
+src/unnamed/ov052/data_ov052_02111a4c.c:
+    complete
+    .rodata start:0x02111a4c end:0x02111abc
+
+src/unnamed/ov052/data_ov052_02111abc.c:
+    complete
+    .rodata start:0x02111abc end:0x02111b34
+
+src/unnamed/ov052/data_ov052_02111b34.c:
+    complete
+    .rodata start:0x02111b34 end:0x02111b64
