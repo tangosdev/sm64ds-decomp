@@ -20,6 +20,11 @@
    "name": ".bss",
    "start": "0x020a4bb8",
    "end": "0x020a7fc4"
+  },
+  {
+   "name": ".rodata",
+   "start": "0x02082190",
+   "end": "0x020821c0"
   }
  ],
  "functions": [
@@ -123,6 +128,15 @@
   }
  ],
  "data": [],
+ "rodata": [
+  {
+   "symbol": "data_02082190",
+   "address": "0x02082190",
+   "size": "0x30",
+   "binding": "STB_GLOBAL",
+   "evidence": "Identity matrix, used when Render is given no matrix."
+  }
+ ],
  "bss": [
   {
    "symbol": "data_020a4bb8",
@@ -192,6 +206,13 @@
      "start": "0x020a4bb8",
      "end": "0x020a7fc4",
      "comparison": "NOBITS -- symbol/module gates"
+    },
+    {
+     "section": ".rodata",
+     "start": "0x02082190",
+     "end": "0x020821c0",
+     "differingBytes": 0,
+     "firstDiff": null
     }
    ],
    "objectAudit": {

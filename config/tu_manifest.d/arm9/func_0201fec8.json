@@ -24,7 +24,7 @@
     },
     {
       "name": ".rodata",
-      "start": "0x02075358",
+      "start": "0x020752cc",
       "end": "0x020755a0"
     },
     {
@@ -258,7 +258,7 @@
         },
         {
           "section": ".rodata",
-          "start": "0x02075358",
+          "start": "0x020752cc",
           "end": "0x020755a0",
           "differingBytes": 0,
           "firstDiff": null
@@ -343,6 +343,13 @@
     }
   },
   "rodata": [
+    {
+      "symbol": "data_020752cc",
+      "address": "0x020752cc",
+      "size": "0x8c",
+      "binding": "STB_GLOBAL",
+      "evidence": "Five 28-byte owner-info records. data_020752e8, data_02075304, data_02075320 and data_0207533c are the records at +28, +56, +84 and +112."
+    },
     {
       "symbol": "data_02075358",
       "address": "0x02075358",
