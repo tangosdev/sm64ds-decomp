@@ -124,6 +124,13 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated model resource destructor-registration node"
+    },
+    {
+      "symbol": "gWaterfallSoundsDisabled",
+      "address": "0x02110aec",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "four-word flag block at the end of this TU's bss"
     }
   ],
   "notes": [

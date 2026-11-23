@@ -176,6 +176,13 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x596 collision handle"
+    },
+    {
+      "symbol": "data_ov079_02128390",
+      "address": "0x02128390",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "tail of this TU's bss"
     }
   ],
   "notes": [

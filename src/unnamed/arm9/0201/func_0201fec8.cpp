@@ -51,20 +51,39 @@ extern const u8 data_02075358[584] = {
     0x74, 0x00, 0x2e, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 /* Owner-info records. data_020752e8, data_02075304, data_02075320 and
-   data_0207533c are the records at +28, +56, +84 and +112. */
-extern const char data_020752cc[140] = {
-    0,   0,   0,   0, 120, 242, 8,   2, 152, 83,  7,   2, 156, 242, 8,   2, 208, 242, 8,   2,
-    0,   0,   128, 0, 4,   0,   0,   0, 0,   0,   0,   0, 120, 242, 8,   2, 248, 83,  7,   2,
-    156, 242, 8,   2, 208, 242, 8,   2, 0,   0,   128, 0, 4,   0,   0,   0, 0,   0,   0,   0,
-    120, 242, 8,   2, 48,  85,  7,   2, 156, 242, 8,   2, 208, 242, 8,   2, 0,   0,   128, 0,
-    4,   0,   0,   0, 0,   0,   0,   0, 120, 242, 8,   2, 196, 84,  7,   2, 156, 242, 8,   2,
-    208, 242, 8,   2, 0,   0,   128, 0, 4,   0,   0,   0, 0,   0,   0,   0, 120, 242, 8,   2,
-    92,  84,  7,   2, 156, 242, 8,   2, 208, 242, 8,   2, 0,   0,   128, 0, 4,   0,   0,   0,
-};
+   data_0207533c are the records at +28, +56, +84 and +112. The four pointers
+   in each record are relocated. */
+extern const char data_0208f278[];
+extern const char data_0208f29c[];
+extern const char data_0208f2d0[];
+extern const char data_02075398[];
+extern const char data_020753f8[];
+extern const char data_0207545c[];
+extern const char data_020754c4[];
+extern const char data_02075530[];
+
+typedef struct OwnerInfo {
+    u32 head;
+    const char *slot;
+    const char *text;
+    const char *next;
+    const char *tail;
+    u32 flag;
+    u32 count;
+} OwnerInfo;
+
 extern const char data_020752e8[28];
 extern const char data_02075304[28];
 extern const char data_02075320[28];
 extern const char data_0207533c[28];
+
+extern const OwnerInfo data_020752cc[5] = {
+    {0, data_0208f278, data_02075398, data_0208f29c, data_0208f2d0, 0x00800000, 4},
+    {0, data_0208f278, data_020753f8, data_0208f29c, data_0208f2d0, 0x00800000, 4},
+    {0, data_0208f278, data_02075530, data_0208f29c, data_0208f2d0, 0x00800000, 4},
+    {0, data_0208f278, data_020754c4, data_0208f29c, data_0208f2d0, 0x00800000, 4},
+    {0, data_0208f278, data_0207545c, data_0208f29c, data_0208f2d0, 0x00800000, 4},
+};
 extern "C" {
 extern void OS_GetOwnerInfo(unsigned char *dst);
 }
