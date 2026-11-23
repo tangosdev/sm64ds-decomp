@@ -78,8 +78,8 @@ extern ViewRecord data_ov029_021130fc[];
 extern StandardEntry data_ov029_02113134[];
 extern ObjSubTable data_ov029_02113174[];
 extern ObjSubTable data_ov029_021131b4[];
-typedef struct data_ov029_02113204 { Clps21 clps; u32 tail[4]; } data_ov029_02113204;
-extern struct data_ov029_02113204 data_ov029_02113204;
+typedef struct data_ov029_02113204 { Clps21 clps; u32 tail[4]; } data_ov029_02113204_Rec;
+extern data_ov029_02113204_Rec data_ov029_02113204;
 extern SimpleEntry data_ov029_021132c4[];
 extern SimpleEntry data_ov029_021133d4[];
 extern StandardEntry data_ov029_021134ec[];
@@ -154,7 +154,7 @@ typedef char data_ov029_021131b4_size[sizeof(data_ov029_021131b4) == 0x50 ? 1 : 
 
 #pragma define_section d02113204 ".data.data_ov029_02113204" ".data.data_ov029_02113204" ".data.data_ov029_02113204" far_data
 #pragma section d02113204 begin
-struct data_ov029_02113204 data_ov029_02113204 = {
+data_ov029_02113204_Rec data_ov029_02113204 = {
 {
         0x53504c43,
         8,

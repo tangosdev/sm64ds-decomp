@@ -153,8 +153,8 @@ extern u32 data_ov020_02113780;
 typedef struct data_ov020_02113784 {
     PathDef f_02113784;
     u16 f_0211378a;
-} data_ov020_02113784;
-extern struct data_ov020_02113784 data_ov020_02113784;
+} data_ov020_02113784_Rec;
+extern data_ov020_02113784_Rec data_ov020_02113784;
 extern ObjTab data_ov020_0211378c;
 extern ObjTab data_ov020_02113794;
 extern ObjTab data_ov020_0211379c;
@@ -167,19 +167,19 @@ extern char data_ov020_021137cc[];
 typedef struct data_ov020_021137d8 {
     s16 f_021137d8[5];
     u16 f_021137e2;
-} data_ov020_021137d8;
-extern struct data_ov020_021137d8 data_ov020_021137d8;
+} data_ov020_021137d8_Rec;
+extern data_ov020_021137d8_Rec data_ov020_021137d8;
 typedef struct data_ov020_021137e4 {
     u16 f_021137e4[5];
     u16 f_021137ee;
-} data_ov020_021137e4;
-extern struct data_ov020_021137e4 data_ov020_021137e4;
+} data_ov020_021137e4_Rec;
+extern data_ov020_021137e4_Rec data_ov020_021137e4;
 extern Vector3s data_ov020_021137f0[];
 typedef struct data_ov020_021137fc {
     ExitEnt f_021137fc;
     u16 f_0211380a;
-} data_ov020_021137fc;
-extern struct data_ov020_021137fc data_ov020_021137fc;
+} data_ov020_021137fc_Rec;
+extern data_ov020_021137fc_Rec data_ov020_021137fc;
 extern StdEnt data_ov020_0211380c;
 extern StdEnt data_ov020_0211381c;
 extern StdEnt data_ov020_0211382c;
@@ -196,8 +196,8 @@ extern BTA_File data_ov020_021138cc;
 typedef struct data_ov020_021138e4 {
     SimpEnt f_021138e4[3];
     LevelEnt f_021138fc;
-} data_ov020_021138e4;
-extern struct data_ov020_021138e4 data_ov020_021138e4;
+} data_ov020_021138e4_Rec;
+extern data_ov020_021138e4_Rec data_ov020_021138e4;
 extern StdEnt data_ov020_02113918[];
 extern StdEnt data_ov020_02113938[];
 extern StdEnt data_ov020_02113958[];
@@ -238,16 +238,16 @@ extern StdEnt data_ov020_021140d4[];
 typedef struct data_ov020_02114184 {
     ViewEnt f_02114184[21];
     u16 f_021142aa;
-} data_ov020_02114184;
-extern struct data_ov020_02114184 data_ov020_02114184;
+} data_ov020_02114184_Rec;
+extern data_ov020_02114184_Rec data_ov020_02114184;
 extern DoorEnt data_ov020_021142ac[];
 extern StdEnt data_ov020_021143d8[];
 extern StdEnt data_ov020_02114508[];
 typedef struct data_ov020_02114668 {
     CLPS_Block f_02114668;
     u32 f_02114820[2];
-} data_ov020_02114668;
-extern struct data_ov020_02114668 data_ov020_02114668;
+} data_ov020_02114668_Rec;
+extern data_ov020_02114668_Rec data_ov020_02114668;
 
 #pragma define_section d02113780 ".data.data_ov020_02113780" ".data.data_ov020_02113780" ".data.data_ov020_02113780" far_data
 #pragma section d02113780 begin
@@ -257,7 +257,7 @@ typedef char data_ov020_02113780_size[sizeof(data_ov020_02113780) == 0x4 ? 1 : -
 
 #pragma define_section d02113784 ".data.data_ov020_02113784" ".data.data_ov020_02113784" ".data.data_ov020_02113784" far_data
 #pragma section d02113784 begin
-struct data_ov020_02113784 data_ov020_02113784 = {
+data_ov020_02113784_Rec data_ov020_02113784 = {
     {0x0000, 0x02, 0xff, 0x32, 0x48},
     0x0000
 };
@@ -320,7 +320,7 @@ typedef char data_ov020_021137cc_size[sizeof(data_ov020_021137cc) == 0xc ? 1 : -
 
 #pragma define_section d021137d8 ".data.data_ov020_021137d8" ".data.data_ov020_021137d8" ".data.data_ov020_021137d8" far_data
 #pragma section d021137d8 begin
-struct data_ov020_021137d8 data_ov020_021137d8 = {
+data_ov020_021137d8_Rec data_ov020_021137d8 = {
     {0x0af0, 0x07d0, 0x07d0, 0x0500, 0x07d0},
     0x0000
 };
@@ -329,7 +329,7 @@ typedef char data_ov020_021137d8_size[sizeof(data_ov020_021137d8) == 0xc ? 1 : -
 
 #pragma define_section d021137e4 ".data.data_ov020_021137e4" ".data.data_ov020_021137e4" ".data.data_ov020_021137e4" far_data
 #pragma section d021137e4 begin
-struct data_ov020_021137e4 data_ov020_021137e4 = {
+data_ov020_021137e4_Rec data_ov020_021137e4 = {
     {0x07cd, 0x07ce, 0x07cf, 0x07d0, 0x07d1},
     0x0000
 };
@@ -344,7 +344,7 @@ typedef char data_ov020_021137f0_size[sizeof(data_ov020_021137f0) == 0xc ? 1 : -
 
 #pragma define_section d021137fc ".data.data_ov020_021137fc" ".data.data_ov020_021137fc" ".data.data_ov020_021137fc" far_data
 #pragma section d021137fc begin
-struct data_ov020_021137fc data_ov020_021137fc = {
+data_ov020_021137fc_Rec data_ov020_021137fc = {
     {0x07d0, 0x0708, 0x03b6, 0x0000, (s16)0xc000, {0x2e, 0x00, 0x04, 0x22}},
     0x0000
 };
@@ -435,7 +435,7 @@ typedef char data_ov020_021138cc_size[sizeof(data_ov020_021138cc) == 0x18 ? 1 : 
 
 #pragma define_section d021138e4 ".data.data_ov020_021138e4" ".data.data_ov020_021138e4" ".data.data_ov020_021138e4" far_data
 #pragma section d021138e4 begin
-struct data_ov020_021138e4 data_ov020_021138e4 = {
+data_ov020_021138e4_Rec data_ov020_021138e4 = {
     {{0x8226, (s16)0xfb50, 0x0000, 0x08fc},
      {0x063d, (s16)0xf830, 0x04b0, 0x076c},
      {0xe5ff, (s16)0xf830, 0x0258, 0x0578}},
@@ -803,7 +803,7 @@ typedef char data_ov020_021140d4_size[sizeof(data_ov020_021140d4) == 0xb0 ? 1 : 
 
 #pragma define_section d02114184 ".data.data_ov020_02114184" ".data.data_ov020_02114184" ".data.data_ov020_02114184" far_data
 #pragma section d02114184 begin
-struct data_ov020_02114184 data_ov020_02114184 = {
+data_ov020_02114184_Rec data_ov020_02114184 = {
     {{0x02, 0xff, 0x028a, 0x0137, 0x189c, {0x00, 0x00}, (s16)0x8000, 0x0000},
      {0x04, 0x01, 0x0d5c, (s16)0xf768, (s16)0xfa60, {0x00, 0x00}, 0x0000, 0x0000},
      {0x04, 0xff, (s16)0xfd62, 0x0a8c, 0x012c, {0x00, 0x00}, 0x4000, 0x0000},
@@ -913,7 +913,7 @@ typedef char data_ov020_02114508_size[sizeof(data_ov020_02114508) == 0x160 ? 1 :
 
 #pragma define_section d02114668 ".data.data_ov020_02114668" ".data.data_ov020_02114668" ".data.data_ov020_02114668" far_data
 #pragma section d02114668 begin
-struct data_ov020_02114668 data_ov020_02114668 = {
+data_ov020_02114668_Rec data_ov020_02114668 = {
     {0x53504c43, 8, 54, {{0x00000fe3, 0x000000ff}, {0x00040fc4, 0x000000ff},
                                         {0x00040fc0, 0x000000ff}, {0x00040105, 0x000000ff},
                                         {0x01000fc0, 0x000000ff}, {0x00040fcc, 0x000000ff},

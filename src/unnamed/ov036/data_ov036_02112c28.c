@@ -84,28 +84,28 @@ typedef char data_ov036_02112b08_size[sizeof(data_ov036_02112b08) == 0x20 ? 1 : 
 typedef struct data_ov036_02112a00 {
     u16 minimapTile;
     u16 tilePad;
-} data_ov036_02112a00;
-extern struct data_ov036_02112a00 data_ov036_02112a00;
+} data_ov036_02112a00_Rec;
+extern data_ov036_02112a00_Rec data_ov036_02112a00;
 extern u32 data_ov036_02112a04;
 typedef struct data_ov036_02112a08 {
     u16 count;
     u16 pad;
     void *entries;
-} data_ov036_02112a08;
-extern struct data_ov036_02112a08 data_ov036_02112a08;
+} data_ov036_02112a08_Rec;
+extern data_ov036_02112a08_Rec data_ov036_02112a08;
 typedef struct data_ov036_02112a10 {
     u16 count;
     u16 pad;
     void *entries;
-} data_ov036_02112a10;
-extern struct data_ov036_02112a10 data_ov036_02112a10;
+} data_ov036_02112a10_Rec;
+extern data_ov036_02112a10_Rec data_ov036_02112a10;
 typedef struct data_ov036_02112a18 {
     void *objTable;
     void *bta;
     s8 minimapId;
     u8 rest[3];
-} data_ov036_02112a18;
-extern struct data_ov036_02112a18 data_ov036_02112a18;
+} data_ov036_02112a18_Rec;
+extern data_ov036_02112a18_Rec data_ov036_02112a18;
 extern StandardEntry data_ov036_02112a44;
 typedef struct data_ov036_02112a54 {
     ObjSubTable areaSubs[3];
@@ -122,31 +122,31 @@ typedef struct data_ov036_02112a54 {
         s16 minimapScale;
         u32 skybox;
     } level;
-} data_ov036_02112a54;
-extern struct data_ov036_02112a54 data_ov036_02112a54;
+} data_ov036_02112a54_Rec;
+extern data_ov036_02112a54_Rec data_ov036_02112a54;
 typedef struct data_ov036_02112c28 {
     struct PathDef paths[7];
     u16 pathPad;
-} data_ov036_02112c28;
-extern struct data_ov036_02112c28 data_ov036_02112c28;
+} data_ov036_02112c28_Rec;
+extern data_ov036_02112c28_Rec data_ov036_02112c28;
 extern StandardEntry data_ov036_02112c54[];
 extern ObjSubTable data_ov036_02112c94[];
 typedef struct data_ov036_02112cd4 {
     ViewRecord views[5];
     u16 pad;
-} data_ov036_02112cd4;
-extern struct data_ov036_02112cd4 data_ov036_02112cd4;
+} data_ov036_02112cd4_Rec;
+extern data_ov036_02112cd4_Rec data_ov036_02112cd4;
 typedef struct data_ov036_02112d1c {
     Clps24 clps;
     u32 tail[6];
-} data_ov036_02112d1c;
-extern struct data_ov036_02112d1c data_ov036_02112d1c;
+} data_ov036_02112d1c_Rec;
+extern data_ov036_02112d1c_Rec data_ov036_02112d1c;
 extern Vector3s data_ov036_02112dfc[];
 extern SimpleEntry data_ov036_0211306c[];
 extern StandardEntry data_ov036_02113384[];
 #pragma define_section gap0 ".data.gap0" ".data.gap0" ".data.gap0" far_data
 #pragma section gap0 begin
-struct data_ov036_02112a00 data_ov036_02112a00 = {0x07aa, 0x0000};
+data_ov036_02112a00_Rec data_ov036_02112a00 = {0x07aa, 0x0000};
 typedef char data_ov036_02112a00_size[sizeof(data_ov036_02112a00) == 0x4 ? 1 : -1];
 #pragma section gap0 end
 
@@ -158,19 +158,19 @@ typedef char data_ov036_02112a04_size[sizeof(data_ov036_02112a04) == 0x4 ? 1 : -
 
 #pragma define_section d02112a08 ".data.data_ov036_02112a08" ".data.data_ov036_02112a08" ".data.data_ov036_02112a08" far_data
 #pragma section d02112a08 begin
-struct data_ov036_02112a08 data_ov036_02112a08 = {0x0003, 0x0000, &data_ov036_02112a54};
+data_ov036_02112a08_Rec data_ov036_02112a08 = {0x0003, 0x0000, &data_ov036_02112a54};
 typedef char data_ov036_02112a08_size[sizeof(data_ov036_02112a08) == 0x8 ? 1 : -1];
 #pragma section d02112a08 end
 
 #pragma define_section d02112a10 ".data.data_ov036_02112a10" ".data.data_ov036_02112a10" ".data.data_ov036_02112a10" far_data
 #pragma section d02112a10 begin
-struct data_ov036_02112a10 data_ov036_02112a10 = {0x0008, 0x0000, data_ov036_02112c94};
+data_ov036_02112a10_Rec data_ov036_02112a10 = {0x0008, 0x0000, data_ov036_02112c94};
 typedef char data_ov036_02112a10_size[sizeof(data_ov036_02112a10) == 0x8 ? 1 : -1];
 #pragma section d02112a10 end
 
 #pragma define_section d02112a18 ".data.data_ov036_02112a18" ".data.data_ov036_02112a18" ".data.data_ov036_02112a18" far_data
 #pragma section d02112a18 begin
-struct data_ov036_02112a18 data_ov036_02112a18 = {&data_ov036_02112a08, 0, 0x00, {0x00, 0x7b, 0x1b}};
+data_ov036_02112a18_Rec data_ov036_02112a18 = {&data_ov036_02112a08, 0, 0x00, {0x00, 0x7b, 0x1b}};
 typedef char data_ov036_02112a18_size[sizeof(data_ov036_02112a18) == 0xc ? 1 : -1];
 #pragma section d02112a18 end
 
@@ -210,7 +210,7 @@ typedef char data_ov036_02112a44_size[sizeof(data_ov036_02112a44) == 0x10 ? 1 : 
 
 #pragma define_section d02112a54 ".data.data_ov036_02112a54" ".data.data_ov036_02112a54" ".data.data_ov036_02112a54" far_data
 #pragma section d02112a54 begin
-struct data_ov036_02112a54 data_ov036_02112a54 = {
+data_ov036_02112a54_Rec data_ov036_02112a54 = {
 {
         {0x00, 0x6d, {0x00, 0x00}, data_ov036_02113384},
         {0x05, 0x63, {0x00, 0x00}, data_ov036_0211306c},
@@ -235,7 +235,7 @@ typedef char data_ov036_02112a54_size[sizeof(data_ov036_02112a54) == 0x34 ? 1 : 
 
 #pragma define_section d02112c28 ".data.data_ov036_02112c28" ".data.data_ov036_02112c28" ".data.data_ov036_02112c28" far_data
 #pragma section d02112c28 begin
-struct data_ov036_02112c28 data_ov036_02112c28 = {
+data_ov036_02112c28_Rec data_ov036_02112c28 = {
 {
         {0x0000, 0x0d, 0xff, 0xff, 0x7f},
         {0x000d, 0x18, 0xff, 0xff, 0x7f},
@@ -278,7 +278,7 @@ typedef char data_ov036_02112c94_size[sizeof(data_ov036_02112c94) == 0x40 ? 1 : 
 
 #pragma define_section d02112cd4 ".data.data_ov036_02112cd4" ".data.data_ov036_02112cd4" ".data.data_ov036_02112cd4" far_data
 #pragma section d02112cd4 begin
-struct data_ov036_02112cd4 data_ov036_02112cd4 = {
+data_ov036_02112cd4_Rec data_ov036_02112cd4 = {
     {
         {0x02, 0xff, 0x0672, (s16)0xfbb4, 0x0d48, {0x00, 0x00}, 0x6000, 0x0000},
         {0x07, 0xff, (s16)0xfce0, 0x026a, (s16)0xde04, {0x00, 0x00}, 0x0000, 0x0000},
@@ -293,7 +293,7 @@ typedef char data_ov036_02112cd4_size[sizeof(data_ov036_02112cd4) == 0x48 ? 1 : 
 
 #pragma define_section d02112d1c ".data.data_ov036_02112d1c" ".data.data_ov036_02112d1c" ".data.data_ov036_02112d1c" far_data
 #pragma section d02112d1c begin
-struct data_ov036_02112d1c data_ov036_02112d1c = {
+data_ov036_02112d1c_Rec data_ov036_02112d1c = {
 {
         0x53504c43,
         8,
