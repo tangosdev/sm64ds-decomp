@@ -57,3 +57,7 @@ src/game/actors/d_a_slide_box.cpp:
     .ctor start:0x02113acc end:0x02113ad0
     .data.slideBox start:0x02113bac end:0x02113bcc
     .bss start:0x02114e6c end:0x02114ea0
+
+src/unnamed/ov016/data_ov016.c:
+    complete
+    .data.hasira start:0x02113ccc end:0x02114878
