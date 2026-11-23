@@ -1,460 +1,10 @@
-/* ov053 is data-only: 4,556 bytes of .rodata at 0x021111a0 and 480 bytes
-   of .data at 0x02112380, no code. mwccarm puts every plain initialized
-   object in its own same-named input section ordered by size, and the lcf
-   can only select by section name, so one TU cannot place separated runs
-   as separate arrays. The .rodata range stays one union array (its zero
-   runs are interior elements). The .data range is one struct. The
-   data_ov053_* rows stay symbols.txt rows and are emitted as lcf labels.
-   A relocated word is a pointer; a word with no agreed record stays raw. */
+/* ov053 course rows. Texture SRT files and one colour-animation file,
+ * their key tables and material names, then the level records. */
 #include "CLPS.h"
+#include "private/BTA_File.h"
+#include "private/BMA_File.h"
 #include "types.h"
 
-typedef union Ov053Word {
-    u32 value;
-    const void *ptr;
-} Ov053Word;
-
-extern u32 data_ov053_021111a4[];
-extern u32 data_ov053_021111a8[];
-extern u32 data_ov053_021111ac[];
-extern u32 data_ov053_021111b0[];
-extern u32 data_ov053_021111b4[];
-extern u32 data_ov053_021111b8[];
-extern u32 data_ov053_021111bc[];
-extern u32 data_ov053_021111c0[];
-extern u32 data_ov053_021111c4[];
-extern u32 data_ov053_021111c8[];
-extern u32 data_ov053_021111cc[];
-extern u32 data_ov053_021111d0[];
-extern u32 data_ov053_021111d4[];
-extern u32 data_ov053_021111d8[];
-extern u32 data_ov053_021111dc[];
-extern u32 data_ov053_021111e0[];
-extern u32 data_ov053_021111fc[];
-extern u32 data_ov053_02111234[];
-extern u32 data_ov053_0211126c[];
-extern u32 data_ov053_021112a4[];
-extern u32 data_ov053_021112dc[];
-extern u32 data_ov053_02111314[];
-extern u32 data_ov053_0211134c[];
-extern u32 data_ov053_02111384[];
-extern u32 data_ov053_021113c0[];
-extern u32 data_ov053_02111404[];
-extern u32 data_ov053_021114f8[];
-extern u32 data_ov053_021115ec[];
-extern u32 data_ov053_02111750[];
-extern u32 data_ov053_0211194c[];
-extern u32 data_ov053_02111b68[];
-extern u32 data_ov053_02111dc4[];
-extern u32 data_ov053_02112098[];
-extern u32 data_ov053_02112384[];
-extern u32 data_ov053_0211238c[];
-extern u32 data_ov053_02112394[];
-extern u32 data_ov053_0211239c[];
-extern u32 data_ov053_021123a4[];
-extern u32 data_ov053_021123b0[];
-extern u32 data_ov053_021123bc[];
-extern u32 data_ov053_021123c8[];
-extern u32 data_ov053_021123d4[];
-extern u32 data_ov053_021123e4[];
-extern u32 data_ov053_0211241c[];
-extern u32 data_ov053_0211247c[];
-extern u32 data_ov053_021124dc[];
-extern u32 data_ov053_02112514[];
-
-/* .rodata: 0x21111a0..0x211236c, 4556 bytes. */
-const Ov053Word data_ov053_021111a0[1139] = {
-    {.value = 0x00000000},         {.value = 0x00000000},         {.value = 0x00000000},
-    {.value = 0x00000000},         {.value = 0x00000000},         {.value = 0x00000000},
-    {.value = 0x00000000},         {.value = 0x00000000},         {.value = 0x00001000},
-    {.value = 0x00001000},         {.value = 0x00001000},         {.value = 0x00001000},
-    {.value = 0x00001000},         {.value = 0x00001000},         {.value = 0x00001000},
-    {.value = 0x00001000},         {.value = 0x0000ffff},         {.ptr = &data_ov053_02112394},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x000000b5},         {.value = 0x000000b5},         {.value = 0x0000ffff},
-    {.ptr = &data_ov053_021123b0}, {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x0001005a},
-    {.value = 0x0000ffff},         {.ptr = &data_ov053_021123bc}, {.value = 0x00000001},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x005b005a},         {.value = 0x0000ffff},         {.ptr = &data_ov053_021123b0},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x00000001},         {.value = 0x0001002c},         {.value = 0x0000ffff},
-    {.ptr = &data_ov053_021123bc}, {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x002d002c},
-    {.value = 0x0000ffff},         {.ptr = &data_ov053_021123b0}, {.value = 0x00000001},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x0001001e},         {.value = 0x0000ffff},         {.ptr = &data_ov053_021123bc},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x00000001},         {.value = 0x001f001e},         {.value = 0x0000ffff},
-    {.ptr = &data_ov053_021123b0}, {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x0001003f},
-    {.value = 0x0000ffff},         {.ptr = &data_ov053_021123bc}, {.value = 0x00000001},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x0040003f},         {.value = 0x0000ffff},         {.ptr = &data_ov053_021123b0},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x00000001},         {.value = 0x00010008},         {.value = 0x0000ffff},
-    {.ptr = &data_ov053_021123bc}, {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x00090008},
-    {.value = 0x0000ffff},         {.ptr = &data_ov053_021123b0}, {.value = 0x00000001},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x0001004b},         {.value = 0x0000ffff},         {.ptr = &data_ov053_021123bc},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x00000001},         {.value = 0x004c004b},         {.value = 0x0000ffff},
-    {.ptr = &data_ov053_021123b0}, {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x0001001e},
-    {.value = 0x0000ffff},         {.ptr = &data_ov053_021123bc}, {.value = 0x00000001},
-    {.value = 0x00000001},         {.value = 0x00000001},         {.value = 0x00000001},
-    {.value = 0x001f001e},         {.value = 0x0000ffff},         {.ptr = &data_ov053_021123a4},
-    {.value = 0x00000101},         {.value = 0x005a0101},         {.value = 0x00b40101},
-    {.value = 0x010e0101},         {.value = 0x01680101},         {.value = 0x01c20101},
-    {.value = 0x00b00001},         {.value = 0x00b00001},         {.value = 0x00b00001},
-    {.value = 0x00b00001},         {.value = 0x00b00001},         {.value = 0x00b00001},
-    {.value = 0x00520001},         {.value = 0x00000000},         {.value = 0xfffffe1d},
-    {.value = 0x000000be},         {.value = 0x00000360},         {.value = 0x000000be},
-    {.value = 0xfffffe1d},         {.value = 0x000000be},         {.value = 0x00000360},
-    {.value = 0x000000be},         {.value = 0x0000036b},         {.value = 0x00000079},
-    {.value = 0xfffffd86},         {.value = 0x00000079},         {.value = 0x0000036b},
-    {.value = 0x00000079},         {.value = 0xfffffd86},         {.value = 0x00000079},
-    {.value = 0x00000000},         {.value = 0xfffffe1d},         {.value = 0xfffffe2e},
-    {.value = 0xfffffe5e},         {.value = 0xfffffea7},         {.value = 0xffffff03},
-    {.value = 0xffffff6d},         {.value = 0xffffffe0},         {.value = 0x00000056},
-    {.value = 0x000000c8},         {.value = 0x00000133},         {.value = 0x0000018f},
-    {.value = 0x000001d8},         {.value = 0x00000208},         {.value = 0x00000219},
-    {.value = 0x0000020f},         {.value = 0x000001f2},         {.value = 0x000001c5},
-    {.value = 0x0000018a},         {.value = 0x00000144},         {.value = 0x000000f5},
-    {.value = 0x000000a0},         {.value = 0x00000048},         {.value = 0xffffffee},
-    {.value = 0xffffff95},         {.value = 0xffffff40},         {.value = 0xfffffef2},
-    {.value = 0xfffffeac},         {.value = 0xfffffe71},         {.value = 0xfffffe44},
-    {.value = 0xfffffe27},         {.value = 0x000001e3},         {.value = 0x000001d2},
-    {.value = 0x000001a2},         {.value = 0x00000159},         {.value = 0x000000fd},
-    {.value = 0x00000093},         {.value = 0x00000020},         {.value = 0xffffffaa},
-    {.value = 0xffffff38},         {.value = 0xfffffecd},         {.value = 0xfffffe71},
-    {.value = 0xfffffe28},         {.value = 0xfffffdf8},         {.value = 0xfffffde7},
-    {.value = 0xfffffdf1},         {.value = 0xfffffe0e},         {.value = 0xfffffe3b},
-    {.value = 0xfffffe76},         {.value = 0xfffffebc},         {.value = 0xffffff0b},
-    {.value = 0xffffff60},         {.value = 0xffffffb8},         {.value = 0x00000012},
-    {.value = 0x0000006b},         {.value = 0x000000c0},         {.value = 0x0000010e},
-    {.value = 0x00000154},         {.value = 0x0000018f},         {.value = 0x000001bc},
-    {.value = 0x000001d9},         {.value = 0x00000000},         {.value = 0xfffffe1d},
-    {.value = 0xfffffea9},         {.value = 0xfffffff7},         {.value = 0x00000186},
-    {.value = 0x000002d4},         {.value = 0x00000360},         {.value = 0x00000315},
-    {.value = 0x00000255},         {.value = 0x0000014e},         {.value = 0x0000002f},
-    {.value = 0xffffff28},         {.value = 0xfffffe67},         {.value = 0xfffffe1d},
-    {.value = 0xfffffe67},         {.value = 0xffffff28},         {.value = 0x00000030},
-    {.value = 0x0000014f},         {.value = 0x00000256},         {.value = 0x00000316},
-    {.value = 0x00000360},         {.value = 0x00000201},         {.value = 0xffffff79},
-    {.value = 0xfffffe1d},         {.value = 0xfffffea9},         {.value = 0xfffffff7},
-    {.value = 0x00000186},         {.value = 0x000002d4},         {.value = 0x00000360},
-    {.value = 0x00000203},         {.value = 0xffffff7a},         {.value = 0x0000036b},
-    {.value = 0x000002ce},         {.value = 0x00000158},         {.value = 0xffffff99},
-    {.value = 0xfffffe23},         {.value = 0xfffffd86},         {.value = 0xfffffdda},
-    {.value = 0xfffffeb1},         {.value = 0xffffffd8},         {.value = 0x00000119},
-    {.value = 0x00000240},         {.value = 0x00000318},         {.value = 0x0000036b},
-    {.value = 0x00000318},         {.value = 0x00000240},         {.value = 0x00000119},
-    {.value = 0xffffffd7},         {.value = 0xfffffeb0},         {.value = 0xfffffdd9},
-    {.value = 0xfffffd86},         {.value = 0xffffff10},         {.value = 0x000001e5},
-    {.value = 0x0000036b},         {.value = 0x000002ce},         {.value = 0x00000158},
-    {.value = 0xffffff99},         {.value = 0xfffffe23},         {.value = 0xfffffd86},
-    {.value = 0xffffff0d},         {.value = 0x000001e4},         {.value = 0x00000000},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x0000014c},         {.value = 0x00000000},
-    {.value = 0xfffffeb4},         {.value = 0xfffffe1d},         {.value = 0xfffffe81},
-    {.value = 0xffffff71},         {.value = 0x0000008f},         {.value = 0x0000017f},
-    {.value = 0x000001e3},         {.value = 0x000001ae},         {.value = 0x00000124},
-    {.value = 0x00000067},         {.value = 0xffffff99},         {.value = 0xfffffedc},
-    {.value = 0xfffffe52},         {.value = 0xfffffe1d},         {.value = 0xfffffe46},
-    {.value = 0xfffffeb4},         {.value = 0xffffff4f},         {.value = 0x00000000},
-    {.value = 0x000000b1},         {.value = 0x0000014c},         {.value = 0x000001ba},
-    {.value = 0x000001e3},         {.value = 0x000001c8},         {.value = 0x0000017f},
-    {.value = 0x00000113},         {.value = 0x0000008f},         {.value = 0x00000000},
-    {.value = 0xffffff71},         {.value = 0xfffffeed},         {.value = 0xfffffe81},
-    {.value = 0xfffffe38},         {.value = 0xfffffe1d},         {.value = 0x000001e3},
-    {.value = 0x000000e9},         {.value = 0xffffff17},         {.value = 0xfffffe1d},
-    {.value = 0xffffff17},         {.value = 0x000000e9},         {.value = 0x000001e3},
-    {.value = 0x000000e9},         {.value = 0xffffff17},         {.value = 0xfffffe1d},
-    {.value = 0xfffffeb4},         {.value = 0x00000000},         {.value = 0x0000014c},
-    {.value = 0x000001e3},         {.value = 0x0000017f},         {.value = 0x0000008f},
-    {.value = 0xffffff71},         {.value = 0xfffffe81},         {.value = 0xfffffe1d},
-    {.value = 0xfffffe52},         {.value = 0xfffffedc},         {.value = 0xffffff99},
-    {.value = 0x00000067},         {.value = 0x00000124},         {.value = 0x000001ae},
-    {.value = 0x000001e3},         {.value = 0x000001ba},         {.value = 0x0000014c},
-    {.value = 0x000000b1},         {.value = 0x00000000},         {.value = 0xffffff4f},
-    {.value = 0xfffffeb4},         {.value = 0xfffffe46},         {.value = 0xfffffe1d},
-    {.value = 0xfffffe38},         {.value = 0xfffffe81},         {.value = 0xfffffeed},
-    {.value = 0xffffff71},         {.value = 0x00000000},         {.value = 0x0000008f},
-    {.value = 0x00000113},         {.value = 0x0000017f},         {.value = 0x000001c8},
-    {.value = 0x000001e3},         {.value = 0x00000000},         {.value = 0xfffffe1d},
-    {.value = 0xfffffe1d},         {.value = 0xfffffe1d},         {.value = 0xfffffe1d},
-    {.value = 0xfffffe1d},         {.value = 0xfffffe1d},         {.value = 0xfffffe1d},
-    {.value = 0xfffffe1d},         {.value = 0xfffffe1d},         {.value = 0xfffffe1d},
-    {.value = 0xffffff17},         {.value = 0x000000e9},         {.value = 0x000001e3},
-    {.value = 0x000000e9},         {.value = 0xffffff17},         {.value = 0xfffffe1d},
-    {.value = 0xfffffeb4},         {.value = 0x00000001},         {.value = 0x0000014d},
-    {.value = 0x000001e3},         {.value = 0x0000014c},         {.value = 0x00000000},
-    {.value = 0xfffffeb4},         {.value = 0xfffffe1d},         {.value = 0xfffffe25},
-    {.value = 0xfffffe3e},         {.value = 0xfffffe64},         {.value = 0xfffffe97},
-    {.value = 0xfffffed3},         {.value = 0xffffff17},         {.value = 0xffffff62},
-    {.value = 0xffffffb0},         {.value = 0x00000000},         {.value = 0x00000050},
-    {.value = 0x0000009e},         {.value = 0x000000e9},         {.value = 0x0000012d},
-    {.value = 0x00000169},         {.value = 0x0000019c},         {.value = 0x000001c2},
-    {.value = 0x000001db},         {.value = 0x000001e3},         {.value = 0x000001dd},
-    {.value = 0x000001cb},         {.value = 0x000001ae},         {.value = 0x00000188},
-    {.value = 0x00000159},         {.value = 0x00000124},         {.value = 0x000000e9},
-    {.value = 0x000000aa},         {.value = 0x00000067},         {.value = 0x00000023},
-    {.value = 0xffffffde},         {.value = 0xffffff99},         {.value = 0xffffff57},
-    {.value = 0xffffff17},         {.value = 0xfffffedc},         {.value = 0xfffffea7},
-    {.value = 0xfffffe79},         {.value = 0xfffffe52},         {.value = 0xfffffe35},
-    {.value = 0xfffffe23},         {.value = 0xfffffe1d},         {.value = 0x000001e3},
-    {.value = 0x000001e3},         {.value = 0x000001e3},         {.value = 0x000001e3},
-    {.value = 0x000001e3},         {.value = 0x000001e3},         {.value = 0x000001e3},
-    {.value = 0x000001e3},         {.value = 0x000001e3},         {.value = 0x000001e3},
-    {.value = 0x000000e9},         {.value = 0xffffff17},         {.value = 0xfffffe1d},
-    {.value = 0xffffff17},         {.value = 0x000000e9},         {.value = 0x000001e3},
-    {.value = 0x0000014c},         {.value = 0xffffffff},         {.value = 0xfffffeb3},
-    {.value = 0xfffffe1d},         {.value = 0xfffffeb4},         {.value = 0x00000000},
-    {.value = 0x0000014c},         {.value = 0x000001e3},         {.value = 0x000001dc},
-    {.value = 0x000001c5},         {.value = 0x000001a3},         {.value = 0x00000175},
-    {.value = 0x0000013e},         {.value = 0x000000ff},         {.value = 0x000000ba},
-    {.value = 0x00000072},         {.value = 0x00000026},         {.value = 0xffffffda},
-    {.value = 0xffffff8e},         {.value = 0xffffff46},         {.value = 0xffffff01},
-    {.value = 0xfffffec2},         {.value = 0xfffffe8b},         {.value = 0xfffffe5d},
-    {.value = 0xfffffe3b},         {.value = 0xfffffe24},         {.value = 0xfffffe1d},
-    {.value = 0xfffffe24},         {.value = 0xfffffe38},         {.value = 0xfffffe57},
-    {.value = 0xfffffe81},         {.value = 0xfffffeb4},         {.value = 0xfffffeed},
-    {.value = 0xffffff2d},         {.value = 0xffffff71},         {.value = 0xffffffb8},
-    {.value = 0x00000000},         {.value = 0x00000048},         {.value = 0x0000008f},
-    {.value = 0x000000d3},         {.value = 0x00000113},         {.value = 0x0000014c},
-    {.value = 0x0000017f},         {.value = 0x000001a9},         {.value = 0x000001c8},
-    {.value = 0x000001dc},         {.value = 0x000001e3},         {.value = 0x19191919},
-    {.value = 0x19191919},         {.value = 0x1a191919},         {.value = 0x1a1a1a1a},
-    {.value = 0x1a1a1a1a},         {.value = 0x1a1a1a1a},         {.value = 0x1b1b1b1a},
-    {.value = 0x1b1b1b1b},         {.value = 0x1b1b1b1b},         {.value = 0x1c1b1b1b},
-    {.value = 0x1c1c1c1c},         {.value = 0x1c1c1c1c},         {.value = 0x1c1c1c1c},
-    {.value = 0x1d1d1c1c},         {.value = 0x1d1d1d1d},         {.value = 0x1d1d1d1d},
-    {.value = 0x1d1d1d1d},         {.value = 0x1e1e1e1e},         {.value = 0x1e1e1e1e},
-    {.value = 0x1e1e1e1e},         {.value = 0x1f1f1e1e},         {.value = 0x1f1f1f1f},
-    {.value = 0x0c0c1f1f},         {.value = 0x0c0c0c0c},         {.value = 0x0b0b0b0c},
-    {.value = 0x0b0b0b0b},         {.value = 0x0a0a0a0a},         {.value = 0x090a0a0a},
-    {.value = 0x09090909},         {.value = 0x08080909},         {.value = 0x08080808},
-    {.value = 0x07070808},         {.value = 0x07070707},         {.value = 0x06060607},
-    {.value = 0x06060606},         {.value = 0x05050505},         {.value = 0x04050505},
-    {.value = 0x04040404},         {.value = 0x03030404},         {.value = 0x03030303},
-    {.value = 0x02020303},         {.value = 0x02020202},         {.value = 0x01010102},
-    {.value = 0x01010101},         {.value = 0x00000000},         {.value = 0x02020202},
-    {.value = 0x02020202},         {.value = 0x02020202},         {.value = 0x02020202},
-    {.value = 0x02020202},         {.value = 0x02020202},         {.value = 0x02020202},
-    {.value = 0x01010101},         {.value = 0x01010101},         {.value = 0x01010101},
-    {.value = 0x01010101},         {.value = 0x01010101},         {.value = 0x01010101},
-    {.value = 0x01010101},         {.value = 0x01010101},         {.value = 0x01010101},
-    {.value = 0x01010101},         {.value = 0x00000001},         {.value = 0x00000000},
-    {.value = 0x00000000},         {.value = 0x00000000},         {.value = 0x00000000},
-    {.value = 0x06060000},         {.value = 0x07070707},         {.value = 0x08080807},
-    {.value = 0x09090908},         {.value = 0x0a0a0909},         {.value = 0x0b0a0a0a},
-    {.value = 0x0b0b0b0b},         {.value = 0x0c0c0c0c},         {.value = 0x0d0d0d0c},
-    {.value = 0x0e0e0e0d},         {.value = 0x0f0f0e0e},         {.value = 0x100f0f0f},
-    {.value = 0x10101010},         {.value = 0x11111111},         {.value = 0x12121212},
-    {.value = 0x13131312},         {.value = 0x14141313},         {.value = 0x15141414},
-    {.value = 0x16151515},         {.value = 0x16161616},         {.value = 0x17171717},
-    {.value = 0x18181817},         {.value = 0x19191818},         {.value = 0x06060606},
-    {.value = 0x06060606},         {.value = 0x05060606},         {.value = 0x05050505},
-    {.value = 0x05050505},         {.value = 0x05050505},         {.value = 0x04040405},
-    {.value = 0x04040404},         {.value = 0x04040404},         {.value = 0x04040404},
-    {.value = 0x03030303},         {.value = 0x03030303},         {.value = 0x03030303},
-    {.value = 0x02030303},         {.value = 0x02020202},         {.value = 0x02020202},
-    {.value = 0x02020202},         {.value = 0x01010102},         {.value = 0x01010101},
-    {.value = 0x01010101},         {.value = 0x01010101},         {.value = 0x00000000},
-    {.value = 0x06060000},         {.value = 0x06060606},         {.value = 0x06060606},
-    {.value = 0x05050506},         {.value = 0x05050505},         {.value = 0x05050505},
-    {.value = 0x04050505},         {.value = 0x04040404},         {.value = 0x04040404},
-    {.value = 0x04040404},         {.value = 0x03030304},         {.value = 0x03030303},
-    {.value = 0x03030303},         {.value = 0x03030303},         {.value = 0x02020202},
-    {.value = 0x02020202},         {.value = 0x02020202},         {.value = 0x01010202},
-    {.value = 0x01010101},         {.value = 0x01010101},         {.value = 0x01010101},
-    {.value = 0x00000000},         {.value = 0x00000000},         {.value = 0x00000000},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xfffffe1d},         {.value = 0xfffffe1d},
-    {.value = 0xfffffe1d},         {.value = 0xfffffe1d},         {.value = 0xfffffe1d},
-    {.value = 0xfffffe1d},         {.value = 0xfffffe1d},         {.value = 0xfffffe1d},
-    {.value = 0xfffffe1d},         {.value = 0xfffffe1d},         {.value = 0xfffffe1d},
-    {.value = 0xfffffe1d},         {.value = 0xfffffe1d},         {.value = 0xfffffe1d},
-    {.value = 0xfffffe1d},         {.value = 0xfffffe1d},         {.value = 0xfffffe1d},
-    {.value = 0xfffffe1d},         {.value = 0xfffffe1d},         {.value = 0xfffffe1d},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000000e9},         {.value = 0xffffff17},
-    {.value = 0xfffffe1d},         {.value = 0xffffff17},         {.value = 0x000000e9},
-    {.value = 0x000001e3},         {.value = 0x000001e3},         {.value = 0x000001e3},
-    {.value = 0x000001e3},         {.value = 0x000001e3},         {.value = 0x000001e3},
-    {.value = 0x000001e3},         {.value = 0x000001e3},         {.value = 0x000001e3},
-    {.value = 0x000001e3},         {.value = 0x000001e3},         {.value = 0x000001e3},
-    {.value = 0x000001e3},         {.value = 0x000001e3},         {.value = 0x000001e3},
-    {.value = 0x000001e3},         {.value = 0x000001e3},         {.value = 0x000001e3},
-    {.value = 0x000001e3},         {.value = 0x000001e3},         {.value = 0x000001e3},
-    {.value = 0x00000000},         {.value = 0x00000017},         {.value = 0x0000002e},
-    {.value = 0x00000044},         {.value = 0x0000005b},         {.value = 0x00000072},
-    {.value = 0x00000089},         {.value = 0x0000009f},         {.value = 0x000000b6},
-    {.value = 0x000000cd},         {.value = 0x000000e4},         {.value = 0x000000fa},
-    {.value = 0x00000111},         {.value = 0x00000128},         {.value = 0x0000013f},
-    {.value = 0x00000155},         {.value = 0x0000016c},         {.value = 0x00000183},
-    {.value = 0x0000019a},         {.value = 0x000001b0},         {.value = 0x000001c7},
-    {.value = 0x000001de},         {.value = 0x000001f5},         {.value = 0x0000020b},
-    {.value = 0x00000222},         {.value = 0x00000239},         {.value = 0x00000250},
-    {.value = 0x00000266},         {.value = 0x0000027d},         {.value = 0x00000294},
-    {.value = 0x000002ab},         {.value = 0x000002c1},         {.value = 0x000002d8},
-    {.value = 0x000002ef},         {.value = 0x00000306},         {.value = 0x0000031c},
-    {.value = 0x00000333},         {.value = 0x0000034a},         {.value = 0x00000361},
-    {.value = 0x00000377},         {.value = 0x0000038e},         {.value = 0x000003a5},
-    {.value = 0x000003bc},         {.value = 0x000003d2},         {.value = 0x000003e9},
-    {.value = 0x00000400},         {.value = 0x00000417},         {.value = 0x0000042e},
-    {.value = 0x00000444},         {.value = 0x0000045b},         {.value = 0x00000472},
-    {.value = 0x00000489},         {.value = 0x0000049f},         {.value = 0x000004b6},
-    {.value = 0x000004cd},         {.value = 0x000004e4},         {.value = 0x000004fa},
-    {.value = 0x00000511},         {.value = 0x00000528},         {.value = 0x0000053f},
-    {.value = 0x00000555},         {.value = 0x0000056c},         {.value = 0x00000583},
-    {.value = 0x0000059a},         {.value = 0x000005b0},         {.value = 0x000005c7},
-    {.value = 0x000005de},         {.value = 0x000005f5},         {.value = 0x0000060b},
-    {.value = 0x00000622},         {.value = 0x00000639},         {.value = 0x00000650},
-    {.value = 0x00000666},         {.value = 0x0000067d},         {.value = 0x00000694},
-    {.value = 0x000006ab},         {.value = 0x000006c1},         {.value = 0x000006d8},
-    {.value = 0x000006ef},         {.value = 0x00000706},         {.value = 0x0000071c},
-    {.value = 0x00000733},         {.value = 0x0000074a},         {.value = 0x00000761},
-    {.value = 0x00000777},         {.value = 0x0000078e},         {.value = 0x000007a5},
-    {.value = 0x000007bc},         {.value = 0x000007d2},         {.value = 0x000007e9},
-    {.value = 0x00000800},         {.value = 0x00000817},         {.value = 0x0000082e},
-    {.value = 0x00000844},         {.value = 0x0000085b},         {.value = 0x00000872},
-    {.value = 0x00000889},         {.value = 0x0000089f},         {.value = 0x000008b6},
-    {.value = 0x000008cd},         {.value = 0x000008e4},         {.value = 0x000008fa},
-    {.value = 0x00000911},         {.value = 0x00000928},         {.value = 0x0000093f},
-    {.value = 0x00000955},         {.value = 0x0000096c},         {.value = 0x00000983},
-    {.value = 0x0000099a},         {.value = 0x000009b0},         {.value = 0x000009c7},
-    {.value = 0x000009de},         {.value = 0x000009f5},         {.value = 0x00000a0b},
-    {.value = 0x00000a22},         {.value = 0x00000a39},         {.value = 0x00000a50},
-    {.value = 0x00000a66},         {.value = 0x00000a7d},         {.value = 0x00000a94},
-    {.value = 0x00000aab},         {.value = 0x00000ac1},         {.value = 0x00000ad8},
-    {.value = 0x00000aef},         {.value = 0x00000b06},         {.value = 0x00000b1c},
-    {.value = 0x00000b33},         {.value = 0x00000b4a},         {.value = 0x00000b61},
-    {.value = 0x00000b77},         {.value = 0x00000b8e},         {.value = 0x00000ba5},
-    {.value = 0x00000bbc},         {.value = 0x00000bd2},         {.value = 0x00000be9},
-    {.value = 0x00000c00},         {.value = 0x00000c17},         {.value = 0x00000c2e},
-    {.value = 0x00000c44},         {.value = 0x00000c5b},         {.value = 0x00000c72},
-    {.value = 0x00000c89},         {.value = 0x00000c9f},         {.value = 0x00000cb6},
-    {.value = 0x00000ccd},         {.value = 0x00000ce4},         {.value = 0x00000cfa},
-    {.value = 0x00000d11},         {.value = 0x00000d28},         {.value = 0x00000d3f},
-    {.value = 0x00000d55},         {.value = 0x00000d6c},         {.value = 0x00000d83},
-    {.value = 0x00000d9a},         {.value = 0x00000db0},         {.value = 0x00000dc7},
-    {.value = 0x00000dde},         {.value = 0x00000df5},         {.value = 0x00000e0b},
-    {.value = 0x00000e22},         {.value = 0x00000e39},         {.value = 0x00000e50},
-    {.value = 0x00000e66},         {.value = 0x00000e7d},         {.value = 0x00000e94},
-    {.value = 0x00000eab},         {.value = 0x00000ec1},         {.value = 0x00000ed8},
-    {.value = 0x00000eef},         {.value = 0x00000f06},         {.value = 0x00000f1c},
-    {.value = 0x00000f33},         {.value = 0x00000f4a},         {.value = 0x00000f61},
-    {.value = 0x00000f77},         {.value = 0x00000f8e},         {.value = 0x00000fa5},
-    {.value = 0x00000fbc},         {.value = 0x00000fd2},         {.value = 0x00000fe9},
-    {.value = 0x00001000},         {.value = 0x00000000},         {.value = 0xfffffe1d},
-    {.value = 0xfffffe22},         {.value = 0xfffffe32},         {.value = 0xfffffe4c},
-    {.value = 0xfffffe6f},         {.value = 0xfffffe98},         {.value = 0xfffffec9},
-    {.value = 0xfffffeff},         {.value = 0xffffff39},         {.value = 0xffffff77},
-    {.value = 0xffffffb8},         {.value = 0xfffffffa},         {.value = 0x0000003c},
-    {.value = 0x0000007e},         {.value = 0x000000bf},         {.value = 0x000000fd},
-    {.value = 0x00000137},         {.value = 0x0000016d},         {.value = 0x0000019d},
-    {.value = 0x000001c7},         {.value = 0x000001e9},         {.value = 0x00000203},
-    {.value = 0x00000213},         {.value = 0x00000219},         {.value = 0x00000218},
-    {.value = 0x00000215},         {.value = 0x0000020f},         {.value = 0x00000208},
-    {.value = 0x000001ff},         {.value = 0x000001f4},         {.value = 0x000001e8},
-    {.value = 0x000001da},         {.value = 0x000001ca},         {.value = 0x000001b9},
-    {.value = 0x000001a7},         {.value = 0x00000193},         {.value = 0x0000017e},
-    {.value = 0x00000169},         {.value = 0x00000152},         {.value = 0x0000013a},
-    {.value = 0x00000122},         {.value = 0x00000109},         {.value = 0x000000ef},
-    {.value = 0x000000d5},         {.value = 0x000000ba},         {.value = 0x000000a0},
-    {.value = 0x00000085},         {.value = 0x00000069},         {.value = 0x0000004e},
-    {.value = 0x00000033},         {.value = 0x00000018},         {.value = 0xfffffffd},
-    {.value = 0xffffffe2},         {.value = 0xffffffc8},         {.value = 0xffffffae},
-    {.value = 0xffffff95},         {.value = 0xffffff7d},         {.value = 0xffffff65},
-    {.value = 0xffffff4e},         {.value = 0xffffff39},         {.value = 0xffffff24},
-    {.value = 0xffffff10},         {.value = 0xfffffefe},         {.value = 0xfffffeec},
-    {.value = 0xfffffedd},         {.value = 0xfffffece},         {.value = 0xfffffec0},
-    {.value = 0xfffffeb2},         {.value = 0xfffffea5},         {.value = 0xfffffe99},
-    {.value = 0xfffffe8d},         {.value = 0xfffffe82},         {.value = 0xfffffe78},
-    {.value = 0xfffffe6e},         {.value = 0xfffffe64},         {.value = 0xfffffe5c},
-    {.value = 0xfffffe53},         {.value = 0xfffffe4c},         {.value = 0xfffffe45},
-    {.value = 0xfffffe3e},         {.value = 0xfffffe38},         {.value = 0xfffffe33},
-    {.value = 0xfffffe2e},         {.value = 0xfffffe2a},         {.value = 0xfffffe27},
-    {.value = 0xfffffe24},         {.value = 0xfffffe21},         {.value = 0xfffffe1f},
-    {.value = 0xfffffe1e},         {.value = 0xfffffe1d},         {.value = 0x000001e3},
-    {.value = 0x000001de},         {.value = 0x000001ce},         {.value = 0x000001b4},
-    {.value = 0x00000191},         {.value = 0x00000168},         {.value = 0x00000137},
-    {.value = 0x00000101},         {.value = 0x000000c7},         {.value = 0x00000089},
-    {.value = 0x00000048},         {.value = 0x00000006},         {.value = 0xffffffc4},
-    {.value = 0xffffff82},         {.value = 0xffffff41},         {.value = 0xffffff03},
-    {.value = 0xfffffec9},         {.value = 0xfffffe93},         {.value = 0xfffffe63},
-    {.value = 0xfffffe39},         {.value = 0xfffffe17},         {.value = 0xfffffdfd},
-    {.value = 0xfffffded},         {.value = 0xfffffde7},         {.value = 0xfffffde8},
-    {.value = 0xfffffdeb},         {.value = 0xfffffdf1},         {.value = 0xfffffdf8},
-    {.value = 0xfffffe01},         {.value = 0xfffffe0c},         {.value = 0xfffffe18},
-    {.value = 0xfffffe26},         {.value = 0xfffffe36},         {.value = 0xfffffe47},
-    {.value = 0xfffffe59},         {.value = 0xfffffe6d},         {.value = 0xfffffe82},
-    {.value = 0xfffffe97},         {.value = 0xfffffeae},         {.value = 0xfffffec6},
-    {.value = 0xfffffede},         {.value = 0xfffffef7},         {.value = 0xffffff11},
-    {.value = 0xffffff2b},         {.value = 0xffffff46},         {.value = 0xffffff60},
-    {.value = 0xffffff7b},         {.value = 0xffffff97},         {.value = 0xffffffb2},
-    {.value = 0xffffffcd},         {.value = 0xffffffe8},         {.value = 0x00000003},
-    {.value = 0x0000001e},         {.value = 0x00000038},         {.value = 0x00000052},
-    {.value = 0x0000006b},         {.value = 0x00000083},         {.value = 0x0000009b},
-    {.value = 0x000000b2},         {.value = 0x000000c7},         {.value = 0x000000dc},
-    {.value = 0x000000f0},         {.value = 0x00000102},         {.value = 0x00000114},
-    {.value = 0x00000123},         {.value = 0x00000132},         {.value = 0x00000140},
-    {.value = 0x0000014e},         {.value = 0x0000015b},         {.value = 0x00000167},
-    {.value = 0x00000173},         {.value = 0x0000017e},         {.value = 0x00000188},
-    {.value = 0x00000192},         {.value = 0x0000019c},         {.value = 0x000001a4},
-    {.value = 0x000001ad},         {.value = 0x000001b4},         {.value = 0x000001bb},
-    {.value = 0x000001c2},         {.value = 0x000001c8},         {.value = 0x000001cd},
-    {.value = 0x000001d2},         {.value = 0x000001d6},         {.value = 0x000001d9},
-    {.value = 0x000001dc},         {.value = 0x000001df},         {.value = 0x000001e1},
-    {.value = 0x000001e2},         {.value = 0x000001e3},
-};
-
-typedef struct ClpsBlock {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[6];
-} ClpsBlock;
-
-/* Widths the level loaders walk. Same layouts as LVL_Overlay; this file
- * stays C. A halfword no loader reads stays raw. */
 typedef struct ObjTable {
     u16 count;
     u8 pad[2];
@@ -499,7 +49,7 @@ typedef struct PathNode {
     s16 z;
 } PathNode;
 
-/* 0xe: CamViewObj through angleY, plus the two bytes of the 0xe stride. */
+/* SetViewObjs steps 0xe. The halfword at +0xc is stored and unread. */
 typedef struct ViewEntry {
     u8 type;
     u8 p1;
@@ -508,9 +58,10 @@ typedef struct ViewEntry {
     s16 z;
     u8 pad_8[2];
     s16 angleY;
-    u8 tail[2];
+    u16 pad_c;
 } ViewEntry;
 
+/* Bytes +9..+0xb are stored. No loader in src/ reads them. */
 typedef struct Area {
     struct ObjTable *objTable;
     void *bta;
@@ -532,146 +83,572 @@ typedef struct LevelRec {
     u32 skybox;
 } LevelRec;
 
-/* .data 0x02112380..0x02112560. data_02092208[45] is the level
- * record at 0x021124f8. Its object table is 0x02112384: three rows at
- * 0x0211247c (two views, one minimap tile, one entrance). The area at
- * 0x021123c8 points at 0x0211239c, one standard object at 0x021123d4.
- * 0x02112514 is the CLPS block, stride 8, six entries.
- * 0x021123f4..0x0211241c has no label spacing that matches a loader
- * record, so those words stay raw. 0x0211241c..0x0211247c and
- * 0x02112494..0x021124dc are BTA files (texture-animation containers);
- * the bytes stay words and the pointers keep their symbols. The
- * material-name words 0x02112394..0x0211239c and 0x021123a4..0x021123c8
- * stay raw for the same reason. */
+typedef struct ExitEntry {
+    s16 x;
+    s16 y;
+    s16 z;
+    s16 rotX;
+    s16 rotY;
+    u8 param[4];
+} ExitEntry;
+
+typedef struct {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[6];
+    u32 tail[2];
+    u32 pad[3];
+} ClpsBlock;
+typedef char ViewEntry_size[sizeof(ViewEntry) == 0xe ? 1 : -1];
+typedef char Area_size[sizeof(Area) == 0xc ? 1 : -1];
+typedef char LevelRec_size[sizeof(LevelRec) == 0x1c ? 1 : -1];
+typedef char ClpsBlock_size[sizeof(ClpsBlock) == 0x4c ? 1 : -1];
+
+#pragma define_section s112394 ".data.data_ov053_02112394" ".data.data_ov053_02112394" ".data.data_ov053_02112394" far_data
+#pragma section s112394 begin
+char data_ov053_02112394[8] = "gas_mat";
+#pragma section s112394 end
+typedef char data_ov053_02112394_size[sizeof data_ov053_02112394 == 0x8 ? 1 : -1];
+
+#pragma define_section s1123a4 ".data.data_ov053_021123a4" ".data.data_ov053_021123a4" ".data.data_ov053_021123a4" far_data
+#pragma section s1123a4 begin
+char data_ov053_021123a4[12] = "mat_face";
+#pragma section s1123a4 end
+typedef char data_ov053_021123a4_size[sizeof data_ov053_021123a4 == 0xc ? 1 : -1];
+
+#pragma define_section s1123b0 ".data.data_ov053_021123b0" ".data.data_ov053_021123b0" ".data.data_ov053_021123b0" far_data
+#pragma section s1123b0 begin
+char data_ov053_021123b0[12] = "mat_eye_l";
+#pragma section s1123b0 end
+typedef char data_ov053_021123b0_size[sizeof data_ov053_021123b0 == 0xc ? 1 : -1];
+
+#pragma define_section s1123bc ".data.data_ov053_021123bc" ".data.data_ov053_021123bc" ".data.data_ov053_021123bc" far_data
+#pragma section s1123bc begin
+char data_ov053_021123bc[12] = "mat_eye_r";
+#pragma section s1123bc end
+typedef char data_ov053_021123bc_size[sizeof data_ov053_021123bc == 0xc ? 1 : -1];
+
+#pragma define_section s1111a0 ".rodata.data_ov053_021111a0" ".rodata.data_ov053_021111a0" ".rodata.data_ov053_021111a0" far_data
+#pragma section s1111a0 begin
+u16 data_ov053_021111a0[2] = {0x0000, 0x0000};
+#pragma section s1111a0 end
+typedef char data_ov053_021111a0_size[sizeof data_ov053_021111a0 == 0x4 ? 1 : -1];
+
+#pragma define_section s1111a4 ".rodata.data_ov053_021111a4" ".rodata.data_ov053_021111a4" ".rodata.data_ov053_021111a4" far_data
+#pragma section s1111a4 begin
+u16 data_ov053_021111a4[2] = {0x0000, 0x0000};
+#pragma section s1111a4 end
+typedef char data_ov053_021111a4_size[sizeof data_ov053_021111a4 == 0x4 ? 1 : -1];
+
+#pragma define_section s1111a8 ".rodata.data_ov053_021111a8" ".rodata.data_ov053_021111a8" ".rodata.data_ov053_021111a8" far_data
+#pragma section s1111a8 begin
+u16 data_ov053_021111a8[2] = {0x0000, 0x0000};
+#pragma section s1111a8 end
+typedef char data_ov053_021111a8_size[sizeof data_ov053_021111a8 == 0x4 ? 1 : -1];
+
+#pragma define_section s1111ac ".rodata.data_ov053_021111ac" ".rodata.data_ov053_021111ac" ".rodata.data_ov053_021111ac" far_data
+#pragma section s1111ac begin
+u16 data_ov053_021111ac[2] = {0x0000, 0x0000};
+#pragma section s1111ac end
+typedef char data_ov053_021111ac_size[sizeof data_ov053_021111ac == 0x4 ? 1 : -1];
+
+#pragma define_section s1111b0 ".rodata.data_ov053_021111b0" ".rodata.data_ov053_021111b0" ".rodata.data_ov053_021111b0" far_data
+#pragma section s1111b0 begin
+u16 data_ov053_021111b0[2] = {0x0000, 0x0000};
+#pragma section s1111b0 end
+typedef char data_ov053_021111b0_size[sizeof data_ov053_021111b0 == 0x4 ? 1 : -1];
+
+#pragma define_section s1111b4 ".rodata.data_ov053_021111b4" ".rodata.data_ov053_021111b4" ".rodata.data_ov053_021111b4" far_data
+#pragma section s1111b4 begin
+u16 data_ov053_021111b4[2] = {0x0000, 0x0000};
+#pragma section s1111b4 end
+typedef char data_ov053_021111b4_size[sizeof data_ov053_021111b4 == 0x4 ? 1 : -1];
+
+#pragma define_section s1111b8 ".rodata.data_ov053_021111b8" ".rodata.data_ov053_021111b8" ".rodata.data_ov053_021111b8" far_data
+#pragma section s1111b8 begin
+u16 data_ov053_021111b8[2] = {0x0000, 0x0000};
+#pragma section s1111b8 end
+typedef char data_ov053_021111b8_size[sizeof data_ov053_021111b8 == 0x4 ? 1 : -1];
+
+#pragma define_section s1111bc ".rodata.data_ov053_021111bc" ".rodata.data_ov053_021111bc" ".rodata.data_ov053_021111bc" far_data
+#pragma section s1111bc begin
+u16 data_ov053_021111bc[2] = {0x0000, 0x0000};
+#pragma section s1111bc end
+typedef char data_ov053_021111bc_size[sizeof data_ov053_021111bc == 0x4 ? 1 : -1];
+
+#pragma define_section s1111c0 ".rodata.data_ov053_021111c0" ".rodata.data_ov053_021111c0" ".rodata.data_ov053_021111c0" far_data
+#pragma section s1111c0 begin
+fx32 data_ov053_021111c0[1] = {0x00001000};
+#pragma section s1111c0 end
+typedef char data_ov053_021111c0_size[sizeof data_ov053_021111c0 == 0x4 ? 1 : -1];
+
+#pragma define_section s1111c4 ".rodata.data_ov053_021111c4" ".rodata.data_ov053_021111c4" ".rodata.data_ov053_021111c4" far_data
+#pragma section s1111c4 begin
+fx32 data_ov053_021111c4[1] = {0x00001000};
+#pragma section s1111c4 end
+typedef char data_ov053_021111c4_size[sizeof data_ov053_021111c4 == 0x4 ? 1 : -1];
+
+#pragma define_section s1111c8 ".rodata.data_ov053_021111c8" ".rodata.data_ov053_021111c8" ".rodata.data_ov053_021111c8" far_data
+#pragma section s1111c8 begin
+fx32 data_ov053_021111c8[1] = {0x00001000};
+#pragma section s1111c8 end
+typedef char data_ov053_021111c8_size[sizeof data_ov053_021111c8 == 0x4 ? 1 : -1];
+
+#pragma define_section s1111cc ".rodata.data_ov053_021111cc" ".rodata.data_ov053_021111cc" ".rodata.data_ov053_021111cc" far_data
+#pragma section s1111cc begin
+fx32 data_ov053_021111cc[1] = {0x00001000};
+#pragma section s1111cc end
+typedef char data_ov053_021111cc_size[sizeof data_ov053_021111cc == 0x4 ? 1 : -1];
+
+#pragma define_section s1111d0 ".rodata.data_ov053_021111d0" ".rodata.data_ov053_021111d0" ".rodata.data_ov053_021111d0" far_data
+#pragma section s1111d0 begin
+fx32 data_ov053_021111d0[1] = {0x00001000};
+#pragma section s1111d0 end
+typedef char data_ov053_021111d0_size[sizeof data_ov053_021111d0 == 0x4 ? 1 : -1];
+
+#pragma define_section s1111d4 ".rodata.data_ov053_021111d4" ".rodata.data_ov053_021111d4" ".rodata.data_ov053_021111d4" far_data
+#pragma section s1111d4 begin
+fx32 data_ov053_021111d4[1] = {0x00001000};
+#pragma section s1111d4 end
+typedef char data_ov053_021111d4_size[sizeof data_ov053_021111d4 == 0x4 ? 1 : -1];
+
+#pragma define_section s1111d8 ".rodata.data_ov053_021111d8" ".rodata.data_ov053_021111d8" ".rodata.data_ov053_021111d8" far_data
+#pragma section s1111d8 begin
+fx32 data_ov053_021111d8[1] = {0x00001000};
+#pragma section s1111d8 end
+typedef char data_ov053_021111d8_size[sizeof data_ov053_021111d8 == 0x4 ? 1 : -1];
+
+#pragma define_section s1111dc ".rodata.data_ov053_021111dc" ".rodata.data_ov053_021111dc" ".rodata.data_ov053_021111dc" far_data
+#pragma section s1111dc begin
+fx32 data_ov053_021111dc[1] = {0x00001000};
+#pragma section s1111dc end
+typedef char data_ov053_021111dc_size[sizeof data_ov053_021111dc == 0x4 ? 1 : -1];
+
+#pragma define_section s1111e0 ".rodata.data_ov053_021111e0" ".rodata.data_ov053_021111e0" ".rodata.data_ov053_021111e0" far_data
+#pragma section s1111e0 begin
+BTAMaterialRecord data_ov053_021111e0[1] = {
+    {0xffff, 0x0000, data_ov053_02112394, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {181, 0x0000}, {181, 0x0000}},
+};
+#pragma section s1111e0 end
+typedef char data_ov053_021111e0_size[sizeof data_ov053_021111e0 == 0x1c ? 1 : -1];
+
+#pragma define_section s1111fc ".rodata.data_ov053_021111fc" ".rodata.data_ov053_021111fc" ".rodata.data_ov053_021111fc" far_data
+#pragma section s1111fc begin
+BTAMaterialRecord data_ov053_021111fc[2] = {
+    {0xffff, 0x0000, data_ov053_021123b0, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {90, 0x0001}},
+    {0xffff, 0x0000, data_ov053_021123bc, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {90, 0x005b}},
+};
+#pragma section s1111fc end
+typedef char data_ov053_021111fc_size[sizeof data_ov053_021111fc == 0x38 ? 1 : -1];
+
+#pragma define_section s111234 ".rodata.data_ov053_02111234" ".rodata.data_ov053_02111234" ".rodata.data_ov053_02111234" far_data
+#pragma section s111234 begin
+BTAMaterialRecord data_ov053_02111234[2] = {
+    {0xffff, 0x0000, data_ov053_021123b0, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {44, 0x0001}},
+    {0xffff, 0x0000, data_ov053_021123bc, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {44, 0x002d}},
+};
+#pragma section s111234 end
+typedef char data_ov053_02111234_size[sizeof data_ov053_02111234 == 0x38 ? 1 : -1];
+
+#pragma define_section s11126c ".rodata.data_ov053_0211126c" ".rodata.data_ov053_0211126c" ".rodata.data_ov053_0211126c" far_data
+#pragma section s11126c begin
+BTAMaterialRecord data_ov053_0211126c[2] = {
+    {0xffff, 0x0000, data_ov053_021123b0, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {30, 0x0001}},
+    {0xffff, 0x0000, data_ov053_021123bc, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {30, 0x001f}},
+};
+#pragma section s11126c end
+typedef char data_ov053_0211126c_size[sizeof data_ov053_0211126c == 0x38 ? 1 : -1];
+
+#pragma define_section s1112a4 ".rodata.data_ov053_021112a4" ".rodata.data_ov053_021112a4" ".rodata.data_ov053_021112a4" far_data
+#pragma section s1112a4 begin
+BTAMaterialRecord data_ov053_021112a4[2] = {
+    {0xffff, 0x0000, data_ov053_021123b0, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {63, 0x0001}},
+    {0xffff, 0x0000, data_ov053_021123bc, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {63, 0x0040}},
+};
+#pragma section s1112a4 end
+typedef char data_ov053_021112a4_size[sizeof data_ov053_021112a4 == 0x38 ? 1 : -1];
+
+#pragma define_section s1112dc ".rodata.data_ov053_021112dc" ".rodata.data_ov053_021112dc" ".rodata.data_ov053_021112dc" far_data
+#pragma section s1112dc begin
+BTAMaterialRecord data_ov053_021112dc[2] = {
+    {0xffff, 0x0000, data_ov053_021123b0, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {8, 0x0001}},
+    {0xffff, 0x0000, data_ov053_021123bc, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {8, 0x0009}},
+};
+#pragma section s1112dc end
+typedef char data_ov053_021112dc_size[sizeof data_ov053_021112dc == 0x38 ? 1 : -1];
+
+#pragma define_section s111314 ".rodata.data_ov053_02111314" ".rodata.data_ov053_02111314" ".rodata.data_ov053_02111314" far_data
+#pragma section s111314 begin
+BTAMaterialRecord data_ov053_02111314[2] = {
+    {0xffff, 0x0000, data_ov053_021123b0, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {75, 0x0001}},
+    {0xffff, 0x0000, data_ov053_021123bc, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {75, 0x004c}},
+};
+#pragma section s111314 end
+typedef char data_ov053_02111314_size[sizeof data_ov053_02111314 == 0x38 ? 1 : -1];
+
+#pragma define_section s11134c ".rodata.data_ov053_0211134c" ".rodata.data_ov053_0211134c" ".rodata.data_ov053_0211134c" far_data
+#pragma section s11134c begin
+BTAMaterialRecord data_ov053_0211134c[2] = {
+    {0xffff, 0x0000, data_ov053_021123b0, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {30, 0x0001}},
+    {0xffff, 0x0000, data_ov053_021123bc, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {1, 0x0000}, {30, 0x001f}},
+};
+#pragma section s11134c end
+typedef char data_ov053_0211134c_size[sizeof data_ov053_0211134c == 0x38 ? 1 : -1];
+
+#pragma define_section s111384 ".rodata.data_ov053_02111384" ".rodata.data_ov053_02111384" ".rodata.data_ov053_02111384" far_data
+#pragma section s111384 begin
+BMAMaterialRecord data_ov053_02111384[1] = {{
+    0xffff, 0x0000, data_ov053_021123a4,
+    {{0x01, 0x01, 0x0000}, {0x01, 0x01, 0x005a}, {0x01, 0x01, 0x00b4}, {0x01, 0x01, 0x010e}, {0x01, 0x01, 0x0168}, {0x01, 0x01, 0x01c2}, {0x01, 0x00, 0x00b0}, {0x01, 0x00, 0x00b0}, {0x01, 0x00, 0x00b0}, {0x01, 0x00, 0x00b0}, {0x01, 0x00, 0x00b0}, {0x01, 0x00, 0x00b0}, {0x01, 0x00, 0x0052}},
+}};
+#pragma section s111384 end
+typedef char data_ov053_02111384_size[sizeof data_ov053_02111384 == 0x3c ? 1 : -1];
+
+#pragma define_section s1113c0 ".rodata.data_ov053_021113c0" ".rodata.data_ov053_021113c0" ".rodata.data_ov053_021113c0" far_data
+#pragma section s1113c0 begin
+fx32 data_ov053_021113c0[17] = {
+    0x00000000, 0xfffffe1d, 0x000000be, 0x00000360, 0x000000be, 0xfffffe1d, 0x000000be, 0x00000360,
+    0x000000be, 0x0000036b, 0x00000079, 0xfffffd86, 0x00000079, 0x0000036b, 0x00000079, 0xfffffd86,
+    0x00000079,
+};
+#pragma section s1113c0 end
+typedef char data_ov053_021113c0_size[sizeof data_ov053_021113c0 == 0x44 ? 1 : -1];
+
+#pragma define_section s111404 ".rodata.data_ov053_02111404" ".rodata.data_ov053_02111404" ".rodata.data_ov053_02111404" far_data
+#pragma section s111404 begin
+fx32 data_ov053_02111404[61] = {
+    0x00000000, 0xfffffe1d, 0xfffffe2e, 0xfffffe5e, 0xfffffea7, 0xffffff03, 0xffffff6d, 0xffffffe0,
+    0x00000056, 0x000000c8, 0x00000133, 0x0000018f, 0x000001d8, 0x00000208, 0x00000219, 0x0000020f,
+    0x000001f2, 0x000001c5, 0x0000018a, 0x00000144, 0x000000f5, 0x000000a0, 0x00000048, 0xffffffee,
+    0xffffff95, 0xffffff40, 0xfffffef2, 0xfffffeac, 0xfffffe71, 0xfffffe44, 0xfffffe27, 0x000001e3,
+    0x000001d2, 0x000001a2, 0x00000159, 0x000000fd, 0x00000093, 0x00000020, 0xffffffaa, 0xffffff38,
+    0xfffffecd, 0xfffffe71, 0xfffffe28, 0xfffffdf8, 0xfffffde7, 0xfffffdf1, 0xfffffe0e, 0xfffffe3b,
+    0xfffffe76, 0xfffffebc, 0xffffff0b, 0xffffff60, 0xffffffb8, 0x00000012, 0x0000006b, 0x000000c0,
+    0x0000010e, 0x00000154, 0x0000018f, 0x000001bc, 0x000001d9,
+};
+#pragma section s111404 end
+typedef char data_ov053_02111404_size[sizeof data_ov053_02111404 == 0xf4 ? 1 : -1];
+
+#pragma define_section s1114f8 ".rodata.data_ov053_021114f8" ".rodata.data_ov053_021114f8" ".rodata.data_ov053_021114f8" far_data
+#pragma section s1114f8 begin
+fx32 data_ov053_021114f8[61] = {
+    0x00000000, 0xfffffe1d, 0xfffffea9, 0xfffffff7, 0x00000186, 0x000002d4, 0x00000360, 0x00000315,
+    0x00000255, 0x0000014e, 0x0000002f, 0xffffff28, 0xfffffe67, 0xfffffe1d, 0xfffffe67, 0xffffff28,
+    0x00000030, 0x0000014f, 0x00000256, 0x00000316, 0x00000360, 0x00000201, 0xffffff79, 0xfffffe1d,
+    0xfffffea9, 0xfffffff7, 0x00000186, 0x000002d4, 0x00000360, 0x00000203, 0xffffff7a, 0x0000036b,
+    0x000002ce, 0x00000158, 0xffffff99, 0xfffffe23, 0xfffffd86, 0xfffffdda, 0xfffffeb1, 0xffffffd8,
+    0x00000119, 0x00000240, 0x00000318, 0x0000036b, 0x00000318, 0x00000240, 0x00000119, 0xffffffd7,
+    0xfffffeb0, 0xfffffdd9, 0xfffffd86, 0xffffff10, 0x000001e5, 0x0000036b, 0x000002ce, 0x00000158,
+    0xffffff99, 0xfffffe23, 0xfffffd86, 0xffffff0d, 0x000001e4,
+};
+#pragma section s1114f8 end
+typedef char data_ov053_021114f8_size[sizeof data_ov053_021114f8 == 0xf4 ? 1 : -1];
+
+#pragma define_section s1115ec ".rodata.data_ov053_021115ec" ".rodata.data_ov053_021115ec" ".rodata.data_ov053_021115ec" far_data
+#pragma section s1115ec begin
+fx32 data_ov053_021115ec[89] = {
+    0x00000000, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d,
+    0xffffff17, 0x000000e9, 0x000001e3, 0x0000014c, 0x00000000, 0xfffffeb4, 0xfffffe1d, 0xfffffe81,
+    0xffffff71, 0x0000008f, 0x0000017f, 0x000001e3, 0x000001ae, 0x00000124, 0x00000067, 0xffffff99,
+    0xfffffedc, 0xfffffe52, 0xfffffe1d, 0xfffffe46, 0xfffffeb4, 0xffffff4f, 0x00000000, 0x000000b1,
+    0x0000014c, 0x000001ba, 0x000001e3, 0x000001c8, 0x0000017f, 0x00000113, 0x0000008f, 0x00000000,
+    0xffffff71, 0xfffffeed, 0xfffffe81, 0xfffffe38, 0xfffffe1d, 0x000001e3, 0x000000e9, 0xffffff17,
+    0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d, 0xfffffeb4,
+    0x00000000, 0x0000014c, 0x000001e3, 0x0000017f, 0x0000008f, 0xffffff71, 0xfffffe81, 0xfffffe1d,
+    0xfffffe52, 0xfffffedc, 0xffffff99, 0x00000067, 0x00000124, 0x000001ae, 0x000001e3, 0x000001ba,
+    0x0000014c, 0x000000b1, 0x00000000, 0xffffff4f, 0xfffffeb4, 0xfffffe46, 0xfffffe1d, 0xfffffe38,
+    0xfffffe81, 0xfffffeed, 0xffffff71, 0x00000000, 0x0000008f, 0x00000113, 0x0000017f, 0x000001c8,
+    0x000001e3,
+};
+#pragma section s1115ec end
+typedef char data_ov053_021115ec_size[sizeof data_ov053_021115ec == 0x164 ? 1 : -1];
+
+#pragma define_section s111750 ".rodata.data_ov053_02111750" ".rodata.data_ov053_02111750" ".rodata.data_ov053_02111750" far_data
+#pragma section s111750 begin
+fx32 data_ov053_02111750[127] = {
+    0x00000000, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d,
+    0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17,
+    0xfffffe1d, 0xfffffeb4, 0x00000001, 0x0000014d, 0x000001e3, 0x0000014c, 0x00000000, 0xfffffeb4,
+    0xfffffe1d, 0xfffffe25, 0xfffffe3e, 0xfffffe64, 0xfffffe97, 0xfffffed3, 0xffffff17, 0xffffff62,
+    0xffffffb0, 0x00000000, 0x00000050, 0x0000009e, 0x000000e9, 0x0000012d, 0x00000169, 0x0000019c,
+    0x000001c2, 0x000001db, 0x000001e3, 0x000001dd, 0x000001cb, 0x000001ae, 0x00000188, 0x00000159,
+    0x00000124, 0x000000e9, 0x000000aa, 0x00000067, 0x00000023, 0xffffffde, 0xffffff99, 0xffffff57,
+    0xffffff17, 0xfffffedc, 0xfffffea7, 0xfffffe79, 0xfffffe52, 0xfffffe35, 0xfffffe23, 0xfffffe1d,
+    0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3,
+    0x000001e3, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3,
+    0x0000014c, 0xffffffff, 0xfffffeb3, 0xfffffe1d, 0xfffffeb4, 0x00000000, 0x0000014c, 0x000001e3,
+    0x000001dc, 0x000001c5, 0x000001a3, 0x00000175, 0x0000013e, 0x000000ff, 0x000000ba, 0x00000072,
+    0x00000026, 0xffffffda, 0xffffff8e, 0xffffff46, 0xffffff01, 0xfffffec2, 0xfffffe8b, 0xfffffe5d,
+    0xfffffe3b, 0xfffffe24, 0xfffffe1d, 0xfffffe24, 0xfffffe38, 0xfffffe57, 0xfffffe81, 0xfffffeb4,
+    0xfffffeed, 0xffffff2d, 0xffffff71, 0xffffffb8, 0x00000000, 0x00000048, 0x0000008f, 0x000000d3,
+    0x00000113, 0x0000014c, 0x0000017f, 0x000001a9, 0x000001c8, 0x000001dc, 0x000001e3,
+};
+#pragma section s111750 end
+typedef char data_ov053_02111750_size[sizeof data_ov053_02111750 == 0x1fc ? 1 : -1];
+
+#pragma define_section s111b68 ".rodata.data_ov053_02111b68" ".rodata.data_ov053_02111b68" ".rodata.data_ov053_02111b68" far_data
+#pragma section s111b68 begin
+fx32 data_ov053_02111b68[151] = {
+    0x00000000, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d,
+    0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d, 0xffffff17, 0x000000e9,
+    0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9,
+    0xffffff17, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d,
+    0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d, 0xffffff17, 0x000000e9,
+    0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9,
+    0xffffff17, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d,
+    0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d,
+    0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d,
+    0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d,
+    0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d, 0xffffff17, 0x000000e9,
+    0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9,
+    0xffffff17, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d,
+    0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d, 0xffffff17, 0x000000e9,
+    0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9,
+    0xffffff17, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d,
+    0xffffff17, 0x000000e9, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3,
+    0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3,
+    0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3,
+};
+#pragma section s111b68 end
+typedef char data_ov053_02111b68_size[sizeof data_ov053_02111b68 == 0x25c ? 1 : -1];
+
+#pragma define_section s111dc4 ".rodata.data_ov053_02111dc4" ".rodata.data_ov053_02111dc4" ".rodata.data_ov053_02111dc4" far_data
+#pragma section s111dc4 begin
+fx32 data_ov053_02111dc4[181] = {
+    0x00000000, 0x00000017, 0x0000002e, 0x00000044, 0x0000005b, 0x00000072, 0x00000089, 0x0000009f,
+    0x000000b6, 0x000000cd, 0x000000e4, 0x000000fa, 0x00000111, 0x00000128, 0x0000013f, 0x00000155,
+    0x0000016c, 0x00000183, 0x0000019a, 0x000001b0, 0x000001c7, 0x000001de, 0x000001f5, 0x0000020b,
+    0x00000222, 0x00000239, 0x00000250, 0x00000266, 0x0000027d, 0x00000294, 0x000002ab, 0x000002c1,
+    0x000002d8, 0x000002ef, 0x00000306, 0x0000031c, 0x00000333, 0x0000034a, 0x00000361, 0x00000377,
+    0x0000038e, 0x000003a5, 0x000003bc, 0x000003d2, 0x000003e9, 0x00000400, 0x00000417, 0x0000042e,
+    0x00000444, 0x0000045b, 0x00000472, 0x00000489, 0x0000049f, 0x000004b6, 0x000004cd, 0x000004e4,
+    0x000004fa, 0x00000511, 0x00000528, 0x0000053f, 0x00000555, 0x0000056c, 0x00000583, 0x0000059a,
+    0x000005b0, 0x000005c7, 0x000005de, 0x000005f5, 0x0000060b, 0x00000622, 0x00000639, 0x00000650,
+    0x00000666, 0x0000067d, 0x00000694, 0x000006ab, 0x000006c1, 0x000006d8, 0x000006ef, 0x00000706,
+    0x0000071c, 0x00000733, 0x0000074a, 0x00000761, 0x00000777, 0x0000078e, 0x000007a5, 0x000007bc,
+    0x000007d2, 0x000007e9, 0x00000800, 0x00000817, 0x0000082e, 0x00000844, 0x0000085b, 0x00000872,
+    0x00000889, 0x0000089f, 0x000008b6, 0x000008cd, 0x000008e4, 0x000008fa, 0x00000911, 0x00000928,
+    0x0000093f, 0x00000955, 0x0000096c, 0x00000983, 0x0000099a, 0x000009b0, 0x000009c7, 0x000009de,
+    0x000009f5, 0x00000a0b, 0x00000a22, 0x00000a39, 0x00000a50, 0x00000a66, 0x00000a7d, 0x00000a94,
+    0x00000aab, 0x00000ac1, 0x00000ad8, 0x00000aef, 0x00000b06, 0x00000b1c, 0x00000b33, 0x00000b4a,
+    0x00000b61, 0x00000b77, 0x00000b8e, 0x00000ba5, 0x00000bbc, 0x00000bd2, 0x00000be9, 0x00000c00,
+    0x00000c17, 0x00000c2e, 0x00000c44, 0x00000c5b, 0x00000c72, 0x00000c89, 0x00000c9f, 0x00000cb6,
+    0x00000ccd, 0x00000ce4, 0x00000cfa, 0x00000d11, 0x00000d28, 0x00000d3f, 0x00000d55, 0x00000d6c,
+    0x00000d83, 0x00000d9a, 0x00000db0, 0x00000dc7, 0x00000dde, 0x00000df5, 0x00000e0b, 0x00000e22,
+    0x00000e39, 0x00000e50, 0x00000e66, 0x00000e7d, 0x00000e94, 0x00000eab, 0x00000ec1, 0x00000ed8,
+    0x00000eef, 0x00000f06, 0x00000f1c, 0x00000f33, 0x00000f4a, 0x00000f61, 0x00000f77, 0x00000f8e,
+    0x00000fa5, 0x00000fbc, 0x00000fd2, 0x00000fe9, 0x00001000,
+};
+#pragma section s111dc4 end
+typedef char data_ov053_02111dc4_size[sizeof data_ov053_02111dc4 == 0x2d4 ? 1 : -1];
+
+#pragma define_section s112098 ".rodata.data_ov053_02112098" ".rodata.data_ov053_02112098" ".rodata.data_ov053_02112098" far_data
+#pragma section s112098 begin
+fx32 data_ov053_02112098[181] = {
+    0x00000000, 0xfffffe1d, 0xfffffe22, 0xfffffe32, 0xfffffe4c, 0xfffffe6f, 0xfffffe98, 0xfffffec9,
+    0xfffffeff, 0xffffff39, 0xffffff77, 0xffffffb8, 0xfffffffa, 0x0000003c, 0x0000007e, 0x000000bf,
+    0x000000fd, 0x00000137, 0x0000016d, 0x0000019d, 0x000001c7, 0x000001e9, 0x00000203, 0x00000213,
+    0x00000219, 0x00000218, 0x00000215, 0x0000020f, 0x00000208, 0x000001ff, 0x000001f4, 0x000001e8,
+    0x000001da, 0x000001ca, 0x000001b9, 0x000001a7, 0x00000193, 0x0000017e, 0x00000169, 0x00000152,
+    0x0000013a, 0x00000122, 0x00000109, 0x000000ef, 0x000000d5, 0x000000ba, 0x000000a0, 0x00000085,
+    0x00000069, 0x0000004e, 0x00000033, 0x00000018, 0xfffffffd, 0xffffffe2, 0xffffffc8, 0xffffffae,
+    0xffffff95, 0xffffff7d, 0xffffff65, 0xffffff4e, 0xffffff39, 0xffffff24, 0xffffff10, 0xfffffefe,
+    0xfffffeec, 0xfffffedd, 0xfffffece, 0xfffffec0, 0xfffffeb2, 0xfffffea5, 0xfffffe99, 0xfffffe8d,
+    0xfffffe82, 0xfffffe78, 0xfffffe6e, 0xfffffe64, 0xfffffe5c, 0xfffffe53, 0xfffffe4c, 0xfffffe45,
+    0xfffffe3e, 0xfffffe38, 0xfffffe33, 0xfffffe2e, 0xfffffe2a, 0xfffffe27, 0xfffffe24, 0xfffffe21,
+    0xfffffe1f, 0xfffffe1e, 0xfffffe1d, 0x000001e3, 0x000001de, 0x000001ce, 0x000001b4, 0x00000191,
+    0x00000168, 0x00000137, 0x00000101, 0x000000c7, 0x00000089, 0x00000048, 0x00000006, 0xffffffc4,
+    0xffffff82, 0xffffff41, 0xffffff03, 0xfffffec9, 0xfffffe93, 0xfffffe63, 0xfffffe39, 0xfffffe17,
+    0xfffffdfd, 0xfffffded, 0xfffffde7, 0xfffffde8, 0xfffffdeb, 0xfffffdf1, 0xfffffdf8, 0xfffffe01,
+    0xfffffe0c, 0xfffffe18, 0xfffffe26, 0xfffffe36, 0xfffffe47, 0xfffffe59, 0xfffffe6d, 0xfffffe82,
+    0xfffffe97, 0xfffffeae, 0xfffffec6, 0xfffffede, 0xfffffef7, 0xffffff11, 0xffffff2b, 0xffffff46,
+    0xffffff60, 0xffffff7b, 0xffffff97, 0xffffffb2, 0xffffffcd, 0xffffffe8, 0x00000003, 0x0000001e,
+    0x00000038, 0x00000052, 0x0000006b, 0x00000083, 0x0000009b, 0x000000b2, 0x000000c7, 0x000000dc,
+    0x000000f0, 0x00000102, 0x00000114, 0x00000123, 0x00000132, 0x00000140, 0x0000014e, 0x0000015b,
+    0x00000167, 0x00000173, 0x0000017e, 0x00000188, 0x00000192, 0x0000019c, 0x000001a4, 0x000001ad,
+    0x000001b4, 0x000001bb, 0x000001c2, 0x000001c8, 0x000001cd, 0x000001d2, 0x000001d6, 0x000001d9,
+    0x000001dc, 0x000001df, 0x000001e1, 0x000001e2, 0x000001e3,
+};
+#pragma section s112098 end
+typedef char data_ov053_02112098_size[sizeof data_ov053_02112098 == 0x2d4 ? 1 : -1];
+
+#pragma define_section s11194c ".rodata.data_ov053_0211194c" ".rodata.data_ov053_0211194c" ".rodata.data_ov053_0211194c" far_data
+#pragma section s11194c begin
+u8 data_ov053_0211194c[540] = {
+    0x19, 0x19, 0x19, 0x19, 0x19, 0x19, 0x19, 0x19, 0x19, 0x19, 0x19, 0x1a, 0x1a, 0x1a, 0x1a, 0x1a,
+    0x1a, 0x1a, 0x1a, 0x1a, 0x1a, 0x1a, 0x1a, 0x1a, 0x1a, 0x1b, 0x1b, 0x1b, 0x1b, 0x1b, 0x1b, 0x1b,
+    0x1b, 0x1b, 0x1b, 0x1b, 0x1b, 0x1b, 0x1b, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c,
+    0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1d, 0x1d, 0x1d, 0x1d, 0x1d, 0x1d, 0x1d, 0x1d, 0x1d, 0x1d,
+    0x1d, 0x1d, 0x1d, 0x1d, 0x1e, 0x1e, 0x1e, 0x1e, 0x1e, 0x1e, 0x1e, 0x1e, 0x1e, 0x1e, 0x1e, 0x1e,
+    0x1e, 0x1e, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c,
+    0x0c, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x09,
+    0x09, 0x09, 0x09, 0x09, 0x09, 0x09, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x07, 0x07,
+    0x07, 0x07, 0x07, 0x07, 0x07, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x05, 0x05, 0x05, 0x05,
+    0x05, 0x05, 0x05, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
+    0x03, 0x03, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+    0x00, 0x00, 0x00, 0x00, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
+    0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
+    0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+    0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+    0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x06,
+    0x07, 0x07, 0x07, 0x07, 0x07, 0x08, 0x08, 0x08, 0x08, 0x09, 0x09, 0x09, 0x09, 0x09, 0x0a, 0x0a,
+    0x0a, 0x0a, 0x0a, 0x0b, 0x0b, 0x0b, 0x0b, 0x0b, 0x0c, 0x0c, 0x0c, 0x0c, 0x0c, 0x0d, 0x0d, 0x0d,
+    0x0d, 0x0e, 0x0e, 0x0e, 0x0e, 0x0e, 0x0f, 0x0f, 0x0f, 0x0f, 0x0f, 0x10, 0x10, 0x10, 0x10, 0x10,
+    0x11, 0x11, 0x11, 0x11, 0x12, 0x12, 0x12, 0x12, 0x12, 0x13, 0x13, 0x13, 0x13, 0x13, 0x14, 0x14,
+    0x14, 0x14, 0x14, 0x15, 0x15, 0x15, 0x15, 0x16, 0x16, 0x16, 0x16, 0x16, 0x17, 0x17, 0x17, 0x17,
+    0x17, 0x18, 0x18, 0x18, 0x18, 0x18, 0x19, 0x19, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
+    0x06, 0x06, 0x06, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05,
+    0x05, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,
+    0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x02,
+    0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x01, 0x01, 0x01,
+    0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x05, 0x05, 0x05,
+    0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x04, 0x04, 0x04, 0x04, 0x04,
+    0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03,
+    0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
+    0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+    0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
+#pragma section s11194c end
+typedef char data_ov053_0211194c_size[sizeof data_ov053_0211194c == 0x21c ? 1 : -1];
+
+#pragma define_section s1123f4 ".data.data_ov053_021123f4" ".data.data_ov053_021123f4" ".data.data_ov053_021123f4" far_data
+#pragma section s1123f4 begin
+BMA_File data_ov053_021123f4 = {90, 0, data_ov053_0211194c, 1, 0, data_ov053_02111384};
+#pragma section s1123f4 end
+typedef char data_ov053_021123f4_size[sizeof data_ov053_021123f4 == 0x10 ? 1 : -1];
+
+#pragma define_section s112404 ".data.data_ov053_02112404" ".data.data_ov053_02112404" ".data.data_ov053_02112404" far_data
+#pragma section s112404 begin
+BTA_File data_ov053_02112404 = {75, 0, (fx32 *)data_ov053_021111d8, (u16 *)data_ov053_021111a4, (fx32 *)data_ov053_02111b68, 2, 0, data_ov053_02111314};
+#pragma section s112404 end
+typedef char data_ov053_02112404_size[sizeof data_ov053_02112404 == 0x18 ? 1 : -1];
+
+#pragma define_section s11241c ".data.data_ov053_0211241c" ".data.data_ov053_0211241c" ".data.data_ov053_0211241c" far_data
+#pragma section s11241c begin
+BTA_File data_ov053_0211241c[4] = {
+    {181, 0, (fx32 *)data_ov053_021111cc, (u16 *)data_ov053_021111b4, (fx32 *)data_ov053_02111dc4, 1, 0, data_ov053_021111e0},
+    {90, 0, (fx32 *)data_ov053_021111d4, (u16 *)data_ov053_021111b8, (fx32 *)data_ov053_02112098, 2, 0, data_ov053_021111fc},
+    {44, 0, (fx32 *)data_ov053_021111d0, (u16 *)data_ov053_021111a8, (fx32 *)data_ov053_021115ec, 2, 0, data_ov053_02111234},
+    {30, 0, (fx32 *)data_ov053_021111c0, (u16 *)data_ov053_021111bc, (fx32 *)data_ov053_021114f8, 2, 0, data_ov053_0211126c},
+};
+#pragma section s11241c end
+typedef char data_ov053_0211241c_size[sizeof data_ov053_0211241c == 0x60 ? 1 : -1];
+
+#pragma define_section s112494 ".data.data_ov053_02112494" ".data.data_ov053_02112494" ".data.data_ov053_02112494" far_data
+#pragma section s112494 begin
+BTA_File data_ov053_02112494[3] = {
+    {63, 0, (fx32 *)data_ov053_021111dc, (u16 *)data_ov053_021111b0, (fx32 *)data_ov053_02111750, 2, 0, data_ov053_021112a4},
+    {30, 0, (fx32 *)data_ov053_021111c4, (u16 *)data_ov053_021111ac, (fx32 *)data_ov053_02111404, 2, 0, data_ov053_0211134c},
+    {8, 0, (fx32 *)data_ov053_021111c8, (u16 *)data_ov053_021111a0, (fx32 *)data_ov053_021113c0, 2, 0, data_ov053_021112dc},
+};
+#pragma section s112494 end
+typedef char data_ov053_02112494_size[sizeof data_ov053_02112494 == 0x48 ? 1 : -1];
+
+#pragma define_section s112380 ".data.data_ov053_02112380" ".data.data_ov053_02112380" ".data.data_ov053_02112380" far_data
+#pragma section s112380 begin
 struct {
     u16 minimapTile;
-    u16 minimapTilePad;
-    ObjTable at_02112384;
-    ObjSubTable at_0211238c[1];
-    u32 raw_02112394[2];
-    ObjTable at_0211239c;
-    u32 raw_021123a4[9];
-    Area at_021123c8;
-    StandardEntry at_021123d4[1];
-    StandardEntry at_021123e4[1];
-    Ov053Word raw_021123f4[10];
-    Ov053Word bta_0211241c[24];
-    ObjSubTable at_0211247c[3];
-    Ov053Word bta_02112494[18];
-    ViewEntry at_021124dc[2];
-    LevelRec at_021124f8;
-    ClpsBlock at_02112514;
-    u32 raw_0211254c[2];
-    u32 tail[3];
-} data_ov053_02112380 = {
-    0x072d,
-    0x0000,
-    {0x0003, {0x00, 0x00}, data_ov053_0211247c},
-    {
-        {0x00, 1, {0x00, 0x00}, data_ov053_021123d4},
-    },
-    0x5f736167,
-    0x0074616d,
-    {0x0001, {0x00, 0x00}, data_ov053_0211238c},
-    0x5f74616d,
-    0x65636166,
-    0x00000000,
-    0x5f74616d,
-    0x5f657965,
-    0x0000006c,
-    0x5f74616d,
-    0x5f657965,
-    0x00000072,
-    {(struct ObjTable *)data_ov053_0211239c, data_ov053_0211241c, 0, {0x00, 0x40, 0x06}},
-    {
-        {0x0012, (s16)0x0000, (s16)0x012c, (s16)0x0000, (s16)0x0000, (s16)0x0000, (s16)0x0000,
-         0xffff},
-    },
-    {
-        {0x0000, (s16)0x0000, (s16)0x03e8, (s16)0x0546, (s16)0x0000, (s16)0x8000, (s16)0x0000,
-         0x0578},
-    },
-    {
-        {.value = 0x0000005a},
-        {.ptr = &data_ov053_0211194c},
-        {.value = 0x00000001},
-        {.ptr = &data_ov053_02111384},
-        {.value = 0x0000004b},
-        {.ptr = &data_ov053_021111d8},
-        {.ptr = &data_ov053_021111a4},
-        {.ptr = &data_ov053_02111b68},
-        {.value = 0x00000002},
-        {.ptr = &data_ov053_02111314},
-    },
-    {
-        {.value = 0x000000b5},         {.ptr = &data_ov053_021111cc}, {.ptr = &data_ov053_021111b4},
-        {.ptr = &data_ov053_02111dc4}, {.value = 0x00000001},         {.ptr = &data_ov053_021111e0},
-        {.value = 0x0000005a},         {.ptr = &data_ov053_021111d4}, {.ptr = &data_ov053_021111b8},
-        {.ptr = &data_ov053_02112098}, {.value = 0x00000002},         {.ptr = &data_ov053_021111fc},
-        {.value = 0x0000002c},         {.ptr = &data_ov053_021111d0}, {.ptr = &data_ov053_021111a8},
-        {.ptr = &data_ov053_021115ec}, {.value = 0x00000002},         {.ptr = &data_ov053_02111234},
-        {.value = 0x0000001e},         {.ptr = &data_ov053_021111c0}, {.ptr = &data_ov053_021111bc},
-        {.ptr = &data_ov053_021114f8}, {.value = 0x00000002},         {.ptr = &data_ov053_0211126c},
-    },
-    {
-        {0x04, 2, {0x00, 0x00}, data_ov053_021124dc},
-        {0x0b, 1, {0x00, 0x00}, &data_ov053_02112380},
-        {0x01, 1, {0x00, 0x00}, data_ov053_021123e4},
-    },
-    {
-        {.value = 0x0000003f},
-        {.ptr = &data_ov053_021111dc},
-        {.ptr = &data_ov053_021111b0},
-        {.ptr = &data_ov053_02111750},
-        {.value = 0x00000002},
-        {.ptr = &data_ov053_021112a4},
-        {.value = 0x0000001e},
-        {.ptr = &data_ov053_021111c4},
-        {.ptr = &data_ov053_021111ac},
-        {.ptr = &data_ov053_02111404},
-        {.value = 0x00000002},
-        {.ptr = &data_ov053_0211134c},
-        {.value = 0x00000008},
-        {.ptr = &data_ov053_021111c8},
-        {.ptr = &data_ov053_021111a0},
-        {.ptr = &data_ov053_021113c0},
-        {.value = 0x00000002},
-        {.ptr = &data_ov053_021112dc},
-    },
-    {
-        {0x00,
-         0x00,
-         (s16)0x0000,
-         (s16)0x03e8,
-         (s16)0x0000,
-         {0x00, 0x00},
-         (s16)0x0000,
-         {0x00, 0x00}},
-        {0x07,
-         0xff,
-         (s16)0x0000,
-         (s16)0x0898,
-         (s16)0x0000,
-         {0x00, 0x00},
-         (s16)0x0000,
-         {0x00, 0x00}},
-    },
-    {(struct CLPS_Block *)data_ov053_02112514, (struct ObjTable *)data_ov053_02112384, 0x072e,
-     0x072c, 0x072f, 0x0730, (struct Area *)data_ov053_021123c8, 1, 0x01, (s16)0x0320, 0x0000009f},
-    {0x53504c43,
-     8,
-     6,
-     {{0x00030fc5, 0x000000ff},
-      {0x01030fc0, 0x000000ff},
-      {0x00038005, 0x000000ff},
-      {0x0003b005, 0x000000ff},
-      {0x00230fc0, 0x000000ff},
-      {0x02030fc0, 0x000000ff}}},
-    0xffffffff,
-    0xffffffff,
-    0x00000000,
-    0x00000000,
-    0x00000000,
-};
+    u16 pad;
+} data_ov053_02112380 = {0x072d, 0x0000};
+#pragma section s112380 end
+typedef char data_ov053_02112380_size[sizeof data_ov053_02112380 == 0x4 ? 1 : -1];
 
-typedef char data_ov053_02112380_size[sizeof data_ov053_02112380 == 0x1e0 ? 1 : -1];
+#pragma define_section s1123d4 ".data.data_ov053_021123d4" ".data.data_ov053_021123d4" ".data.data_ov053_021123d4" far_data
+#pragma section s1123d4 begin
+StandardEntry data_ov053_021123d4[1] = 
+{
+    {0x0012, 0x0000, 0x012c, 0x0000, 0x0000, 0x0000, 0x0000, 0xffff},
+};
+#pragma section s1123d4 end
+typedef char data_ov053_021123d4_size[sizeof data_ov053_021123d4 == 0x10 ? 1 : -1];
+
+#pragma define_section s1123e4 ".data.data_ov053_021123e4" ".data.data_ov053_021123e4" ".data.data_ov053_021123e4" far_data
+#pragma section s1123e4 begin
+StandardEntry data_ov053_021123e4[1] = 
+{
+    {0x0000, 0x0000, 0x03e8, 0x0546, 0x0000, (s16)0x8000, 0x0000, 0x0578},
+};
+#pragma section s1123e4 end
+typedef char data_ov053_021123e4_size[sizeof data_ov053_021123e4 == 0x10 ? 1 : -1];
+
+#pragma define_section s1124dc ".data.data_ov053_021124dc" ".data.data_ov053_021124dc" ".data.data_ov053_021124dc" far_data
+#pragma section s1124dc begin
+ViewEntry data_ov053_021124dc[2] = 
+{
+    {0x00, 0x00, 0x0000, 0x03e8, 0x0000, {0x00, 0x00}, 0x0000, 0x0000},
+    {0x07, 0xff, 0x0000, 0x0898, 0x0000, {0x00, 0x00}, 0x0000, 0x0000},
+};
+#pragma section s1124dc end
+typedef char data_ov053_021124dc_size[sizeof data_ov053_021124dc == 0x1c ? 1 : -1];
+
+#pragma define_section s112514 ".data.data_ov053_02112514" ".data.data_ov053_02112514" ".data.data_ov053_02112514" far_data
+#pragma section s112514 begin
+ClpsBlock data_ov053_02112514 = 
+{
+    0x53504c43,
+    8,
+    6,
+    {
+        {0x00030fc5, 0x000000ff},
+        {0x01030fc0, 0x000000ff},
+        {0x00038005, 0x000000ff},
+        {0x0003b005, 0x000000ff},
+        {0x00230fc0, 0x000000ff},
+        {0x02030fc0, 0x000000ff},
+    },
+    {0xffffffff, 0xffffffff},
+    {0x00000000, 0x00000000, 0x00000000},
+};
+#pragma section s112514 end
+typedef char data_ov053_02112514_size[sizeof data_ov053_02112514 == 0x4c ? 1 : -1];
+
+#pragma define_section s11238c ".data.data_ov053_0211238c" ".data.data_ov053_0211238c" ".data.data_ov053_0211238c" far_data
+#pragma section s11238c begin
+ObjSubTable data_ov053_0211238c[1] = 
+{
+    {0x00, 0x01, {0x00, 0x00}, data_ov053_021123d4},
+};
+#pragma section s11238c end
+typedef char data_ov053_0211238c_size[sizeof data_ov053_0211238c == 0x8 ? 1 : -1];
+
+#pragma define_section s11247c ".data.data_ov053_0211247c" ".data.data_ov053_0211247c" ".data.data_ov053_0211247c" far_data
+#pragma section s11247c begin
+ObjSubTable data_ov053_0211247c[3] = 
+{
+    {0x04, 0x02, {0x00, 0x00}, data_ov053_021124dc},
+    {0x0b, 0x01, {0x00, 0x00}, &data_ov053_02112380},
+    {0x01, 0x01, {0x00, 0x00}, data_ov053_021123e4},
+};
+#pragma section s11247c end
+typedef char data_ov053_0211247c_size[sizeof data_ov053_0211247c == 0x18 ? 1 : -1];
+
+#pragma define_section s112384 ".data.data_ov053_02112384" ".data.data_ov053_02112384" ".data.data_ov053_02112384" far_data
+#pragma section s112384 begin
+ObjTable data_ov053_02112384 = 
+{0x0003, {0x00, 0x00}, data_ov053_0211247c};
+#pragma section s112384 end
+typedef char data_ov053_02112384_size[sizeof data_ov053_02112384 == 0x8 ? 1 : -1];
+
+#pragma define_section s11239c ".data.data_ov053_0211239c" ".data.data_ov053_0211239c" ".data.data_ov053_0211239c" far_data
+#pragma section s11239c begin
+ObjTable data_ov053_0211239c = 
+{0x0001, {0x00, 0x00}, data_ov053_0211238c};
+#pragma section s11239c end
+typedef char data_ov053_0211239c_size[sizeof data_ov053_0211239c == 0x8 ? 1 : -1];
+
+#pragma define_section s1123c8 ".data.data_ov053_021123c8" ".data.data_ov053_021123c8" ".data.data_ov053_021123c8" far_data
+#pragma section s1123c8 begin
+Area data_ov053_021123c8 = {&data_ov053_0211239c, data_ov053_0211241c, 0x00, {0x00, 0x40, 0x06}};
+#pragma section s1123c8 end
+typedef char data_ov053_021123c8_size[sizeof data_ov053_021123c8 == 0xc ? 1 : -1];
+
+#pragma define_section s1124f8 ".data.data_ov053_021124f8" ".data.data_ov053_021124f8" ".data.data_ov053_021124f8" far_data
+#pragma section s1124f8 begin
+LevelRec data_ov053_021124f8 = 
+{(struct CLPS_Block *)&data_ov053_02112514, (struct ObjTable *)&data_ov053_02112384, 0x072e, 0x072c, 0x072f, 0x0730, (struct Area *)&data_ov053_021123c8, 0x01, 0x01, 0x0320, 0x0000009f};
+#pragma section s1124f8 end
+typedef char data_ov053_021124f8_size[sizeof data_ov053_021124f8 == 0x1c ? 1 : -1];
+
