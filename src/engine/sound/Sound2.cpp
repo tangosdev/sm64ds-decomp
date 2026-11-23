@@ -49,7 +49,11 @@ extern u32 data_02099fac;
 /* far range: silent beyond it */
 extern int data_02099fb0;
 /* slot-9 voice count */
-extern const u32 data_020821c0[16];
+/* Near/far range pairs for the sound slots. */
+extern "C" const u32 data_020821c0[16] = {
+    0x0000005a, 0x00000226, 0x000000c8, 0x000005dc, 0x000000c8, 0x000002ee, 0x00000096, 0x00000190,
+    0x00000028, 0x00000190, 0x0000005a, 0x000003e8, 0x00000032, 0x00000190, 0x000000c8, 0x000005dc,
+};
 extern void *data_020a4bec;
 /* the registry owner */
 extern SoundSlot data_020a4c18[];
