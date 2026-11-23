@@ -1,0 +1,30 @@
+#include "types.h"
+
+/* Definition order is what makes the compiler's size sort match address order. */
+
+typedef struct {
+    u32 w[3];
+} data_ov058_02111994_Layout;
+typedef char data_ov058_02111994_size[sizeof(data_ov058_02111994_Layout) == 0xc ? 1 : -1];
+
+typedef struct {
+    u32 w[36];
+} data_ov058_021119a0_Layout;
+typedef char data_ov058_021119a0_size[sizeof(data_ov058_021119a0_Layout) == 0x90 ? 1 : -1];
+
+extern data_ov058_02111994_Layout data_ov058_02111994;
+extern data_ov058_021119a0_Layout data_ov058_021119a0;
+
+data_ov058_02111994_Layout data_ov058_02111994 = {{
+    0x000000ff,
+    0x00050fc1,
+    0x000000ff,
+}};
+
+data_ov058_021119a0_Layout data_ov058_021119a0 = {{
+    0x02580524, 0x0000f257, 0x00140000, 0x02580650, 0x8000f257, 0x00140000, 0x02580704, 0x0000f257,
+    0x00130000, 0x02580830, 0x8000f257, 0x00130000, 0x02580a7c, 0xc000f4a8, 0x00150000, 0x02580a7c,
+    0x4000f5d4, 0x00150000, 0x02580a7c, 0xc000f688, 0x00170000, 0x02580a7c, 0x4000f7b4, 0x00170000,
+    0x0258095c, 0xe000f2a3, 0x00010100, 0x0258023f, 0xe000fa29, 0x000d0000, 0x02580f90, 0xe000efb7,
+    0x00051200, 0x02580a30, 0x6000f377, 0x00011000,
+}};

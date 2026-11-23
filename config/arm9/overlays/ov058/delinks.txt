@@ -5,3 +5,43 @@
 src/game/actors/d_a_obj_closet.cpp:
     complete
     .text start:0x021111a0 end:0x021116e4
+
+src/unnamed/ov058/data_ov058_02111700.c:
+    complete
+    .data start:0x02111700 end:0x0211171c
+
+src/unnamed/ov058/data_ov058_0211171c.c:
+    complete
+    .data start:0x0211171c end:0x0211173c
+
+src/unnamed/ov058/data_ov058_0211173c.c:
+    complete
+    .data start:0x0211173c end:0x02111754
+
+src/unnamed/ov058/data_ov058_02111754.c:
+    complete
+    .data start:0x02111754 end:0x02111760
+
+src/unnamed/ov058/data_ov058_02111760.c:
+    complete
+    .data start:0x02111760 end:0x02111830
+
+src/unnamed/ov058/data_ov058_02111830.c:
+    complete
+    .data start:0x02111830 end:0x0211190c
+
+src/unnamed/ov058/data_ov058_0211190c.c:
+    complete
+    .data start:0x0211190c end:0x02111920
+
+src/unnamed/ov058/data_ov058_02111920.c:
+    complete
+    .data start:0x02111920 end:0x02111928
+
+src/unnamed/ov058/data_ov058_02111928.c:
+    complete
+    .data start:0x02111928 end:0x02111994
+
+src/unnamed/ov058/data_ov058_02111994.c:
+    complete
+    .data start:0x02111994 end:0x02111a30

@@ -11,3 +11,47 @@ src/game/actors/d_a_obj_hs_billboard.cpp:
     .init start:0x02111434 end:0x021114ec
     .ctor start:0x021114ec end:0x021114f0
     .bss start:0x02111a00 end:0x02111a50
+
+src/unnamed/ov031/data_ov031_02111500.c:
+    complete
+    .data start:0x02111500 end:0x0211153c
+
+src/unnamed/ov031/data_ov031_0211153c.c:
+    complete
+    .data start:0x0211153c end:0x02111548
+
+src/unnamed/ov031/data_ov031_02111548.c:
+    complete
+    .data start:0x02111548 end:0x0211155c
+
+src/unnamed/ov031/data_ov031_0211155c.c:
+    complete
+    .data start:0x0211155c end:0x0211159c
+
+src/unnamed/ov031/data_ov031_0211159c.c:
+    complete
+    .data start:0x0211159c end:0x021115e0
+
+src/unnamed/ov031/data_ov031_021115e0.c:
+    complete
+    .data start:0x021115e0 end:0x02111624
+
+src/unnamed/ov031/data_ov031_02111624.c:
+    complete
+    .data start:0x02111624 end:0x02111660
+
+src/unnamed/ov031/data_ov031_02111660.c:
+    complete
+    .data start:0x02111660 end:0x02111740
+
+src/unnamed/ov031/data_ov031_02111740.c:
+    complete
+    .data start:0x02111740 end:0x02111758
+
+src/unnamed/ov031/data_ov031_02111758.c:
+    complete
+    .data start:0x02111758 end:0x02111834
+
+src/unnamed/ov031/data_ov031_02111834.c:
+    complete
+    .data start:0x02111834 end:0x021118e8

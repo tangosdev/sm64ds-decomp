@@ -13,3 +13,27 @@ src/game/actors/d_a_luigi.cpp:
     .data.lgFade start:0x02111a90 end:0x02111a94
     .data start:0x02111a94 end:0x02111aa4
     .bss start:0x02111b70 end:0x02111b80
+
+src/unnamed/ov055/data_ov055_02111920.c:
+    complete
+    .data.lgPre start:0x02111920 end:0x02111940
+
+src/unnamed/ov055/data_ov055_02111940.c:
+    complete
+    .data.lgPre start:0x02111940 end:0x02111958
+
+src/unnamed/ov055/data_ov055_02111958.c:
+    complete
+    .data.lgPre start:0x02111958 end:0x02111a30
+
+src/unnamed/ov055/data_ov055_02111a30.c:
+    complete
+    .data.lgPre start:0x02111a30 end:0x02111a4c
+
+src/unnamed/ov055/data_ov055_02111a4c.c:
+    complete
+    .data.lgPre start:0x02111a4c end:0x02111a78
+
+src/unnamed/ov055/data_ov055_02111a78.c:
+    complete
+    .data.lgPre start:0x02111a78 end:0x02111a90
