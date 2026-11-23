@@ -417,7 +417,7 @@ src/minigames/d_mg3d_heyho_obj_adapter.cpp:
     .init start:0x0212f4c4 end:0x0212f52c
     .ctor start:0x0213356c end:0x02133570
     .data.pmf_Heyho start:0x0213af18 end:0x0213afd0
-    .bss start:0x02140300 end:0x02140400
+    .bss start:0x021402fc end:0x02140400
 
 src/minigames/d_mg_jump3d_mario.cpp:
     complete
@@ -441,7 +441,7 @@ src/minigames/unit020c8a30.cpp:
     .text start:0x020c8a30 end:0x020c8dd4
     .init start:0x0212f660 end:0x0212f6b4
     .ctor start:0x02133574 end:0x02133578
-    .bss start:0x021404c4 end:0x02140538
+    .bss start:0x021404c4 end:0x0214053c
     .data.data_ov006_02134b54 start:0x02134b54 end:0x02134b60
     .data.data_ov006_02134b60 start:0x02134b60 end:0x02134b6c
     .data.data_ov006_02134b6c start:0x02134b6c end:0x02134b78
@@ -479,7 +479,7 @@ src/minigames/unit020cd744.cpp:
     .init start:0x0212fc7c end:0x0212fd48
     .ctor start:0x0213357c end:0x02133580
     .data.pmf_unit020cd744 start:0x0213b31c end:0x0213b3a4
-    .bss start:0x02140808 end:0x02141640
+    .bss start:0x02140808 end:0x02141660
     .data.sTrmpLineTex start:0x0213b3f4 end:0x0213b814
 
 src/minigames/d_s_mg_amida.cpp:
@@ -492,7 +492,7 @@ src/minigames/d_s_mg_bomroom.cpp:
     .text start:0x020d5a54 end:0x020d95a4
     .init start:0x0212fd48 end:0x021300b0
     .ctor start:0x02133580 end:0x02133584
-    .bss start:0x02141660 end:0x02141768
+    .bss start:0x02141660 end:0x02141774
     .data.w13b814 start:0x0213b9ec end:0x0213bafc
     .data.sBomroomMarkerLitSprites start:0x02133a70 end:0x02133a80
     .data.sBomroomMarkerPlainSprites start:0x02133ae0 end:0x02133af0
@@ -635,7 +635,7 @@ src/minigames/d_mg3d_esp_anim_set.cpp:
     .text start:0x020e7660 end:0x020ea280
     .init start:0x02130a08 end:0x02130df8
     .ctor start:0x0213359c end:0x021335a0
-    .bss start:0x02141e54 end:0x02141fcc
+    .bss start:0x02141e54 end:0x02142018
     .rodata.data_ov006_0212e57c start:0x0212e57c end:0x0212e580
     .rodata.sEsp3DCardsPerDifficulty start:0x0212e588 end:0x0212e58c
     .rodata.data_ov006_0212e58c start:0x0212e58c end:0x0212e594
@@ -703,7 +703,7 @@ src/minigames/d_s_mg_jump_methods.cpp:
     .ctor start:0x021335a4 end:0x021335a8
     .data.gap55 start:0x0213cb4c end:0x0213cb8c
     .data.sJumpNcgByLanguage start:0x0213cbc8 end:0x0213cbdc
-    .bss start:0x02142188 end:0x021421b0
+    .bss start:0x02142044 end:0x021421c4
 
 src/minigames/d_s_mg_jump.cpp:
     complete
@@ -761,7 +761,7 @@ src/minigames/d_s_mg_memory2.cpp:
     .data.gap58 start:0x0213d248 end:0x0213d338
     .data.data_ov006_0213d40c start:0x0213d40c end:0x0213d45c
     .data.sMemory2CardFrameSprites start:0x0213d45c end:0x0213d4cc
-    .bss start:0x021423a8 end:0x021424ec
+    .bss start:0x021423a8 end:0x0214250c
     .rodata.sMemory2Tables start:0x0212e8e8 end:0x0212e954
 
 src/minigames/d_s_mg_m_carlo.cpp:
@@ -769,7 +769,7 @@ src/minigames/d_s_mg_m_carlo.cpp:
     .text start:0x020f7634 end:0x020f8ef4
     .init start:0x021318a0 end:0x0213195c
     .ctor start:0x021335b8 end:0x021335bc
-    .bss start:0x0214250c end:0x02142558
+    .bss start:0x0214250c end:0x021425a8
     .data.gap59 start:0x0213d5e0 end:0x0213d600
 
 src/minigames/d_s_mg_m_carlo2.cpp:
@@ -792,7 +792,7 @@ src/minigames/d_s_mg_pachinko2.cpp:
     .text start:0x020ff420 end:0x0210428c
     .init start:0x02131cd0 end:0x02131fa4
     .ctor start:0x021335c4 end:0x021335c8
-    .bss start:0x021426cc end:0x021427ac
+    .bss start:0x021426cc end:0x021427bc
     .rodata.sPachinko2CupHopRightStartFrames start:0x0212ebac end:0x0212ebb0
     .rodata.sPachinko2CupHopLeftStartFrames start:0x0212ebb0 end:0x0212ebb4
     .rodata.sPachinko2BallWalkOffSprites start:0x0212ebb4 end:0x0212ebb8
@@ -880,7 +880,7 @@ src/minigames/d_s_mg_slots.cpp:
     .init start:0x02132894 end:0x02132970
     .ctor start:0x021335d0 end:0x021335d4
     .data start:0x0213e4e0 end:0x0213e588
-    .bss start:0x02142bdc end:0x02142c1c
+    .bss start:0x02142bdc end:0x02142cc0
 
 src/minigames/d_s_mg_smartball.cpp:
     complete
@@ -990,7 +990,7 @@ src/minigames/d_s_mg_trampoline2.cpp:
     .data start:0x0213fbc4 end:0x0213fd0c
     .init start:0x0213322c end:0x0213326c
     .ctor start:0x021335dc end:0x021335e0
-    .bss start:0x02142f80 end:0x02142f94
+    .bss start:0x02142f60 end:0x02142f94
     .rodata.after_sound start:0x0212f0f0 end:0x0212f3ac
 
 src/minigames/d_s_mg_bsc.cpp:

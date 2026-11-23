@@ -31,7 +31,7 @@
     {
       "name": ".bss",
       "start": "0x02141e54",
-      "end": "0x02141fcc"
+      "end": "0x02142018"
     },
     {
       "name": ".data.gap54",
@@ -1181,6 +1181,13 @@
       "size": "0x20",
       "binding": "STB_GLOBAL",
       "evidence": "dScMg3DEsp_cState[4] play-phase table; the initializer plain-copies the ROM PMF constants into it"
+    },
+    {
+      "symbol": "sHanaSpinAngle",
+      "address": "0x02141fcc",
+      "size": "0x4c",
+      "binding": "STB_GLOBAL",
+      "evidence": "hanachan round words from the spin angle through sHanaUsedIds"
     }
   ],
   "rodata": [
@@ -1360,7 +1367,7 @@
         {
           "section": ".bss",
           "start": "0x02141e54",
-          "end": "0x02141fcc",
+          "end": "0x02142018",
           "comparison": "NOBITS -- symbol/module gates"
         },
         {

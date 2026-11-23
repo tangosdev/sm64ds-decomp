@@ -150,7 +150,7 @@ void G3_MultMtx33(void *m);
 extern VecFx32 data_02099f88;
 extern int data_020a4bd4;
 /* Identity, used when Render is given no matrix. */
-extern const int data_02082190[12];
+extern const int data_02082190[12] = {0x1000, 0, 0, 0, 0x1000, 0, 0, 0, 0x1000, 0, 0, 0};
 extern void *data_020a4bd0;
 extern u8 data_020a4bbc;
 extern struct Buf8 data_02099f94;

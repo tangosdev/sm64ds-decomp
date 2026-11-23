@@ -31,7 +31,7 @@
     {
       "name": ".bss",
       "start": "0x02137ba8",
-      "end": "0x02137bd0"
+      "end": "0x02137be0"
     }
   ],
   "functions": [
@@ -142,6 +142,13 @@
       "size": "0x0000000c",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the animation handle"
+    },
+    {
+      "symbol": "data_ov096_02137bd0",
+      "address": "0x02137bd0",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "tail of this TU's bss"
     }
   ],
   "notes": [
@@ -342,7 +349,7 @@
         {
           "section": ".bss",
           "start": "0x02137ba8",
-          "end": "0x02137bd0",
+          "end": "0x02137be0",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],

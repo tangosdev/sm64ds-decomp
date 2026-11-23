@@ -36,7 +36,7 @@
     {
       "name": ".bss",
       "start": "0x0211b1f8",
-      "end": "0x0211b234"
+      "end": "0x0211b240"
     }
   ],
   "functions": [
@@ -141,6 +141,13 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the 0x384 model handle"
+    },
+    {
+      "symbol": "data_ov060_0211b234",
+      "address": "0x0211b234",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "tail of this TU's bss"
     }
   ],
   "notes": [
@@ -266,7 +273,7 @@
         {
           "section": ".bss",
           "start": "0x0211b1f8",
-          "end": "0x0211b234",
+          "end": "0x0211b240",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],

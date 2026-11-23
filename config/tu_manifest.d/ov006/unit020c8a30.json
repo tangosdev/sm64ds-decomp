@@ -32,7 +32,7 @@
     {
       "name": ".bss",
       "start": "0x021404c4",
-      "end": "0x02140538"
+      "end": "0x0214053c"
     },
     {
       "name": ".data.data_ov006_02134b54",
@@ -410,6 +410,13 @@
       "size": "0x60",
       "binding": "STB_GLOBAL",
       "evidence": "the three 0x20-byte Puff records (3 x 0x20 = 0x60); the static initializer builds them with __cxa_vec_ctor(C1, D1). Interior labels data_ov006_021404dc..021404f6 and sPuffPoolLast (&sPuffs[2], Puff_DrawAll's start) fall inside it"
+    },
+    {
+      "symbol": "sTrmpGoalRow",
+      "address": "0x02140538",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "goal-row halfword plus the two pad bytes before d_mg_trmpln2_mario's BSS"
     }
   ],
   "notes": [
@@ -481,7 +488,7 @@
         {
           "section": ".bss",
           "start": "0x021404c4",
-          "end": "0x02140538",
+          "end": "0x0214053c",
           "comparison": "NOBITS -- symbol/module gates"
         },
         {

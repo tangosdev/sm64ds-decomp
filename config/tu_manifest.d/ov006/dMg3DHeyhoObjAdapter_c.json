@@ -36,7 +36,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x02140300",
+      "start": "0x021402fc",
       "end": "0x02140400"
     }
   ],
@@ -557,6 +557,13 @@
   ],
   "bss": [
     {
+      "symbol": "data_ov006_021402fc",
+      "address": "0x021402fc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "pointer Heyho_SpawnAll stores; the four bytes immediately before this TU's other BSS"
+    },
+    {
       "symbol": "_ZGVsHeyho_React_Left256$317",
       "address": "0x02140300",
       "size": "0x4",
@@ -859,7 +866,7 @@
         },
         {
           "section": ".bss",
-          "start": "0x02140300",
+          "start": "0x021402fc",
           "end": "0x02140400",
           "comparison": "NOBITS -- symbol/module gates"
         }

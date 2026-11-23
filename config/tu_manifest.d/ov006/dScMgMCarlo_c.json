@@ -38,7 +38,7 @@
     {
       "name": ".bss",
       "start": "0x0214250c",
-      "end": "0x02142558"
+      "end": "0x021425a8"
     },
     {
       "name": ".data.gap59",
@@ -240,6 +240,13 @@
       "size": "0x4c",
       "binding": "STB_GLOBAL",
       "evidence": "sprite-index remap table: 19 words copied from the retail table sMgCardSprites at overlay load; Render indexes it by sprite"
+    },
+    {
+      "symbol": "sMCarlo2BoardDelay",
+      "address": "0x02142558",
+      "size": "0x50",
+      "binding": "STB_GLOBAL",
+      "evidence": "second board's delay through sMCarlo2FaceCounts"
     }
   ],
   "notes": [
@@ -414,7 +421,7 @@
         {
           "section": ".bss",
           "start": "0x0214250c",
-          "end": "0x02142558",
+          "end": "0x021425a8",
           "comparison": "NOBITS -- symbol/module gates"
         },
         {

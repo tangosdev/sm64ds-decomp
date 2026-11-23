@@ -1479,3 +1479,6 @@ SlotState sSlot3StateTable[8] = {
     &dScMgSlot3_c::StatePayout,   &dScMgSlot3_c::StatePayout, &dScMgSlot3_c::StateWait,
     &dScMgSlot3_c::StateGameOver, &dScMgSlot3_c::StateDone,
 };
+
+/* Cell order, then sSmartballPathBuf at +0x24. */
+int sSmartballCellOrder[41];

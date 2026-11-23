@@ -2,16 +2,17 @@
  * first .data run. sWhirlpoolBta's keys are in daWater_Tatumaki_c. The
  * Polelift/KoopaShutter/Submarine vtables at 0x02113a90 stay unclaimed. */
 #include "types.h"
+#include "private/BTA_File.h"
 
 /* Words the other BTAs and the course table relocate point here.
  * sWhirlpoolBta's own key words live in daWater_Tatumaki_c. */
-extern u32 data_ov026_02112490[];
+extern const u16 data_ov026_02112490[];
 extern u32 data_ov026_02112498[];
 extern u32 data_ov026_0211249c[];
 extern u32 data_ov026_021124a0[];
-extern u32 data_ov026_021124a4[];
-extern u32 data_ov026_021124e4[];
-extern u32 data_ov026_02112554[];
+extern const fx32 data_ov026_021124a4[];
+extern const BTAMaterialRecord data_ov026_021124e4[];
+extern const fx32 data_ov026_02112554[];
 extern u32 data_ov026_02112738[];
 extern u32 data_ov026_02112dc8[];
 extern u32 data_ov026_02112dd8[];

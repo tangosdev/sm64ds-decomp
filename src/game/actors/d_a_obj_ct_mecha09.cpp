@@ -186,3 +186,6 @@ daObjCtMecha09_c *daObjCtMecha09_c_classInit() {
 
 Mecha09ModelFilePtr data_ov065_0211d9d4(ASSET_CT_MECHA_OBJ09_BMD);
 Mecha09ClsnFilePtr data_ov065_0211d9cc(ASSET_CT_MECHA_OBJ09_KCL);
+
+/* Bound tail of this TU's .bss. One object; interior labels stay in symbols.txt. */
+u8 data_ov065_0211d9f4[0xc];

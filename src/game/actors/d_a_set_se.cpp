@@ -35,7 +35,7 @@
 #include "SaveData.h"
 
 extern int data_ov002_0210b498[];  /* sound-ID table, 11 entries: 0x18d, 0x100-0x103, 0x81, 0x89, 0x9c-0x9e, 0; the _ZTV9daSetSE_c header follows it, so spawn params stay 0-10 */
-extern int gWaterfallSoundsDisabled;
+extern int gWaterfallSoundsDisabled[];
 extern int gCurrentMusicID;        /* current music ID */
 extern dCamera_c *gCamera;         /* CAMERA */
 extern s8 gCurrentSublevel;        /* LEVEL_ID */
@@ -81,7 +81,7 @@ int daSetSE_c::InitResources()
     else
         disabled = 0;
 
-    gWaterfallSoundsDisabled = disabled;
+    gWaterfallSoundsDisabled[0] = disabled;
     return 1;
 }
 
@@ -91,7 +91,7 @@ int daSetSE_c::Behavior()
     int music;
     dCamera_c *cam;
 
-    if (gWaterfallSoundsDisabled != 0)
+    if (gWaterfallSoundsDisabled[0] != 0)
         return 1;
 
     effect = param1;

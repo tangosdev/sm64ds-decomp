@@ -365,3 +365,5 @@ int daObjBC_Switch_c::CleanupResources() {
  * handle, then the collision handle. */
 BcSwitchModelFilePtr daObjBC_Switch_c_ModelFile(ASSET_B_COIN_SWITCH_BMD);
 BcSwitchCollisionFilePtr daObjBC_Switch_c_ClsnFile(ASSET_B_COIN_SWITCH_KCL);
+
+int gWaterfallSoundsDisabled[4];

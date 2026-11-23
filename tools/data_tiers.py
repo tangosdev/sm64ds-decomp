@@ -15,9 +15,9 @@ The address is the item. Aliases, renames and TU moves do not create a second
 one. The key is ``module:0xaddress``.
 
 Decompiled or not is the complete claim. The public bar is one DATA line, and
-BSS counts in it. A short or blind byte compare is not a third state: the
-address stays claimed or unclaimed. Verified and differing are byte results
-in the text report.
+BSS counts in it. A few configured ranges do not. A short or blind byte
+compare is not a third state: the address stays claimed or unclaimed.
+Verified and differing are byte results in the text report.
 
 ``source_coverage.py`` and ``validate_merge.py`` remain the byte ratchets.
 This tool does not duplicate them.
@@ -43,6 +43,14 @@ README_END = "<!-- data:end -->"
 
 STORAGE_CATEGORIES = {"global-storage", "code-embedded-data"}
 
+# Half-open ranges left out of the progress total.
+EXCLUDED_RANGES = (
+    ("arm9", 0x02075f14, 0x02082158),
+    ("arm9", 0x0208a178, 0x0208c178),
+    ("arm9", 0x0209289c, 0x0209435c),
+    ("ov007", 0x020d87b8, 0x02103260),
+)
+
 
 def canonical_id(module, address):
     """Module-qualified key. One address is one data item."""
@@ -54,6 +62,13 @@ def normalize_address(value):
     if isinstance(value, str):
         value = int(value, 0)
     return f"0x{int(value):08x}"
+
+
+def excluded_address(module, address):
+    """True when this address is outside the progress total."""
+    value = int(address, 0) if isinstance(address, str) else int(address)
+    return any(module == mod and start <= value < end
+               for mod, start, end in EXCLUDED_RANGES)
 
 
 def is_bss(record):
@@ -202,6 +217,8 @@ def _record_rows(inventory, verification):
         address = record.get("address")
         if not module or not address:
             continue
+        if excluded_address(module, address):
+            continue
         key = canonical_id(module, address)
         bss = is_bss(record)
         complete = record.get("declared_ownership") == "complete-window-claimed"
@@ -337,6 +354,7 @@ def summarize(inventory, verification=None):
             "A short byte compare is not its own state. Decompiled means a complete claim.",
             "VERIFIED and DIFFERS require the full build's romData report.",
             "The DATA bar counts every storage address, BSS included.",
+            "A few configured ranges are outside the progress total.",
             "Per-address window bytes are the next configured boundary upper bound, not object sizes.",
             "BSS has no ROM payload. A claim counts it as data; the build cannot byte-compare it.",
             "NAMED means the spelling is not a data_/reg_ placeholder. It is not a reviewed name.",

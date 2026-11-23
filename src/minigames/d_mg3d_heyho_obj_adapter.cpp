@@ -1360,6 +1360,7 @@ dMg3DHeyhoObjAdapter_c::dMg3DHeyhoObjAdapter_c() : mCommand(0)
  * the model handle, then the animation handle. The plain counters have
  * no initializer: one would grow the sinit. */
 extern "C" {
+void *data_ov006_021402fc;
 int sHeyhoUnsettledCount;
 int sJumpComboCount;
 int sHeyhoScorePopups;

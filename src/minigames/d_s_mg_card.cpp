@@ -56,7 +56,7 @@ extern OamAttr **sCardPayoutHighlightSprites[];
 extern "C" OamAttr data_ov006_02134074[];
 extern "C" OamAttr data_ov006_02134124[];
 OamAttr *sCardHudSprites[] = {data_ov006_02134074, data_ov006_02134124};
-extern int sCardSelectLocked;
+extern int sCardSelectLocked[];
 extern int sCardSwapRequested;
 extern int data_ov006_02141770;
 extern const Five sCardHandOrder;
@@ -211,7 +211,7 @@ void dScMgCard_c::StartRound(int mode)
 
     gMgCoinsShowDelta = 1;
     sCardSwapRequested = 0;
-    sCardSelectLocked = 0;
+    sCardSelectLocked[0] = 0;
     data_ov006_02141770 = 0;
     unk_539a = 0;
     sCardDrawsLeft = 1;
@@ -376,7 +376,7 @@ void dScMgCard_c::UpdateState()
         ok = 0;
         if (gTouchInfo[gActivePlayerSlot].held != 0 && gTouchInfo[gActivePlayerSlot].edge != 0)
             ok = 1;
-        if (ok != 0 && dScMgCard_c::AllLifted(mArray1) != 0 && sCardSelectLocked == 0) {
+        if (ok != 0 && dScMgCard_c::AllLifted(mArray1) != 0 && sCardSelectLocked[0] == 0) {
             v5 = gTouchInfo[gActivePlayerSlot].x;
             v4 = gTouchInfo[gActivePlayerSlot].y;
             if (dScMgCard_c::AllInState(mArray1, 2) != 0) {
@@ -389,7 +389,7 @@ void dScMgCard_c::UpdateState()
                         r = -r;
                     if (r < 0x14) {
                         sCardSwapRequested = 1;
-                        sCardSelectLocked = 1;
+                        sCardSelectLocked[0] = 1;
                         mState++;
                         sMgCoinsBetPlaced = 1;
                         Sound::PlayBank2_2D(0x151);
@@ -409,7 +409,7 @@ void dScMgCard_c::UpdateState()
                         r = -r;
                     if (r < 0x14) {
                         sCardSwapRequested = 1;
-                        sCardSelectLocked = 1;
+                        sCardSelectLocked[0] = 1;
                         mState++;
                         sMgCoinsBetPlaced = 1;
                         Sound::PlayBank2_2D(0x151);
@@ -435,7 +435,7 @@ void dScMgCard_c::UpdateState()
         }
         break;
     case 5:
-        if (sCardSelectLocked != 0 && dScMgCard_c::AllInState(mArray1, 2) != 0 &&
+        if (sCardSelectLocked[0] != 0 && dScMgCard_c::AllInState(mArray1, 2) != 0 &&
             mDealer.IsIdle() != 0) {
             mState++;
         } else if (mDealer.IsIdle() != 0) {
@@ -465,7 +465,7 @@ void dScMgCard_c::UpdateState()
             } else {
                 mState = 4;
                 sCardSwapRequested = 0;
-                sCardSelectLocked = 0;
+                sCardSelectLocked[0] = 0;
                 data_ov006_02141770 = 0;
             }
         } else if (mDealer.IsIdle() != 0) {
@@ -526,7 +526,7 @@ void dScMgCard_c::UpdateState()
         if (mStateTimer == 0) {
             t4 = dScMgCard_c::EvaluateHand(mArray2, &mDealerHandFace);
             t5 = dScMgCard_c::EvaluateHand(mArray1, &mPlayerHandFace);
-            if (sCardSelectLocked != 0 && sCardSelectLocked != 0) {
+            if (sCardSelectLocked[0] != 0 && sCardSelectLocked[0] != 0) {
                 /* the hand-value fanfares sit at sound bank 22 up */
                 Mg_ShowBanner(t4 + 22, 0x80, 0x48, 0, -1, 1);
                 Mg_ShowBanner(t5 + 22, 0x80, 0x78, 0, -1, 2);
@@ -706,7 +706,7 @@ s32 dScMgCard_c::Render()
 s32 dScMgCard_c::CleanupResources()
 {
     sCardSwapRequested = 0;
-    sCardSelectLocked = 0;
+    sCardSelectLocked[0] = 0;
     data_ov006_02141770 = 0;
     return 1;
 }
@@ -1265,7 +1265,7 @@ void dMgCardObj_c::Update()
         }
         return;
     }
-    if (sCardSelectLocked != 0)
+    if (sCardSelectLocked[0] != 0)
         return;
 
     {

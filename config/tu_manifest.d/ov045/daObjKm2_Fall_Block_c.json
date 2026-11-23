@@ -30,7 +30,7 @@
     {
       "name": ".bss",
       "start": "0x02113248",
-      "end": "0x02113270"
+      "end": "0x02113280"
     },
     {
       "name": ".data",
@@ -124,6 +124,13 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
+    },
+    {
+      "symbol": "data_ov045_02113270",
+      "address": "0x02113270",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "tail of this TU's bss"
     }
   ],
   "notes": [
@@ -183,7 +190,7 @@
         {
           "section": ".bss",
           "start": "0x02113248",
-          "end": "0x02113270",
+          "end": "0x02113280",
           "comparison": "NOBITS -- symbol/module gates"
         },
         {

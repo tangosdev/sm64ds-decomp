@@ -19,7 +19,7 @@
     },
     {
       "name": ".rodata",
-      "start": "0x02086324",
+      "start": "0x02086314",
       "end": "0x02086384"
     }
   ],
@@ -70,11 +70,18 @@
   "data": [],
   "rodata": [
     {
+      "symbol": "data_02086314",
+      "address": "0x02086314",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "Texture-palette VRAM bases, indexed by the bank nibble."
+    },
+    {
       "symbol": "data_02086324",
       "address": "0x02086324",
       "size": "0x60",
       "binding": "STB_GLOBAL",
-      "evidence": "The 16 texture-bank combinations' LCDC slot windows, indexed by GX_ResetBankForTex's result in GX_BeginLoadTex: each row is the first and second texture block and the first block's size, all in 4 KiB units, shifted left 12 into data_020a60ac/bc/c0. The companion texture-palette table data_02086314[] is the existing src/data/arm9/data_02086314.c claim immediately below."
+      "evidence": "The 16 texture-bank combinations' LCDC slot windows, indexed by GX_ResetBankForTex's result in GX_BeginLoadTex: each row is the first and second texture block and the first block's size, all in 4 KiB units, shifted left 12 into data_020a60ac/bc/c0."
     }
   ],
   "bss": [],
@@ -82,7 +89,7 @@
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/arm9-GX/GX.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 6,
@@ -129,7 +136,7 @@
         },
         {
           "section": ".rodata",
-          "start": "0x02086324",
+          "start": "0x02086314",
           "end": "0x02086384",
           "differingBytes": 0,
           "firstDiff": null

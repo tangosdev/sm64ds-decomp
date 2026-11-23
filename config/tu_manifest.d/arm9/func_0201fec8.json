@@ -24,7 +24,7 @@
     },
     {
       "name": ".rodata",
-      "start": "0x02075358",
+      "start": "0x020752cc",
       "end": "0x020755a0"
     },
     {
@@ -199,6 +199,206 @@
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02074e44"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020752d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f278",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f278"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020752d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02075398",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02075398"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020752d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f29c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f29c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020752dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f2d0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f2d0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020752ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f278",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f278"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020752f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020753f8",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020753f8"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020752f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f29c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f29c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020752f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f2d0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f2d0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02075308",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f278",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f278"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0207530c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02075530",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02075530"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02075310",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f29c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f29c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02075314",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f2d0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f2d0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02075324",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f278",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f278"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02075328",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_020754c4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020754c4"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0207532c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f29c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f29c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02075330",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f2d0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f2d0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02075340",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f278",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f278"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02075344",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0207545c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0207545c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02075348",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f29c",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f29c"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0207534c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_0208f2d0",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0208f2d0"
     }
   ],
   "verification": {
@@ -258,7 +458,7 @@
         },
         {
           "section": ".rodata",
-          "start": "0x02075358",
+          "start": "0x020752cc",
           "end": "0x020755a0",
           "differingBytes": 0,
           "firstDiff": null
@@ -343,6 +543,13 @@
     }
   },
   "rodata": [
+    {
+      "symbol": "data_020752cc",
+      "address": "0x020752cc",
+      "size": "0x8c",
+      "binding": "STB_GLOBAL",
+      "evidence": "Five 28-byte owner-info records. data_020752e8, data_02075304, data_02075320 and data_0207533c are the records at +28, +56, +84 and +112."
+    },
     {
       "symbol": "data_02075358",
       "address": "0x02075358",

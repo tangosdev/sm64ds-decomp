@@ -5,6 +5,7 @@
 #ifndef DECL_COMMON_H
 #define DECL_COMMON_H
 #include "common.h"
+#include "WbmCarryOffset.h"
 
 /* C linkage. These declare ROM symbols by their exact final names, so a C++
    translation unit including this header must not mangle them -- a bare
@@ -161,7 +162,6 @@ extern int data_ov002_0210f344[3];
 extern int data_ov002_0210f824[];
 extern int data_ov002_0210f89c;
 extern int data_ov002_0210f8cc[3];
-extern int gWaterfallSoundsDisabled;
 extern int data_ov003_020b1650[];
 extern int data_ov003_020b1704[];
 extern int sMgPauseBgNcgByLanguage[];
@@ -253,7 +253,6 @@ extern int data_ov006_021421b4;
    winner here. Every consumer now lives in that one translation unit,
    which declares both with the recovered pointer type, so no declaration
    belongs here either. */
-extern int sTrmpAnyOnLedge;
 extern int data_ov007_02103260;
 extern int data_ov007_02103340;
 extern int data_ov007_02103344;
@@ -294,7 +293,7 @@ extern int data_ov075_0211d650[];
 extern void *gKeyModelFiles[];
 extern int data_ov091_021344e8[];
 extern int data_ov094_02136a1c[];
-extern Vector3 data_ov098_0213bf60[];
+extern const struct WbmCarryOffset data_ov098_0213bf60[];
 extern int data_ov100_02148008[3];
 extern int data_ov100_02148710;
 extern int data_ov100_02148718;
@@ -536,7 +535,7 @@ extern unsigned int sD3DOptionNcgByLanguage[];
 extern unsigned short gKuppaScriptFrame;
 extern unsigned short data_ov002_0210abb8[];
 extern unsigned short data_ov002_0210c088[];
-extern unsigned short sHanaSpinAngle;
+extern unsigned short sHanaSpinAngle[];
 extern unsigned short data_ov007_02104c28;
 extern void ChangeArea(int);
 extern void CleanCommonModelDataArr(void);

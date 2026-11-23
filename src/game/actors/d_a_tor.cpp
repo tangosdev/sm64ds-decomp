@@ -294,3 +294,6 @@ int daTor_c::InitResources()
 daTor_c *daTor_c_classInit() {
     return new daTor_c();
 }
+
+/* Bound tail of this TU's .bss. One object; interior labels stay in symbols.txt. */
+u8 data_ov096_02137bd0[0x10];

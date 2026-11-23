@@ -28,7 +28,7 @@
     },
     {
       "name": ".rodata",
-      "start": "0x02075244",
+      "start": "0x02075230",
       "end": "0x02075250"
     },
     {
@@ -864,7 +864,7 @@
         },
         {
           "section": ".rodata",
-          "start": "0x02075244",
+          "start": "0x02075230",
           "end": "0x02075250",
           "differingBytes": 0,
           "firstDiff": null
@@ -972,22 +972,13 @@
     "compilerOnlyOutput": {
       "requested": [
         "_ZN7Vector3D1Ev",
-        "_ZN8dActor_c21@class$163d_actor_cppD1Ev",
-        "_ZN8dActor_c21@class$160d_actor_cppD1Ev",
-        "_ZN8dActor_c21@class$157d_actor_cppD1Ev",
-        "_ZN8dActor_c21@class$154d_actor_cppD1Ev",
         "_ZN7dBase_cD2Ev"
       ],
       "deadstripped": [
         "_ZN7Vector3D1Ev",
-        "_ZN7dBase_cD2Ev",
-        "_ZN8dActor_c21@class$154d_actor_cppD1Ev",
-        "_ZN8dActor_c21@class$157d_actor_cppD1Ev",
-        "_ZN8dActor_c21@class$160d_actor_cppD1Ev",
-        "_ZN8dActor_c21@class$163d_actor_cppD1Ev"
+        "_ZN7dBase_cD2Ev"
       ],
       "droppedSections": [
-        6,
         7,
         8,
         9,
@@ -995,14 +986,11 @@
         11,
         12,
         13,
-        14,
         15,
         16,
-        45,
-        192,
-        193,
-        194,
-        195,
+        18,
+        19,
+        49,
         196,
         197
       ],
@@ -1083,6 +1071,20 @@
     }
   ],
   "rodata": [
+    {
+      "symbol": "data_02075230",
+      "address": "0x02075230",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Yellow, red and blue coin actor ids, then a zero."
+    },
+    {
+      "symbol": "data_02075238",
+      "address": "0x02075238",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "What a yellow, red and blue coin is worth."
+    },
     {
       "symbol": "data_02075244",
       "address": "0x02075244",

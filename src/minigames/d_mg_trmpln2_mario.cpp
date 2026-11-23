@@ -123,7 +123,7 @@ extern Vector3 sTrmp2MarioScale;
 extern Vector3 sTrmp3DMarioScale;
 extern MgCamera *sMgSubCamera;
 extern int sTrmpRowBaseHeights[2];
-extern short sTrmpGoalRow;
+extern short sTrmpGoalRow[];
 extern int sTrmp2Lives;
 extern int sTrmp3DLives;
 
@@ -153,7 +153,7 @@ extern int data_ov006_02140598;
 extern int data_ov006_0214053c;
 extern void *sTrmpJumpers[];
 extern void *sTrmp2MarioPtrs[];
-extern int sTrmpAnyOnLedge;
+extern int sTrmpAnyOnLedge[];
 
 /* the goal-slot bank StateGoal walks; a run of separate 12-byte globals */
 extern TrmpGoal sTrmpGoalSlots;
@@ -1158,7 +1158,7 @@ void dMgTrmpln3DMario_c::StateLand() {
         return;
     if (mAnmModel.Finished() == 0)
         return;
-    if (mHeightRow == sTrmpGoalRow)
+    if (mHeightRow == sTrmpGoalRow[0])
         EnterGoal();
     else
         EnterOnLedge();
@@ -1182,7 +1182,7 @@ void dMgTrmpln3DMario_c::StateFallToLedge() {
         int cur = mPos.y;
         int *d = sTrmpRowHeights;
         if (cur <= d[idx]) {
-            if (idx == sTrmpGoalRow) {
+            if (idx == sTrmpGoalRow[0]) {
                 EnterGoal();
             } else {
                 EnterOnLedge();
@@ -1967,9 +1967,9 @@ void Trmp3DMario_UpdateAll(void) {
     for (i = 0; i < sTrmp3DMarioCount; i++)
         ((dMgTrmpln3DMario_c *)(sTrmp3DMarios + i * 0xd0))->Update();
     if (sTrmpMariosOnLedges != 0)
-        sTrmpAnyOnLedge = 1;
+        sTrmpAnyOnLedge[0] = 1;
     else
-        sTrmpAnyOnLedge = 0;
+        sTrmpAnyOnLedge[0] = 0;
     Puff_UpdateAll();
 }
 

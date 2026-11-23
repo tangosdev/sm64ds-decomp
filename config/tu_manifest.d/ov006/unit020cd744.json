@@ -40,7 +40,7 @@
     {
       "name": ".bss",
       "start": "0x02140808",
-      "end": "0x02141640"
+      "end": "0x02141660"
     },
     {
       "name": ".data.sTrmpLineTex",
@@ -908,6 +908,13 @@
       "size": "0xcb0",
       "binding": "STB_GLOBAL",
       "evidence": "the four 0x32c-byte TrmpLine slots (4 x 0x32c = 0xcb0); the static initializer builds them with __cxa_vec_ctor(C1, D1) and registers __arraydtor for them. Interior labels data_ov006_02140cae/cb4/cb6, data_ov006_02140d80, sTrmpStartLinePoints, data_ov006_02141402 and sTrmpStartLine fall inside it"
+    },
+    {
+      "symbol": "sAmidaLaneTargets",
+      "address": "0x02141640",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "eight lane words; sAmidaLaneSaved is the interior label at +0x10"
     }
   ],
   "notes": [
@@ -1004,7 +1011,7 @@
         {
           "section": ".bss",
           "start": "0x02140808",
-          "end": "0x02141640",
+          "end": "0x02141660",
           "comparison": "NOBITS -- symbol/module gates"
         },
         {

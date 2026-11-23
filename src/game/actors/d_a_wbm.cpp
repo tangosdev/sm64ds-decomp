@@ -53,6 +53,7 @@ enum daWbm_c_AssetId {
 #include "SharedFilePtr.h"
 #include "daPly_c.h"
 #include "nitro/fx/fx.h"
+#include "WbmCarryOffset.h"
 #include "nitro/fx/fx_trig.h"
 #include "Sound.h"
 #include "math/Approach.h"
@@ -63,10 +64,15 @@ enum daWbm_c_AssetId {
 typedef void (daWbm_c::*State)();
 
 /* Actor ids are from symbols/actor_debug_names.tsv. */
-enum {
-    ACTOR_PLAYER = 191,
-    ACTOR_BOMBHEI = 206,
-    ACTOR_WATERBOMB = 208
+enum { ACTOR_PLAYER = 191, ACTOR_BOMBHEI = 206, ACTOR_WATERBOMB = 208 };
+
+/* Carry-offset rows the block actor reads. Vector3's ctor would move this
+ * out of .rodata, so the row is a POD triple. Interior labels stay in symbols.txt. */
+extern const WbmCarryOffset data_ov098_0213bf60[4] = {
+    {0x00028000, 0x00000000, 0x0002d000},
+    {0x00028000, 0x00000000, 0x00046000},
+    {0x00030000, 0x00010000, 0x00000000},
+    {0x00030000, 0x00000000, 0x0003c000},
 };
 
 extern "C" {
@@ -438,3 +444,6 @@ void daWbm_c::Land()
     mBouncePhase = 0;
     func_0201267c(0xd9, &mCamSpacePos);
 }
+
+/* Bound tail of this TU's .bss. One object; interior labels stay in symbols.txt. */
+u8 data_ov098_0213c948[0x18];

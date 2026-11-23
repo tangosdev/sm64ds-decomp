@@ -190,3 +190,6 @@ BkKabeModelFile gBkKabe00ModelFile(ASSET_BK_KABE00_BMD);
 BkKabeCollisionFilePtr gBkKabe00CollisionFile(ASSET_BK_KABE00_KCL);
 BkKabeModelFile gBkKabe01ModelFile(ASSET_BK_KABE01_BMD);
 BkKabeCollisionFilePtr gBkKabe01CollisionFile(ASSET_BK_KABE01_KCL);
+
+/* Bound tail of this TU's .bss. One object; interior labels stay in symbols.txt. */
+u8 data_ov079_02128390[0x10];

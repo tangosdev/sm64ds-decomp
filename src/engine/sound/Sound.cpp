@@ -174,7 +174,10 @@ extern unsigned char gLocalPlayerId;
 extern signed char gCurrentSublevel;
 extern daPly_c *gPlayers[];
 extern signed char gCurrentAreaId;
-extern const unsigned char data_02075250[8];
+/* Sound bank offsets, one byte per bank. */
+extern const unsigned char data_02075250[8] = {
+    0, 64, 128, 192, 192, 0, 0, 0,
+};
 /* The eleven sound-player numbers func_02011c54 stops; the twelfth byte is
    padding. */
 extern const u8 data_02075258[12] = {

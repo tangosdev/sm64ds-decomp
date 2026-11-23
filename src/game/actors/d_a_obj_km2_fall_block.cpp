@@ -78,3 +78,6 @@ s32 daObjKm2_Fall_Block_c::CleanupResources() {
  * mwcc emits __sinit_d_a_obj_km2_fall_block.cpp. */
 Km2FallModelFilePtr gKm2KuzureModelFile(ASSET_KM2_KUZURE_BMD);
 Km2FallClsnFileHandle gKm2KuzureCollisionFile(ASSET_KM2_KUZURE_KCL);
+
+/* ROM picture of the unclaimed run. Interior labels stay in symbols.txt. */
+u8 data_ov045_02113270[0x10];

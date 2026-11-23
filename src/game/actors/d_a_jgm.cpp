@@ -100,8 +100,8 @@ extern DaJgmAnimationFilePtr data_ov077_02127b28;
 extern DaJgmAnimationFilePtr data_ov077_02127b40;
 extern DaJgmTexSequenceFilePtr data_ov077_02127b20;
 extern DaJgmTexSequenceFilePtr data_ov077_02127b30;
-extern SharedFilePtr *data_ov077_02127238[];
-extern DaJgmTexSequenceFilePtr *data_ov077_02127230[];
+extern SharedFilePtr *const data_ov077_02127238[];
+extern DaJgmTexSequenceFilePtr *const data_ov077_02127230[];
 extern DaJgmStateHandlers data_ov077_02127bc4[];
 extern Vector3 data_ov077_02127b88;
 extern DaJgmStateHandler data_ov077_021277e0;
@@ -661,6 +661,17 @@ DaJgmStateHandlers data_ov077_02127bc4[5] = {
     {data_ov077_02127810, data_ov077_021277f8}
 };
 Vector3 data_ov077_02127b88(0, -0x1e000, 0);
+
+/* Texture-sequence handles, then animation handles. The file indexes each
+ * pair; together they are the rodata run at 0x02127230. */
+extern DaJgmTexSequenceFilePtr *const data_ov077_02127230[2] = {
+    &data_ov077_02127b20,
+    &data_ov077_02127b30,
+};
+extern SharedFilePtr *const data_ov077_02127238[2] = {
+    &data_ov077_02127b28,
+    &data_ov077_02127b40,
+};
 
 int daJgm_c::OnYoshiTryEat()
 {

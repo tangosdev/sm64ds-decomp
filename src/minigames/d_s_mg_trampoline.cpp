@@ -89,7 +89,7 @@ extern int func_020126e8(int a);
 
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 
-extern short sTrmpGoalRow;
+extern short sTrmpGoalRow[];
 
 extern int sTrmpComboCount;
 
@@ -97,7 +97,7 @@ extern int sTrmp3DLives;
 
 extern int sTrmpMariosInPlay;
 
-extern int sTrmpAnyOnLedge;
+extern int sTrmpAnyOnLedge[];
 void TrmpLine_UpdateAll(void);
 void TrmpLine_CreateStartLineT1(void);
 
@@ -357,7 +357,7 @@ void dScMgTrampoline_c::StartRound(int /* arg */) {
     mTouchStart = data_020a0dbc;
     mTouch = data_020a0dbc;
 
-    sTrmpAnyOnLedge = 0;
+    sTrmpAnyOnLedge[0] = 0;
     mLevel = 0;
     if (mLevel > 0x270e)
         mLevel = 0x270e;
@@ -543,7 +543,7 @@ void dScMgTrampoline_c::StatePlay() {
         }
     }
 
-    if (sTrmpAnyOnLedge == 0) {
+    if (sTrmpAnyOnLedge[0] == 0) {
         if (ApproachLinear2(mDoorSwitchTimer, 0, 1)) {
             if (GetDoorSide()) {
                 SetDoorSide(0);
@@ -629,7 +629,7 @@ s16 dScMgTrampoline_c::GetDoorSide() {
 }
 
 void dScMgTrampoline_c::SetDoorSide(short value) {
-    sTrmpGoalRow = value;
+    sTrmpGoalRow[0] = value;
     mDoorSide = value;
 }
 

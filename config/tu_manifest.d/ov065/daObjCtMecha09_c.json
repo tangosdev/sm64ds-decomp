@@ -29,7 +29,7 @@
     {
       "name": ".bss",
       "start": "0x0211d9cc",
-      "end": "0x0211d9f4"
+      "end": "0x0211da00"
     },
     {
       "name": ".data.afterDossy",
@@ -133,6 +133,13 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node for the file-1485 collision handle"
+    },
+    {
+      "symbol": "data_ov065_0211d9f4",
+      "address": "0x0211d9f4",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "tail of this TU's bss"
     }
   ],
   "notes": [
@@ -359,7 +366,7 @@
         {
           "section": ".bss",
           "start": "0x0211d9cc",
-          "end": "0x0211d9f4",
+          "end": "0x0211da00",
           "comparison": "NOBITS -- symbol/module gates"
         },
         {

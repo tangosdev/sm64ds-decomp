@@ -2446,3 +2446,5 @@ Entry sPachinko2CupStateTable[5] = {
     {&dScMgPachinko2_c::Cup_StateHopLeft}, {&dScMgPachinko2_c::Cup_StateHopRight},
     {&dScMgPachinko2_c::Cup_StateDecide},
 };
+
+int data_ov006_021427ac[4];
