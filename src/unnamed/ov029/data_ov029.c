@@ -1,9 +1,9 @@
 /* ov029 course rows with no class owner: 0x021130cc..0x02113bdc.
  * dScStage_c walks the level subtables at 0x02113174 and area 0's at
  * 0x021131b4. Each array is the record that loader steps. The four
- * 0xffffffff words after the CLPS count are not entries. Interior
- * data_ov029_* labels stay symbols.txt rows of this one object, so the
- * bytes stay in source order instead of mwccarm's smaller-first order. */
+ * 0xffffffff words after the CLPS count are not entries. Each
+ * non-ambiguous data_ov029_* label is its own section, in address order,
+ * so mwccarm does not emit the smaller object first. */
 #include "types.h"
 #include "CLPS.h"
 
@@ -35,9 +35,17 @@ typedef struct {
     u16 param;
 } StandardEntry;
 
-/* SetViewObjs steps 0xe bytes and does not name a field inside one. */
+/* SetViewObjs steps 0xe. The two bytes at +8 and the half at +0xc stay
+ * unread; they are the pad the stride still counts. */
 typedef struct {
-    u8 raw[0xe];
+    u8 type;
+    u8 p1;
+    s16 x;
+    s16 y;
+    s16 z;
+    u8 raw_08[2];
+    s16 angleY;
+    u16 raw_0c;
 } ViewRecord;
 
 typedef struct {
@@ -47,16 +55,14 @@ typedef struct {
     struct CLPS entries[21];
 } Clps21;
 
-extern u32 data_ov029_021130fc[];
+typedef char ViewRecord_size[sizeof(ViewRecord) == 0xe ? 1 : -1];
+
 extern u32 data_ov029_02112ea4[];
-extern u32 data_ov029_02113134[];
 extern u32 data_ov029_02112ef8[];
 extern u32 data_ov029_02112f78[];
 extern u32 data_ov029_02112ee8[];
 extern u32 data_ov029_02112ecc[];
 extern u32 data_ov029_02112ea0[];
-extern u32 data_ov029_021136cc[];
-extern u32 data_ov029_021132c4[];
 extern u32 data_ov029_02112f08[];
 extern u32 data_ov029_02112f68[];
 extern u32 data_ov029_02112f38[];
@@ -65,40 +71,58 @@ extern u32 data_ov029_02112f48[];
 extern u32 data_ov029_02112f18[];
 extern u32 data_ov029_02112f58[];
 
-struct {
-    SimpleEntry simple6[6];       /* 0x021130cc category 5, star 7 */
-    ViewRecord views[4];          /* 0x021130fc category 4 */
-    StandardEntry entrances[4];   /* 0x02113134 category 1 */
-    ObjSubTable levelSubs[8];     /* 0x02113174 */
-    ObjSubTable area0Subs[10];    /* 0x021131b4 */
-    Clps21 clps;                  /* 0x02113204 */
-    u32 clpsTail[4];              /* 0x021132b4 */
-    SimpleEntry simple34[34];     /* 0x021132c4 category 5 */
-    SimpleEntry simple35[35];     /* 0x021133d4 category 5 */
-    StandardEntry standard30[30]; /* 0x021134ec category 0 */
-    StandardEntry standard81[81]; /* 0x021136cc category 0 */
-} data_ov029_021130cc = {
-    {
+#pragma explicit_zero_data on
+
+extern SimpleEntry data_ov029_021130cc[];
+extern ViewRecord data_ov029_021130fc[];
+extern StandardEntry data_ov029_02113134[];
+extern ObjSubTable data_ov029_02113174[];
+extern ObjSubTable data_ov029_021131b4[];
+struct data_ov029_02113204 { Clps21 clps; u32 tail[4]; };
+extern struct data_ov029_02113204 data_ov029_02113204;
+extern SimpleEntry data_ov029_021132c4[];
+extern SimpleEntry data_ov029_021133d4[];
+extern StandardEntry data_ov029_021134ec[];
+extern StandardEntry data_ov029_021136cc[];
+
+#pragma define_section d021130cc ".data.data_ov029_021130cc" ".data.data_ov029_021130cc" ".data.data_ov029_021130cc" far_data
+#pragma section d021130cc begin
+SimpleEntry data_ov029_021130cc[6] = {
         {0x0f10, 0x1130, 0x0000, 0x03e8},
         {0x0e3e, 0x0640, 0x073a, 0x08fc},
         {0x0e3e, 0x0898, 0x04b0, (s16)0xf66e},
         {0x0e3e, (s16)0xfd12, 0x08e3, 0x088e},
         {0x0e3e, (s16)0xff38, 0x12c0, 0x0032},
         {0xce3d, 0x0000, 0x0ccb, 0x0dac},
-    },
-    {
-        {0x02, 0xff, 0x28, 0x0a, 0x52, 0x03, 0x43, 0xf9, 0x00, 0x00, 0x00, 0xc0, 0x00, 0x00},
-        {0x02, 0xff, 0xa0, 0x0f, 0xa0, 0x0f, 0x8a, 0x02, 0x00, 0x00, 0x00, 0xa0, 0x00, 0x00},
-        {0x07, 0xff, 0x70, 0xef, 0x00, 0x00, 0x34, 0xef, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-        {0x02, 0xff, 0x12, 0xfd, 0xe4, 0x0c, 0x48, 0xf4, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00},
-    },
-    {
+    };
+typedef char data_ov029_021130cc_size[sizeof(data_ov029_021130cc) == 0x30 ? 1 : -1];
+#pragma section d021130cc end
+
+#pragma define_section d021130fc ".data.data_ov029_021130fc" ".data.data_ov029_021130fc" ".data.data_ov029_021130fc" far_data
+#pragma section d021130fc begin
+ViewRecord data_ov029_021130fc[4] = {
+        {0x02, 0xff, 0x0a28, 0x0352, (s16)0xf943, {0x00, 0x00}, (s16)0xc000, 0x0000},
+        {0x02, 0xff, 0x0fa0, 0x0fa0, 0x028a, {0x00, 0x00}, (s16)0xa000, 0x0000},
+        {0x07, 0xff, (s16)0xef70, 0x0000, (s16)0xef34, {0x00, 0x00}, 0x0000, 0x0000},
+        {0x02, 0xff, (s16)0xfd12, 0x0ce4, (s16)0xf448, {0x00, 0x00}, (s16)0x8000, 0x0000},
+    };
+typedef char data_ov029_021130fc_size[sizeof(data_ov029_021130fc) == 0x38 ? 1 : -1];
+#pragma section d021130fc end
+
+#pragma define_section d02113134 ".data.data_ov029_02113134" ".data.data_ov029_02113134" ".data.data_ov029_02113134" far_data
+#pragma section d02113134 begin
+StandardEntry data_ov029_02113134[4] = {
         {0x0000, 0x0cef, 0x0dac, 0x015e, {0x0000, (s16)0x8000, 0x0000}, 0x0508},
         {0x0000, 0x0ea6, 0x03e8, (s16)0xff06, {0x0000, (s16)0x8000, 0x0000}, 0x0008},
         {0x0000, 0x0cb2, 0x03e8, (s16)0xff06, {0x0000, (s16)0x8000, 0x0000}, 0x0008},
         {0x0000, 0x0dac, 0x03e8, 0x0032, {0x0000, (s16)0x8000, 0x0000}, 0x0008},
-    },
-    {
+    };
+typedef char data_ov029_02113134_size[sizeof(data_ov029_02113134) == 0x40 ? 1 : -1];
+#pragma section d02113134 end
+
+#pragma define_section d02113174 ".data.data_ov029_02113174" ".data.data_ov029_02113174" ".data.data_ov029_02113174" far_data
+#pragma section d02113174 begin
+ObjSubTable data_ov029_02113174[8] = {
         {0x04, 0x04, {0x00, 0x00}, data_ov029_021130fc},
         {0x0b, 0x02, {0x00, 0x00}, data_ov029_02112ea4},
         {0x01, 0x04, {0x00, 0x00}, data_ov029_02113134},
@@ -107,8 +131,13 @@ struct {
         {0x08, 0x02, {0x00, 0x00}, data_ov029_02112ee8},
         {0x09, 0x01, {0x00, 0x00}, data_ov029_02112ecc},
         {0x0e, 0x01, {0x00, 0x00}, data_ov029_02112ea0},
-    },
-    {
+    };
+typedef char data_ov029_02113174_size[sizeof(data_ov029_02113174) == 0x40 ? 1 : -1];
+#pragma section d02113174 end
+
+#pragma define_section d021131b4 ".data.data_ov029_021131b4" ".data.data_ov029_021131b4" ".data.data_ov029_021131b4" far_data
+#pragma section d021131b4 begin
+ObjSubTable data_ov029_021131b4[10] = {
         {0x00, 0x51, {0x00, 0x00}, data_ov029_021136cc},
         {0x05, 0x22, {0x00, 0x00}, data_ov029_021132c4},
         {0x20, 0x01, {0x00, 0x00}, data_ov029_02112f08},
@@ -119,8 +148,14 @@ struct {
         {0xc0, 0x01, {0x00, 0x00}, data_ov029_02112f18},
         {0xe0, 0x01, {0x00, 0x00}, data_ov029_02112f58},
         {0xe5, 0x06, {0x00, 0x00}, &data_ov029_021130cc},
-    },
-    {
+    };
+typedef char data_ov029_021131b4_size[sizeof(data_ov029_021131b4) == 0x50 ? 1 : -1];
+#pragma section d021131b4 end
+
+#pragma define_section d02113204 ".data.data_ov029_02113204" ".data.data_ov029_02113204" ".data.data_ov029_02113204" far_data
+#pragma section d02113204 begin
+struct data_ov029_02113204 data_ov029_02113204 = {
+{
         0x53504c43,
         8,
         0x0015,
@@ -134,13 +169,19 @@ struct {
             {0x01033fc5, 0x000000ff}, {0x01030fc5, 0x000000ff}, {0x018b0fcc, 0x000000ff},
         },
     },
-    {
+{
         0xffffffff,
         0xffffffff,
         0xffffffff,
         0xffffffff,
-    },
-    {
+    }
+};
+typedef char data_ov029_02113204_size[sizeof(data_ov029_02113204) == 0xc0 ? 1 : -1];
+#pragma section d02113204 end
+
+#pragma define_section d021132c4 ".data.data_ov029_021132c4" ".data.data_ov029_021132c4" ".data.data_ov029_021132c4" far_data
+#pragma section d021132c4 begin
+SimpleEntry data_ov029_021132c4[34] = {
         {0xe225, (s16)0xf704, 0x08ca, (s16)0xfe0c}, {0xe225, (s16)0xf768, 0x08ca, (s16)0xfed4},
         {0xe225, (s16)0xf830, 0x08ca, (s16)0xff38}, {0xe225, (s16)0xf8f8, 0x08ca, (s16)0xfed4},
         {0xe225, (s16)0xf95c, 0x08ca, (s16)0xfe0c}, {0xe225, (s16)0xf8f8, 0x08ca, (s16)0xfd44},
@@ -158,8 +199,13 @@ struct {
         {0x043d, 0x0598, 0x1068, 0x0052},           {0xe225, 0x00cd, 0x0ea6, 0x0032},
         {0xe225, (s16)0xfd8f, 0x0ea6, 0x0064},      {0xe225, (s16)0xff38, 0x0ea6, (s16)0xfea2},
         {0xe225, 0x02e5, 0x0f3c, 0x0051},           {0xea3c, (s16)0xfd12, (s16)0xf95c, 0x0960},
-    },
-    {
+    };
+typedef char data_ov029_021132c4_size[sizeof(data_ov029_021132c4) == 0x110 ? 1 : -1];
+#pragma section d021132c4 end
+
+#pragma define_section d021133d4 ".data.data_ov029_021133d4" ".data.data_ov029_021133d4" ".data.data_ov029_021133d4" far_data
+#pragma section d021133d4 begin
+SimpleEntry data_ov029_021133d4[35] = {
         {0xe225, (s16)0xfc4a, (s16)0xf5d8, 0x0226},
         {0xe225, (s16)0xfd12, (s16)0xf5d8, 0x01c2},
         {0xe225, (s16)0xfdda, (s16)0xf5d8, 0x0226},
@@ -195,8 +241,13 @@ struct {
         {0xae26, 0x007d, (s16)0xf7fe, (s16)0xf95c},
         {0xae26, (s16)0xf1be, (s16)0xfa6f, 0x01f4},
         {0x0a3f, (s16)0xfd12, (s16)0xf7fe, 0x0d93},
-    },
-    {
+    };
+typedef char data_ov029_021133d4_size[sizeof(data_ov029_021133d4) == 0x118 ? 1 : -1];
+#pragma section d021133d4 end
+
+#pragma define_section d021134ec ".data.data_ov029_021134ec" ".data.data_ov029_021134ec" ".data.data_ov029_021134ec" far_data
+#pragma section d021134ec begin
+StandardEntry data_ov029_021134ec[30] = {
         {0x007d, (s16)0xf254, (s16)0xf542, (s16)0xf830, {0x0000, 0x0000, 0x0000}, 0xff01},
         {0x007d, (s16)0xfd12, (s16)0xfdd0, 0x06d6, {0x0000, 0x0000, 0x0000}, 0xff01},
         {0x001e, 0x0546, (s16)0xf60a, 0x0e10, {0x0000, 0x0000, 0x0000}, 0xff06},
@@ -227,8 +278,13 @@ struct {
         {0x0019, (s16)0xf5a6, (s16)0xf5d9, 0x092e, {0x0000, 0x0000, 0x0000}, 0xff02},
         {0x0019, (s16)0xf5a6, (s16)0xf6a1, 0x09f6, {0x0000, 0x0000, 0x0000}, 0xff02},
         {0x0019, (s16)0xf5a6, (s16)0xf769, 0x0abe, {0x0000, 0x0000, 0x0000}, 0xff02},
-    },
-    {
+    };
+typedef char data_ov029_021134ec_size[sizeof(data_ov029_021134ec) == 0x1e0 ? 1 : -1];
+#pragma section d021134ec end
+
+#pragma define_section d021136cc ".data.data_ov029_021136cc" ".data.data_ov029_021136cc" ".data.data_ov029_021136cc" far_data
+#pragma section d021136cc begin
+StandardEntry data_ov029_021136cc[81] = {
         {0x007d, 0x0753, 0x09c4, (s16)0xf254, {0x0000, 0x0000, 0x0000}, 0xff00},
         {0x007d, 0x0cb2, 0x00fa, 0x0b22, {0x0000, 0x0000, 0x0000}, 0xff00},
         {0x007d, 0x07d0, 0x06d6, 0x084d, {0x0000, 0x0000, 0x0000}, 0xff00},
@@ -310,7 +366,6 @@ struct {
         {0x0017, 0x1130, 0x0000, 0x0abe, {0x0000, 0x0000, 0x0000}, 0xffff},
         {0x0017, 0x1130, 0x0000, 0x0b86, {0x0000, 0x0000, 0x0000}, 0xffff},
         {0x004c, (s16)0xfb82, 0x0dac, (s16)0xf31c, {(s16)0xffff, 0x4000, 0x0000}, 0x0756},
-    },
-};
-
-typedef char data_ov029_021130cc_size[(sizeof data_ov029_021130cc) == 0xb10 ? 1 : -1];
+    };
+typedef char data_ov029_021136cc_size[sizeof(data_ov029_021136cc) == 0x510 ? 1 : -1];
+#pragma section d021136cc end
