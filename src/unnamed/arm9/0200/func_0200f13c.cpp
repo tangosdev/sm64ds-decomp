@@ -6,12 +6,13 @@
  * scene (dScEntry_c, ov075) and the download-play scene (dScMB_c) call
  * them after func_0200f2cc has set up the banks and BG controls.
  *
- * The two functions' file-ID tables are interleaved in one .data object,
+ * The two functions' file-ID tables are interleaved in .data,
  * 0x0208a10c (f220), 0x0208a120 (f13c), 0x0208a134 (f220), 0x0208a148
- * (f13c), 0x0208a15c (f13c), five words each, one per language. The player
- * count and the two pointer tables in front of them stay out: other
- * translation units reference them. The eight bytes after the last
- * file-ID word are not part of this object.
+ * (f13c), 0x0208a15c (f13c), five words each, one per language. Those
+ * tables, the player count and the two pointer tables in front of them
+ * live in src/data/arm9, one object per file: this translation unit is
+ * text-only, so it cannot carry them. The eight bytes after the last
+ * file-ID word are not part of them.
  *
  * mwccarm emits .text in reverse source order, so the file reads from the
  * top of the run down.
@@ -37,14 +38,8 @@ extern void *data_0208a0e4[5];
 struct OamAttr;
 extern struct OamAttr *data_0208a0f8[5];
 
-/* Per-language file IDs, five words each. data_0208a120 is sub OBJ,
-   data_0208a134 is sub BG3, data_0208a148 is main BG2, data_0208a15c is main OBJ. */
-u32 data_0208a10c[25] = {
-    0xa00d, 0xa40d, 0xa80d, 0xac0d, 0xb00d, 0xa000, 0xa400, 0xa800, 0xac00,
-    0xb000, 0xa004, 0xa404, 0xa804, 0xac04, 0xb004, 0xa00f, 0xa40f, 0xa80f,
-    0xac0f, 0xb00f, 0xa00e, 0xa40e, 0xa80e, 0xac0e, 0xb00e,
-};
-/* sub BG2 characters are data_0208a10c[0..4] */
+/* Per-language file IDs, indexed by GetLanguageIndex(). */
+extern u32 data_0208a10c[5]; /* sub BG2 characters */
 extern u32 data_0208a120[5]; /* sub OBJ characters */
 extern u32 data_0208a134[5]; /* sub BG3 characters at +0x6000 */
 extern u32 data_0208a148[5]; /* main BG2 characters */

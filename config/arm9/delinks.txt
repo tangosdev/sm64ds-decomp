@@ -118,10 +118,13 @@ src/data/arm9/data_0208a0f8.c:
     complete
     .data start:0x0208a0f8 end:0x0208a10c
 
+src/data/arm9/data_0208a10c.c:
+    complete
+    .data start:0x0208a10c end:0x0208a170
+
 src/unnamed/arm9/0200/func_0200f13c.cpp:
     complete
     .text start:0x0200f13c end:0x0200f2cc
-    .data start:0x0208a10c end:0x0208a170
 
 src/unnamed/arm9/0200/func_0200f2cc.cpp:
     complete
@@ -1456,10 +1459,13 @@ src/func_02048234.c:
     complete
     .text start:0x02048234 end:0x02048528
 
+src/data/arm9/data_020821c0.c:
+    complete
+    .rodata start:0x020821c0 end:0x02082200
+
 src/engine/sound/Sound2.cpp:
     complete
     .text start:0x02048528 end:0x020490b0
-    .rodata start:0x020821c0 end:0x02082200
 
 src/unnamed/arm9/0204/func_020490b0.cpp:
     complete
