@@ -1,15 +1,11 @@
 /* Shared course table for sublevel 28 (sLevelOverlayIds[28] == 36).
  * gap0 is 0x02112a00..0x02112a88, gap2 is 0x02112b08..0x02112b28, and the
- * level rows are 0x02112c28..0x02113a54. dScStage_c copies the record at
- * data_ov036_02112a6c to sLevelInfo and passes it to LoadClsnAndObjects.
- * Its CLPS is data_ov036_02112d1c. Area subtables are data_ov036_02112a54;
- * level-wide subtables are data_ov036_02112c94. Classes in this overlay
- * already own their CLPS blocks. data_ov036_02112b08 is one CLPS entry;
- * the 0xffffffff words after the count are not entries. Seven PathDefs
+ * level rows are 0x02112c28..0x02113a54. The record at 0x02112a6c stays
+ * inside data_ov036_02112a54; that label is ambiguous. Each other
+ * non-ambiguous data_ov036_* label in these ranges is its own section.
+ * The 0xffffffff words after a CLPS count are not entries. Seven PathDefs
  * end two bytes before the entrances. Five 0xe-byte views leave two zero
- * bytes of alignment before the CLPS tag. Interior data_ov036_* labels
- * stay symbols.txt rows so these runs are not split into smaller-first
- * .data globals. */
+ * bytes of alignment before the CLPS tag. */
 #include "types.h"
 #include "CLPS.h"
 #include "PathPtr.h"
@@ -41,10 +37,20 @@ typedef struct {
     u16 param;
 } StandardEntry;
 
-/* SetViewObjs steps 0xe bytes and does not name a field inside one. */
+/* SetViewObjs steps 0xe. The two bytes at +8 and the half at +0xc stay
+ * unread; they are the pad the stride still counts. */
 typedef struct {
-    u8 raw[0xe];
+    u8 type;
+    u8 p1;
+    s16 x;
+    s16 y;
+    s16 z;
+    u8 raw_08[2];
+    s16 angleY;
+    u16 raw_0c;
 } ViewRecord;
+
+typedef char ViewRecord_size[sizeof(ViewRecord) == 0xe ? 1 : -1];
 
 typedef struct {
     u32 tag;
@@ -61,21 +67,7 @@ typedef struct {
     u32 tail[4];
 } Clps1;
 
-extern u32 data_ov036_02112a54[];
-extern u32 data_ov036_02112c94[];
-extern u32 data_ov036_02112a08[];
-extern u32 data_ov036_02113384[];
-extern u32 data_ov036_0211306c[];
-extern u32 data_ov036_02112a44[];
-extern u32 data_ov036_02112d1c[];
-extern u32 data_ov036_02112a10[];
-extern u32 data_ov036_02112a18[];
-extern u32 data_ov036_02112dfc[];
-extern u32 data_ov036_02112cd4[];
-extern u32 data_ov036_02112c54[];
-extern u32 data_ov036_02112a24[];
-extern u32 data_ov036_02112a34[];
-extern u32 data_ov036_02112a04[];
+#pragma explicit_zero_data on
 
 #pragma define_section gap2 ".data.gap2" ".data.gap2" ".data.gap2" far_data
 #pragma section gap2 begin
@@ -87,41 +79,36 @@ Clps1 data_ov036_02112b08 = {
     {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
 };
 #pragma section gap2 end
+typedef char data_ov036_02112b08_size[sizeof(data_ov036_02112b08) == 0x20 ? 1 : -1];
 
-#pragma define_section gap0 ".data.gap0" ".data.gap0" ".data.gap0" far_data
-#pragma section gap0 begin
-struct {
-    u16 minimapTile; /* LoadMinimapTileObjects, one u16 */
-    u16 tilePad;     /* the star-camera word is four bytes later */
-    u32 starCamera;  /* LoadStarCameraObjects reads this word */
-    struct {
-        u16 count;
-        u16 pad;
-        void *entries;
-    } areaTable; /* 0x02112a08 */
-    struct {
-        u16 count;
-        u16 pad;
-        void *entries;
-    } levelTable; /* 0x02112a10 */
-    struct {
-        void *objTable;
-        void *bta;
-        s8 minimapId;
-        u8 rest[3]; /* unread bytes of the 0xc area record */
-    } area; /* 0x02112a18 */
-    struct {
-        s16 x;
-        s16 y;
-        s16 z;
-        u16 param;
-    } teleportSrc[2]; /* 0x02112a24, LoadTeleportSourceObjects */
-    struct {
-        u32 w0;
-        u32 w1;
-    } teleportDst[2]; /* 0x02112a34, eight bytes; the words are unread */
-    StandardEntry starObj;    /* 0x02112a44 */
-    ObjSubTable areaSubs[3];  /* 0x02112a54 */
+struct data_ov036_02112a00 {
+    u16 minimapTile;
+    u16 tilePad;
+};
+extern struct data_ov036_02112a00 data_ov036_02112a00;
+extern u32 data_ov036_02112a04;
+struct data_ov036_02112a08 {
+    u16 count;
+    u16 pad;
+    void *entries;
+};
+extern struct data_ov036_02112a08 data_ov036_02112a08;
+struct data_ov036_02112a10 {
+    u16 count;
+    u16 pad;
+    void *entries;
+};
+extern struct data_ov036_02112a10 data_ov036_02112a10;
+struct data_ov036_02112a18 {
+    void *objTable;
+    void *bta;
+    s8 minimapId;
+    u8 rest[3];
+};
+extern struct data_ov036_02112a18 data_ov036_02112a18;
+extern StandardEntry data_ov036_02112a44;
+struct data_ov036_02112a54 {
+    ObjSubTable areaSubs[3];
     struct {
         void *clps;
         void *objTable;
@@ -134,57 +121,122 @@ struct {
         u8 cameraFlags;
         s16 minimapScale;
         u32 skybox;
-    } level; /* 0x02112a6c, the record copied to sLevelInfo */
-} data_ov036_02112a00 = {
-    0x07aa,
-    0x0000,
-    0x11111114,
-    {0x0003, 0x0000, data_ov036_02112a54},
-    {0x0008, 0x0000, data_ov036_02112c94},
-    {data_ov036_02112a08, 0, 0x00, {0x00, 0x7b, 0x1b}},
-    {
+    } level;
+};
+extern struct data_ov036_02112a54 data_ov036_02112a54;
+struct data_ov036_02112c28 {
+    struct PathDef paths[7];
+    u16 pathPad;
+};
+extern struct data_ov036_02112c28 data_ov036_02112c28;
+extern StandardEntry data_ov036_02112c54[];
+extern ObjSubTable data_ov036_02112c94[];
+struct data_ov036_02112cd4 {
+    ViewRecord views[5];
+    u16 pad;
+};
+extern struct data_ov036_02112cd4 data_ov036_02112cd4;
+struct data_ov036_02112d1c {
+    Clps24 clps;
+    u32 tail[6];
+};
+extern struct data_ov036_02112d1c data_ov036_02112d1c;
+extern Vector3s data_ov036_02112dfc[];
+extern SimpleEntry data_ov036_0211306c[];
+extern StandardEntry data_ov036_02113384[];
+#pragma define_section gap0 ".data.gap0" ".data.gap0" ".data.gap0" far_data
+#pragma section gap0 begin
+struct data_ov036_02112a00 data_ov036_02112a00 = {0x07aa, 0x0000};
+typedef char data_ov036_02112a00_size[sizeof(data_ov036_02112a00) == 0x4 ? 1 : -1];
+#pragma section gap0 end
+
+#pragma define_section d02112a04 ".data.data_ov036_02112a04" ".data.data_ov036_02112a04" ".data.data_ov036_02112a04" far_data
+#pragma section d02112a04 begin
+u32 data_ov036_02112a04 = 0x11111114;
+typedef char data_ov036_02112a04_size[sizeof(data_ov036_02112a04) == 0x4 ? 1 : -1];
+#pragma section d02112a04 end
+
+#pragma define_section d02112a08 ".data.data_ov036_02112a08" ".data.data_ov036_02112a08" ".data.data_ov036_02112a08" far_data
+#pragma section d02112a08 begin
+struct data_ov036_02112a08 data_ov036_02112a08 = {0x0003, 0x0000, &data_ov036_02112a54};
+typedef char data_ov036_02112a08_size[sizeof(data_ov036_02112a08) == 0x8 ? 1 : -1];
+#pragma section d02112a08 end
+
+#pragma define_section d02112a10 ".data.data_ov036_02112a10" ".data.data_ov036_02112a10" ".data.data_ov036_02112a10" far_data
+#pragma section d02112a10 begin
+struct data_ov036_02112a10 data_ov036_02112a10 = {0x0008, 0x0000, data_ov036_02112c94};
+typedef char data_ov036_02112a10_size[sizeof(data_ov036_02112a10) == 0x8 ? 1 : -1];
+#pragma section d02112a10 end
+
+#pragma define_section d02112a18 ".data.data_ov036_02112a18" ".data.data_ov036_02112a18" ".data.data_ov036_02112a18" far_data
+#pragma section d02112a18 begin
+struct data_ov036_02112a18 data_ov036_02112a18 = {&data_ov036_02112a08, 0, 0x00, {0x00, 0x7b, 0x1b}};
+typedef char data_ov036_02112a18_size[sizeof(data_ov036_02112a18) == 0xc ? 1 : -1];
+#pragma section d02112a18 end
+
+#pragma define_section d02112a24 ".data.data_ov036_02112a24" ".data.data_ov036_02112a24" ".data.data_ov036_02112a24" far_data
+#pragma section d02112a24 begin
+struct {
+    s16 x;
+    s16 y;
+    s16 z;
+    u16 param;
+} data_ov036_02112a24[2] = {
         {(s16)0xeffc, 0x0ce4, (s16)0xf542, 0x1001},
         {(s16)0xe50c, 0x0905, (s16)0xff9c, 0x0001},
-    },
-    {
-        {0x0ce4effc, 0x0080f542},
-        {0x0905e50c, 0x0040ff9c},
-    },
-    {0x0014, 0x0b22, (s16)0xf902, 0x05dc, {0x0003, (s16)0xeaab, 0x0000}, 0xffff},
-    {
+    };
+typedef char data_ov036_02112a24_size[sizeof(data_ov036_02112a24) == 0x10 ? 1 : -1];
+#pragma section d02112a24 end
+
+#pragma define_section d02112a34 ".data.data_ov036_02112a34" ".data.data_ov036_02112a34" ".data.data_ov036_02112a34" far_data
+#pragma section d02112a34 begin
+struct {
+    s16 x;
+    s16 y;
+    s16 z;
+    u16 param;
+} data_ov036_02112a34[2] = {
+        {(s16)0xeffc, 0x0ce4, (s16)0xf542, 0x0080},
+        {(s16)0xe50c, 0x0905, (s16)0xff9c, 0x0040},
+    };
+typedef char data_ov036_02112a34_size[sizeof(data_ov036_02112a34) == 0x10 ? 1 : -1];
+#pragma section d02112a34 end
+
+#pragma define_section d02112a44 ".data.data_ov036_02112a44" ".data.data_ov036_02112a44" ".data.data_ov036_02112a44" far_data
+#pragma section d02112a44 begin
+StandardEntry data_ov036_02112a44 = {0x0014, 0x0b22, (s16)0xf902, 0x05dc, {0x0003, (s16)0xeaab, 0x0000}, 0xffff};
+typedef char data_ov036_02112a44_size[sizeof(data_ov036_02112a44) == 0x10 ? 1 : -1];
+#pragma section d02112a44 end
+
+#pragma define_section d02112a54 ".data.data_ov036_02112a54" ".data.data_ov036_02112a54" ".data.data_ov036_02112a54" far_data
+#pragma section d02112a54 begin
+struct data_ov036_02112a54 data_ov036_02112a54 = {
+{
         {0x00, 0x6d, {0x00, 0x00}, data_ov036_02113384},
         {0x05, 0x63, {0x00, 0x00}, data_ov036_0211306c},
-        {0x60, 0x01, {0x00, 0x00}, data_ov036_02112a44},
+        {0x60, 0x01, {0x00, 0x00}, &data_ov036_02112a44},
     },
-    {
-        data_ov036_02112d1c,
-        data_ov036_02112a10,
+{
+        &data_ov036_02112d1c,
+        &data_ov036_02112a10,
         0x07ab,
         0x07a9,
         0x07ac,
         0x07ad,
-        data_ov036_02112a18,
+        &data_ov036_02112a18,
         0x01,
         0x01,
         0x0640,
         0x0000002f,
-    },
+    }
 };
-#pragma section gap0 end
+typedef char data_ov036_02112a54_size[sizeof(data_ov036_02112a54) == 0x34 ? 1 : -1];
+#pragma section d02112a54 end
 
-struct {
-    struct PathDef paths[7];      /* 0x02112c28, category 3 */
-    u16 pathPad;                  /* PathDef is 6 bytes; the entrance label is +2 */
-    StandardEntry entrances[4];   /* 0x02112c54, category 1 */
-    ObjSubTable levelSubs[8];     /* 0x02112c94 */
-    ViewRecord views[5];          /* 0x02112cd4, category 4 */
-    Clps24 clps;                  /* 0x02112d1c */
-    u32 clpsTail[6];              /* 0x02112de4, not entries */
-    Vector3s nodes[104];          /* 0x02112dfc, category 2 */
-    SimpleEntry simple99[99];     /* 0x0211306c, category 5 */
-    StandardEntry standard109[109]; /* 0x02113384, category 0 */
-} data_ov036_02112c28 = {
-    {
+#pragma define_section d02112c28 ".data.data_ov036_02112c28" ".data.data_ov036_02112c28" ".data.data_ov036_02112c28" far_data
+#pragma section d02112c28 begin
+struct data_ov036_02112c28 data_ov036_02112c28 = {
+{
         {0x0000, 0x0d, 0xff, 0xff, 0x7f},
         {0x000d, 0x18, 0xff, 0xff, 0x7f},
         {0x0025, 0x19, 0xff, 0xff, 0x7f},
@@ -193,31 +245,56 @@ struct {
         {0x0064, 0x02, 0xff, 0x03, 0x7f},
         {0x0066, 0x02, 0xff, 0x00, 0x7f},
     },
-    0,
-    {
+    0
+};
+typedef char data_ov036_02112c28_size[sizeof(data_ov036_02112c28) == 0x2c ? 1 : -1];
+#pragma section d02112c28 end
+
+#pragma define_section d02112c54 ".data.data_ov036_02112c54" ".data.data_ov036_02112c54" ".data.data_ov036_02112c54" far_data
+#pragma section d02112c54 begin
+StandardEntry data_ov036_02112c54[4] = {
         {0x0000, 0x09f6, (s16)0xffa6, 0x07d0, {0x0000, 0x4000, 0x0000}, 0x0500},
         {0x0000, 0x08ca, (s16)0xf902, 0x0708, {0x0000, 0x4000, 0x0000}, 0x0000},
         {0x0000, 0x08ca, (s16)0xf902, 0x0866, {0x0000, 0x4000, 0x0000}, 0x0000},
         {0x0000, 0x09f6, (s16)0xf902, 0x0992, {0x0000, 0x4000, 0x0000}, 0x0000},
-    },
-    {
+    };
+typedef char data_ov036_02112c54_size[sizeof(data_ov036_02112c54) == 0x40 ? 1 : -1];
+#pragma section d02112c54 end
+
+#pragma define_section d02112c94 ".data.data_ov036_02112c94" ".data.data_ov036_02112c94" ".data.data_ov036_02112c94" far_data
+#pragma section d02112c94 begin
+ObjSubTable data_ov036_02112c94[8] = {
         {0x02, 0x68, {0x00, 0x00}, data_ov036_02112dfc},
         {0x03, 0x07, {0x00, 0x00}, &data_ov036_02112c28},
-        {0x04, 0x05, {0x00, 0x00}, data_ov036_02112cd4},
+        {0x04, 0x05, {0x00, 0x00}, &data_ov036_02112cd4},
         {0x0b, 0x01, {0x00, 0x00}, &data_ov036_02112a00},
         {0x01, 0x04, {0x00, 0x00}, data_ov036_02112c54},
         {0x06, 0x02, {0x00, 0x00}, data_ov036_02112a24},
         {0x07, 0x02, {0x00, 0x00}, data_ov036_02112a34},
-        {0x0e, 0x01, {0x00, 0x00}, data_ov036_02112a04},
-    },
+        {0x0e, 0x01, {0x00, 0x00}, &data_ov036_02112a04},
+    };
+typedef char data_ov036_02112c94_size[sizeof(data_ov036_02112c94) == 0x40 ? 1 : -1];
+#pragma section d02112c94 end
+
+#pragma define_section d02112cd4 ".data.data_ov036_02112cd4" ".data.data_ov036_02112cd4" ".data.data_ov036_02112cd4" far_data
+#pragma section d02112cd4 begin
+struct data_ov036_02112cd4 data_ov036_02112cd4 = {
     {
-        {0x02, 0xff, 0x72, 0x06, 0xb4, 0xfb, 0x48, 0x0d, 0x00, 0x00, 0x00, 0x60, 0x00, 0x00},
-        {0x07, 0xff, 0xe0, 0xfc, 0x6a, 0x02, 0x04, 0xde, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-        {0x04, 0x02, 0xde, 0xf4, 0xd8, 0x0e, 0xf6, 0xf0, 0x00, 0x00, 0x00, 0xa0, 0x00, 0x00},
-        {0x02, 0x00, 0x10, 0xf5, 0xd8, 0x0e, 0xb2, 0xf3, 0x00, 0x00, 0x00, 0xc0, 0x00, 0x00},
-        {0x02, 0x00, 0xbe, 0xf1, 0x8b, 0x19, 0x2e, 0xf0, 0x00, 0x00, 0x00, 0xa0, 0x00, 0x00},
+        {0x02, 0xff, 0x0672, (s16)0xfbb4, 0x0d48, {0x00, 0x00}, 0x6000, 0x0000},
+        {0x07, 0xff, (s16)0xfce0, 0x026a, (s16)0xde04, {0x00, 0x00}, 0x0000, 0x0000},
+        {0x04, 0x02, (s16)0xf4de, 0x0ed8, (s16)0xf0f6, {0x00, 0x00}, (s16)0xa000, 0x0000},
+        {0x02, 0x00, (s16)0xf510, 0x0ed8, (s16)0xf3b2, {0x00, 0x00}, (s16)0xc000, 0x0000},
+        {0x02, 0x00, (s16)0xf1be, 0x198b, (s16)0xf02e, {0x00, 0x00}, (s16)0xa000, 0x0000},
     },
-    {
+    0
+};
+typedef char data_ov036_02112cd4_size[sizeof(data_ov036_02112cd4) == 0x48 ? 1 : -1];
+#pragma section d02112cd4 end
+
+#pragma define_section d02112d1c ".data.data_ov036_02112d1c" ".data.data_ov036_02112d1c" ".data.data_ov036_02112d1c" far_data
+#pragma section d02112d1c begin
+struct data_ov036_02112d1c data_ov036_02112d1c = {
+{
         0x53504c43,
         8,
         0x0018,
@@ -248,11 +325,17 @@ struct {
             {0x00048fc0, 0x000000ff},
         },
     },
-    {
+{
         0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
         0xffffffff, 0xffffffff,
-    },
-    {
+    }
+};
+typedef char data_ov036_02112d1c_size[sizeof(data_ov036_02112d1c) == 0xe0 ? 1 : -1];
+#pragma section d02112d1c end
+
+#pragma define_section d02112dfc ".data.data_ov036_02112dfc" ".data.data_ov036_02112dfc" ".data.data_ov036_02112dfc" far_data
+#pragma section d02112dfc begin
+Vector3s data_ov036_02112dfc[104] = {
         {0x1162, (s16)0xf92a, 0x07d0},
         {0x143b, (s16)0xf8fd, 0x07d0},
         {0x14b9, (s16)0xf953, 0x07d0},
@@ -357,8 +440,13 @@ struct {
         {(s16)0xfdda, 0x0fa0, (s16)0xf704},
         {(s16)0xfc18, 0x11d5, (s16)0xf5a6},
         {(s16)0xfdda, 0x11d5, (s16)0xf5a6},
-    },
-    {
+    };
+typedef char data_ov036_02112dfc_size[sizeof(data_ov036_02112dfc) == 0x270 ? 1 : -1];
+#pragma section d02112dfc end
+
+#pragma define_section d0211306c ".data.data_ov036_0211306c" ".data.data_ov036_0211306c" ".data.data_ov036_0211306c" far_data
+#pragma section d0211306c begin
+SimpleEntry data_ov036_0211306c[99] = {
         {0x6226, (s16)0xf4ac, (s16)0xff38, (s16)0xffe7},
         {0x6226, (s16)0xf254, 0x0384, (s16)0xffe7},
         {0x6226, (s16)0xe9bc, 0x044c, (s16)0xffe7},
@@ -458,8 +546,13 @@ struct {
         {0x2227, (s16)0xeb7e, 0x0672, 0x0000},
         {0x4c3f, 0x1388, 0x0f8c, 0x109a},
         {0xce3f, (s16)0xeffc, 0x19c8, (s16)0xea52},
-    },
-    {
+    };
+typedef char data_ov036_0211306c_size[sizeof(data_ov036_0211306c) == 0x318 ? 1 : -1];
+#pragma section d0211306c end
+
+#pragma define_section d02113384 ".data.data_ov036_02113384" ".data.data_ov036_02113384" ".data.data_ov036_02113384" far_data
+#pragma section d02113384 begin
+StandardEntry data_ov036_02113384[109] = {
         {0x006c, 0x165c, (s16)0xfadd, 0x190a, {0x0000, 0x0000, 0x0000}, 0xff00},
         {0x006d, (s16)0xf5c3, (s16)0xfa92, (s16)0xffdd, {0x0000, 0x0000, 0x0000}, 0xffff},
         {0x006d, (s16)0xf39a, (s16)0xf83a, 0x190a, {0x0000, 0x0000, 0x0000}, 0xffff},
@@ -569,9 +662,6 @@ struct {
         {0x0031, (s16)0xf7c6, 0x0802, (s16)0xffab, {0x0000, 0x0000, 0x0000}, 0x0015},
         {0x0031, (s16)0xf7c6, 0x0802, (s16)0xffab, {0x0000, 0x0000, 0x0000}, 0x00f6},
         {0x004c, 0x0c4e, (s16)0xf902, 0x06a4, {(s16)0xffff, (s16)0xe000, 0x0000}, 0x0755},
-    },
-};
-
-typedef char data_ov036_02112b08_size[(sizeof data_ov036_02112b08) == 0x20 ? 1 : -1];
-typedef char data_ov036_02112a00_size[(sizeof data_ov036_02112a00) == 0x88 ? 1 : -1];
-typedef char data_ov036_02112c28_size[(sizeof data_ov036_02112c28) == 0xe2c ? 1 : -1];
+    };
+typedef char data_ov036_02113384_size[sizeof(data_ov036_02113384) == 0x6d0 ? 1 : -1];
+#pragma section d02113384 end
