@@ -1044,3 +1044,23 @@ src/unnamed/ov006/data_ov006_0212e1a8.c:
 src/unnamed/ov006/data_ov006_0212e2c0.c:
     complete
     .rodata.before_coin_tables start:0x0212e2c0 end:0x0212e308
+
+src/unnamed/ov006/data_ov006_021375e4.c:
+    complete
+    .data.gap31 start:0x021375e4 end:0x021389ec
+
+src/unnamed/ov006/data_ov006_02138d28.c:
+    complete
+    .data.gap33 start:0x02138d28 end:0x02139db4
+
+src/unnamed/ov006/data_ov006_02136e44.c:
+    complete
+    .data.gap24 start:0x02136e44 end:0x021374ac
+
+src/unnamed/ov006/data_ov006_0213dd34.c:
+    complete
+    .data.gap60 start:0x0213dd34 end:0x0213e1fc
+
+src/unnamed/ov006/data_ov006_021346bc.c:
+    complete
+    .data.gap13 start:0x021346bc end:0x02134b3c
