@@ -21,3 +21,7 @@ src/unnamed/ov024/data_ov024.c:
 src/unnamed/ov024/data_ov024_02112a00.c:
     complete
     .data.gap1 start:0x02112a00 end:0x02113960
+
+src/unnamed/ov024/data_ov024_02112880.c:
+    complete
+    .data.gap0 start:0x02112880 end:0x021129f0

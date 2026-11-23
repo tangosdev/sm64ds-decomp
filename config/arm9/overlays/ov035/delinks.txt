@@ -103,3 +103,11 @@ src/unnamed/ov035/data_ov035_02112aa4.c:
 src/unnamed/ov035/data_ov035_02112b00.c:
     complete
     .data.m35Mid2 start:0x02112b00 end:0x02112b80
+
+src/unnamed/ov035/data_ov035_02112040.c:
+    complete
+    .data.m35Pre start:0x02112040 end:0x021121d8
+
+src/unnamed/ov035/data_ov035_02112bdc.c:
+    complete
+    .data.m35Rest start:0x02112bdc end:0x02112c60

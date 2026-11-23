@@ -8,6 +8,18 @@
     .data.dkkClps start:0x02112d28 end:0x02112d48 kind:data align:4
     .data.dkkTail start:0x02112d48 end:0x02113a60 kind:data align:4
     .bss        start:0x02113a60 end:0x02113b00 kind:bss align:32
+src/unnamed/ov025/data_ov025_02112b40.c:
+    complete
+    .data start:0x02112b40 end:0x02112b80
+
+src/unnamed/ov025/data_ov025_02112b80.c:
+    complete
+    .data start:0x02112b80 end:0x02112bd4
+
+src/unnamed/ov025/data_ov025_02112bd4.c:
+    complete
+    .data start:0x02112bd4 end:0x02112c28
+
 src/game/actors/d_a_dgr.cpp:
     complete
     .text start:0x021111a0 end:0x021118c8
@@ -15,6 +27,26 @@ src/game/actors/d_a_dgr.cpp:
     .ctor start:0x02112b18 end:0x02112b1c
     .bss start:0x02113a60 end:0x02113a88
     .data start:0x02112c28 end:0x02112c48
+
+src/unnamed/ov025/data_ov025_02112d48.c:
+    complete
+    .data.dkkTail start:0x02112d48 end:0x02112fec
+
+src/unnamed/ov025/data_ov025_02112fec.c:
+    complete
+    .data.dkkTail start:0x02112fec end:0x02113404
+
+src/unnamed/ov025/data_ov025_02113404.c:
+    complete
+    .data.dkkTail start:0x02113404 end:0x02113724
+
+src/unnamed/ov025/data_ov025_021137e4.c:
+    complete
+    .data.dkkTail start:0x021137e4 end:0x021137ec
+
+src/unnamed/ov025/data_ov025_02113800.c:
+    complete
+    .data.dkkTail start:0x02113800 end:0x02113804
 
 src/game/actors/d_a_dkk.cpp:
     complete
@@ -40,3 +72,35 @@ src/game/actors/d_a_dp_lift.cpp:
     .ctor start:0x02112b24 end:0x02112b28
     .data.liftClps start:0x02112d08 end:0x02112d28
     .bss start:0x02113ad8 end:0x02113b00
+
+src/unnamed/ov025/data_ov025_02112654.c:
+    complete
+    .rodata start:0x02112654 end:0x02112970
+
+src/unnamed/ov025/data_ov025_02112c48.c:
+    complete
+    .data start:0x02112c48 end:0x02112ce8
+
+src/unnamed/ov025/data_ov025_021138a8.c:
+    complete
+    .data.dkkTail start:0x021138a8 end:0x021138d0
+
+src/unnamed/ov025/data_ov025_021138d8.c:
+    complete
+    .data.dkkTail start:0x021138d8 end:0x021138dc
+
+src/unnamed/ov025/data_ov025_021138fc.c:
+    complete
+    .data.dkkTail start:0x021138fc end:0x02113914
+
+src/unnamed/ov025/data_ov025_02113934.c:
+    complete
+    .data.dkkTail start:0x02113934 end:0x02113994
+
+src/unnamed/ov025/data_ov025_02113998.c:
+    complete
+    .data.dkkTail start:0x02113998 end:0x021139a0
+
+src/unnamed/ov025/data_ov025_021139f4.c:
+    complete
+    .data.dkkTail start:0x021139f4 end:0x02113a60
