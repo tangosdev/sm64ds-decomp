@@ -29,7 +29,7 @@ extern int data_020a60b4;                    // texture-palette banks taken by B
 extern int data_020a60b8;                    // texture banks taken by BeginLoadTex
 extern u32 data_020a60bc;                    // texture slots' second LCDC block, 0 if contiguous
 extern u32 data_020a60c0;                    // size of the first block
-extern "C" const u16 data_02086314[8];       // texture-palette LCDC block, by bank combination
+extern const u16 data_02086314[8];           // texture-palette LCDC block, by bank combination
 extern const GXTexStartAddr data_02086324[]; // texture blocks, by bank combination
 
 extern "C" {
@@ -93,7 +93,7 @@ void GX_EndLoadTexPltt() {
 
 } // extern "C"
 /* Texture-palette VRAM bases, indexed by the bank nibble. */
-extern "C" const u16 data_02086314[8] = {
+extern const u16 data_02086314[8] = {
     0, 0x6880, 0x6890, 0x6880, 0x6894, 0, 0x6890, 0x6880,
 };
 

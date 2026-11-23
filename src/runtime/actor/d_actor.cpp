@@ -612,8 +612,8 @@ void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, fx32 spread, s16 angle)
 }
 
 /* Yellow, red and blue coin actor ids, then what each kind is worth. */
-extern "C" const u16 data_02075230[4] = {0x120, 0x121, 0x122, 0};
-extern "C" const u32 data_02075238[3] = {1, 2, 5};
+extern const u16 data_02075230[4] = {0x120, 0x121, 0x122, 0};
+extern const u32 data_02075238[3] = {1, 2, 5};
 void GiveCoins(s32 playerNo, s32 amount);
 /* 0x0202a7b8 */
 

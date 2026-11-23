@@ -80,6 +80,4 @@ Km2FallModelFilePtr gKm2KuzureModelFile(ASSET_KM2_KUZURE_BMD);
 Km2FallClsnFileHandle gKm2KuzureCollisionFile(ASSET_KM2_KUZURE_KCL);
 
 /* ROM picture of the unclaimed run. Interior labels stay in symbols.txt. */
-extern "C" {
 u8 data_ov045_02113270[0x10];
-}

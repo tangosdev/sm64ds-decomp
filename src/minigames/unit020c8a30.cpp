@@ -283,6 +283,4 @@ OamAttr *data_ov006_02134b84[3] = {
 };
 
 /* The goal-row halfword read by d_mg_trmpln2_mario. Two trailing bytes pad to the next BSS claim. */
-extern "C" {
 short sTrmpGoalRow[2];
-}

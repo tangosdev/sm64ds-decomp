@@ -154,7 +154,6 @@ RcGuruguruCollisionFilePtr gRcGuruguruCollisionFile(ASSET_RC_GURUGURU_KCL); /* c
 /* 0x02112aa8 is one CLPS entry. 0x02112ac8 is the two-entry block SetFile
    receives. The 0xffffffff words after each count are not entries; symbols.txt
    still names them inside the block. */
-extern "C" {
 struct {
     u32 tag;
     u16 stride;
@@ -177,7 +176,6 @@ struct {
     {{0x01000fc0, 0x000000ff}, {0x01000fc4, 0x000000ff}},
     {0xffffffff, 0xffffffff},
 };
-}
 
 RcGuruguruAssets data_ov036_02113d78 = {
     &gRcGuruguruModelFile,

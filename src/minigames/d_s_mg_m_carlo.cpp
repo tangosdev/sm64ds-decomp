@@ -923,6 +923,4 @@ OamAttr *sMCarloCardSprites[19] = {
 };
 
 /* Pair-match board 2, from the delay through sMCarlo2FaceCounts. */
-extern "C" {
 short sMCarlo2BoardDelay[0x28];
-}

@@ -2102,6 +2102,4 @@ extern "C" PMF sBomroomTopDoorStateTable[4] = {
 };
 
 /* sCardSwapRequested at +4, data_ov006_02141770 at +8. */
-extern "C" {
 int sCardSelectLocked[3];
-}

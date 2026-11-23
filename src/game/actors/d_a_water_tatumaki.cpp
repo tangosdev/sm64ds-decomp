@@ -95,25 +95,25 @@ extern "C" TatumakiAnimFileHandle gWaterTatumakiAnimationFile; /* water_tatumaki
 extern daWater_Tatumaki_c::State sSpinState;                   /* spin, waiting to catch */
 extern daWater_Tatumaki_c::State sDragState;                   /* drag the player down */
 /* Key words sWhirlpoolBta points at. The header is defined below them. */
-extern "C" char data_ov026_02112dd0[];
-extern "C" char data_ov026_02112de8[];
-extern "C" const u16 data_ov026_02112490[2] = {0, 0};
+extern char data_ov026_02112dd0[];
+extern char data_ov026_02112de8[];
+extern const u16 data_ov026_02112490[2] = {0, 0};
 
-extern "C" const fx32 data_ov026_021124a4[2] = {0x00000800, 0x00001000};
+extern const fx32 data_ov026_021124a4[2] = {0x00000800, 0x00001000};
 
-extern "C" const BTAMaterialRecord data_ov026_021124e4[2] = {
+extern const BTAMaterialRecord data_ov026_021124e4[2] = {
     {0xffff, 0, data_ov026_02112dd0, {1, 0}, {1, 1}, {1, 0}, {0x1e, 0}, {1, 0}},
     {0xffff, 0, data_ov026_02112de8, {1, 0}, {1, 1}, {1, 0}, {0x1e, 0}, {1, 0}},
 };
 
-extern "C" const fx32 data_ov026_02112554[30] = {
+extern const fx32 data_ov026_02112554[30] = {
     0x00000000, 0xfffffeef, 0xfffffdde, 0xfffffccd, 0xfffffbbc, 0xfffffaab, 0xfffff99a, 0xfffff889,
     0xfffff777, 0xfffff666, 0xfffff555, 0xfffff444, 0xfffff333, 0xfffff222, 0xfffff111, 0xfffff000,
     0xffffeeef, 0xffffedde, 0xffffeccd, 0xffffebbc, 0xffffeaab, 0xffffe99a, 0xffffe889, 0xffffe777,
     0xffffe666, 0xffffe555, 0xffffe444, 0xffffe333, 0xffffe222, 0xffffe111};
 
 /* Whirlpool texture-SRT header. Non-const: Prepare patches the material id. */
-extern "C" BTA_File sWhirlpoolBta = {
+BTA_File sWhirlpoolBta = {
     0x1e,
     0,
     (fx32 *)data_ov026_021124a4,

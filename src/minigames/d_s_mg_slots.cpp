@@ -1481,6 +1481,4 @@ SlotState sSlot3StateTable[8] = {
 };
 
 /* Cell order, then sSmartballPathBuf at +0x24. */
-extern "C" {
 int sSmartballCellOrder[41];
-}

@@ -1201,6 +1201,4 @@ dScMgMemory2_cCardState sMemory2PlayerTable[3] = {
 };
 
 /* Board delay, then the card-list words through sMCarloSecondPick. */
-extern "C" {
 short sMCarloBoardDelay[16];
-}
