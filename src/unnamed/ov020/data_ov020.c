@@ -150,10 +150,10 @@ typedef char data_ov020_02113508_size[sizeof(data_ov020_02113508) == 0x16c ? 1 :
 #pragma section r02113508 end
 
 extern u32 data_ov020_02113780;
-struct data_ov020_02113784 {
+typedef struct data_ov020_02113784 {
     PathDef f_02113784;
     u16 f_0211378a;
-};
+} data_ov020_02113784;
 extern struct data_ov020_02113784 data_ov020_02113784;
 extern ObjTab data_ov020_0211378c;
 extern ObjTab data_ov020_02113794;
@@ -164,21 +164,21 @@ extern ObjTab data_ov020_021137b4;
 extern ObjTab data_ov020_021137bc;
 extern ObjTab data_ov020_021137c4;
 extern char data_ov020_021137cc[];
-struct data_ov020_021137d8 {
+typedef struct data_ov020_021137d8 {
     s16 f_021137d8[5];
     u16 f_021137e2;
-};
+} data_ov020_021137d8;
 extern struct data_ov020_021137d8 data_ov020_021137d8;
-struct data_ov020_021137e4 {
+typedef struct data_ov020_021137e4 {
     u16 f_021137e4[5];
     u16 f_021137ee;
-};
+} data_ov020_021137e4;
 extern struct data_ov020_021137e4 data_ov020_021137e4;
 extern Vector3s data_ov020_021137f0[];
-struct data_ov020_021137fc {
+typedef struct data_ov020_021137fc {
     ExitEnt f_021137fc;
     u16 f_0211380a;
-};
+} data_ov020_021137fc;
 extern struct data_ov020_021137fc data_ov020_021137fc;
 extern StdEnt data_ov020_0211380c;
 extern StdEnt data_ov020_0211381c;
@@ -193,10 +193,10 @@ extern StdEnt data_ov020_0211389c;
 extern StdEnt data_ov020_021138ac;
 extern StdEnt data_ov020_021138bc;
 extern BTA_File data_ov020_021138cc;
-struct data_ov020_021138e4 {
+typedef struct data_ov020_021138e4 {
     SimpEnt f_021138e4[3];
     LevelEnt f_021138fc;
-};
+} data_ov020_021138e4;
 extern struct data_ov020_021138e4 data_ov020_021138e4;
 extern StdEnt data_ov020_02113918[];
 extern StdEnt data_ov020_02113938[];
@@ -235,18 +235,18 @@ extern AreaEnt data_ov020_02113fb0[];
 extern StdEnt data_ov020_02114004[];
 extern StdEnt data_ov020_02114064[];
 extern StdEnt data_ov020_021140d4[];
-struct data_ov020_02114184 {
+typedef struct data_ov020_02114184 {
     ViewEnt f_02114184[21];
     u16 f_021142aa;
-};
+} data_ov020_02114184;
 extern struct data_ov020_02114184 data_ov020_02114184;
 extern DoorEnt data_ov020_021142ac[];
 extern StdEnt data_ov020_021143d8[];
 extern StdEnt data_ov020_02114508[];
-struct data_ov020_02114668 {
+typedef struct data_ov020_02114668 {
     CLPS_Block f_02114668;
     u32 f_02114820[2];
-};
+} data_ov020_02114668;
 extern struct data_ov020_02114668 data_ov020_02114668;
 
 #pragma define_section d02113780 ".data.data_ov020_02113780" ".data.data_ov020_02113780" ".data.data_ov020_02113780" far_data

@@ -78,7 +78,7 @@ extern ViewRecord data_ov029_021130fc[];
 extern StandardEntry data_ov029_02113134[];
 extern ObjSubTable data_ov029_02113174[];
 extern ObjSubTable data_ov029_021131b4[];
-struct data_ov029_02113204 { Clps21 clps; u32 tail[4]; };
+typedef struct data_ov029_02113204 { Clps21 clps; u32 tail[4]; } data_ov029_02113204;
 extern struct data_ov029_02113204 data_ov029_02113204;
 extern SimpleEntry data_ov029_021132c4[];
 extern SimpleEntry data_ov029_021133d4[];

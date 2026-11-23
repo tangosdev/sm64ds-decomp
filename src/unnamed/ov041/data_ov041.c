@@ -200,15 +200,15 @@ fx32 data_ov041_021111e0[420] = {
 typedef char data_ov041_021111e0_size[sizeof(data_ov041_021111e0) == 0x690 ? 1 : -1];
 #pragma section r021111e0 end
 
-struct data_ov041_02111880 {
+typedef struct data_ov041_02111880 {
     s16 f_02111880;
     u16 f_02111882;
-};
+} data_ov041_02111880;
 extern struct data_ov041_02111880 data_ov041_02111880;
-struct data_ov041_02111884 {
+typedef struct data_ov041_02111884 {
     u16 f_02111884;
     u16 f_02111886;
-};
+} data_ov041_02111884;
 extern struct data_ov041_02111884 data_ov041_02111884;
 extern u32 data_ov041_02111888;
 extern ObjTab data_ov041_0211188c;
@@ -216,32 +216,32 @@ extern ObjTab data_ov041_02111894;
 extern char data_ov041_0211189c[];
 extern char data_ov041_021118a8[];
 extern AreaEnt data_ov041_021118b4[];
-struct data_ov041_021118c0 {
+typedef struct data_ov041_021118c0 {
     ExitEnt f_021118c0;
     u16 f_021118ce;
-};
+} data_ov041_021118c0;
 extern struct data_ov041_021118c0 data_ov041_021118c0;
 extern ObjSub data_ov041_021118d0[];
 extern PathDef data_ov041_021118e0[];
 extern BTA_File data_ov041_021118f8;
-struct data_ov041_02111910 {
+typedef struct data_ov041_02111910 {
     ViewEnt f_02111910[2];
     LevelEnt f_0211192c;
-};
+} data_ov041_02111910;
 extern struct data_ov041_02111910 data_ov041_02111910;
 extern Vector3s data_ov041_02111948[];
 extern ObjSub data_ov041_02111978[];
 extern StdEnt data_ov041_021119b8[];
-struct data_ov041_021119f8 {
+typedef struct data_ov041_021119f8 {
     CLPS_Block f_021119f8;
     u32 f_02111a48[4];
-};
+} data_ov041_021119f8;
 extern struct data_ov041_021119f8 data_ov041_021119f8;
 extern StdEnt data_ov041_02111a58[];
-struct data_ov041_02111b88 {
+typedef struct data_ov041_02111b88 {
     SimpEnt f_02111b88[52];
     u32 f_02111d28[6];
-};
+} data_ov041_02111b88;
 extern struct data_ov041_02111b88 data_ov041_02111b88;
 
 #pragma define_section d02111880 ".data.data_ov041_02111880" ".data.data_ov041_02111880" ".data.data_ov041_02111880" far_data

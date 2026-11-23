@@ -81,33 +81,33 @@ Clps1 data_ov036_02112b08 = {
 #pragma section gap2 end
 typedef char data_ov036_02112b08_size[sizeof(data_ov036_02112b08) == 0x20 ? 1 : -1];
 
-struct data_ov036_02112a00 {
+typedef struct data_ov036_02112a00 {
     u16 minimapTile;
     u16 tilePad;
-};
+} data_ov036_02112a00;
 extern struct data_ov036_02112a00 data_ov036_02112a00;
 extern u32 data_ov036_02112a04;
-struct data_ov036_02112a08 {
+typedef struct data_ov036_02112a08 {
     u16 count;
     u16 pad;
     void *entries;
-};
+} data_ov036_02112a08;
 extern struct data_ov036_02112a08 data_ov036_02112a08;
-struct data_ov036_02112a10 {
+typedef struct data_ov036_02112a10 {
     u16 count;
     u16 pad;
     void *entries;
-};
+} data_ov036_02112a10;
 extern struct data_ov036_02112a10 data_ov036_02112a10;
-struct data_ov036_02112a18 {
+typedef struct data_ov036_02112a18 {
     void *objTable;
     void *bta;
     s8 minimapId;
     u8 rest[3];
-};
+} data_ov036_02112a18;
 extern struct data_ov036_02112a18 data_ov036_02112a18;
 extern StandardEntry data_ov036_02112a44;
-struct data_ov036_02112a54 {
+typedef struct data_ov036_02112a54 {
     ObjSubTable areaSubs[3];
     struct {
         void *clps;
@@ -122,24 +122,24 @@ struct data_ov036_02112a54 {
         s16 minimapScale;
         u32 skybox;
     } level;
-};
+} data_ov036_02112a54;
 extern struct data_ov036_02112a54 data_ov036_02112a54;
-struct data_ov036_02112c28 {
+typedef struct data_ov036_02112c28 {
     struct PathDef paths[7];
     u16 pathPad;
-};
+} data_ov036_02112c28;
 extern struct data_ov036_02112c28 data_ov036_02112c28;
 extern StandardEntry data_ov036_02112c54[];
 extern ObjSubTable data_ov036_02112c94[];
-struct data_ov036_02112cd4 {
+typedef struct data_ov036_02112cd4 {
     ViewRecord views[5];
     u16 pad;
-};
+} data_ov036_02112cd4;
 extern struct data_ov036_02112cd4 data_ov036_02112cd4;
-struct data_ov036_02112d1c {
+typedef struct data_ov036_02112d1c {
     Clps24 clps;
     u32 tail[6];
-};
+} data_ov036_02112d1c;
 extern struct data_ov036_02112d1c data_ov036_02112d1c;
 extern Vector3s data_ov036_02112dfc[];
 extern SimpleEntry data_ov036_0211306c[];
