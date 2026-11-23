@@ -107,91 +107,32 @@ typedef char ViewEnt_size[sizeof(ViewEnt) == 0xe ? 1 : -1];
 typedef char FogEnt_size[sizeof(FogEnt) == 8 ? 1 : -1];
 typedef char CLPS_Block_size[sizeof(struct CLPS_Block) == 440 ? 1 : -1];
 
-extern u32 data_ov020_021134e8[];
-extern u32 data_ov020_021134ec[];
-extern u32 data_ov020_02113508[];
-extern u32 data_ov020_02113784[];
-extern u32 data_ov020_0211378c[];
-extern u32 data_ov020_02113794[];
-extern u32 data_ov020_0211379c[];
-extern u32 data_ov020_021137a4[];
-extern u32 data_ov020_021137ac[];
-extern u32 data_ov020_021137b4[];
-extern u32 data_ov020_021137bc[];
-extern u32 data_ov020_021137c4[];
-extern u32 data_ov020_021137cc[];
-extern u32 data_ov020_021137d8[];
-extern u32 data_ov020_021137e4[];
-extern u32 data_ov020_021137f0[];
-extern u32 data_ov020_021137fc[];
-extern u32 data_ov020_0211380c[];
-extern u32 data_ov020_0211381c[];
-extern u32 data_ov020_0211382c[];
-extern u32 data_ov020_0211383c[];
-extern u32 data_ov020_0211384c[];
-extern u32 data_ov020_0211385c[];
-extern u32 data_ov020_0211386c[];
-extern u32 data_ov020_0211387c[];
-extern u32 data_ov020_0211388c[];
-extern u32 data_ov020_0211389c[];
-extern u32 data_ov020_021138ac[];
-extern u32 data_ov020_021138bc[];
-extern u32 data_ov020_021138cc[];
-extern u32 data_ov020_021138e4[];
-extern u32 data_ov020_02113918[];
-extern u32 data_ov020_02113938[];
-extern u32 data_ov020_02113958[];
-extern u32 data_ov020_02113978[];
-extern u32 data_ov020_02113998[];
-extern u32 data_ov020_021139b8[];
-extern u32 data_ov020_021139d8[];
-extern u32 data_ov020_021139f8[];
-extern u32 data_ov020_02113a18[];
-extern u32 data_ov020_02113a38[];
-extern u32 data_ov020_02113a58[];
-extern u32 data_ov020_02113a78[];
-extern u32 data_ov020_02113a98[];
-extern u32 data_ov020_02113ab8[];
-extern u32 data_ov020_02113ad8[];
-extern u32 data_ov020_02113af8[];
-extern u32 data_ov020_02113b18[];
-extern u32 data_ov020_02113b40[];
-extern u32 data_ov020_02113b68[];
-extern u32 data_ov020_02113b98[];
-extern u32 data_ov020_02113bd8[];
-extern u32 data_ov020_02113c18[];
-extern u32 data_ov020_02113c60[];
-extern u32 data_ov020_02113ca8[];
-extern u32 data_ov020_02113cf0[];
-extern u32 data_ov020_02113d38[];
-extern u32 data_ov020_02113d80[];
-extern u32 data_ov020_02113dd0[];
-extern u32 data_ov020_02113e20[];
-extern u32 data_ov020_02113e70[];
-extern u32 data_ov020_02113ec0[];
-extern u32 data_ov020_02113f10[];
-extern u32 data_ov020_02113f60[];
-extern u32 data_ov020_02113fb0[];
-extern u32 data_ov020_02114004[];
-extern u32 data_ov020_02114064[];
-extern u32 data_ov020_021140d4[];
-extern u32 data_ov020_02114184[];
-extern u32 data_ov020_021142ac[];
-extern u32 data_ov020_021143d8[];
-extern u32 data_ov020_02114508[];
-extern u32 data_ov020_02114668[];
+#pragma explicit_zero_data on
 
-const struct {
-    u16 keyRot[2];
-    fx32 keyScale;
-    BTAMaterialRecord materials[1];
-    fx32 keyTrans[91];
-} data_ov020_021134e4 = {
-    {0, 0},
-    0x00001000,
-    {{0xffff, 0, (char *)data_ov020_021137cc, {1, 0}, {1, 0}, {1, 0}, {91, 0}, {91, 0}}},
-    {
-        0x00000000, 0x0000002e, 0x0000005b, 0x00000089, 0x000000b6, 0x000000e4, 0x00000111,
+extern char data_ov020_021137cc[];
+
+#pragma define_section r021134e4 ".rodata.data_ov020_021134e4" ".rodata.data_ov020_021134e4" ".rodata.data_ov020_021134e4" far_data
+#pragma section r021134e4 begin
+u16 data_ov020_021134e4[2] = {0, 0};
+typedef char data_ov020_021134e4_size[sizeof(data_ov020_021134e4) == 0x4 ? 1 : -1];
+#pragma section r021134e4 end
+
+#pragma define_section r021134e8 ".rodata.data_ov020_021134e8" ".rodata.data_ov020_021134e8" ".rodata.data_ov020_021134e8" far_data
+#pragma section r021134e8 begin
+fx32 data_ov020_021134e8[1] = {0x00001000};
+typedef char data_ov020_021134e8_size[sizeof(data_ov020_021134e8) == 0x4 ? 1 : -1];
+#pragma section r021134e8 end
+
+#pragma define_section r021134ec ".rodata.data_ov020_021134ec" ".rodata.data_ov020_021134ec" ".rodata.data_ov020_021134ec" far_data
+#pragma section r021134ec begin
+BTAMaterialRecord data_ov020_021134ec[1] = {{0xffff, 0, (char *)data_ov020_021137cc, {1, 0}, {1, 0}, {1, 0}, {91, 0}, {91, 0}}};
+typedef char data_ov020_021134ec_size[sizeof(data_ov020_021134ec) == 0x1c ? 1 : -1];
+#pragma section r021134ec end
+
+#pragma define_section r02113508 ".rodata.data_ov020_02113508" ".rodata.data_ov020_02113508" ".rodata.data_ov020_02113508" far_data
+#pragma section r02113508 begin
+fx32 data_ov020_02113508[91] = {
+    0x00000000, 0x0000002e, 0x0000005b, 0x00000089, 0x000000b6, 0x000000e4, 0x00000111,
         0x0000013f, 0x0000016c, 0x0000019a, 0x000001c7, 0x000001f5, 0x00000222, 0x00000250,
         0x0000027d, 0x000002ab, 0x000002d8, 0x00000306, 0x00000333, 0x00000361, 0x0000038e,
         0x000003bc, 0x000003e9, 0x00000417, 0x00000444, 0x00000472, 0x0000049f, 0x000004cd,
@@ -203,221 +144,475 @@ const struct {
         0x00000b33, 0x00000b61, 0x00000b8e, 0x00000bbc, 0x00000be9, 0x00000c17, 0x00000c44,
         0x00000c72, 0x00000c9f, 0x00000ccd, 0x00000cfa, 0x00000d28, 0x00000d55, 0x00000d83,
         0x00000db0, 0x00000dde, 0x00000e0b, 0x00000e39, 0x00000e66, 0x00000e94, 0x00000ec1,
-        0x00000eef, 0x00000f1c, 0x00000f4a, 0x00000f77, 0x00000fa5, 0x00000fd2, 0x00001000,
-    },
+        0x00000eef, 0x00000f1c, 0x00000f4a, 0x00000f77, 0x00000fa5, 0x00000fd2, 0x00001000
 };
+typedef char data_ov020_02113508_size[sizeof(data_ov020_02113508) == 0x16c ? 1 : -1];
+#pragma section r02113508 end
 
-struct {
-    u32 f_02113780;         /* 02113780 */
-    PathDef f_02113784;     /* 02113784 */
-    u16 f_0211378a;         /* 0211378a */
-    ObjTab f_0211378c;      /* 0211378c */
-    ObjTab f_02113794;      /* 02113794 */
-    ObjTab f_0211379c;      /* 0211379c */
-    ObjTab f_021137a4;      /* 021137a4 */
-    ObjTab f_021137ac;      /* 021137ac */
-    ObjTab f_021137b4;      /* 021137b4 */
-    ObjTab f_021137bc;      /* 021137bc */
-    ObjTab f_021137c4;      /* 021137c4 */
-    char f_021137cc[12];    /* 021137cc */
-    s16 f_021137d8[5];      /* 021137d8 */
-    u16 f_021137e2;         /* 021137e2 */
-    u16 f_021137e4[5];      /* 021137e4 */
-    u16 f_021137ee;         /* 021137ee */
-    Vector3s f_021137f0[2]; /* 021137f0 */
-    ExitEnt f_021137fc;     /* 021137fc */
-    u16 f_0211380a;         /* 0211380a */
-    StdEnt f_0211380c;      /* 0211380c */
-    StdEnt f_0211381c;      /* 0211381c */
-    StdEnt f_0211382c;      /* 0211382c */
-    SimpEnt f_0211383c[2];  /* 0211383c */
-    StdEnt f_0211384c;      /* 0211384c */
-    SimpEnt f_0211385c[2];  /* 0211385c */
-    ObjSub f_0211386c[2];   /* 0211386c */
-    ObjSub f_0211387c[2];   /* 0211387c */
-    ObjSub f_0211388c[2];   /* 0211388c */
-    StdEnt f_0211389c;      /* 0211389c */
-    StdEnt f_021138ac;      /* 021138ac */
-    StdEnt f_021138bc;      /* 021138bc */
-    BTA_File f_021138cc;    /* 021138cc */
-    SimpEnt f_021138e4[3];  /* 021138e4 */
-    LevelEnt f_021138fc;    /* 021138fc */
-    StdEnt f_02113918[2];   /* 02113918 */
-    StdEnt f_02113938[2];   /* 02113938 */
-    StdEnt f_02113958[2];   /* 02113958 */
-    StdEnt f_02113978[2];   /* 02113978 */
-    StdEnt f_02113998[2];   /* 02113998 */
-    StdEnt f_021139b8[2];   /* 021139b8 */
-    StdEnt f_021139d8[2];   /* 021139d8 */
-    StdEnt f_021139f8[2];   /* 021139f8 */
-    StdEnt f_02113a18[2];   /* 02113a18 */
-    StdEnt f_02113a38[2];   /* 02113a38 */
-    StdEnt f_02113a58[2];   /* 02113a58 */
-    StdEnt f_02113a78[2];   /* 02113a78 */
-    StdEnt f_02113a98[2];   /* 02113a98 */
-    StdEnt f_02113ab8[2];   /* 02113ab8 */
-    StdEnt f_02113ad8[2];   /* 02113ad8 */
-    StdEnt f_02113af8[2];   /* 02113af8 */
-    SimpEnt f_02113b18[5];  /* 02113b18 */
-    SimpEnt f_02113b40[5];  /* 02113b40 */
-    SimpEnt f_02113b68[6];  /* 02113b68 */
-    SimpEnt f_02113b98[8];  /* 02113b98 */
-    StdEnt f_02113bd8[4];   /* 02113bd8 */
-    ObjSub f_02113c18[9];   /* 02113c18 */
-    ObjSub f_02113c60[9];   /* 02113c60 */
-    ObjSub f_02113ca8[9];   /* 02113ca8 */
-    ObjSub f_02113cf0[9];   /* 02113cf0 */
-    ObjSub f_02113d38[9];   /* 02113d38 */
-    StdEnt f_02113d80[5];   /* 02113d80 */
-    StdEnt f_02113dd0[5];   /* 02113dd0 */
-    StdEnt f_02113e20[5];   /* 02113e20 */
-    StdEnt f_02113e70[5];   /* 02113e70 */
-    StdEnt f_02113ec0[5];   /* 02113ec0 */
-    StdEnt f_02113f10[5];   /* 02113f10 */
-    StdEnt f_02113f60[5];   /* 02113f60 */
-    AreaEnt f_02113fb0[7];  /* 02113fb0 */
-    StdEnt f_02114004[6];   /* 02114004 */
-    StdEnt f_02114064[7];   /* 02114064 */
-    StdEnt f_021140d4[11];  /* 021140d4 */
-    ViewEnt f_02114184[21]; /* 02114184 */
-    u16 f_021142aa;         /* 021142aa */
-    DoorEnt f_021142ac[25]; /* 021142ac */
-    StdEnt f_021143d8[19];  /* 021143d8 */
-    StdEnt f_02114508[22];  /* 02114508 */
-    CLPS_Block f_02114668;  /* 02114668 */
-    u32 f_02114820[2];      /* 02114820 */
-} data_ov020_02113780 = {
-    /* 02113780 */ 0x00000004,
-    /* 02113784 */ {0x0000, 0x02, 0xff, 0x32, 0x48},
-    /* 0211378a */ 0x0000,
-    /* 0211378c */ {2, 0, (void *)data_ov020_0211388c},
-    /* 02113794 */ {9, 0, (void *)data_ov020_02113c18},
-    /* 0211379c */ {9, 0, (void *)data_ov020_02113c60},
-    /* 021137a4 */ {2, 0, (void *)data_ov020_0211386c},
-    /* 021137ac */ {9, 0, (void *)data_ov020_02113ca8},
-    /* 021137b4 */ {9, 0, (void *)data_ov020_02113cf0},
-    /* 021137bc */ {9, 0, (void *)data_ov020_02113d38},
-    /* 021137c4 */ {2, 0, (void *)data_ov020_0211387c},
-    /* 021137cc */ "th_water",
-    /* 021137d8 */ {0x0af0, 0x07d0, 0x07d0, 0x0500, 0x07d0},
-    /* 021137e2 */ 0x0000,
-    /* 021137e4 */ {0x07cd, 0x07ce, 0x07cf, 0x07d0, 0x07d1},
-    /* 021137ee */ 0x0000,
-    /* 021137f0 */ {{(s16)0xfbb4, 0x062c, (s16)0xfa29}, {(s16)0xf7fe, 0x062c, (s16)0xfa29}},
-    /* 021137fc */ {0x07d0, 0x0708, 0x03b6, 0x0000, (s16)0xc000, {0x2e, 0x00, 0x04, 0x22}},
-    /* 0211380a */ 0x0000,
-    /* 0211380c */ {0x0043, (s16)0xff9c, 0x0032, (s16)0xfe0c, {0x0000, 0x0000, 0x0000}, 0x0100},
-    /* 0211381c */ {0x0043, (s16)0xff9c, 0x0032, (s16)0xfe0c, {0x0000, 0x0000, 0x0000}, 0x0100},
-    /* 0211382c */ {0x0043, (s16)0xff9c, 0x0032, (s16)0xfe0c, {0x0000, 0x0000, 0x0000}, 0x0100},
-    /* 0211383c */
-    {{0x8226, 0x00c8, 0x0320, (s16)0xfa88}, {0xe5ff, (s16)0xfe0c, 0x0258, (s16)0xfc7c}},
-    /* 0211384c */ {0x0043, (s16)0xff9c, 0x0032, (s16)0xfe0c, {0x0000, 0x0000, 0x0000}, 0x0100},
-    /* 0211385c */ {{0x8226, (s16)0xfe70, 0x01f4, 0x0032}, {0x8226, (s16)0xfa88, 0x01f4, 0x03b6}},
-    /* 0211386c */
-    {{0x00, 0x07, {0, 0}, (void *)data_ov020_02114064},
-     {0x05, 0x03, {0, 0}, (void *)data_ov020_021138e4}},
-    /* 0211387c */
-    {{0x00, 0x05, {0, 0}, (void *)data_ov020_02113f10},
-     {0x05, 0x06, {0, 0}, (void *)data_ov020_02113b68}},
-    /* 0211388c */
-    {{0x00, 0x13, {0, 0}, (void *)data_ov020_021143d8},
-     {0x05, 0x05, {0, 0}, (void *)data_ov020_02113b18}},
-    /* 0211389c */ {0x0043, (s16)0xff9c, 0x0032, (s16)0xfe0c, {0x0000, 0x0000, 0x0000}, 0x0100},
-    /* 021138ac */ {0x0043, (s16)0xff9c, 0x0032, (s16)0xfe0c, {0x0000, 0x0000, 0x0000}, 0x0102},
-    /* 021138bc */ {0x0043, (s16)0xff9c, 0x0032, (s16)0xfe0c, {0x0000, 0x0000, 0x0000}, 0x0100},
-    /* 021138cc */
-    {91, 0, (fx32 *)data_ov020_021134e8, (u16 *)&data_ov020_021134e4, (fx32 *)data_ov020_02113508,
-     1, 0, (BTAMaterialRecord *)data_ov020_021134ec},
-    /* 021138e4 */
+extern u32 data_ov020_02113780;
+struct data_ov020_02113784 {
+    PathDef f_02113784;
+    u16 f_0211378a;
+};
+extern struct data_ov020_02113784 data_ov020_02113784;
+extern ObjTab data_ov020_0211378c;
+extern ObjTab data_ov020_02113794;
+extern ObjTab data_ov020_0211379c;
+extern ObjTab data_ov020_021137a4;
+extern ObjTab data_ov020_021137ac;
+extern ObjTab data_ov020_021137b4;
+extern ObjTab data_ov020_021137bc;
+extern ObjTab data_ov020_021137c4;
+extern char data_ov020_021137cc[];
+struct data_ov020_021137d8 {
+    s16 f_021137d8[5];
+    u16 f_021137e2;
+};
+extern struct data_ov020_021137d8 data_ov020_021137d8;
+struct data_ov020_021137e4 {
+    u16 f_021137e4[5];
+    u16 f_021137ee;
+};
+extern struct data_ov020_021137e4 data_ov020_021137e4;
+extern Vector3s data_ov020_021137f0[];
+struct data_ov020_021137fc {
+    ExitEnt f_021137fc;
+    u16 f_0211380a;
+};
+extern struct data_ov020_021137fc data_ov020_021137fc;
+extern StdEnt data_ov020_0211380c;
+extern StdEnt data_ov020_0211381c;
+extern StdEnt data_ov020_0211382c;
+extern SimpEnt data_ov020_0211383c[];
+extern StdEnt data_ov020_0211384c;
+extern SimpEnt data_ov020_0211385c[];
+extern ObjSub data_ov020_0211386c[];
+extern ObjSub data_ov020_0211387c[];
+extern ObjSub data_ov020_0211388c[];
+extern StdEnt data_ov020_0211389c;
+extern StdEnt data_ov020_021138ac;
+extern StdEnt data_ov020_021138bc;
+extern BTA_File data_ov020_021138cc;
+struct data_ov020_021138e4 {
+    SimpEnt f_021138e4[3];
+    LevelEnt f_021138fc;
+};
+extern struct data_ov020_021138e4 data_ov020_021138e4;
+extern StdEnt data_ov020_02113918[];
+extern StdEnt data_ov020_02113938[];
+extern StdEnt data_ov020_02113958[];
+extern StdEnt data_ov020_02113978[];
+extern StdEnt data_ov020_02113998[];
+extern StdEnt data_ov020_021139b8[];
+extern StdEnt data_ov020_021139d8[];
+extern StdEnt data_ov020_021139f8[];
+extern StdEnt data_ov020_02113a18[];
+extern StdEnt data_ov020_02113a38[];
+extern StdEnt data_ov020_02113a58[];
+extern StdEnt data_ov020_02113a78[];
+extern StdEnt data_ov020_02113a98[];
+extern StdEnt data_ov020_02113ab8[];
+extern StdEnt data_ov020_02113ad8[];
+extern StdEnt data_ov020_02113af8[];
+extern SimpEnt data_ov020_02113b18[];
+extern SimpEnt data_ov020_02113b40[];
+extern SimpEnt data_ov020_02113b68[];
+extern SimpEnt data_ov020_02113b98[];
+extern StdEnt data_ov020_02113bd8[];
+extern ObjSub data_ov020_02113c18[];
+extern ObjSub data_ov020_02113c60[];
+extern ObjSub data_ov020_02113ca8[];
+extern ObjSub data_ov020_02113cf0[];
+extern ObjSub data_ov020_02113d38[];
+extern StdEnt data_ov020_02113d80[];
+extern StdEnt data_ov020_02113dd0[];
+extern StdEnt data_ov020_02113e20[];
+extern StdEnt data_ov020_02113e70[];
+extern StdEnt data_ov020_02113ec0[];
+extern StdEnt data_ov020_02113f10[];
+extern StdEnt data_ov020_02113f60[];
+extern AreaEnt data_ov020_02113fb0[];
+extern StdEnt data_ov020_02114004[];
+extern StdEnt data_ov020_02114064[];
+extern StdEnt data_ov020_021140d4[];
+struct data_ov020_02114184 {
+    ViewEnt f_02114184[21];
+    u16 f_021142aa;
+};
+extern struct data_ov020_02114184 data_ov020_02114184;
+extern DoorEnt data_ov020_021142ac[];
+extern StdEnt data_ov020_021143d8[];
+extern StdEnt data_ov020_02114508[];
+struct data_ov020_02114668 {
+    CLPS_Block f_02114668;
+    u32 f_02114820[2];
+};
+extern struct data_ov020_02114668 data_ov020_02114668;
+
+#pragma define_section d02113780 ".data.data_ov020_02113780" ".data.data_ov020_02113780" ".data.data_ov020_02113780" far_data
+#pragma section d02113780 begin
+u32 data_ov020_02113780 = 0x00000004;
+typedef char data_ov020_02113780_size[sizeof(data_ov020_02113780) == 0x4 ? 1 : -1];
+#pragma section d02113780 end
+
+#pragma define_section d02113784 ".data.data_ov020_02113784" ".data.data_ov020_02113784" ".data.data_ov020_02113784" far_data
+#pragma section d02113784 begin
+struct data_ov020_02113784 data_ov020_02113784 = {
+    {0x0000, 0x02, 0xff, 0x32, 0x48},
+    0x0000
+};
+typedef char data_ov020_02113784_size[sizeof(data_ov020_02113784) == 0x8 ? 1 : -1];
+#pragma section d02113784 end
+
+#pragma define_section d0211378c ".data.data_ov020_0211378c" ".data.data_ov020_0211378c" ".data.data_ov020_0211378c" far_data
+#pragma section d0211378c begin
+ObjTab data_ov020_0211378c = {2, 0, (void *)data_ov020_0211388c};
+typedef char data_ov020_0211378c_size[sizeof(data_ov020_0211378c) == 0x8 ? 1 : -1];
+#pragma section d0211378c end
+
+#pragma define_section d02113794 ".data.data_ov020_02113794" ".data.data_ov020_02113794" ".data.data_ov020_02113794" far_data
+#pragma section d02113794 begin
+ObjTab data_ov020_02113794 = {9, 0, (void *)data_ov020_02113c18};
+typedef char data_ov020_02113794_size[sizeof(data_ov020_02113794) == 0x8 ? 1 : -1];
+#pragma section d02113794 end
+
+#pragma define_section d0211379c ".data.data_ov020_0211379c" ".data.data_ov020_0211379c" ".data.data_ov020_0211379c" far_data
+#pragma section d0211379c begin
+ObjTab data_ov020_0211379c = {9, 0, (void *)data_ov020_02113c60};
+typedef char data_ov020_0211379c_size[sizeof(data_ov020_0211379c) == 0x8 ? 1 : -1];
+#pragma section d0211379c end
+
+#pragma define_section d021137a4 ".data.data_ov020_021137a4" ".data.data_ov020_021137a4" ".data.data_ov020_021137a4" far_data
+#pragma section d021137a4 begin
+ObjTab data_ov020_021137a4 = {2, 0, (void *)data_ov020_0211386c};
+typedef char data_ov020_021137a4_size[sizeof(data_ov020_021137a4) == 0x8 ? 1 : -1];
+#pragma section d021137a4 end
+
+#pragma define_section d021137ac ".data.data_ov020_021137ac" ".data.data_ov020_021137ac" ".data.data_ov020_021137ac" far_data
+#pragma section d021137ac begin
+ObjTab data_ov020_021137ac = {9, 0, (void *)data_ov020_02113ca8};
+typedef char data_ov020_021137ac_size[sizeof(data_ov020_021137ac) == 0x8 ? 1 : -1];
+#pragma section d021137ac end
+
+#pragma define_section d021137b4 ".data.data_ov020_021137b4" ".data.data_ov020_021137b4" ".data.data_ov020_021137b4" far_data
+#pragma section d021137b4 begin
+ObjTab data_ov020_021137b4 = {9, 0, (void *)data_ov020_02113cf0};
+typedef char data_ov020_021137b4_size[sizeof(data_ov020_021137b4) == 0x8 ? 1 : -1];
+#pragma section d021137b4 end
+
+#pragma define_section d021137bc ".data.data_ov020_021137bc" ".data.data_ov020_021137bc" ".data.data_ov020_021137bc" far_data
+#pragma section d021137bc begin
+ObjTab data_ov020_021137bc = {9, 0, (void *)data_ov020_02113d38};
+typedef char data_ov020_021137bc_size[sizeof(data_ov020_021137bc) == 0x8 ? 1 : -1];
+#pragma section d021137bc end
+
+#pragma define_section d021137c4 ".data.data_ov020_021137c4" ".data.data_ov020_021137c4" ".data.data_ov020_021137c4" far_data
+#pragma section d021137c4 begin
+ObjTab data_ov020_021137c4 = {2, 0, (void *)data_ov020_0211387c};
+typedef char data_ov020_021137c4_size[sizeof(data_ov020_021137c4) == 0x8 ? 1 : -1];
+#pragma section d021137c4 end
+
+#pragma define_section d021137cc ".data.data_ov020_021137cc" ".data.data_ov020_021137cc" ".data.data_ov020_021137cc" far_data
+#pragma section d021137cc begin
+char data_ov020_021137cc[12] = "th_water";
+typedef char data_ov020_021137cc_size[sizeof(data_ov020_021137cc) == 0xc ? 1 : -1];
+#pragma section d021137cc end
+
+#pragma define_section d021137d8 ".data.data_ov020_021137d8" ".data.data_ov020_021137d8" ".data.data_ov020_021137d8" far_data
+#pragma section d021137d8 begin
+struct data_ov020_021137d8 data_ov020_021137d8 = {
+    {0x0af0, 0x07d0, 0x07d0, 0x0500, 0x07d0},
+    0x0000
+};
+typedef char data_ov020_021137d8_size[sizeof(data_ov020_021137d8) == 0xc ? 1 : -1];
+#pragma section d021137d8 end
+
+#pragma define_section d021137e4 ".data.data_ov020_021137e4" ".data.data_ov020_021137e4" ".data.data_ov020_021137e4" far_data
+#pragma section d021137e4 begin
+struct data_ov020_021137e4 data_ov020_021137e4 = {
+    {0x07cd, 0x07ce, 0x07cf, 0x07d0, 0x07d1},
+    0x0000
+};
+typedef char data_ov020_021137e4_size[sizeof(data_ov020_021137e4) == 0xc ? 1 : -1];
+#pragma section d021137e4 end
+
+#pragma define_section d021137f0 ".data.data_ov020_021137f0" ".data.data_ov020_021137f0" ".data.data_ov020_021137f0" far_data
+#pragma section d021137f0 begin
+Vector3s data_ov020_021137f0[2] = {{(s16)0xfbb4, 0x062c, (s16)0xfa29}, {(s16)0xf7fe, 0x062c, (s16)0xfa29}};
+typedef char data_ov020_021137f0_size[sizeof(data_ov020_021137f0) == 0xc ? 1 : -1];
+#pragma section d021137f0 end
+
+#pragma define_section d021137fc ".data.data_ov020_021137fc" ".data.data_ov020_021137fc" ".data.data_ov020_021137fc" far_data
+#pragma section d021137fc begin
+struct data_ov020_021137fc data_ov020_021137fc = {
+    {0x07d0, 0x0708, 0x03b6, 0x0000, (s16)0xc000, {0x2e, 0x00, 0x04, 0x22}},
+    0x0000
+};
+typedef char data_ov020_021137fc_size[sizeof(data_ov020_021137fc) == 0x10 ? 1 : -1];
+#pragma section d021137fc end
+
+#pragma define_section d0211380c ".data.data_ov020_0211380c" ".data.data_ov020_0211380c" ".data.data_ov020_0211380c" far_data
+#pragma section d0211380c begin
+StdEnt data_ov020_0211380c = {0x0043, (s16)0xff9c, 0x0032, (s16)0xfe0c, {0x0000, 0x0000, 0x0000}, 0x0100};
+typedef char data_ov020_0211380c_size[sizeof(data_ov020_0211380c) == 0x10 ? 1 : -1];
+#pragma section d0211380c end
+
+#pragma define_section d0211381c ".data.data_ov020_0211381c" ".data.data_ov020_0211381c" ".data.data_ov020_0211381c" far_data
+#pragma section d0211381c begin
+StdEnt data_ov020_0211381c = {0x0043, (s16)0xff9c, 0x0032, (s16)0xfe0c, {0x0000, 0x0000, 0x0000}, 0x0100};
+typedef char data_ov020_0211381c_size[sizeof(data_ov020_0211381c) == 0x10 ? 1 : -1];
+#pragma section d0211381c end
+
+#pragma define_section d0211382c ".data.data_ov020_0211382c" ".data.data_ov020_0211382c" ".data.data_ov020_0211382c" far_data
+#pragma section d0211382c begin
+StdEnt data_ov020_0211382c = {0x0043, (s16)0xff9c, 0x0032, (s16)0xfe0c, {0x0000, 0x0000, 0x0000}, 0x0100};
+typedef char data_ov020_0211382c_size[sizeof(data_ov020_0211382c) == 0x10 ? 1 : -1];
+#pragma section d0211382c end
+
+#pragma define_section d0211383c ".data.data_ov020_0211383c" ".data.data_ov020_0211383c" ".data.data_ov020_0211383c" far_data
+#pragma section d0211383c begin
+SimpEnt data_ov020_0211383c[2] = {{0x8226, 0x00c8, 0x0320, (s16)0xfa88}, {0xe5ff, (s16)0xfe0c, 0x0258, (s16)0xfc7c}};
+typedef char data_ov020_0211383c_size[sizeof(data_ov020_0211383c) == 0x10 ? 1 : -1];
+#pragma section d0211383c end
+
+#pragma define_section d0211384c ".data.data_ov020_0211384c" ".data.data_ov020_0211384c" ".data.data_ov020_0211384c" far_data
+#pragma section d0211384c begin
+StdEnt data_ov020_0211384c = {0x0043, (s16)0xff9c, 0x0032, (s16)0xfe0c, {0x0000, 0x0000, 0x0000}, 0x0100};
+typedef char data_ov020_0211384c_size[sizeof(data_ov020_0211384c) == 0x10 ? 1 : -1];
+#pragma section d0211384c end
+
+#pragma define_section d0211385c ".data.data_ov020_0211385c" ".data.data_ov020_0211385c" ".data.data_ov020_0211385c" far_data
+#pragma section d0211385c begin
+SimpEnt data_ov020_0211385c[2] = {{0x8226, (s16)0xfe70, 0x01f4, 0x0032}, {0x8226, (s16)0xfa88, 0x01f4, 0x03b6}};
+typedef char data_ov020_0211385c_size[sizeof(data_ov020_0211385c) == 0x10 ? 1 : -1];
+#pragma section d0211385c end
+
+#pragma define_section d0211386c ".data.data_ov020_0211386c" ".data.data_ov020_0211386c" ".data.data_ov020_0211386c" far_data
+#pragma section d0211386c begin
+ObjSub data_ov020_0211386c[2] = {{0x00, 0x07, {0, 0}, (void *)data_ov020_02114064},
+     {0x05, 0x03, {0, 0}, (void *)&data_ov020_021138e4}};
+typedef char data_ov020_0211386c_size[sizeof(data_ov020_0211386c) == 0x10 ? 1 : -1];
+#pragma section d0211386c end
+
+#pragma define_section d0211387c ".data.data_ov020_0211387c" ".data.data_ov020_0211387c" ".data.data_ov020_0211387c" far_data
+#pragma section d0211387c begin
+ObjSub data_ov020_0211387c[2] = {{0x00, 0x05, {0, 0}, (void *)data_ov020_02113f10},
+     {0x05, 0x06, {0, 0}, (void *)data_ov020_02113b68}};
+typedef char data_ov020_0211387c_size[sizeof(data_ov020_0211387c) == 0x10 ? 1 : -1];
+#pragma section d0211387c end
+
+#pragma define_section d0211388c ".data.data_ov020_0211388c" ".data.data_ov020_0211388c" ".data.data_ov020_0211388c" far_data
+#pragma section d0211388c begin
+ObjSub data_ov020_0211388c[2] = {{0x00, 0x13, {0, 0}, (void *)data_ov020_021143d8},
+     {0x05, 0x05, {0, 0}, (void *)data_ov020_02113b18}};
+typedef char data_ov020_0211388c_size[sizeof(data_ov020_0211388c) == 0x10 ? 1 : -1];
+#pragma section d0211388c end
+
+#pragma define_section d0211389c ".data.data_ov020_0211389c" ".data.data_ov020_0211389c" ".data.data_ov020_0211389c" far_data
+#pragma section d0211389c begin
+StdEnt data_ov020_0211389c = {0x0043, (s16)0xff9c, 0x0032, (s16)0xfe0c, {0x0000, 0x0000, 0x0000}, 0x0100};
+typedef char data_ov020_0211389c_size[sizeof(data_ov020_0211389c) == 0x10 ? 1 : -1];
+#pragma section d0211389c end
+
+#pragma define_section d021138ac ".data.data_ov020_021138ac" ".data.data_ov020_021138ac" ".data.data_ov020_021138ac" far_data
+#pragma section d021138ac begin
+StdEnt data_ov020_021138ac = {0x0043, (s16)0xff9c, 0x0032, (s16)0xfe0c, {0x0000, 0x0000, 0x0000}, 0x0102};
+typedef char data_ov020_021138ac_size[sizeof(data_ov020_021138ac) == 0x10 ? 1 : -1];
+#pragma section d021138ac end
+
+#pragma define_section d021138bc ".data.data_ov020_021138bc" ".data.data_ov020_021138bc" ".data.data_ov020_021138bc" far_data
+#pragma section d021138bc begin
+StdEnt data_ov020_021138bc = {0x0043, (s16)0xff9c, 0x0032, (s16)0xfe0c, {0x0000, 0x0000, 0x0000}, 0x0100};
+typedef char data_ov020_021138bc_size[sizeof(data_ov020_021138bc) == 0x10 ? 1 : -1];
+#pragma section d021138bc end
+
+#pragma define_section d021138cc ".data.data_ov020_021138cc" ".data.data_ov020_021138cc" ".data.data_ov020_021138cc" far_data
+#pragma section d021138cc begin
+BTA_File data_ov020_021138cc = {91, 0, (fx32 *)data_ov020_021134e8, (u16 *)&data_ov020_021134e4, (fx32 *)data_ov020_02113508,
+     1, 0, (BTAMaterialRecord *)data_ov020_021134ec};
+typedef char data_ov020_021138cc_size[sizeof(data_ov020_021138cc) == 0x18 ? 1 : -1];
+#pragma section d021138cc end
+
+#pragma define_section d021138e4 ".data.data_ov020_021138e4" ".data.data_ov020_021138e4" ".data.data_ov020_021138e4" far_data
+#pragma section d021138e4 begin
+struct data_ov020_021138e4 data_ov020_021138e4 = {
     {{0x8226, (s16)0xfb50, 0x0000, 0x08fc},
      {0x063d, (s16)0xf830, 0x04b0, 0x076c},
      {0xe5ff, (s16)0xf830, 0x0258, 0x0578}},
-    /* 021138fc */
-    {(CLPS_Block *)data_ov020_02114668, (ObjTab *)data_ov020_021137b4, 0x07d2, 0x07cc, 0x07d3,
-     0x07d4, (AreaEnt *)data_ov020_02113fb0, 0x07, 0x00, 0x0582, 0x0000005f},
-    /* 02113918 */
-    {{0x0014, 0x060e, 0x0000, 0x06a4, {0x00ff, (s16)0xc000, 0x0000}, 0x0b27},
-     {0x0046, 0x03b6, 0x0000, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0000}},
-    /* 02113938 */
-    {{0x0046, 0x03b6, 0x0000, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0000},
-     {0x0014, 0x060e, 0x0000, 0x06a4, {0x00ff, (s16)0xc000, 0x0000}, 0x0b27}},
-    /* 02113958 */
-    {{0x0046, 0x03b6, 0x0000, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0000},
-     {0x0014, 0x060e, 0x0000, 0x06a4, {0x00ff, (s16)0xc000, 0x0000}, 0x0b27}},
-    /* 02113978 */
-    {{0x0046, 0x03b6, 0x0000, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0000},
-     {0x0014, 0x060e, 0x0000, 0x06a4, {0x00ff, (s16)0xc000, 0x0000}, 0x0b27}},
-    /* 02113998 */
-    {{0x0043, 0x0bb8, 0x0032, 0x0190, {0x0000, 0x0000, 0x0000}, 0x0102},
-     {0x0043, 0x0abe, 0x003c, 0x0866, {0x0000, (s16)0x9555, 0x0000}, 0x0102}},
-    /* 021139b8 */
-    {{0x0046, 0x03b6, 0x0000, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0000},
-     {0x0014, 0x060e, 0x0000, 0x06a4, {0x00ff, (s16)0xc000, 0x0000}, 0x0b27}},
-    /* 021139d8 */
-    {{0x0046, 0x03b6, 0x0000, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0001},
-     {0x0044, 0x03b6, 0x0096, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0102}},
-    /* 021139f8 */
-    {{0x0046, 0x03b6, 0x0000, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0000},
-     {0x0014, 0x060e, 0x0000, 0x06a4, {0x00ff, (s16)0xc000, 0x0000}, 0x0b27}},
-    /* 02113a18 */
-    {{0x0043, (s16)0xf8f8, 0x0032, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0x2f02},
-     {0x0043, (s16)0xfa10, 0x0032, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0x0102}},
-    /* 02113a38 */
-    {{0x0043, (s16)0xf8f8, 0x0032, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0x2100},
-     {0x0043, (s16)0xfa10, 0x0032, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0x0100}},
-    /* 02113a58 */
-    {{0x0043, (s16)0xf8f8, 0x0032, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0x2100},
-     {0x0043, (s16)0xfa10, 0x0032, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0x0100}},
-    /* 02113a78 */
-    {{0x0043, (s16)0xf8f8, 0x0032, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0x2100},
-     {0x0043, (s16)0xfa10, 0x0032, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0x0100}},
-    /* 02113a98 */
-    {{0x0096, 0x012c, 0x0078, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0xffff},
-     {0x0108, (s16)0xfe0c, 0x0112, (s16)0xfaec, {0x0000, 0x2000, 0x0000}, 0xffff}},
-    /* 02113ab8 */
-    {{0x0043, (s16)0xf8f8, 0x0032, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0x2100},
-     {0x0043, (s16)0xfa10, 0x0032, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0x0100}},
-    /* 02113ad8 */
-    {{0x0043, (s16)0xf8f8, 0x0032, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0x2100},
-     {0x0043, (s16)0xfa10, 0x0032, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0x0100}},
-    /* 02113af8 */
-    {{0x0043, (s16)0xf8f8, 0x0032, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0x2100},
-     {0x0043, (s16)0xfa10, 0x0032, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0x0100}},
-    /* 02113b18 */
-    {{0x4a3f, 0x028a, 0x0b21, 0x076c},
+    {(CLPS_Block *)&data_ov020_02114668, (ObjTab *)&data_ov020_021137b4, 0x07d2, 0x07cc, 0x07d3,
+     0x07d4, (AreaEnt *)data_ov020_02113fb0, 0x07, 0x00, 0x0582, 0x0000005f}
+};
+typedef char data_ov020_021138e4_size[sizeof(data_ov020_021138e4) == 0x34 ? 1 : -1];
+#pragma section d021138e4 end
+
+#pragma define_section d02113918 ".data.data_ov020_02113918" ".data.data_ov020_02113918" ".data.data_ov020_02113918" far_data
+#pragma section d02113918 begin
+StdEnt data_ov020_02113918[2] = {{0x0014, 0x060e, 0x0000, 0x06a4, {0x00ff, (s16)0xc000, 0x0000}, 0x0b27},
+     {0x0046, 0x03b6, 0x0000, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0000}};
+typedef char data_ov020_02113918_size[sizeof(data_ov020_02113918) == 0x20 ? 1 : -1];
+#pragma section d02113918 end
+
+#pragma define_section d02113938 ".data.data_ov020_02113938" ".data.data_ov020_02113938" ".data.data_ov020_02113938" far_data
+#pragma section d02113938 begin
+StdEnt data_ov020_02113938[2] = {{0x0046, 0x03b6, 0x0000, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0000},
+     {0x0014, 0x060e, 0x0000, 0x06a4, {0x00ff, (s16)0xc000, 0x0000}, 0x0b27}};
+typedef char data_ov020_02113938_size[sizeof(data_ov020_02113938) == 0x20 ? 1 : -1];
+#pragma section d02113938 end
+
+#pragma define_section d02113958 ".data.data_ov020_02113958" ".data.data_ov020_02113958" ".data.data_ov020_02113958" far_data
+#pragma section d02113958 begin
+StdEnt data_ov020_02113958[2] = {{0x0046, 0x03b6, 0x0000, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0000},
+     {0x0014, 0x060e, 0x0000, 0x06a4, {0x00ff, (s16)0xc000, 0x0000}, 0x0b27}};
+typedef char data_ov020_02113958_size[sizeof(data_ov020_02113958) == 0x20 ? 1 : -1];
+#pragma section d02113958 end
+
+#pragma define_section d02113978 ".data.data_ov020_02113978" ".data.data_ov020_02113978" ".data.data_ov020_02113978" far_data
+#pragma section d02113978 begin
+StdEnt data_ov020_02113978[2] = {{0x0046, 0x03b6, 0x0000, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0000},
+     {0x0014, 0x060e, 0x0000, 0x06a4, {0x00ff, (s16)0xc000, 0x0000}, 0x0b27}};
+typedef char data_ov020_02113978_size[sizeof(data_ov020_02113978) == 0x20 ? 1 : -1];
+#pragma section d02113978 end
+
+#pragma define_section d02113998 ".data.data_ov020_02113998" ".data.data_ov020_02113998" ".data.data_ov020_02113998" far_data
+#pragma section d02113998 begin
+StdEnt data_ov020_02113998[2] = {{0x0043, 0x0bb8, 0x0032, 0x0190, {0x0000, 0x0000, 0x0000}, 0x0102},
+     {0x0043, 0x0abe, 0x003c, 0x0866, {0x0000, (s16)0x9555, 0x0000}, 0x0102}};
+typedef char data_ov020_02113998_size[sizeof(data_ov020_02113998) == 0x20 ? 1 : -1];
+#pragma section d02113998 end
+
+#pragma define_section d021139b8 ".data.data_ov020_021139b8" ".data.data_ov020_021139b8" ".data.data_ov020_021139b8" far_data
+#pragma section d021139b8 begin
+StdEnt data_ov020_021139b8[2] = {{0x0046, 0x03b6, 0x0000, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0000},
+     {0x0014, 0x060e, 0x0000, 0x06a4, {0x00ff, (s16)0xc000, 0x0000}, 0x0b27}};
+typedef char data_ov020_021139b8_size[sizeof(data_ov020_021139b8) == 0x20 ? 1 : -1];
+#pragma section d021139b8 end
+
+#pragma define_section d021139d8 ".data.data_ov020_021139d8" ".data.data_ov020_021139d8" ".data.data_ov020_021139d8" far_data
+#pragma section d021139d8 begin
+StdEnt data_ov020_021139d8[2] = {{0x0046, 0x03b6, 0x0000, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0001},
+     {0x0044, 0x03b6, 0x0096, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0102}};
+typedef char data_ov020_021139d8_size[sizeof(data_ov020_021139d8) == 0x20 ? 1 : -1];
+#pragma section d021139d8 end
+
+#pragma define_section d021139f8 ".data.data_ov020_021139f8" ".data.data_ov020_021139f8" ".data.data_ov020_021139f8" far_data
+#pragma section d021139f8 begin
+StdEnt data_ov020_021139f8[2] = {{0x0046, 0x03b6, 0x0000, 0x0384, {0x0000, 0x0000, 0x0000}, 0x0000},
+     {0x0014, 0x060e, 0x0000, 0x06a4, {0x00ff, (s16)0xc000, 0x0000}, 0x0b27}};
+typedef char data_ov020_021139f8_size[sizeof(data_ov020_021139f8) == 0x20 ? 1 : -1];
+#pragma section d021139f8 end
+
+#pragma define_section d02113a18 ".data.data_ov020_02113a18" ".data.data_ov020_02113a18" ".data.data_ov020_02113a18" far_data
+#pragma section d02113a18 begin
+StdEnt data_ov020_02113a18[2] = {{0x0043, (s16)0xf8f8, 0x0032, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0x2f02},
+     {0x0043, (s16)0xfa10, 0x0032, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0x0102}};
+typedef char data_ov020_02113a18_size[sizeof(data_ov020_02113a18) == 0x20 ? 1 : -1];
+#pragma section d02113a18 end
+
+#pragma define_section d02113a38 ".data.data_ov020_02113a38" ".data.data_ov020_02113a38" ".data.data_ov020_02113a38" far_data
+#pragma section d02113a38 begin
+StdEnt data_ov020_02113a38[2] = {{0x0043, (s16)0xf8f8, 0x0032, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0x2100},
+     {0x0043, (s16)0xfa10, 0x0032, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0x0100}};
+typedef char data_ov020_02113a38_size[sizeof(data_ov020_02113a38) == 0x20 ? 1 : -1];
+#pragma section d02113a38 end
+
+#pragma define_section d02113a58 ".data.data_ov020_02113a58" ".data.data_ov020_02113a58" ".data.data_ov020_02113a58" far_data
+#pragma section d02113a58 begin
+StdEnt data_ov020_02113a58[2] = {{0x0043, (s16)0xf8f8, 0x0032, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0x2100},
+     {0x0043, (s16)0xfa10, 0x0032, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0x0100}};
+typedef char data_ov020_02113a58_size[sizeof(data_ov020_02113a58) == 0x20 ? 1 : -1];
+#pragma section d02113a58 end
+
+#pragma define_section d02113a78 ".data.data_ov020_02113a78" ".data.data_ov020_02113a78" ".data.data_ov020_02113a78" far_data
+#pragma section d02113a78 begin
+StdEnt data_ov020_02113a78[2] = {{0x0043, (s16)0xf8f8, 0x0032, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0x2100},
+     {0x0043, (s16)0xfa10, 0x0032, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0x0100}};
+typedef char data_ov020_02113a78_size[sizeof(data_ov020_02113a78) == 0x20 ? 1 : -1];
+#pragma section d02113a78 end
+
+#pragma define_section d02113a98 ".data.data_ov020_02113a98" ".data.data_ov020_02113a98" ".data.data_ov020_02113a98" far_data
+#pragma section d02113a98 begin
+StdEnt data_ov020_02113a98[2] = {{0x0096, 0x012c, 0x0078, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0xffff},
+     {0x0108, (s16)0xfe0c, 0x0112, (s16)0xfaec, {0x0000, 0x2000, 0x0000}, 0xffff}};
+typedef char data_ov020_02113a98_size[sizeof(data_ov020_02113a98) == 0x20 ? 1 : -1];
+#pragma section d02113a98 end
+
+#pragma define_section d02113ab8 ".data.data_ov020_02113ab8" ".data.data_ov020_02113ab8" ".data.data_ov020_02113ab8" far_data
+#pragma section d02113ab8 begin
+StdEnt data_ov020_02113ab8[2] = {{0x0043, (s16)0xf8f8, 0x0032, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0x2100},
+     {0x0043, (s16)0xfa10, 0x0032, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0x0100}};
+typedef char data_ov020_02113ab8_size[sizeof(data_ov020_02113ab8) == 0x20 ? 1 : -1];
+#pragma section d02113ab8 end
+
+#pragma define_section d02113ad8 ".data.data_ov020_02113ad8" ".data.data_ov020_02113ad8" ".data.data_ov020_02113ad8" far_data
+#pragma section d02113ad8 begin
+StdEnt data_ov020_02113ad8[2] = {{0x0043, (s16)0xf8f8, 0x0032, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0x2100},
+     {0x0043, (s16)0xfa10, 0x0032, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0x0100}};
+typedef char data_ov020_02113ad8_size[sizeof(data_ov020_02113ad8) == 0x20 ? 1 : -1];
+#pragma section d02113ad8 end
+
+#pragma define_section d02113af8 ".data.data_ov020_02113af8" ".data.data_ov020_02113af8" ".data.data_ov020_02113af8" far_data
+#pragma section d02113af8 begin
+StdEnt data_ov020_02113af8[2] = {{0x0043, (s16)0xf8f8, 0x0032, (s16)0xfce0, {0x0000, 0x0000, 0x0000}, 0x2100},
+     {0x0043, (s16)0xfa10, 0x0032, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0x0100}};
+typedef char data_ov020_02113af8_size[sizeof(data_ov020_02113af8) == 0x20 ? 1 : -1];
+#pragma section d02113af8 end
+
+#pragma define_section d02113b18 ".data.data_ov020_02113b18" ".data.data_ov020_02113b18" ".data.data_ov020_02113b18" far_data
+#pragma section d02113b18 begin
+SimpEnt data_ov020_02113b18[5] = {{0x4a3f, 0x028a, 0x0b21, 0x076c},
      {0xe225, 0x015e, 0x0c80, 0x012c},
      {0xe225, 0x0226, 0x0c80, 0x012c},
      {0xe225, 0x02ee, 0x0c80, 0x012c},
-     {0xe225, 0x03b6, 0x0c80, 0x012c}},
-    /* 02113b40 */
-    {{0x8226, 0x03e8, 0x0514, 0x044c},
+     {0xe225, 0x03b6, 0x0c80, 0x012c}};
+typedef char data_ov020_02113b18_size[sizeof(data_ov020_02113b18) == 0x28 ? 1 : -1];
+#pragma section d02113b18 end
+
+#pragma define_section d02113b40 ".data.data_ov020_02113b40" ".data.data_ov020_02113b40" ".data.data_ov020_02113b40" far_data
+#pragma section d02113b40 begin
+SimpEnt data_ov020_02113b40[5] = {{0x8226, 0x03e8, 0x0514, 0x044c},
      {0x8e26, 0x0a28, 0x0320, (s16)0xfe0c},
      {0x423f, 0x03b1, 0x0352, 0x00fa},
      {0x083f, (s16)0xffb0, 0x0352, 0x0640},
-     {0xe5ff, 0x0320, 0x0258, 0x00c8}},
-    /* 02113b68 */
-    {{0x4c3f, 0x06a4, 0x06d6, (s16)0xfe70},
+     {0xe5ff, 0x0320, 0x0258, 0x00c8}};
+typedef char data_ov020_02113b40_size[sizeof(data_ov020_02113b40) == 0x28 ? 1 : -1];
+#pragma section d02113b40 end
+
+#pragma define_section d02113b68 ".data.data_ov020_02113b68" ".data.data_ov020_02113b68" ".data.data_ov020_02113b68" far_data
+#pragma section d02113b68 begin
+SimpEnt data_ov020_02113b68[6] = {{0x4c3f, 0x06a4, 0x06d6, (s16)0xfe70},
      {0xe7ff, 0x08fc, 0x05dc, 0x0190},
      {0x0227, 0x0578, 0x06a4, 0x04b0},
      {0x0227, 0x0708, 0x06a4, 0x04b0},
      {0x0227, 0x0064, 0x06a4, 0x04b0},
-     {0x0227, (s16)0xfe70, 0x06a4, 0x04b0}},
-    /* 02113b98 */
-    {{0x8226, 0x0af0, 0x0000, 0x0898},
+     {0x0227, (s16)0xfe70, 0x06a4, 0x04b0}};
+typedef char data_ov020_02113b68_size[sizeof(data_ov020_02113b68) == 0x30 ? 1 : -1];
+#pragma section d02113b68 end
+
+#pragma define_section d02113b98 ".data.data_ov020_02113b98" ".data.data_ov020_02113b98" ".data.data_ov020_02113b98" far_data
+#pragma section d02113b98 begin
+SimpEnt data_ov020_02113b98[8] = {{0x8226, 0x0af0, 0x0000, 0x0898},
      {0x8226, 0x0992, 0x0320, 0x0898},
      {0x443f, 0x04b0, (s16)0xf6d2, 0x00c8},
      {0xe3ff, 0x0af0, (s16)0xfc18, 0x06a4},
      {0xe5ff, 0x0af0, 0x0258, 0x05dc},
      {0xce3f, 0x02bc, (s16)0xf768, 0x06d6},
      {0xee3c, 0x04b0, (s16)0xf768, 0x06a4},
-     {0xe225, (s16)0xf60a, (s16)0xf7fe, 0x0672}},
-    /* 02113bd8 */
-    {{0x001e, (s16)0xf830, 0x00be, 0x0000, {0x0000, 0x0000, 0x0000}, 0xff06},
+     {0xe225, (s16)0xf60a, (s16)0xf7fe, 0x0672}};
+typedef char data_ov020_02113b98_size[sizeof(data_ov020_02113b98) == 0x40 ? 1 : -1];
+#pragma section d02113b98 end
+
+#pragma define_section d02113bd8 ".data.data_ov020_02113bd8" ".data.data_ov020_02113bd8" ".data.data_ov020_02113bd8" far_data
+#pragma section d02113bd8 begin
+StdEnt data_ov020_02113bd8[4] = {{0x001e, (s16)0xf830, 0x00be, 0x0000, {0x0000, 0x0000, 0x0000}, 0xff06},
      {0x0126, (s16)0xf8f8, 0x0000, 0x0050, {0x0000, 0x4000, 0x0000}, 0xffff},
      {0x0126, (s16)0xfbb4, 0x0000, 0x0000, {0x0000, (s16)0xc000, 0x0000}, 0xffff},
-     {0x011f, (s16)0xfa88, 0x0113, 0x03b6, {0x0000, (s16)0x8000, 0x0000}, 0xffff}},
-    /* 02113c18 */
-    {{0x00, 0x04, {0, 0}, (void *)data_ov020_02113bd8},
+     {0x011f, (s16)0xfa88, 0x0113, 0x03b6, {0x0000, (s16)0x8000, 0x0000}, 0xffff}};
+typedef char data_ov020_02113bd8_size[sizeof(data_ov020_02113bd8) == 0x40 ? 1 : -1];
+#pragma section d02113bd8 end
+
+#pragma define_section d02113c18 ".data.data_ov020_02113c18" ".data.data_ov020_02113c18" ".data.data_ov020_02113c18" far_data
+#pragma section d02113c18 begin
+ObjSub data_ov020_02113c18[9] = {{0x00, 0x04, {0, 0}, (void *)data_ov020_02113bd8},
      {0x05, 0x02, {0, 0}, (void *)data_ov020_0211385c},
      {0x20, 0x02, {0, 0}, (void *)data_ov020_02113a18},
      {0x40, 0x02, {0, 0}, (void *)data_ov020_02113a38},
@@ -425,9 +620,13 @@ struct {
      {0x80, 0x02, {0, 0}, (void *)data_ov020_02113a78},
      {0xa0, 0x02, {0, 0}, (void *)data_ov020_02113ab8},
      {0xc0, 0x02, {0, 0}, (void *)data_ov020_02113ad8},
-     {0xe0, 0x02, {0, 0}, (void *)data_ov020_02113af8}},
-    /* 02113c60 */
-    {{0x00, 0x0b, {0, 0}, (void *)data_ov020_021140d4},
+     {0xe0, 0x02, {0, 0}, (void *)data_ov020_02113af8}};
+typedef char data_ov020_02113c18_size[sizeof(data_ov020_02113c18) == 0x48 ? 1 : -1];
+#pragma section d02113c18 end
+
+#pragma define_section d02113c60 ".data.data_ov020_02113c60" ".data.data_ov020_02113c60" ".data.data_ov020_02113c60" far_data
+#pragma section d02113c60 begin
+ObjSub data_ov020_02113c60[9] = {{0x00, 0x0b, {0, 0}, (void *)data_ov020_021140d4},
      {0x05, 0x05, {0, 0}, (void *)data_ov020_02113b40},
      {0x20, 0x02, {0, 0}, (void *)data_ov020_021139d8},
      {0x40, 0x02, {0, 0}, (void *)data_ov020_02113918},
@@ -435,29 +634,41 @@ struct {
      {0x80, 0x02, {0, 0}, (void *)data_ov020_02113938},
      {0xa0, 0x02, {0, 0}, (void *)data_ov020_021139f8},
      {0xc0, 0x02, {0, 0}, (void *)data_ov020_02113958},
-     {0xe0, 0x02, {0, 0}, (void *)data_ov020_02113978}},
-    /* 02113ca8 */
-    {{0x00, 0x02, {0, 0}, (void *)data_ov020_02113a98},
+     {0xe0, 0x02, {0, 0}, (void *)data_ov020_02113978}};
+typedef char data_ov020_02113c60_size[sizeof(data_ov020_02113c60) == 0x48 ? 1 : -1];
+#pragma section d02113c60 end
+
+#pragma define_section d02113ca8 ".data.data_ov020_02113ca8" ".data.data_ov020_02113ca8" ".data.data_ov020_02113ca8" far_data
+#pragma section d02113ca8 begin
+ObjSub data_ov020_02113ca8[9] = {{0x00, 0x02, {0, 0}, (void *)data_ov020_02113a98},
      {0x05, 0x02, {0, 0}, (void *)data_ov020_0211383c},
-     {0x20, 0x01, {0, 0}, (void *)data_ov020_021138ac},
-     {0x40, 0x01, {0, 0}, (void *)data_ov020_021138bc},
-     {0x60, 0x01, {0, 0}, (void *)data_ov020_0211384c},
-     {0x80, 0x01, {0, 0}, (void *)data_ov020_0211389c},
-     {0xa0, 0x01, {0, 0}, (void *)data_ov020_0211380c},
-     {0xc0, 0x01, {0, 0}, (void *)data_ov020_0211381c},
-     {0xe0, 0x01, {0, 0}, (void *)data_ov020_0211382c}},
-    /* 02113cf0 */
-    {{0x02, 0x02, {0, 0}, (void *)data_ov020_021137f0},
-     {0x03, 0x01, {0, 0}, (void *)data_ov020_02113784},
-     {0x04, 0x15, {0, 0}, (void *)data_ov020_02114184},
-     {0x0b, 0x05, {0, 0}, (void *)data_ov020_021137e4},
+     {0x20, 0x01, {0, 0}, (void *)&data_ov020_021138ac},
+     {0x40, 0x01, {0, 0}, (void *)&data_ov020_021138bc},
+     {0x60, 0x01, {0, 0}, (void *)&data_ov020_0211384c},
+     {0x80, 0x01, {0, 0}, (void *)&data_ov020_0211389c},
+     {0xa0, 0x01, {0, 0}, (void *)&data_ov020_0211380c},
+     {0xc0, 0x01, {0, 0}, (void *)&data_ov020_0211381c},
+     {0xe0, 0x01, {0, 0}, (void *)&data_ov020_0211382c}};
+typedef char data_ov020_02113ca8_size[sizeof(data_ov020_02113ca8) == 0x48 ? 1 : -1];
+#pragma section d02113ca8 end
+
+#pragma define_section d02113cf0 ".data.data_ov020_02113cf0" ".data.data_ov020_02113cf0" ".data.data_ov020_02113cf0" far_data
+#pragma section d02113cf0 begin
+ObjSub data_ov020_02113cf0[9] = {{0x02, 0x02, {0, 0}, (void *)data_ov020_021137f0},
+     {0x03, 0x01, {0, 0}, (void *)&data_ov020_02113784},
+     {0x04, 0x15, {0, 0}, (void *)&data_ov020_02114184},
+     {0x0b, 0x05, {0, 0}, (void *)&data_ov020_021137e4},
      {0x01, 0x05, {0, 0}, (void *)data_ov020_02113f60},
      {0x09, 0x19, {0, 0}, (void *)data_ov020_021142ac},
-     {0x0c, 0x05, {0, 0}, (void *)data_ov020_021137d8},
+     {0x0c, 0x05, {0, 0}, (void *)&data_ov020_021137d8},
      {0x0e, 0x01, {0, 0}, (void *)&data_ov020_02113780},
-     {0x0a, 0x01, {0, 0}, (void *)data_ov020_021137fc}},
-    /* 02113d38 */
-    {{0x00, 0x16, {0, 0}, (void *)data_ov020_02114508},
+     {0x0a, 0x01, {0, 0}, (void *)&data_ov020_021137fc}};
+typedef char data_ov020_02113cf0_size[sizeof(data_ov020_02113cf0) == 0x48 ? 1 : -1];
+#pragma section d02113cf0 end
+
+#pragma define_section d02113d38 ".data.data_ov020_02113d38" ".data.data_ov020_02113d38" ".data.data_ov020_02113d38" far_data
+#pragma section d02113d38 begin
+ObjSub data_ov020_02113d38[9] = {{0x00, 0x16, {0, 0}, (void *)data_ov020_02114508},
      {0x05, 0x08, {0, 0}, (void *)data_ov020_02113b98},
      {0x20, 0x02, {0, 0}, (void *)data_ov020_02113998},
      {0x40, 0x05, {0, 0}, (void *)data_ov020_02113d80},
@@ -465,74 +676,118 @@ struct {
      {0x80, 0x06, {0, 0}, (void *)data_ov020_02114004},
      {0xa0, 0x05, {0, 0}, (void *)data_ov020_02113e20},
      {0xc0, 0x05, {0, 0}, (void *)data_ov020_02113e70},
-     {0xe0, 0x05, {0, 0}, (void *)data_ov020_02113ec0}},
-    /* 02113d80 */
-    {{0x0043, 0x0bb8, 0x0032, 0x0190, {0x0000, 0x0000, 0x0000}, 0x0100},
+     {0xe0, 0x05, {0, 0}, (void *)data_ov020_02113ec0}};
+typedef char data_ov020_02113d38_size[sizeof(data_ov020_02113d38) == 0x48 ? 1 : -1];
+#pragma section d02113d38 end
+
+#pragma define_section d02113d80 ".data.data_ov020_02113d80" ".data.data_ov020_02113d80" ".data.data_ov020_02113d80" far_data
+#pragma section d02113d80 begin
+StdEnt data_ov020_02113d80[5] = {{0x0043, 0x0bb8, 0x0032, 0x0190, {0x0000, 0x0000, 0x0000}, 0x0100},
      {0x0043, 0x0abe, 0x003c, 0x0866, {0x0000, (s16)0x9556, 0x0000}, 0x0100},
      {0x0044, (s16)0xfbbe, (s16)0xf6a0, 0x0442, {0x0000, 0x6000, 0x0000}, 0x0201},
      {0x010a, 0x029e, (s16)0xf72c, (s16)0xfdb2, {0x0000, (s16)0xe000, 0x0000}, 0xffff},
-     {0x0043, (s16)0xfbbe, (s16)0xf6d2, 0x0442, {0x0000, 0x6000, 0x0000}, 0xff03}},
-    /* 02113dd0 */
-    {{0x0043, 0x0bb8, 0x0032, 0x0190, {0x0000, 0x0000, 0x0000}, 0x0100},
+     {0x0043, (s16)0xfbbe, (s16)0xf6d2, 0x0442, {0x0000, 0x6000, 0x0000}, 0xff03}};
+typedef char data_ov020_02113d80_size[sizeof(data_ov020_02113d80) == 0x50 ? 1 : -1];
+#pragma section d02113d80 end
+
+#pragma define_section d02113dd0 ".data.data_ov020_02113dd0" ".data.data_ov020_02113dd0" ".data.data_ov020_02113dd0" far_data
+#pragma section d02113dd0 begin
+StdEnt data_ov020_02113dd0[5] = {{0x0043, 0x0bb8, 0x0032, 0x0190, {0x0000, 0x0000, 0x0000}, 0x0100},
      {0x0043, 0x0abe, 0x003c, 0x0866, {0x0000, (s16)0x9556, 0x0000}, 0x0100},
      {0x0044, (s16)0xfbbe, (s16)0xf6a0, 0x0442, {0x0000, 0x6000, 0x0000}, 0x0201},
      {0x010a, 0x029e, (s16)0xf72c, (s16)0xfdb2, {0x0000, (s16)0xe000, 0x0000}, 0xffff},
-     {0x0043, (s16)0xfbbe, (s16)0xf6d2, 0x0442, {0x0000, 0x6000, 0x0000}, 0xff03}},
-    /* 02113e20 */
-    {{0x0044, (s16)0xfbbe, (s16)0xf6a0, 0x0442, {0x0000, 0x6000, 0x0000}, 0x0201},
+     {0x0043, (s16)0xfbbe, (s16)0xf6d2, 0x0442, {0x0000, 0x6000, 0x0000}, 0xff03}};
+typedef char data_ov020_02113dd0_size[sizeof(data_ov020_02113dd0) == 0x50 ? 1 : -1];
+#pragma section d02113dd0 end
+
+#pragma define_section d02113e20 ".data.data_ov020_02113e20" ".data.data_ov020_02113e20" ".data.data_ov020_02113e20" far_data
+#pragma section d02113e20 begin
+StdEnt data_ov020_02113e20[5] = {{0x0044, (s16)0xfbbe, (s16)0xf6a0, 0x0442, {0x0000, 0x6000, 0x0000}, 0x0201},
      {0x010a, 0x029e, (s16)0xf72c, (s16)0xfdb2, {0x0000, (s16)0xe000, 0x0000}, 0xffff},
      {0x0043, (s16)0xfbbe, (s16)0xf6d2, 0x0442, {0x0000, 0x6000, 0x0000}, 0xff03},
      {0x0043, 0x0bb8, 0x0032, 0x0190, {0x0000, 0x0000, 0x0000}, 0x0100},
-     {0x0043, 0x0abe, 0x003c, 0x0866, {0x0000, (s16)0x9556, 0x0000}, 0x0100}},
-    /* 02113e70 */
-    {{0x0043, 0x0bb8, 0x0032, 0x0190, {0x0000, 0x0000, 0x0000}, 0x0100},
+     {0x0043, 0x0abe, 0x003c, 0x0866, {0x0000, (s16)0x9556, 0x0000}, 0x0100}};
+typedef char data_ov020_02113e20_size[sizeof(data_ov020_02113e20) == 0x50 ? 1 : -1];
+#pragma section d02113e20 end
+
+#pragma define_section d02113e70 ".data.data_ov020_02113e70" ".data.data_ov020_02113e70" ".data.data_ov020_02113e70" far_data
+#pragma section d02113e70 begin
+StdEnt data_ov020_02113e70[5] = {{0x0043, 0x0bb8, 0x0032, 0x0190, {0x0000, 0x0000, 0x0000}, 0x0100},
      {0x0043, 0x0abe, 0x003c, 0x0866, {0x0000, (s16)0x9556, 0x0000}, 0x0100},
      {0x010a, 0x029e, (s16)0xf72c, (s16)0xfdb2, {0x0000, (s16)0xe000, 0x0000}, 0xffff},
      {0x0043, (s16)0xfbbe, (s16)0xf6d2, 0x0442, {0x0000, 0x6000, 0x0000}, 0xff03},
-     {0x0044, (s16)0xfbbe, (s16)0xf6a0, 0x0442, {0x0000, 0x6000, 0x0000}, 0x0201}},
-    /* 02113ec0 */
-    {{0x0043, 0x0bb8, 0x0032, 0x0190, {0x0000, 0x0000, 0x0000}, 0x0100},
+     {0x0044, (s16)0xfbbe, (s16)0xf6a0, 0x0442, {0x0000, 0x6000, 0x0000}, 0x0201}};
+typedef char data_ov020_02113e70_size[sizeof(data_ov020_02113e70) == 0x50 ? 1 : -1];
+#pragma section d02113e70 end
+
+#pragma define_section d02113ec0 ".data.data_ov020_02113ec0" ".data.data_ov020_02113ec0" ".data.data_ov020_02113ec0" far_data
+#pragma section d02113ec0 begin
+StdEnt data_ov020_02113ec0[5] = {{0x0043, 0x0bb8, 0x0032, 0x0190, {0x0000, 0x0000, 0x0000}, 0x0100},
      {0x0043, 0x0abe, 0x003c, 0x0866, {0x0000, (s16)0x9556, 0x0000}, 0x0100},
      {0x010a, 0x029e, (s16)0xf72c, (s16)0xfdb2, {0x0000, (s16)0xe000, 0x0000}, 0xffff},
      {0x0043, (s16)0xfbbe, (s16)0xf6d2, 0x0442, {0x0000, 0x6000, 0x0000}, 0xff03},
-     {0x0044, (s16)0xfbbe, (s16)0xf6a0, 0x0442, {0x0000, 0x6000, 0x0000}, 0x0201}},
-    /* 02113f10 */
-    {{0x0131, 0x02bc, 0x06a4, 0x0320, {0x0000, 0x0000, 0x0000}, 0xff00},
+     {0x0044, (s16)0xfbbe, (s16)0xf6a0, 0x0442, {0x0000, 0x6000, 0x0000}, 0x0201}};
+typedef char data_ov020_02113ec0_size[sizeof(data_ov020_02113ec0) == 0x50 ? 1 : -1];
+#pragma section d02113ec0 end
+
+#pragma define_section d02113f10 ".data.data_ov020_02113f10" ".data.data_ov020_02113f10" ".data.data_ov020_02113f10" far_data
+#pragma section d02113f10 begin
+StdEnt data_ov020_02113f10[5] = {{0x0131, 0x02bc, 0x06a4, 0x0320, {0x0000, 0x0000, 0x0000}, 0xff00},
      {0x0097, 0x0514, 0x076c, (s16)0xfea2, {0x0000, (s16)0xc000, 0x0000}, 0x0006},
      {0x001e, 0x01d5, 0x079e, (s16)0xfd70, {0x0000, 0x0000, 0x0000}, 0xff06},
      {0x002a, 0x07d0, 0x0708, 0x03b6, {0x0000, (s16)0xc000, 0x0000}, 0x0f22},
-     {0x0043, 0x0337, 0x06d6, (s16)0xff3e, {0x0000, (s16)0xc000, 0x0000}, 0xff00}},
-    /* 02113f60 */
-    {{0x0000, 0x0384, 0x05dc, 0x16a8, {0x0000, (s16)0x8000, 0x0000}, 0x0500},
+     {0x0043, 0x0337, 0x06d6, (s16)0xff3e, {0x0000, (s16)0xc000, 0x0000}, 0xff00}};
+typedef char data_ov020_02113f10_size[sizeof(data_ov020_02113f10) == 0x50 ? 1 : -1];
+#pragma section d02113f10 end
+
+#pragma define_section d02113f60 ".data.data_ov020_02113f60" ".data.data_ov020_02113f60" ".data.data_ov020_02113f60" far_data
+#pragma section d02113f60 begin
+StdEnt data_ov020_02113f60[5] = {{0x0000, 0x0384, 0x05dc, 0x16a8, {0x0000, (s16)0x8000, 0x0000}, 0x0500},
      {0x0000, 0x02bc, 0x05dc, 0x15e0, {0x0000, (s16)0x8000, 0x0000}, 0x0500},
      {0x0000, 0x01f4, 0x05dc, 0x16a8, {0x0000, (s16)0x8000, 0x0000}, 0x0500},
      {0x0000, 0x02bc, 0x05dc, 0x1770, {0x0000, (s16)0x8000, 0x0000}, 0x0500},
-     {0x0000, 0x07d0, 0x076c, 0x03b6, {0x0000, (s16)0xc000, 0x0000}, 0x059c}},
-    /* 02113fb0 */
-    {{(ObjTab *)data_ov020_0211378c, 0, 0x00, {0x00, 0xcc, 0x10}},
-     {(ObjTab *)data_ov020_0211379c, 0, 0x01, {0x01, 0x40, 0x06}},
-     {(ObjTab *)data_ov020_021137bc, (void *)data_ov020_021138cc, 0x04, {0x01, 0x8b, 0x0c}},
-     {(ObjTab *)data_ov020_021137a4, 0, 0x01, {0x01, 0x40, 0x06}},
-     {(ObjTab *)data_ov020_021137c4, 0, 0x03, {0x01, 0xbc, 0x02}},
-     {(ObjTab *)data_ov020_021137ac, 0, 0x01, {0x01, 0x40, 0x06}},
-     {(ObjTab *)data_ov020_02113794, 0, 0x01, {0x01, 0x90, 0x01}}},
-    /* 02114004 */
-    {{0x0043, 0x0bb8, 0x0032, 0x0190, {0x0000, 0x0000, 0x0000}, 0x0100},
+     {0x0000, 0x07d0, 0x076c, 0x03b6, {0x0000, (s16)0xc000, 0x0000}, 0x059c}};
+typedef char data_ov020_02113f60_size[sizeof(data_ov020_02113f60) == 0x50 ? 1 : -1];
+#pragma section d02113f60 end
+
+#pragma define_section d02113fb0 ".data.data_ov020_02113fb0" ".data.data_ov020_02113fb0" ".data.data_ov020_02113fb0" far_data
+#pragma section d02113fb0 begin
+AreaEnt data_ov020_02113fb0[7] = {{(ObjTab *)&data_ov020_0211378c, 0, 0x00, {0x00, 0xcc, 0x10}},
+     {(ObjTab *)&data_ov020_0211379c, 0, 0x01, {0x01, 0x40, 0x06}},
+     {(ObjTab *)&data_ov020_021137bc, (void *)&data_ov020_021138cc, 0x04, {0x01, 0x8b, 0x0c}},
+     {(ObjTab *)&data_ov020_021137a4, 0, 0x01, {0x01, 0x40, 0x06}},
+     {(ObjTab *)&data_ov020_021137c4, 0, 0x03, {0x01, 0xbc, 0x02}},
+     {(ObjTab *)&data_ov020_021137ac, 0, 0x01, {0x01, 0x40, 0x06}},
+     {(ObjTab *)&data_ov020_02113794, 0, 0x01, {0x01, 0x90, 0x01}}};
+typedef char data_ov020_02113fb0_size[sizeof(data_ov020_02113fb0) == 0x54 ? 1 : -1];
+#pragma section d02113fb0 end
+
+#pragma define_section d02114004 ".data.data_ov020_02114004" ".data.data_ov020_02114004" ".data.data_ov020_02114004" far_data
+#pragma section d02114004 begin
+StdEnt data_ov020_02114004[6] = {{0x0043, 0x0bb8, 0x0032, 0x0190, {0x0000, 0x0000, 0x0000}, 0x0100},
      {0x0043, 0x0abe, 0x003c, 0x0866, {0x0000, (s16)0x9556, 0x0000}, 0x0100},
      {0x0014, 0x051b, 0x0000, (s16)0xfaf9, {0x0003, 0x2000, 0x0000}, 0xffff},
      {0x0044, (s16)0xfbbe, (s16)0xf6a0, 0x0442, {0x0000, 0x6000, 0x0000}, 0x0201},
      {0x010a, 0x029e, (s16)0xf72c, (s16)0xfdb2, {0x0000, (s16)0xe000, 0x0000}, 0xffff},
-     {0x0043, (s16)0xfbbe, (s16)0xf6d2, 0x0442, {0x0000, 0x6000, 0x0000}, 0xff03}},
-    /* 02114064 */
-    {{0x0047, (s16)0xf862, 0x0320, 0x00c8, {0x0000, 0x0000, 0x0000}, 0xffff},
+     {0x0043, (s16)0xfbbe, (s16)0xf6d2, 0x0442, {0x0000, 0x6000, 0x0000}, 0xff03}};
+typedef char data_ov020_02114004_size[sizeof(data_ov020_02114004) == 0x60 ? 1 : -1];
+#pragma section d02114004 end
+
+#pragma define_section d02114064 ".data.data_ov020_02114064" ".data.data_ov020_02114064" ".data.data_ov020_02114064" far_data
+#pragma section d02114064 begin
+StdEnt data_ov020_02114064[7] = {{0x0047, (s16)0xf862, 0x0320, 0x00c8, {0x0000, 0x0000, 0x0000}, 0xffff},
      {0x003a, (s16)0xfaec, 0x0000, 0x0834, {0x0000, (s16)0xe71d, 0x0000}, 0xffff},
      {0x0126, (s16)0xfa0d, 0x0000, 0x0786, {0x0000, 0x238e, 0x0000}, 0xffff},
      {0x0120, (s16)0xfa88, 0x0352, 0x012c, {0x0000, 0x4000, 0x0000}, 0xffff},
      {0x0120, (s16)0xfd44, 0x0352, (s16)0xff9c, {0x0000, (s16)0xc000, 0x0000}, 0xffff},
      {0x0120, (s16)0xfa88, 0x0352, (s16)0xfda8, {0x0000, 0x4000, 0x0000}, 0xffff},
-     {0x0120, (s16)0xfd44, 0x0352, (s16)0xfd12, {0x0000, (s16)0xc000, 0x0000}, 0xffff}},
-    /* 021140d4 */
-    {{0x00ab, 0x0a28, 0x0320, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0xff01},
+     {0x0120, (s16)0xfd44, 0x0352, (s16)0xfd12, {0x0000, (s16)0xc000, 0x0000}, 0xffff}};
+typedef char data_ov020_02114064_size[sizeof(data_ov020_02114064) == 0x70 ? 1 : -1];
+#pragma section d02114064 end
+
+#pragma define_section d021140d4 ".data.data_ov020_021140d4" ".data.data_ov020_021140d4" ".data.data_ov020_021140d4" far_data
+#pragma section d021140d4 begin
+StdEnt data_ov020_021140d4[11] = {{0x00ab, 0x0a28, 0x0320, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0xff01},
      {0x00ab, 0x0b54, 0x0320, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0xffff},
      {0x00ab, 0x0c80, 0x0320, (s16)0xfb50, {0x0000, 0x0000, 0x0000}, 0xff01},
      {0x00ab, 0x0a28, 0x0320, (s16)0xfe0c, {0x0000, (s16)0x8000, 0x0000}, 0xffff},
@@ -542,8 +797,13 @@ struct {
      {0x001e, 0x04b0, 0x041a, 0x0708, {0x0000, 0x0000, 0x0000}, 0xff06},
      {0x0108, 0x080c, 0x04b0, (s16)0xfbb4, {0x0000, (s16)0xc000, 0x0000}, 0xffff},
      {0x0108, 0x080c, 0x04b0, (s16)0xfe0c, {0x0000, (s16)0xc000, 0x0000}, 0xffff},
-     {0x0108, 0x0514, 0x03ce, (s16)0xfaec, {0x0000, 0x2000, 0x0000}, 0xffff}},
-    /* 02114184 */
+     {0x0108, 0x0514, 0x03ce, (s16)0xfaec, {0x0000, 0x2000, 0x0000}, 0xffff}};
+typedef char data_ov020_021140d4_size[sizeof(data_ov020_021140d4) == 0xb0 ? 1 : -1];
+#pragma section d021140d4 end
+
+#pragma define_section d02114184 ".data.data_ov020_02114184" ".data.data_ov020_02114184" ".data.data_ov020_02114184" far_data
+#pragma section d02114184 begin
+struct data_ov020_02114184 data_ov020_02114184 = {
     {{0x02, 0xff, 0x028a, 0x0137, 0x189c, {0x00, 0x00}, (s16)0x8000, 0x0000},
      {0x04, 0x01, 0x0d5c, (s16)0xf768, (s16)0xfa60, {0x00, 0x00}, 0x0000, 0x0000},
      {0x04, 0xff, (s16)0xfd62, 0x0a8c, 0x012c, {0x00, 0x00}, 0x4000, 0x0000},
@@ -565,9 +825,14 @@ struct {
      {0x04, 0x01, 0x0a5a, (s16)0xf63c, 0x047e, {0x00, 0x00}, 0x0000, 0x0000},
      {0x04, 0x01, 0x012c, 0x0960, (s16)0xfed4, {0x00, 0x00}, 0x4000, 0x0000},
      {0x04, 0x01, 0x0d93, 0x0514, 0x0190, {0x00, 0x00}, (s16)0xc000, 0x0000}},
-    /* 021142aa */ 0x0000,
-    /* 021142ac */
-    {{0x01f4, 0x0000, 0x0802, 0x0000, 0x0100, 0x0012},
+    0x0000
+};
+typedef char data_ov020_02114184_size[sizeof(data_ov020_02114184) == 0x128 ? 1 : -1];
+#pragma section d02114184 end
+
+#pragma define_section d021142ac ".data.data_ov020_021142ac" ".data.data_ov020_021142ac" ".data.data_ov020_021142ac" far_data
+#pragma section d021142ac begin
+DoorEnt data_ov020_021142ac[25] = {{0x01f4, 0x0000, 0x0802, 0x0000, 0x0100, 0x0012},
      {0x0320, 0x0000, 0x0802, (s16)0x8000, 0x1000, 0x0012},
      {(s16)0xf9c0, 0x0000, (s16)0xf9f2, 0x0000, 0x6000, 0x0012},
      {(s16)0xf7a4, (s16)0xff38, 0x110f, (s16)0xe000, 0x2000, 0x0012},
@@ -591,9 +856,13 @@ struct {
      {(s16)0xffb5, (s16)0xf6a0, 0x11c6, 0x0000, 0x2200, 0x0012},
      {(s16)0xffb5, (s16)0xf6a0, 0x0802, 0x0000, 0x2200, 0x0012},
      {(s16)0xf862, (s16)0xf6a0, 0x007d, (s16)0xc000, 0x2200, 0x0012},
-     {0x060e, (s16)0xf6a0, 0x0113, 0x4000, 0x2200, 0x0012}},
-    /* 021143d8 */
-    {{0x0044, 0x041a, 0x07ea, 0x09c4, {0x0000, (s16)0xa000, 0x0000}, 0x0500},
+     {0x060e, (s16)0xf6a0, 0x0113, 0x4000, 0x2200, 0x0012}};
+typedef char data_ov020_021142ac_size[sizeof(data_ov020_021142ac) == 0x12c ? 1 : -1];
+#pragma section d021142ac end
+
+#pragma define_section d021143d8 ".data.data_ov020_021143d8" ".data.data_ov020_021143d8" ".data.data_ov020_021143d8" far_data
+#pragma section d021143d8 begin
+StdEnt data_ov020_021143d8[19] = {{0x0044, 0x041a, 0x07ea, 0x09c4, {0x0000, (s16)0xa000, 0x0000}, 0x0500},
      {0x001f, 0x0285, 0x0be9, 0x044c, {0x0000, 0x0000, 0x0000}, 0xff02},
      {0x0098, (s16)0xfe0c, (s16)0xff38, 0x170c, {0x0000, (s16)0x8000, 0x0000}, 0xffff},
      {0x0092, 0x0898, (s16)0xff38, 0x12c0, {0x0000, 0x0000, 0x0000}, 0x0000},
@@ -611,9 +880,13 @@ struct {
      {0x001e, 0x047e, 0x08da, 0x08ca, {0x0000, 0x0000, 0x0000}, 0xff06},
      {0x0031, 0x0096, 0x0c80, 0x012c, {0x0000, 0x0000, 0x0000}, 0x00fc},
      {0x0031, 0x01c2, 0x0c80, 0x012c, {0x0000, 0x0000, 0x0000}, 0x0017},
-     {0x0031, (s16)0xf47a, 0x044c, 0x14b4, {0x0000, 0x6000, 0x0000}, 0x00f3}},
-    /* 02114508 */
-    {{0x0048, (s16)0xff42, (s16)0xf66e, 0x00be, {0x0000, 0x0000, 0x0000}, 0xffff},
+     {0x0031, (s16)0xf47a, 0x044c, 0x14b4, {0x0000, 0x6000, 0x0000}, 0x00f3}};
+typedef char data_ov020_021143d8_size[sizeof(data_ov020_021143d8) == 0x130 ? 1 : -1];
+#pragma section d021143d8 end
+
+#pragma define_section d02114508 ".data.data_ov020_02114508" ".data.data_ov020_02114508" ".data.data_ov020_02114508" far_data
+#pragma section d02114508 begin
+StdEnt data_ov020_02114508[22] = {{0x0048, (s16)0xff42, (s16)0xf66e, 0x00be, {0x0000, 0x0000, 0x0000}, 0xffff},
      {0x0049, 0x0af0, 0x0320, 0x073a, {0x0000, 0x0000, 0x0000}, 0xffff},
      {0x00e7, (s16)0xf49a, (s16)0xff38, 0x14a6, {0x0857, (s16)0xe000, (s16)0xffff}, 0x0000},
      {0x00d2, 0x0b54, 0x0000, (s16)0xfb82, {0x0000, 0x0000, 0x0000}, 0xffff},
@@ -634,8 +907,14 @@ struct {
      {0x00fe, 0x07d9, (s16)0xf4ac, 0x064a, {0x0000, (s16)0x8000, 0x0000}, 0x0204},
      {0x001e, 0x0ce4, 0x04e2, 0x00b4, {0x0000, 0x0000, 0x0000}, 0xff06},
      {0x011c, (s16)0xf60a, (s16)0xf6a0, 0x0672, {0x00b6, 0x0000, 0x0000}, 0xffff},
-     {0x00fe, 0x07d9, (s16)0xf4ac, 0x064a, {0x0000, (s16)0x8000, 0x0000}, 0x1204}},
-    /* 02114668 */ {0x53504c43, 8, 54, {{0x00000fe3, 0x000000ff}, {0x00040fc4, 0x000000ff},
+     {0x00fe, 0x07d9, (s16)0xf4ac, 0x064a, {0x0000, (s16)0x8000, 0x0000}, 0x1204}};
+typedef char data_ov020_02114508_size[sizeof(data_ov020_02114508) == 0x160 ? 1 : -1];
+#pragma section d02114508 end
+
+#pragma define_section d02114668 ".data.data_ov020_02114668" ".data.data_ov020_02114668" ".data.data_ov020_02114668" far_data
+#pragma section d02114668 begin
+struct data_ov020_02114668 data_ov020_02114668 = {
+    {0x53504c43, 8, 54, {{0x00000fe3, 0x000000ff}, {0x00040fc4, 0x000000ff},
                                         {0x00040fc0, 0x000000ff}, {0x00040105, 0x000000ff},
                                         {0x01000fc0, 0x000000ff}, {0x00040fcc, 0x000000ff},
                                         {0x000403c5, 0x000000ff}, {0x01000fc4, 0x000000ff},
@@ -662,7 +941,7 @@ struct {
                                         {0x00040185, 0x000000ff}, {0x00040505, 0x000000ff},
                                         {0x000401c0, 0x000000ff}, {0x01040fc4, 0x000000ff},
                                         {0x000401c5, 0x000000ff}, {0x000401c4, 0x000000ff}}},
-    /* 02114820 */ {0xffffffff, 0xffffffff}};
-
-typedef char data_ov020_021134e4_size[sizeof(data_ov020_021134e4) == 0x190 ? 1 : -1];
-typedef char data_ov020_02113780_size[sizeof(data_ov020_02113780) == 0x10a8 ? 1 : -1];
+    {0xffffffff, 0xffffffff}
+};
+typedef char data_ov020_02114668_size[sizeof(data_ov020_02114668) == 0x1c0 ? 1 : -1];
+#pragma section d02114668 end
