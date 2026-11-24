@@ -29,18 +29,6 @@
       "end": "0x021129f8"
     },
     {
-      "name": ".data.data_ov036_02112b28",
-      "input_section": ".data",
-      "start": "0x02112b28",
-      "end": "0x02112b48"
-    },
-    {
-      "name": ".data.data_ov036_02112ba8",
-      "input_section": ".data",
-      "start": "0x02112ba8",
-      "end": "0x02112bc8"
-    },
-    {
       "name": ".data.data_ov036_02113f4c",
       "input_section": ".data",
       "start": "0x02113f4c",
@@ -187,20 +175,6 @@
         }
       ],
       "evidence": "compiler storage includes the two-word ABI preamble at 0x02113f94; the configured public address point is eight bytes later and all 33 slots through 0x0211401c match retail"
-    },
-    {
-      "symbol": "data_ov036_02112b28",
-      "address": "0x02112b28",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "the carpet's collision properties: one floor entry"
-    },
-    {
-      "symbol": "data_ov036_02112ba8",
-      "address": "0x02112ba8",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "single-entry floor CLPS, same words as data_ov036_02112b28; no ov036 relocation targets it"
     }
   ],
   "bss": [
@@ -242,8 +216,7 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated animation resource destructor-registration node"
-    }
-  ,
+    },
     {
       "symbol": "data_ov036_021141d8",
       "address": "0x021141d8",
@@ -971,20 +944,6 @@
           "section": ".ctor",
           "start": "0x021129f4",
           "end": "0x021129f8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov036_02112b28",
-          "start": "0x02112b28",
-          "end": "0x02112b48",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov036_02112ba8",
-          "start": "0x02112ba8",
-          "end": "0x02112bc8",
           "differingBytes": 0,
           "firstDiff": null
         },

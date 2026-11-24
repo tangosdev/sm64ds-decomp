@@ -28,36 +28,6 @@
       "end": "0x021129f4"
     },
     {
-      "name": ".data.data_ov036_02112a88",
-      "input_section": ".data",
-      "start": "0x02112a88",
-      "end": "0x2112aa8"
-    },
-    {
-      "name": ".data.data_ov036_02112ae8",
-      "input_section": ".data",
-      "start": "0x02112ae8",
-      "end": "0x2112b08"
-    },
-    {
-      "name": ".data.data_ov036_02112b88",
-      "input_section": ".data",
-      "start": "0x02112b88",
-      "end": "0x2112ba8"
-    },
-    {
-      "name": ".data.data_ov036_02112be8",
-      "input_section": ".data",
-      "start": "0x02112be8",
-      "end": "0x2112c08"
-    },
-    {
-      "name": ".data.data_ov036_02112c08",
-      "input_section": ".data",
-      "start": "0x02112c08",
-      "end": "0x2112c28"
-    },
-    {
       "name": ".data.data_ov036_02113e4c",
       "input_section": ".data",
       "start": "0x02113e4c",
@@ -156,41 +126,6 @@
       "address": "0x02113e88",
       "size": "0x3c",
       "evidence": "the daObjDorifuResources[5] table InitResources/CleanupResources forward to daObjDorifu_c with, read directly from the ov036 overlay image via tools/modules.py: five 0xc-byte {SharedFilePtr*, SharedFilePtr*, CLPS_Block*} entries pointing into this overlay's own .bss/.data cells, the same shape as sibling daObjKm1_Dorifu_c's data_ov043_02112518"
-    },
-    {
-      "symbol": "data_ov036_02112a88",
-      "address": "0x02112a88",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "one of the five plank triangles' collision properties: floor and wall entries"
-    },
-    {
-      "symbol": "data_ov036_02112ae8",
-      "address": "0x02112ae8",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "one of the five plank triangles' collision properties: floor and wall entries"
-    },
-    {
-      "symbol": "data_ov036_02112b88",
-      "address": "0x02112b88",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "one of the five plank triangles' collision properties: floor and wall entries"
-    },
-    {
-      "symbol": "data_ov036_02112be8",
-      "address": "0x02112be8",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "one of the five plank triangles' collision properties: floor and wall entries"
-    },
-    {
-      "symbol": "data_ov036_02112c08",
-      "address": "0x02112c08",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "one of the five plank triangles' collision properties: floor and wall entries"
     }
   ],
   "bss": [
@@ -1509,41 +1444,6 @@
           "section": ".ctor",
           "start": "0x021129f0",
           "end": "0x021129f4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov036_02112a88",
-          "start": "0x02112a88",
-          "end": "0x02112aa8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov036_02112ae8",
-          "start": "0x02112ae8",
-          "end": "0x02112b08",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov036_02112b88",
-          "start": "0x02112b88",
-          "end": "0x02112ba8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov036_02112be8",
-          "start": "0x02112be8",
-          "end": "0x02112c08",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov036_02112c08",
-          "start": "0x02112c08",
-          "end": "0x02112c28",
           "differingBytes": 0,
           "firstDiff": null
         },

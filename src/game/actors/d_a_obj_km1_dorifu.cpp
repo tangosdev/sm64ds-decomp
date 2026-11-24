@@ -129,17 +129,4 @@ DorifuCollisionFilePtr data_ov043_02112670(ASSET_KM1_DORIFU2_KCL);
 DorifuCollisionFilePtr data_ov043_02112698(ASSET_KM1_DORIFU3_KCL);
 DorifuCollisionFilePtr data_ov043_02112660(ASSET_KM1_DORIFU4_KCL);
 
-Km1DorifuClpsBlock sKm1Dorifu0Clps = {
-    {'C', 'L', 'P', 'S'}, 8, 2, {{0x0fc0, 0x00ff}, {0x2fc0, 0x00ff}}};
 
-Km1DorifuClpsBlock sKm1Dorifu1Clps = {
-    {'C', 'L', 'P', 'S'}, 8, 2, {{0x0fc0, 0x00ff}, {0x4fc0, 0x00ff}}};
-
-Km1DorifuClpsBlock sKm1Dorifu2Clps = {
-    {'C', 'L', 'P', 'S'}, 8, 2, {{0x0fc0, 0x00ff}, {0x4fc0, 0x00ff}}};
-
-Km1DorifuClpsBlock sKm1Dorifu3Clps = {
-    {'C', 'L', 'P', 'S'}, 8, 2, {{0x0fc0, 0x00ff}, {0x4fc0, 0x00ff}}};
-
-Km1DorifuClpsBlock sKm1Dorifu4Clps = {
-    {'C', 'L', 'P', 'S'}, 8, 2, {{0x4fc0, 0x00ff}, {0x0fc0, 0x00ff}}};

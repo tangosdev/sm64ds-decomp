@@ -151,31 +151,15 @@ struct RcGuruguruCollisionFilePtr : SharedFilePtr {
 RcGuruguruModelFilePtr gRcGuruguruModelFile(ASSET_RC_GURUGURU_BMD);         /* model */
 RcGuruguruCollisionFilePtr gRcGuruguruCollisionFile(ASSET_RC_GURUGURU_KCL); /* collision */
 
-/* 0x02112aa8 is one CLPS entry. 0x02112ac8 is the two-entry block SetFile
-   receives. The 0xffffffff words after each count are not entries; symbols.txt
-   still names them inside the block. */
-struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entry;
-    u32 tail[4];
-} data_ov036_02112aa8 = {
-    0x53504c43, 8, 1, {0x01000fc0, 0x000000ff}, {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
-};
-struct {
+/* The guruguru's CLPS blocks live in the stage-map TU; SetFile receives
+   the two-entry block at 0x02112ac8. */
+extern struct {
     u32 tag;
     u16 stride;
     u16 count;
     struct CLPS entries[2];
     u32 tail[2];
-} data_ov036_02112ac8 = {
-    0x53504c43,
-    8,
-    2,
-    {{0x01000fc0, 0x000000ff}, {0x01000fc4, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
-};
+} data_ov036_02112ac8;
 
 RcGuruguruAssets data_ov036_02113d78 = {
     &gRcGuruguruModelFile,

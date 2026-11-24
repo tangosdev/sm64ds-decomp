@@ -34,12 +34,6 @@
       "end": "0x02113d84"
     },
     {
-      "name": ".data.data_ov036_02112aa8",
-      "input_section": ".data",
-      "start": "0x02112aa8",
-      "end": "0x02112ae8"
-    },
-    {
       "name": ".bss",
       "start": "0x021140ac",
       "end": "0x021140d4"
@@ -109,20 +103,6 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "resource-pointer table: model handle, collision handle, CLPS block"
-    },
-    {
-      "symbol": "data_ov036_02112aa8",
-      "address": "0x02112aa8",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "single-entry floor CLPS including its all-ones tail; no ov036 relocation targets it"
-    },
-    {
-      "symbol": "data_ov036_02112ac8",
-      "address": "0x02112ac8",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "two-entry CLPS block named by data_ov036_02113d78, including its all-ones tail"
     },
     {
       "symbol": "_ZTI18daObjRc_Guruguru_c",
@@ -292,13 +272,6 @@
           "section": ".ctor",
           "start": "0x021129ec",
           "end": "0x021129f0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov036_02112aa8",
-          "start": "0x02112aa8",
-          "end": "0x02112ae8",
           "differingBytes": 0,
           "firstDiff": null
         },
