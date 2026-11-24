@@ -230,9 +230,9 @@
       "relocation_destinations_verified": "PASS"
     },
     "linkcheck": {
-      "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
       "result": "scratch-data-verified",
-      "scratch": "build/tu (gitignored)",
+      "scratch": "build/tu/arm9-func_0200f13c/link (gitignored)",
       "phases": {
         "delink": true,
         "lcf": true,
@@ -273,8 +273,72 @@
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              5,
+              6,
+              7,
+              8,
+              9,
+              11,
+              13,
+              14
+            ],
+            "desired": [
+              5,
+              11,
+              9,
+              8,
+              7,
+              6,
+              13,
+              14
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                11,
+                13,
+                14
+              ],
+              "desired": [
+                5,
+                11,
+                9,
+                8,
+                7,
+                6,
+                13,
+                14
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                11,
+                13,
+                14
+              ]
+            }
+          ],
+          "symbolIndices": 8,
+          "sectionLinks": 0,
+          "sectionInfos": 2,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,

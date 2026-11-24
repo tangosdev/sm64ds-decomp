@@ -57,7 +57,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-data-verified",
+      "result": "data-verified",
       "scratch": "build/tu/arm9-Message3/link (gitignored)",
       "phases": {
         "delink": true,
@@ -92,14 +92,26 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 26
+          "LICENSED": 37
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
+        "groups": [
+          {
+            "section": ".rodata",
+            "original": [
+              5,
+              6
+            ],
+            "desired": [
+              5,
+              6
+            ]
+          }
+        ],
         "objisolate": null,
         "errors": null
       },
