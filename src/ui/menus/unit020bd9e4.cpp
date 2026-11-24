@@ -45,7 +45,7 @@
 
 extern "C" void NNS_SndHandleReleaseSeq(NNSSndHandle *);
 extern "C" void NNS_SndHandleInit(NNSSndHandle *);
-extern "C" int NNS_SndPlayerStopSeq(NNSSndHandle *, int);
+extern "C" void NNS_SndPlayerStopSeq(NNSSndHandle *, int);
 extern "C" int NNS_SndArcPlayerStartSeqArc(void *, unsigned int, int);
 
 extern int data_ov007_02103134[];

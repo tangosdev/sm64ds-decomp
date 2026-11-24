@@ -585,10 +585,11 @@ void daKuriKing_c::EnterScaleChange() {
     this->mScaleSteps = 3;
 }
 
-int daKuriKing_c::UpdateMegaKnockback() {
+void daKuriKing_c::UpdateMegaKnockback() {
     if(ApproachAngle(&this->mWalkSpeed, 0, 0xa, 0x100, 1)==0)
-        return ChangeState(3);
-    return WalkAlongRing();
+        ChangeState(3);
+    else
+        WalkAlongRing();
 }
 
 void daKuriKing_c::func_ov074_0211fc34()
@@ -820,7 +821,7 @@ void daKuriKing_c::UpdateIntroTalk() {
 
 void func_ov074_021203e0(void) {}
 
-int daKuriKing_c::ChangeState(int i) {
+void daKuriKing_c::ChangeState(int i) {
     mState = i;
     int j = mState;
     KuriKingPmf *c = (KuriKingPmf *)this;
@@ -1341,9 +1342,7 @@ void daKuriKing_c::UpdateCylindersAndFootsteps() {
 /* Advances mWalkAngle by mWalkSpeed while on the ground and re-derives the
  * walk velocity from the sine table, then eases mAngle.y toward the
  * direction-scaled heading. */
-/* Returns int so callers can `return WalkAlongRing(c)`; the body still
- * falls off the end, which is what the ROM's code does. */
-int daKuriKing_c::WalkAlongRing() {
+void daKuriKing_c::WalkAlongRing() {
     if (this->mWithMeshClsn.IsOnGround()) {
         this->mWalkAngle += this->mWalkSpeed;
         this->mPos.x = FX_MUL(FX_SinIdx(((u16)this->mWalkAngle) >> 4), 0x546000);

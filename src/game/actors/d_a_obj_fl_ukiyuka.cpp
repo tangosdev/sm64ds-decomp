@@ -70,7 +70,7 @@ int daObjFl_Ukiyuka_c::InitResources() {
         mMeshCollider.SetClipRadius(0x1000000);
         break;
     }
-    InitResourcesFrom(&data_ov022_021140d4[mVariant], kBobAmplitude);
+    return InitResourcesFrom(&data_ov022_021140d4[mVariant], kBobAmplitude);
 }
 
 /* 8-byte file handles. Both models use func_02017acc / func_02017ab4 and

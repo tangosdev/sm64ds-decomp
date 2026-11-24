@@ -673,12 +673,12 @@ int StaffRoll::func_ov002_020f2984() {
     return (int)this;
 }
 
-int StaffRoll::func_ov002_020f2990() {
+void StaffRoll::func_ov002_020f2990() {
     int x, y;
     int idx;
 
     if (endVisible == 0)
-        return (int)this;
+        return;
 
     x = endX >> 0xc;
     y = endY >> 0xc;
@@ -2289,11 +2289,11 @@ void StaffRoll::func_ov002_020f5f60() {
     starChars = 0;
 }
 
-int StaffRoll::func_ov002_020f5f8c() {
+void StaffRoll::func_ov002_020f5f8c() {
     func_ov002_020f26e0();
     func_ov002_020f3978();
     func_ov002_020f2eac();
-    return func_ov002_020f2990();
+    func_ov002_020f2990();
 }
 
 int StaffRoll::func_ov002_020f5fb8() {

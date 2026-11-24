@@ -137,7 +137,7 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     short St_Knocked_Init();
     int St_Knocked_Main();
     void HandleContact();
-    int func_ov070_0211f0a4();
+    void func_ov070_0211f0a4();
 };
 
 /* Inline destructor is not the key function; OnYoshiTryEat is the first

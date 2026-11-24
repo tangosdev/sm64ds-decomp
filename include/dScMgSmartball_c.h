@@ -104,7 +104,7 @@ struct dScMgSmartball_c : dScMgBase_c {
        (src/minigames/d_s_mg_smartball.cpp); the slot is unchanged. */
     virtual void StartRound(int arg);               /* slot 18 */
     virtual int  OnGraphCallback3();                           /* slot 25 */
-    virtual int  InitSubScreenBg();                          /* slot 31 */
+    virtual void InitSubScreenBg();                            /* slot 31 */
     s32  InitResources();  /* slot  0 */
     void AfterCleanupResources(u32 vfSuccess);
                            /* slot  5 */

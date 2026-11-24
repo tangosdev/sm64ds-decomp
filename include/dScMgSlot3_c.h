@@ -62,7 +62,7 @@ struct dScMgSlot3_c : dScMgSingle3DBase_c {
        _ZTV12dScMgSlot3_c. */
     s32 InitResources();                  /* slot  0 */
     virtual void StartRound(int arg);     /* slot 18 */
-    virtual int SaveScreenForMenu();      /* slot 29 */
+    virtual void SaveScreenForMenu();     /* slot 29 */
     virtual void RestoreScreenFromMenu(); /* slot 30 */
     virtual void InitMainScreenBg();      /* slot 32 */
     s32 Behavior();                       /* slot  6 */

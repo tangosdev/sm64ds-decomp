@@ -398,7 +398,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            compiles to from ov006; the vtable word is NOT a linker artifact,
            because the twenty-six tables that do not override this slot hold
            0x020af04c directly. */
-    virtual int  CloseMenu();                /* slot 28 */
+    virtual void CloseMenu(); /* slot 28 */
     /* Slot 29 -- SaveScreenForMenu (formerly OnAimedAtWithEgg, dActor_c.h:146
        at the same index). This is the slot that disproved the borrowed
        names; see the caution below.
@@ -479,7 +479,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            and r1 holding the loaded function pointer; a 12-byte return would
            put a hidden result pointer in r0 and `this` in r1 under AAPCS.
            Whatever slot 30 returns here, it is not a Vector3. */
-    virtual int  SaveScreenForMenu();                   /* slot 29 */
+    virtual void SaveScreenForMenu(); /* slot 29 */
     /* Slot 30 -- RestoreScreenFromMenu (formerly OnAimedAtWithEggReturnVec,
        dActor_c.h:151 at the same index). Both halves of the old name were
        MEASURED wrong here: it is slot 29's mirror, and it returns nothing.
@@ -635,7 +635,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            `recovered name: dScMgTrampoline2_c_Kill` and included
            dScMgTrampoline2_c.h.  Five tables reference that address, so it is
            dScMgD3DBase_c's.  Fixed here along with the type it casts `this` to. */
-    virtual int  InitSubScreenBg();                          /* slot 31 */
+    virtual void InitSubScreenBg(); /* slot 31 */
     /* Slot 32 -- InitMainScreenBg (formerly Virtual80, and before that the
        borrowed `AfterClsn`), and it is slot 31 again with the other display
        engine.  Reading the two bodies side by side is the fastest way to see

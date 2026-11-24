@@ -1977,7 +1977,7 @@ extern void Enable3dEngines();
 }
 }
 
-int dScMgBase_c::CloseMenu() {
+void dScMgBase_c::CloseMenu() {
     using s20af04c::Enable3dEngines;
     func_02012e1c();
     mMenuOpen = 0;
@@ -2011,7 +2011,7 @@ extern int GetGameLanguage(void);
 }
 }
 
-int dScMgBase_c::SaveScreenForMenu() {
+void dScMgBase_c::SaveScreenForMenu() {
     using s20af094::GetGameLanguage;
     if (GetDisplayMode() != 0)
         Disable3dEngines();
@@ -3910,7 +3910,7 @@ extern unsigned char gSubScreenLayers;
 }
 }
 
-int dScMgBase_c::InitSubScreenBg() {
+void dScMgBase_c::InitSubScreenBg() {
     using s20b2880::GetGameLanguage;
     using s20b2880::LoadCompressedFileAt;
     using s20b2880::gSubScreenLayers;

@@ -35,7 +35,7 @@ extern void Vec3fGetDistAndAngle(const Vector3 *from, const Vector3 *to, int *ou
                                  short *outVertAng, short *outHorzAng);
 extern void Vec3fSetDistAndAngle(Vector3 *res, const Vector3 *trans, int mag, short ang,
                                  short angY);
-extern int func_02007cec(void *a, const Vector3 *b, int c);
+extern void func_02007cec(void *a, const Vector3 *b, int c);
 extern void Math_Function_0203b0fc(int *value, int target, int step, int max);
 extern int AngleDiff(int a, int b);
 }

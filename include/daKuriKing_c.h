@@ -135,7 +135,7 @@ struct daKuriKing_c : dEnemyBase_c {
     void EnterDefeat();
     void UpdateScaleChange();
     void EnterScaleChange();
-    int UpdateMegaKnockback();
+    void UpdateMegaKnockback();
     void func_ov074_0211fc34();
     void UpdateKnockback();
     void EnterKnockback();
@@ -146,7 +146,7 @@ struct daKuriKing_c : dEnemyBase_c {
     void EnterWalk();
     void UpdateIntroTalkEnd();
     void UpdateIntroTalk();
-    int ChangeState(int i);
+    void ChangeState(int i);
     void UpdateState();
     int AdvanceMaterialChanger();
     int StepScaleTransition();
@@ -159,7 +159,7 @@ struct daKuriKing_c : dEnemyBase_c {
     void HandleCylinderHits();
     void UpdateBodyMatrix();
     void UpdateCylindersAndFootsteps();
-    int WalkAlongRing();
+    void WalkAlongRing();
     void UpdateShadows();
     void UpdateModelMatrix();
     void UpdateAnimation();

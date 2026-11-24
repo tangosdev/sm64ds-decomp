@@ -157,7 +157,7 @@ void daObjYajirusi_c::OnHitByMegaChar(daPly_c &player) {
 // 0x02137d40 (0x40)
 /* Slot 22. A Bob-omb (actorID 0xce) breaks the sign. The slot's type is
  * int, and neither path returns a value. */
-int daObjYajirusi_c::OnAttacked1(dActor_c &other) {
+void daObjYajirusi_c::OnAttacked1(dActor_c &other) {
     unsigned r = (other.actorID == 0xce) ? 1u : 0u;
     if (r == 0)
         return;

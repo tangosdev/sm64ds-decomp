@@ -74,7 +74,7 @@ struct dScMgAmida_c : dScMgBase_c {
        Keep IsVariant2 LAST all the same: any further virtual added to dScMgBase_c
        would take 36 and push it out again. */
     virtual void StartRound(int arg);                 /* slot 18 */
-    virtual int  InitSubScreenBg();                            /* slot 31 */
+    virtual void InitSubScreenBg();                   /* slot 31 */
     virtual void PaintSquare(int cx, int cy, int colour, int size); /* slot 34 */
     virtual int  IsAltVariant();                          /* slot 35 */
     virtual int IsVariant2();                             /* slot 36 */
