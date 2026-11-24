@@ -45,15 +45,3 @@ src/game/actors/d_a_snm_bth.cpp:
     .init start:0x02112f70 end:0x02112fc4
     .ctor start:0x02112fd0 end:0x02112fd4
     .bss start:0x02113d04 end:0x02113d1c
-
-src/unnamed/ov027/data_ov027.c:
-    complete
-    .rodata start:0x02112b14 end:0x02112ca4
-
-src/unnamed/ov027/data_ov027_02112fe0.c:
-    complete
-    .data.pre start:0x02112fe0 end:0x021130e8
-
-src/unnamed/ov027/data_ov027_02113128.c:
-    complete
-    .data.gap0 start:0x02113128 end:0x021137c4

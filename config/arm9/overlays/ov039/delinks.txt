@@ -9,7 +9,3 @@ src/game/actors/d_a_obj_kumo.cpp:
     .init start:0x021113b4 end:0x021113f4
     .ctor start:0x021113f4 end:0x021113f8
     .bss start:0x021118e0 end:0x02111900
-
-src/unnamed/ov039/data_ov039.c:
-    complete
-    .data start:0x02111400 end:0x02111818

@@ -11,7 +11,3 @@ src/game/actors/d_a_obj_hs_billboard.cpp:
     .init start:0x02111434 end:0x021114ec
     .ctor start:0x021114ec end:0x021114f0
     .bss start:0x02111a00 end:0x02111a50
-
-src/unnamed/ov031/data_ov031.c:
-    complete
-    .data start:0x02111500 end:0x021118e8
