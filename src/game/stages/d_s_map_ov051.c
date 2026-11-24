@@ -36,7 +36,7 @@ extern ViewEntry data_ov051_02111588[4];
 extern StandardEntry data_ov051_021115c0[4];
 extern StandardEntry data_ov051_02111600[5];
 extern Clps_02111650 data_ov051_02111650;
-static StandardEntry lead_ov051_021116b0[7];
+extern StandardEntry data_ov051_021116b0[7];
 extern SimpleEntry data_ov051_02111720[15];
 extern SimpleEntry data_ov051_02111798[18];
 extern StandardEntry data_ov051_02111828[10];
@@ -106,7 +106,7 @@ ObjSubTable data_ov051_02111528[5] = {
     {0x00, 0x05, {0x00, 0x00}, &data_ov051_02111600[0]},
     {0x20, 0x0a, {0x00, 0x00}, &data_ov051_02111828[0]},
     {0x25, 0x0f, {0x00, 0x00}, &data_ov051_02111720[0]},
-    {0x40, 0x07, {0x00, 0x00}, &lead_ov051_021116b0[0]},
+    {0x40, 0x07, {0x00, 0x00}, &data_ov051_021116b0[0]},
     {0x45, 0x12, {0x00, 0x00}, &data_ov051_02111798[0]},
 };
 
@@ -158,7 +158,7 @@ Clps_02111650 data_ov051_02111650 = {
     {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
 };
 
-static StandardEntry lead_ov051_021116b0[7] = {
+StandardEntry data_ov051_021116b0[7] = {
     {0x00fe, (s16)0xff9c, 0x034d, (s16)0xf894, 0x0000, 0x2000, 0x0000, 0x1204},
     {0x00fe, (s16)0xfc7c, 0x0246, (s16)0xfaec, 0x0000, (s16)0xa000, 0x0000, 0x1104},
     {0x00fe, 0x0155, 0x0164, (s16)0xfbae, 0x0000, (s16)0xc000, 0x0000, 0x1004},

@@ -25,7 +25,7 @@ extern s16 data_ov054_021111fc[5];
 extern ObjSubTable data_ov054_02111208[2];
 extern ObjSubTable data_ov054_02111218[2];
 extern ObjSubTable data_ov054_02111228[2];
-static SimpleEntry lead_ov054_02111238[2];
+extern SimpleEntry data_ov054_02111238[2];
 extern ObjSubTable data_ov054_02111248[2];
 extern ObjSubTable data_ov054_02111258[2];
 extern SimpleEntry data_ov054_02111268[3];
@@ -70,7 +70,7 @@ s16 data_ov054_021111fc[5] = {
 
 ObjSubTable data_ov054_02111258[2] = {
     {0x00, 0x05, {0x00, 0x00}, &data_ov054_021113b4[0]},
-    {0x05, 0x02, {0x00, 0x00}, &lead_ov054_02111238[0]},
+    {0x05, 0x02, {0x00, 0x00}, &data_ov054_02111238[0]},
 };
 
 ObjSubTable data_ov054_02111218[2] = {
@@ -83,7 +83,7 @@ ObjSubTable data_ov054_02111228[2] = {
     {0x05, 0x03, {0x00, 0x00}, &data_ov054_02111280[0]},
 };
 
-static SimpleEntry lead_ov054_02111238[2] = {
+SimpleEntry data_ov054_02111238[2] = {
     {0x2226, 0x0000, 0x0000, (s16)0xfa24},
     {0xe143, 0x076c, 0x0000, 0x0000},
 };
