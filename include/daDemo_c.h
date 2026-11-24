@@ -258,7 +258,7 @@ struct daDemo_c : dActor_c {
         int func_ov002_020f27e8();
         void func_ov002_020f2958();
         int func_ov002_020f2984();
-        int func_ov002_020f2990();
+        void func_ov002_020f2990();
         void func_ov002_020f2a48();
         void func_ov002_020f2a68();
         void func_ov002_020f2a78(int);
@@ -339,7 +339,7 @@ struct daDemo_c : dActor_c {
         void func_ov002_020f5efc();
         void func_ov002_020f5f0c(int);
         void func_ov002_020f5f60();
-        int func_ov002_020f5f8c();
+        void func_ov002_020f5f8c();
         int func_ov002_020f5fb8();
         void func_ov002_020f5fe4();
         /* Begin credit line n (1..0x14) in the first credit slot. */

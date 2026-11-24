@@ -975,7 +975,7 @@ void daPropeller_Heyho_c::HandleContact() {
 /* Defeat helper: a small puff of dust, then mExtraCoinCount + 1 coins spread
  * 10.0 units from the actor, then the actor is killed and recorded in the
  * death table. */
-int daPropeller_Heyho_c::func_ov070_0211f0a4() {
+void daPropeller_Heyho_c::func_ov070_0211f0a4() {
     this->SmallPoofDust();
     Vector3 pos;
     pos.x = this->mPos.x;

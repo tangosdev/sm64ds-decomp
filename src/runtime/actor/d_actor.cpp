@@ -843,31 +843,21 @@ void dActor_c::OnGroundPounded(dActor_c &pounder)
 {
 }
 
-int dActor_c::OnAttacked1(dActor_c &attacker)
-{
-}
+void dActor_c::OnAttacked1(dActor_c &attacker) {}
 
-int dActor_c::OnAttacked2(dActor_c &attacker)
-{
-}
+void dActor_c::OnAttacked2(dActor_c &attacker) {}
 
 void dActor_c::OnKicked(dActor_c &kicker)
 {
 }
 
-int dActor_c::OnPushed(dActor_c &pusher)
-{
-}
+void dActor_c::OnPushed(dActor_c &pusher) {}
 
-int dActor_c::OnHitByCannonBlastedChar(dActor_c &attacker)
-{
-}
+void dActor_c::OnHitByCannonBlastedChar(dActor_c &attacker) {}
 
 void dActor_c::OnHitByMegaChar(daPly_c &player) {}
 
-int dActor_c::OnHitFromUnderneath(dActor_c &attacker)
-{
-}
+void dActor_c::OnHitFromUnderneath(dActor_c &attacker) {}
 
 int dActor_c::OnAimedAtWithEgg()
 {

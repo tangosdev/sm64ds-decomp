@@ -177,7 +177,7 @@ struct dScMgSlot1_c : dScMgBase_c {
        for what that cost and how it was closed. */
     virtual void StartRound(int arg); /* slot 18 */
     virtual void OpenMenu();          /* slot 27 */
-    virtual int CloseMenu();          /* slot 28 */
+    virtual void CloseMenu();         /* slot 28 */
     int SlotReels_CheckStopped();
     void InitHud();
 

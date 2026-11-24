@@ -57,7 +57,7 @@ extern SoundSlot data_020a4c08[];
 extern SoundSlot data_020a4bf8[];
 extern SoundSlot data_020a4bf0;
 
-extern "C" int NNS_SndPlayerStopSeq(NNSSndHandle *handle, int v);
+extern "C" void NNS_SndPlayerStopSeq(NNSSndHandle *handle, int v);
 extern "C" void NNS_SndHandleReleaseSeq(NNSSndHandle *handle);
 extern "C" void NNS_SndHandleInit(NNSSndHandle *handle);
 extern "C" void *NNS_SndArcGetSeqArcParam(int kind, int id);

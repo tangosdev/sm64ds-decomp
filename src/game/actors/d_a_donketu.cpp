@@ -62,7 +62,7 @@ daDonketu_c *daDonketu_c_classInit() {
 int daDonketu_c::InitResources() {
     mBigBullyID = 0;
     mFileTable = &data_ov064_0211b834;
-    InitResourcesCommon();
+    return InitResourcesCommon();
 }
 
 /* 0 runs the shared worker, 1 is already handled, 2 drops a coin (actor

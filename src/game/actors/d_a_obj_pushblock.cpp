@@ -242,7 +242,7 @@ int daObjPushblock_c::CleanupResources() {
  * The ROM sets no return value on the early exits: r0 keeps whatever the last
  * call left there, and the body falls through to the epilogue. A bare `return`
  * is not valid C++ in a function that returns int. */
-int daObjPushblock_c::OnPushed(dActor_c &other) {
+void daObjPushblock_c::OnPushed(dActor_c &other) {
     dActor_c *pusher = &other;
     if (pusher != 0) {
         mPrevAngle.y = pusher->mAngle.y;

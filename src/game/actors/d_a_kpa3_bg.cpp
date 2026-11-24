@@ -12,8 +12,7 @@
  * Behavior runs data_ov060_0211b1ac[mState]: 0 finds Bowser, 1 watches
  * him, 2 drops the platform. The three handlers (StateStart, StateCheck,
  * StateFall) are members declared in the header, so the table's
- * pointer-to-member constants are real. StateStart returns an int, so its
- * table entry casts the pointer-to-member to the table's void handler type.
+ * pointer-to-member constants are real.
  *
  * __sinit at the end of this file emits compiler-numbered statics, which
  * the manifest maps to the ROM's @456..@479 and @506.
@@ -163,12 +162,11 @@ s32 daKpa3Bg_c::CleanupResources()
 
 /* mState 0: finds the daKpa actor (id 0x117), remembers its uniqueID and
    moves to mState 1. Retries every frame until Bowser exists. */
-int daKpa3Bg_c::StateStart() {
+void daKpa3Bg_c::StateStart() {
     dActor_c *koopa = dActor_c::FindWithActorID(0x117, 0);
     if (koopa) {
         mKoopaUniqueId = koopa->uniqueID;
         mState = 1;
-        return 1;
     }
 }
 
@@ -307,7 +305,7 @@ extern const Kpa3BgPieceSpot data_ov060_02119564[10] = {
 };
 
 HandlerEntry data_ov060_0211b1ac[3] = {
-    {(Handler)&daKpa3Bg_c::StateStart},
+    {&daKpa3Bg_c::StateStart},
     {&daKpa3Bg_c::StateCheck},
     {&daKpa3Bg_c::StateFall},
 };

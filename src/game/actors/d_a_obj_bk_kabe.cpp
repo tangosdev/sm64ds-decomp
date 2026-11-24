@@ -116,7 +116,7 @@ void daObjBk_Kabe_c::Kill() {
     MarkForDestruction();
 }
 
-int daObjBk_Kabe_c::OnHitByCannonBlastedChar(dActor_c &other) {
+void daObjBk_Kabe_c::OnHitByCannonBlastedChar(dActor_c &other) {
     Kill();
 }
 

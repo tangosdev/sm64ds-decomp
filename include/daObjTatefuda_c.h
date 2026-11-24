@@ -159,7 +159,7 @@ struct daObjTatefuda_c : dBgActor_c {
     int Render();
 
     void OnGroundPounded(dActor_c &other);   /* slot 21 */
-    int  OnAttacked1(dActor_c &other);       /* slot 22 */
+    void OnAttacked1(dActor_c &other);       /* slot 22 */
     void OnHitByMegaChar(daPly_c &player);   /* slot 27 */
 
     /* The five-state machine on mState: SetState enters a state (mState =

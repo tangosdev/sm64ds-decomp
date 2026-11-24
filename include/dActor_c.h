@@ -162,13 +162,13 @@ struct dActor_c : dBase_c {
        of each does, allocating registers differently under `int` even with r0
        untouched. Measured, not assumed; see notes/actor-core-provenance.md 9. */
     virtual void OnGroundPounded(dActor_c &pounder);          /* slot 21 */
-    virtual int OnAttacked1(dActor_c &attacker);              /* slot 22 */
-    virtual int OnAttacked2(dActor_c &attacker);              /* slot 23 */
+    virtual void OnAttacked1(dActor_c &attacker);             /* slot 22 */
+    virtual void OnAttacked2(dActor_c &attacker);             /* slot 23 */
     virtual void OnKicked(dActor_c &kicker);                  /* slot 24 */
-    virtual int OnPushed(dActor_c &pusher);                   /* slot 25 */
-    virtual int OnHitByCannonBlastedChar(dActor_c &attacker); /* slot 26 */
+    virtual void OnPushed(dActor_c &pusher);                  /* slot 25 */
+    virtual void OnHitByCannonBlastedChar(dActor_c &attacker); /* slot 26 */
     virtual void OnHitByMegaChar(daPly_c &player);            /* slot 27 */
-    virtual int OnHitFromUnderneath(dActor_c &attacker);      /* slot 28 */
+    virtual void OnHitFromUnderneath(dActor_c &attacker);     /* slot 28 */
     virtual int  OnAimedAtWithEgg();                   /* slot 29 */
     /* Returns a Vector3 by value, and the ROM says so: 0x020100dc writes x/y/z
        through r0 and reads every field off r1, the AAPCS indirect-return shape.

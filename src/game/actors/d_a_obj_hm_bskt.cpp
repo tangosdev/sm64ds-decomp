@@ -137,11 +137,10 @@ s32 daObjHmBskt_c::CleanupResources() {
  * star it carried, respawn a free star 150.0 above the landing point, puff
  * two particle effects and destroy the cage. The landed path falls off the
  * end without a return value; the caller ignores it. */
-int daObjHmBskt_c::CheckLanding(dBgCh_Actr *clsn) {
+void daObjHmBskt_c::CheckLanding(dBgCh_Actr *clsn) {
     dBgCh_Actr_UpdateContinuous_Veneer(clsn);
-    int g = clsn->IsOnGround();
-    if (!g)
-        return g;
+    if (!clsn->IsOnGround())
+        return;
     mStarActor->MarkForDestruction();
     int px = mPos.x;
     int pz = mPos.z;

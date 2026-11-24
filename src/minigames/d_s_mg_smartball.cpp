@@ -4886,7 +4886,7 @@ void dScMgSmartball_c::StartRound(int /* arg */) {
 }
 
 /* Slot 31: loads the option palette and tilemap for the sub screen. */
-int dScMgSmartball_c::InitSubScreenBg() {
+void dScMgSmartball_c::InitSubScreenBg() {
     int f;
     G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,
                       GX_BG_CHARBASE_0x04000, GX_BG_EXTPLTT_01);

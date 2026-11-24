@@ -126,7 +126,7 @@ extern fBase_c *gCurrentScene;
 } /* extern "C" */
 void Sound_PlayBank1Panned(int a, int b, int c);
 int func_020179b4(SharedFilePtr *f, dExtModel_c *m, int extra);
-int D3D_PlaySeAtX(int a, int b);
+void D3D_PlaySeAtX(int a, int b);
 void Puff_Spawn(int a, int b);
 void Puff_DrawAll(void);
 void Puff_UpdateAll(void);

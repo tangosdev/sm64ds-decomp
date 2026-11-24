@@ -43,7 +43,7 @@ struct daObjHmBskt_c : dBgActor_c {
     virtual s32 Behavior();         /* slot 6 */
     virtual s32 Render();           /* slot 9 */
 
-    int CheckLanding(dBgCh_Actr *);
+    void CheckLanding(dBgCh_Actr *);
 };
 
 typedef char daObjHmBskt_c_size_must_be_0x4e0[sizeof(daObjHmBskt_c) == 0x4e0 ? 1 : -1];

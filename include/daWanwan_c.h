@@ -66,11 +66,11 @@ struct daWanwan_c : dEnemyBase_c {
     void StateWalkInit();
     void StateWalkMain();
     void StateAttackInit();
-    int StateAttackMain();
+    void StateAttackMain();
     void StateEscapeDemoInit();
     void StateEscapeDemoMain();
     void StateBombDamageInit();
-    int StateBombDamageMain();
+    void StateBombDamageMain();
     void StateGiantDamageInit();
     void StateGiantDamageMain();
     void SetState(int i);

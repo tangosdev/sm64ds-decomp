@@ -109,7 +109,7 @@ void daObjBk_Lift_c::StoodOnCallback(dBgW *collider, dActor_c *lift, dActor_c *r
 /* Marks the lift as stood on, which is what restarts a kind-2 ride in
    Behavior. The rider is the veneer's extra forwarded register -- a
    callee taking only `this` drops `mov r1, r2`. */
-int daObjBk_Lift_c::OnStoodOn(dActor_c *rider) {
+void daObjBk_Lift_c::OnStoodOn(dActor_c *rider) {
     mJustSteppedOn = 1;
     mMove = 1;
 }

@@ -49,7 +49,7 @@ struct daObjPushblock_c : dBgActor_c {
        Itanium substitution only fires when the parameter type has already
        appeared earlier in the same mangled name, which happens inside
        dActor_c's own methods but not here. */
-    int OnPushed(dActor_c &other);         /* slot 25 */
+    void OnPushed(dActor_c &other); /* slot 25 */
 
     /* Slot 27, dActor_c's own OnHitByMegaChar(daPly_c&). Attributed the same way:
        _ZTV16daObjPushblock_c carries 0x020b8d14 at slot 27 -- vtable + 0x6c -- where

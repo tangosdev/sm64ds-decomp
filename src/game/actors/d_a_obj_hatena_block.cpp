@@ -821,8 +821,7 @@ void daObjHatenaBlock_c::OnGroundPounded(dActor_c &other)
 
 /* Attacked: the same accept test and bounce start as OnGroundPounded (declared
    int, but with no return statement on any path, like OnHitFromUnderneath). */
-int daObjHatenaBlock_c::OnAttacked1(dActor_c &other)
-{
+void daObjHatenaBlock_c::OnAttacked1(dActor_c &other) {
     int v = mState;
     if (v != STATE_BOUNCING) {
         if (!IsHitBlocked()) {
@@ -859,8 +858,7 @@ void daObjHatenaBlock_c::OnHitByMegaChar(daPly_c &player) {
    -0x8000 (-8 units) and mSpeed.y to 0x1e000 (30 units), whether or not
    the hit is then accepted; the accept test and bounce start are the same as
    OnGroundPounded's. */
-int daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other)
-{
+void daObjHatenaBlock_c::OnHitFromUnderneath(dActor_c &other) {
     if (mState != STATE_BOUNCING) {
         mVertAccel = -0x8000;
         mSpeed.y = 0x1e000;

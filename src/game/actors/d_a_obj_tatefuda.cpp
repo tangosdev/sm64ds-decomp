@@ -925,8 +925,7 @@ static inline int IsActorID(dActor_c *actor, int id) {
  * a shadow struct and dispatched through a bare virtual-call shape (`Base::M`
  * at the shadow's slot 31, this class's own Kill -- include/daObjTatefuda_c.h). An
  * unqualified `Kill()` here is that same virtual dispatch. */
-int daObjTatefuda_c::OnAttacked1(dActor_c &other)
-{
+void daObjTatefuda_c::OnAttacked1(dActor_c &other) {
     if (IsActorID(&other, ACTOR_BOMBHEI)) {
         Kill();
     }

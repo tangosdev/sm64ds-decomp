@@ -406,7 +406,7 @@ s32 daObjFallBlock_c::InitResourcesFrom(ResourceDescriptor *fp) {
 /* Sets mShakeRequested so Behavior case 0 starts the shake. The actor
    parameter is the veneer's extra forwarded register -- a 1-arg callee
    drops mov r1,r2. */
-int daObjFallBlock_c::RequestShake(dActor_c *other) {
+void daObjFallBlock_c::RequestShake(dActor_c *other) {
     mShakeRequested = 1;
 }
 

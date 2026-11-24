@@ -177,7 +177,7 @@ struct daObjFallBlock_c : dBgActor_c {
     void FindLinkedStar();
     void ResetMotion();
     void ApplyModelXyz();
-    int RequestShake(dActor_c *);
+    void RequestShake(dActor_c *);
     static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
 };
 

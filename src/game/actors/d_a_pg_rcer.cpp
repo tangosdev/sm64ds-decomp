@@ -582,7 +582,7 @@ void daPgRcer_c::UpdateModelMatrix() {
     DropShadowRadHeight(mShadowModel, mAnmModel.mat4x3, 0x140000, 0x50000, 0xf);
 }
 
-int daPgRcer_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
+void daPgRcer_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
     Vector3 floorNormal;
     Vector3 wallNormal;
     clsn->func_02038414();

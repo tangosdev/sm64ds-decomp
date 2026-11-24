@@ -57,7 +57,7 @@ struct daObjBk_Botaosi_c : dBgActor_c {
     void UpdateShadow();
     void UpdateModelMatrix();
 
-    virtual int OnAttacked2(dActor_c &other);     /* slot 23 */
+    virtual void OnAttacked2(dActor_c &other);    /* slot 23 */
     virtual void OnKicked(dActor_c &other);       /* slot 24 */
     virtual void OnHitByMegaChar(daPly_c &player); /* slot 27 */
 };

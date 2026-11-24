@@ -48,7 +48,7 @@ struct daObjBk_Kabe_c : dBgActor_c {
     virtual int CleanupResources();                        /* slot  3 */
     virtual int Behavior();                                /* slot  6 */
     virtual int Render();                                  /* slot  9 */
-    virtual int OnHitByCannonBlastedChar(dActor_c &other); /* slot 26 */
+    virtual void OnHitByCannonBlastedChar(dActor_c &other); /* slot 26 */
     /* dBgActor_c's own slot, overridden here: _ZTV14daObjBk_Kabe_c+0x7c holds
        0x02127280 where _ZTV10dBgActor_c+0x7c holds _ZN10dBgActor_c4KillEv. An
        override, so it adds no slot and no field. */

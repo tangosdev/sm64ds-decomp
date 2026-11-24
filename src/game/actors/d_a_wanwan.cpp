@@ -710,10 +710,9 @@ void daWanwan_c::StateAttackInit() {
 }
 
 /* State 2 update: stretch the leash to kChainMax, then back to idle. */
-int daWanwan_c::StateAttackMain() {
-    int r = TryStartReleaseCutscene();
-    if (r)
-        return r;
+void daWanwan_c::StateAttackMain() {
+    if (TryStartReleaseCutscene())
+        return;
     if (!Math_Function_0203b14c(&mChainExtension, kChainMax, 0x800, 0x10000, 0x800) &&
         !DecIfAbove0_Short(&mActionTimer))
         SetState(1);
@@ -858,7 +857,7 @@ void daWanwan_c::StateBombDamageInit() {
 
 /* State 4 update. The early exits fall out of the bottom: the ROM leaves r0
  * alone on those paths, and a valueless return is not available to the host. */
-int daWanwan_c::StateBombDamageMain() {
+void daWanwan_c::StateBombDamageMain() {
     ApproachLinear(mScale.x, 0x1000, 0x500);
     mScale.z = mScale.x;
     mScale.y = mScale.z;

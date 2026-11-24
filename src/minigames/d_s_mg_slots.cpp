@@ -173,10 +173,10 @@ void dScMgSlot3_c::RestoreScreenFromMenu() {
    strh` -- and only then tail-branches into the base with `bx ip`.  A second
    argument passed in r1 would reach dScMgBase_c::SaveScreenForMenu as a
    display-control word, so the base cannot be reading one. */
-int dScMgSlot3_c::SaveScreenForMenu() {
+void dScMgSlot3_c::SaveScreenForMenu() {
     G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x8000,
                      GX_BG_CHARBASE_0x00000, GX_BG_EXTPLTT_01);
-    return dScMgBase_c::SaveScreenForMenu();
+    dScMgBase_c::SaveScreenForMenu();
 }
 
 /* dScMgSlot3_c::InitMainScreenBg - slot 32, the only override of it in the family.
@@ -1000,7 +1000,7 @@ void dScMgSlot1_c::betIcon_c::Place() {
     mPressTime = 6;
 }
 
-int dScMgSlot1_c::CloseMenu() {
+void dScMgSlot1_c::CloseMenu() {
     dScMgBase_c::CloseMenu();
     SetSubBg1Offset(0x100, 0);
 }

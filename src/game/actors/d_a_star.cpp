@@ -1846,7 +1846,7 @@ void daStar_c::CollectByEgg(daPly_c *player) {
 /* Adds the star's map marker unless the level hides it: sublevel 5 hides star
  * id 5, and sublevel 0x16 shows star id 4 only once gCurrentEntranceId is 4. Marker
  * type 0 is added only for kinds 2 and 4. */
-int daStar_c::MaybeAddStarMarker() {
+void daStar_c::MaybeAddStarMarker() {
     signed char g1 = gCurrentSublevel;
     int t;
     if (g1 == 5) {

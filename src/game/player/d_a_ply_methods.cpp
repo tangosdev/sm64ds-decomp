@@ -3895,7 +3895,7 @@ int daPly_c::func_ov002_020c231c() {
     return 0;
 }
 
-int daPly_c::func_ov002_020c25a8(int arg1) {
+void daPly_c::func_ov002_020c25a8(int arg1) {
     int ret;
     Vector3 v;
     Vector3 wn;
@@ -3994,11 +3994,8 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
         mIsInAirState = 0;
     }
 
-    {
-        int wallFlag = mClsnFlags & 2;
-        if (wallFlag == 0)
-            return wallFlag;
-    }
+    if ((mClsnFlags & 2) == 0)
+        return;
 
     mMeshClsn.GetWallResult()->surface.CopyNormalTo(wn);
     mWallNormal.x = wn.x;
@@ -4010,13 +4007,10 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
         mPos.z -= mWallNormal.z * 2;
     }
 
-    ret = func_ov002_020d0580();
-    if (ret != 0)
-        return ret;
-
-    ret = func_ov002_020c2138();
-    if (ret != 0)
-        return ret;
+    if (func_ov002_020d0580() != 0)
+        return;
+    if (func_ov002_020c2138() != 0)
+        return;
 }
 
 void daPly_c::func_ov002_020c29d4() {
