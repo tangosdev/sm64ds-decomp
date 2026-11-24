@@ -1,3 +1,7 @@
     .ctor       start:0x021111a0 end:0x021111a0 kind:rodata align:4
     .data       start:0x021111c0 end:0x021115e0 kind:data align:32
     .bss        start:0x021115e0 end:0x021115e0 kind:bss align:32
+
+src/game/stages/d_s_map_ov042.c:
+    complete
+    .data start:0x021111c0 end:0x021115e0

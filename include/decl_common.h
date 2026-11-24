@@ -580,7 +580,6 @@ extern void UnloadArchive(int);
 extern void UnloadArchives(void);
 extern void WarpPlayer(int, int);
 extern void data_ov052_02111e84(void *);
-extern void data_ov054_02111238(void *);
 extern void MI_SendGXCommand(unsigned int, const void *, unsigned int);
 /* func_02005348 removed: it is the member dScBoot_c::func_02005348(), declared in include/dScBoot_c.h */
 extern void Vec3fSetDistAndAngle(struct Vector3 *, const struct Vector3 *, int, short, short);
@@ -796,7 +795,6 @@ extern void *sRouletteLandedRacer;
 extern struct CLPS_Block data_ov010_021122f8;
 extern void *data_ov016_021149d4[];
 extern void *data_ov023_02112088;
-extern void *data_ov051_021116b0[];
 extern void *data_ov065_0211c0a8[];
 extern struct CLPS_Block *data_ov065_0211cd68[];
 extern void *data_ov065_0211cfd8[];

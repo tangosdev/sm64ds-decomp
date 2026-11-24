@@ -20,4 +20,3 @@ src/game/actors/d_a_obj_tt_water.cpp:
     .init start:0x02111a54 end:0x02111ac0
     .ctor start:0x02111ac4 end:0x02111ac8
     .bss start:0x021124e8 end:0x02112510
-

@@ -1,26 +1,9 @@
 #include "types.h"
 #include "CLPS.h"
 #include "PathPtr.h"
+#include "StageMap.h"
 
 /* Definition order is what makes the compiler's size sort match address order. */
-
-/* Widths the level loaders walk. Same layouts as LVL_Overlay; this file
- * stays C. */
-typedef struct ObjSubTable {
-    u8 categoryAndStar;
-    u8 count;
-    u8 pad[2];
-    void *entries;
-} ObjSubTable;
-
-typedef struct DoorEntry {
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 angle;
-    u16 param;
-    u16 type;
-} DoorEntry;
 
 typedef struct ExitRow {
     s16 x;
@@ -53,30 +36,6 @@ typedef struct FogRow {
     u16 farDist;
 } FogRow;
 
-typedef struct StandardEntry {
-    u16 raw;
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    u16 param;
-} StandardEntry;
-
-typedef struct SimpleEntry {
-    u16 raw;
-    s16 x;
-    s16 y;
-    s16 z;
-} SimpleEntry;
-
-typedef struct PathNode {
-    s16 x;
-    s16 y;
-    s16 z;
-} PathNode;
-
 /* 45 nodes, then the two zero bytes before 0x021132b0. */
 typedef struct PathRun {
     PathNode node[45];
@@ -92,11 +51,9 @@ typedef struct ClpsBlock {
 } ClpsBlock;
 
 typedef char ObjSubTable_size_must_be_0x8[sizeof(ObjSubTable) == 8 ? 1 : -1];
-typedef char DoorEntry_size_must_be_0xc[sizeof(DoorEntry) == 0xc ? 1 : -1];
 typedef char ExitRow_size_must_be_0x10[sizeof(ExitRow) == 0x10 ? 1 : -1];
 typedef char ViewRow_size_must_be_0x10[sizeof(ViewRow) == 0x10 ? 1 : -1];
 typedef char FogRow_size_must_be_0x8[sizeof(FogRow) == 8 ? 1 : -1];
-typedef char StandardEntry_size_must_be_0x10[sizeof(StandardEntry) == 0x10 ? 1 : -1];
 typedef char SimpleEntry_size_must_be_0x8[sizeof(SimpleEntry) == 8 ? 1 : -1];
 typedef char PathNode_size_must_be_0x6[sizeof(PathNode) == 6 ? 1 : -1];
 typedef char PathRun_size_must_be_0x110[sizeof(PathRun) == 0x110 ? 1 : -1];

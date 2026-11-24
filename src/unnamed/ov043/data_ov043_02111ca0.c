@@ -1,38 +1,8 @@
 #include "CLPS.h"
 #include "types.h"
+#include "StageMap.h"
 
 /* Definition order is what makes the compiler's size sort match address order. */
-
-typedef struct ObjTable {
-    u16 count;
-    u8 pad[2];
-    void *entries;
-} ObjTable;
-
-typedef struct ObjSubTable {
-    u8 categoryAndStar;
-    u8 count;
-    u8 pad[2];
-    void *entries;
-} ObjSubTable;
-
-typedef struct SimpleEntry {
-    u16 raw;
-    s16 x;
-    s16 y;
-    s16 z;
-} SimpleEntry;
-
-typedef struct StandardEntry {
-    u16 raw;
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 rotX;
-    s16 rotY;
-    s16 rotZ;
-    u16 param;
-} StandardEntry;
 
 typedef struct TeleportEntry {
     s16 x;
@@ -40,55 +10,6 @@ typedef struct TeleportEntry {
     s16 z;
     u16 param;
 } TeleportEntry;
-
-typedef struct PathNode {
-    s16 x;
-    s16 y;
-    s16 z;
-} PathNode;
-
-/* SetViewObjs steps 0xe. The halfword at +0xc is stored and unread. */
-typedef struct ViewEntry {
-    u8 type;
-    u8 p1;
-    s16 x;
-    s16 y;
-    s16 z;
-    u8 pad_8[2];
-    s16 angleY;
-    u16 pad_c;
-} ViewEntry;
-
-/* Bytes +9..+0xb are stored. No loader in src/ reads them. */
-typedef struct Area {
-    struct ObjTable *objTable;
-    void *bta;
-    s8 minimapId;
-    u8 pad[3];
-} Area;
-
-typedef struct LevelRec {
-    struct CLPS_Block *clps;
-    struct ObjTable *objTable;
-    u16 modelFileId;
-    u16 kclFileId;
-    u16 minimapTilesFile;
-    u16 minimapPaletteFile;
-    struct Area *areas;
-    u8 areaCount;
-    u8 cameraFlags;
-    s16 minimapScale;
-    u32 skybox;
-} LevelRec;
-
-typedef struct ExitEntry {
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 rotX;
-    s16 rotY;
-    u8 param[4];
-} ExitEntry;
 
 typedef struct {
     u32 tag;
