@@ -136,7 +136,7 @@ enum daDoor_c_AssetId {
 
 /* The vector temps below are VecFx32: a stack Vector3 would run its destructor. */
 /* One entry of data_ov100_02148204, indexed by param1 (the variant). */
-struct DoorEntry {
+struct DoorVariantInfo {
     SharedFilePtr *file;    /* 0x0: the door model */
     SharedFilePtr *keyFile; /* 0x4: a decoration model hung on the door, or
                                 null (see mKeyModel) */
@@ -173,8 +173,8 @@ enum DoorSound {
 };
 
 /* Bits of the save flags (gSaveBlock.file.flags1) the door uses. The shift is
-   DoorEntry::flagShift, except for the key bit, which is shifted by
-   DoorEntry::keyIndex. */
+   DoorVariantInfo::flagShift, except for the key bit, which is shifted by
+   DoorVariantInfo::keyIndex. */
 enum DoorSaveFlag {
     DOOR_SAVE_HAVE_KEY = 2,          /* << keyIndex: with it set the door offers
                                         TryTalkToKeyDoor; read here as "the
@@ -222,7 +222,7 @@ int func_ov002_020ca78c(void *p);
 int AngleDiff(int a, int b);
 }
 
-extern DoorEntry data_ov100_02148204[19];
+extern DoorVariantInfo data_ov100_02148204[19];
 /* Latch: set (St_UnlockingWithKey_Init) when the door being opened has a nonzero
    mKeyModelIdx, cleared by St_CharIntro_Main; the swing and exit states
    branch on it. */
@@ -294,7 +294,7 @@ DoorModelFilePtr gObjDoor4YamiModelFile(ASSET_OBJ_DOOR4_YAMI_BMD);
 DoorModelFilePtr gObjDoor5HorrorModelFile(ASSET_OBJ_DOOR5_HORROR_BMD);
 DoorAnimationFileHandle gDoorOpenAnimationFile(0x9c08);
 
-DoorEntry data_ov100_02148204[19] = {
+DoorVariantInfo data_ov100_02148204[19] = {
     {&gRegularDoorModelFile, 0, -1, -1, -1, 0, -1, 0},
     {&gRegularDoorModelFile, &gObjDoor0StarModelFile, -1, -1, -1, 0, -1, 0},
     {&gRegularDoorModelFile, &gObjDoor0Star1ModelFile, 1, -1, 0, 0, 25, 0},
@@ -584,7 +584,7 @@ int daDoor_c::St_UnlockingWithKey_Main(daPly_c *a2) {
    data_ov100_02148704 latch. Was a C source. */
 int daDoor_c::St_UnlockingWithKey_Init(daPly_c *p) {
     Vector3 pos;
-    DoorEntry *e;
+    DoorVariantInfo *e;
 
     p->OpenBigDoor();
 
@@ -692,7 +692,7 @@ int daDoor_c::St_TalkingToPlayer_Init() {
    goes to the last case. The message position is mSpeed (see
    InitResources). Was a C source. */
 int daDoor_c::St_StayClosed_Main(daPly_c *b) {
-    DoorEntry *entry;
+    DoorVariantInfo *entry;
 
     if (func_ov100_021452e4(b)) {
         entry = &data_ov100_02148204[param1];
@@ -932,7 +932,7 @@ int daDoor_c::SetState(void *p, int a2) {
  * where the doubled null check comes from: the explicit `if` emits one and
  * `delete` emits its own. */
 s32 daDoor_c::CleanupResources() {
-    DoorEntry *e = &data_ov100_02148204[param1];
+    DoorVariantInfo *e = &data_ov100_02148204[param1];
     dExtSimpleModel_c *key;
     e->file->Release();
     gDoorOpenAnimationFile.Release();
@@ -1032,7 +1032,7 @@ inline u32 daDoor_c::GetParam1() const {
  * a daDoor_c one. */
 s32 daDoor_c::InitResources() {
     unsigned int idx;
-    DoorEntry *e;
+    DoorVariantInfo *e;
     void *f;
     void *an;
     Vector3 scaledPos;

@@ -9,23 +9,23 @@
 struct CLPS_Block;
 
 typedef struct ObjTable {
-    u16 count;
-    u8 pad[2];
-    void *entries;
+    u16 count;     /* 0x00 */
+    u8 pad[2];     /* 0x02 */
+    void *entries; /* 0x04 */
 } ObjTable;
 
 typedef struct ObjSubTable {
-    u8 categoryAndStar;
-    u8 count;
-    u8 pad[2];
-    void *entries;
+    u8 categoryAndStar; /* 0x00 */
+    u8 count;           /* 0x01 */
+    u8 pad[2];          /* 0x02 */
+    void *entries;      /* 0x04 */
 } ObjSubTable;
 
 typedef struct SimpleEntry {
-    u16 raw;
-    s16 x;
-    s16 y;
-    s16 z;
+    u16 raw; /* 0x00 */
+    s16 x;   /* 0x02 */
+    s16 y;   /* 0x04 */
+    s16 z;   /* 0x06 */
 } SimpleEntry;
 
 typedef struct StandardEntry {
@@ -46,67 +46,71 @@ typedef struct PathNode {
 } PathNode;
 
 typedef struct DoorEntry {
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 angle;
-    u16 param;
-    u16 type;
+    s16 x;     /* 0x00 */
+    s16 y;     /* 0x02 */
+    s16 z;     /* 0x04 */
+    s16 angle; /* 0x06 */
+    u16 param; /* 0x08 */
+    u16 type;  /* 0x0a */
 } DoorEntry;
 
 typedef struct ExitEntry {
-    s16 x;
-    s16 y;
-    s16 z;
-    s16 rotX;
-    s16 rotY;
-    u8 param[4];
+    s16 x;       /* 0x00 */
+    s16 y;       /* 0x02 */
+    s16 z;       /* 0x04 */
+    s16 rotX;    /* 0x06 */
+    s16 rotY;    /* 0x08 */
+    u8 param[4]; /* 0x0a */
 } ExitEntry;
 
 typedef struct TeleportSourceEntry {
-    s16 x;
-    s16 y;
-    s16 z;
-    u16 param;
+    s16 x;     /* 0x00 */
+    s16 y;     /* 0x02 */
+    s16 z;     /* 0x04 */
+    u16 param; /* 0x06 */
 } TeleportSourceEntry;
 
+/* Destination row the player reads: x/y/z shifted up by 12, param's low
+ * nibble the area, the next nibble the yaw. */
 typedef struct TeleportDest {
-    s32 a;
-    s32 b;
+    s16 x;     /* 0x00 */
+    s16 y;     /* 0x02 */
+    s16 z;     /* 0x04 */
+    u16 param; /* 0x06 */
 } TeleportDest;
 
 /* 0xe. SetViewObjs steps this far. */
 typedef struct ViewEntry {
-    u8 type;
-    u8 p1;
-    s16 x;
-    s16 y;
-    s16 z;
-    u8 pad[2];
-    s16 angleY;
-    u16 pad_c;
+    u8 type;    /* 0x00 */
+    u8 p1;      /* 0x01 */
+    s16 x;      /* 0x02 */
+    s16 y;      /* 0x04 */
+    s16 z;      /* 0x06 */
+    u8 pad[2];  /* 0x08 */
+    s16 angleY; /* 0x0a */
+    u16 pad_c;  /* 0x0c */
 } ViewEntry;
 
 typedef struct Area {
-    struct ObjTable *objTable;
-    void *bta;
-    s8 minimapId;
-    u8 pad[3];
+    struct ObjTable *objTable; /* 0x00 */
+    void *bta;                 /* 0x04 */
+    s8 minimapId;              /* 0x08 */
+    u8 pad[3];                 /* 0x09 */
 } Area;
 
 /* The level record dScStage_c::LoadClsnAndObjects reads. 0x1c. */
 typedef struct LevelRec {
-    struct CLPS_Block *clps;
-    struct ObjTable *objTable;
-    u16 modelFileId;
-    u16 kclFileId;
-    u16 minimapTilesFile;
-    u16 minimapPaletteFile;
-    struct Area *areas;
-    u8 areaCount;
-    u8 cameraFlags;
-    s16 minimapScale;
-    u32 skybox;
+    struct CLPS_Block *clps;   /* 0x00 */
+    struct ObjTable *objTable; /* 0x04 */
+    u16 modelFileId;           /* 0x08 */
+    u16 kclFileId;             /* 0x0a */
+    u16 minimapTilesFile;      /* 0x0c */
+    u16 minimapPaletteFile;    /* 0x0e */
+    struct Area *areas;        /* 0x10 */
+    u8 areaCount;              /* 0x14 */
+    u8 cameraFlags;            /* 0x15 */
+    s16 minimapScale;          /* 0x16 */
+    u32 skybox;                /* 0x18 */
 } LevelRec;
 
 typedef char ObjTable_size_must_be_8[sizeof(ObjTable) == 8 ? 1 : -1];

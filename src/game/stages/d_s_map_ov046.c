@@ -13,13 +13,13 @@ typedef struct {
     struct CLPS entries[3];
 } Clps_0211157c;
 
-struct CLPS_Block {
+typedef struct CLPS_Block {
     u32 tag;
     u16 stride;
     u16 count;
     struct CLPS entries[2];
     u32 tail[2];
-};
+} CLPS_Block;
 
 extern const u16 data_ov046_021111a0[2];
 extern const fx32 data_ov046_021111a4[1];
