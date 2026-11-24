@@ -3152,11 +3152,7 @@ data_02075f14 kind:data(any) addr:0x02075f14
 data_02078000 kind:data(any) addr:0x02078000
 data_0207fbf4 kind:data(any) addr:0x0207fbf4
 data_02080000 kind:data(any) addr:0x02080000
-data_02080210 kind:data(any) addr:0x02080210
 data_0208050a kind:data(any) addr:0x0208050a
-data_02080b1f kind:data(any) addr:0x02080b1f
-data_02080fdf kind:data(any) addr:0x02080fdf
-data_0208141f kind:data(any) addr:0x0208141f
 data_02081967 kind:data(any) addr:0x02081967
 IDENTITY_MATRIX4X3 kind:data(any) addr:0x02082128
 data_02082158 kind:data(any) addr:0x02082158
@@ -3173,9 +3169,6 @@ data_02082314 kind:data(any) addr:0x02082314
 data_02082414 kind:data(any) addr:0x02082414
 data_02082614 kind:data(any) addr:0x02082614
 data_02082714 kind:data(any) addr:0x02082714
-data_02082a1f kind:data(any) addr:0x02082a1f
-data_02082a28 kind:data(any) addr:0x02082a28
-data_02082a2a kind:data(any) addr:0x02082a2a
 data_02082a34 kind:data(any) addr:0x02082a34
 data_02083620 kind:data(any) addr:0x02083620
 FX_AtanTable_ kind:data(any) addr:0x02086214
@@ -3688,7 +3681,6 @@ data_0208eeac kind:data(any) addr:0x0208eeac
 data_0208eecc kind:data(any) addr:0x0208eecc
 data_0208eeec kind:data(any) addr:0x0208eeec
 data_0208eeee kind:data(any) addr:0x0208eeee
-data_0208f021 kind:data(any) addr:0x0208f021
 data_0208f074 kind:data(any) addr:0x0208f074
 data_0208f174 kind:data(any) addr:0x0208f174
 data_0208f274 kind:data(any) addr:0x0208f274
@@ -4020,7 +4012,6 @@ data_020901dc kind:data(any) addr:0x020901dc
 data_020901e8 kind:data(any) addr:0x020901e8
 data_020901f4 kind:data(any) addr:0x020901f4
 data_02090200 kind:data(any) addr:0x02090200
-data_02090208 kind:data(any) addr:0x02090208
 data_0209020c kind:data(any) addr:0x0209020c
 data_02090218 kind:data(any) addr:0x02090218
 data_02090224 kind:data(any) addr:0x02090224

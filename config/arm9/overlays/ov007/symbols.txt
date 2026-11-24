@@ -1038,12 +1038,9 @@ data_ov007_020cff5d kind:data(any) addr:0x020cff5d
 data_ov007_020cff64 kind:data(any) addr:0x020cff64
 data_ov007_020d0060 kind:data(any) addr:0x020d0060
 data_ov007_020d0194 kind:data(any) addr:0x020d0194
-data_ov007_020d020c kind:data(any) addr:0x020d020c
 data_ov007_020d042c kind:data(any) addr:0x020d042c
 data_ov007_020d072c kind:data(any) addr:0x020d072c
-data_ov007_020d0f0f kind:data(any) addr:0x020d0f0f
 data_ov007_020d147c kind:data(any) addr:0x020d147c
-data_ov007_020d2b5c kind:data(any) addr:0x020d2b5c
 data_ov007_020d403c kind:data(any) addr:0x020d403c
 data_ov007_020d7584 kind:data(any) addr:0x020d7584
 data_ov007_020d75e0 kind:data(any) addr:0x020d75e0
@@ -1157,25 +1154,17 @@ data_ov007_020dbdbc kind:data(any) addr:0x020dbdbc
 data_ov007_020dd6c8 kind:data(any) addr:0x020dd6c8
 data_ov007_020defdc kind:data(any) addr:0x020defdc
 data_ov007_020e08f0 kind:data(any) addr:0x020e08f0
-data_ov007_020e0fde kind:data(any) addr:0x020e0fde
-data_ov007_020e1702 kind:data(any) addr:0x020e1702
-data_ov007_020e1708 kind:data(any) addr:0x020e1708
 data_ov007_020e2204 kind:data(any) addr:0x020e2204
-data_ov007_020e2e08 kind:data(any) addr:0x020e2e08
 data_ov007_020e6478 kind:data(any) addr:0x020e6478
 data_ov007_020ea6ec kind:data(any) addr:0x020ea6ec
 data_ov007_020ee55c kind:data(any) addr:0x020ee55c ambiguous
-data_ov007_020ef022 kind:data(any) addr:0x020ef022
 data_ov007_020eff18 kind:data(any) addr:0x020eff18 ambiguous
 data_ov007_020f0000 kind:data(any) addr:0x020f0000
-data_ov007_020f020e kind:data(any) addr:0x020f020e
 data_ov007_020f1000 kind:data(any) addr:0x020f1000
 data_ov007_020f11f8 kind:data(any) addr:0x020f11f8
 data_ov007_020f295c kind:data(any) addr:0x020f295c
 data_ov007_020ff028 kind:data(any) addr:0x020ff028 ambiguous
 data_ov007_02100000 kind:data(any) addr:0x02100000 ambiguous
-data_ov007_02102a0e kind:data(any) addr:0x02102a0e
-data_ov007_02102a1f kind:data(any) addr:0x02102a1f
 data_ov007_02102dc4 kind:data(any) addr:0x02102dc4
 data_ov007_02102dd0 kind:data(any) addr:0x02102dd0
 data_ov007_02102dd8 kind:data(any) addr:0x02102dd8
