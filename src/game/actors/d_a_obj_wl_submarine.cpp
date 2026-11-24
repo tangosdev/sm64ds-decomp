@@ -44,14 +44,9 @@ struct SubmarineCollisionFilePtr : SharedFilePtr {
 };
 extern SubmarineCollisionFilePtr Submarine_ClsnFile;
 
-struct CLPS_Block {
-    u32 words[10];
-};
-
-CLPS_Block data_ov026_02112fd4 = {
-    0x53504c43, 0x00040008, 0x00000fc5, 0x000000ff, 0x00004fc4,
-    0x000000ff, 0x01000fc4, 0x000000ff, 0x01000fc5, 0x000000ff,
-};
+/* The platform's own collision block in the stage-map TU, fed to the mesh
+ * collider by InitResources. */
+extern CLPS_Block data_ov026_02112fd4;
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */
