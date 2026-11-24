@@ -1012,3 +1012,31 @@ src/minigames/d_s_mg_snowball.cpp:
 src/minigames/d_s_mg_flower.cpp:
     complete
     .text start:0x0212a554 end:0x0212b890
+
+src/unnamed/ov006/data_ov006_02133600.c:
+    complete
+    .data.gap0 start:0x02133600 end:0x0213386c
+
+src/unnamed/ov006/data_ov006_02136e44.c:
+    complete
+    .data.gap24 start:0x02136e44 end:0x021374ac
+
+src/unnamed/ov006/data_ov006_02137500.c:
+    complete
+    .data.gap28 start:0x02137500 end:0x02137590
+
+src/unnamed/ov006/data_ov006_021375e4.c:
+    complete
+    .data.gap31 start:0x021375e4 end:0x021389ec
+
+src/unnamed/ov006/data_ov006_021389f8.c:
+    complete
+    .data.gap32 start:0x021389f8 end:0x02138c48
+
+src/unnamed/ov006/data_ov006_0212b890.c:
+    complete
+    .rodata.before_coin_tables start:0x0212b890 end:0x0212e308
+
+src/unnamed/ov006/data_ov006_02138d28.c:
+    complete
+    .data.gap33 start:0x02138d28 end:0x02139db4

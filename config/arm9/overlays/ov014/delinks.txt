@@ -43,3 +43,7 @@ src/game/actors/d_a_obj_wanwan_shutter.cpp:
     .init start:0x021132fc end:0x02113368
     .ctor start:0x02113370 end:0x02113374
     .bss start:0x021149b8 end:0x021149e0
+
+src/unnamed/ov014/data_ov014_02113380.c:
+    complete
+    .data.gap0 start:0x02113380 end:0x021145b8

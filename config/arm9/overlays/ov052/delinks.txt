@@ -19,3 +19,7 @@ src/game/actors/d_a_obj_emm_yuka.cpp:
     .ctor start:0x02111c40 end:0x02111c44
     .data start:0x021125a0 end:0x021125ac
     .bss start:0x021126a8 end:0x021126d0
+
+src/unnamed/ov052/data_ov052.c:
+    complete
+    .rodata start:0x02111868 end:0x02111b64

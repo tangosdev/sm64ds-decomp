@@ -56,3 +56,11 @@ src/game/actors/d_a_obj_km2_fall_block.cpp:
     .data.km2FallBlockClps start:0x021125f0 end:0x02112610
     .bss start:0x02113248 end:0x02113280
     .data start:0x021130ac end:0x021130b8
+
+src/unnamed/ov045/data_ov045.c:
+    complete
+    .rodata start:0x02111e60 end:0x021121a8
+
+src/unnamed/ov045/data_ov045_02112460.c:
+    complete
+    .data.w12460 start:0x02112460 end:0x02112550

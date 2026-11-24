@@ -30,3 +30,7 @@ src/game/actors/d_a_obj_ice_board.cpp:
     .init start:0x02112e00 end:0x02112e6c
     .ctor start:0x02112e74 end:0x02112e78
     .bss start:0x02113c7c end:0x02113ca4
+
+src/unnamed/ov018/data_ov018.c:
+    complete
+    .rodata start:0x02112a74 end:0x02112c14
