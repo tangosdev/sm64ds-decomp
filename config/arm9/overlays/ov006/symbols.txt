@@ -4591,7 +4591,6 @@ data_ov006_02140cb4 kind:bss addr:0x02140cb4
 data_ov006_02140cb6 kind:bss addr:0x02140cb6
 data_ov006_02140d80 kind:bss addr:0x02140d80 ambiguous
 sTrmpStartLinePoints kind:bss addr:0x02141314
-data_ov006_02141402 kind:bss addr:0x02141402
 sTrmpStartLine kind:bss addr:0x02141590
 sAmidaLaneTargets kind:bss addr:0x02141640
 sAmidaLaneSaved kind:bss addr:0x02141650
@@ -4842,7 +4841,6 @@ sSoundPop12Table kind:bss addr:0x02142db0
 sSoundPop03Table kind:bss addr:0x02142dc8
 sSoundPop04Table kind:bss addr:0x02142de0
 sSoundNoteStateTable kind:bss addr:0x02142df8
-data_ov006_02142e02 kind:bss addr:0x02142e02
 sSoundPopUpdateTable kind:bss addr:0x02142e20
 sTeresaRevealStateTable kind:bss addr:0x02142e88
 sTeresaSceneStateTable kind:bss addr:0x02142eb0
