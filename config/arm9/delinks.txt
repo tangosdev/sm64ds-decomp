@@ -964,6 +964,10 @@ src/data/arm9/data_02075d14.c:
     complete
     .rodata start:0x02075d14 end:0x02075f14
 
+src/data/arm9/data_02075f14.c:
+    complete
+    .rodata start:0x02075f14 end:0x02082128
+
 src/data/arm9/data_0209f648.c:
     complete
     .bss start:0x0209f648 end:0x020a0c5c
@@ -1357,6 +1361,10 @@ src/cstd_sqrt.cpp:
     .init start:0x0207511c end:0x02075150
     .ctor start:0x02086bb0 end:0x02086bb4
     .bss start:0x020a0edc end:0x020a0ef0
+
+src/IDENTITY_MATRIX4X3.c:
+    complete
+    .rodata start:0x02082128 end:0x02082158
 
 src/engine/link/unit0203d7b8.cpp:
     complete
