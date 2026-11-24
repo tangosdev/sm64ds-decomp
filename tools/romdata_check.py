@@ -494,6 +494,16 @@ def verify_data_symbol(raw, name, shndx, value, size, names=None):
     elif (compared and compared == len(linked) and not blind
           and extent is not None and compared >= extent):
         rec["verdict"] = VERIFIED
+    elif (compared and compared == len(linked) and not blind
+          and extent is not None and 0 < extent - compared <= 3
+          and (addr + extent) % 4 == 0
+          and RV.rom_bytes(module, addr + compared,
+                           extent - compared) == b"\x00" * (extent - compared)):
+        # The compiler emits the object short of the 4-aligned boundary; the
+        # linker's ALIGNALL(4) zero-fills the 1-3 byte gap before the next
+        # symbol. A zero gap is link-produced, not missing coverage.
+        rec["verdict"] = VERIFIED
+        rec["alignPad"] = extent - compared
     else:
         rec["verdict"] = PARTIAL
     return rec

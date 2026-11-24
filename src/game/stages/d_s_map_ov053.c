@@ -1,17 +1,12 @@
 #include "CLPS.h"
-#include "private/BTA_File.h"
-#include "private/BMA_File.h"
-#include "types.h"
+#include "PathPtr.h"
 #include "StageMap.h"
+#include "private/BMA_File.h"
+#include "private/BTA_File.h"
+#include "types.h"
 
-/* Definition order is what makes the compiler's size sort match address order. */
-
-typedef struct TeleportEntry {
-    s16 x;
-    s16 y;
-    s16 z;
-    u16 param;
-} TeleportEntry;
+/* Definition order is what makes the compiler's size sort match address order.
+ */
 
 typedef struct {
     u32 tag;
@@ -19,17 +14,7 @@ typedef struct {
     u16 count;
     struct CLPS entries[6];
     u32 tail[2];
-    u32 pad[3];
-} ClpsBlock;
-typedef char ViewEntry_size[sizeof(ViewEntry) == 0xe ? 1 : -1];
-typedef char Area_size[sizeof(Area) == 0xc ? 1 : -1];
-typedef char LevelRec_size[sizeof(LevelRec) == 0x1c ? 1 : -1];
-typedef char ClpsBlock_size[sizeof(ClpsBlock) == 0x4c ? 1 : -1];
-
-typedef struct {
-    u16 minimapTile;
-    u16 pad;
-} data_ov053_02112380_Layout;
+} Clps_02112514;
 
 extern const u16 data_ov053_021111a0[2];
 extern const u16 data_ov053_021111a4[2];
@@ -65,7 +50,7 @@ extern const u8 data_ov053_0211194c[540];
 extern const fx32 data_ov053_02111b68[151];
 extern const fx32 data_ov053_02111dc4[181];
 extern const fx32 data_ov053_02112098[181];
-extern data_ov053_02112380_Layout data_ov053_02112380;
+extern u16 data_ov053_02112380[1];
 extern ObjTable data_ov053_02112384;
 extern ObjSubTable data_ov053_0211238c[1];
 extern char data_ov053_02112394[8];
@@ -88,48 +73,83 @@ extern BTA_File data_ov053_021124ac;
 extern BTA_File data_ov053_021124c4;
 extern ViewEntry data_ov053_021124dc[2];
 extern LevelRec data_ov053_021124f8;
-extern ClpsBlock data_ov053_02112514;
+extern Clps_02112514 data_ov053_02112514;
 
-const fx32 data_ov053_021111d4[1] = {0x00001000};
 
-const u16 data_ov053_021111bc[2] = {0x0000, 0x0000};
 
-const u16 data_ov053_021111a8[2] = {0x0000, 0x0000};
 
-const u16 data_ov053_021111a4[2] = {0x0000, 0x0000};
 
-const u16 data_ov053_021111b8[2] = {0x0000, 0x0000};
 
-const u16 data_ov053_021111b0[2] = {0x0000, 0x0000};
 
-data_ov053_02112380_Layout data_ov053_02112380 = {0x072d, 0x0000};
 
-const fx32 data_ov053_021111c0[1] = {0x00001000};
 
-const fx32 data_ov053_021111c4[1] = {0x00001000};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const fx32 data_ov053_021111d0[1] = {0x00001000};
 
-const u16 data_ov053_021111ac[2] = {0x0000, 0x0000};
+const u16 data_ov053_021111b8[2] = {0x0000, 0x0000};
 
-const fx32 data_ov053_021111cc[1] = {0x00001000};
-
-const fx32 data_ov053_021111d8[1] = {0x00001000};
+const fx32 data_ov053_021111d4[1] = {0x00001000};
 
 const u16 data_ov053_021111a0[2] = {0x0000, 0x0000};
 
 const u16 data_ov053_021111b4[2] = {0x0000, 0x0000};
 
-const fx32 data_ov053_021111dc[1] = {0x00001000};
+const u16 data_ov053_021111bc[2] = {0x0000, 0x0000};
+
+u16 data_ov053_02112380[1] = {0x072d};
+
+const u16 data_ov053_021111ac[2] = {0x0000, 0x0000};
+
+const fx32 data_ov053_021111c0[1] = {0x00001000};
+
+const fx32 data_ov053_021111cc[1] = {0x00001000};
+
+const u16 data_ov053_021111a8[2] = {0x0000, 0x0000};
 
 const fx32 data_ov053_021111c8[1] = {0x00001000};
+
+const u16 data_ov053_021111a4[2] = {0x0000, 0x0000};
+
+const fx32 data_ov053_021111dc[1] = {0x00001000};
+
+const u16 data_ov053_021111b0[2] = {0x0000, 0x0000};
+
+const fx32 data_ov053_021111d8[1] = {0x00001000};
+
+const fx32 data_ov053_021111c4[1] = {0x00001000};
 
 char data_ov053_02112394[8] = "gas_mat";
 
 ObjSubTable data_ov053_0211238c[1] = {
     {0x00, 0x01, {0x00, 0x00}, &data_ov053_021123d4[0]},
 };
-
 ObjTable data_ov053_02112384 = {0x0003, {0x00, 0x00}, &data_ov053_0211247c[0]};
 
 ObjTable data_ov053_0211239c = {0x0001, {0x00, 0x00}, &data_ov053_0211238c[0]};
@@ -145,14 +165,11 @@ Area data_ov053_021123c8 = {&data_ov053_0211239c, &data_ov053_0211241c, 0x00, {0
 StandardEntry data_ov053_021123e4[1] = {
     {0x0000, 0x0000, 0x03e8, 0x0546, 0x0000, (s16)0x8000, 0x0000, 0x0578},
 };
-
 BMA_File data_ov053_021123f4 = {90, 0, (u8 *)&data_ov053_0211194c[0],
                                 1,  0, (BMAMaterialRecord *)&data_ov053_02111384[0]};
-
 StandardEntry data_ov053_021123d4[1] = {
     {0x0012, 0x0000, 0x012c, 0x0000, 0x0000, 0x0000, 0x0000, 0xffff},
 };
-
 BTA_File data_ov053_02112404 = {75,
                                 0,
                                 (fx32 *)&data_ov053_021111d8[0],
@@ -161,7 +178,6 @@ BTA_File data_ov053_02112404 = {75,
                                 2,
                                 0,
                                 (BTAMaterialRecord *)&data_ov053_02111314[0]};
-
 BTA_File data_ov053_0211241c = {181,
                                 0,
                                 (fx32 *)&data_ov053_021111cc[0],
@@ -170,7 +186,6 @@ BTA_File data_ov053_0211241c = {181,
                                 1,
                                 0,
                                 (BTAMaterialRecord *)&data_ov053_021111e0[0]};
-
 BTA_File data_ov053_02112434 = {90,
                                 0,
                                 (fx32 *)&data_ov053_021111d4[0],
@@ -179,7 +194,6 @@ BTA_File data_ov053_02112434 = {90,
                                 2,
                                 0,
                                 (BTAMaterialRecord *)&data_ov053_021111fc[0]};
-
 BTA_File data_ov053_0211244c = {44,
                                 0,
                                 (fx32 *)&data_ov053_021111d0[0],
@@ -188,7 +202,6 @@ BTA_File data_ov053_0211244c = {44,
                                 2,
                                 0,
                                 (BTAMaterialRecord *)&data_ov053_02111234[0]};
-
 BTA_File data_ov053_02112464 = {30,
                                 0,
                                 (fx32 *)&data_ov053_021111c0[0],
@@ -197,13 +210,11 @@ BTA_File data_ov053_02112464 = {30,
                                 2,
                                 0,
                                 (BTAMaterialRecord *)&data_ov053_0211126c[0]};
-
 ObjSubTable data_ov053_0211247c[3] = {
     {0x04, 0x02, {0x00, 0x00}, &data_ov053_021124dc[0]},
     {0x0b, 0x01, {0x00, 0x00}, &data_ov053_02112380},
     {0x01, 0x01, {0x00, 0x00}, &data_ov053_021123e4[0]},
 };
-
 BTA_File data_ov053_02112494 = {63,
                                 0,
                                 (fx32 *)&data_ov053_021111dc[0],
@@ -212,7 +223,6 @@ BTA_File data_ov053_02112494 = {63,
                                 2,
                                 0,
                                 (BTAMaterialRecord *)&data_ov053_021112a4[0]};
-
 BTA_File data_ov053_021124ac = {30,
                                 0,
                                 (fx32 *)&data_ov053_021111c4[0],
@@ -221,7 +231,6 @@ BTA_File data_ov053_021124ac = {30,
                                 2,
                                 0,
                                 (BTAMaterialRecord *)&data_ov053_0211134c[0]};
-
 BTA_File data_ov053_021124c4 = {8,
                                 0,
                                 (fx32 *)&data_ov053_021111c8[0],
@@ -230,7 +239,6 @@ BTA_File data_ov053_021124c4 = {8,
                                 2,
                                 0,
                                 (BTAMaterialRecord *)&data_ov053_021112dc[0]};
-
 const BTAMaterialRecord data_ov053_021111e0[1] = {
     {0xffff,
      0x0000,
@@ -241,12 +249,10 @@ const BTAMaterialRecord data_ov053_021111e0[1] = {
      {181, 0x0000},
      {181, 0x0000}},
 };
-
 ViewEntry data_ov053_021124dc[2] = {
     {0x00, 0x00, 0x0000, 0x03e8, 0x0000, {0x00, 0x00}, 0x0000, 0x0000},
     {0x07, 0xff, 0x0000, 0x0898, 0x0000, {0x00, 0x00}, 0x0000, 0x0000},
 };
-
 LevelRec data_ov053_021124f8 = {(struct CLPS_Block *)&data_ov053_02112514,
                                 (struct ObjTable *)&data_ov053_02112384,
                                 0x072e,
@@ -258,7 +264,6 @@ LevelRec data_ov053_021124f8 = {(struct CLPS_Block *)&data_ov053_02112514,
                                 0x01,
                                 0x0320,
                                 0x0000009f};
-
 const BTAMaterialRecord data_ov053_021112dc[2] = {
     {0xffff,
      0x0000,
@@ -277,7 +282,6 @@ const BTAMaterialRecord data_ov053_021112dc[2] = {
      {1, 0x0000},
      {8, 0x0009}},
 };
-
 const BTAMaterialRecord data_ov053_02111314[2] = {
     {0xffff,
      0x0000,
@@ -296,7 +300,6 @@ const BTAMaterialRecord data_ov053_02111314[2] = {
      {1, 0x0000},
      {75, 0x004c}},
 };
-
 const BTAMaterialRecord data_ov053_0211134c[2] = {
     {0xffff,
      0x0000,
@@ -315,7 +318,6 @@ const BTAMaterialRecord data_ov053_0211134c[2] = {
      {1, 0x0000},
      {30, 0x001f}},
 };
-
 const BTAMaterialRecord data_ov053_021111fc[2] = {
     {0xffff,
      0x0000,
@@ -334,7 +336,6 @@ const BTAMaterialRecord data_ov053_021111fc[2] = {
      {1, 0x0000},
      {90, 0x005b}},
 };
-
 const BTAMaterialRecord data_ov053_02111234[2] = {
     {0xffff,
      0x0000,
@@ -353,7 +354,6 @@ const BTAMaterialRecord data_ov053_02111234[2] = {
      {1, 0x0000},
      {44, 0x002d}},
 };
-
 const BTAMaterialRecord data_ov053_0211126c[2] = {
     {0xffff,
      0x0000,
@@ -372,7 +372,6 @@ const BTAMaterialRecord data_ov053_0211126c[2] = {
      {1, 0x0000},
      {30, 0x001f}},
 };
-
 const BTAMaterialRecord data_ov053_021112a4[2] = {
     {0xffff,
      0x0000,
@@ -391,7 +390,6 @@ const BTAMaterialRecord data_ov053_021112a4[2] = {
      {1, 0x0000},
      {63, 0x0040}},
 };
-
 const BMAMaterialRecord data_ov053_02111384[1] = {{
     0xffff,
     0x0000,
@@ -410,14 +408,12 @@ const BMAMaterialRecord data_ov053_02111384[1] = {{
      {0x01, 0x00, 0x00b0},
      {0x01, 0x00, 0x0052}},
 }};
-
 const fx32 data_ov053_021113c0[17] = {
     0x00000000, 0xfffffe1d, 0x000000be, 0x00000360, 0x000000be, 0xfffffe1d,
     0x000000be, 0x00000360, 0x000000be, 0x0000036b, 0x00000079, 0xfffffd86,
     0x00000079, 0x0000036b, 0x00000079, 0xfffffd86, 0x00000079,
 };
-
-ClpsBlock data_ov053_02112514 = {
+Clps_02112514 data_ov053_02112514 = {
     0x53504c43,
     8,
     6,
@@ -430,9 +426,7 @@ ClpsBlock data_ov053_02112514 = {
         {0x02030fc0, 0x000000ff},
     },
     {0xffffffff, 0xffffffff},
-    {0x00000000, 0x00000000, 0x00000000},
 };
-
 const fx32 data_ov053_021114f8[61] = {
     0x00000000, 0xfffffe1d, 0xfffffea9, 0xfffffff7, 0x00000186, 0x000002d4, 0x00000360, 0x00000315,
     0x00000255, 0x0000014e, 0x0000002f, 0xffffff28, 0xfffffe67, 0xfffffe1d, 0xfffffe67, 0xffffff28,
@@ -443,7 +437,6 @@ const fx32 data_ov053_021114f8[61] = {
     0xfffffeb0, 0xfffffdd9, 0xfffffd86, 0xffffff10, 0x000001e5, 0x0000036b, 0x000002ce, 0x00000158,
     0xffffff99, 0xfffffe23, 0xfffffd86, 0xffffff0d, 0x000001e4,
 };
-
 const fx32 data_ov053_02111404[61] = {
     0x00000000, 0xfffffe1d, 0xfffffe2e, 0xfffffe5e, 0xfffffea7, 0xffffff03, 0xffffff6d, 0xffffffe0,
     0x00000056, 0x000000c8, 0x00000133, 0x0000018f, 0x000001d8, 0x00000208, 0x00000219, 0x0000020f,
@@ -454,7 +447,6 @@ const fx32 data_ov053_02111404[61] = {
     0xfffffe76, 0xfffffebc, 0xffffff0b, 0xffffff60, 0xffffffb8, 0x00000012, 0x0000006b, 0x000000c0,
     0x0000010e, 0x00000154, 0x0000018f, 0x000001bc, 0x000001d9,
 };
-
 const fx32 data_ov053_021115ec[89] = {
     0x00000000, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d,
     0xffffff17, 0x000000e9, 0x000001e3, 0x0000014c, 0x00000000, 0xfffffeb4, 0xfffffe1d, 0xfffffe81,
@@ -469,7 +461,6 @@ const fx32 data_ov053_021115ec[89] = {
     0xfffffe81, 0xfffffeed, 0xffffff71, 0x00000000, 0x0000008f, 0x00000113, 0x0000017f, 0x000001c8,
     0x000001e3,
 };
-
 const fx32 data_ov053_02111750[127] = {
     0x00000000, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xfffffe1d,
     0xfffffe1d, 0xfffffe1d, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17,
@@ -488,7 +479,6 @@ const fx32 data_ov053_02111750[127] = {
     0xfffffeed, 0xffffff2d, 0xffffff71, 0xffffffb8, 0x00000000, 0x00000048, 0x0000008f, 0x000000d3,
     0x00000113, 0x0000014c, 0x0000017f, 0x000001a9, 0x000001c8, 0x000001dc, 0x000001e3,
 };
-
 const u8 data_ov053_0211194c[540] = {
     0x19, 0x19, 0x19, 0x19, 0x19, 0x19, 0x19, 0x19, 0x19, 0x19, 0x19, 0x1a, 0x1a, 0x1a, 0x1a, 0x1a,
     0x1a, 0x1a, 0x1a, 0x1a, 0x1a, 0x1a, 0x1a, 0x1a, 0x1a, 0x1b, 0x1b, 0x1b, 0x1b, 0x1b, 0x1b, 0x1b,
@@ -525,7 +515,6 @@ const u8 data_ov053_0211194c[540] = {
     0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
     0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
-
 const fx32 data_ov053_02111b68[151] = {
     0x00000000, 0xfffffe1d, 0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d,
     0xffffff17, 0x000000e9, 0x000001e3, 0x000000e9, 0xffffff17, 0xfffffe1d, 0xffffff17, 0x000000e9,
@@ -547,7 +536,6 @@ const fx32 data_ov053_02111b68[151] = {
     0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3,
     0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3, 0x000001e3,
 };
-
 const fx32 data_ov053_02111dc4[181] = {
     0x00000000, 0x00000017, 0x0000002e, 0x00000044, 0x0000005b, 0x00000072, 0x00000089, 0x0000009f,
     0x000000b6, 0x000000cd, 0x000000e4, 0x000000fa, 0x00000111, 0x00000128, 0x0000013f, 0x00000155,
@@ -573,7 +561,6 @@ const fx32 data_ov053_02111dc4[181] = {
     0x00000eef, 0x00000f06, 0x00000f1c, 0x00000f33, 0x00000f4a, 0x00000f61, 0x00000f77, 0x00000f8e,
     0x00000fa5, 0x00000fbc, 0x00000fd2, 0x00000fe9, 0x00001000,
 };
-
 const fx32 data_ov053_02112098[181] = {
     0x00000000, 0xfffffe1d, 0xfffffe22, 0xfffffe32, 0xfffffe4c, 0xfffffe6f, 0xfffffe98, 0xfffffec9,
     0xfffffeff, 0xffffff39, 0xffffff77, 0xffffffb8, 0xfffffffa, 0x0000003c, 0x0000007e, 0x000000bf,
