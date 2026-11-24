@@ -48,8 +48,11 @@ extern u32 data_02099fa8;
 extern u32 data_02099fac;
 /* far range: silent beyond it */
 extern int data_02099fb0;
-/* slot-9 voice count */
-extern const u32 data_020821c0[16];
+/* Near/far range pairs for the sound modes SetSoundRange copies. */
+extern const u32 data_020821c0[16] = {
+    90, 550, 200, 1500, 200, 750, 150, 400,
+    40, 400, 90, 1000, 50, 400, 200, 1500,
+};
 extern void *data_020a4bec;
 /* the registry owner */
 extern SoundSlot data_020a4c18[];

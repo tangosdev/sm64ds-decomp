@@ -15,6 +15,11 @@
       "name": ".text",
       "start": "0x02030fa8",
       "end": "0x02034a78"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x02075b14",
+      "end": "0x02075f14"
     }
   ],
   "data": [],
@@ -60,7 +65,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -74,6 +79,13 @@
           "section": ".text",
           "start": "0x02030fa8",
           "end": "0x02034a78",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02075b14",
+          "end": "0x02075f14",
           "differingBytes": 0,
           "firstDiff": null
         }
@@ -350,5 +362,20 @@
       "legacy_source": "src/_ZN7Message10LoadTextVSEv.cpp",
       "ordinal": 34
     }
-  ]
+  ],
+  "rodata": [
+    {
+      "symbol": "data_02075b14",
+      "address": "0x02075b14",
+      "size": "0x200",
+      "evidence": "const u16[256]: VS-mode font character table (multi-byte set)"
+    },
+    {
+      "symbol": "data_02075d14",
+      "address": "0x02075d14",
+      "size": "0x200",
+      "evidence": "const u16[256]: VS-mode font character table (single-byte set)"
+    }
+  ],
+  "production_mode": "intact-object"
 }

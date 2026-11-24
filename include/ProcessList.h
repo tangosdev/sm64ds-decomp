@@ -20,7 +20,7 @@ struct ProcessList {
         callback = p;
     }
 
-    static int func_020441bc(int);
+    static const char *func_020441bc(int);
 };
 
 #endif
