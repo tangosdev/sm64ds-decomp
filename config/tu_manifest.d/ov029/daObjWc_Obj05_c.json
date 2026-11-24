@@ -33,12 +33,6 @@
       "end": "0x021142ac"
     },
     {
-      "name": ".data.w12ea0b",
-      "start": "0x0211306c",
-      "end": "0x0211308c",
-      "input_section": ".data"
-    },
-    {
       "name": ".data",
       "start": "0x02113e30",
       "end": "0x02113ef4"
@@ -128,12 +122,6 @@
     }
   ],
   "data": [
-    {
-      "symbol": "data_ov029_0211306c",
-      "address": "0x0211306c",
-      "size": "0x20",
-      "binding": "STB_GLOBAL"
-    },
     {
       "symbol": "_ZTI15daObjWc_Obj05_c",
       "address": "0x02113e30",
@@ -854,13 +842,6 @@
           "start": "0x02114284",
           "end": "0x021142ac",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".data.w12ea0b",
-          "start": "0x0211306c",
-          "end": "0x0211308c",
-          "differingBytes": 0,
-          "firstDiff": null
         },
         {
           "section": ".data",

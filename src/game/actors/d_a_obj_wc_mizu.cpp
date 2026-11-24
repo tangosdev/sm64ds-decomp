@@ -27,7 +27,7 @@ enum d_a_obj_wc_mizu_AssetId { ASSET_WC_MIZU_BMD = 0x06ca, ASSET_WC_MIZU_KCL = 0
  *   is the only consumer and defines both handles (obj07's own handles live
  *   at 0x021142d4/0x021142dc).
  * - data_ov029_02112b2c is this TU's water-level table. The texture keys,
- *   the BTA and the CLPS block are defined here too.
+ *   the BTA and the CLPS block are stage data in d_s_map_ov029.c.
  * - S14: g_profile_WC_MIZU stays outside the licensed .text.
  * - UpdateModelTransform (0x021122b4) and UpdateClsnTransform (0x02112250)
  *   are TU-local; Behavior calls both every frame.
@@ -43,13 +43,6 @@ enum d_a_obj_wc_mizu_AssetId { ASSET_WC_MIZU_BMD = 0x06ca, ASSET_WC_MIZU_KCL = 0
 
 struct BMD_File;
 struct KCL_File;
-
-/* 'CLPS' collision-property block: tag, count/stride header, entries. */
-struct CLPS_Block {
-    u32 tag;
-    u32 header;
-    u32 entries[6];
-};
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
@@ -76,61 +69,10 @@ extern const int data_ov029_02112b2c[3] = {
 extern u8 data_0209f2c0;
 extern int gWaterHeight;
 
-/* The texture animation's keys. The material record and the translation
-   run are labels inside this table. */
-extern u32 data_ov029_02112ec0;
-extern const u32 data_ov029_021129a0[] = {
-    0x00001000, 0x0000ffff, (u32)&data_ov029_02112ec0,
-    0x00000001, 0x00000001, 0x00000001,
-    0x0000005b, 0x0000005b, 0x00000000,
-    0x0000002e, 0x0000005b, 0x00000089,
-    0x000000b6, 0x000000e4, 0x00000111,
-    0x0000013f, 0x0000016c, 0x0000019a,
-    0x000001c7, 0x000001f5, 0x00000222,
-    0x00000250, 0x0000027d, 0x000002ab,
-    0x000002d8, 0x00000306, 0x00000333,
-    0x00000361, 0x0000038e, 0x000003bc,
-    0x000003e9, 0x00000417, 0x00000444,
-    0x00000472, 0x0000049f, 0x000004cd,
-    0x000004fa, 0x00000528, 0x00000555,
-    0x00000583, 0x000005b0, 0x000005de,
-    0x0000060b, 0x00000639, 0x00000666,
-    0x00000694, 0x000006c1, 0x000006ef,
-    0x0000071c, 0x0000074a, 0x00000777,
-    0x000007a5, 0x000007d2, 0x00000800,
-    0x0000082e, 0x0000085b, 0x00000889,
-    0x000008b6, 0x000008e4, 0x00000911,
-    0x0000093f, 0x0000096c, 0x0000099a,
-    0x000009c7, 0x000009f5, 0x00000a22,
-    0x00000a50, 0x00000a7d, 0x00000aab,
-    0x00000ad8, 0x00000b06, 0x00000b33,
-    0x00000b61, 0x00000b8e, 0x00000bbc,
-    0x00000be9, 0x00000c17, 0x00000c44,
-    0x00000c72, 0x00000c9f, 0x00000ccd,
-    0x00000cfa, 0x00000d28, 0x00000d55,
-    0x00000d83, 0x00000db0, 0x00000dde,
-    0x00000e0b, 0x00000e39, 0x00000e66,
-    0x00000e94, 0x00000ec1, 0x00000eef,
-    0x00000f1c, 0x00000f4a, 0x00000f77,
-    0x00000fa5, 0x00000fd2, 0x00001000,
-};
-extern u16 data_ov029_0211299c[];
-extern fx32 data_ov029_021129c0[];
-extern BTAMaterialRecord data_ov029_021129a4[];
-
-/* The WDW water's texture animation: 0x5b frames, constant scale and
-   translation, one material. */
-BTA_File data_ov029_02112fb8 = {
-    0x5b, 0, (fx32 *)data_ov029_021129a0, data_ov029_0211299c, data_ov029_021129c0,
-    1,    0, data_ov029_021129a4,
-};
-
-/* The water surface's collision properties: one floor entry. */
-CLPS_Block data_ov029_02112fec = {
-    0x53504c43,
-    0x00010008,
-    {0x00000fe0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
-};
+/* Stage data owned by d_s_map_ov029.c: the water's texture animation and
+   its collision properties. */
+extern BTA_File data_ov029_02112fb8;
+extern CLPS_Block data_ov029_02112fec;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */

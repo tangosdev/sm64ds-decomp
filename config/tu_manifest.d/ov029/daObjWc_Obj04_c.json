@@ -31,12 +31,6 @@
       "name": ".bss",
       "start": "0x02114324",
       "end": "0x02114360"
-    },
-    {
-      "name": ".data.data_ov029_0211304c",
-      "input_section": ".data",
-      "start": "0x0211304c",
-      "end": "0x0211306c"
     }
   ],
   "functions": [
@@ -122,15 +116,7 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "data": [
-    {
-      "symbol": "data_ov029_0211304c",
-      "address": "0x0211304c",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "collision properties: a floor entry and a wall entry"
-    }
-  ],
+  "data": [],
   "bss": [
     {
       "symbol": "data_ov029_02114324",
@@ -157,8 +143,7 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated model resource destructor-registration node"
-    }
-  ,
+    },
     {
       "symbol": "data_ov029_0211434c",
       "address": "0x0211434c",
@@ -472,13 +457,6 @@
           "start": "0x02114324",
           "end": "0x02114360",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".data.data_ov029_0211304c",
-          "start": "0x0211304c",
-          "end": "0x0211306c",
-          "differingBytes": 0,
-          "firstDiff": null
         }
       ],
       "objectAudit": {

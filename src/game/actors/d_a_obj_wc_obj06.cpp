@@ -39,18 +39,7 @@ struct WcObj06CollisionFilePtr : SharedFilePtr {
 extern WcObj06ModelFilePtr gWcObj06ModelFile;
 extern WcObj06CollisionFilePtr gWcObj06CollisionFile;
 
-/* Collision properties: the 'CLPS' tag, the 8-byte stride header with two
- * entries, then the default entries. */
-struct CLPS_Block {
-    u32 tag;
-    u32 header;
-    u32 entries[6];
-};
-CLPS_Block data_ov029_0211308c = {
-    0x53504c43,
-    0x00020008,
-    {0x01000fc0, 0x000000ff, 0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff},
-};
+extern CLPS_Block data_ov029_0211308c;
 
 daObjFloatBoard_c_Resources data_ov029_02113f00 = {
     &gWcObj06ModelFile,

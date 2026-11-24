@@ -33,12 +33,6 @@
       "end": "0x02114270"
     },
     {
-      "name": ".data.w12ea0",
-      "start": "0x0211302c",
-      "end": "0x0211304c",
-      "input_section": ".data"
-    },
-    {
       "name": ".data",
       "start": "0x02113cac",
       "end": "0x02113d70"
@@ -128,12 +122,6 @@
     }
   ],
   "data": [
-    {
-      "symbol": "data_ov029_0211302c",
-      "address": "0x0211302c",
-      "size": "0x20",
-      "binding": "STB_GLOBAL"
-    },
     {
       "symbol": "_ZTI15daObjWc_Obj02_c",
       "address": "0x02113cac",
@@ -828,7 +816,7 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
@@ -866,13 +854,6 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
-          "section": ".data.w12ea0",
-          "start": "0x0211302c",
-          "end": "0x0211304c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".data",
           "start": "0x02113cac",
           "end": "0x02113d70",
@@ -882,7 +863,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 15
+          "LICENSED": 19
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -893,38 +874,81 @@
           {
             "section": ".init",
             "original": [
-              46
+              48
             ],
             "desired": [
-              46
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              44
+              46
             ],
             "desired": [
-              44
+              46
             ]
           },
           {
             "section": ".bss",
             "original": [
               5,
-              8,
-              14,
+              6,
+              20,
               21
             ],
             "desired": [
+              6,
               5,
-              8,
-              14,
-              21
+              21,
+              20
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              18,
+              23,
+              24,
+              26
+            ],
+            "desired": [
+              18,
+              23,
+              24,
+              26
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                20,
+                21
+              ],
+              "desired": [
+                6,
+                5,
+                21,
+                20
+              ],
+              "slots": [
+                5,
+                6,
+                20,
+                21
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
