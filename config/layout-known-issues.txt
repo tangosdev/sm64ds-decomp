@@ -68,19 +68,3 @@ L3 src/unnamed/ov043/data_ov043_02111ca0.c
 # The 0x14-byte string at 0x02103240. The text object that uses it is text-only,
 # and the menu unit beside it is an intact TU, so the bytes stay in this unit.
 L3 src/unnamed/ov007/data_ov007_02103240.c
-# Same shape as the block above: a data_ stem is not an address name to srcpath,
-# so each new word-table or align-32 tail in src/unnamed/ is listed here.
-L3 src/unnamed/ov011/data_ov011.c
-L3 src/unnamed/ov028/data_ov028.c
-L3 src/unnamed/ov037/data_ov037.c
-L3 src/unnamed/ov038/data_ov038.c
-L3 src/unnamed/ov040/data_ov040.c
-L3 src/unnamed/ov042/data_ov042.c
-L3 src/unnamed/ov046/data_ov046.c
-L3 src/unnamed/ov048/data_ov048.c
-L3 src/unnamed/ov049/data_ov049.c
-L3 src/unnamed/ov050/data_ov050.c
-L3 src/unnamed/ov051/data_ov051.c
-L3 src/unnamed/ov054/data_ov054.c
-L3 src/unnamed/ov057/data_ov057.c
-L3 src/unnamed/ov059/data_ov059.c
