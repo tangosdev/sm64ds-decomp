@@ -7,61 +7,17 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[1];
-    u32 tail[4];
-} Clps_02112fec;
-
-typedef struct {
+/* The fixed 0x20-byte collision-property record the water actors hand to
+ * dBgW_Kc::SetFile: the 'CLPS' header (entry stride 8 at +4, live-entry count
+ * at +6), two entry slots and all-ones filler to the end of the record. A
+ * count-1 block carries the filler in its second slot as well. */
+struct CLPS_Block {
     u32 tag;
     u16 stride;
     u16 count;
     struct CLPS entries[2];
     u32 tail[2];
-} Clps_0211300c;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[1];
-    u32 tail[4];
-} Clps_0211302c;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_0211304c;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_0211306c;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_0211308c;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_021130ac;
+};
 
 typedef struct {
     u32 tag;
@@ -80,7 +36,7 @@ extern u16 data_ov029_02112ea4[2];
 extern ObjTable data_ov029_02112ea8;
 extern ObjTable data_ov029_02112eb0;
 extern ObjTable data_ov029_02112eb8;
-extern char data_ov029_02112ec0[];
+extern char data_ov029_02112ec0[12];
 extern DoorEntry data_ov029_02112ecc[1];
 extern StandardEntry data_ov029_02112ed8[1];
 extern FogEntry data_ov029_02112ee8[2];
@@ -97,13 +53,13 @@ extern ObjSubTable data_ov029_02112f88[3];
 extern Area data_ov029_02112fa0[2];
 extern BTA_File data_ov029_02112fb8;
 extern LevelRec data_ov029_02112fd0;
-extern Clps_02112fec data_ov029_02112fec;
-extern Clps_0211300c data_ov029_0211300c;
-extern Clps_0211302c data_ov029_0211302c;
-extern Clps_0211304c data_ov029_0211304c;
-extern Clps_0211306c data_ov029_0211306c;
-extern Clps_0211308c data_ov029_0211308c;
-extern Clps_021130ac data_ov029_021130ac;
+extern struct CLPS_Block data_ov029_02112fec;
+extern struct CLPS_Block data_ov029_0211300c;
+extern struct CLPS_Block data_ov029_0211302c;
+extern struct CLPS_Block data_ov029_0211304c;
+extern struct CLPS_Block data_ov029_0211306c;
+extern struct CLPS_Block data_ov029_0211308c;
+extern struct CLPS_Block data_ov029_021130ac;
 extern SimpleEntry data_ov029_021130cc[6];
 extern ViewEntry data_ov029_021130fc[4];
 extern StandardEntry data_ov029_02113134[4];
@@ -129,11 +85,11 @@ ObjTable data_ov029_02112eb0 = {0x000a, {0x00, 0x00}, &data_ov029_021131b4[0]};
 
 ObjTable data_ov029_02112eb8 = {0x0008, {0x00, 0x00}, &data_ov029_02113174[0]};
 
-char data_ov029_02112ec0[] = "mat_water";
-
 DoorEntry data_ov029_02112ecc[1] = {
     {0x0190, (s16)0xf908, (s16)0xf358, (s16)0xc000, 0x1099, 0x0000},
 };
+
+char data_ov029_02112ec0[12] = "mat_water";
 
 StandardEntry data_ov029_02112f48[1] = {
     {0x0017, 0x1130, 0x0000, 0x03e8, 0x0000, 0x0000, 0x0000, 0xffff},
@@ -182,7 +138,6 @@ TeleportSourceEntry data_ov029_02112ef8[2] = {
     {0x032c, 0x0000, 0x0dea, 0x0000},
 };
 
-
 ObjSubTable data_ov029_02112f88[3] = {
     {0x00, 0x1e, {0x00, 0x00}, &data_ov029_021134ec[0]},
     {0x05, 0x23, {0x00, 0x00}, &data_ov029_021133d4[0]},
@@ -224,7 +179,7 @@ LevelRec data_ov029_02112fd0 = {(struct CLPS_Block *)&data_ov029_02113204,
                                 0x03e8,
                                 0x0000008f};
 
-Clps_0211306c data_ov029_0211306c = {
+struct CLPS_Block data_ov029_0211306c = {
     0x53504c43,
     0x0008,
     0x0002,
@@ -232,7 +187,7 @@ Clps_0211306c data_ov029_0211306c = {
     {0xffffffff, 0xffffffff},
 };
 
-Clps_0211308c data_ov029_0211308c = {
+struct CLPS_Block data_ov029_0211308c = {
     0x53504c43,
     0x0008,
     0x0002,
@@ -240,7 +195,7 @@ Clps_0211308c data_ov029_0211308c = {
     {0xffffffff, 0xffffffff},
 };
 
-Clps_021130ac data_ov029_021130ac = {
+struct CLPS_Block data_ov029_021130ac = {
     0x53504c43,
     0x0008,
     0x0002,
@@ -248,15 +203,15 @@ Clps_021130ac data_ov029_021130ac = {
     {0xffffffff, 0xffffffff},
 };
 
-Clps_02112fec data_ov029_02112fec = {
+struct CLPS_Block data_ov029_02112fec = {
     0x53504c43,
     0x0008,
     0x0001,
-    {{0x00000fe0, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+    {{0x00000fe0, 0x000000ff}, {0xffffffff, 0xffffffff}},
+    {0xffffffff, 0xffffffff},
 };
 
-Clps_0211300c data_ov029_0211300c = {
+struct CLPS_Block data_ov029_0211300c = {
     0x53504c43,
     0x0008,
     0x0002,
@@ -264,22 +219,21 @@ Clps_0211300c data_ov029_0211300c = {
     {0xffffffff, 0xffffffff},
 };
 
-Clps_0211302c data_ov029_0211302c = {
+struct CLPS_Block data_ov029_0211302c = {
     0x53504c43,
     0x0008,
     0x0001,
-    {{0x01000fc0, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+    {{0x01000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
+    {0xffffffff, 0xffffffff},
 };
 
-Clps_0211304c data_ov029_0211304c = {
+struct CLPS_Block data_ov029_0211304c = {
     0x53504c43,
     0x0008,
     0x0002,
     {{0x01000fc0, 0x000000ff}, {0x01000fc5, 0x000000ff}},
     {0xffffffff, 0xffffffff},
 };
-
 
 SimpleEntry data_ov029_021130cc[6] = {
     {0x0f10, 0x1130, 0x0000, 0x03e8},      {0x0e3e, 0x0640, 0x073a, 0x08fc},
