@@ -72,6 +72,16 @@ typedef struct {
     int start;
     int end;
 } Entry;
+/* WFS's ROM-table block: one leading word, then variable-length sections
+ * whose first word is their uncompressed length. The FAT section comes first. */
+typedef struct {
+    u32 length;
+    u8 data[1];
+} WFSTableSection;
+typedef struct {
+    u32 largestFileSize;
+    WFSTableSection fat;
+} WFSTableBlock;
 struct Pair {
     int *f0;
     int f4;
@@ -465,7 +475,7 @@ void WFSi_LoadTables(void) {
         int j;
 
         sb = FS_FindArchive(data_02099e6c, 3);
-        buf = (char *)fp + 4;
+        buf = (char *)&((WFSTableBlock *)fp)->fat;
         FS_InitFile(&file);
         j = 0;
 
@@ -488,7 +498,7 @@ void WFSi_LoadTables(void) {
         } while (j < 4);
 
         {
-            Entry *entries = (Entry *)((char *)fp + 8);
+            Entry *entries = (Entry *)((WFSTableBlock *)fp)->fat.data;
             int count = ptrs[0]->length >> 3;
             u32 max = sl;
             int k;
