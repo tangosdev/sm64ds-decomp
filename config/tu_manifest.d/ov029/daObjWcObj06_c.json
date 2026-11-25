@@ -35,12 +35,6 @@
       "name": ".data",
       "start": "0x02113f00",
       "end": "0x02113f0c"
-    },
-    {
-      "name": ".data.wcObj06Clps",
-      "input_section": ".data",
-      "start": "0x0211308c",
-      "end": "0x021130ac"
     }
   ],
   "functions": [
@@ -79,13 +73,6 @@
       "address": "0x02113f00",
       "size": "0xc",
       "binding": "STB_GLOBAL"
-    },
-    {
-      "symbol": "data_ov029_0211308c",
-      "address": "0x0211308c",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "two entries: the 0x01000fc0 floor and the 0x01000fc5 wall"
     }
   ],
   "bss": [
@@ -259,13 +246,6 @@
           "section": ".data",
           "start": "0x02113f00",
           "end": "0x02113f0c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.wcObj06Clps",
-          "start": "0x0211308c",
-          "end": "0x021130ac",
           "differingBytes": 0,
           "firstDiff": null
         }

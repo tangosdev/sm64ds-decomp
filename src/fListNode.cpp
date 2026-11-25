@@ -21,7 +21,23 @@
 #pragma defer_codegen off
 
 extern void *data_020a4b68;
-extern const int data_02082178[6];
+
+/* The frame-loop phase names the crash screen prints ("LoopProc %1u:%s"),
+   indexed by fManager_c::m_nowLoopProc. All of them are eight bytes;
+   mwccarm orders equal sizes in .data by declaration. data_02099f58 and
+   data_02099f78 ("EXECUTE"/"CONNECT") and the ProcessFunction constants
+   the table's neighbours hold stay extern: they interleave with these
+   strings in the same .data run and are not this shard's range. */
+char data_02099f28[8] = "DRAW";
+char data_02099f30[8] = "NULL";
+char data_02099f38[8] = "DELETE";
+char data_02099f40[8] = "CREATE";
+extern char data_02099f58[8], data_02099f78[8];
+
+extern const char *const data_02082178[6] = {
+    data_02099f30, data_02099f78, data_02099f40, data_02099f58, data_02099f38, data_02099f28,
+};
+
 namespace Absorb02043fdc {
 struct ProcessListDescriptor {
     void *func_02043fdc();
@@ -89,7 +105,7 @@ void fManager_c::mainLoop() {
 
 /* Table entry for frame-loop phase i (fManager_c::m_nowLoopProc). The crash screen
  * prints it. */
-int ProcessList::func_020441bc(int i) {
+const char *ProcessList::func_020441bc(int i) {
     return data_02082178[i];
 }
 

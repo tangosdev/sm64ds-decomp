@@ -83,9 +83,12 @@ extern int data_0209d704;
 extern u8 data_0209d710[];
 extern int data_0209d74c[];
 extern s32 gFrameStep;
-extern u16 data_0208ee64[4];
-extern u8 data_0208ee6c[8];
-extern u8 data_0208ee74[];
+/* Place values the decimal number printer divides by. */
+u16 data_0208ee64[4] = {100, 10, 1, 0};
+/* Star-glyph pairs AddCharPair emits for the star-count print. */
+u8 data_0208ee6c[8] = {242, 244, 246, 248, 250, 252, 254, 0};
+/* Digit glyphs the decimal prints index, ten digits and two pad bytes. */
+u8 data_0208ee74[12] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0};
 extern int data_0208ee8c[];
 extern int data_0208eeac[];
 extern int data_0208eecc[];

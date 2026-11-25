@@ -29,25 +29,13 @@
     },
     {
       "name": ".rodata",
-      "start": "0x021129a0",
+      "start": "0x02112b2c",
       "end": "0x02112b38"
     },
     {
       "name": ".bss",
       "start": "0x021142fc",
       "end": "0x02114324"
-    },
-    {
-      "name": ".data.data_ov029_02112fb8",
-      "input_section": ".data",
-      "start": "0x02112fb8",
-      "end": "0x02112fd0"
-    },
-    {
-      "name": ".data.data_ov029_02112fec",
-      "input_section": ".data",
-      "start": "0x02112fec",
-      "end": "0x0211300c"
     }
   ],
   "functions": [
@@ -133,30 +121,8 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "data": [
-    {
-      "symbol": "data_ov029_02112fb8",
-      "address": "0x02112fb8",
-      "size": "0x18",
-      "binding": "STB_GLOBAL",
-      "evidence": "texture-SRT file: 0x5b frames, constant scale and translation, one material record"
-    },
-    {
-      "symbol": "data_ov029_02112fec",
-      "address": "0x02112fec",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "the water surface's collision properties: one floor entry"
-    }
-  ],
+  "data": [],
   "rodata": [
-    {
-      "symbol": "data_ov029_021129a0",
-      "address": "0x021129a0",
-      "size": "0x18c",
-      "binding": "STB_GLOBAL",
-      "evidence": "texture-animation keys the water's BTA_File points at"
-    },
     {
       "symbol": "data_ov029_02112b2c",
       "address": "0x02112b2c",
@@ -370,56 +336,6 @@
       "addend": 0,
       "target_module": "ov029",
       "target_address": "0x02112d90"
-    },
-    {
-      "section": ".data.data_ov029_02112fb8",
-      "source": "0x02112fbc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov029_021129a0",
-      "addend": 0,
-      "target_module": "ov029",
-      "target_address": "0x021129a0"
-    },
-    {
-      "section": ".data.data_ov029_02112fb8",
-      "source": "0x02112fc0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov029_0211299c",
-      "addend": 0,
-      "target_module": "ov029",
-      "target_address": "0x0211299c"
-    },
-    {
-      "section": ".data.data_ov029_02112fb8",
-      "source": "0x02112fc4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov029_021129c0",
-      "addend": 0,
-      "target_module": "ov029",
-      "target_address": "0x021129c0"
-    },
-    {
-      "section": ".data.data_ov029_02112fb8",
-      "source": "0x02112fcc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov029_021129a4",
-      "addend": 0,
-      "target_module": "ov029",
-      "target_address": "0x021129a4"
-    },
-    {
-      "section": ".rodata",
-      "source": "0x021129a8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov029_02112ec0",
-      "addend": 0,
-      "target_module": "ov029",
-      "target_address": "0x02112ec0"
     }
   ],
   "notes": [
@@ -547,7 +463,7 @@
         },
         {
           "section": ".rodata",
-          "start": "0x021129a0",
+          "start": "0x02112b2c",
           "end": "0x02112b38",
           "differingBytes": 0,
           "firstDiff": null
@@ -557,25 +473,11 @@
           "start": "0x021142fc",
           "end": "0x02114324",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".data.data_ov029_02112fb8",
-          "start": "0x02112fb8",
-          "end": "0x02112fd0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov029_02112fec",
-          "start": "0x02112fec",
-          "end": "0x0211300c",
-          "differingBytes": 0,
-          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 18
+          "LICENSED": 16
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -586,19 +488,19 @@
           {
             "section": ".init",
             "original": [
-              52
+              49
             ],
             "desired": [
-              52
+              49
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              50
+              47
             ],
             "desired": [
-              50
+              47
             ]
           },
           {
@@ -623,24 +525,6 @@
               5,
               22,
               14
-            ]
-          },
-          {
-            "section": ".data.data_ov029_02112fb8",
-            "original": [
-              25
-            ],
-            "desired": [
-              25
-            ]
-          },
-          {
-            "section": ".data.data_ov029_02112fec",
-            "original": [
-              27
-            ],
-            "desired": [
-              27
             ]
           }
         ],

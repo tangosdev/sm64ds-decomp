@@ -1,1386 +1,1285 @@
 {
-  "id": "ov026/daWater_Tatumaki_c",
-  "module": "ov026",
-  "source": "src/game/actors/d_a_water_tatumaki.cpp",
-  "promoted_source": "src/game/actors/d_a_water_tatumaki.cpp",
-  "production_mode": "intact-object",
-  "status": "promoted",
-  "boundary_confidence": "medium",
-  "boundary_evidence": [
-    "contiguous linker run: 0x2111aa0..0x21121bc, 13 function(s), from build/tu_map.json (tools/tu_map.py)",
-    "class label(s): daWater_Tatumaki_c",
-    "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit fold: the daWater_Tatumaki_c_classInit registry factory (profile WATER_TATUMAKI, historical alias Whirlpool_Spawn), 0x021121bc..0x021121fc, abuts this TU's InitResources with no gap; tu_map leaves it unlabelled because it cuts on symbol name. Folded as `return new daWater_Tatumaki_c();` at the end of the file (defer_codegen off, source order). The unit is now 0x02111aa0..0x021121fc, 14 functions, bounded above by daWater_Suikomi_c's first function at 0x021121fc (src/game/actors/d_a_water_suikomi.cpp).",
-    "the compiler-generated __sinit_d_a_water_tatumaki.cpp is byte-identical to retail __sinit_ov026_02112c94 (0xd4). It constructs the model handle at 0x02113f0c and the anim handle at 0x02113f04, then copies the four pointer-to-member descriptors at 0x02113cec..0x02113d0c into the state records at 0x02113f2c and 0x02113f3c. The ctor word at 0x02112db0 points at that initializer. Class RTTI, profile, and vtable stay outside this claim."
-  ],
-  "sections": [
-    {
-      "name": ".text",
-      "start": "0x02111aa0",
-      "end": "0x021121fc"
-    },
-    {
-      "name": ".init",
-      "start": "0x02112c94",
-      "end": "0x02112d68"
-    },
-    {
-      "name": ".ctor",
-      "start": "0x02112db0",
-      "end": "0x02112db4"
-    },
-    {
-      "name": ".rodata.data_ov026_02112490",
-      "input_section": ".rodata",
-      "start": "0x02112490",
-      "end": "0x02112494"
-    },
-    {
-      "name": ".rodata.data_ov026_021124a4",
-      "input_section": ".rodata",
-      "start": "0x021124a4",
-      "end": "0x021124ac"
-    },
-    {
-      "name": ".rodata.data_ov026_021124e4",
-      "input_section": ".rodata",
-      "start": "0x021124e4",
-      "end": "0x0211251c"
-    },
-    {
-      "name": ".rodata.data_ov026_02112554",
-      "input_section": ".rodata",
-      "start": "0x02112554",
-      "end": "0x021125cc"
-    },
-    {
-      "name": ".data.wlLate",
-      "start": "0x02113cec",
-      "end": "0x02113dd0",
-      "input_section": ".data"
-    },
-    {
-      "name": ".bss",
-      "start": "0x02113f04",
-      "end": "0x02113f4c"
-    }
-  ],
-  "functions": [
-    {
-      "symbol": "_ZN18daWater_Tatumaki_cD1Ev",
-      "address": "0x02111aa0",
-      "size": "0x00000038",
-      "legacy_source": "src/_ZN18daWater_Tatumaki_cD1Ev.cpp",
-      "ordinal": 0
-    },
-    {
-      "symbol": "_ZN18daWater_Tatumaki_cD0Ev",
-      "address": "0x02111ad8",
-      "size": "0x0000004c",
-      "legacy_source": "src/_ZN18daWater_Tatumaki_cD0Ev.cpp",
-      "ordinal": 1
-    },
-    {
-      "symbol": "_ZN18daWater_Tatumaki_c9StateDragEv",
-      "address": "0x02111b24",
-      "size": "0x00000190",
-      "legacy_source": "src/func_ov026_02111b24.c",
-      "ordinal": 2
-    },
-    {
-      "symbol": "_ZN18daWater_Tatumaki_c13InitStateDragEv",
-      "address": "0x02111cb4",
-      "size": "0x00000098",
-      "legacy_source": "src/func_ov026_02111cb4.c",
-      "ordinal": 3
-    },
-    {
-      "symbol": "_ZN18daWater_Tatumaki_c9StateSpinEv",
-      "address": "0x02111d4c",
-      "size": "0x0000018c",
-      "legacy_source": "src/func_ov026_02111d4c.cpp",
-      "ordinal": 4
-    },
-    {
-      "symbol": "_ZN18daWater_Tatumaki_c13InitStateSpinEv",
-      "address": "0x02111ed8",
-      "size": "0x00000008",
-      "legacy_source": "src/func_ov026_02111ed8.c",
-      "ordinal": 5
-    },
-    {
-      "symbol": "_ZN18daWater_Tatumaki_c8SetStateEPKNS_5StateE",
-      "address": "0x02111ee0",
-      "size": "0x00000050",
-      "legacy_source": "src/func_ov026_02111ee0.cpp",
-      "ordinal": 6
-    },
-    {
-      "symbol": "_ZN18daWater_Tatumaki_c17UpdateModelMatrixEv",
-      "address": "0x02111f30",
-      "size": "0x00000074",
-      "legacy_source": "src/func_ov026_02111f30.c",
-      "ordinal": 7
-    },
-    {
-      "symbol": "_ZN18daWater_Tatumaki_c16CleanupResourcesEv",
-      "address": "0x02111fa4",
-      "size": "0x00000030",
-      "legacy_source": "src/_ZN18daWater_Tatumaki_c16CleanupResourcesEv.cpp",
-      "ordinal": 8
-    },
-    {
-      "symbol": "_ZN18daWater_Tatumaki_c16OnPendingDestroyEv",
-      "address": "0x02111fd4",
-      "size": "0x00000004",
-      "legacy_source": "src/_ZN18daWater_Tatumaki_c16OnPendingDestroyEv.cpp",
-      "ordinal": 9
-    },
-    {
-      "symbol": "_ZN18daWater_Tatumaki_c6RenderEv",
-      "address": "0x02111fd8",
-      "size": "0x00000034",
-      "legacy_source": "src/_ZN18daWater_Tatumaki_c6RenderEv.cpp",
-      "ordinal": 10
-    },
-    {
-      "symbol": "_ZN18daWater_Tatumaki_c8BehaviorEv",
-      "address": "0x0211200c",
-      "size": "0x000000e0",
-      "legacy_source": "src/_ZN18daWater_Tatumaki_c8BehaviorEv.cpp",
-      "ordinal": 11
-    },
-    {
-      "symbol": "_ZN18daWater_Tatumaki_c13InitResourcesEv",
-      "address": "0x021120ec",
-      "size": "0x000000d0",
-      "legacy_source": "src/_ZN18daWater_Tatumaki_c13InitResourcesEv.cpp",
-      "ordinal": 12
-    },
-    {
-      "symbol": "_Z28daWater_Tatumaki_c_classInitv",
-      "address": "0x021121bc",
-      "size": "0x00000040",
-      "legacy_source": "src/d_a_water_tatumaki.c",
-      "ordinal": 13
-    }
-  ],
-  "init": [
-    {
-      "symbol": "__sinit_d_a_water_tatumaki.cpp",
-      "address": "0x02112c94",
-      "size": "0xd4",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov026_02112c94 and carries the same relocation sites"
-    }
-  ],
-  "ctor": [
-    {
-      "symbol": ".p__sinit_d_a_water_tatumaki.cpp",
-      "address": "0x02112db0",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
-    }
-  ],
-  "data": [
-    {
-      "symbol": "@747",
-      "address": "0x02113cec",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary for the spin record's execute pointer-to-member; retail first word is StateSpin (0x02111d4c)"
-    },
-    {
-      "symbol": "@749",
-      "address": "0x02113cf4",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary for the drag record's enter pointer-to-member; retail first word is InitStateDrag (0x02111cb4)"
-    },
-    {
-      "symbol": "@751",
-      "address": "0x02113cfc",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary for the drag record's execute pointer-to-member; retail first word is StateDrag (0x02111b24)"
-    },
-    {
-      "symbol": "@745",
-      "address": "0x02113d04",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler temporary for the spin record's enter pointer-to-member; retail first word is InitStateSpin (0x02111ed8)"
-    },
-    {
-      "symbol": "_ZTI18daWater_Tatumaki_c",
-      "address": "0x02113d0c",
-      "size": "0xc",
-      "evidence": "compiler emission of the class key function"
-    },
-    {
-      "symbol": "_ZTS18daWater_Tatumaki_c",
-      "address": "0x02113d18",
-      "size": "0x15",
-      "evidence": "compiler emission of the class key function"
-    },
-    {
-      "symbol": "g_profile_WATER_TATUMAKI",
-      "address": "0x02113d30",
-      "size": "0x1c",
-      "evidence": "compiler emission of the class key function"
-    },
-    {
-      "symbol": "_ZTV18daWater_Tatumaki_c",
-      "address": "0x02113d54",
-      "size": "0x84",
-      "evidence": "compiler emission of the class key function",
-      "emitted_storage_address": "0x02113d4c",
-      "address_point_bias": "0x8"
-    }
-  ],
-  "bss": [
-    {
-      "symbol": "gWaterTatumakiAnimationFile",
-      "address": "0x02113f04",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "anim resource handle constructed with file ID 0x4a8"
-    },
-    {
-      "symbol": "gWaterTatumakiModelFile",
-      "address": "0x02113f0c",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 0x4a9"
-    },
-    {
-      "symbol": "@742",
-      "address": "0x02113f14",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated model resource destructor-registration node"
-    },
-    {
-      "symbol": "@743",
-      "address": "0x02113f20",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated anim resource destructor-registration node"
-    },
-    {
-      "symbol": "sSpinState",
-      "address": "0x02113f2c",
-      "size": "0x10",
-      "binding": "STB_GLOBAL",
-      "evidence": "spin state record; the initializer copies its two descriptors into it"
-    },
-    {
-      "symbol": "sDragState",
-      "address": "0x02113f3c",
-      "size": "0x10",
-      "binding": "STB_GLOBAL",
-      "evidence": "drag state record; the initializer copies its two descriptors into it"
-    }
-  ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN20TatumakiModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call destination and the model-handle constructor's PC24 relocation"
-    },
-    {
-      "symbol": "_ZN20TatumakiModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail destructor registration destination for the model handle"
-    },
-    {
-      "symbol": "_ZN22TatumakiAnimFileHandleC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0201799c",
-      "evidence": "retail initializer call destination for the anim handle"
-    },
-    {
-      "symbol": "_ZN22TatumakiAnimFileHandleD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017984",
-      "evidence": "retail destructor registration destination for the anim handle"
-    }
-  ],
-  "symbol_binding_rewrites": [
-    {
-      "symbol": "__sinit_d_a_water_tatumaki.cpp",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
-    },
-    {
-      "symbol": ".p__sinit_d_a_water_tatumaki.cpp",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
-    },
-    {
-      "symbol": "@742",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x02113f14"
-    },
-    {
-      "symbol": "@743",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local anim registration node is a configured initializer relocation destination at 0x02113f20"
-    },
-    {
-      "symbol": "@745",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local spin-enter descriptor is a configured initializer relocation destination at 0x02113d04"
-    },
-    {
-      "symbol": "@747",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local spin-execute descriptor is a configured initializer relocation destination at 0x02113cec"
-    },
-    {
-      "symbol": "@749",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local drag-enter descriptor is a configured initializer relocation destination at 0x02113cf4"
-    },
-    {
-      "symbol": "@751",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local drag-execute descriptor is a configured initializer relocation destination at 0x02113cfc"
-    }
-  ],
-  "relocations": [
-    {
-      "section": ".init",
-      "source": "0x02112ca0",
-      "type": "R_ARM_PC24",
-      "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
-      "addend": -8,
-      "target_module": "arm9",
-      "target_address": "0x02017acc"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112cb0",
-      "type": "R_ARM_PC24",
-      "kind": "arm_call",
-      "symbol": "__register_global_object",
-      "addend": -8,
-      "target_module": "arm9",
-      "target_address": "0x020731dc"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112cbc",
-      "type": "R_ARM_PC24",
-      "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
-      "addend": -8,
-      "target_module": "arm9",
-      "target_address": "0x0201799c"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112ccc",
-      "type": "R_ARM_PC24",
-      "kind": "arm_call",
-      "symbol": "__register_global_object",
-      "addend": -8,
-      "target_module": "arm9",
-      "target_address": "0x020731dc"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112d30",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "gWaterTatumakiModelFile",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113f0c"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112d38",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02017ab4"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112d3c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "@742",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113f14"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112d40",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "gWaterTatumakiAnimationFile",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113f04"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112d48",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02017984"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112d4c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "@743",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113f20"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112d50",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "@745",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113d04"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112d54",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "@747",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113cec"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112d58",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "@749",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113cf4"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112d5c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "@751",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113cfc"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112d60",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "sSpinState",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113f2c"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112d64",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "sDragState",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113f3c"
-    },
-    {
-      "section": ".ctor",
-      "source": "0x02112db0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "__sinit_d_a_water_tatumaki.cpp",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02112c94"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113cec",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN18daWater_Tatumaki_c9StateSpinEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111d4c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113cf4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN18daWater_Tatumaki_c13InitStateDragEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111cb4"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113cfc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN18daWater_Tatumaki_c9StateDragEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111b24"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d04",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN18daWater_Tatumaki_c13InitStateSpinEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111ed8"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d30",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_Z28daWater_Tatumaki_c_classInitv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x021121bc"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d50",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI18daWater_Tatumaki_c",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113d0c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d90",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02043494"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d8c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual38Ejj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0204349c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d88",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual34Ejj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0204357c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113dcc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x020100dc"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113dc8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010124"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113dc4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0201012c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113dc0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010130"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113dbc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010134"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113db8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnPushedERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010138"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113db4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnKickedERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0201013c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113db0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010140"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113dac",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010144"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113da8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010148"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113da4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c9Virtual50Ev",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0201014c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113da0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010154"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d9c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010160"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d80",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11AfterRenderEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010f6c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d7c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c12BeforeRenderEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010f78"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d74",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010fc8"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d70",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010fd4"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d68",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011214"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d64",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011220"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d5c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011244"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d58",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011268"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d98",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN18daWater_Tatumaki_cD0Ev",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111ad8"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d84",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN18daWater_Tatumaki_c16OnPendingDestroyEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111fd4"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d60",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN18daWater_Tatumaki_c16CleanupResourcesEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111fa4"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d78",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN18daWater_Tatumaki_c6RenderEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111fd8"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d54",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN18daWater_Tatumaki_c13InitResourcesEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x021120ec"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d6c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN18daWater_Tatumaki_c8BehaviorEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x0211200c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d94",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN18daWater_Tatumaki_cD1Ev",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111aa0"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d10",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTS18daWater_Tatumaki_c",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113d18"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d14",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI12dEnemyBase_c",
-      "addend": 0,
-      "target_module": "ov002",
-      "target_address": "0x021081c0"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113d0c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTVN3abi20__si_class_type_infoE",
-      "addend": 8,
-      "target_module": "arm9",
-      "target_address": "0x0209a764"
-    },
-    {
-      "section": ".rodata.data_ov026_021124e4",
-      "source": "0x021124e8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov026_02112dd0",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02112dd0"
-    },
-    {
-      "section": ".rodata.data_ov026_021124e4",
-      "source": "0x02112504",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov026_02112de8",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02112de8"
-    }
-  ],
-  "notes": [
-    "The file-scope model handle, anim handle, and two state records are defined in this TU. mwcc emits __sinit_d_a_water_tatumaki.cpp, the ctor word, and four anonymous pointer-to-member descriptors. Class RTTI and the vtable stay externalized; this claim stops at 0x02113d0c, where _ZTI18daWater_Tatumaki_c begins.",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
-    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov026_02111b24 and the one that held func_ov026_02111cb4; kept the first. Both returns are pointers; the merged file declares void* and casts to char* at the second call.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzDist' differs between the legacy file that used to hold func_ov026_02111cb4 and the one that held func_ov026_02111d4c; kept the first. The merged file uses the const Vector3* declaration and casts the Vec3 arguments at the first call.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold func_ov026_02111b24 and the one that held func_ov026_02111d4c; kept the first. The two declarations were the same void*/int signature; one extern \"C\" declaration remains.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MulVec3Mat4x3' differs between the legacy file that used to hold func_ov026_02111b24 and the one that held func_ov026_02111d4c; kept the first. The merged file uses the const Vector3* declaration and casts the Vec3 arguments at the first call.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov026_02111b24 and the one that held func_ov026_02111f30; kept the first. The merged file declares a flat 12-int matrix so func_ov026_02111f30 copies it as a POD. Callers only take its address.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'int') differs between the legacy file that used to hold _ZN18daWater_Tatumaki_c8BehaviorEv and the one that held _ZN18daWater_Tatumaki_c8BehaviorEv; kept the first. The two aliases are different names. Behavior keeps its pointer-to-member type; the state helper uses its own class so the member stays at 0x110.",
-    "Collision property member calls replace local helper declarations. Reconciled 6 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (39 sections, 136 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
-  ],
-  "compiler_only_output": [
-    {
-      "symbol": "_ZN18daWater_Tatumaki_cD2Ev",
-      "disposition": "deadstrip",
-      "reason": "Homeless. One out-of-line destructor emits D1, D0, and D2 under pragma defer_codegen off. The cartridge has D1 at ov026:0x02111aa0 and D0 at ov026:0x02111ad8. No symbols.txt row names a D2 for this class."
-    },
-    {
-      "symbol": "_ZN7Vector3D1Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "arm9",
-      "canonical_address": "0x020072c0",
-      "reason": "This TU builds Vector3 values, so mwccarm re-emits Vector3's trivial vague-linkage D1. The cartridge keeps that body at arm9:0x020072c0, already owned by another source."
-    },
-    {
-      "symbol": "_ZTI12dEnemyBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x021081c0",
-      "reason": "Base typeinfo emitted with this class's vtable. ROM home ov002:0x021081c0."
-    },
-    {
-      "symbol": "_ZTS12dEnemyBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x021081cc",
-      "reason": "Base type-name string emitted with this class's vtable. ROM home ov002:0x021081cc."
-    },
-    {
-      "symbol": "_ZTI8dActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e390",
-      "reason": "Base typeinfo emitted with this class's vtable. ROM home arm9:0x0208e390."
-    },
-    {
-      "symbol": "_ZTS8dActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e384",
-      "reason": "Base type-name string emitted with this class's vtable. ROM home arm9:0x0208e384."
-    },
-    {
-      "symbol": "_ZTI7dBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e78",
-      "reason": "Base typeinfo emitted with this class's vtable. ROM home arm9:0x02086e78."
-    },
-    {
-      "symbol": "_ZTS7dBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e54",
-      "reason": "Base type-name string emitted with this class's vtable. ROM home arm9:0x02086e54."
-    },
-    {
-      "symbol": "_ZTI7fBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086d70",
-      "reason": "Base typeinfo emitted with this class's vtable. ROM home arm9:0x02086d70."
-    },
-    {
-      "symbol": "_ZTS7fBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e60",
-      "reason": "Base type-name string emitted with this class's vtable. ROM home arm9:0x02086e60."
-    }
-  ],
-  "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
-    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov026-daWater_Tatumaki_c/daWater_Tatumaki_c.o (gitignored)",
-    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 14,
-    "functions_declared": 14,
-    "compilerOnlyOutput": {
-      "requested": [
-        "_ZN18daWater_Tatumaki_cD2Ev",
-        "_ZN7Vector3D1Ev"
-      ],
-      "deadstripped": [
-        "_ZN18daWater_Tatumaki_cD2Ev",
-        "_ZN7Vector3D1Ev"
-      ],
-      "droppedSections": [
-        9,
-        10,
-        13,
-        47,
-        48,
-        49,
-        50,
-        51,
-        52,
-        53,
-        54,
-        55,
-        56,
-        57,
-        58,
-        59,
-        60,
-        61,
-        62,
-        63
-      ],
-      "data": [
-        "_ZTI12dEnemyBase_c",
-        "_ZTS12dEnemyBase_c",
-        "_ZTI8dActor_c",
-        "_ZTS8dActor_c",
-        "_ZTI7dBase_c",
-        "_ZTS7dBase_c",
-        "_ZTI7fBase_c",
-        "_ZTS7fBase_c"
-      ],
-      "dataExternalized": [
-        "_ZTI12dEnemyBase_c",
-        "_ZTI7dBase_c",
-        "_ZTI7fBase_c",
-        "_ZTI8dActor_c",
-        "_ZTS12dEnemyBase_c",
-        "_ZTS7dBase_c",
-        "_ZTS7fBase_c",
-        "_ZTS8dActor_c"
-      ]
-    },
-    "criteria": {
-      "every_declared_function_defined": "PASS",
-      "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 7 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
-      "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
-    },
-    "linkcheck": {
-      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-data-verified",
-      "scratch": "build/tu/ov026-daWater_Tatumaki_c/link (gitignored)",
-      "phases": {
-        "delink": true,
-        "lcf": true,
-        "compile": true,
-        "link": true,
-        "checkModules": true,
-        "checkSymbols": false,
-        "rom": true
-      },
-      "tuRange": {
-        "start": "0x02111aa0",
-        "end": "0x021121fc",
-        "differingBytes": 0,
-        "firstDiff": null
-      },
-      "tuRanges": [
-        {
-          "section": ".text",
-          "start": "0x02111aa0",
-          "end": "0x021121fc",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.data_ov026_02112490",
-          "start": "0x02112490",
-          "end": "0x02112494",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.data_ov026_021124a4",
-          "start": "0x021124a4",
-          "end": "0x021124ac",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.data_ov026_021124e4",
-          "start": "0x021124e4",
-          "end": "0x0211251c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.data_ov026_02112554",
-          "start": "0x02112554",
-          "end": "0x021125cc",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".init",
-          "start": "0x02112c94",
-          "end": "0x02112d68",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".ctor",
-          "start": "0x02112db0",
-          "end": "0x02112db4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.wlLate",
-          "start": "0x02113cec",
-          "end": "0x02113dd0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".bss",
-          "start": "0x02113f04",
-          "end": "0x02113f4c",
-          "comparison": "NOBITS -- symbol/module gates"
-        }
-      ],
-      "objectAudit": {
-        "counts": {
-          "LICENSED": 26
-        },
-        "emittedTextOrderIsRomAscending": true,
-        "nonLicensedSymbols": [],
-        "unlicensedSections": []
-      },
-      "nontextSectionOrder": {
-        "groups": [
-          {
-            "section": ".init",
-            "original": [
-              66
-            ],
-            "desired": [
-              66
-            ]
-          },
-          {
-            "section": ".ctor",
-            "original": [
-              64
-            ],
-            "desired": [
-              64
-            ]
-          },
-          {
-            "section": ".data.wlLate",
-            "original": [
-              37,
-              39,
-              42,
-              44
-            ],
-            "desired": [
-              39,
-              42,
-              44,
-              37
-            ]
-          },
-          {
-            "section": ".bss",
-            "original": [
-              33,
-              34,
-              35,
-              36,
-              41,
-              46
-            ],
-            "desired": [
-              36,
-              34,
-              33,
-              35,
-              41,
-              46
-            ]
-          }
-        ],
-        "objisolate": {
-          "reordered": [
-            {
-              "section": ".data.wlLate",
-              "original": [
-                37,
-                39,
-                42,
-                44
-              ],
-              "desired": [
-                39,
-                42,
-                44,
-                37
-              ],
-              "slots": [
-                37,
-                39,
-                42,
-                44
-              ]
-            },
-            {
-              "section": ".bss",
-              "original": [
-                33,
-                34,
-                35,
-                36,
-                41,
-                46
-              ],
-              "desired": [
-                36,
-                34,
-                33,
-                35,
-                41,
-                46
-              ],
-              "slots": [
-                33,
-                34,
-                35,
-                36,
-                41,
-                46
-              ]
-            }
-          ],
-          "symbolIndices": 10,
-          "sectionLinks": 0,
-          "sectionInfos": 4,
-          "error": null
-        },
-        "errors": null
-      },
-      "linkedStorageAliases": null,
-      "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [],
-      "symbolCheckBaselineErrors": [],
-      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
-      "rom": {
-        "bytes": 16777216,
-        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
-        "matchesStockRom": true
-      },
-      "linkerOutput": null
-    }
+ "id": "ov026/daWater_Tatumaki_c",
+ "module": "ov026",
+ "source": "src/game/actors/d_a_water_tatumaki.cpp",
+ "promoted_source": "src/game/actors/d_a_water_tatumaki.cpp",
+ "production_mode": "intact-object",
+ "status": "promoted",
+ "boundary_confidence": "medium",
+ "boundary_evidence": [
+  "contiguous linker run: 0x2111aa0..0x21121bc, 13 function(s), from build/tu_map.json (tools/tu_map.py)",
+  "class label(s): daWater_Tatumaki_c",
+  "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+  "classInit fold: the daWater_Tatumaki_c_classInit registry factory (profile WATER_TATUMAKI, historical alias Whirlpool_Spawn), 0x021121bc..0x021121fc, abuts this TU's InitResources with no gap; tu_map leaves it unlabelled because it cuts on symbol name. Folded as `return new daWater_Tatumaki_c();` at the end of the file (defer_codegen off, source order). The unit is now 0x02111aa0..0x021121fc, 14 functions, bounded above by daWater_Suikomi_c's first function at 0x021121fc (src/game/actors/d_a_water_suikomi.cpp).",
+  "the compiler-generated __sinit_d_a_water_tatumaki.cpp is byte-identical to retail __sinit_ov026_02112c94 (0xd4). It constructs the model handle at 0x02113f0c and the anim handle at 0x02113f04, then copies the four pointer-to-member descriptors at 0x02113cec..0x02113d0c into the state records at 0x02113f2c and 0x02113f3c. The ctor word at 0x02112db0 points at that initializer. Class RTTI, profile, and vtable stay outside this claim."
+ ],
+ "sections": [
+  {
+   "name": ".text",
+   "start": "0x02111aa0",
+   "end": "0x021121fc"
   },
-  "defined_symbol_renames": [
+  {
+   "name": ".init",
+   "start": "0x02112c94",
+   "end": "0x02112d68"
+  },
+  {
+   "name": ".ctor",
+   "start": "0x02112db0",
+   "end": "0x02112db4"
+  },
+  {
+   "name": ".data",
+   "start": "0x02113cec",
+   "end": "0x02113dd0"
+  },
+  {
+   "name": ".bss",
+   "start": "0x02113f04",
+   "end": "0x02113f4c"
+  }
+ ],
+ "functions": [
+  {
+   "symbol": "_ZN18daWater_Tatumaki_cD1Ev",
+   "address": "0x02111aa0",
+   "size": "0x00000038",
+   "legacy_source": "src/_ZN18daWater_Tatumaki_cD1Ev.cpp",
+   "ordinal": 0
+  },
+  {
+   "symbol": "_ZN18daWater_Tatumaki_cD0Ev",
+   "address": "0x02111ad8",
+   "size": "0x0000004c",
+   "legacy_source": "src/_ZN18daWater_Tatumaki_cD0Ev.cpp",
+   "ordinal": 1
+  },
+  {
+   "symbol": "_ZN18daWater_Tatumaki_c9StateDragEv",
+   "address": "0x02111b24",
+   "size": "0x00000190",
+   "legacy_source": "src/func_ov026_02111b24.c",
+   "ordinal": 2
+  },
+  {
+   "symbol": "_ZN18daWater_Tatumaki_c13InitStateDragEv",
+   "address": "0x02111cb4",
+   "size": "0x00000098",
+   "legacy_source": "src/func_ov026_02111cb4.c",
+   "ordinal": 3
+  },
+  {
+   "symbol": "_ZN18daWater_Tatumaki_c9StateSpinEv",
+   "address": "0x02111d4c",
+   "size": "0x0000018c",
+   "legacy_source": "src/func_ov026_02111d4c.cpp",
+   "ordinal": 4
+  },
+  {
+   "symbol": "_ZN18daWater_Tatumaki_c13InitStateSpinEv",
+   "address": "0x02111ed8",
+   "size": "0x00000008",
+   "legacy_source": "src/func_ov026_02111ed8.c",
+   "ordinal": 5
+  },
+  {
+   "symbol": "_ZN18daWater_Tatumaki_c8SetStateEPKNS_5StateE",
+   "address": "0x02111ee0",
+   "size": "0x00000050",
+   "legacy_source": "src/func_ov026_02111ee0.cpp",
+   "ordinal": 6
+  },
+  {
+   "symbol": "_ZN18daWater_Tatumaki_c17UpdateModelMatrixEv",
+   "address": "0x02111f30",
+   "size": "0x00000074",
+   "legacy_source": "src/func_ov026_02111f30.c",
+   "ordinal": 7
+  },
+  {
+   "symbol": "_ZN18daWater_Tatumaki_c16CleanupResourcesEv",
+   "address": "0x02111fa4",
+   "size": "0x00000030",
+   "legacy_source": "src/_ZN18daWater_Tatumaki_c16CleanupResourcesEv.cpp",
+   "ordinal": 8
+  },
+  {
+   "symbol": "_ZN18daWater_Tatumaki_c16OnPendingDestroyEv",
+   "address": "0x02111fd4",
+   "size": "0x00000004",
+   "legacy_source": "src/_ZN18daWater_Tatumaki_c16OnPendingDestroyEv.cpp",
+   "ordinal": 9
+  },
+  {
+   "symbol": "_ZN18daWater_Tatumaki_c6RenderEv",
+   "address": "0x02111fd8",
+   "size": "0x00000034",
+   "legacy_source": "src/_ZN18daWater_Tatumaki_c6RenderEv.cpp",
+   "ordinal": 10
+  },
+  {
+   "symbol": "_ZN18daWater_Tatumaki_c8BehaviorEv",
+   "address": "0x0211200c",
+   "size": "0x000000e0",
+   "legacy_source": "src/_ZN18daWater_Tatumaki_c8BehaviorEv.cpp",
+   "ordinal": 11
+  },
+  {
+   "symbol": "_ZN18daWater_Tatumaki_c13InitResourcesEv",
+   "address": "0x021120ec",
+   "size": "0x000000d0",
+   "legacy_source": "src/_ZN18daWater_Tatumaki_c13InitResourcesEv.cpp",
+   "ordinal": 12
+  },
+  {
+   "symbol": "_Z28daWater_Tatumaki_c_classInitv",
+   "address": "0x021121bc",
+   "size": "0x00000040",
+   "legacy_source": "src/d_a_water_tatumaki.c",
+   "ordinal": 13
+  }
+ ],
+ "init": [
+  {
+   "symbol": "__sinit_d_a_water_tatumaki.cpp",
+   "address": "0x02112c94",
+   "size": "0xd4",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov026_02112c94 and carries the same relocation sites"
+  }
+ ],
+ "ctor": [
+  {
+   "symbol": ".p__sinit_d_a_water_tatumaki.cpp",
+   "address": "0x02112db0",
+   "size": "0x4",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+  }
+ ],
+ "data": [
+  {
+   "symbol": "@747",
+   "address": "0x02113cec",
+   "size": "0x8",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler temporary for the spin record's execute pointer-to-member; retail first word is StateSpin (0x02111d4c)"
+  },
+  {
+   "symbol": "@749",
+   "address": "0x02113cf4",
+   "size": "0x8",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler temporary for the drag record's enter pointer-to-member; retail first word is InitStateDrag (0x02111cb4)"
+  },
+  {
+   "symbol": "@751",
+   "address": "0x02113cfc",
+   "size": "0x8",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler temporary for the drag record's execute pointer-to-member; retail first word is StateDrag (0x02111b24)"
+  },
+  {
+   "symbol": "@745",
+   "address": "0x02113d04",
+   "size": "0x8",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler temporary for the spin record's enter pointer-to-member; retail first word is InitStateSpin (0x02111ed8)"
+  },
+  {
+   "symbol": "_ZTI18daWater_Tatumaki_c",
+   "address": "0x02113d0c",
+   "size": "0xc",
+   "evidence": "compiler emission of the class key function"
+  },
+  {
+   "symbol": "_ZTS18daWater_Tatumaki_c",
+   "address": "0x02113d18",
+   "size": "0x15",
+   "evidence": "compiler emission of the class key function"
+  },
+  {
+   "symbol": "g_profile_WATER_TATUMAKI",
+   "address": "0x02113d30",
+   "size": "0x1c",
+   "evidence": "compiler emission of the class key function"
+  },
+  {
+   "symbol": "_ZTV18daWater_Tatumaki_c",
+   "address": "0x02113d54",
+   "size": "0x84",
+   "evidence": "compiler emission of the class key function",
+   "emitted_storage_address": "0x02113d4c",
+   "address_point_bias": "0x8"
+  }
+ ],
+ "bss": [
+  {
+   "symbol": "gWaterTatumakiAnimationFile",
+   "address": "0x02113f04",
+   "size": "0x8",
+   "binding": "STB_GLOBAL",
+   "evidence": "anim resource handle constructed with file ID 0x4a8"
+  },
+  {
+   "symbol": "gWaterTatumakiModelFile",
+   "address": "0x02113f0c",
+   "size": "0x8",
+   "binding": "STB_GLOBAL",
+   "evidence": "model resource handle constructed with file ID 0x4a9"
+  },
+  {
+   "symbol": "@742",
+   "address": "0x02113f14",
+   "size": "0xc",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler-generated model resource destructor-registration node"
+  },
+  {
+   "symbol": "@743",
+   "address": "0x02113f20",
+   "size": "0xc",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler-generated anim resource destructor-registration node"
+  },
+  {
+   "symbol": "sSpinState",
+   "address": "0x02113f2c",
+   "size": "0x10",
+   "binding": "STB_GLOBAL",
+   "evidence": "spin state record; the initializer copies its two descriptors into it"
+  },
+  {
+   "symbol": "sDragState",
+   "address": "0x02113f3c",
+   "size": "0x10",
+   "binding": "STB_GLOBAL",
+   "evidence": "drag state record; the initializer copies its two descriptors into it"
+  }
+ ],
+ "undefined_symbol_aliases": [
+  {
+   "symbol": "_ZN20TatumakiModelFilePtrC1Ej",
+   "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02017acc",
+   "evidence": "retail initializer call destination and the model-handle constructor's PC24 relocation"
+  },
+  {
+   "symbol": "_ZN20TatumakiModelFilePtrD1Ev",
+   "canonical_symbol": "_Z13func_02017ab4i",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02017ab4",
+   "evidence": "retail destructor registration destination for the model handle"
+  },
+  {
+   "symbol": "_ZN22TatumakiAnimFileHandleC1Ej",
+   "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+   "canonical_module": "arm9",
+   "canonical_address": "0x0201799c",
+   "evidence": "retail initializer call destination for the anim handle"
+  },
+  {
+   "symbol": "_ZN22TatumakiAnimFileHandleD1Ev",
+   "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02017984",
+   "evidence": "retail destructor registration destination for the anim handle"
+  }
+ ],
+ "symbol_binding_rewrites": [
+  {
+   "symbol": "__sinit_d_a_water_tatumaki.cpp",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+  },
+  {
+   "symbol": ".p__sinit_d_a_water_tatumaki.cpp",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+  },
+  {
+   "symbol": "@742",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x02113f14"
+  },
+  {
+   "symbol": "@743",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "compiler-local anim registration node is a configured initializer relocation destination at 0x02113f20"
+  },
+  {
+   "symbol": "@745",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "compiler-local spin-enter descriptor is a configured initializer relocation destination at 0x02113d04"
+  },
+  {
+   "symbol": "@747",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "compiler-local spin-execute descriptor is a configured initializer relocation destination at 0x02113cec"
+  },
+  {
+   "symbol": "@749",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "compiler-local drag-enter descriptor is a configured initializer relocation destination at 0x02113cf4"
+  },
+  {
+   "symbol": "@751",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "compiler-local drag-execute descriptor is a configured initializer relocation destination at 0x02113cfc"
+  }
+ ],
+ "relocations": [
+  {
+   "section": ".init",
+   "source": "0x02112ca0",
+   "type": "R_ARM_PC24",
+   "kind": "arm_call",
+   "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+   "addend": -8,
+   "target_module": "arm9",
+   "target_address": "0x02017acc"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112cb0",
+   "type": "R_ARM_PC24",
+   "kind": "arm_call",
+   "symbol": "__register_global_object",
+   "addend": -8,
+   "target_module": "arm9",
+   "target_address": "0x020731dc"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112cbc",
+   "type": "R_ARM_PC24",
+   "kind": "arm_call",
+   "symbol": "_ZN13SharedFilePtr9ConstructEj",
+   "addend": -8,
+   "target_module": "arm9",
+   "target_address": "0x0201799c"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112ccc",
+   "type": "R_ARM_PC24",
+   "kind": "arm_call",
+   "symbol": "__register_global_object",
+   "addend": -8,
+   "target_module": "arm9",
+   "target_address": "0x020731dc"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112d30",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "gWaterTatumakiModelFile",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113f0c"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112d38",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_Z13func_02017ab4i",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02017ab4"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112d3c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "@742",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113f14"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112d40",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "gWaterTatumakiAnimationFile",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113f04"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112d48",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "SharedFilePtr_Destruct_Anim",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02017984"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112d4c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "@743",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113f20"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112d50",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "@745",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113d04"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112d54",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "@747",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113cec"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112d58",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "@749",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113cf4"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112d5c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "@751",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113cfc"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112d60",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "sSpinState",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113f2c"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112d64",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "sDragState",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113f3c"
+  },
+  {
+   "section": ".ctor",
+   "source": "0x02112db0",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "__sinit_d_a_water_tatumaki.cpp",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02112c94"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113cec",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN18daWater_Tatumaki_c9StateSpinEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111d4c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113cf4",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN18daWater_Tatumaki_c13InitStateDragEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111cb4"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113cfc",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN18daWater_Tatumaki_c9StateDragEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111b24"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d04",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN18daWater_Tatumaki_c13InitStateSpinEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111ed8"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d30",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_Z28daWater_Tatumaki_c_classInitv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x021121bc"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d50",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZTI18daWater_Tatumaki_c",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113d0c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d90",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02043494"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d8c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN7fBase_c9Virtual38Ejj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0204349c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d88",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN7fBase_c9Virtual34Ejj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0204357c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113dcc",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x020100dc"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113dc8",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010124"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113dc4",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0201012c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113dc0",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010130"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113dbc",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010134"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113db8",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c8OnPushedERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010138"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113db4",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c8OnKickedERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0201013c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113db0",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010140"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113dac",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010144"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113da8",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010148"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113da4",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c9Virtual50Ev",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0201014c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113da0",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010154"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d9c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010160"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d80",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c11AfterRenderEj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010f6c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d7c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c12BeforeRenderEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010f78"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d74",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010fc8"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d70",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010fd4"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d68",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02011214"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d64",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02011220"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d5c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02011244"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d58",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02011268"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d98",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN18daWater_Tatumaki_cD0Ev",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111ad8"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d84",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN18daWater_Tatumaki_c16OnPendingDestroyEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111fd4"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d60",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN18daWater_Tatumaki_c16CleanupResourcesEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111fa4"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d78",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN18daWater_Tatumaki_c6RenderEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111fd8"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d54",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN18daWater_Tatumaki_c13InitResourcesEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x021120ec"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d6c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN18daWater_Tatumaki_c8BehaviorEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x0211200c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d94",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN18daWater_Tatumaki_cD1Ev",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111aa0"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d10",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZTS18daWater_Tatumaki_c",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113d18"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d14",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZTI12dEnemyBase_c",
+   "addend": 0,
+   "target_module": "ov002",
+   "target_address": "0x021081c0"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113d0c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZTVN3abi20__si_class_type_infoE",
+   "addend": 8,
+   "target_module": "arm9",
+   "target_address": "0x0209a764"
+  }
+ ],
+ "notes": [
+  "The file-scope model handle, anim handle, and two state records are defined in this TU. mwcc emits __sinit_d_a_water_tatumaki.cpp, the ctor word, and four anonymous pointer-to-member descriptors. Class RTTI and the vtable stay externalized; this claim stops at 0x02113d0c, where _ZTI18daWater_Tatumaki_c begins.",
+  "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
+  "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+  "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov026_02111b24 and the one that held func_ov026_02111cb4; kept the first. Both returns are pointers; the merged file declares void* and casts to char* at the second call.",
+  "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzDist' differs between the legacy file that used to hold func_ov026_02111cb4 and the one that held func_ov026_02111d4c; kept the first. The merged file uses the const Vector3* declaration and casts the Vec3 arguments at the first call.",
+  "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold func_ov026_02111b24 and the one that held func_ov026_02111d4c; kept the first. The two declarations were the same void*/int signature; one extern \"C\" declaration remains.",
+  "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MulVec3Mat4x3' differs between the legacy file that used to hold func_ov026_02111b24 and the one that held func_ov026_02111d4c; kept the first. The merged file uses the const Vector3* declaration and casts the Vec3 arguments at the first call.",
+  "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov026_02111b24 and the one that held func_ov026_02111f30; kept the first. The merged file declares a flat 12-int matrix so func_ov026_02111f30 copies it as a POD. Callers only take its address.",
+  "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'int') differs between the legacy file that used to hold _ZN18daWater_Tatumaki_c8BehaviorEv and the one that held _ZN18daWater_Tatumaki_c8BehaviorEv; kept the first. The two aliases are different names. Behavior keeps its pointer-to-member type; the state helper uses its own class so the member stays at 0x110.",
+  "Collision property member calls replace local helper declarations. Reconciled 6 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (39 sections, 136 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
+ ],
+ "compiler_only_output": [
+  {
+   "symbol": "_ZN18daWater_Tatumaki_cD2Ev",
+   "disposition": "deadstrip",
+   "reason": "Homeless. One out-of-line destructor emits D1, D0, and D2 under pragma defer_codegen off. The cartridge has D1 at ov026:0x02111aa0 and D0 at ov026:0x02111ad8. No symbols.txt row names a D2 for this class."
+  },
+  {
+   "symbol": "_ZN7Vector3D1Ev",
+   "disposition": "deadstrip-duplicate",
+   "canonical_module": "arm9",
+   "canonical_address": "0x020072c0",
+   "reason": "This TU builds Vector3 values, so mwccarm re-emits Vector3's trivial vague-linkage D1. The cartridge keeps that body at arm9:0x020072c0, already owned by another source."
+  },
+  {
+   "symbol": "_ZTI12dEnemyBase_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "ov002",
+   "canonical_address": "0x021081c0",
+   "reason": "Base typeinfo emitted with this class's vtable. ROM home ov002:0x021081c0."
+  },
+  {
+   "symbol": "_ZTS12dEnemyBase_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "ov002",
+   "canonical_address": "0x021081cc",
+   "reason": "Base type-name string emitted with this class's vtable. ROM home ov002:0x021081cc."
+  },
+  {
+   "symbol": "_ZTI8dActor_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x0208e390",
+   "reason": "Base typeinfo emitted with this class's vtable. ROM home arm9:0x0208e390."
+  },
+  {
+   "symbol": "_ZTS8dActor_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x0208e384",
+   "reason": "Base type-name string emitted with this class's vtable. ROM home arm9:0x0208e384."
+  },
+  {
+   "symbol": "_ZTI7dBase_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02086e78",
+   "reason": "Base typeinfo emitted with this class's vtable. ROM home arm9:0x02086e78."
+  },
+  {
+   "symbol": "_ZTS7dBase_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02086e54",
+   "reason": "Base type-name string emitted with this class's vtable. ROM home arm9:0x02086e54."
+  },
+  {
+   "symbol": "_ZTI7fBase_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02086d70",
+   "reason": "Base typeinfo emitted with this class's vtable. ROM home arm9:0x02086d70."
+  },
+  {
+   "symbol": "_ZTS7fBase_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02086e60",
+   "reason": "Base type-name string emitted with this class's vtable. ROM home arm9:0x02086e60."
+  }
+ ],
+ "verification": {
+  "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+  "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "object": "build/tu/ov026-daWater_Tatumaki_c/daWater_Tatumaki_c.o (gitignored)",
+  "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+  "functions_matched": 14,
+  "functions_declared": 14,
+  "compilerOnlyOutput": {
+   "requested": [
+    "_ZN18daWater_Tatumaki_cD2Ev",
+    "_ZN7Vector3D1Ev"
+   ],
+   "deadstripped": [
+    "_ZN18daWater_Tatumaki_cD2Ev",
+    "_ZN7Vector3D1Ev"
+   ],
+   "droppedSections": [
+    9,
+    10,
+    13,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "data": [
+    "_ZTI12dEnemyBase_c",
+    "_ZTS12dEnemyBase_c",
+    "_ZTI8dActor_c",
+    "_ZTS8dActor_c",
+    "_ZTI7dBase_c",
+    "_ZTS7dBase_c",
+    "_ZTI7fBase_c",
+    "_ZTS7fBase_c"
+   ],
+   "dataExternalized": [
+    "_ZTI12dEnemyBase_c",
+    "_ZTI7dBase_c",
+    "_ZTI7fBase_c",
+    "_ZTI8dActor_c",
+    "_ZTS12dEnemyBase_c",
+    "_ZTS7dBase_c",
+    "_ZTS7fBase_c",
+    "_ZTS8dActor_c"
+   ]
+  },
+  "criteria": {
+   "every_declared_function_defined": "PASS",
+   "every_declared_function_bytes_match": "PASS",
+   "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 7 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+   "functions_occur_in_expected_order": "PASS",
+   "relocation_destinations_verified": "PASS"
+  },
+  "linkcheck": {
+   "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+   "result": "scratch-data-verified",
+   "scratch": "build/tu/ov026-daWater_Tatumaki_c/link (gitignored)",
+   "phases": {
+    "delink": true,
+    "lcf": true,
+    "compile": true,
+    "link": true,
+    "checkModules": true,
+    "checkSymbols": false,
+    "rom": true
+   },
+   "tuRange": {
+    "start": "0x02111aa0",
+    "end": "0x021121fc",
+    "differingBytes": 0,
+    "firstDiff": null
+   },
+   "tuRanges": [
     {
-      "from": "@852",
-      "to": "@742",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @836 to @842 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @842 to @788 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @788 to @782 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @782 to @783 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @783 to @820 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @820 to @834 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @834 to @839 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @842 to @848 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @848 to @846 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @846 to @848 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @848 to @852 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+     "section": ".text",
+     "start": "0x02111aa0",
+     "end": "0x021121fc",
+     "differingBytes": 0,
+     "firstDiff": null
     },
     {
-      "from": "@853",
-      "to": "@743",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @837 to @843 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @843 to @789 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @789 to @783 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @783 to @784 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @784 to @821 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @821 to @835 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @835 to @840 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @843 to @849 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @849 to @847 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @847 to @849 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @849 to @853 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+     "section": ".init",
+     "start": "0x02112c94",
+     "end": "0x02112d68",
+     "differingBytes": 0,
+     "firstDiff": null
     },
     {
-      "from": "@855",
-      "to": "@745",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @839 to @845 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @845 to @791 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @791 to @785 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @785 to @786 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @786 to @823 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @823 to @837 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @837 to @842 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @845 to @851 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @851 to @849 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @849 to @851 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @851 to @855 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+     "section": ".ctor",
+     "start": "0x02112db0",
+     "end": "0x02112db4",
+     "differingBytes": 0,
+     "firstDiff": null
     },
     {
-      "from": "@857",
-      "to": "@747",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @841 to @847 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @847 to @793 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @793 to @787 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @787 to @788 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @788 to @825 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @825 to @839 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @839 to @844 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @847 to @853 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @853 to @851 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @851 to @853 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @853 to @857 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+     "section": ".data",
+     "start": "0x02113cec",
+     "end": "0x02113dd0",
+     "differingBytes": 0,
+     "firstDiff": null
     },
     {
-      "from": "@859",
-      "to": "@749",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @843 to @849 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @849 to @795 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @795 to @789 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @789 to @790 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @790 to @827 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @827 to @841 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @841 to @846 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @849 to @855 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @855 to @853 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @853 to @855 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @855 to @859 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
-    },
-    {
-      "from": "@861",
-      "to": "@751",
-      "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @845 to @851 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @851 to @797 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @797 to @791 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @791 to @792 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @792 to @829 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @829 to @843 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @843 to @848 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @851 to @857 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @857 to @855 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @855 to @857 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @857 to @861 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+     "section": ".bss",
+     "start": "0x02113f04",
+     "end": "0x02113f4c",
+     "comparison": "NOBITS -- symbol/module gates",
+     "differingBytes": 0,
+     "firstDiff": null
     }
-  ],
-  "rodata": [
-    {
-      "symbol": "data_ov026_02112490",
-      "address": "0x02112490",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "sWhirlpoolBta rotation key; the header at 0x02112f48 points here"
+   ],
+   "objectAudit": {
+    "counts": {
+     "LICENSED": 26
     },
-    {
-      "symbol": "data_ov026_021124a4",
-      "address": "0x021124a4",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "sWhirlpoolBta scale keys; the header at 0x02112f44 points here"
+    "emittedTextOrderIsRomAscending": true,
+    "nonLicensedSymbols": [],
+    "unlicensedSections": []
+   },
+   "nontextSectionOrder": {
+    "groups": [
+     {
+      "section": ".init",
+      "original": [
+       66
+      ],
+      "desired": [
+       66
+      ]
+     },
+     {
+      "section": ".ctor",
+      "original": [
+       64
+      ],
+      "desired": [
+       64
+      ]
+     },
+     {
+      "section": ".data.wlLate",
+      "original": [
+       37,
+       39,
+       42,
+       44
+      ],
+      "desired": [
+       39,
+       42,
+       44,
+       37
+      ]
+     },
+     {
+      "section": ".bss",
+      "original": [
+       33,
+       34,
+       35,
+       36,
+       41,
+       46
+      ],
+      "desired": [
+       36,
+       34,
+       33,
+       35,
+       41,
+       46
+      ]
+     }
+    ],
+    "objisolate": {
+     "reordered": [
+      {
+       "section": ".data.wlLate",
+       "original": [
+        37,
+        39,
+        42,
+        44
+       ],
+       "desired": [
+        39,
+        42,
+        44,
+        37
+       ],
+       "slots": [
+        37,
+        39,
+        42,
+        44
+       ]
+      },
+      {
+       "section": ".bss",
+       "original": [
+        33,
+        34,
+        35,
+        36,
+        41,
+        46
+       ],
+       "desired": [
+        36,
+        34,
+        33,
+        35,
+        41,
+        46
+       ],
+       "slots": [
+        33,
+        34,
+        35,
+        36,
+        41,
+        46
+       ]
+      }
+     ],
+     "symbolIndices": 10,
+     "sectionLinks": 0,
+     "sectionInfos": 4,
+     "error": null
     },
-    {
-      "symbol": "data_ov026_021124e4",
-      "address": "0x021124e4",
-      "size": "0x38",
-      "binding": "STB_GLOBAL",
-      "evidence": "sWhirlpoolBta material records; the header at 0x02112f54 points here"
-    },
-    {
-      "symbol": "data_ov026_02112554",
-      "address": "0x02112554",
-      "size": "0x78",
-      "binding": "STB_GLOBAL",
-      "evidence": "sWhirlpoolBta translation keys; the header at 0x02112f4c points here"
-    }
-  ]
+    "errors": null
+   },
+   "linkedStorageAliases": null,
+   "symbolCheckNewVsBaseline": [],
+   "symbolCheckErrors": [],
+   "symbolCheckBaselineErrors": [],
+   "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+   "rom": {
+    "bytes": 16777216,
+    "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "matchesStockRom": true
+   },
+   "linkerOutput": null
+  }
+ },
+ "defined_symbol_renames": [
+  {
+   "from": "@852",
+   "to": "@742",
+   "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @836 to @842 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @842 to @788 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @788 to @782 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @782 to @783 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @783 to @820 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @820 to @834 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @834 to @839 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @842 to @848 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @848 to @846 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @846 to @848 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @848 to @852 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+  },
+  {
+   "from": "@853",
+   "to": "@743",
+   "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @837 to @843 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @843 to @789 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @789 to @783 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @783 to @784 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @784 to @821 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @821 to @835 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @835 to @840 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @843 to @849 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @849 to @847 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @847 to @849 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @849 to @853 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+  },
+  {
+   "from": "@855",
+   "to": "@745",
+   "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @839 to @845 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @845 to @791 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @791 to @785 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @785 to @786 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @786 to @823 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @823 to @837 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @837 to @842 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @845 to @851 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @851 to @849 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @849 to @851 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @851 to @855 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+  },
+  {
+   "from": "@857",
+   "to": "@747",
+   "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @841 to @847 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @847 to @793 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @793 to @787 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @787 to @788 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @788 to @825 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @825 to @839 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @839 to @844 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @847 to @853 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @853 to @851 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @851 to @853 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @853 to @857 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+  },
+  {
+   "from": "@859",
+   "to": "@749",
+   "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @843 to @849 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @849 to @795 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @795 to @789 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @789 to @790 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @790 to @827 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @827 to @841 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @841 to @846 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @849 to @855 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @855 to @853 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @853 to @855 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @855 to @859 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+  },
+  {
+   "from": "@861",
+   "to": "@751",
+   "evidence": "compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin | compiler temp; ApproachLinear's Vector3 overload is now declared in math/Approach.h, retiring this TU's named-parameter local extern, so mwcc emits it under this lower number (re-keyed by address) Re-keyed from @845 to @851 when Re-keyed when StateDrag's and Behavior's volatile int triples became plain Vector3 copies (#821).. Re-keyed from @851 to @797 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @797 to @791 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @791 to @792 when a redundant pun was removed (same section, offset, size, type and binding). Re-keyed from @792 to @829 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @829 to @843 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @843 to @848 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @851 to @857 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @857 to @855 when the Mtx43 copy casts and raw-word matrix members became plain Matrix4x3 (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @855 to @857 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @857 to @861 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+  }
+ ]
 }

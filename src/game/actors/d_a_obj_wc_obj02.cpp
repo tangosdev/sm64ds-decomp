@@ -44,13 +44,7 @@ void func_02012694(unsigned int a, const Vector3 *p);
 
 extern WcObj02ModelFilePtr data_ov029_02114250;
 extern WcObj02CollisionFilePtr data_ov029_02114248;
-struct CLPS_Block {
-    u32 words[8];
-};
-
-CLPS_Block data_ov029_0211302c = {
-    0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
-};
+extern CLPS_Block data_ov029_0211302c;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */

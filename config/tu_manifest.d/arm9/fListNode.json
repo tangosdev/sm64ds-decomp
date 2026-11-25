@@ -34,6 +34,16 @@
       "name": ".bss",
       "start": "0x020a4b6c",
       "end": "0x020a4bb8"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x02082178",
+      "end": "0x02082190"
+    },
+    {
+      "name": ".data",
+      "start": "0x02099f28",
+      "end": "0x02099f48"
     }
   ],
   "functions": [
@@ -94,7 +104,36 @@
       "ordinal": 7
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_02099f28",
+      "address": "0x02099f28",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "char[8] \"DRAW\": phase name for DRAW"
+    },
+    {
+      "symbol": "data_02099f30",
+      "address": "0x02099f30",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "char[8] \"NULL\": phase name for NONE"
+    },
+    {
+      "symbol": "data_02099f38",
+      "address": "0x02099f38",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "char[8] \"DELETE\": phase name for DELETE"
+    },
+    {
+      "symbol": "data_02099f40",
+      "address": "0x02099f40",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "char[8] \"CREATE\": phase name for CREATE"
+    }
+  ],
   "bss": [
     {
       "symbol": "_ZN10fManager_c15m_connectManageE",
@@ -234,11 +273,25 @@
           "start": "0x020a4b6c",
           "end": "0x020a4bb8",
           "comparison": "NOBITS -- symbol/module gates"
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02082178",
+          "end": "0x02082190",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02099f28",
+          "end": "0x02099f48",
+          "differingBytes": 0,
+          "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 15
+          "LICENSED": 20
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -249,36 +302,60 @@
           {
             "section": ".init",
             "original": [
-              30
+              36
             ],
             "desired": [
-              30
+              36
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              28
+              34
             ],
             "desired": [
-              28
+              34
             ]
           },
           {
             "section": ".bss",
             "original": [
-              13,
-              14,
-              15,
-              16,
-              17
+              19,
+              20,
+              21,
+              22,
+              23
             ],
             "desired": [
-              13,
-              15,
-              14,
-              16,
-              17
+              19,
+              21,
+              20,
+              22,
+              23
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              9
+            ],
+            "desired": [
+              9
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              5,
+              6,
+              7,
+              8
+            ],
+            "desired": [
+              8,
+              7,
+              6,
+              5
             ]
           }
         ],
@@ -287,29 +364,50 @@
             {
               "section": ".bss",
               "original": [
-                13,
-                14,
-                15,
-                16,
-                17
+                19,
+                20,
+                21,
+                22,
+                23
               ],
               "desired": [
-                13,
-                15,
-                14,
-                16,
-                17
+                19,
+                21,
+                20,
+                22,
+                23
               ],
               "slots": [
-                13,
-                14,
-                15,
-                16,
-                17
+                19,
+                20,
+                21,
+                22,
+                23
+              ]
+            },
+            {
+              "section": ".data",
+              "original": [
+                5,
+                6,
+                7,
+                8
+              ],
+              "desired": [
+                8,
+                7,
+                6,
+                5
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8
               ]
             }
           ],
-          "symbolIndices": 5,
+          "symbolIndices": 9,
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null
@@ -472,6 +570,75 @@
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02075154"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02082178",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02099f30",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099f30"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0208217c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02099f78",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099f78"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02082180",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02099f40",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099f40"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02082184",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02099f58",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099f58"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02082188",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02099f38",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099f38"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0208218c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_02099f28",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02099f28"
+    }
+  ],
+  "rodata": [
+    {
+      "symbol": "data_02082178",
+      "address": "0x02082178",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "const char *const[6]: frame-loop phase-name table ProcessList::func_020441bc indexes; the crash screen prints it"
     }
   ]
 }

@@ -32,33 +32,8 @@
       "end": "0x021142fc"
     },
     {
-      "name": ".data.wcObj07Clps",
-      "input_section": ".data",
-      "start": "0x021130ac",
-      "end": "0x021130cc"
-    },
-    {
-      "name": ".data.data_ov029_02113fc4",
-      "input_section": ".data",
+      "name": ".data",
       "start": "0x02113fc4",
-      "end": "0x02113fc8"
-    },
-    {
-      "name": ".data.gap2",
-      "input_section": ".data",
-      "start": "0x02113fc8",
-      "end": "0x02113fd4"
-    },
-    {
-      "name": ".data.data_ov029_02113fd4",
-      "input_section": ".data",
-      "start": "0x02113fd4",
-      "end": "0x02113fe0"
-    },
-    {
-      "name": ".data.gap3",
-      "input_section": ".data",
-      "start": "0x02113fe0",
       "end": "0x02114098"
     }
   ],
@@ -100,13 +75,6 @@
     }
   ],
   "data": [
-    {
-      "symbol": "data_ov029_021130ac",
-      "address": "0x021130ac",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "CLPS block the spinning disc passes to InitResourcesFrom"
-    },
     {
       "symbol": "data_ov029_02113fc4",
       "address": "0x02113fc4",
@@ -297,36 +265,8 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
-          "section": ".data.wcObj07Clps",
-          "start": "0x021130ac",
-          "end": "0x021130cc",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov029_02113fc4",
+          "section": ".data",
           "start": "0x02113fc4",
-          "end": "0x02113fc8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.gap2",
-          "start": "0x02113fc8",
-          "end": "0x02113fd4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov029_02113fd4",
-          "start": "0x02113fd4",
-          "end": "0x02113fe0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.gap3",
-          "start": "0x02113fe0",
           "end": "0x02114098",
           "differingBytes": 0,
           "firstDiff": null
@@ -719,7 +659,7 @@
       "target_address": "0x02112d24"
     },
     {
-      "section": ".data.gap2",
+      "section": ".data",
       "source": "0x02113fc8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -729,7 +669,7 @@
       "target_address": "0x0209a764"
     },
     {
-      "section": ".data.gap2",
+      "section": ".data",
       "source": "0x02113fcc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -739,7 +679,7 @@
       "target_address": "0x02113fe0"
     },
     {
-      "section": ".data.gap2",
+      "section": ".data",
       "source": "0x02113fd0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -749,7 +689,7 @@
       "target_address": "0x021091ac"
     },
     {
-      "section": ".data.data_ov029_02113fd4",
+      "section": ".data",
       "source": "0x02113fd4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -759,7 +699,7 @@
       "target_address": "0x021142dc"
     },
     {
-      "section": ".data.data_ov029_02113fd4",
+      "section": ".data",
       "source": "0x02113fd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -769,7 +709,7 @@
       "target_address": "0x021142d4"
     },
     {
-      "section": ".data.data_ov029_02113fd4",
+      "section": ".data",
       "source": "0x02113fdc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -779,7 +719,7 @@
       "target_address": "0x021130ac"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02113ff4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -789,7 +729,7 @@
       "target_address": "0x02112168"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114014",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -799,7 +739,7 @@
       "target_address": "0x02113fc8"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114054",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -809,7 +749,7 @@
       "target_address": "0x02043494"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114050",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -819,7 +759,7 @@
       "target_address": "0x0204349c"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x0211404c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -829,7 +769,7 @@
       "target_address": "0x0204357c"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114048",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -839,7 +779,7 @@
       "target_address": "0x02043ac0"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114090",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -849,7 +789,7 @@
       "target_address": "0x020100dc"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x0211408c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -859,7 +799,7 @@
       "target_address": "0x02010124"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114088",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -869,7 +809,7 @@
       "target_address": "0x0201012c"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114084",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -879,7 +819,7 @@
       "target_address": "0x02010130"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114080",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -889,7 +829,7 @@
       "target_address": "0x02010134"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x0211407c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -899,7 +839,7 @@
       "target_address": "0x02010138"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114078",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -909,7 +849,7 @@
       "target_address": "0x0201013c"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114074",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -919,7 +859,7 @@
       "target_address": "0x02010140"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114070",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -929,7 +869,7 @@
       "target_address": "0x02010144"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x0211406c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -939,7 +879,7 @@
       "target_address": "0x02010148"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114068",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -949,7 +889,7 @@
       "target_address": "0x0201014c"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114064",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -959,7 +899,7 @@
       "target_address": "0x02010154"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114060",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -969,7 +909,7 @@
       "target_address": "0x02010160"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114044",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -979,7 +919,7 @@
       "target_address": "0x02010f6c"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114040",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -989,7 +929,7 @@
       "target_address": "0x02010f78"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114038",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -999,7 +939,7 @@
       "target_address": "0x02010fc8"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114034",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1009,7 +949,7 @@
       "target_address": "0x02010fd4"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x0211402c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1019,7 +959,7 @@
       "target_address": "0x02011214"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114028",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1029,7 +969,7 @@
       "target_address": "0x02011220"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114020",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1039,7 +979,7 @@
       "target_address": "0x02011244"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x0211401c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1049,7 +989,7 @@
       "target_address": "0x02011268"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114094",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1059,7 +999,7 @@
       "target_address": "0x020ee55c"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x0211403c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1069,7 +1009,7 @@
       "target_address": "0x020b66f0"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114030",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1079,7 +1019,7 @@
       "target_address": "0x020b6718"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x0211405c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1089,7 +1029,7 @@
       "target_address": "0x021120d0"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114018",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1099,7 +1039,7 @@
       "target_address": "0x02112148"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114024",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1109,7 +1049,7 @@
       "target_address": "0x02112134"
     },
     {
-      "section": ".data.gap3",
+      "section": ".data",
       "source": "0x02114058",
       "type": "R_ARM_ABS32",
       "kind": "load",

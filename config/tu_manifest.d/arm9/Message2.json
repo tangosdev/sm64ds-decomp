@@ -15,6 +15,11 @@
       "name": ".text",
       "start": "0x0201ab04",
       "end": "0x0201cb2c"
+    },
+    {
+      "name": ".data",
+      "start": "0x0208ee64",
+      "end": "0x0208ee80"
     }
   ],
   "functions": [
@@ -110,7 +115,26 @@
       "ordinal": 12
     }
   ],
-  "data": [],
+  "data": [
+    {
+      "symbol": "data_0208ee64",
+      "address": "0x0208ee64",
+      "size": "0x8",
+      "evidence": "u16[4]: number-format place values 100, 10, 1; Message2.cpp divides by them at the %N state"
+    },
+    {
+      "symbol": "data_0208ee6c",
+      "address": "0x0208ee6c",
+      "size": "0x8",
+      "evidence": "u8[8]: digit glyph bytes AddCharPair indexes for text code 3"
+    },
+    {
+      "symbol": "data_0208ee74",
+      "address": "0x0208ee74",
+      "size": "0xc",
+      "evidence": "u8[12]: decimal digit characters; Message2.cpp and Message.cpp AddChar them"
+    }
+  ],
   "bss": [],
   "compiler_only_output": [],
   "notes": [
@@ -141,7 +165,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/arm9-Message2/link (gitignored)",
       "phases": {
         "delink": true,
@@ -149,12 +173,12 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
         "start": "0x0201ab04",
-        "end": "0x0201adfc",
+        "end": "0x0201cb2c",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -162,22 +186,68 @@
         {
           "section": ".text",
           "start": "0x0201ab04",
-          "end": "0x0201adfc",
+          "end": "0x0201cb2c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x0208ee64",
+          "end": "0x0208ee80",
           "differingBytes": 0,
           "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 5
+          "LICENSED": 16
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              5,
+              6,
+              7
+            ],
+            "desired": [
+              6,
+              5,
+              7
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                5,
+                6,
+                7
+              ],
+              "desired": [
+                6,
+                5,
+                7
+              ],
+              "slots": [
+                5,
+                6,
+                7
+              ]
+            }
+          ],
+          "symbolIndices": 3,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -187,10 +257,11 @@
       "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
       "rom": {
         "bytes": 16777216,
-        "sha256": "ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40",
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
       "linkerOutput": null
     }
-  }
+  },
+  "production_mode": "intact-object"
 }
