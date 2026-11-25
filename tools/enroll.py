@@ -288,12 +288,16 @@ def candidates():
                 continue
             # A carved object's section alignment is inherited from the delinks.txt
             # header and cannot be overridden per entry (dsd rejects `align:` there).
-            # dsd gives code sections 4-byte alignment, so a function that does not
-            # start 4-aligned - the thumb SDK stubs at 2-byte-aligned addresses - gets
-            # padded up by the linker, inserting bytes and shifting the whole module.
+            # The generated script starts at ALIGNALL(4). A Thumb function on a
+            # halfword address stays a candidate: tools/halfword_text.py folds
+            # the neighboring gap bytes into that object just before the link,
+            # so the linker sees a word-aligned section. An odd address, or a
+            # halfword function compiled as ARM, still cannot be placed.
             if addr % 4 != 0:
-                skipped["not 4-byte aligned (thumb stub)"] += 1
-                continue
+                if (addr % 2 != 0 or mode != "thumb" or not THUMB_PRAGMA.search(
+                        f.read_text(encoding="utf-8", errors="ignore"))):
+                    skipped["not 4-byte aligned (thumb stub)"] += 1
+                    continue
             # A 4-aligned Thumb function would slip past the alignment gate above and
             # then be compiled as ARM; only the size check would bounce it. Be explicit.
             # The exception is a source that asks for Thumb itself (`#pragma thumb on`,

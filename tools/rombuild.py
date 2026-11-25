@@ -1669,6 +1669,15 @@ def main():
                 data_provenance_snapshot = DPB.before_link(data_provenance_plan)
             except (ValueError, OSError) as exc:
                 raise BuildError("data provenance inputs", 1, str(exc)) from exc
+        try:
+            import halfword_text as HT
+            report["halfwordText"] = HT.apply(
+                BUILD / "arm9.lcf", BUILD / "objects.txt", config_root)
+        except (OSError, ValueError) as exc:
+            raise BuildError("halfword text placement", 1, str(exc)) from exc
+        if report["halfwordText"]["patchedObjects"]:
+            print(f"      halfword: {report['halfwordText']['patchedObjects']} "
+                  f"contribution(s) extended to a word boundary")
         print("[4/6] mwldarm")
         run([*launcher(), str(MW / LD_VERSION / "mwldarm.exe"), *LDFLAGS.split(),
              f"@{BUILD / 'objects.txt'}", str(BUILD / "arm9.lcf"),
