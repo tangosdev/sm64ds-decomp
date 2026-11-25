@@ -5835,7 +5835,7 @@ int daPly_c::St_Squish_Main() {
                     dActor_c *a = mAttachedActor;
                     if (a != 0) {
                         if (IsActorID(a, 0xa4) || IsActorID(a, 0xa5))
-                            ((daBtn_c *)a)->unk_407 = 1;
+                            ((daBtn_c *)a)->mPlayerSquashed = 1;
                     }
                 }
             } else {
