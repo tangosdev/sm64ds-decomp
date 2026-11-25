@@ -7,6 +7,7 @@
 src/game/actors/d_a_jgm.cpp:
     complete
     .text start:0x02123740 end:0x02124b64
+    .rodata start:0x02127230 end:0x02127240
     .init start:0x02127240 end:0x0212749c
     .ctor start:0x021277cc end:0x021277d0
     .bss start:0x02127b20 end:0x02127c14

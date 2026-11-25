@@ -31,12 +31,6 @@
       "name": ".bss",
       "start": "0x02114020",
       "end": "0x02114048"
-    },
-    {
-      "name": ".data.data_ov036_02112b68",
-      "input_section": ".data",
-      "start": "0x02112b68",
-      "end": "0x02112b88"
     }
   ],
   "functions": [
@@ -104,22 +98,7 @@
       "ordinal": 8
     }
   ],
-  "data": [
-    {
-      "symbol": "data_ov036_02112b68",
-      "address": "0x02112b68",
-      "size": "0x1c",
-      "binding": "STB_GLOBAL",
-      "evidence": "CLPS block for the swing: CLPS header, layer 2, entries 0x01000fc0 and 0x01002fc0"
-    },
-    {
-      "symbol": "data_ov036_02112b84",
-      "address": "0x02112b84",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "all-ones word closing the CLPS block"
-    }
-  ],
+  "data": [],
   "init": [
     {
       "symbol": "__sinit_d_a_obj_rc_buranko.cpp",
@@ -460,13 +439,6 @@
           "start": "0x02114020",
           "end": "0x02114048",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".data.data_ov036_02112b68",
-          "start": "0x02112b68",
-          "end": "0x02112b88",
-          "differingBytes": 0,
-          "firstDiff": null
         }
       ],
       "objectAudit": {

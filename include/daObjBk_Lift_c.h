@@ -47,7 +47,7 @@ struct daObjBk_Lift_c : dBgActor_c {
     void UpdateShadow();
     /* Mesh-collider stood-on callback pair: arms a kind-2 ride. */
     static void StoodOnCallback(dBgW *, dActor_c *, dActor_c *);
-    int OnStoodOn(dActor_c *);
+    void OnStoodOn(dActor_c *);
     virtual void OnHitByMegaChar(daPly_c &player); /* slot 27 */
     /* dBgActor_c's own slot, overridden here: _ZTV14daObjBk_Lift_c+0x7c relocates to
        0x0211233c while _ZTV10dBgActor_c+0x7c relocates to _ZN10dBgActor_c4KillEv. An

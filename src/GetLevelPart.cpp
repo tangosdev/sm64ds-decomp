@@ -5,7 +5,10 @@
  * SublevelToLevel.cpp. The object is deadstripped: the initializer never
  * references it, and a .bss byte in this gap would shift every later symbol.
  */
-extern const signed char data_02075264[52];
+extern const signed char data_02075264[52] = {
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1,
+    2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0,
+};
 
 signed char GetLevelPart(int idx) {
     return data_02075264[idx];

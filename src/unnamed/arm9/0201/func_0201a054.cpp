@@ -53,7 +53,7 @@ extern void func_020196cc(void);
 extern void func_0201a5cc(void);
 }
 
-extern char data_0208ee50[12];
+char data_0208ee50[12] = "ds mario";
 /* save magic, zero padded */
 extern char ACTOR_SPAWN_TABLE[];
 extern void *data_020a4bb8;

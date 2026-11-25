@@ -35,7 +35,7 @@
     },
     {
       "name": ".rodata",
-      "start": "0x020ff0b8",
+      "start": "0x020ff0a0",
       "end": "0x020ff0d0"
     }
   ],
@@ -673,7 +673,7 @@
         },
         {
           "section": ".rodata",
-          "start": "0x020ff0b8",
+          "start": "0x020ff0a0",
           "end": "0x020ff0d0",
           "differingBytes": 0,
           "firstDiff": null
@@ -2006,6 +2006,66 @@
       "addend": 0,
       "target_module": "ov002",
       "target_address": "0x0210de00"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff0a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210de48",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210de48"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff0a4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210de60",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210de60"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff0a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210de50",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210de50"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff0ac",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210da40",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210da40"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff0b0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d9a0",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d9a0"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x020ff0b4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov002_0210d9c0",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x0210d9c0"
     }
   ],
   "defined_symbol_renames": [
@@ -2085,6 +2145,20 @@
       "symbol": "data_ov002_020ff0c4",
       "address": "0x020ff0c4",
       "size": "0xc"
+    },
+    {
+      "symbol": "data_ov002_020ff0a0",
+      "address": "0x020ff0a0",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three animation handles"
+    },
+    {
+      "symbol": "data_ov002_020ff0ac",
+      "address": "0x020ff0ac",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "three model handles"
     }
   ]
 }

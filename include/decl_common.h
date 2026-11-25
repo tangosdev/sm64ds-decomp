@@ -5,6 +5,7 @@
 #ifndef DECL_COMMON_H
 #define DECL_COMMON_H
 #include "common.h"
+#include "WbmCarryOffset.h"
 
 /* C linkage. These declare ROM symbols by their exact final names, so a C++
    translation unit including this header must not mangle them -- a bare
@@ -161,7 +162,6 @@ extern int data_ov002_0210f344[3];
 extern int data_ov002_0210f824[];
 extern int data_ov002_0210f89c;
 extern int data_ov002_0210f8cc[3];
-extern int gWaterfallSoundsDisabled;
 extern int data_ov003_020b1650[];
 extern int data_ov003_020b1704[];
 extern int sMgPauseBgNcgByLanguage[];
@@ -253,7 +253,6 @@ extern int data_ov006_021421b4;
    winner here. Every consumer now lives in that one translation unit,
    which declares both with the recovered pointer type, so no declaration
    belongs here either. */
-extern int sTrmpAnyOnLedge;
 extern int data_ov007_02103260;
 extern int data_ov007_02103340;
 extern int data_ov007_02103344;
@@ -266,7 +265,6 @@ extern struct daObjFloatBoard_c_Resources data_ov029_02113be8;
 extern struct daObjFloatBoard_c_Resources data_ov029_02113f00;
 extern int data_ov035_02111bfc[];
 extern struct CLPS_Block data_ov036_02112b48;
-extern int data_ov041_021118e0;
 extern int data_ov055_02111a90;
 extern int data_ov055_02111b60;
 extern int data_ov055_02111b64;
@@ -294,13 +292,13 @@ extern int data_ov075_0211d650[];
 extern void *gKeyModelFiles[];
 extern int data_ov091_021344e8[];
 extern int data_ov094_02136a1c[];
-extern Vector3 data_ov098_0213bf60[];
+extern const struct WbmCarryOffset data_ov098_0213bf60[];
 extern int data_ov100_02148008[3];
 extern int data_ov100_02148710;
 extern int data_ov100_02148718;
 extern int data_ov100_0214871c;
 extern int data_ov100_02148720;
-extern int func_02007cec(void*, const struct Vector3*, int);
+extern void func_02007cec(void *, const struct Vector3 *, int);
 extern int GetLanguageIndex(void);
 extern int func_02013890(int, int);
 extern int func_02013a44(void);
@@ -536,7 +534,7 @@ extern unsigned int sD3DOptionNcgByLanguage[];
 extern unsigned short gKuppaScriptFrame;
 extern unsigned short data_ov002_0210abb8[];
 extern unsigned short data_ov002_0210c088[];
-extern unsigned short sHanaSpinAngle;
+extern unsigned short sHanaSpinAngle[];
 extern unsigned short data_ov007_02104c28;
 extern void ChangeArea(int);
 extern void CleanCommonModelDataArr(void);
@@ -582,7 +580,6 @@ extern void UnloadArchive(int);
 extern void UnloadArchives(void);
 extern void WarpPlayer(int, int);
 extern void data_ov052_02111e84(void *);
-extern void data_ov054_02111238(void *);
 extern void MI_SendGXCommand(unsigned int, const void *, unsigned int);
 /* func_02005348 removed: it is the member dScBoot_c::func_02005348(), declared in include/dScBoot_c.h */
 extern void Vec3fSetDistAndAngle(struct Vector3 *, const struct Vector3 *, int, short, short);
@@ -798,7 +795,6 @@ extern void *sRouletteLandedRacer;
 extern struct CLPS_Block data_ov010_021122f8;
 extern void *data_ov016_021149d4[];
 extern void *data_ov023_02112088;
-extern void *data_ov051_021116b0[];
 extern void *data_ov065_0211c0a8[];
 extern struct CLPS_Block *data_ov065_0211cd68[];
 extern void *data_ov065_0211cfd8[];
@@ -823,7 +819,7 @@ void Banner_Draw(MgBanner *);
 extern void Bomroom_DrawScore();
 extern void D3D_CaptureToMain(void);
 extern void D3D_CaptureToSub(void);
-extern int D3D_PlaySeAtX(int, int);
+extern void D3D_PlaySeAtX(int, int);
 extern void D3D_PlaySePannedLoop(int, int, int);
 extern void D3D_ReleaseSubBg1(void *);
 extern void HanaPopup_ClearAll(void);

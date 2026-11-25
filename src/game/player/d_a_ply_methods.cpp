@@ -3895,7 +3895,7 @@ int daPly_c::func_ov002_020c231c() {
     return 0;
 }
 
-int daPly_c::func_ov002_020c25a8(int arg1) {
+void daPly_c::func_ov002_020c25a8(int arg1) {
     int ret;
     Vector3 v;
     Vector3 wn;
@@ -3994,11 +3994,8 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
         mIsInAirState = 0;
     }
 
-    {
-        int wallFlag = mClsnFlags & 2;
-        if (wallFlag == 0)
-            return wallFlag;
-    }
+    if ((mClsnFlags & 2) == 0)
+        return;
 
     mMeshClsn.GetWallResult()->surface.CopyNormalTo(wn);
     mWallNormal.x = wn.x;
@@ -4010,13 +4007,10 @@ int daPly_c::func_ov002_020c25a8(int arg1) {
         mPos.z -= mWallNormal.z * 2;
     }
 
-    ret = func_ov002_020d0580();
-    if (ret != 0)
-        return ret;
-
-    ret = func_ov002_020c2138();
-    if (ret != 0)
-        return ret;
+    if (func_ov002_020d0580() != 0)
+        return;
+    if (func_ov002_020c2138() != 0)
+        return;
 }
 
 void daPly_c::func_ov002_020c29d4() {
@@ -19049,7 +19043,6 @@ int daPly_c::ChangeState(daPly_c::State &state) {
    comes from daPly_c.h. */
 
 int daPly_c::CleanupResources() {
-    struct VB { virtual void v0(); virtual void v1(); };
     void UnloadSilverStarAndNumber(void);
     void UnloadKeyModels(int n);
     extern SharedFilePtr data_ov002_0210e3d8;
@@ -19063,22 +19056,13 @@ int daPly_c::CleanupResources() {
     func_ov002_020e032c();
     for (i = 0; i < 4; i++) {
         int j;
-        VB *p = (VB *)mModels.mBodyModels[i];
-        if (p != 0) {
-            if (p != 0)
-                p->v1();
-        }
-        p = (VB *)mModels.mHeadModels[i];
-        if (p != 0) {
-            if (p != 0)
-                p->v1();
-        }
+        if (mModels.mBodyModels[i] != 0)
+            delete mModels.mBodyModels[i];
+        if (mModels.mHeadModels[i] != 0)
+            delete mModels.mHeadModels[i];
         j = i + 4;
-        p = (VB *)mModels.mHeadModels[j];
-        if (p != 0) {
-            if (p != 0)
-                p->v1();
-        }
+        if (mModels.mHeadModels[j] != 0)
+            delete mModels.mHeadModels[j];
         {
             int *q = mModels.mBodyTexParams[i];
             if (q != 0)
@@ -19091,18 +19075,10 @@ int daPly_c::CleanupResources() {
                 ::operator delete[]((void *)q);
         }
     }
-    {
-        VB *p = (VB *)mModels.mBodyModels[4];
-        if (p != 0) {
-            if (p != 0)
-                p->v1();
-        }
-        p = (VB *)mModels.mSleepBubbleModel;
-        if (p != 0) {
-            if (p != 0)
-                p->v1();
-        }
-    }
+    if (mModels.mBodyModels[4] != 0)
+        delete mModels.mBodyModels[4];
+    if (mModels.mSleepBubbleModel != 0)
+        delete mModels.mSleepBubbleModel;
     {
         if (mTrailPos != 0)
             delete[] mTrailPos;
@@ -21731,8 +21707,8 @@ int func_02017ab4(int self);
 int SharedFilePtr_Destruct_Anim(int self);
 void *SharedFilePtr_Construct_TexSeq(void *self, unsigned int fileID);
 int SharedFilePtr_Destruct_TexSeq(int self);
-extern "C" {
 void func_0201973c(void);
+extern "C" {
 unsigned short *func_ov002_020e6ad4(unsigned short *);
 
 /* The random-number seed RandomIntInternal draws from. */

@@ -79,14 +79,14 @@
       "address": "0x02082a34",
       "size": "0xbec",
       "binding": "STB_GLOBAL",
-      "evidence": "the star floor-normal records and the 16-bit curve block; the two words at 0x020830c4 point at ov007 data and the arm9 block data_02080fdf"
+      "evidence": "the star floor-normal records and the 16-bit curve block"
     },
     {
       "symbol": "data_02083620",
       "address": "0x02083620",
       "size": "0x2bf4",
       "binding": "STB_GLOBAL",
-      "evidence": "the curve/asset block the two words in data_02078000 point at; two of its own words are relocations (0x02085360 -> ov007 code, 0x02085364 -> data_0208f021)"
+      "evidence": "the curve/asset block the two words in data_02078000 point at"
     }
   ],
   "bss": [],
@@ -153,46 +153,5 @@
       "linkerOutput": null
     }
   },
-  "relocations": [
-    {
-      "section": ".rodata",
-      "source": "0x020830c4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov007_020e0fde",
-      "addend": 0,
-      "target_module": "ov007",
-      "target_address": "0x020e0fde"
-    },
-    {
-      "section": ".rodata",
-      "source": "0x020830c8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_02080fdf",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02080fdf"
-    },
-    {
-      "section": ".rodata",
-      "source": "0x02085360",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_0208f021",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0208f021"
-    },
-    {
-      "section": ".rodata",
-      "source": "0x02085364",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov007_020ef022",
-      "addend": 0,
-      "target_module": "ov007",
-      "target_address": "0x020ef022"
-    }
-  ]
+  "relocations": []
 }

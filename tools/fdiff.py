@@ -117,7 +117,7 @@ def main():
 
     target = target_from_args(a)
     src = pathlib.Path(a.c).read_text(encoding="utf-8")
-    cpp = src.startswith("//cpp")
+    cpp = pathlib.Path(a.c).suffix == ".cpp" or src.startswith("//cpp")
     import tempfile
     with tempfile.TemporaryDirectory() as td:
         cf = pathlib.Path(td) / ("cand.cpp" if cpp else "cand.c")

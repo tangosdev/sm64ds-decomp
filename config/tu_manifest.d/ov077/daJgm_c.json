@@ -17,6 +17,11 @@
       "end": "0x02124b64"
     },
     {
+      "name": ".rodata",
+      "start": "0x02127230",
+      "end": "0x02127240"
+    },
+    {
       "name": ".init",
       "start": "0x02127240",
       "end": "0x0212749c"
@@ -274,6 +279,23 @@
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail; the other two .ctor words belong to the remaining shards"
+    }
+  ],
+
+  "rodata": [
+    {
+      "symbol": "data_ov077_02127230",
+      "address": "0x02127230",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two texture-sequence handle pointers"
+    },
+    {
+      "symbol": "data_ov077_02127238",
+      "address": "0x02127238",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "two animation handle pointers"
     }
   ],
   "data": [],
@@ -974,6 +996,46 @@
       "addend": 0,
       "target_module": "ov077",
       "target_address": "0x02127240"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127230",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov077_02127b20",
+      "addend": 0,
+      "target_module": "ov077",
+      "target_address": "0x02127b20"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127234",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov077_02127b30",
+      "addend": 0,
+      "target_module": "ov077",
+      "target_address": "0x02127b30"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x02127238",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov077_02127b28",
+      "addend": 0,
+      "target_module": "ov077",
+      "target_address": "0x02127b28"
+    },
+    {
+      "section": ".rodata",
+      "source": "0x0212723c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov077_02127b40",
+      "addend": 0,
+      "target_module": "ov077",
+      "target_address": "0x02127b40"
     }
   ],
   "notes": [
@@ -1070,6 +1132,13 @@
           "section": ".text",
           "start": "0x02123740",
           "end": "0x02124b64",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02127230",
+          "end": "0x02127240",
           "differingBytes": 0,
           "firstDiff": null
         },

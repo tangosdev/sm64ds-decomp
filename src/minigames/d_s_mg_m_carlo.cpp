@@ -58,7 +58,7 @@ extern dMgMCarloCardObj_c *sMCarloCardsTail;
 /* board list tail */
 extern dMgMCarloCardObj_c *sMCarloSecondPick;
 /* second pick */
-extern short sMCarloBoardDelay;
+extern short sMCarloBoardDelay[];
 
 extern int sMCarloCardTotal;
 
@@ -561,7 +561,7 @@ void dMgMCarloCardObj_c::Update(int slot) {
         }
         if (IsPairWith(sMCarloFirstPick) != 0) {
             sMCarloSecondPick = this;
-            sMCarloBoardDelay = 32;
+            sMCarloBoardDelay[0] = 32;
             mState = CARD_SELECTED;
             Sound::PlayBank2_2D(0x154);
             if (sMgCoinsBetPlaced == 0)
@@ -705,7 +705,7 @@ void dScMgMCarlo_c::SetupBoard(dMgMCarloCardObj_c *cards) {
         slot = 0;
         sMCarloFirstPick = 0;
         sMCarloSecondPick = 0;
-        sMCarloBoardDelay = 0;
+        sMCarloBoardDelay[0] = 0;
         sMCarloCardsMoving = 0;
         sMCarloDealProgress = 0;
         sMCarloCards = cards;
@@ -840,7 +840,7 @@ void dScMgMCarlo_c::UpdateBoard(void) {
 
     if (sMCarloFirstPick != 0) {
         if (sMCarloSecondPick != 0) {
-            if (--sMCarloBoardDelay == 0) {
+            if (--sMCarloBoardDelay[0] == 0) {
                 if (sMCarloFirstPick->mSlot > sMCarloSecondPick->mSlot)
                     sMCarloDealProgress = sMCarloSecondPick->mSlot << 12;
                 else
@@ -921,3 +921,6 @@ OamAttr *sMCarloCardSprites[19] = {
     sMgCardSprites[10], sMgCardSprites[7],  sMgCardSprites[8],  sMgCardSprites[15],
     sMgCardSprites[16], sMgCardSprites[17], sMgCardSprites[18],
 };
+
+/* Pair-match board 2, from the delay through sMCarlo2FaceCounts. */
+short sMCarlo2BoardDelay[0x28];

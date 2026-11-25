@@ -16,4 +16,3 @@ src/ui/hud/d_cap_icon.cpp:
 src/ui/hud/d_th_icon.cpp:
     complete
     .text start:0x020ab41c end:0x020ab5f8
-

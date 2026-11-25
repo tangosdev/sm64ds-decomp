@@ -55,7 +55,7 @@ struct daKpa3Bg_c : dBgActor_c {
 
     /* The mState handlers, in data_ov060_0211b1ac's pointer-to-member
        table. N64's falling_bowser_plat_act_start, _check and _fall. */
-    int StateStart();
+    void StateStart();
     void StateCheck();
     void StateFall();
 

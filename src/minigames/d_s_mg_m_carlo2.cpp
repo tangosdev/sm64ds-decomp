@@ -49,7 +49,7 @@ extern dMgMCarlo2CardObj_c *sMCarlo2CardsTail;
 
 extern dMgMCarlo2CardObj_c *sMCarlo2Cards;
 
-extern s16 sMCarlo2BoardDelay;
+extern s16 sMCarlo2BoardDelay[];
 /* frames left before the pair resolves  */
 extern s16 sMCarlo2CardsMoving;
 /* pieces still animating                */
@@ -440,7 +440,7 @@ void dMgMCarlo2CardObj_c::Update(int slot)
         }
         if (IsPairWith(sMCarlo2FirstPick) != 0) {
             sMCarlo2SecondPick = this;
-            sMCarlo2BoardDelay = 32;
+            sMCarlo2BoardDelay[0] = 32;
             mState = 3;
             Sound::PlayBank2_2D(0x154);
             return;
@@ -523,7 +523,7 @@ void dScMgMCarlo2_c::SetupBoard(dMgMCarlo2CardObj_c* base)
         sMCarlo2CardHead = 0;
         sMCarlo2FirstPick = 0;
         sMCarlo2SecondPick = 0;
-        sMCarlo2BoardDelay = 0;
+        sMCarlo2BoardDelay[0] = 0;
         sMCarlo2CardsMoving = 0;
         sMCarlo2CardsWanted = 0x28;
         sMCarlo2DeckSize = 0x28;
@@ -634,8 +634,8 @@ void dScMgMCarlo2_c::UpdateBoard()
     dMgMCarlo2CardObj_c *head = sMCarlo2Cards;
 
     if (sMCarlo2FirstPick != 0 && sMCarlo2SecondPick != 0) {
-        sMCarlo2BoardDelay -= 1;
-        if (sMCarlo2BoardDelay == 0) {
+        sMCarlo2BoardDelay[0] -= 1;
+        if (sMCarlo2BoardDelay[0] == 0) {
             dMgMCarlo2CardObj_c* first;
             dMgMCarlo2CardObj_c* second;
             dMgMCarlo2CardObj_c* tail;

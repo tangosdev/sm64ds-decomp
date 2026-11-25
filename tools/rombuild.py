@@ -69,6 +69,17 @@ import dsd_pin as DSP  # noqa: E402
 import data_section_routes as DSR  # noqa: E402
 import initialized_boundaries as IB  # noqa: E402
 
+
+def source_is_cpp(path, text):
+    """True when mwccarm should compile this source as C++.
+
+    A `.cpp` file is C++. A `.c` file is C++ only when it starts with `//cpp`,
+    which is how the older one-function files selected the language.
+    """
+    if pathlib.Path(str(path)).suffix == ".cpp":
+        return True
+    return text.startswith("//cpp")
+
 # Default compiler for the ROM build — same as the matching pin (tools/match.py
 # CANONICAL / notes/rom-build.md). config/rombuild-versions.txt carries per-file
 # exceptions that still need a 1.2/* service pack.
@@ -1250,6 +1261,25 @@ def retarget_text_section(obj, section=".init"):
     return False
 
 
+def _empty_table(rel, obj):
+    """Refuse a resource-table object that is too small to hold its bytes.
+
+    The tracked source is a placeholder. A compile that linked that placeholder
+    produces an object of a few hundred bytes and an undefined symbol at the
+    stock link. The real objects start at about 1.6KB.
+    """
+    import cartridge_resources as CART
+    if str(rel).replace("\\", "/") not in CART.BY_REL:
+        return None
+    try:
+        size = pathlib.Path(obj).stat().st_size
+    except OSError:
+        return f"{rel}: missing object"
+    if size < 1000:
+        return f"{rel}: object is {size} bytes"
+    return None
+
+
 def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_root=None,
                 data_sink=None, prebuilt=None, compiler_only=None, intact_tus=None):
     """Compile one enrolled source file to the object path dsd's objects.txt names.
@@ -1265,6 +1295,12 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
     only value the production build ever uses.
     """
     src = REPO / rel
+    norm = str(rel).replace("\\", "/")
+    import cartridge_resources as CART
+    # The tracked file is a placeholder. Fill every table before this compile
+    # reads it; the process restores the placeholders at exit.
+    if norm in CART.BY_REL:
+        CART.install()
     obj = (pathlib.Path(build_root) if build_root else BUILD) / pathlib.Path(rel).with_suffix(".o")
     obj.parent.mkdir(parents=True, exist_ok=True)
     if prebuilt is not None:
@@ -1275,15 +1311,15 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
         return rel, None, "tu-derived"
     version = (vers or {}).get(pathlib.Path(rel).stem, VERSION)
     flags = CFLAGS
-    # A leading //cpp marker means C++, matched to how match.py/fdiff compile it.
+    # .cpp is C++. A .c file is C++ only when its first line is //cpp.
     try:
-        if src.read_text(encoding="utf-8").startswith("//cpp"):
+        if source_is_cpp(src, src.read_text(encoding="utf-8")):
             flags = flags.replace("-lang c99", "-lang c++")
     except OSError:
         pass
 
     exe = MW / version / "mwccarm.exe"
-    key = (cache.source_key(rel, version, flags, exe)
+    key = (cache.source_key(rel, version, flags, exe, source_path=src)
            if cache and cache.enabled else None)
     if key is not None:
         deps = cache.manifest(key)
@@ -1294,6 +1330,9 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
             err = _isolate(obj, rel, syms, data_sink, compiler_only, intact_tus)
             if err:
                 return rel, f"isolate: {err}", "error"
+            err = _empty_table(rel, obj)
+            if err:
+                return rel, err, "error"
             return rel, None, "hit"
 
     # -MD makes mwccarm write out the headers it actually read, which is what lets the
@@ -1326,15 +1365,24 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
             return rel, f"retarget: {err}", "error"
         if key is None:
             err = _isolate(obj, rel, syms, data_sink, compiler_only, intact_tus)
-            return (rel, f"isolate: {err}", "error") if err else (rel, None, "miss")
+            if err:
+                return rel, f"isolate: {err}", "error"
+            err = _empty_table(rel, obj)
+            return (rel, err, "error") if err else (rel, None, "miss")
         deps = cache.deps_from(scratch)
         if deps is None:
             err = _isolate(obj, rel, syms, data_sink, compiler_only, intact_tus)
-            return (rel, f"isolate: {err}", "error") if err else (rel, None, "uncacheable")
+            if err:
+                return rel, f"isolate: {err}", "error"
+            err = _empty_table(rel, obj)
+            return (rel, err, "error") if err else (rel, None, "uncacheable")
         # Cache the RAW object, then isolate the working copy. Storing the reduced
         # form instead would bake this transformation into every entry, so any later
         # fix to it would be masked by isolate()'s own idempotence -- which is exactly
         # how the STB_LOPROC bug survived a rebuild and forced SCHEMA 2.
+        err = _empty_table(rel, obj)
+        if err:
+            return rel, err, "error"
         cache.put(key, deps, obj)
         err = _isolate(obj, rel, syms, data_sink, compiler_only, intact_tus)
         return (rel, f"isolate: {err}", "error") if err else (rel, None, "miss")
@@ -1469,6 +1517,12 @@ def main():
                                  "Re-run tools/enroll.py if files moved; add a documented "
                                  "waiver to config/layout-known-issues.txt only if the "
                                  "violation is genuinely pre-existing.")
+
+        import cartridge_resources as CART
+        try:
+            CART.install()
+        except OSError as exc:
+            raise BuildError("cartridge resources", 1, str(exc)) from exc
 
         profile = RP.prepare_profile(args.profile)
         config_root = profile["configRoot"]
@@ -1763,6 +1817,9 @@ def main():
         report["failure"] = {"phase": phase, "returncode": code, "output": output[:4000]}
         save_report()
         return 1
+    finally:
+        import cartridge_resources as CART
+        CART.restore()
 
 
 if __name__ == "__main__":

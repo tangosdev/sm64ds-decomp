@@ -146,7 +146,7 @@ src/game/actors/d_a_obj_mario_cap.cpp:
     .init start:0x02101064 end:0x02101478
     .ctor start:0x021080f0 end:0x021080f4
     .bss start:0x0210de00 end:0x0210df94
-    .rodata start:0x020ff0b8 end:0x020ff0d0
+    .rodata start:0x020ff0a0 end:0x020ff0d0
 
 src/game/actors/d_a_obj_pushblock.cpp:
     complete
@@ -294,7 +294,7 @@ src/game/actors/d_a_obj_bc_switch.cpp:
     .text start:0x020f11b0 end:0x020f15fc
     .init start:0x02107304 end:0x02107370
     .ctor start:0x02108124 end:0x02108128
-    .bss start:0x02110ac4 end:0x02110aec
+    .bss start:0x02110ac4 end:0x02110afc
 
 src/game/actors/d_a_e_switch.cpp:
     complete

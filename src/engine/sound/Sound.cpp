@@ -43,7 +43,7 @@ extern "C" s32 NNS_SndHeapSaveState(struct SndHeap *heap);
 extern "C" int func_0203d7d4(int a);
 extern "C" void NNS_SndPlayerStopSeqByPlayerNo(int a, int b);
 extern "C" void NNS_SndPlayerPauseByPlayerNo(int a, int b);
-extern "C" int NNS_SndPlayerStopSeq(NNSSndHandle *handle, int z);
+extern "C" void NNS_SndPlayerStopSeq(NNSSndHandle *handle, int z);
 struct data_020a5bb8_t;
 extern "C" void NNS_SndHandleInit(NNSSndHandle *p);
 extern "C" void NNS_SndInit(void);
@@ -174,7 +174,10 @@ extern unsigned char gLocalPlayerId;
 extern signed char gCurrentSublevel;
 extern daPly_c *gPlayers[];
 extern signed char gCurrentAreaId;
-extern const unsigned char data_02075250[8];
+/* Sound bank offsets, one byte per bank. */
+extern const unsigned char data_02075250[8] = {
+    0, 64, 128, 192, 192, 0, 0, 0,
+};
 /* The eleven sound-player numbers func_02011c54 stops; the twelfth byte is
    padding. */
 extern const u8 data_02075258[12] = {

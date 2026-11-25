@@ -238,7 +238,7 @@ struct daStar_c : dEnemyBase_c {
     void OnBounceLand();
     void ReturnToHome();
     void CheckBounds();
-    int MaybeAddStarMarker();
+    void MaybeAddStarMarker();
     void CollectByEgg(daPly_c *player);
     int Collect(daPly_c *player);
     void CheckPickup();

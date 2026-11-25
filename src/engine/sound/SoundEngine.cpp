@@ -427,7 +427,7 @@ extern void NNS_SndHandleReleaseSeq(NNSSndHandle *handle);
 extern void NNS_SndHandleInit(NNSSndHandle *handle);
 extern void NNS_SndPlayerPauseByPlayerNo(int idx, int val);
 extern void NNS_SndPlayerStopSeqByPlayerNo(int idx, int arg1);
-extern int NNS_SndPlayerStopSeq(NNSSndHandle *handle, int fade);
+extern void NNS_SndPlayerStopSeq(NNSSndHandle *handle, int fade);
 extern int NNS_SndPlayerCreateHeap(int playerNo, struct SndHeap *heap, u32 size);
 extern void NNSi_SndPlayerMain(void);
 extern void NNSi_SndPlayerInit(void);
@@ -1922,9 +1922,7 @@ extern "C" int NNS_SndPlayerCreateHeap(int playerNo, struct SndHeap *heap, u32 s
     return 1;
 }
 
-extern "C" int NNS_SndPlayerStopSeq(NNSSndHandle *handle, int fade) {
-    /* NNSi_SndPlayerStopSeq is void, so there is no return: the call is a tail call and r0 is the
-       callee's. */
+extern "C" void NNS_SndPlayerStopSeq(NNSSndHandle *handle, int fade) {
     NNSi_SndPlayerStopSeq(handle->player, fade);
 }
 

@@ -24,6 +24,11 @@
       "name": ".ctor",
       "start": "0x02086b70",
       "end": "0x02086b74"
+    },
+    {
+      "name": ".rodata",
+      "start": "0x02075264",
+      "end": "0x02075298"
     }
   ],
   "functions": [
@@ -44,6 +49,15 @@
   ],
   "data": [],
   "bss": [],
+  "rodata": [
+    {
+      "symbol": "data_02075264",
+      "address": "0x02075264",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "Which part of a course each sublevel belongs to."
+    }
+  ],
   "init": [
     {
       "symbol": "__sinit_GetLevelPart.cpp",
@@ -169,6 +183,13 @@
           "section": ".ctor",
           "start": "0x02086b70",
           "end": "0x02086b74",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x02075264",
+          "end": "0x02075298",
           "differingBytes": 0,
           "firstDiff": null
         }

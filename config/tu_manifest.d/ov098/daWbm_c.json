@@ -33,11 +33,11 @@
     {
       "name": ".bss",
       "start": "0x0213c91c",
-      "end": "0x0213c948"
+      "end": "0x0213c960"
     },
     {
       "name": ".rodata",
-      "start": "0x0213bf90",
+      "start": "0x0213bf60",
       "end": "0x0213bf9c"
     }
   ],
@@ -163,6 +163,13 @@
       "size": "0x00000018",
       "binding": "STB_GLOBAL",
       "evidence": "the three-entry member-pointer state table the initializer fills from .data"
+    },
+    {
+      "symbol": "data_ov098_0213c948",
+      "address": "0x0213c948",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "tail of this TU's bss"
     }
   ],
   "rodata": [
@@ -172,6 +179,13 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "six launch angles, 0x0000 through 0xc000 in quarter-turn steps, then a zero"
+    },
+    {
+      "symbol": "data_ov098_0213bf60",
+      "address": "0x0213bf60",
+      "size": "0x30",
+      "binding": "STB_GLOBAL",
+      "evidence": "four carry-offset rows"
     }
   ],
   "notes": [
@@ -298,12 +312,12 @@
         {
           "section": ".bss",
           "start": "0x0213c91c",
-          "end": "0x0213c948",
+          "end": "0x0213c960",
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
           "section": ".rodata",
-          "start": "0x0213bf90",
+          "start": "0x0213bf60",
           "end": "0x0213bf9c",
           "differingBytes": 0,
           "firstDiff": null

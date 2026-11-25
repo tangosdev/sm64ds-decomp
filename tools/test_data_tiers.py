@@ -60,6 +60,20 @@ def verification(by_address, **extra):
 
 
 class SummarizeTests(unittest.TestCase):
+    def test_an_excluded_address_is_not_in_the_total(self):
+        rows = [
+            rec(0x02075f14),
+            rec(0x02082158),
+        ]
+        rows[0]["module"] = "arm9"
+        rows[0]["id"] = "arm9:0x02075f14"
+        rows[1]["module"] = "arm9"
+        rows[1]["id"] = "arm9:0x02082158"
+        rows[1]["address"] = "0x02082158"
+        report = DT.summarize(inventory(rows), verification({}))
+        self.assertEqual(report["counts"]["items"], 1)
+        self.assertEqual(report["items"][0]["address"], "0x02082158")
+
     def test_address_is_the_item_and_aliases_do_not_double_count(self):
         report = DT.summarize(
             inventory([rec(0x100, aliases=["data_1", "named_table"])]),

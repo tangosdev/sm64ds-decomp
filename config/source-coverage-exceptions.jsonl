@@ -21,3 +21,7 @@
 # Waivers are consumed ONCE. After the decrease lands, main's own total is the new floor
 # and the row does nothing; stale rows are harmless and can be pruned in a later sweep.
 #
+{"module": "arm9", "section": ".rodata", "start": "0x02075f14", "end": "0x02082158", "reason": "particle resource is supplied from the cartridge image; source only takes its address"}
+{"module": "arm9", "section": ".data", "start": "0x0208a178", "end": "0x0208c178", "reason": "font is supplied from the cartridge image; source only takes its address"}
+{"module": "arm9", "section": ".data", "start": "0x0209289c", "end": "0x0209435c", "reason": "message tables are supplied from the cartridge image; Message3 only takes their addresses"}
+

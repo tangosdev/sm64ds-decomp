@@ -26,7 +26,7 @@
     },
     {
       "name": ".rodata",
-      "start": "0x02075258",
+      "start": "0x02075250",
       "end": "0x02075264"
     },
     {
@@ -978,7 +978,7 @@
         },
         {
           "section": ".rodata",
-          "start": "0x02075258",
+          "start": "0x02075250",
           "end": "0x02075264",
           "differingBytes": 0,
           "firstDiff": null
@@ -1461,6 +1461,13 @@
     }
   ],
   "rodata": [
+    {
+      "symbol": "data_02075250",
+      "address": "0x02075250",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Sound bank offsets, one byte per bank."
+    },
     {
       "symbol": "data_02075258",
       "address": "0x02075258",

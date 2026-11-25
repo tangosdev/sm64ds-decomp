@@ -36,7 +36,7 @@
     },
     {
       "name": ".bss",
-      "start": "0x02142f80",
+      "start": "0x02142f60",
       "end": "0x02142f94"
     },
     {
@@ -1600,6 +1600,13 @@
   ],
   "bss": [
     {
+      "symbol": "sTrmpAnyOnLedge",
+      "address": "0x02142f60",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "ledge flag, then the effect and spinner words through sTrmp2Spinners"
+    },
+    {
       "symbol": "sTrmp2StarModelFile",
       "address": "0x02142f80",
       "size": "0x8",
@@ -1811,7 +1818,7 @@
         },
         {
           "section": ".bss",
-          "start": "0x02142f80",
+          "start": "0x02142f60",
           "end": "0x02142f94",
           "comparison": "NOBITS -- symbol/module gates"
         },

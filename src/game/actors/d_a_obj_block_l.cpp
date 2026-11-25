@@ -151,7 +151,7 @@ void daObjBlockL_c::OnKicked(dActor_c &other) {
 
 /* Vtable slot 23. Both branches call this class's own Kill (slot 31)
  * through an unqualified virtual call. */
-int daObjBlockL_c::OnAttacked2(dActor_c &other) {
+void daObjBlockL_c::OnAttacked2(dActor_c &other) {
     if (IsActorID(this, 0x11)) {
         if (other.param1 != 2)
             return;
@@ -163,7 +163,7 @@ int daObjBlockL_c::OnAttacked2(dActor_c &other) {
 
 /* Vtable slot 22; `other` is never read. The single call is this class's
  * own Kill (slot 31) through an unqualified virtual call. */
-int daObjBlockL_c::OnAttacked1(dActor_c &other) {
+void daObjBlockL_c::OnAttacked1(dActor_c &other) {
     if (IsActorID(this, 0x11))
         return;
     Kill();

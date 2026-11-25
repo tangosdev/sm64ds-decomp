@@ -154,6 +154,9 @@ FRingModelFilePtr data_ov060_0211b208(ASSET_KPA_SHWAVE_BMD);
 FRingAnimationFileHandle data_ov060_0211b1f8(ASSET_KPA_SHWAVE_BCA);
 FRingTexSequenceFilePtr data_ov060_0211b200(ASSET_KPA_SHWAVE_BTP);
 
+/* Bound tail of this TU's .bss. One object; interior labels stay in symbols.txt. */
+u8 data_ov060_0211b234[0xc];
+
 /* return new builds the ring and its eight animators. */
 daFRing_c *daFRing_c_classInit(void) {
     return new daFRing_c;

@@ -109,10 +109,10 @@ struct dScMgD3DBase_c : dScMgBase_c {
     virtual int  OnGraphCallback3();                           /* slot 25 */
     virtual int  GetDisplayMode();           /* slot 26 */
     virtual void OpenMenu();                    /* slot 27 */
-    virtual int  CloseMenu();                /* slot 28 */
-    virtual int  SaveScreenForMenu();                   /* slot 29 */
+    virtual void CloseMenu();                   /* slot 28 */
+    virtual void SaveScreenForMenu();           /* slot 29 */
     virtual void RestoreScreenFromMenu();          /* slot 30 */
-    virtual int  InitSubScreenBg();                          /* slot 31 */
+    virtual void InitSubScreenBg();                /* slot 31 */
     virtual void InitEngines();                          /* slot 33 */
 
     /* THAT LIST IS EMPTY NOW.  This class overrides nine of dScMgBase_c's own

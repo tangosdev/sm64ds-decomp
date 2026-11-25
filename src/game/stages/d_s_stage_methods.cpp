@@ -54,6 +54,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "daPly_c.h"
 #include "nitro/gx/g2.h"
 #include "nitro/hw/registers.h"
+#include "nitro/hw/mmap_global.h"
 #include "dScene_c.h"
 #include "Event.h"
 #include "dExtSimpleModel_c.h"
@@ -4860,7 +4861,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         } else {
             LoadCompressedFileAt(0xa00f, G2_GetBG2CharPtr());
         }
-        LoadFileAt(0x980b, 0x5000000);
+        LoadFileAt(0x980b, HW_BG_PLTT);
         screenMap = (char *)G2_GetBG2ScrPtr();
         LoadCompressedFileAt(0x9808, screenMap);
         LoadCompressedFileAt(0x9809, screenMap + 0x800);
@@ -4886,11 +4887,11 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
                               GX_BG_CHARBASE_0x00000);
 
         LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NCG_BIN, G2S_GetBG0CharPtr());
-        LoadFileAt(ASSET_D_2D_OP_BG_CL_NCL_BIN, 0x5000400);
+        LoadFileAt(ASSET_D_2D_OP_BG_CL_NCL_BIN, HW_DB_BG_PLTT);
         LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL02_NSC_BIN, G2S_GetBG0ScrPtr());
         LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NSC_BIN, G2S_GetBG1ScrPtr());
         LoadCompressedFileAt(ASSET_D_2D_OP_OBJ_CL_NCG_BIN, G2S_GetOBJCharPtr());
-        LoadFileAt(ASSET_D_2D_OP_OBJ_CL_NCL_BIN, 0x5000600);
+        LoadFileAt(ASSET_D_2D_OP_OBJ_CL_NCL_BIN, HW_DB_OBJ_PLTT);
         {
             char *clearScreenMap = (char *)G2S_GetBG2ScrPtr();
             volatile u16 fillTile = 0x10d0;
@@ -4928,7 +4929,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         LoadCompressedFileAt(0xa00d, G2S_GetBG0CharPtr());
     }
 
-    LoadFileAt(0x9807, 0x5000400);
+    LoadFileAt(0x9807, HW_DB_BG_PLTT);
     screenMap = (char *)G2S_GetBG1ScrPtr();
     LoadCompressedFileAt(0x9804, screenMap + 0x800);
     LoadCompressedFileAt(0x9803, screenMap + 0x1000);
@@ -4969,7 +4970,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         } else {
             LoadCompressedFileAt(0xa00f, G2_GetBG2CharPtr());
         }
-        LoadFileAt(0x980b, 0x5000000);
+        LoadFileAt(0x980b, HW_BG_PLTT);
         LoadCompressedFileAt(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN,
                              (char *)G2_GetBG2ScrPtr() + 0x1800);
         LoadCompressedFileAt(0x9801, screenMap + 0x2800);

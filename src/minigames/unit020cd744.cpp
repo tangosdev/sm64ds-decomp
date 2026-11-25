@@ -1894,3 +1894,6 @@ inline TrmpLine::TrmpLine() {
 TrmpItemRingModelFile sTrmpItemRingAModelFile(0x21a);
 TrmpItemRingModelFile sTrmpItemRingBModelFile(0x21b);
 TrmpItemRingModelFile sTrmpItemRingCModelFile(0x21c);
+
+/* Lane goals, then the saved copy at +0x10 (sAmidaLaneSaved). */
+int sAmidaLaneTargets[8];

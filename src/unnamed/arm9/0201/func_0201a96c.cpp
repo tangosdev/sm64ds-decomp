@@ -28,7 +28,7 @@ u8 func_0201a96c(WatchdogAlarm *self, int suspended) {
 /* File-scope watchdog. mwcc emits __sinit_func_0201a96c.cpp: the
    constructor calls func_0201aa18, then registers the destructor.
    ~WatchdogAlarm is not defined here. It is aliased onto func_0201aaec,
-   which stays in func_0201aaec.c. The registration node is the 12 bytes
+   which stays in func_0201aaec.cpp. The registration node is the 12 bytes
    at data_0209d528. The main loop's 32-entry ring data_0209d534 sits
    between that node and the alarm, so this TU's one .bss run owns it
    too. The alarm is 0x44 bytes; 0x0209d5b8 is the next symbol. */

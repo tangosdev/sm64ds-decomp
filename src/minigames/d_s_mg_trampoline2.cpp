@@ -1188,3 +1188,6 @@ extern const Trampoline2WaveDef sTrmp2SpawnDefs[6] = {
     {2, sTrmp2Wave3Positions, sTrmp2Wave3Angles, sTrmp2Wave3ItemTypes, sTrmp2Wave3MotionTypes},
     {3, sTrmp2Wave4Positions, sTrmp2Wave4Angles, sTrmp2Wave4ItemTypes, sTrmp2Wave4MotionTypes},
     {5, sTrmp2Wave5Positions, sTrmp2Wave5Angles, sTrmp2Wave5ItemTypes, sTrmp2Wave5MotionTypes}};
+
+/* Ledge flag, then the effect and spinner words through sTrmp2Spinners. */
+int sTrmpAnyOnLedge[8];

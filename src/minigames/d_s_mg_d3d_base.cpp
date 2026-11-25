@@ -177,8 +177,7 @@ void D3D_InitDualScreen(void) {
 /* Slot 31: loads the sub-screen BG and OBJ graphics, then restores the
  * banks it borrowed. Keep the destinations as base plus offset; one folded
  * constant changes the code. */
-int dScMgD3DBase_c::InitSubScreenBg()
-{
+void dScMgD3DBase_c::InitSubScreenBg() {
     mSavedSubObjBank = GX_GetBankForSubOBJ();
     GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_16_I);
     LoadCompressedFileAt(sD3DCommonNcgByLanguage[GetGameLanguage()], G2S_GetOBJCharPtr());
@@ -350,9 +349,7 @@ int dScMgD3DBase_c::GetDisplayMode()
     return 2;
 }
 
-/* Returns whatever func_02012718 leaves in r0; decl_common.h declares it
-   void, so there is no return statement. */
-int D3D_PlaySeAtX(int a, int b) {
+void D3D_PlaySeAtX(int a, int b) {
     func_02012718(a, b + 0x80000);
 }
 
@@ -379,14 +376,12 @@ void dScMgD3DBase_c::OpenMenu()
 }
 
 /* Slot 28. */
-int dScMgD3DBase_c::CloseMenu()
-{
-    return dScMgBase_c::CloseMenu();
+void dScMgD3DBase_c::CloseMenu() {
+    dScMgBase_c::CloseMenu();
 }
 
 /* Slot 29: claims the sub-screen banks before the base opens the menu. */
-int dScMgD3DBase_c::SaveScreenForMenu()
-{
+void dScMgD3DBase_c::SaveScreenForMenu() {
     D3D_InitDualScreen();
     GXS_LoadOBJPltt(sD3DSubObjPalette, 0x100, 0x100);
     data_0209e660 = 0;
@@ -394,7 +389,7 @@ int dScMgD3DBase_c::SaveScreenForMenu()
     GX_SetBankForSubBG(GX_VRAM_SUB_BG_32_H);
     mSavedSubObjBank = GX_GetBankForSubOBJ();
     GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_16_I);
-    return dScMgBase_c::SaveScreenForMenu();
+    dScMgBase_c::SaveScreenForMenu();
 }
 
 /* Slot 30: gives the banks back around the base's menu teardown. */

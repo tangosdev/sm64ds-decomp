@@ -105,7 +105,7 @@
     },
     {
       "symbol": "_ZN13WatchdogAlarmD1Ev",
-      "canonical_symbol": "func_0201aaec",
+      "canonical_symbol": "_Z13func_0201aaecP13WatchdogAlarm",
       "canonical_module": "arm9",
       "canonical_address": "0x0201aaec",
       "evidence": "~WatchdogAlarm is declared and not defined. The retail initializer registers func_0201aaec, which stays in func_0201aaec.c."
@@ -144,7 +144,7 @@
       "source": "0x02074e18",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "func_0201aa18",
+      "symbol": "_Z13func_0201aa18P13WatchdogAlarm",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201aa18"
@@ -174,7 +174,7 @@
       "source": "0x02074e3c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "func_0201aaec",
+      "symbol": "_Z13func_0201aaecP13WatchdogAlarm",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0201aaec"

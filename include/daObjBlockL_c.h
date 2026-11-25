@@ -112,8 +112,8 @@ struct daObjBlockL_c : dBgActor_c {
        here too, so the correction is a no-op for this class, re-verified
        rather than assumed. */
     void OnGroundPounded(dActor_c &other);  /* slot 21 */
-    int OnAttacked1(dActor_c &other);       /* slot 22 */
-    int OnAttacked2(dActor_c &other);       /* slot 23 */
+    void OnAttacked1(dActor_c &other);      /* slot 22 */
+    void OnAttacked2(dActor_c &other);      /* slot 23 */
     void OnKicked(dActor_c &other);         /* slot 24 */
     void OnHitByMegaChar(daPly_c &player);  /* slot 27 */
 };

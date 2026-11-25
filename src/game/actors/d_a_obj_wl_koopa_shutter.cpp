@@ -27,6 +27,7 @@ enum daObjWlKoopaShutter_c_AssetId {
 #include "daObjWlKoopaShutter_c.h"
 #include "SharedFilePtr.h"
 #include "SaveBlock.h"
+#include "StageMap.h"
 
 /* BSS file homes (symbols.txt); Init loads them, Cleanup releases them.
  * The ctor/dtor are the ROM's SharedFilePtr veneer pairs (func_02017acc /
@@ -49,12 +50,13 @@ struct CLPS_Block {
 };
 
 /* CLPS header and the pointer table that follows it. */
-extern u32 data_ov026_02112e60[];
-extern u32 data_ov026_02112e70[];
-extern u32 data_ov026_02112e90[];
-extern u32 data_ov026_02112eb0[];
-extern u32 data_ov026_02112ec0[];
-extern u32 data_ov026_02112ed0[];
+
+extern StandardEntry data_ov026_02112e60[];
+extern StandardEntry data_ov026_02112e70[];
+extern StandardEntry data_ov026_02112e90[];
+extern StandardEntry data_ov026_02112eb0[];
+extern StandardEntry data_ov026_02112ec0[];
+extern StandardEntry data_ov026_02112ed0[];
 extern u32 data_ov026_021132b0[];
 extern u32 data_ov026_02113600[];
 

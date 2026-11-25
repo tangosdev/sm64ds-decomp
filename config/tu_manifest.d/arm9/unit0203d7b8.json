@@ -38,6 +38,11 @@
       "name": ".data",
       "start": "0x02099e18",
       "end": "0x02099e70"
+    },
+    {
+      "name": ".bss",
+      "start": "0x020a0ef0",
+      "end": "0x020a4b40"
     }
   ],
   "functions": [
@@ -929,7 +934,407 @@
       "evidence": "archive name passed to FS_FindArchive"
     }
   ],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_020a0ef0",
+      "address": "0x020a0ef0",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "link-mode selector byte (the wireless subsystem's mode: off/parent/child/download-play)"
+    },
+    {
+      "symbol": "data_020a0ef4",
+      "address": "0x020a0ef4",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "peer count byte; indexes the channel-measure table data_020a0fd0"
+    },
+    {
+      "symbol": "data_020a0ef8",
+      "address": "0x020a0ef8",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "chunk-send countdown byte while the 0x16-byte profile chunks go out"
+    },
+    {
+      "symbol": "data_020a0efc",
+      "address": "0x020a0efc",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "link state byte"
+    },
+    {
+      "symbol": "data_020a0f00",
+      "address": "0x020a0f00",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "packed into the send packet at +0xe"
+    },
+    {
+      "symbol": "data_020a0f04",
+      "address": "0x020a0f04",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "link mode byte; copied into data_020a0f98 by the state check"
+    },
+    {
+      "symbol": "data_020a0f08",
+      "address": "0x020a0f08",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "packed into the send packet at +0xd"
+    },
+    {
+      "symbol": "data_020a0f0c",
+      "address": "0x020a0f0c",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "link state byte"
+    },
+    {
+      "symbol": "data_020a0f10",
+      "address": "0x020a0f10",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "this console's AID/slot index; selects data_020a1154's own record"
+    },
+    {
+      "symbol": "data_020a0f14",
+      "address": "0x020a0f14",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "u16 link status bits"
+    },
+    {
+      "symbol": "data_020a0f18",
+      "address": "0x020a0f18",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "s16 measured channel value returned by the channel-measure callback"
+    },
+    {
+      "symbol": "data_020a0f1c",
+      "address": "0x020a0f1c",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "link status and error bits"
+    },
+    {
+      "symbol": "data_020a0f20",
+      "address": "0x020a0f20",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "counter; copied to WMParentParam::tgid"
+    },
+    {
+      "symbol": "data_020a0f24",
+      "address": "0x020a0f24",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "u16 link word"
+    },
+    {
+      "symbol": "data_020a0f28",
+      "address": "0x020a0f28",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "u16 link word"
+    },
+    {
+      "symbol": "data_020a0f2c",
+      "address": "0x020a0f2c",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "u16 link word"
+    },
+    {
+      "symbol": "data_020a0f30",
+      "address": "0x020a0f30",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "u16 link word"
+    },
+    {
+      "symbol": "data_020a0f34",
+      "address": "0x020a0f34",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "u16 link word"
+    },
+    {
+      "symbol": "data_020a0f38",
+      "address": "0x020a0f38",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int link word"
+    },
+    {
+      "symbol": "data_020a0f3c",
+      "address": "0x020a0f3c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "void* pointer word"
+    },
+    {
+      "symbol": "data_020a0f40",
+      "address": "0x020a0f40",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "s32 link word"
+    },
+    {
+      "symbol": "data_020a0f44",
+      "address": "0x020a0f44",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "WMParentParam* the heap-allocated parent template func_0203fbc4 fills"
+    },
+    {
+      "symbol": "data_020a0f48",
+      "address": "0x020a0f48",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "void* pointer word"
+    },
+    {
+      "symbol": "data_020a0f4c",
+      "address": "0x020a0f4c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "void* pointer word"
+    },
+    {
+      "symbol": "data_020a0f50",
+      "address": "0x020a0f50",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "s32 link word"
+    },
+    {
+      "symbol": "data_020a0f54",
+      "address": "0x020a0f54",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "WMBssDesc* the parent's bss descriptor pointer"
+    },
+    {
+      "symbol": "data_020a0f58",
+      "address": "0x020a0f58",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "uint link word"
+    },
+    {
+      "symbol": "data_020a0f5c",
+      "address": "0x020a0f5c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int link word"
+    },
+    {
+      "symbol": "data_020a0f60",
+      "address": "0x020a0f60",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "void* pointer word"
+    },
+    {
+      "symbol": "data_020a0f64",
+      "address": "0x020a0f64",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "uint link word"
+    },
+    {
+      "symbol": "data_020a0f68",
+      "address": "0x020a0f68",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "void* pointer word"
+    },
+    {
+      "symbol": "data_020a0f6c",
+      "address": "0x020a0f6c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "s32 link word"
+    },
+    {
+      "symbol": "data_020a0f70",
+      "address": "0x020a0f70",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int link word"
+    },
+    {
+      "symbol": "data_020a0f74",
+      "address": "0x020a0f74",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "WMDataSharingInfo* the data-sharing descriptor pointer"
+    },
+    {
+      "symbol": "data_020a0f78",
+      "address": "0x020a0f78",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "s32 link word"
+    },
+    {
+      "symbol": "data_020a0f7c",
+      "address": "0x020a0f7c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "void* handed to MB_RegisterFile"
+    },
+    {
+      "symbol": "data_020a0f80",
+      "address": "0x020a0f80",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "WMDataSet* the MP data-set descriptor pointer"
+    },
+    {
+      "symbol": "data_020a0f84",
+      "address": "0x020a0f84",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int link word"
+    },
+    {
+      "symbol": "data_020a0f88",
+      "address": "0x020a0f88",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int link word"
+    },
+    {
+      "symbol": "data_020a0f8c",
+      "address": "0x020a0f8c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int link word"
+    },
+    {
+      "symbol": "data_020a0f90",
+      "address": "0x020a0f90",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "ChannelMeasureCallback the chosen channel is reported through"
+    },
+    {
+      "symbol": "data_020a0f94",
+      "address": "0x020a0f94",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int link word"
+    },
+    {
+      "symbol": "data_020a0f98",
+      "address": "0x020a0f98",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int holding the active link mode (copied from data_020a0f04)"
+    },
+    {
+      "symbol": "data_020a0f9c",
+      "address": "0x020a0f9c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8[4] MAC-valid flags; data_020a0f9d is an interior label at +1"
+    },
+    {
+      "symbol": "data_020a0fa0",
+      "address": "0x020a0fa0",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "u16[4][3] MAC table the three halfwords of each child's WM record land in (also OS_GetMacAddress target); data_020a0fa6 interior"
+    },
+    {
+      "symbol": "data_020a0fb8",
+      "address": "0x020a0fb8",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "u16[4][3] child MAC-address slots; data_020a0fbe is the slots-1..3 view at +6"
+    },
+    {
+      "symbol": "data_020a0fd0",
+      "address": "0x020a0fd0",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "u16[14] measured-channel list, one slot for each channel 1..14, indexed by data_020a0ef4"
+    },
+    {
+      "symbol": "data_020a0fec",
+      "address": "0x020a0fec",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "the MBGameRegistry copied into place by func_0203db64 and passed to MB_RegisterFile"
+    },
+    {
+      "symbol": "data_020a1020",
+      "address": "0x020a1020",
+      "size": "0x20",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8[0x20] the 32-byte-aligned send packet this console builds each frame"
+    },
+    {
+      "symbol": "data_020a1040",
+      "address": "0x020a1040",
+      "size": "0x24",
+      "binding": "STB_GLOBAL",
+      "evidence": "this console's PlayerInputRecord, sampled each frame by func_0203df40"
+    },
+    {
+      "symbol": "data_020a1064",
+      "address": "0x020a1064",
+      "size": "0x40",
+      "binding": "STB_GLOBAL",
+      "evidence": "the WMParentParam template kept by func_0203db64"
+    },
+    {
+      "symbol": "data_020a10a4",
+      "address": "0x020a10a4",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "four players' MBUserInfo profiles (0x16 each)"
+    },
+    {
+      "symbol": "data_020a10fc",
+      "address": "0x020a10fc",
+      "size": "0x58",
+      "binding": "STB_GLOBAL",
+      "evidence": "the download-play children's four MBUserInfo profiles"
+    },
+    {
+      "symbol": "data_020a1154",
+      "address": "0x020a1154",
+      "size": "0x90",
+      "binding": "STB_GLOBAL",
+      "evidence": "the four players' PlayerInputRecords, unpacked from the link frames"
+    },
+    {
+      "symbol": "data_020a11e4",
+      "address": "0x020a11e4",
+      "size": "0x498",
+      "binding": "STB_GLOBAL",
+      "evidence": "backing storage for the file-share task: 0x400-byte stack, OSThread (data_020a15e4 at +0x400), thread queue"
+    },
+    {
+      "symbol": "data_020a1680",
+      "address": "0x020a1680",
+      "size": "0x930",
+      "binding": "STB_GLOBAL",
+      "evidence": "the 32-byte-aligned WM_ReadStatus work area; data_020a1780 is an interior label at +0x100"
+    },
+    {
+      "symbol": "data_020a1fc0",
+      "address": "0x020a1fc0",
+      "size": "0x2b80",
+      "binding": "STB_GLOBAL",
+      "evidence": "the WFSWork file-sharing block; its aligned context union rounds the type to 0x2b80. data_020a2400, data_020a2404, data_020a2408, data_020a2409 and data_020a3fc0 are interior labels"
+    }
+  ],
   "init": [
     {
       "symbol": "__sinit_unit0203d7b8.cpp",
@@ -988,7 +1393,8 @@
     "Folded from 117 sources: the link module's 38 (#5389) and the wireless layer's 79 (83 functions). The file is C++ for Memory::Allocate (func_0203e20c, func_0203f604, func_020408b0) and the file-scope EmptyInit object; every function keeps C linkage inside one extern \"C\" block.",
     "No pragma. func_0203e20c's step 3 reduces its accepted-children count to a result it never reads, as step 5 does with the result it loops on; the optimiser deletes only that last assignment, which keeps the count (the cartridge's addeq/andeq). WFSi_LoadTables starts its size total at 0 and adds the leading word, which keeps the cartridge's add from the zeroed counter.",
     "Absorbed arm9/func_02040384 (intact-object): its __sinit_func_02040384.cpp/.p__sinit_func_02040384.cpp are renamed for this file. sEmptyInit stays static and deadstripped, so it claims no .bss (data_020a0df4 was gTouchInfo[3], not padding).",
-    "func_0203e0ac and the tail of func_0203e20c copy the local input record into all four player records with chained field assignments. PlayerInputRecord.inputYaw is u16: both copies read it back with ldrh."
+    "func_0203e0ac and the tail of func_0203e20c copy the local input record into all four player records with chained field assignments. PlayerInputRecord.inputYaw is u16: both copies read it back with ldrh.",
+    "LOCAL WORKER NOTE: this machine builds the EU-dump control ROM ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to its strict stock control; verification.linkcheck.rom.sha256 is normalized to the fleet-canonical hash per #3691."
   ],
   "production_mode": "intact-object",
   "verification": {
@@ -1058,11 +1464,17 @@
           "end": "0x02099e70",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x020a0ef0",
+          "end": "0x020a4b40",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 123
+          "LICENSED": 186
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1073,23 +1485,381 @@
           {
             "section": ".init",
             "original": [
-              243
+              306
             ],
             "desired": [
-              243
+              306
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              241
+              304
             ],
             "desired": [
-              241
+              304
+            ]
+          },
+          {
+            "section": ".rodata",
+            "original": [
+              59
+            ],
+            "desired": [
+              59
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              9,
+              13,
+              35,
+              53,
+              62
+            ],
+            "desired": [
+              13,
+              9,
+              53,
+              62,
+              35
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              7,
+              8,
+              10,
+              11,
+              12,
+              14,
+              15,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              51,
+              52,
+              54,
+              55,
+              56,
+              57,
+              58,
+              60,
+              61,
+              63,
+              64,
+              65,
+              66,
+              67,
+              68
+            ],
+            "desired": [
+              10,
+              6,
+              12,
+              7,
+              14,
+              11,
+              15,
+              5,
+              8,
+              20,
+              17,
+              23,
+              24,
+              22,
+              18,
+              21,
+              25,
+              19,
+              39,
+              41,
+              42,
+              44,
+              45,
+              47,
+              48,
+              50,
+              51,
+              34,
+              33,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              36,
+              37,
+              38,
+              40,
+              43,
+              46,
+              49,
+              52,
+              26,
+              54,
+              55,
+              56,
+              57,
+              58,
+              60,
+              61,
+              64,
+              63,
+              65,
+              66,
+              67,
+              68
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".data",
+              "original": [
+                9,
+                13,
+                35,
+                53,
+                62
+              ],
+              "desired": [
+                13,
+                9,
+                53,
+                62,
+                35
+              ],
+              "slots": [
+                9,
+                13,
+                35,
+                53,
+                62
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                10,
+                11,
+                12,
+                14,
+                15,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51,
+                52,
+                54,
+                55,
+                56,
+                57,
+                58,
+                60,
+                61,
+                63,
+                64,
+                65,
+                66,
+                67,
+                68
+              ],
+              "desired": [
+                10,
+                6,
+                12,
+                7,
+                14,
+                11,
+                15,
+                5,
+                8,
+                20,
+                17,
+                23,
+                24,
+                22,
+                18,
+                21,
+                25,
+                19,
+                39,
+                41,
+                42,
+                44,
+                45,
+                47,
+                48,
+                50,
+                51,
+                34,
+                33,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                36,
+                37,
+                38,
+                40,
+                43,
+                46,
+                49,
+                52,
+                26,
+                54,
+                55,
+                56,
+                57,
+                58,
+                60,
+                61,
+                64,
+                63,
+                65,
+                66,
+                67,
+                68
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                10,
+                11,
+                12,
+                14,
+                15,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51,
+                52,
+                54,
+                55,
+                56,
+                57,
+                58,
+                60,
+                61,
+                63,
+                64,
+                65,
+                66,
+                67,
+                68
+              ]
+            }
+          ],
+          "symbolIndices": 62,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,

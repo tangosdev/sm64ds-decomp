@@ -117,7 +117,7 @@ void daObjBk_Botaosi_c::OnKicked(dActor_c &other) {
 /* The helper is void; the override falls off its end so the call stays a
    tail call, the shape func_ov015_021128e8 has in d_a_obj_bk_lift.cpp. */
 #pragma long_calls on
-int daObjBk_Botaosi_c::OnAttacked2(dActor_c &other) {
+void daObjBk_Botaosi_c::OnAttacked2(dActor_c &other) {
     HandleHit(&other);
 }
 #pragma long_calls off

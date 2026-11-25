@@ -62,10 +62,10 @@ struct daObjHatenaBlock_c : dBgActor_c {
     int Render();
 
     void OnGroundPounded(dActor_c &other);     /* slot 21 */
-    int OnAttacked1(dActor_c &other);          /* slot 22 */
+    void OnAttacked1(dActor_c &other);         /* slot 22 */
     void OnKicked(dActor_c &other);            /* slot 24 */
     void OnHitByMegaChar(daPly_c &player);     /* slot 27 */
-    int OnHitFromUnderneath(dActor_c &other);  /* slot 28 */
+    void OnHitFromUnderneath(dActor_c &other); /* slot 28 */
 
     /* Helpers named from what they do (symbols/actor_renames.tsv gives the evidence tier).
        All are ordinary members; func_ov102_02149684 is the one exception,

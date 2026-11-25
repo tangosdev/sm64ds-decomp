@@ -1,4 +1,3 @@
-//cpp
 /* Load-bearing: the ROM build passes -Cpp_exceptions off, and the
    .exceptix record at 0x02073928 (func_02072168, length 0x88c)
    exists only because this pragma turns exceptions back on. */
@@ -62,12 +61,11 @@ typedef void (*F1)(int);
  * CatchInfo the same way that runtime's catch setup does ('*' pointer types
  * get a copied pointer). Names follow those roles. ActionIterator and
  * CatchInfo are shared (private/throw_context.h). */
-extern void *func_02071910(ThrowContext *c, void *s);
-extern void func_02072dac(int a, ActionIterator *s);
-extern void func_02071864(ThrowContext *t, ActionIterator *it);
 extern unsigned char *ReadSignedVarInt(unsigned char *p, int *out);
-extern unsigned char *func_02071a50(unsigned char *p, int *out);
 }
+
+extern void func_02072dac(int a, ActionIterator *s);
+extern unsigned char *func_02071a50(unsigned char *p, int *out);
 
 void ThrowContext::func_02072168(ActionIterator *s, char *end) {
     unsigned char op;
@@ -76,10 +74,10 @@ void ThrowContext::func_02072168(ActionIterator *s, char *end) {
     for (;;) {
         p = s->mAction;
         if (p == 0) {
-            func_02072dac((int)func_02071910(this, s), s);
+            func_02072dac((int)func_02071910(s), s);
             if (s->mActionTable == 0)
                 std::terminate();
-            func_02071864(this, s);
+            func_02071864(s);
             p = s->mAction;
             if (p == 0)
                 continue;

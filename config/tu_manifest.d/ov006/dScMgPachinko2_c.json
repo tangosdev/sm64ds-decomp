@@ -30,7 +30,7 @@
     {
       "name": ".bss",
       "start": "0x021426cc",
-      "end": "0x021427ac"
+      "end": "0x021427bc"
     },
     {
       "name": ".data.gap59",
@@ -1269,6 +1269,13 @@
       "size": "0x28",
       "binding": "STB_GLOBAL",
       "evidence": "five cup-state Entry records, plain-copied from the ROM .data constants"
+    },
+    {
+      "symbol": "data_ov006_021427ac",
+      "address": "0x021427ac",
+      "size": "0x10",
+      "binding": "STB_GLOBAL",
+      "evidence": "sixteen unreferenced bytes between the paddle state table and the panel BSS"
     }
   ],
   "rodata": [
@@ -1633,7 +1640,7 @@
         {
           "section": ".bss",
           "start": "0x021426cc",
-          "end": "0x021427ac",
+          "end": "0x021427bc",
           "comparison": "NOBITS -- symbol/module gates"
         },
         {

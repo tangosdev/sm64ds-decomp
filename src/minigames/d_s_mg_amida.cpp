@@ -204,7 +204,7 @@ int dScMgAmida_c::IsVariant2() {
 /* Slot 31: the sub screen's BG1 set up for this game. Same shape as the
    base's, with 4 for the BG1CNT base bits and this class's own language
    table. Not a Kill; see the slot-31 block in include/dScMgBase_c.h. */
-int dScMgAmida_c::InitSubScreenBg() {
+void dScMgAmida_c::InitSubScreenBg() {
     int language;
     void *chars;
     G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256, GX_BG_COLORMODE_16, GX_BG_SCRBASE_0x0000,

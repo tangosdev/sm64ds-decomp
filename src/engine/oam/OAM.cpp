@@ -49,8 +49,13 @@
 extern u8 data_0209e660[]; /* sub-OAM suppress flag / single-buffer select */
 extern int data_0209e67c[];
 extern int data_0209e694[];
-extern const unsigned char data_020755a0[12]; /* OBJ width, stride 4 */
-extern const unsigned char data_020755ac[12]; /* OBJ height, stride 4 */
+/* OBJ width, then height. Each row is stride 4. */
+extern const unsigned char data_020755a0[12] = {
+    8, 16, 32, 64, 16, 32, 32, 64, 8, 8, 16, 32,
+};
+extern const unsigned char data_020755ac[12] = {
+    8, 16, 32, 64, 8, 8, 16, 32, 16, 32, 32, 64,
+};
 
 extern "C" {
 int func_0202043c(OamAnimation *anim);

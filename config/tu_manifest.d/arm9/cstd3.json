@@ -18,7 +18,7 @@
     },
     {
       "name": ".rodata",
-      "start": "0x020868d4",
+      "start": "0x020868a0",
       "end": "0x020868fc"
     }
   ],
@@ -55,6 +55,13 @@
   "data": [],
   "rodata": [
     {
+      "symbol": "data_020868a0",
+      "address": "0x020868a0",
+      "size": "0x34",
+      "binding": "STB_GLOBAL",
+      "evidence": "The fatal cstd assert line, 52 bytes: \"ASSERTION FAILED  FILE=[%s] LINE=[%d]  EXP=[%s] \\n\". cstd::__assert passes it to func_0206ccd8 from its stop branch, which then traps forever."
+    },
+    {
       "symbol": "data_020868d4",
       "address": "0x020868d4",
       "size": "0x28",
@@ -74,30 +81,11 @@
     "absorb/cstd3-grow extends the TU downward to 0x0206ccd8 (func_0206ccd8, the varargs print helper __assert calls; the file stays ROM-descending, so the new definition appends after __assert with the lowest address last). The shard's print-argument struct S would collide with the TU's register-helper struct S, so it goes function-local with identical layout; the shard's file-scope optimize_for_size pragma is scoped push/pop with opt_common_subs restored on, undoing the off state func_0206cd9c leaks."
   ],
   "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
-    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/arm9-cstd3/cstd3.o (gitignored)",
-    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 4,
-    "functions_declared": 4,
-    "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
-      "data": [],
-      "dataExternalized": []
-    },
-    "criteria": {
-      "every_declared_function_defined": "PASS",
-      "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
-      "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
-    },
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "linkcheck": {
       "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
       "result": "scratch-data-verified",
-      "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
+      "scratch": "build/tu/arm9-cstd3/link (gitignored)",
       "phases": {
         "delink": true,
         "lcf": true,
@@ -123,7 +111,7 @@
         },
         {
           "section": ".rodata",
-          "start": "0x020868d4",
+          "start": "0x020868a0",
           "end": "0x020868fc",
           "differingBytes": 0,
           "firstDiff": null
@@ -131,18 +119,12 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 5
+          "LICENSED": 2
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
-      "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
-        "errors": null
-      },
-      "linkedStorageAliases": null,
       "symbolCheckNewVsBaseline": [],
       "symbolCheckErrors": [],
       "symbolCheckBaselineErrors": [],
@@ -152,7 +134,12 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null
+      "linkerOutput": null,
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      }
     }
   },
   "production_mode": "intact-object"

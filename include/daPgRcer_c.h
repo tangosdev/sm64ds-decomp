@@ -77,7 +77,7 @@ struct daPgRcer_c : dActor_c {
     void CheckFallCheat();                                    /* 0x021112b8 */
     int FollowPath();                                         /* 0x0211131c */
     void AdvancePathNode();                                   /* 0x021113b0 */
-    int UpdateFloorAndWalls(dBgCh_Actr *clsn);                /* 0x0211140c */
+    void UpdateFloorAndWalls(dBgCh_Actr *clsn);               /* 0x0211140c */
     void UpdateModelMatrix();                                 /* 0x021114ec */
 
     /* The six states, after N64 racing_penguin_act_*; InitStateX runs once

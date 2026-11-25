@@ -611,9 +611,9 @@ void dActor_c::SpawnCoins(const Vector3 &pos, s32 count, fx32 spread, s16 angle)
     }
 }
 
-extern const u16 data_02075230[4];
-/* yellow, red, blue */
-extern const u32 data_02075238[3];
+/* Yellow, red and blue coin actor ids, then what each kind is worth. */
+extern const u16 data_02075230[4] = {0x120, 0x121, 0x122, 0};
+extern const u32 data_02075238[3] = {1, 2, 5};
 void GiveCoins(s32 playerNo, s32 amount);
 /* 0x0202a7b8 */
 
@@ -843,31 +843,21 @@ void dActor_c::OnGroundPounded(dActor_c &pounder)
 {
 }
 
-int dActor_c::OnAttacked1(dActor_c &attacker)
-{
-}
+void dActor_c::OnAttacked1(dActor_c &attacker) {}
 
-int dActor_c::OnAttacked2(dActor_c &attacker)
-{
-}
+void dActor_c::OnAttacked2(dActor_c &attacker) {}
 
 void dActor_c::OnKicked(dActor_c &kicker)
 {
 }
 
-int dActor_c::OnPushed(dActor_c &pusher)
-{
-}
+void dActor_c::OnPushed(dActor_c &pusher) {}
 
-int dActor_c::OnHitByCannonBlastedChar(dActor_c &attacker)
-{
-}
+void dActor_c::OnHitByCannonBlastedChar(dActor_c &attacker) {}
 
 void dActor_c::OnHitByMegaChar(daPly_c &player) {}
 
-int dActor_c::OnHitFromUnderneath(dActor_c &attacker)
-{
-}
+void dActor_c::OnHitFromUnderneath(dActor_c &attacker) {}
 
 int dActor_c::OnAimedAtWithEgg()
 {

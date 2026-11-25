@@ -29,6 +29,7 @@ enum d_a_obj_rc_guruguru_AssetId { ASSET_RC_GURUGURU_BMD = 0x06a4, ASSET_RC_GURU
 #include "daObjRc_Guruguru_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
+#include "CLPS.h"
 
 /* The BMD's SharedFilePtr (0x021140ac), the KCL's (0x021140b4) and the
    CLPS block dBgW_KcMbg::SetFile is handed (0x02112ac8). */
@@ -150,20 +151,13 @@ struct RcGuruguruCollisionFilePtr : SharedFilePtr {
 RcGuruguruModelFilePtr gRcGuruguruModelFile(ASSET_RC_GURUGURU_BMD);         /* model */
 RcGuruguruCollisionFilePtr gRcGuruguruCollisionFile(ASSET_RC_GURUGURU_KCL); /* collision */
 
-/* 0x02112aa8 is a single-entry floor block. 0x02112ac8 is the two-entry
-   block SetFile receives. Each block includes the all-ones tail that
-   symbols.txt still names. */
-u32 data_ov036_02112aa8[8] = {
-    0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
-};
-u32 data_ov036_02112ac8[8] = {
-    0x53504c43, 0x00020008, 0x01000fc0, 0x000000ff, 0x01000fc4, 0x000000ff, 0xffffffff, 0xffffffff,
-};
+/* The guruguru's CLPS block lives in the stage-map TU. */
+extern CLPS_Block data_ov036_02112ac8;
 
 RcGuruguruAssets data_ov036_02113d78 = {
     &gRcGuruguruModelFile,
     &gRcGuruguruCollisionFile,
-    reinterpret_cast<CLPS_Block *>(data_ov036_02112ac8),
+    &data_ov036_02112ac8,
 };
 
 extern "C" SpawnInfo<daObjRc_Guruguru_c> g_profile_RC_GURUGURU = {daObjRc_Guruguru_c_classInit,
