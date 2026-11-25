@@ -117,14 +117,10 @@ extern PMF data_ov071_02122ba0;
 extern PMF data_ov071_02122b98;
 
 ScuttlebugStateRow data_ov071_02122fa8[9] = {
-    {data_ov071_02122b88, data_ov071_02122b80},
-    {data_ov071_02122b68, data_ov071_02122b70},
-    {data_ov071_02122b78, data_ov071_02122b60},
-    {data_ov071_02122be8, data_ov071_02122be0},
-    {data_ov071_02122bd8, data_ov071_02122bd0},
-    {data_ov071_02122bc8, data_ov071_02122bc0},
-    {data_ov071_02122bb8, data_ov071_02122b90},
-    {data_ov071_02122bb0, data_ov071_02122ba8},
+    {data_ov071_02122b88, data_ov071_02122b80}, {data_ov071_02122b68, data_ov071_02122b70},
+    {data_ov071_02122b78, data_ov071_02122b60}, {data_ov071_02122be8, data_ov071_02122be0},
+    {data_ov071_02122bd8, data_ov071_02122bd0}, {data_ov071_02122bc8, data_ov071_02122bc0},
+    {data_ov071_02122bb8, data_ov071_02122b90}, {data_ov071_02122bb0, data_ov071_02122ba8},
     {data_ov071_02122ba0, data_ov071_02122b98},
 };
 

@@ -66,7 +66,7 @@ struct daBttBk_c : dActor_c {
        [daBttBk_c_classInit and D0, src/game/actors/d_a_btt_bk.cpp] */
     dBgCh_Actr mWithMeshClsn; /* 0x180 */
     Matrix4x3 mShadowMtx;     /* 0x33c -- the drop shadow's matrix (UpdateModelTransform) */
-    StateRow *mStateRow;       /* 0x36c -- current row of the state table */
+    StateRow *mStateRow;      /* 0x36c -- current row of the state table */
     s32 mState;               /* 0x370 -- index stored by each state's enter function */
     dActor_c *mCarrier;       /* 0x374 -- the actor this crate rides, or null */
 

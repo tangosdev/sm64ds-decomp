@@ -36,7 +36,8 @@ void *func_02018934(char *name, char *path, void *heap) {
     myFS_OpenFile(&file, path);
     diff = FS_GetLength(&file);
     aligned = (diff + 15) & ~15;
-    archive = (struct MountedNarc *)((mHeap::Heap_t *)heap)->_Allocate(aligned + sizeof(*archive), -0x10);
+    archive =
+        (struct MountedNarc *)((mHeap::Heap_t *)heap)->_Allocate(aligned + sizeof(*archive), -0x10);
     narc = archive + 1;
     DC_FlushRange(narc, aligned);
     if (myFS_ReadFile(&file, narc, diff) == diff && func_0204ee40(archive, name, narc)) {

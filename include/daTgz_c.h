@@ -39,7 +39,7 @@ struct daTgz_c : dActor_c {
     Matrix4x3 mShadowMatrix; /* 0x3a0 */
     /* PMF pair. SetState stores &gTgzStates[i] (d_a_tgz.cpp).
        CallStateEnter calls slot 0; CallStateUpdate calls slot 1. */
-    State *mStateDesc;                   /* 0x3d0 */
+    State *mStateDesc; /* 0x3d0 */
     /* daPly_c stored when a hit sends the Spiny into state 2 (Knockback),
        which reads it once for the heading away from him and then clears it.
        The "Chase" in the name is a coined guess that the body does not bear

@@ -115,7 +115,7 @@ struct daBtn_c : dEnemyBase_c {
     /* Coins the body still has to give: 4 for the king, 6 otherwise. */
     u8                           mCoinsLeft;            /* 0x406 */
     /* Set by daPly_c when the body squashes a player; shortens the lying-flat wait. */
-    u8                           mPlayerSquashed;       /* 0x407 */
+    u8 mPlayerSquashed; /* 0x407 */
     /* The star-marker slot dActor_c::TrackStar(mStarID, 2) claimed (-1 when
        none was claimed: no free slot, or -- type 2 only -- mStarID is not
        the star this mission was entered for (gCurrentStarId, STAR_ID) and
