@@ -49,17 +49,6 @@ enum d_a_obj_km1_dorifu_AssetId {
 #include "SpawnInfo.h"
 #include "CLPS.h"
 
-/* The shared API keeps CLPS_Block opaque because other blocks have other
- * entry counts. These five KCL files each use entries 0 and 1. */
-struct Km1DorifuClpsBlock {
-    char signature[4];
-    u16 entrySize;
-    u16 entryCount;
-    CLPS entries[2];
-};
-
-typedef char Km1DorifuClps_size_must_be_24[sizeof(Km1DorifuClpsBlock) == 24 ? 1 : -1];
-
 struct DorifuModelFilePtr : SharedFilePtr {
     DorifuModelFilePtr(u32 fileID);
     ~DorifuModelFilePtr();
@@ -72,19 +61,19 @@ struct DorifuCollisionFilePtr : SharedFilePtr {
 
 extern DorifuModelFilePtr data_ov043_021126a0;
 extern DorifuCollisionFilePtr data_ov043_02112678;
-extern Km1DorifuClpsBlock sKm1Dorifu0Clps;
+extern CLPS_Block sKm1Dorifu0Clps;
 extern DorifuModelFilePtr data_ov043_02112680;
 extern DorifuCollisionFilePtr data_ov043_02112658;
-extern Km1DorifuClpsBlock sKm1Dorifu1Clps;
+extern CLPS_Block sKm1Dorifu1Clps;
 extern DorifuModelFilePtr data_ov043_02112668;
 extern DorifuCollisionFilePtr data_ov043_02112670;
-extern Km1DorifuClpsBlock sKm1Dorifu2Clps;
+extern CLPS_Block sKm1Dorifu2Clps;
 extern DorifuModelFilePtr data_ov043_02112688;
 extern DorifuCollisionFilePtr data_ov043_02112698;
-extern Km1DorifuClpsBlock sKm1Dorifu3Clps;
+extern CLPS_Block sKm1Dorifu3Clps;
 extern DorifuModelFilePtr data_ov043_02112690;
 extern DorifuCollisionFilePtr data_ov043_02112660;
-extern Km1DorifuClpsBlock sKm1Dorifu4Clps;
+extern CLPS_Block sKm1Dorifu4Clps;
 
 daObjKm1_Dorifu_c *daObjKm1_Dorifu_c_classInit() {
     return new daObjKm1_Dorifu_c();
@@ -101,11 +90,11 @@ extern "C" SpawnInfo<daObjKm1_Dorifu_c> g_profile_KM1_DORIFU = {
     0};
 
 daObjDorifuResources data_ov043_02112518[5] = {
-    {&data_ov043_021126a0, &data_ov043_02112678, reinterpret_cast<CLPS_Block *>(&sKm1Dorifu0Clps)},
-    {&data_ov043_02112680, &data_ov043_02112658, reinterpret_cast<CLPS_Block *>(&sKm1Dorifu1Clps)},
-    {&data_ov043_02112668, &data_ov043_02112670, reinterpret_cast<CLPS_Block *>(&sKm1Dorifu2Clps)},
-    {&data_ov043_02112688, &data_ov043_02112698, reinterpret_cast<CLPS_Block *>(&sKm1Dorifu3Clps)},
-    {&data_ov043_02112690, &data_ov043_02112660, reinterpret_cast<CLPS_Block *>(&sKm1Dorifu4Clps)}};
+    {&data_ov043_021126a0, &data_ov043_02112678, &sKm1Dorifu0Clps},
+    {&data_ov043_02112680, &data_ov043_02112658, &sKm1Dorifu1Clps},
+    {&data_ov043_02112668, &data_ov043_02112670, &sKm1Dorifu2Clps},
+    {&data_ov043_02112688, &data_ov043_02112698, &sKm1Dorifu3Clps},
+    {&data_ov043_02112690, &data_ov043_02112660, &sKm1Dorifu4Clps}};
 
 s32 daObjKm1_Dorifu_c::InitResources() {
     return daObjDorifu_c::InitResources(data_ov043_02112518);
@@ -129,17 +118,4 @@ DorifuCollisionFilePtr data_ov043_02112670(ASSET_KM1_DORIFU2_KCL);
 DorifuCollisionFilePtr data_ov043_02112698(ASSET_KM1_DORIFU3_KCL);
 DorifuCollisionFilePtr data_ov043_02112660(ASSET_KM1_DORIFU4_KCL);
 
-Km1DorifuClpsBlock sKm1Dorifu0Clps = {
-    {'C', 'L', 'P', 'S'}, 8, 2, {{0x0fc0, 0x00ff}, {0x2fc0, 0x00ff}}};
 
-Km1DorifuClpsBlock sKm1Dorifu1Clps = {
-    {'C', 'L', 'P', 'S'}, 8, 2, {{0x0fc0, 0x00ff}, {0x4fc0, 0x00ff}}};
-
-Km1DorifuClpsBlock sKm1Dorifu2Clps = {
-    {'C', 'L', 'P', 'S'}, 8, 2, {{0x0fc0, 0x00ff}, {0x4fc0, 0x00ff}}};
-
-Km1DorifuClpsBlock sKm1Dorifu3Clps = {
-    {'C', 'L', 'P', 'S'}, 8, 2, {{0x0fc0, 0x00ff}, {0x4fc0, 0x00ff}}};
-
-Km1DorifuClpsBlock sKm1Dorifu4Clps = {
-    {'C', 'L', 'P', 'S'}, 8, 2, {{0x4fc0, 0x00ff}, {0x0fc0, 0x00ff}}};

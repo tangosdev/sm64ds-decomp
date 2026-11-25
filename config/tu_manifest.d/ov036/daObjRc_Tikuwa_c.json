@@ -27,12 +27,6 @@
       "end": "0x021129ec"
     },
     {
-      "name": ".data.data_ov036_02112b48",
-      "input_section": ".data",
-      "start": "0x02112b48",
-      "end": "0x02112b68"
-    },
-    {
       "name": ".bss",
       "start": "0x02114084",
       "end": "0x021140ac"
@@ -124,13 +118,6 @@
     }
   ],
   "data": [
-    {
-      "symbol": "data_ov036_02112b48",
-      "address": "0x02112b48",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "the donut's collision properties: floor and wall entries"
-    },
     {
       "symbol": "_ZTI16daObjRc_Tikuwa_c",
       "address": "0x02113cb4",
@@ -378,13 +365,6 @@
           "section": ".ctor",
           "start": "0x021129e8",
           "end": "0x021129ec",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov036_02112b48",
-          "start": "0x02112b48",
-          "end": "0x02112b68",
           "differingBytes": 0,
           "firstDiff": null
         },
