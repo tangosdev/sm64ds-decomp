@@ -78,8 +78,23 @@ extern "C" {
 extern int  func_0203b2ec(void *l, void *n, void *p);
 }
 
-extern void *data_020a4b68;
+void *data_020a4b68;
 extern fBaseActorInfo **data_020a4bb8;
+
+/* The create-path state at 0x020a4b48: the four fBase_c temp-ctor statics,
+   the scene-installed create hooks (data_020a4b58, data_020a4b5c), the
+   create entry's progress (gBaseCreationState) and its profile id
+   (gCurrentSpawnID), and the executing process node (data_020a4b68). */
+u8 fBase_c::m_tmpCtGroupType;
+u8 gBaseCreationState;
+u16 gCurrentSpawnID;
+u16 fBase_c::m_tmpCtProfName;
+extern "C" {
+int (*data_020a4b58)(int actorID);
+void (*data_020a4b5c)(int actorID);
+}
+u32 fBase_c::m_tmpCtParam;
+void *fBase_c::m_tmpCtConnectParent;
 
 struct LifecycleSequence {
     int func_0204424c();
@@ -686,17 +701,6 @@ extern fBase_c::AfterProcessFunction data_02099e9c;
 /* Defined below; the calls are emitted first. */
 extern void func_0204302c(int actorID);
 extern int func_02043060(int actorID);
-extern "C" {
-
-/* The create hooks a scene installs, and the create entry's progress:
-   gBaseCreationState steps 2..5 through fBase_make and gCurrentSpawnID holds
-   the profile being created (0xffff when idle). */
-extern void (*data_020a4b5c)(int actorID);
-extern int (*data_020a4b58)(int actorID);
-}
-
-extern u16 gCurrentSpawnID;
-extern u8 gBaseCreationState;
 
 int fBase_c::createPack() {
     return Process(data_02099ebc, data_02099ec4, data_02099e94);

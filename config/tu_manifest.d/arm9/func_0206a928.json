@@ -17,7 +17,7 @@
     },
     {
       "name": ".rodata",
-      "start": "0x02086894",
+      "start": "0x02086880",
       "end": "0x020868a0"
     }
   ],
@@ -32,6 +32,13 @@
   ],
   "data": [],
   "rodata": [
+    {
+      "symbol": "data_02086880",
+      "address": "0x02086880",
+      "size": "0x14",
+      "binding": "STB_GLOBAL",
+      "evidence": "Sixteen spaces and padding. func_0206c9f4, the pad writer the formatter calls on each width shortfall, writes them through the stream callback up to 16 bytes at a time."
+    },
     {
       "symbol": "data_02086894",
       "address": "0x02086894",
@@ -52,7 +59,7 @@
     "linkcheck": {
       "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
       "result": "scratch-data-verified",
-      "scratch": "build/tu/_baseline/link (gitignored) plus build/objcache",
+      "scratch": "build/tu/arm9-func_0206a928/link (gitignored)",
       "phases": {
         "delink": true,
         "lcf": true,
@@ -78,7 +85,7 @@
         },
         {
           "section": ".rodata",
-          "start": "0x02086894",
+          "start": "0x02086880",
           "end": "0x020868a0",
           "differingBytes": 0,
           "firstDiff": null
@@ -101,7 +108,12 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null
+      "linkerOutput": null,
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      }
     }
   }
 }

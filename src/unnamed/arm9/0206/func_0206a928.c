@@ -615,6 +615,10 @@ void func_0206a928(struct Stream *ctx, const char *fmt, int **ap) {
         ctx->fn(ctx, buf, nbuf);
 }
 
+/* Sixteen spaces: func_0206c9f4 writes them through the stream callback up
+   to 16 bytes at a time to pad fields to width. */
+const char data_02086880[20] = "                ";
+
 /* The printf %s fallback for a null argument, then the single-character
    zero string the float conversions pad with, at +8. */
 const char data_02086894[12] = {

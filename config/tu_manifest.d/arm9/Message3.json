@@ -20,10 +20,345 @@
       "name": ".rodata",
       "start": "0x02075b14",
       "end": "0x02075f14"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0209fc6c",
+      "end": "0x020a0c5c"
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "data_0209fc6c",
+      "address": "0x0209fc6c",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fc70",
+      "address": "0x0209fc70",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fc74",
+      "address": "0x0209fc74",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fc78",
+      "address": "0x0209fc78",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fc7c",
+      "address": "0x0209fc7c",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fc80",
+      "address": "0x0209fc80",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fc84",
+      "address": "0x0209fc84",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fc88",
+      "address": "0x0209fc88",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fc8c",
+      "address": "0x0209fc8c",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fc90",
+      "address": "0x0209fc90",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fc94",
+      "address": "0x0209fc94",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fc98",
+      "address": "0x0209fc98",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fc9c",
+      "address": "0x0209fc9c",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fca0",
+      "address": "0x0209fca0",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fca4",
+      "address": "0x0209fca4",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fca8",
+      "address": "0x0209fca8",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fcac",
+      "address": "0x0209fcac",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fcb0",
+      "address": "0x0209fcb0",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fcb4",
+      "address": "0x0209fcb4",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fcb8",
+      "address": "0x0209fcb8",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fcbc",
+      "address": "0x0209fcbc",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fcc0",
+      "address": "0x0209fcc0",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fcc4",
+      "address": "0x0209fcc4",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fcc8",
+      "address": "0x0209fcc8",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fccc",
+      "address": "0x0209fccc",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fcd0",
+      "address": "0x0209fcd0",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fcd4",
+      "address": "0x0209fcd4",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fcd8",
+      "address": "0x0209fcd8",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fcdc",
+      "address": "0x0209fcdc",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fce0",
+      "address": "0x0209fce0",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fce4",
+      "address": "0x0209fce4",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "message renderer state byte (glyph count, column/row tracker, cursor or flag); all are this TU's state words"
+    },
+    {
+      "symbol": "data_0209fce8",
+      "address": "0x0209fce8",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "s16 renderer state word"
+    },
+    {
+      "symbol": "data_0209fcec",
+      "address": "0x0209fcec",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "s16 renderer state word"
+    },
+    {
+      "symbol": "data_0209fcf0",
+      "address": "0x0209fcf0",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "s16 renderer state word"
+    },
+    {
+      "symbol": "data_0209fcf4",
+      "address": "0x0209fcf4",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8[4] per-slot scratch used by func_020319fc and the glyph-width paths"
+    },
+    {
+      "symbol": "data_0209fcf8",
+      "address": "0x0209fcf8",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int* pointer word"
+    },
+    {
+      "symbol": "data_0209fcfc",
+      "address": "0x0209fcfc",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int state word"
+    },
+    {
+      "symbol": "data_0209fd00",
+      "address": "0x0209fd00",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int state word"
+    },
+    {
+      "symbol": "data_0209fd04",
+      "address": "0x0209fd04",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int state word"
+    },
+    {
+      "symbol": "data_0209fd08",
+      "address": "0x0209fd08",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int state word"
+    },
+    {
+      "symbol": "data_0209fd0c",
+      "address": "0x0209fd0c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "u8* pointer word"
+    },
+    {
+      "symbol": "data_0209fd10",
+      "address": "0x0209fd10",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "void* pointer word"
+    },
+    {
+      "symbol": "data_0209fd14",
+      "address": "0x0209fd14",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int state word"
+    },
+    {
+      "symbol": "data_0209fd18",
+      "address": "0x0209fd18",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int state word"
+    },
+    {
+      "symbol": "data_0209fd1c",
+      "address": "0x0209fd1c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "int state word"
+    },
+    {
+      "symbol": "data_0209fd20",
+      "address": "0x0209fd20",
+      "size": "0x3c",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-glyph width/position table (u8[0x3c]); written by the layout loop, read by the compose pass"
+    },
+    {
+      "symbol": "data_0209fd5c",
+      "address": "0x0209fd5c",
+      "size": "0xf00",
+      "binding": "STB_GLOBAL",
+      "evidence": "the 0xf00-byte composed-text tile buffer; MI_CpuFill32 clears all of it in the reset path, ends at 0x020a0c5c"
+    }
+  ],
   "compiler_only_output": [],
   "notes": [
     "HAND-BUILT manifest entry, not tools/tubuild.py create output -- the `main` module is unsegmentable, so there is no create candidate id.",
@@ -32,7 +367,8 @@
     "#pragma defer_codegen off gives source-order emission: src/Message3.cpp lists definitions ROM-ascending and the emitted section order is ROM-ascending. Deferred codegen was unusable because the optimization-pragma functions (func_02031428, func_020326ac and func_02033bb8, all opt_common_subs) would read their offs last-wins at end of file. The opt_strength_reduction brackets on func_020331fc, func_02033e50 and func_02033bb8 were removed once the second tilemap row was indexed as (scr + i)[0x20] (#821).",
     "The address-named helpers and the named C helpers LoadFont3D and Message_DrawCenteredLineVS keep extern \"C\" linkage. AddCharVS is a static member like its single-player twin Message::AddChar. data_0209f4a4 is consumed through decl_common.h's s16[] spelling; func_020326ac reads it through a byte-stride pointer pun, so the (u8*) cast stays at the use site.",
     "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii keeps the literal-name spelling with scalar params (Fix12 wall).",
-    "The nine 0x02030fa8..0x020319fc shards were folded in ROM order ahead of AddCharVS. func_02031028's glyph-table search keeps its inline predicate, now `bool`: an int-returning or open-coded compare swaps the two cmp operands."
+    "The nine 0x02030fa8..0x020319fc shards were folded in ROM order ahead of AddCharVS. func_02031028's glyph-table search keeps its inline predicate, now `bool`: an int-returning or open-coded compare swaps the two cmp operands.",
+    "LOCAL WORKER NOTE: this machine builds the EU-dump control ROM ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to its strict stock control; verification.linkcheck.rom.sha256 is normalized to the fleet-canonical hash per #3691."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -57,7 +393,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "data-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/arm9-Message3/link (gitignored)",
       "phases": {
         "delink": true,
@@ -88,11 +424,17 @@
           "end": "0x02075f14",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0209fc6c",
+          "end": "0x020a0c5c",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 37
+          "LICENSED": 84
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -103,16 +445,289 @@
           {
             "section": ".rodata",
             "original": [
-              5,
-              6
+              51,
+              52
             ],
             "desired": [
+              52,
+              51
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
               5,
-              6
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38,
+              39,
+              40,
+              41,
+              42,
+              43,
+              44,
+              45,
+              46,
+              47,
+              48,
+              49,
+              50,
+              53
+            ],
+            "desired": [
+              19,
+              15,
+              21,
+              20,
+              13,
+              14,
+              8,
+              11,
+              16,
+              9,
+              17,
+              18,
+              10,
+              6,
+              12,
+              7,
+              5,
+              35,
+              34,
+              33,
+              32,
+              31,
+              30,
+              29,
+              28,
+              27,
+              26,
+              25,
+              24,
+              23,
+              22,
+              36,
+              37,
+              38,
+              39,
+              40,
+              42,
+              43,
+              45,
+              46,
+              48,
+              49,
+              41,
+              44,
+              47,
+              50,
+              53
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".rodata",
+              "original": [
+                51,
+                52
+              ],
+              "desired": [
+                52,
+                51
+              ],
+              "slots": [
+                51,
+                52
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                53
+              ],
+              "desired": [
+                19,
+                15,
+                21,
+                20,
+                13,
+                14,
+                8,
+                11,
+                16,
+                9,
+                17,
+                18,
+                10,
+                6,
+                12,
+                7,
+                5,
+                35,
+                34,
+                33,
+                32,
+                31,
+                30,
+                29,
+                28,
+                27,
+                26,
+                25,
+                24,
+                23,
+                22,
+                36,
+                37,
+                38,
+                39,
+                40,
+                42,
+                43,
+                45,
+                46,
+                48,
+                49,
+                41,
+                44,
+                47,
+                50,
+                53
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                53
+              ]
+            }
+          ],
+          "symbolIndices": 49,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -375,6 +990,7 @@
       "ordinal": 34
     }
   ],
+  "production_mode": "intact-object",
   "rodata": [
     {
       "symbol": "data_02075b14",
@@ -388,6 +1004,5 @@
       "size": "0x200",
       "evidence": "const u16[256]: VS-mode font character table (single-byte set)"
     }
-  ],
-  "production_mode": "intact-object"
+  ]
 }

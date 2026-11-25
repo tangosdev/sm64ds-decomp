@@ -29,6 +29,10 @@ void CARD_Init(void);
 void CARD_IdentifyBackup(int type);
 }
 
+/* The 8-byte save-block magic this TU alone writes and reads ("ds mario",
+   zero-padded). Nothing else in arm9 or the overlays touches it. */
+u8 data_020a4b40[8];
+
 /* func_02042f68(type, magic) at 0x02042f68 -- the cart I/O pair's setup.
  *
  * NitroSDK CARD_Init, then CARD_IdentifyBackup(type), then keep `magic` up to
