@@ -878,13 +878,13 @@ void TrmpLine::PointDistance(Vector3 *referencePoint, const Vector3 *offsetVecto
 void TrmpLine::ComputeNormals() {
     Vector3 columnEdge;
     Vector3 rowEdge;
-    char *p;
+    Vtx *v;
     Vector3 *normal;
     int *packedNormal;
     int row;
     int column;
 
-    p = (char *)mVerts;
+    v = mVerts;
     normal = (Vector3 *)mNormals;
     packedNormal = mPackedNormals;
 
@@ -902,18 +902,18 @@ void TrmpLine::ComputeNormals() {
             components[2] = 0;
 
             if (column == 0)
-                VEC_Subtract((Vector3 *)p, (Vector3 *)p + 1, &columnEdge);
+                VEC_Subtract((Vector3 *)v, (Vector3 *)(v + 1), &columnEdge);
             else if (column == 3)
-                VEC_Subtract((Vector3 *)p - 1, (Vector3 *)p, &columnEdge);
+                VEC_Subtract((Vector3 *)(v - 1), (Vector3 *)v, &columnEdge);
             else
-                VEC_Subtract((Vector3 *)p - 1, (Vector3 *)p + 1, &columnEdge);
+                VEC_Subtract((Vector3 *)(v - 1), (Vector3 *)(v + 1), &columnEdge);
 
             if (row == 0)
-                VEC_Subtract((Vector3 *)p, (Vector3 *)p + 4, &rowEdge);
+                VEC_Subtract((Vector3 *)v, (Vector3 *)(v + 4), &rowEdge);
             else if (row == 3)
-                VEC_Subtract((Vector3 *)p - 4, (Vector3 *)p, &rowEdge);
+                VEC_Subtract((Vector3 *)(v - 4), (Vector3 *)v, &rowEdge);
             else
-                VEC_Subtract((Vector3 *)p - 4, (Vector3 *)p + 4, &rowEdge);
+                VEC_Subtract((Vector3 *)(v - 4), (Vector3 *)(v + 4), &rowEdge);
 
             VEC_CrossProduct(&columnEdge, &rowEdge, normal);
             VEC_Normalize(normal, normal);
@@ -927,7 +927,7 @@ void TrmpLine::ComputeNormals() {
 
             normal++;
             packedNormal++;
-            p += 0xc;
+            v++;
         }
     }
 }
