@@ -8,11 +8,10 @@
  *
  * The two functions' file-ID tables are interleaved in .data,
  * 0x0208a10c (f220), 0x0208a120 (f13c), 0x0208a134 (f220), 0x0208a148
- * (f13c), 0x0208a15c (f13c), five words each, one per language. Those
- * tables, the player count and the two pointer tables in front of them
- * live in src/data/arm9, one object per file: this translation unit is
- * text-only, so it cannot carry them. The eight bytes after the last
- * file-ID word are not part of them.
+ * (f13c), 0x0208a15c (f13c), five words each, one per language. The
+ * player count and the two per-language pointer tables sit in front of
+ * them. The eight bytes after the last file-ID word are not part of
+ * them.
  *
  * mwccarm emits .text in reverse source order, so the file reads from the
  * top of the run down.
@@ -28,22 +27,31 @@ u32 LoadCompressedFileAt(int fileID, void *target);
 void *LoadFile(int fileID);
 void Deallocate(void *ptr);
 
+/* The per-language compressed OBJ graphics and OAM template tables point
+   at file data other translation units own. */
+extern u8 data_02096f08[], data_02097230[], data_020975d4[], data_02097950[], data_02097ca4[];
+struct OamAttr;
+extern struct OamAttr data_02098b58[], data_02098d20[], data_02098e60[], data_02098fa0[],
+    data_02099068[];
+
 /* Player count. Callers store one byte; the next object is word-aligned,
    so the three bytes after it stay 0. */
-extern unsigned char data_0208a0e0;
+unsigned char data_0208a0e0 = 1;
 
 /* Per-language file pointers, then OAM templates, indexed by GetLanguageIndex(). */
-extern void *data_0208a0e4[5];
-
-struct OamAttr;
-extern struct OamAttr *data_0208a0f8[5];
+void *data_0208a0e4[5] = {
+    data_02096f08, data_02097230, data_020975d4, data_02097950, data_02097ca4,
+};
+struct OamAttr *data_0208a0f8[5] = {
+    data_02098b58, data_02098d20, data_02098e60, data_02098fa0, data_02099068,
+};
 
 /* Per-language file IDs, indexed by GetLanguageIndex(). */
-extern u32 data_0208a10c[5]; /* sub BG2 characters */
-extern u32 data_0208a120[5]; /* sub OBJ characters */
-extern u32 data_0208a134[5]; /* sub BG3 characters at +0x6000 */
-extern u32 data_0208a148[5]; /* main BG2 characters */
-extern u32 data_0208a15c[5]; /* main OBJ characters */
+u32 data_0208a10c[5] = {0xa00d, 0xa40d, 0xa80d, 0xac0d, 0xb00d}; /* sub BG2 characters */
+u32 data_0208a120[5] = {0xa000, 0xa400, 0xa800, 0xac00, 0xb000}; /* sub OBJ characters */
+u32 data_0208a134[5] = {0xa004, 0xa404, 0xa804, 0xac04, 0xb004}; /* sub BG3 characters at +0x6000 */
+u32 data_0208a148[5] = {0xa00f, 0xa40f, 0xa80f, 0xac0f, 0xb00f}; /* main BG2 characters */
+u32 data_0208a15c[5] = {0xa00e, 0xa40e, 0xa80e, 0xac0e, 0xb00e}; /* main OBJ characters */
 
 /* Loads the sub-engine BG graphics: per-language BG2 characters (and BG3
  * characters at +0x6000), file 0x8405 at BG3 characters +0x3000, files

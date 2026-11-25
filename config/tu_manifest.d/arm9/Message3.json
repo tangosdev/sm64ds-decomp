@@ -17,6 +17,11 @@
       "end": "0x02034a78"
     },
     {
+      "name": ".rodata",
+      "start": "0x02075b14",
+      "end": "0x02075f14"
+    },
+    {
       "name": ".bss",
       "start": "0x0209fc6c",
       "end": "0x020a0c5c"
@@ -414,6 +419,13 @@
           "firstDiff": null
         },
         {
+          "section": ".rodata",
+          "start": "0x02075b14",
+          "end": "0x02075f14",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
           "section": ".bss",
           "start": "0x0209fc6c",
           "end": "0x020a0c5c",
@@ -422,7 +434,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 82
+          "LICENSED": 84
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -430,6 +442,17 @@
       },
       "nontextSectionOrder": {
         "groups": [
+          {
+            "section": ".rodata",
+            "original": [
+              51,
+              52
+            ],
+            "desired": [
+              52,
+              51
+            ]
+          },
           {
             "section": ".bss",
             "original": [
@@ -479,24 +502,26 @@
               48,
               49,
               50,
-              51
+              53
             ],
             "desired": [
               19,
-              12,
-              11,
+              15,
+              21,
+              20,
               13,
               14,
               8,
-              7,
-              15,
+              11,
               16,
               9,
               17,
               18,
-              5,
               10,
               6,
+              12,
+              7,
+              5,
               35,
               34,
               33,
@@ -511,29 +536,42 @@
               24,
               23,
               22,
-              21,
-              20,
-              38,
               36,
               37,
+              38,
+              39,
               40,
+              42,
+              43,
+              45,
+              46,
+              48,
+              49,
               41,
               44,
-              45,
               47,
-              48,
-              39,
-              42,
-              46,
-              49,
-              43,
               50,
-              51
+              53
             ]
           }
         ],
         "objisolate": {
           "reordered": [
+            {
+              "section": ".rodata",
+              "original": [
+                51,
+                52
+              ],
+              "desired": [
+                52,
+                51
+              ],
+              "slots": [
+                51,
+                52
+              ]
+            },
             {
               "section": ".bss",
               "original": [
@@ -583,24 +621,26 @@
                 48,
                 49,
                 50,
-                51
+                53
               ],
               "desired": [
                 19,
-                12,
-                11,
+                15,
+                21,
+                20,
                 13,
                 14,
                 8,
-                7,
-                15,
+                11,
                 16,
                 9,
                 17,
                 18,
-                5,
                 10,
                 6,
+                12,
+                7,
+                5,
                 35,
                 34,
                 33,
@@ -615,24 +655,22 @@
                 24,
                 23,
                 22,
-                21,
-                20,
-                38,
                 36,
                 37,
+                38,
+                39,
                 40,
+                42,
+                43,
+                45,
+                46,
+                48,
+                49,
                 41,
                 44,
-                45,
                 47,
-                48,
-                39,
-                42,
-                46,
-                49,
-                43,
                 50,
-                51
+                53
               ],
               "slots": [
                 5,
@@ -681,11 +719,11 @@
                 48,
                 49,
                 50,
-                51
+                53
               ]
             }
           ],
-          "symbolIndices": 47,
+          "symbolIndices": 49,
           "sectionLinks": 0,
           "sectionInfos": 0,
           "error": null
@@ -952,5 +990,19 @@
       "ordinal": 34
     }
   ],
-  "production_mode": "intact-object"
+  "production_mode": "intact-object",
+  "rodata": [
+    {
+      "symbol": "data_02075b14",
+      "address": "0x02075b14",
+      "size": "0x200",
+      "evidence": "const u16[256]: VS-mode font character table (multi-byte set)"
+    },
+    {
+      "symbol": "data_02075d14",
+      "address": "0x02075d14",
+      "size": "0x200",
+      "evidence": "const u16[256]: VS-mode font character table (single-byte set)"
+    }
+  ]
 }
