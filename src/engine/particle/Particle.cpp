@@ -129,12 +129,16 @@ void dPa_c::Initialise() {
     if (memcmp((u8 *)data_02075f14, data_0208f668, 4) != 0) {
         mResourceFile = (void *)data_02075f14;
     } else {
-        /* The compressed stream starts at +4; its header word carries the
-           decompressed size in the upper 24 bits. */
-        char *file = (char *)data_02075f14;
-        u32 size = *(u32 *)(file + 4) >> 8;
+        /* The compressed stream follows the file's LZ tag; its header word
+           carries the decompressed size in the upper 24 bits. */
+        struct TaggedLz77File {
+            u32 tag;
+            u32 lzStream;
+        };
+        TaggedLz77File *file = (TaggedLz77File *)data_02075f14;
+        u32 size = file->lzStream >> 8;
         void *dst = Memory::Allocate(size);
-        DecompressLZ16(file + 4, dst);
+        DecompressLZ16(&file->lzStream, dst);
         DC_StoreRange(dst, size);
         mResourceFile = dst;
     }
