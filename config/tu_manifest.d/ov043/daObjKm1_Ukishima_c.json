@@ -28,12 +28,6 @@
       "end": "0x02111aec"
     },
     {
-      "name": ".data.data_ov043_02111c00",
-      "input_section": ".data",
-      "start": "0x02111c00",
-      "end": "0x02111c20"
-    },
-    {
       "name": ".bss",
       "start": "0x021125e0",
       "end": "0x02112608"
@@ -96,13 +90,6 @@
     }
   ],
   "data": [
-    {
-      "symbol": "data_ov043_02111c00",
-      "address": "0x02111c00",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "the floating island's collision properties: floor and wall entries"
-    },
     {
       "symbol": "_ZTI19daObjKm1_Ukishima_c",
       "address": "0x02112270",
@@ -845,13 +832,6 @@
           "section": ".ctor",
           "start": "0x02111ae8",
           "end": "0x02111aec",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov043_02111c00",
-          "start": "0x02111c00",
-          "end": "0x02111c20",
           "differingBytes": 0,
           "firstDiff": null
         },

@@ -30,12 +30,6 @@
       "end": "0x02111af0"
     },
     {
-      "name": ".data.data_ov043_02111bc0",
-      "input_section": ".data",
-      "start": "0x02111bc0",
-      "end": "0x02111bd4"
-    },
-    {
       "name": ".data",
       "start": "0x02112338",
       "end": "0x0211240c"
@@ -84,13 +78,6 @@
     }
   ],
   "data": [
-    {
-      "symbol": "data_ov043_02111bc0",
-      "address": "0x02111bc0",
-      "size": "0x14",
-      "binding": "STB_GLOBAL",
-      "evidence": "the axle's collision properties: one floor entry and one fill word"
-    },
     {
       "symbol": "_ZTI21daObjKm1_Kurumajiku_c",
       "address": "0x02112338",
@@ -370,13 +357,6 @@
           "section": ".ctor",
           "start": "0x02111aec",
           "end": "0x02111af0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov043_02111bc0",
-          "start": "0x02111bc0",
-          "end": "0x02111bd4",
           "differingBytes": 0,
           "firstDiff": null
         },

@@ -1,202 +1,258 @@
-#include "types.h"
 #include "CLPS.h"
 #include "PathPtr.h"
 #include "StageMap.h"
+#include "types.h"
 
-/* Definition order is what makes the compiler's size sort match address order. */
+/* Definition order is what makes the compiler's size sort match address order.
+ */
 
-/* SetViewObjs steps 0xe. The two bytes at +8 and the half at +0xc stay
- * unread; they are the pad the stride still counts. */
+/* The small actor blocks reserve three entry slots. Counts of one or two leave
+ * the remaining slots as all-ones padding. */
+typedef struct CLPS_Block {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[3];
+} CLPS_Block;
+
 typedef struct {
-    u8 type;
-    u8 p1;
-    s16 x;
-    s16 y;
-    s16 z;
-    u8 raw_08[2];
-    s16 angleY;
-    u16 raw_0c;
-} ViewRecord;
-
-typedef char ViewRecord_size[sizeof(ViewRecord) == 0xe ? 1 : -1];
+    ViewEntry entries[5];
+    u16 pad;
+} ViewEntries5;
 
 typedef struct {
     u32 tag;
     u16 stride;
     u16 count;
     struct CLPS entries[24];
+    u32 tail[6];
 } Clps24;
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entry;
-    u32 tail[4];
-} Clps1;
-
-#pragma explicit_zero_data on
-
-typedef struct data_ov036_02112a00 {
-    u16 minimapTile;
-    u16 tilePad;
-} data_ov036_02112a00_Rec;
-
-typedef struct data_ov036_02112a08 {
-    u16 count;
-    u16 pad;
-    void *entries;
-} data_ov036_02112a08_Rec;
-
-typedef struct data_ov036_02112a10 {
-    u16 count;
-    u16 pad;
-    void *entries;
-} data_ov036_02112a10_Rec;
-
-typedef struct data_ov036_02112a18 {
-    void *objTable;
-    void *bta;
-    s8 minimapId;
-    u8 rest[3];
-} data_ov036_02112a18_Rec;
-
-typedef struct data_ov036_02112a54 {
-    ObjSubTable areaSubs[3];
-    struct {
-        void *clps;
-        void *objTable;
-        u16 modelFileId;
-        u16 kclFileId;
-        u16 minimapTilesFile;
-        u16 minimapPaletteFile;
-        void *areas;
-        u8 areaCount;
-        u8 cameraFlags;
-        s16 minimapScale;
-        u32 skybox;
-    } level;
-} data_ov036_02112a54_Rec;
-
-typedef struct data_ov036_02112c28 {
-    struct PathDef paths[7];
-    u16 pathPad;
-} data_ov036_02112c28_Rec;
-
-typedef struct data_ov036_02112cd4 {
-    ViewRecord views[5];
-    u16 pad;
-} data_ov036_02112cd4_Rec;
-
-typedef struct data_ov036_02112d1c {
-    Clps24 clps;
-    u32 tail[6];
-} data_ov036_02112d1c_Rec;
-
-typedef struct {
-    s16 x;
-    s16 y;
-    s16 z;
-    u16 param;
-} data_ov036_02112a24_Layout;
-typedef struct {
-    s16 x;
-    s16 y;
-    s16 z;
-    u16 param;
-} data_ov036_02112a34_Layout;
-
-extern data_ov036_02112a00_Rec data_ov036_02112a00;
-extern u32 data_ov036_02112a04;
-extern data_ov036_02112a08_Rec data_ov036_02112a08;
-extern data_ov036_02112a10_Rec data_ov036_02112a10;
-extern data_ov036_02112a18_Rec data_ov036_02112a18;
-extern data_ov036_02112a24_Layout data_ov036_02112a24[2];
-extern data_ov036_02112a34_Layout data_ov036_02112a34[2];
-extern StandardEntry data_ov036_02112a44;
-extern data_ov036_02112a54_Rec data_ov036_02112a54;
-extern Clps1 data_ov036_02112b08;
-extern data_ov036_02112c28_Rec data_ov036_02112c28;
+extern u16 data_ov036_02112a00[2];
+extern u32 data_ov036_02112a04[1];
+extern ObjTable data_ov036_02112a08;
+extern ObjTable data_ov036_02112a10;
+extern Area data_ov036_02112a18[1];
+extern TeleportSourceEntry data_ov036_02112a24[2];
+extern TeleportDest data_ov036_02112a34[2];
+extern StandardEntry data_ov036_02112a44[1];
+extern ObjSubTable data_ov036_02112a54[3];
+extern LevelRec data_ov036_02112a6c;
+extern CLPS_Block data_ov036_02112a88;
+extern CLPS_Block data_ov036_02112aa8;
+extern CLPS_Block data_ov036_02112ac8;
+extern CLPS_Block data_ov036_02112ae8;
+extern CLPS_Block data_ov036_02112b08;
+extern CLPS_Block data_ov036_02112b28;
+extern CLPS_Block data_ov036_02112b48;
+extern CLPS_Block data_ov036_02112b68;
+extern CLPS_Block data_ov036_02112b88;
+extern CLPS_Block data_ov036_02112ba8;
+extern CLPS_Block data_ov036_02112bc8;
+extern CLPS_Block data_ov036_02112be8;
+extern CLPS_Block data_ov036_02112c08;
+extern struct PathDef data_ov036_02112c28[7];
 extern StandardEntry data_ov036_02112c54[4];
 extern ObjSubTable data_ov036_02112c94[8];
-extern data_ov036_02112cd4_Rec data_ov036_02112cd4;
-extern data_ov036_02112d1c_Rec data_ov036_02112d1c;
-extern Vector3s data_ov036_02112dfc[104];
+extern ViewEntries5 data_ov036_02112cd4;
+extern Clps24 data_ov036_02112d1c;
+extern PathNode data_ov036_02112dfc[104];
 extern SimpleEntry data_ov036_0211306c[99];
 extern StandardEntry data_ov036_02113384[109];
 
-#pragma define_section s112a00 ".data.gap0"                                                        \
-                               ".data.gap0"                                                        \
-                               ".data.gap0" far_data
-#pragma section s112a00 begin
-data_ov036_02112a00_Rec data_ov036_02112a00 = {0x07aa, 0x0000};
+u16 data_ov036_02112a00[2] = {0x07aa, 0x0000};
 
-u32 data_ov036_02112a04 = 0x11111114;
+u32 data_ov036_02112a04[1] = {0x11111114};
 
-data_ov036_02112a08_Rec data_ov036_02112a08 = {0x0003, 0x0000, &data_ov036_02112a54};
+ObjTable data_ov036_02112a08 = {0x0003, {0x00, 0x00}, &data_ov036_02112a54[0]};
 
-data_ov036_02112a10_Rec data_ov036_02112a10 = {0x0008, 0x0000, &data_ov036_02112c94[0]};
+ObjTable data_ov036_02112a10 = {0x0008, {0x00, 0x00}, &data_ov036_02112c94[0]};
 
-data_ov036_02112a18_Rec data_ov036_02112a18 = {&data_ov036_02112a08, 0, 0x00, {0x00, 0x7b, 0x1b}};
+Area data_ov036_02112a18[1] = {{&data_ov036_02112a08, 0, 0x00, {0x00, 0x7b, 0x1b}}};
 
-data_ov036_02112a34_Layout data_ov036_02112a34[2] = {
-    {(s16)0xeffc, 0x0ce4, (s16)0xf542, 0x0080},
-    {(s16)0xe50c, 0x0905, (s16)0xff9c, 0x0040},
-};
-
-data_ov036_02112a24_Layout data_ov036_02112a24[2] = {
+TeleportSourceEntry data_ov036_02112a24[2] = {
     {(s16)0xeffc, 0x0ce4, (s16)0xf542, 0x1001},
     {(s16)0xe50c, 0x0905, (s16)0xff9c, 0x0001},
 };
 
-StandardEntry data_ov036_02112a44 = {0x0014, 0x0b22,      (s16)0xf902, 0x05dc,
-                                     0x0003, (s16)0xeaab, 0x0000,      0xffff};
-
-#pragma section s112a00 end
-
-#pragma define_section s112b08 ".data.gap2"                                                        \
-                               ".data.gap2"                                                        \
-                               ".data.gap2" far_data
-#pragma section s112b08 begin
-Clps1 data_ov036_02112b08 = {
-    0x53504c43, 8, 1, {0x01000fc0, 0x000000ff}, {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+StandardEntry data_ov036_02112a44[1] = {
+    {0x0014, 0x0b22, (s16)0xf902, 0x05dc, 0x0003, (s16)0xeaab, 0x0000, 0xffff},
 };
 
-#pragma section s112b08 end
+TeleportDest data_ov036_02112a34[2] = {
+    {(s16)0xeffc, 0x0ce4, (s16)0xf542, 0x0080},
+    {(s16)0xe50c, 0x0905, (s16)0xff9c, 0x0040},
+};
 
-data_ov036_02112c28_Rec data_ov036_02112c28 = {{
-                                                   {0x0000, 0x0d, 0xff, 0xff, 0x7f},
-                                                   {0x000d, 0x18, 0xff, 0xff, 0x7f},
-                                                   {0x0025, 0x19, 0xff, 0xff, 0x7f},
-                                                   {0x003e, 0x24, 0xff, 0xff, 0x7f},
-                                                   {0x0062, 0x02, 0xff, 0xff, 0x7f},
-                                                   {0x0064, 0x02, 0xff, 0x03, 0x7f},
-                                                   {0x0066, 0x02, 0xff, 0x00, 0x7f},
-                                               },
-                                               0};
+ObjSubTable data_ov036_02112a54[3] = {
+    {0x00, 0x6d, {0x00, 0x00}, &data_ov036_02113384[0]},
+    {0x05, 0x63, {0x00, 0x00}, &data_ov036_0211306c[0]},
+    {0x60, 0x01, {0x00, 0x00}, &data_ov036_02112a44[0]},
+};
 
-#pragma section s112a00 begin
-data_ov036_02112a54_Rec data_ov036_02112a54 = {
+LevelRec data_ov036_02112a6c = {
+    (struct CLPS_Block *)&data_ov036_02112d1c,
+    &data_ov036_02112a10,
+    0x07ab,
+    0x07a9,
+    0x07ac,
+    0x07ad,
+    (struct Area *)&data_ov036_02112a18[0],
+    0x01,
+    0x01,
+    0x0640,
+    0x0000002f,
+};
+
+CLPS_Block data_ov036_02112ba8 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
     {
-        {0x00, 0x6d, {0x00, 0x00}, &data_ov036_02113384[0]},
-        {0x05, 0x63, {0x00, 0x00}, &data_ov036_0211306c[0]},
-        {0x60, 0x01, {0x00, 0x00}, &data_ov036_02112a44},
+        {0x01000fc0, 0x000000ff},
+        {0xffffffff, 0xffffffff},
+        {0xffffffff, 0xffffffff},
     },
-    {
-        &data_ov036_02112d1c,
-        &data_ov036_02112a10,
-        0x07ab,
-        0x07a9,
-        0x07ac,
-        0x07ad,
-        &data_ov036_02112a18,
-        0x01,
-        0x01,
-        0x0640,
-        0x0000002f,
-    }};
+};
 
-#pragma section s112a00 end
+CLPS_Block data_ov036_02112b28 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {
+        {0x01000fc0, 0x000000ff},
+        {0xffffffff, 0xffffffff},
+        {0xffffffff, 0xffffffff},
+    },
+};
+
+CLPS_Block data_ov036_02112b68 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {
+        {0x01000fc0, 0x000000ff},
+        {0x01002fc0, 0x000000ff},
+        {0xffffffff, 0xffffffff},
+    },
+};
+
+CLPS_Block data_ov036_02112b88 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {
+        {0x00000fc0, 0x000000ff},
+        {0x00004fc0, 0x000000ff},
+        {0xffffffff, 0xffffffff},
+    },
+};
+
+CLPS_Block data_ov036_02112be8 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {
+        {0x00000fc0, 0x000000ff},
+        {0x00002fc0, 0x000000ff},
+        {0xffffffff, 0xffffffff},
+    },
+};
+
+CLPS_Block data_ov036_02112c08 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {
+        {0x00000fc0, 0x000000ff},
+        {0x00004fc0, 0x000000ff},
+        {0xffffffff, 0xffffffff},
+    },
+};
+
+CLPS_Block data_ov036_02112ae8 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {
+        {0x00000fc0, 0x000000ff},
+        {0x00004fc0, 0x000000ff},
+        {0xffffffff, 0xffffffff},
+    },
+};
+
+CLPS_Block data_ov036_02112a88 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {
+        {0x00000fc0, 0x000000ff},
+        {0x00004fc0, 0x000000ff},
+        {0xffffffff, 0xffffffff},
+    },
+};
+
+CLPS_Block data_ov036_02112aa8 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {
+        {0x01000fc0, 0x000000ff},
+        {0xffffffff, 0xffffffff},
+        {0xffffffff, 0xffffffff},
+    },
+};
+
+CLPS_Block data_ov036_02112ac8 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {
+        {0x01000fc0, 0x000000ff},
+        {0x01000fc4, 0x000000ff},
+        {0xffffffff, 0xffffffff},
+    },
+};
+
+CLPS_Block data_ov036_02112b08 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {
+        {0x01000fc0, 0x000000ff},
+        {0xffffffff, 0xffffffff},
+        {0xffffffff, 0xffffffff},
+    },
+};
+
+CLPS_Block data_ov036_02112b48 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {
+        {0x01000fc0, 0x000000ff},
+        {0x01000fc5, 0x000000ff},
+        {0xffffffff, 0xffffffff},
+    },
+};
+
+CLPS_Block data_ov036_02112bc8 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {
+        {0x01000fc0, 0x000000ff},
+        {0x01000fc4, 0x000000ff},
+        {0xffffffff, 0xffffffff},
+    },
+};
+
+struct PathDef data_ov036_02112c28[7] = {
+    {0x0000, 0x0d, 0xff, 0xff, 0x7f}, {0x000d, 0x18, 0xff, 0xff, 0x7f},
+    {0x0025, 0x19, 0xff, 0xff, 0x7f}, {0x003e, 0x24, 0xff, 0xff, 0x7f},
+    {0x0062, 0x02, 0xff, 0xff, 0x7f}, {0x0064, 0x02, 0xff, 0x03, 0x7f},
+    {0x0066, 0x02, 0xff, 0x00, 0x7f},
+};
 
 StandardEntry data_ov036_02112c54[4] = {
     {0x0000, 0x09f6, (s16)0xffa6, 0x07d0, 0x0000, 0x4000, 0x0000, 0x0500},
@@ -207,16 +263,16 @@ StandardEntry data_ov036_02112c54[4] = {
 
 ObjSubTable data_ov036_02112c94[8] = {
     {0x02, 0x68, {0x00, 0x00}, &data_ov036_02112dfc[0]},
-    {0x03, 0x07, {0x00, 0x00}, &data_ov036_02112c28},
-    {0x04, 0x05, {0x00, 0x00}, &data_ov036_02112cd4},
-    {0x0b, 0x01, {0x00, 0x00}, &data_ov036_02112a00},
+    {0x03, 0x07, {0x00, 0x00}, &data_ov036_02112c28[0]},
+    {0x04, 0x05, {0x00, 0x00}, &data_ov036_02112cd4.entries[0]},
+    {0x0b, 0x01, {0x00, 0x00}, &data_ov036_02112a00[0]},
     {0x01, 0x04, {0x00, 0x00}, &data_ov036_02112c54[0]},
     {0x06, 0x02, {0x00, 0x00}, &data_ov036_02112a24[0]},
     {0x07, 0x02, {0x00, 0x00}, &data_ov036_02112a34[0]},
-    {0x0e, 0x01, {0x00, 0x00}, &data_ov036_02112a04},
+    {0x0e, 0x01, {0x00, 0x00}, &data_ov036_02112a04[0]},
 };
 
-data_ov036_02112cd4_Rec data_ov036_02112cd4 = {
+ViewEntries5 data_ov036_02112cd4 = {
     {
         {0x02, 0xff, 0x0672, (s16)0xfbb4, 0x0d48, {0x00, 0x00}, 0x6000, 0x0000},
         {0x07, 0xff, (s16)0xfce0, 0x026a, (s16)0xde04, {0x00, 0x00}, 0x0000, 0x0000},
@@ -224,23 +280,22 @@ data_ov036_02112cd4_Rec data_ov036_02112cd4 = {
         {0x02, 0x00, (s16)0xf510, 0x0ed8, (s16)0xf3b2, {0x00, 0x00}, (s16)0xc000, 0x0000},
         {0x02, 0x00, (s16)0xf1be, 0x198b, (s16)0xf02e, {0x00, 0x00}, (s16)0xa000, 0x0000},
     },
-    0};
+    0x0000,
+};
 
-data_ov036_02112d1c_Rec data_ov036_02112d1c = {
+Clps24 data_ov036_02112d1c = {
+    0x53504c43,
+    0x0008,
+    0x0018,
     {
-        0x53504c43,
-        8,
-        0x0018,
-        {
-            {0x0004bfc5, 0x000000ff}, {0x0004a0c0, 0x000000ff}, {0x0004a080, 0x000000ff},
-            {0x00048080, 0x000000ff}, {0x00048084, 0x000000ff}, {0x04048100, 0x000000ff},
-            {0x01048fc0, 0x000000ff}, {0x00248fc0, 0x000000ff}, {0x018c8080, 0x000000ff},
-            {0x040480c0, 0x000000ff}, {0x01048fc5, 0x000000ff}, {0x0104afc5, 0x000000ff},
-            {0x0104bfc5, 0x000000ff}, {0x005c8fc0, 0x00000004}, {0x005c8fc5, 0x00000005},
-            {0x005c8fc5, 0x00000006}, {0x0004afc4, 0x000000ff}, {0x0004afcc, 0x000000ff},
-            {0x0004afc0, 0x000000ff}, {0x0004a0cc, 0x000000ff}, {0x0004afc5, 0x000000ff},
-            {0x00048fc5, 0x000000ff}, {0x04048fc5, 0x000000ff}, {0x00048fc0, 0x000000ff},
-        },
+        {0x0004bfc5, 0x000000ff}, {0x0004a0c0, 0x000000ff}, {0x0004a080, 0x000000ff},
+        {0x00048080, 0x000000ff}, {0x00048084, 0x000000ff}, {0x04048100, 0x000000ff},
+        {0x01048fc0, 0x000000ff}, {0x00248fc0, 0x000000ff}, {0x018c8080, 0x000000ff},
+        {0x040480c0, 0x000000ff}, {0x01048fc5, 0x000000ff}, {0x0104afc5, 0x000000ff},
+        {0x0104bfc5, 0x000000ff}, {0x005c8fc0, 0x00000004}, {0x005c8fc5, 0x00000005},
+        {0x005c8fc5, 0x00000006}, {0x0004afc4, 0x000000ff}, {0x0004afcc, 0x000000ff},
+        {0x0004afc0, 0x000000ff}, {0x0004a0cc, 0x000000ff}, {0x0004afc5, 0x000000ff},
+        {0x00048fc5, 0x000000ff}, {0x04048fc5, 0x000000ff}, {0x00048fc0, 0x000000ff},
     },
     {
         0xffffffff,
@@ -249,9 +304,10 @@ data_ov036_02112d1c_Rec data_ov036_02112d1c = {
         0xffffffff,
         0xffffffff,
         0xffffffff,
-    }};
+    },
+};
 
-Vector3s data_ov036_02112dfc[104] = {
+PathNode data_ov036_02112dfc[104] = {
     {0x1162, (s16)0xf92a, 0x07d0},      {0x143b, (s16)0xf8fd, 0x07d0},
     {0x14b9, (s16)0xf953, 0x07d0},      {0x153d, (s16)0xfa79, 0x07d0},
     {0x15e0, (s16)0xfac4, 0x07d0},      {0x193b, (s16)0xfac4, 0x07d0},
@@ -377,8 +433,8 @@ SimpleEntry data_ov036_0211306c[99] = {
     {0xe225, (s16)0xe278, 0x109a, (s16)0xf254},
     {0xe225, (s16)0xe7c8, 0x11c6, (s16)0xec14},
     {0xe225, (s16)0xe85e, 0x11c6, (s16)0xec14},
-    {0xe225, (s16)0xe8f4, 0x11c6, (s16)0xec14},
-    {0xe225, (s16)0xe98a, 0x11c6, (s16)0xec14},
+    {0xe225, (s16)0xe8f4, (s16)0x11c6, (s16)0xec14},
+    {0xe225, (s16)0xe98a, (s16)0x11c6, (s16)0xec14},
     {0xe225, (s16)0xea20, 0x11c6, (s16)0xec14},
     {0x043d, (s16)0xeffc, 0x19c8, (s16)0xef02},
     {0xe225, 0x0275, (s16)0xfbe6, (s16)0xf9fe},
@@ -433,7 +489,7 @@ StandardEntry data_ov036_02113384[109] = {
     {0x006f, 0x0018, (s16)0xf808, 0x190a, 0x0000, 0x0000, 0x0000, 0xffff},
     {0x006f, (s16)0xff51, (s16)0xf808, 0x190a, 0x0000, 0x0000, 0x0000, 0xffff},
     {0x006f, (s16)0xf0de, (s16)0xf808, 0x190a, 0x0000, 0x0000, 0x0000, 0xffff},
-    {0x006f, (s16)0xf016, (s16)0xf808, 0x190a, 0x0000, 0x0000, 0x0000, 0xffff},
+    {0x006f, 0x0f016, (s16)0xf808, 0x190a, 0x0000, 0x0000, 0x0000, 0xffff},
     {0x006f, (s16)0xef4e, (s16)0xf808, 0x190a, 0x0000, 0x0000, 0x0000, 0xffff},
     {0x006f, (s16)0xe7e3, (s16)0xf808, 0x18e1, 0x0000, 0x0000, 0x0000, 0xffff},
     {0x006f, (s16)0xe71b, (s16)0xf808, 0x18e1, 0x0000, 0x0000, 0x0000, 0xffff},

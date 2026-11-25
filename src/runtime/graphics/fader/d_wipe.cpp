@@ -40,7 +40,7 @@ u8 data_0209f5f8[0x18]; /* display engine, fresh-line flag, and the two table cu
 extern volatile u8  data_0209f5fc;   /* the next HBlank has a fresh line */
 extern volatile u32 data_0209f608;   /* table index the IRQ reads */
 extern volatile u32 data_0209f60c;   /* table index the CPU fills */
-extern u8           data_0209f648[]; /* two 0x300-byte scanline tables */
+int data_0209f648[2][192];           /* the two 0x300-byte scanline tables */
 
 /* NitroSDK's inline IME helpers (os/common/interrupt.h): each returns the
    previous master enable. File-local because an inline body in a shared
@@ -303,8 +303,8 @@ void dWipe_c::AdvanceFade()
    line-0 windows from it. */
 void Wipe_LatchTable(void) {
     data_0209f608 = data_0209f60c;
-    MI_CpuCopy32(data_0209f648 + data_0209f608 * 0x300u, (int *)0x4000040, 4);
-    MI_CpuCopy32(data_0209f648 + data_0209f608 * 0x300u, (int *)0x4001040, 4);
+    MI_CpuCopy32(&data_0209f648[data_0209f608][0], (int *)0x4000040, 4);
+    MI_CpuCopy32(&data_0209f648[data_0209f608][0], (int *)0x4001040, 4);
     data_0209f5fc = 1;
 }
 
@@ -328,8 +328,8 @@ void Wipe_HBlankHandler(void) {
     if ((REG_DISPSTAT & 2) == 0)
         return;
 
-    MI_CpuCopy32(data_0209f648 + data_0209f608 * 0x300u + line * 4, (int *)0x4000040, 4);
-    MI_CpuCopy32(data_0209f648 + data_0209f608 * 0x300u + line * 4, (int *)0x4001040, 4);
+    MI_CpuCopy32(&data_0209f648[data_0209f608][line], (int *)0x4000040, 4);
+    MI_CpuCopy32(&data_0209f648[data_0209f608][line], (int *)0x4001040, 4);
 
     data_0209f5fc = 0;
 }
@@ -365,7 +365,7 @@ void dWipe_c::BuildStarTable() {
     s64 d64;
 
     idx = data_0209f608 == 0;
-    buf = (struct WindowEdges *)(data_0209f648 + idx * 0x300);
+    buf = (struct WindowEdges *)&data_0209f648[idx];
     fill = 0x80807F7F;
     i = 0;
     MI_CpuFill32(buf, fill, 0x300);
@@ -465,7 +465,7 @@ void dWipe_c::BuildCircleTable() {
 
     idx = data_0209f608 == 0;
     fill = 0x80807f7f;
-    buf = (struct WindowEdges *)(data_0209f648 + idx * 0x300);
+    buf = (struct WindowEdges *)&data_0209f648[idx];
 
     MI_CpuFill32(buf, fill, 0x300);
 

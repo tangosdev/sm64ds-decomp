@@ -1,7 +1,6 @@
 /* The game's checked wrappers around the NitroSDK FS calls. Each forwards its
  * arguments to the SDK function and, on failure, hands its own name string to
- * func_02018e68 and crashes. The names come from those strings, which sit in
- * .rodata at the addresses the externs below give:
+ * func_02018e68 and crashes. The names come from those strings:
  *   0x0208eb8c "myFS_OpenFile"          0x0208ec74 "myFS_OpenFileFast"
  *   0x0208eb9c "myFS_ReadFile"          0x0208ecc4 "myFS_OpenFileDirect"
  *   0x0208ecd8 "myFS_ConvertPathToFileID"
@@ -15,7 +14,7 @@
 
 extern int func_0203d7d4(int);
 extern void *data_0209d3c0;
-extern int data_0208ecd8[7];
+char data_0208ecd8[28] = "myFS_ConvertPathToFileID";
 extern int data_0208ecc4;
 extern char data_0208ec74;
 extern int data_0208eb8c[];
