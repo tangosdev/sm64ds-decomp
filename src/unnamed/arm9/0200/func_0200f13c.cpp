@@ -32,7 +32,7 @@ void Deallocate(void *ptr);
 extern u8 data_02096f08[], data_02097230[], data_020975d4[], data_02097950[], data_02097ca4[];
 struct OamAttr;
 extern struct OamAttr data_02098b58[], data_02098d20[], data_02098e60[], data_02098fa0[],
-                    data_02099068[];
+    data_02099068[];
 
 /* Player count. Callers store one byte; the next object is word-aligned,
    so the three bytes after it stay 0. */
