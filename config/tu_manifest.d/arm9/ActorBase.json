@@ -20,6 +20,11 @@
       "name": ".text",
       "start": "0x02042fe4",
       "end": "0x020440e8"
+    },
+    {
+      "name": ".bss",
+      "start": "0x020a4b48",
+      "end": "0x020a4b6c"
     }
   ],
   "functions": [
@@ -312,7 +317,71 @@
     }
   ],
   "data": [],
-  "bss": [],
+  "bss": [
+    {
+      "symbol": "_ZN7fBase_c16m_tmpCtGroupTypeE",
+      "address": "0x020a4b48",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "fBase_c's temp-ctor group-type static; stashed before classInit and reloaded in the ctor"
+    },
+    {
+      "symbol": "gBaseCreationState",
+      "address": "0x020a4b4c",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "the create entry's progress; steps 2..5 through fBase_make"
+    },
+    {
+      "symbol": "gCurrentSpawnID",
+      "address": "0x020a4b50",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "the profile id being created (0xffff when idle)"
+    },
+    {
+      "symbol": "_ZN7fBase_c15m_tmpCtProfNameE",
+      "address": "0x020a4b54",
+      "size": "0x2",
+      "binding": "STB_GLOBAL",
+      "evidence": "fBase_c's temp-ctor profile-name static"
+    },
+    {
+      "symbol": "data_020a4b58",
+      "address": "0x020a4b58",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "scene-installed create hook, int(*)(int actorID)"
+    },
+    {
+      "symbol": "data_020a4b5c",
+      "address": "0x020a4b5c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "scene-installed create hook, void(*)(int actorID)"
+    },
+    {
+      "symbol": "_ZN7fBase_c12m_tmpCtParamE",
+      "address": "0x020a4b60",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "fBase_c's temp-ctor param1 static"
+    },
+    {
+      "symbol": "_ZN7fBase_c20m_tmpCtConnectParentE",
+      "address": "0x020a4b64",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "fBase_c's temp-ctor connect-parent static"
+    },
+    {
+      "symbol": "data_020a4b68",
+      "address": "0x020a4b68",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "the executing process node (fLiNdBaPr_c*); fListNode's destructors and ShowCrashScreen read it"
+    }
+  ],
   "compiler_only_output": [
     {
       "symbol": "_ZN7fBase_cC1Ev",
@@ -354,7 +423,8 @@
     "include/decl_common.h is deliberately NOT included. It declares func_0203b27c as (int, int) and data_020a4b6c as `int` where this class's own sources pass two pointers and take the address of a list head; from one TU those are two incompatible extern \"C\" declarations of one name, which mwcc rejects as 'illegal function overloading'. The few lines it supplied are restated in the file's own reconciled extern \"C\" block, keeping the most complete observation of each.",
     "All 41 functions, including _ZN7fBase_c21AfterCleanupResourcesEj, are production-enrolled by the complete .text range 0x02042fe4..0x020440e8 in config/arm9/delinks.txt. The retired per-function enrollment no longer describes this build.",
     "Process is a real nonvirtual fBase_c method using the configured int/bool/u32 member-function callback signature. The complete emitted object is unchanged from the prior bridge. Three guard families still declare int returns and their four raw-PMF callers remain unchanged; reconciling those interfaces is tracked by issue #3012. No original bool contract or completed caller migration is claimed.",
-    "Folded 2026-10-28: func_02042fe4..func_0204335c (0x02042fe4..0x020433b8, eleven functions) from their one-function sources under src/unnamed/arm9/0204/. They keep their linker names under C linkage; ActorDerived.cpp and d_scene.cpp call them by those names. The bodies use fBase_c's real manager.sceneNode and the existing global spellings; the local fBaseActorInfo's first word is now classInit, as include/SpawnInfo.h names it. The member-pointer triples and hook pointers stay ROM-owned and are reached by extern."
+    "Folded 2026-10-28: func_02042fe4..func_0204335c (0x02042fe4..0x020433b8, eleven functions) from their one-function sources under src/unnamed/arm9/0204/. They keep their linker names under C linkage; ActorDerived.cpp and d_scene.cpp call them by those names. The bodies use fBase_c's real manager.sceneNode and the existing global spellings; the local fBaseActorInfo's first word is now classInit, as include/SpawnInfo.h names it. The member-pointer triples and hook pointers stay ROM-owned and are reached by extern.",
+    "LOCAL WORKER NOTE: this machine builds the EU-dump control ROM ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to its strict stock control; verification.linkcheck.rom.sha256 is normalized to the fleet-canonical hash per #3691."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -405,7 +475,7 @@
     },
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-link-verified",
+      "result": "scratch-data-verified",
       "scratch": "build/tu/arm9-ActorBase/link (gitignored)",
       "phases": {
         "delink": true,
@@ -413,35 +483,110 @@
         "compile": true,
         "link": true,
         "checkModules": true,
-        "checkSymbols": false,
+        "checkSymbols": true,
         "rom": true
       },
       "tuRange": {
-        "start": "0x02043444",
-        "end": "0x02043f4c",
+        "start": "0x02042fe4",
+        "end": "0x020440e8",
         "differingBytes": 0,
         "firstDiff": null
       },
       "tuRanges": [
         {
           "section": ".text",
-          "start": "0x02043444",
-          "end": "0x02043f4c",
+          "start": "0x02042fe4",
+          "end": "0x020440e8",
           "differingBytes": 0,
           "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x020a4b48",
+          "end": "0x020a4b6c",
+          "comparison": "NOBITS -- symbol/module gates"
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 25
+          "LICENSED": 50
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
         "unlicensedSections": []
       },
       "nontextSectionOrder": {
-        "groups": [],
-        "objisolate": null,
+        "groups": [
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "desired": [
+              6,
+              5,
+              8,
+              7,
+              10,
+              9,
+              11,
+              12,
+              13
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13
+              ],
+              "desired": [
+                6,
+                5,
+                8,
+                7,
+                10,
+                9,
+                11,
+                12,
+                13
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13
+              ]
+            }
+          ],
+          "symbolIndices": 9,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -456,5 +601,6 @@
       },
       "linkerOutput": null
     }
-  }
+  },
+  "production_mode": "intact-object"
 }
