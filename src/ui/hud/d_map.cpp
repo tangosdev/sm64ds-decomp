@@ -182,9 +182,14 @@ void dMap_c::FixTHIPaintingRoomPos(Vector3 & v_)
     }
 }
 
-/* Per-sublevel touch-ups to the BG3 buffer that GetBG3CharPtr returns. Each
- * case writes rows of consecutive u16 tile numbers, and only when its
- * condition holds (cases 7 and 8 also need gCurrentStarId >= 2): a star collected, an event bit, or a bit in gSaveBlock. */
+/* Per-sublevel touch-ups to the minimap tilemaps. Each tile object is one
+ * 32x32 screen block, the blocks stacked downward from just below BG3's
+ * character base (InitResources), so a fixed patch position is a negative
+ * offset from G2S_GetBG3CharPtr -- the screen base register itself moves
+ * with the active minimap. Each case writes rows of consecutive u16 tile
+ * numbers, and only when its condition holds (cases 7 and 8 also need
+ * gCurrentStarId >= 2): a star collected, an event bit, or a bit in
+ * gSaveBlock. */
 void dMap_c::UpdateLevelSpecific()
 {
     int sublevel = gCurrentSublevel;
