@@ -477,9 +477,7 @@ void daJgm_c::UpdateWallAndWater(dBgCh_Actr &collision)
 
     dBgCh_Actr_UpdateDiscreteNoLava_veneer(&collision);
     if (collision.IsOnWall() != 0) {
-        SurfaceInfo *info =
-            (SurfaceInfo *)((char *)collision.GetWallResult() + 4);
-        info->CopyNormalTo(nrm);
+        collision.GetWallResult()->surface.CopyNormalTo(nrm);
         mTurnDir ^= 1;
     }
     pos = mPos;
