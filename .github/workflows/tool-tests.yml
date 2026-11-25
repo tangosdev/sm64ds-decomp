@@ -132,20 +132,30 @@ on:
       # it. update-chaos-data.yml rewrites db.jsonl on main, so that is a live path, not a
       # hypothetical one. A missing check reads exactly like a passing one.
       - "nearmiss/**"
+      # config/tu_manifest.d/** because the tests read it, not just the tools that do:
+      # test_reloc_audit_flags.ManifestAgreement reads every entry's verification.flags,
+      # so a manifest-only PR is exactly the one that can red this job. It happened
+      # twice behind the nightly's back -- #3199 (found by the unrelated #3222, fixed in
+      # #3223) and #5774 (arm9/func_02030aa4 missing verification.flags, fixed with this
+      # line). The nightly below is now the backstop, not the only coverage.
+      - "config/tu_manifest.d/**"
       - ".github/workflows/tool-tests.yml"
   push:
     branches: [main]
     paths:
       - "tools/**"
       - "nearmiss/**"
+      - "config/tu_manifest.d/**"
       - ".github/workflows/tool-tests.yml"
-  # Nightly, because the paths filters above see only the tests' own code, not the
-  # data they read. tools.test_reloc_audit_flags reads every promoted
+  # Nightly, because the paths filters above still do not see everything the tests
+  # read. tools.test_reloc_audit_flags reads every promoted
   # config/tu_manifest.d entry. #3199 promoted ov002/dPathLiftActor_c without its
   # verification block, and main stayed "green" because nothing under tools/ changed.
   # The red only appeared on the next unrelated tools PR (#3222, 2026-09-27), whose
-  # author had to find and fix it (#3223) before their own change could land. This
-  # run catches that shape within a day on main itself. GitHub mails a scheduled
+  # author had to find and fix it (#3223) before their own change could land. #5774
+  # then repeated the shape (arm9/func_02030aa4), which is what put
+  # config/tu_manifest.d/** into the filters above. This run remains as the backstop
+  # for whatever the filters still do not name. GitHub mails a scheduled
   # run's failure to whoever last edited this cron line.
   schedule:
     - cron: "23 7 * * *"
