@@ -1,17 +1,12 @@
 #include "CLPS.h"
-#include "private/BTA_File.h"
-#include "private/BMA_File.h"
-#include "types.h"
+#include "PathPtr.h"
 #include "StageMap.h"
+#include "private/BMA_File.h"
+#include "private/BTA_File.h"
+#include "types.h"
 
-/* Definition order is what makes the compiler's size sort match address order. */
-
-typedef struct TeleportEntry {
-    s16 x;
-    s16 y;
-    s16 z;
-    u16 param;
-} TeleportEntry;
+/* Definition order is what makes the compiler's size sort match address order.
+ */
 
 typedef struct {
     u32 tag;
@@ -20,16 +15,14 @@ typedef struct {
     struct CLPS entries[6];
     u32 tail[2];
     u32 pad[3];
-} ClpsBlock;
-typedef char ViewEntry_size[sizeof(ViewEntry) == 0xe ? 1 : -1];
-typedef char Area_size[sizeof(Area) == 0xc ? 1 : -1];
-typedef char LevelRec_size[sizeof(LevelRec) == 0x1c ? 1 : -1];
-typedef char ClpsBlock_size[sizeof(ClpsBlock) == 0x4c ? 1 : -1];
+} Clps_02112514;
 
+/* The ROM image carries a zero halfword of alignment padding after this record,
+ * so it is written as part of the object. */
 typedef struct {
     u16 minimapTile;
     u16 pad;
-} data_ov053_02112380_Layout;
+} MinimapTile;
 
 extern const u16 data_ov053_021111a0[2];
 extern const u16 data_ov053_021111a4[2];
@@ -65,7 +58,7 @@ extern const u8 data_ov053_0211194c[540];
 extern const fx32 data_ov053_02111b68[151];
 extern const fx32 data_ov053_02111dc4[181];
 extern const fx32 data_ov053_02112098[181];
-extern data_ov053_02112380_Layout data_ov053_02112380;
+extern MinimapTile data_ov053_02112380;
 extern ObjTable data_ov053_02112384;
 extern ObjSubTable data_ov053_0211238c[1];
 extern char data_ov053_02112394[8];
@@ -88,7 +81,7 @@ extern BTA_File data_ov053_021124ac;
 extern BTA_File data_ov053_021124c4;
 extern ViewEntry data_ov053_021124dc[2];
 extern LevelRec data_ov053_021124f8;
-extern ClpsBlock data_ov053_02112514;
+extern Clps_02112514 data_ov053_02112514;
 
 const fx32 data_ov053_021111d4[1] = {0x00001000};
 
@@ -102,7 +95,7 @@ const u16 data_ov053_021111b8[2] = {0x0000, 0x0000};
 
 const u16 data_ov053_021111b0[2] = {0x0000, 0x0000};
 
-data_ov053_02112380_Layout data_ov053_02112380 = {0x072d, 0x0000};
+MinimapTile data_ov053_02112380 = {0x072d, 0x0000};
 
 const fx32 data_ov053_021111c0[1] = {0x00001000};
 
@@ -417,7 +410,7 @@ const fx32 data_ov053_021113c0[17] = {
     0x00000079, 0x0000036b, 0x00000079, 0xfffffd86, 0x00000079,
 };
 
-ClpsBlock data_ov053_02112514 = {
+Clps_02112514 data_ov053_02112514 = {
     0x53504c43,
     8,
     6,

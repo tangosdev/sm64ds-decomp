@@ -3,7 +3,7 @@
     .data       start:0x02111880 end:0x02111d40 kind:data align:32
     .bss        start:0x02111d40 end:0x02111d40 kind:bss align:32
 
-src/unnamed/ov041/data_ov041.c:
+src/game/stages/d_s_map_ov041.c:
     complete
     .rodata start:0x021111a0 end:0x02111870
     .data start:0x02111880 end:0x02111d40

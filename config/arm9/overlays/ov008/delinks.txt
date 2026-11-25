@@ -2,6 +2,6 @@
     .data       start:0x021111c0 end:0x02111c20 kind:data align:32
     .bss        start:0x02111c20 end:0x02111c20 kind:bss align:32
 
-src/unnamed/ov008/data_ov008.c:
+src/game/stages/d_s_map_ov008.c:
     complete
     .data start:0x021111c0 end:0x02111c20
