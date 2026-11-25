@@ -1358,6 +1358,10 @@ src/cstd_sqrt.cpp:
     .ctor start:0x02086bb0 end:0x02086bb4
     .bss start:0x020a0edc end:0x020a0ef0
 
+src/IDENTITY_MATRIX4X3.c:
+    complete
+    .rodata start:0x02082128 end:0x02082158
+
 src/engine/link/unit0203d7b8.cpp:
     complete
     .text start:0x0203d7b8 end:0x02042804

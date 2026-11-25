@@ -21,7 +21,8 @@ OUT_DIR = REPO / "build" / "cartridge"
 # else is a little-endian word array of that C type.
 TABLES = (
     ("src/data/arm9/data_02075f14.c", (
-        ("data_02075f14", 0x02075F14, 0x02082158, "const u32"),
+        # ' APS10_1' particle archive; IDENTITY_MATRIX4X3 follows at 0x02082128.
+        ("data_02075f14", 0x02075F14, 0x02082128, "const u32"),
     )),
     ("src/data/arm9/data_0208a178.c", (
         ("data_0208a178", 0x0208A178, 0x0208C178, "u8"),
