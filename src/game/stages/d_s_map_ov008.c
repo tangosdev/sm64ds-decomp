@@ -1,16 +1,10 @@
 #include "CLPS.h"
 #include "PathPtr.h"
-#include "types.h"
 #include "StageMap.h"
+#include "types.h"
 
-/* Definition order is what makes the compiler's size sort match address order. */
-
-typedef struct TeleportEntry {
-    s16 x;
-    s16 y;
-    s16 z;
-    u16 param;
-} TeleportEntry;
+/* Definition order is what makes the compiler's size sort match address order.
+ */
 
 typedef struct {
     u32 tag;
@@ -18,41 +12,41 @@ typedef struct {
     u16 count;
     struct CLPS entries[21];
     u32 tail[4];
-} ClpsBlock;
-typedef char ViewEntry_size[sizeof(ViewEntry) == 0xe ? 1 : -1];
-typedef char Area_size[sizeof(Area) == 0xc ? 1 : -1];
-typedef char LevelRec_size[sizeof(LevelRec) == 0x1c ? 1 : -1];
-typedef char ExitEntry_size[sizeof(ExitEntry) == 0xe ? 1 : -1];
-typedef char ClpsBlock_size[sizeof(ClpsBlock) == 0xc0 ? 1 : -1];
+} Clps_02111508;
 
+/* The ROM image carries zero halfword padding after these records out to the
+ * next object's alignment, and the end of .data is zero-filled to the section's
+ * 32-byte boundary. Those bytes belong to the record's own extent as far as the
+ * image is concerned, so the trailing padding is written as part of the object.
+ */
 typedef struct {
     u16 minimapTile;
     u16 pad;
-} data_ov008_021111c0_Layout;
+} MinimapTile;
 typedef struct {
     ViewEntry entries[1];
     u16 pad;
-} data_ov008_021111ec_Layout;
+} ViewEntries1;
 typedef struct {
     struct PathDef entries[3];
     u16 pad;
-} data_ov008_021111fc_Layout;
+} PathDefs3;
 typedef struct {
     SimpleEntry entries[107];
     u32 tail[4];
-} data_ov008_021118b8_Layout;
+} SimpleEntries107;
 
-extern data_ov008_021111c0_Layout data_ov008_021111c0;
+extern MinimapTile data_ov008_021111c0;
 extern u32 data_ov008_021111c4;
 extern SimpleEntry data_ov008_021111c8[1];
 extern ObjTable data_ov008_021111d0;
 extern ObjTable data_ov008_021111d8;
 extern Area data_ov008_021111e0;
-extern data_ov008_021111ec_Layout data_ov008_021111ec;
-extern data_ov008_021111fc_Layout data_ov008_021111fc;
+extern ViewEntries1 data_ov008_021111ec;
+extern PathDefs3 data_ov008_021111fc;
 extern LevelRec data_ov008_02111210;
-extern TeleportEntry data_ov008_0211122c[4];
-extern TeleportEntry data_ov008_0211124c[4];
+extern TeleportSourceEntry data_ov008_0211122c[4];
+extern TeleportDest data_ov008_0211124c[4];
 extern SimpleEntry data_ov008_0211126c[4];
 extern SimpleEntry data_ov008_0211128c[4];
 extern PathNode data_ov008_021112ac[6];
@@ -65,11 +59,11 @@ extern StandardEntry data_ov008_021113c0[4];
 extern StandardEntry data_ov008_02111400[5];
 extern ObjSubTable data_ov008_02111450[11];
 extern SimpleEntry data_ov008_021114a8[12];
-extern ClpsBlock data_ov008_02111508;
+extern Clps_02111508 data_ov008_02111508;
 extern StandardEntry data_ov008_021115c8[47];
-extern data_ov008_021118b8_Layout data_ov008_021118b8;
+extern SimpleEntries107 data_ov008_021118b8;
 
-data_ov008_021111c0_Layout data_ov008_021111c0 = {0x07d6, 0x0000};
+MinimapTile data_ov008_021111c0 = {0x07d6, 0x0000};
 
 u32 data_ov008_021111c4 = 0x00000004;
 
@@ -83,14 +77,14 @@ ObjTable data_ov008_021111d0 = {0x0008, {0x00, 0x00}, &data_ov008_02111380[0]};
 
 Area data_ov008_021111e0 = {&data_ov008_021111d8, 0, 0x00, {0x00, 0x40, 0x1f}};
 
-data_ov008_021111ec_Layout data_ov008_021111ec = {
+ViewEntries1 data_ov008_021111ec = {
     {
         {0x02, 0xff, 0x073a, 0x0258, 0x173e, {0x00, 0x00}, (s16)0x871d, 0x0000},
     },
     0x0000,
 };
 
-data_ov008_021111fc_Layout data_ov008_021111fc = {
+PathDefs3 data_ov008_021111fc = {
     {
         {0x0000, 0x02, 0xff, 0xff, 0x7f},
         {0x0002, 0x02, 0xff, 0xff, 0x7f},
@@ -125,14 +119,14 @@ SimpleEntry data_ov008_0211128c[4] = {
     {0xe225, 0x0802, 0x0000, 0x044c},
 };
 
-TeleportEntry data_ov008_0211124c[4] = {
+TeleportDest data_ov008_0211124c[4] = {
     {0x1a5e, 0x0000, 0x1a5e, 0x0000},
     {(s16)0xe5a2, 0x0000, (s16)0xe5a2, 0x0000},
     {(s16)0xe5a2, 0x0000, 0x1a5e, 0x0000},
     {0x1a5e, 0x0000, (s16)0xe5a2, 0x0000},
 };
 
-TeleportEntry data_ov008_0211122c[4] = {
+TeleportSourceEntry data_ov008_0211122c[4] = {
     {(s16)0xe5a2, 0x0000, (s16)0xe5a2, 0x0000},
     {0x1a5e, 0x0000, 0x1a5e, 0x1000},
     {0x1a5e, 0x0000, (s16)0xe5a2, 0x2000},
@@ -218,7 +212,7 @@ SimpleEntry data_ov008_021114a8[12] = {
     {0xe225, 0x08ca, 0x0000, 0x0578},      {0xe225, 0x08ca, 0x0000, 0x0514},
 };
 
-ClpsBlock data_ov008_02111508 = {
+Clps_02111508 data_ov008_02111508 = {
     0x53504c43,
     8,
     21,
@@ -284,7 +278,7 @@ StandardEntry data_ov008_021115c8[47] = {
     {0x0017, 0x0dac, 0x0000, 0x0fa0, 0x0000, 0x0000, 0x0000, 0xffff},
 };
 
-data_ov008_021118b8_Layout data_ov008_021118b8 = {
+SimpleEntries107 data_ov008_021118b8 = {
     {
         {0xe225, 0x0d48, 0x0000, 0x136a}, {0xe225, 0x0d48, 0x0000, 0x1306},
         {0xe225, 0x0d48, 0x0000, 0x12a2}, {0xe225, 0x0d48, 0x0000, 0x123e},

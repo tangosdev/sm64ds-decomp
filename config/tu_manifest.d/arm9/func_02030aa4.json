@@ -1,0 +1,210 @@
+{
+  "id": "arm9/func_02030aa4",
+  "source": "src/unnamed/arm9/0203/func_02030aa4.c",
+  "status": "promoted",
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02030aa4",
+      "end": "0x02030b58"
+    },
+    {
+      "name": ".bss",
+      "start": "0x0209fc50",
+      "end": "0x0209fc6c"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "data_0209fc50",
+      "address": "0x0209fc50",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "link session player count; func_02030aa4 clears it at session start, func_020308d0 sets it from SetNumPlayers"
+    },
+    {
+      "symbol": "data_0209fc54",
+      "address": "0x0209fc54",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "link session state byte; cleared by func_02030aa4, read by func_02030e4c"
+    },
+    {
+      "symbol": "data_0209fc58",
+      "address": "0x0209fc58",
+      "size": "0x1",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-slot disconnect bits; cleared by func_02030aa4, set/cleared by the func_0203* session functions"
+    },
+    {
+      "symbol": "data_0209fc5c",
+      "address": "0x0209fc5c",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-slot present flags (u8[4]); func_02030aa4 zero-fills it, func_02030994 re-ranks against it; data_0209fc5d is an interior label"
+    },
+    {
+      "symbol": "data_0209fc60",
+      "address": "0x0209fc60",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "link session second state word (int); cleared by func_02030aa4"
+    },
+    {
+      "symbol": "data_0209fc64",
+      "address": "0x0209fc64",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "per-slot ranks (s8[4]); func_02030aa4 fills it with -1, func_02030994 re-ranks"
+    },
+    {
+      "symbol": "data_0209fc68",
+      "address": "0x0209fc68",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "the session state machine state (int); func_02030aa4 seeds it 1 or 3 by link mode, func_02030e4c dispatches on it"
+    }
+  ],
+  "production_mode": "intact-object",
+  "verification": {
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/arm9-func_02030aa4/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02030aa4",
+        "end": "0x02030b58",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02030aa4",
+          "end": "0x02030b58",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x0209fc50",
+          "end": "0x0209fc6c",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 8
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11
+            ],
+            "desired": [
+              6,
+              7,
+              5,
+              11,
+              9,
+              8,
+              10
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+              ],
+              "desired": [
+                6,
+                7,
+                5,
+                11,
+                9,
+                8,
+                10
+              ],
+              "slots": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+              ]
+            }
+          ],
+          "symbolIndices": 7,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "module": "arm9",
+  "promoted_source": "src/unnamed/arm9/0203/func_02030aa4.c",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "the link session's state block at 0x0209fc50: present slots, re-ranks, counts, disconnect bits, and the session state machine data_0209fc68"
+  ],
+  "functions": [
+    {
+      "symbol": "func_02030aa4",
+      "address": "0x02030aa4",
+      "size": "0xb4",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030aa4.c",
+      "ordinal": 0
+    }
+  ],
+  "compiler_only_output": [],
+  "data": [],
+  "notes": [
+    "The TU is the owner of the wireless-session state block because func_02030aa4 clears the slot and state words consumed by the neighboring entry/link TUs.",
+    "LOCAL WORKER NOTE: this machine builds the EU-dump control ROM ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to its strict stock control; verification.linkcheck.rom.sha256 is normalized to the fleet-canonical hash per #3691."
+  ]
+}

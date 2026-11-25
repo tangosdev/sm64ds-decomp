@@ -36,36 +36,6 @@
       "name": ".bss",
       "start": "0x02112658",
       "end": "0x02112720"
-    },
-    {
-      "name": ".data.clps0",
-      "input_section": ".data",
-      "start": "0x2111b60",
-      "end": "0x2111b78"
-    },
-    {
-      "name": ".data.clps1",
-      "input_section": ".data",
-      "start": "0x2111ba0",
-      "end": "0x2111bb8"
-    },
-    {
-      "name": ".data.clps2",
-      "input_section": ".data",
-      "start": "0x2111c40",
-      "end": "0x2111c58"
-    },
-    {
-      "name": ".data.clps3",
-      "input_section": ".data",
-      "start": "0x2111c60",
-      "end": "0x2111c78"
-    },
-    {
-      "name": ".data.clps4",
-      "input_section": ".data",
-      "start": "0x2111c80",
-      "end": "0x2111c98"
     }
   ],
   "functions": [
@@ -137,36 +107,6 @@
       "address_point_bias": "0x8",
       "size": "0x88",
       "evidence": "compiler storage includes the two-word ABI preamble at 0x02112554; the configured public address point is eight bytes later and all 32 slot relocations match without split aliases"
-    },
-    {
-      "symbol": "sKm1Dorifu1Clps",
-      "address": "0x2111b60",
-      "size": "0x18",
-      "evidence": "Native mutable CLPS block: signature/stride/count header and two entries; both indices occur in its stock-ROM-bound km1_dorifu KCL. Complete 24-byte slice excludes the following 8-byte FF tail; original name and constness are not recovered."
-    },
-    {
-      "symbol": "sKm1Dorifu2Clps",
-      "address": "0x2111ba0",
-      "size": "0x18",
-      "evidence": "Native mutable CLPS block: signature/stride/count header and two entries; both indices occur in its stock-ROM-bound km1_dorifu KCL. Complete 24-byte slice excludes the following 8-byte FF tail; original name and constness are not recovered."
-    },
-    {
-      "symbol": "sKm1Dorifu0Clps",
-      "address": "0x2111c40",
-      "size": "0x18",
-      "evidence": "Native mutable CLPS block: signature/stride/count header and two entries; both indices occur in its stock-ROM-bound km1_dorifu KCL. Complete 24-byte slice excludes the following 8-byte FF tail; original name and constness are not recovered."
-    },
-    {
-      "symbol": "sKm1Dorifu4Clps",
-      "address": "0x2111c60",
-      "size": "0x18",
-      "evidence": "Native mutable CLPS block: signature/stride/count header and two entries; both indices occur in its stock-ROM-bound km1_dorifu KCL. Complete 24-byte slice excludes the following 8-byte FF tail; original name and constness are not recovered."
-    },
-    {
-      "symbol": "sKm1Dorifu3Clps",
-      "address": "0x2111c80",
-      "size": "0x18",
-      "evidence": "Native mutable CLPS block: signature/stride/count header and two entries; both indices occur in its stock-ROM-bound km1_dorifu KCL. Complete 24-byte slice excludes the following 8-byte FF tail; original name and constness are not recovered."
     }
   ],
   "bss": [
@@ -1613,41 +1553,6 @@
           "start": "0x02112658",
           "end": "0x02112720",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".data.clps0",
-          "start": "0x02111b60",
-          "end": "0x02111b78",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.clps1",
-          "start": "0x02111ba0",
-          "end": "0x02111bb8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.clps2",
-          "start": "0x02111c40",
-          "end": "0x02111c58",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.clps3",
-          "start": "0x02111c60",
-          "end": "0x02111c78",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.clps4",
-          "start": "0x02111c80",
-          "end": "0x02111c98",
-          "differingBytes": 0,
-          "firstDiff": null
         }
       ],
       "objectAudit": {
