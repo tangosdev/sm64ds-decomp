@@ -55,13 +55,6 @@ struct CLPS_Block;
 extern Km1UkishimaClsnFilePtr data_ov043_021125e0;  /* the KCL  */
 extern Km1UkishimaModelFilePtr data_ov043_021125e8; /* the BMD  */
 
-/* 'CLPS' collision-property block: tag, count/stride header, entries. */
-struct CLPS_Block {
-    u32 tag;
-    u32 header;
-    u32 entries[6];
-};
-
 /* The island's floor and wall pair. */
 extern CLPS_Block data_ov043_02111c00;
 

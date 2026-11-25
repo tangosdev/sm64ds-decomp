@@ -151,20 +151,13 @@ struct RcGuruguruCollisionFilePtr : SharedFilePtr {
 RcGuruguruModelFilePtr gRcGuruguruModelFile(ASSET_RC_GURUGURU_BMD);         /* model */
 RcGuruguruCollisionFilePtr gRcGuruguruCollisionFile(ASSET_RC_GURUGURU_KCL); /* collision */
 
-/* The guruguru's CLPS blocks live in the stage-map TU; SetFile receives
-   the two-entry block at 0x02112ac8. */
-extern struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} data_ov036_02112ac8;
+/* The guruguru's CLPS block lives in the stage-map TU. */
+extern CLPS_Block data_ov036_02112ac8;
 
 RcGuruguruAssets data_ov036_02113d78 = {
     &gRcGuruguruModelFile,
     &gRcGuruguruCollisionFile,
-    reinterpret_cast<CLPS_Block *>(&data_ov036_02112ac8),
+    &data_ov036_02112ac8,
 };
 
 extern "C" SpawnInfo<daObjRc_Guruguru_c> g_profile_RC_GURUGURU = {daObjRc_Guruguru_c_classInit,

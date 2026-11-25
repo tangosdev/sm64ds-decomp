@@ -54,13 +54,6 @@ typedef char TikuwaCollisionFilePtr_size_must_be_8[sizeof(TikuwaCollisionFilePtr
 extern TikuwaModelFilePtr gRcTikuwaModelFile;
 extern TikuwaCollisionFilePtr gRcTikuwaCollisionFile;
 
-/* 'CLPS' collision-property block: tag, count/stride header, entries. */
-struct CLPS_Block {
-    u32 tag;
-    u32 header;
-    u32 entries[6];
-};
-
 /* The donut's floor and wall pair. */
 extern CLPS_Block data_ov036_02112b48;
 

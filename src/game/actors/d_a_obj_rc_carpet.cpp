@@ -62,13 +62,6 @@ extern CarpetModelFilePtr gRcCarpetModelFile;
 extern CarpetAnimationFilePtr gRcCarpetWaitAnimationFile;
 extern CarpetCollisionFilePtr gRcCarpetCollisionFile;
 
-/* 'CLPS' collision-property block: tag, count/stride header, entries. */
-struct CLPS_Block {
-    u32 tag;
-    u32 header;
-    u32 entries[6];
-};
-
 /* The flying carpet's floor entry. */
 extern CLPS_Block data_ov036_02112b28;
 

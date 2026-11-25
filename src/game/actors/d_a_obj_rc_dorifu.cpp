@@ -39,13 +39,6 @@ enum d_a_obj_rc_dorifu_AssetId {
 #include "daObjRc_Dorifu_c.h"
 #include "SpawnInfo.h"
 
-/* 'CLPS' collision-property block: tag, count/stride header, entries. */
-struct CLPS_Block {
-    u32 tag;
-    u32 header;
-    u32 entries[6];
-};
-
 /* The five drifting-stair collision blocks; each pairs a floor entry with a
    wall entry under it. */
 extern CLPS_Block data_ov036_02112a88;

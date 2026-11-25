@@ -44,13 +44,6 @@ struct Km1KurumajikuCollisionFilePtr : SharedFilePtr {
 
 extern daObjKurumajiku_c::Resources data_ov043_02112344;
 
-/* 'CLPS' collision-property block: tag, count/stride header, entries. */
-struct CLPS_Block {
-    u32 tag;
-    u32 header;
-    u32 entries[3];
-};
-
 /* The axle's floor entry; retail's slot is 0x14 bytes. */
 extern CLPS_Block data_ov043_02111bc0;
 
