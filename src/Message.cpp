@@ -323,10 +323,7 @@ void LoadControllerModeText(int param0) {
 
     n = data_0209d6b0;
     m = (n + 7) / 8;
-    {
-        int base = (int)G2_GetBG2ScrPtr();
-        scr = (short*)(base + 0x40 + (16 - m / 2) * 2);
-    }
+    scr = (short *)G2_GetBG2ScrPtr() + 0x20 + (16 - m / 2);
     i = 0;
     if (m > 0) {
         int v2 = m + 0x280;
@@ -342,10 +339,7 @@ void LoadControllerModeText(int param0) {
     Message_DrawLineBG2();
     n = data_0209d6b0;
     m = (n + 7) / 8;
-    {
-        int base = (int)G2_GetBG2ScrPtr();
-        scr = (short*)(base + 0x840 + (16 - m / 2) * 2);
-    }
+    scr = (short *)G2_GetBG2ScrPtr() + 0x420 + (16 - m / 2);
     i = 0;
     if (m > 0) {
         int mm = (n + 7) / 8;
@@ -365,10 +359,7 @@ void LoadControllerModeText(int param0) {
     Message_DrawLineBG2();
     n = data_0209d6b0;
     m = (n + 7) / 8;
-    {
-        int base = (int)G2_GetBG2ScrPtr();
-        scr = (short*)(base + 0x1040 + (16 - m / 2) * 2);
-    }
+    scr = (short *)G2_GetBG2ScrPtr() + 0x820 + (16 - m / 2);
     i = 0;
     if (m > 0) {
         int mm = (n + 7) / 8;
@@ -858,7 +849,7 @@ void Message::DisplayText(int t) {
         mapPos = 0x105;
     }
 
-    map = (u16 *)((char *)G2_GetBG3ScrPtr() + mapPos * 2);
+    map = (u16 *)G2_GetBG3ScrPtr() + mapPos;
     cnt = data_0209d6a8;
     for (i = 0; i < cnt; i++) {
         u16 *lower = map + 0x20;
@@ -932,7 +923,7 @@ void Message::DisplayStarNameForStarSelect(unsigned int msg)
     li = 0;
     MI_CpuFill32((void *)p, li, 0x800);
 
-    q = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x180);
+    q = (u16 *)G2_GetBG3ScrPtr() + 0xc0;
     for (i = 0; i < 64; i++) {
         q[i] = (i + 0x280);
     }
@@ -984,10 +975,10 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
 
     if (gCurrentMsgId >= 0x1a5) {
         gMsgBoxStyle = 0;
-        map = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x400);
+        map = (u16 *)G2_GetBG3ScrPtr() + 0x200;
     } else {
         gMsgBoxStyle = 1;
-        map = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x4c0);
+        map = (u16 *)G2_GetBG3ScrPtr() + 0x260;
     }
     for (i = 0; i < 64; i++)
         map[i] = i + 0x200;
@@ -1019,7 +1010,7 @@ void Message::DisplayCourseNameForStarSelect(u32 base)
         MI_CpuFill32(chars, zero2, 0x800);
     }
 
-    map = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x240);
+    map = (u16 *)G2_GetBG3ScrPtr() + 0x120;
     for (j = 0; j < 64; j++)
         map[j] = j + 0x240;
 
@@ -1100,7 +1091,7 @@ void Message::DisplaySaving(unsigned short n)
         MI_CpuFill16(scr, blank, 0x800);
     }
 
-    map = (u16 *)((u8 *)G2_GetBG3ScrPtr() + 0x42);
+    map = (u16 *)G2_GetBG3ScrPtr() + 0x21;
     SetBg3Offset(-gMsgBoxLeft, 4 - gMsgBoxTop);
 
     cols = data_0209d6a8;
@@ -1229,7 +1220,7 @@ void Message::func_0201f138(void) {
     ls = 0x2ff;
     MI_CpuFill16((void *)s, ls, 0x800);
 
-    q = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x42);
+    q = (u16 *)G2_GetBG3ScrPtr() + 0x21;
     div = data_0209d6a8;
     cnt = div * ((MessageEntry *)gCurrentMsgEntry)->lineCount * 2;
     for (i = 0; i < cnt; i++) {
@@ -1341,11 +1332,11 @@ void Message::func_0201f32c(int msgID) {
             MI_CpuFill32(pa, mainZero, 0x4000);
         }
         {
-            void *pb = (char *)G2_GetBG1ScrPtr() + 0x200;
+            void *pb = (u16 *)G2_GetBG1ScrPtr() + 0x100;
             mainBlank = 0x3ff;
             MI_CpuFill16(pb, mainBlank, 0x400);
         }
-        map = (u16 *)((char *)G2_GetBG1ScrPtr() + 0x24e);
+        map = (u16 *)G2_GetBG1ScrPtr() + 0x127;
         SetBg1Offset(0, 0);
         tile = 0x200;
         data_0209d660 = 0;
@@ -1360,7 +1351,7 @@ void Message::func_0201f32c(int msgID) {
             subBlank = 0x22ff;
             MI_CpuFill16(pb, subBlank, 0x800);
         }
-        map = (u16 *)((char *)G2S_GetBG1ScrPtr() + 0x42);
+        map = (u16 *)G2S_GetBG1ScrPtr() + 0x21;
         SetSubBg1Offset(4 - gMsgBoxLeft, 4 - gMsgBoxTop);
         tile = 0x2200;
     } else {
@@ -1374,7 +1365,7 @@ void Message::func_0201f32c(int msgID) {
             bg3Blank = 0x37f;
             MI_CpuFill16(pb, bg3Blank, 0x800);
         }
-        map = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x42);
+        map = (u16 *)G2_GetBG3ScrPtr() + 0x21;
         if (IsGameMode(2))
             SetBg3Offset(-gMsgBoxLeft, 8 - gMsgBoxTop);
         else

@@ -13,7 +13,7 @@ extern "C" int Mg_GetWorkBuffer(void);
 extern "C" int LoadFileAt(int handle, int dest);
 extern "C" void Deallocate(void *ptr);
 
-extern "C" void DecompressLZ16(void *dst, void *src);
+extern "C" void DecompressLZ16(void *src, void *dst);
 
 extern unsigned char data_0209d698;
 extern int data_0209d6f8;
