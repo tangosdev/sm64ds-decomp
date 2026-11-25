@@ -496,13 +496,20 @@ CLPS_BlockRef &CLPS_BlockRef::operator=(CLPS_Block &block)
    the block is missing or its entries are not 8 bytes. Written first to
    land last in the ROM (reverse emission). */
 void func_020381cc(void *block, int idx, void **out) {
-    unsigned char *table = *(unsigned char **)block;
-    if (table == 0 || *(unsigned short *)(table + 4) != 8) {
+    struct CLPSBlockView {
+        char signature[4];
+        u16 entrySize;
+        u16 entryCount;
+        CLPS entries[1];
+    };
+
+    CLPSBlockView *table = *(CLPSBlockView **)block;
+    if (table == 0 || table->entrySize != sizeof(CLPS)) {
         data_020a0c78.SetDefault();
         *out = &data_020a0c78;
         return;
     }
-    *out = table + 8 + (idx << 3);
+    *out = table->entries + idx;
 }
 
 dBgPi::dBgPi()
