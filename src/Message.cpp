@@ -849,7 +849,7 @@ void Message::DisplayText(int t) {
         mapPos = 0x105;
     }
 
-    map = (u16 *)((char *)G2_GetBG3ScrPtr() + mapPos * 2);
+    map = (u16 *)G2_GetBG3ScrPtr() + mapPos;
     cnt = data_0209d6a8;
     for (i = 0; i < cnt; i++) {
         u16 *lower = map + 0x20;
