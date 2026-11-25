@@ -57,6 +57,7 @@
 #include "ParticleIds.h"
 #include "common.h"
 #include "daPly_c.h"
+#include "daBtn_c.h"
 #include "EndingFlyPoint.h"
 #include "SpawnInfo.h"
 #include "dExtAnm2Model_c.h"
@@ -5849,9 +5850,7 @@ int daPly_c::St_Squish_Main() {
                     dActor_c *a = mAttachedActor;
                     if (a != 0) {
                         if (IsActorID(a, 0xa4) || IsActorID(a, 0xa5))
-                            /* daBtn_c::unk_407: daBtn_c.h is not included here (it would
-                               renumber this file's compiler-generated names). */
-                            *((u8 *)a + 0x407) = 1;
+                            ((daBtn_c *)a)->unk_407 = 1;
                     }
                 }
             } else {
