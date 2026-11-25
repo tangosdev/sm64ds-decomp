@@ -45,7 +45,9 @@ struct dMgMemoryPlayer_c {
     s32 y;     /* 0x04 */
     s32 speed; /* 0x08 */
     s16 angle; /* 0x0c */
-    s16 delay; /* 0x0e */
+    /* Unsigned: PlayerDrop's test loads it with ldrh. The clamp after the
+     * decrement reads it as signed, `(s16)delay < 0`. */
+    u16 delay; /* 0x0e */
     u8 active; /* 0x10 */
     u8 unk_11; /* 0x11, write-only: PlayerDrop sets 1, ResetGame zeroes it */
     u8 state;  /* 0x12 */

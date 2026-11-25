@@ -183,11 +183,10 @@ void dScMgMemory_c::PlayerMove(int player) {
 }
 
 void dScMgMemory_c::PlayerDrop(int player) {
-    short *delay = &mPlayers[player].delay;
-    if (*(unsigned short *)delay != 0) {
-        *delay = *(unsigned short *)delay - 1;
-        if (*delay < 0)
-            *delay = 0;
+    if (mPlayers[player].delay != 0) {
+        mPlayers[player].delay--;
+        if ((s16)mPlayers[player].delay < 0)
+            mPlayers[player].delay = 0;
         return;
     }
     mPlayers[player].x = 0xc000;
