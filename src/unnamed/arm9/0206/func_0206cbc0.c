@@ -16,9 +16,16 @@ void func_0206ce90(u32 flags);
 void func_0206cb0c(void *c, int b);
 void func_0206ca7c(void *c, int b);
 
-/* optimize_for_size is this library's own build setting, not a matching lever:
-   the ISD debug console and its soft-float helpers were shipped size-optimized. */
+/* The ISD debug console library was size-optimized. */
 #pragma optimize_for_size on
+
+/* One byte through the aligned u16 accesses this debug-output library uses. */
+static inline int ReadByte(const void *a) {
+    int p = (int)a;
+    if (p & 1)
+        return (*(u16 *)(p - 1) & 0xff00) >> 8;
+    return *(u16 *)p & 0xff;
+}
 
 /* The output callback func_0206ccd8 gives func_0206a928: send count bytes
    to the debug console. It does nothing unless the debugger flags
@@ -58,12 +65,7 @@ void func_0206cbc0(struct Csl *sl, u8 *sb, int count)
     if (sl != 0) {
         while (count-- != 0) {
             if ((u32)sl->fc < (u32)(sl->f4 - 1)) {
-                if ((int)sb & 1)
-                    v = (*(u16 *)(sb - 1) & 0xff00) >> 8;
-                else
-                    v = *(u16 *)sb & 0xff;
-                /* Kept (#821 r82): dropping this no-op narrowing is 0x110
-                   of 0x118; v retyped u16 is 0x11c. */
+                v = ReadByte(sb);
                 v = (u16)v;
                 fn(base, v & 0xff);
                 sl->fc += 1;

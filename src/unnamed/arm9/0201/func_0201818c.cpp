@@ -15,6 +15,13 @@ extern void func_02018770(void);
 extern unsigned int func_02018a24(unsigned int i);
 extern void *func_0201834c(FSFile *file, int flush);
 
+/* An archived compressed file: the "LZ77" tag, then the LZ header and stream
+   DecompressLZ16 consumes. */
+struct LZ77File {
+    char tag[4];
+    unsigned int header;
+};
+
 /* Load file id (an asset handle, or an archived file id) into a new heap
    block, as SharedFilePtr::Load does: a file resident in a mounted archive
    is decompressed or copied out of it, anything else read through
@@ -27,10 +34,11 @@ void *func_0201818c(unsigned int id, int flush) {
         unsigned int size;
         void *mem;
         if (func_02018568(p)) {
-            unsigned int *q = (unsigned int *)(p + 4);
-            size = func_02018ac4(q);
+            struct LZ77File *lz = (struct LZ77File *)p;
+            unsigned int *header = &lz->header;
+            size = func_02018ac4(header);
             mem = Memory::Allocate(size);
-            DecompressLZ16(q, mem);
+            DecompressLZ16(header, mem);
         } else {
             func_020185c0(&obj, id);
             size = FS_GetLength(&obj);

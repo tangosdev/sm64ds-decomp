@@ -18,27 +18,21 @@
  * The second pass walks list B, the cell animations. Each 0xc-byte header
  * gives a frame count at +8; func_ov007_020c13a4 sizes the animation, then
  * every 0x18-byte frame contributes a cell (index at +0) and a duration
- * (+2).
- *
- * ONE SPELLING IS LOAD BEARING, measured against the ROM on 2004/b56:
- * THE SECOND PASS WALKS WITH `p`, THE SAME CURSOR THE FIRST PASS USED.
- * Given its own local pointer the second pass is byte-identical except for a
- * three-way rotation of the callee-saved registers -- the cursor colours to
- * r7 and the two hoisted zeroes to sb and r8, where the ROM has the cursor in
- * sb and the zeroes in r8 and r7. Ten instructions, no other difference.
- * Reusing `p` puts all three where the ROM has them. That rotation survived
- * every declaration order of the block (all 120), the function-top ordering
- * climb in the near-miss note, both loop forms, the named-zero and
- * named-init spellings, and every integer width for the counters; only the
- * shared cursor moves it. */
+ * (+2). */
 #include "Ov007SpriteBank.h"
 #include "Ov007BinFile.h"
 #include "Ov007MenuMem.h"
 #include "nitro/gx/gxcommon.h"
 
-/* List A: a cell's 4-byte header (its record count), then one 0x14-byte
- * record per OAM entry. The names are the OAM attribute fields each byte
- * lands in. */
+/* A count word followed by byte-oriented entries; each list chooses the
+ * entry format. */
+typedef struct Ov007CountedList {
+    u32 count;
+    u8 firstEntry;
+} Ov007CountedList;
+
+/* List A: a cell's 4-byte header, then one 0x14-byte record per OAM entry.
+ * The record names are the OAM attribute fields each byte lands in. */
 typedef struct Ov007OamRecord {
     s16 x;          /* 0x00: attr1 bits 0-8 */
     s16 y;          /* 0x02: attr0 bits 0-7 */
@@ -85,9 +79,6 @@ Ov007SpriteBank *func_ov007_020c9688(int arg) {
     u32 nA;
     u32 nB;
     u32 cnt;
-    // The other callers of func_ov007_020c3df4 pass a literal 0 or a name
-    // string; this named local is deliberate (one of the near-miss row's
-    // nine zero-plumbing shapes).
     const char *name = 0;
     GXOamAttr attrs;
     Ov007BinFile file;
@@ -95,11 +86,11 @@ Ov007SpriteBank *func_ov007_020c9688(int arg) {
     u8 *p;
 
     func_ov007_020c9a2c(&file, arg);
-    nA = *(u32 *)file.blockData[0];
-    nB = *(u32 *)file.blockData[3];
+    nA = ((Ov007CountedList *)file.blockData[0])->count;
+    nB = ((Ov007CountedList *)file.blockData[3])->count;
     s = func_ov007_020c12ac(nA, nB);
 
-    p = (u8 *)file.blockData[0] + 4;
+    p = &((Ov007CountedList *)file.blockData[0])->firstEntry;
     for (i = 0; i < nA; i++) {
         Ov007Cell *cell;
         cnt = *p;
@@ -168,7 +159,7 @@ Ov007SpriteBank *func_ov007_020c9688(int arg) {
         Ov007CellAnim *anim;
         u32 f;
         u32 frameCount;
-        p = (u8 *)file.blockData[3] + 4;
+        p = &((Ov007CountedList *)file.blockData[3])->firstEntry;
         for (k = 0; k < nB; k++) {
             frameCount = ((Ov007CellAnimHeader *)p)->frameCount;
             anim = &s->anims[k];

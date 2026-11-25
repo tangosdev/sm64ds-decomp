@@ -1,10 +1,14 @@
 #include "types.h"
 
-/* One byte through an aligned u16 load: the cluster's READ8, as an inline
-   function. Each inlined copy computes its own address from its argument,
-   and the cartridge recomputes the double's address for each of the two
-   reads; the READ8 macro or a shared local lets CSE share it (0x54 against
-   0x58). */
+/* IEEE-754 double bits in little-endian byte order. The high nibble of
+   exponentLowAndFractionHigh is the exponent's low four bits. */
+struct Ieee754DoubleBytes {
+    u8 fractionLow[6];
+    u8 exponentLowAndFractionHigh;
+    u8 signAndExponent;
+};
+
+/* One byte through the aligned u16 accesses this debug-output library uses. */
 static inline int ReadByte(const void *a) {
     int p = (int)a;
     if (p & 1)
@@ -18,8 +22,8 @@ static inline int ReadByte(const void *a) {
 int func_0206c8b4(u64 x) {
     int hi, lo;
 
-    hi = ReadByte((u8 *)&x + 7);
-    lo = ReadByte((u8 *)&x + 6);
+    hi = ReadByte(&((struct Ieee754DoubleBytes *)&x)->signAndExponent);
+    lo = ReadByte(&((struct Ieee754DoubleBytes *)&x)->exponentLowAndFractionHigh);
 
     return ((hi & 0x7f) << 4) + (lo >> 4);
 }
