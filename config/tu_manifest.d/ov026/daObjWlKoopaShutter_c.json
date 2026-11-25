@@ -1,1145 +1,1007 @@
 {
-  "id": "ov026/daObjWlKoopaShutter_c",
-  "module": "ov026",
-  "source": "src/game/actors/d_a_obj_wl_koopa_shutter.cpp",
-  "promoted_source": "src/game/actors/d_a_obj_wl_koopa_shutter.cpp",
-  "production_mode": "intact-object",
-  "status": "promoted",
-  "boundary_confidence": "medium",
-  "boundary_evidence": [
-    "contiguous linker run: 0x21116c8..0x2111888, 6 function(s), from build/tu_map.json (tools/tu_map.py)",
-    "class label(s): daObjWlKoopaShutter_c",
-    "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "classInit fold: the daObjWlKoopaShutter_c_classInit registry factory (profile WL_KOOPA_SHUTTER, historical alias BowserShutter_Spawn), 0x02111888..0x021118b8, abuts this TU's InitResources with no gap; tu_map leaves it unlabelled because it cuts on symbol name. Folded as `return new daObjWlKoopaShutter_c();` at the end of the file (defer_codegen off, source order). The unit is now 0x021116c8..0x021118b8, 7 functions, bounded above by daObjWlSubmarine_c's D1 at 0x021118b8 (src/game/actors/d_a_obj_wl_submarine.cpp)."
-  ],
-  "sections": [
-    {
-      "name": ".text",
-      "start": "0x021116c8",
-      "end": "0x021118b8"
-    },
-    {
-      "name": ".init",
-      "start": "0x02112bbc",
-      "end": "0x02112c28"
-    },
-    {
-      "name": ".ctor",
-      "start": "0x02112da8",
-      "end": "0x02112dac"
-    },
-    {
-      "name": ".bss",
-      "start": "0x02113eb4",
-      "end": "0x02113edc"
-    },
-    {
-      "name": ".data",
-      "start": "0x02112f74",
-      "end": "0x02112fd4"
-    },
-    {
-      "name": ".data.data_ov026_021132b0",
-      "input_section": ".data",
-      "start": "0x021132b0",
-      "end": "0x02113450"
-    },
-    {
-      "name": ".data.data_ov026_02113600",
-      "input_section": ".data",
-      "start": "0x02113600",
-      "end": "0x021137c0"
-    },
-    {
-      "name": ".data.wlLate",
-      "input_section": ".data",
-      "start": "0x02113b5c",
-      "end": "0x02113c24"
-    }
-  ],
-  "functions": [
-    {
-      "symbol": "_ZN21daObjWlKoopaShutter_cD1Ev",
-      "address": "0x021116c8",
-      "size": "0x00000044",
-      "legacy_source": "src/_ZN21daObjWlKoopaShutter_cD1Ev.cpp",
-      "ordinal": 0
-    },
-    {
-      "symbol": "_ZN21daObjWlKoopaShutter_cD0Ev",
-      "address": "0x0211170c",
-      "size": "0x00000058",
-      "legacy_source": "src/_ZN21daObjWlKoopaShutter_cD0Ev.cpp",
-      "ordinal": 1
-    },
-    {
-      "symbol": "_ZN21daObjWlKoopaShutter_c16CleanupResourcesEv",
-      "address": "0x02111764",
-      "size": "0x00000044",
-      "legacy_source": "src/_ZN21daObjWlKoopaShutter_c16CleanupResourcesEv.cpp",
-      "ordinal": 2
-    },
-    {
-      "symbol": "_ZN21daObjWlKoopaShutter_c6RenderEv",
-      "address": "0x021117a8",
-      "size": "0x00000028",
-      "legacy_source": "src/_ZN21daObjWlKoopaShutter_c6RenderEv.cpp",
-      "ordinal": 3
-    },
-    {
-      "symbol": "_ZN21daObjWlKoopaShutter_c8BehaviorEv",
-      "address": "0x021117d0",
-      "size": "0x00000008",
-      "legacy_source": "src/_ZN21daObjWlKoopaShutter_c8BehaviorEv.cpp",
-      "ordinal": 4
-    },
-    {
-      "symbol": "_ZN21daObjWlKoopaShutter_c13InitResourcesEv",
-      "address": "0x021117d8",
-      "size": "0x000000b0",
-      "legacy_source": "src/_ZN21daObjWlKoopaShutter_c13InitResourcesEv.cpp",
-      "ordinal": 5
-    },
-    {
-      "symbol": "_Z31daObjWlKoopaShutter_c_classInitv",
-      "address": "0x02111888",
-      "size": "0x00000030",
-      "legacy_source": "src/d_a_obj_wl_koopa_shutter.c",
-      "ordinal": 6
-    }
-  ],
-  "data": [
-    {
-      "symbol": "data_ov026_02112f74",
-      "address": "0x02112f74",
-      "size": "0x60",
-      "binding": "STB_GLOBAL",
-      "evidence": "CLPS header and the pointer table that follows it"
-    },
-    {
-      "symbol": "data_ov026_021132b0",
-      "address": "0x021132b0",
-      "size": "0x1a0",
-      "binding": "STB_GLOBAL",
-      "evidence": "table named by this class's pointer block at 0x02112f98; nothing else relocates to it"
-    },
-    {
-      "symbol": "data_ov026_02113600",
-      "address": "0x02113600",
-      "size": "0x1c0",
-      "binding": "STB_GLOBAL",
-      "evidence": "table named by this class's pointer block at 0x02112fa0; nothing else relocates to it"
-    },
-    {
-      "symbol": "_ZTI21daObjWlKoopaShutter_c",
-      "address": "0x02113b5c",
-      "size": "0xc",
-      "evidence": "compiler emission of the class key function"
-    },
-    {
-      "symbol": "_ZTS21daObjWlKoopaShutter_c",
-      "address": "0x02113b68",
-      "size": "0x18",
-      "evidence": "compiler emission of the class key function"
-    },
-    {
-      "symbol": "g_profile_WL_KOOPA_SHUTTER",
-      "address": "0x02113b80",
-      "size": "0x1c",
-      "evidence": "compiler emission of the class key function"
-    },
-    {
-      "symbol": "_ZTV21daObjWlKoopaShutter_c",
-      "address": "0x02113ba4",
-      "size": "0x88",
-      "evidence": "compiler emission of the class key function",
-      "emitted_storage_address": "0x02113b9c",
-      "address_point_bias": "0x8"
-    }
-  ],
-  "bss": [
-    {
-      "symbol": "BowserShutter_ClsnFile",
-      "address": "0x02113eb4",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "collision resource handle constructed with file ID 0x6da"
-    },
-    {
-      "symbol": "BowserShutter_ModelFile",
-      "address": "0x02113ebc",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 0x6d9"
-    },
-    {
-      "symbol": "@61",
-      "address": "0x02113ec4",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated destructor-registration node for the 0x6da collision handle"
-    },
-    {
-      "symbol": "@62",
-      "address": "0x02113ed0",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated destructor-registration node for the 0x6d9 model handle"
-    }
-  ],
-  "notes": [
-    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
-    "Fold verified text-only: 6/6 MATCH, objisolate clean, reloc-destinations clean. 12 unlicensed output(s) reported by verify: 1 .text (_ZN21daObjWlKoopaShutter_cD2Ev) and 11 .data (_ZTV/_ZTI/_ZTS for daObjWlKoopaShutter_c and its dBgActor_c/dActor_c/dBase_c/fBase_c ancestor chain). This TU is the class's key-function TU, so the vtable/RTTI emission is expected; .data licensing is separate, sequenced work and was NOT attempted on this fold branch. Hand fix: the duplicated D0 destructor body from tubuild create was removed.",
-    "Fold verified text-only (pre-promotion shadow, reverse source order): 6/6 MATCH, objisolate clean, reloc-destinations clean. 12 unlicensed output(s) reported by that verify: 1 .text (_ZN21daObjWlKoopaShutter_cD2Ev) and 11 .data (_ZTV/_ZTI/_ZTS for daObjWlKoopaShutter_c and its dBgActor_c/dActor_c/dBase_c/fBase_c ancestor chain). compiler_only_output now licenses those 12 (homeless D2 plus the 11-row dBgActor ancestor-chain deadstrip-data, 2*5+1); homes copied from symbols.txt; reason shape matches merged ov022/daObjFl_Ukiyuka_c (#2891) / ov033/daObjTtWater_c (#2931). Promoted source rewritten ROM-ascending under #pragma defer_codegen off (kinopio #2898 / #2891 landing pattern). Re-verify of the rewritten TU needs the build box.",
-    "Folded __sinit_ov026_02112bbc: two file-scope resource handles (model 0x6d9, collision file 0x6da) are defined for real through declared-only SharedFilePtr subclasses whose constructor and destructor alias the retail veneer pairs (func_02017acc/func_02017ab4 for the model, func_02017b4c/SharedFilePtr_Destruct_Clsn for the collision). The handles keep the TU's own BowserShutter_ModelFile/BowserShutter_ClsnFile spellings, so the externs at the top of the file are redeclared in the wrapper types. The claims pick up .init 0x02112bbc..0x02112c28, .ctor 0x02112da8..0x02112dac and .bss 0x02113eb4..0x02113edc; the two destructor-registration nodes are renumbered @387 -> @61 and @386 -> @62 via defined_symbol_renames because the in-flight ov036 fold already claims those compiler temps. Retired src/unnamed/ov026/__sinit_ov026_02112bbc.c.",
-    "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
-  ],
-  "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
-    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov026-daObjWlKoopaShutter_c/daObjWlKoopaShutter_c.o (gitignored)",
-    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 7,
-    "functions_declared": 7,
-    "compilerOnlyOutput": {
-      "requested": [
-        "_ZN21daObjWlKoopaShutter_cD2Ev",
-        "_ZN10dBgActor_cD2Ev"
-      ],
-      "deadstripped": [
-        "_ZN10dBgActor_cD2Ev",
-        "_ZN21daObjWlKoopaShutter_cD2Ev"
-      ],
-      "droppedSections": [
-        9,
-        10,
-        19,
-        20,
-        25,
-        26,
-        27,
-        28,
-        29,
-        30,
-        31,
-        32,
-        33,
-        34,
-        35,
-        36,
-        37,
-        38,
-        39,
-        40,
-        41
-      ],
-      "data": [
-        "_ZTI7fBase_c",
-        "_ZTS7fBase_c",
-        "_ZTS7dBase_c",
-        "_ZTS8dActor_c",
-        "_ZTI7dBase_c",
-        "_ZTI10dBgActor_c",
-        "_ZTS10dBgActor_c",
-        "_ZTI8dActor_c"
-      ],
-      "dataExternalized": [
-        "_ZTI10dBgActor_c",
-        "_ZTI7dBase_c",
-        "_ZTI7fBase_c",
-        "_ZTI8dActor_c",
-        "_ZTS10dBgActor_c",
-        "_ZTS7dBase_c",
-        "_ZTS7fBase_c",
-        "_ZTS8dActor_c"
-      ]
-    },
-    "criteria": {
-      "every_declared_function_defined": "PASS",
-      "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 19 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
-      "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
-    },
-    "linkcheck": {
-      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-data-verified",
-      "scratch": "build/tu/ov026-daObjWlKoopaShutter_c/link (gitignored)",
-      "phases": {
-        "delink": true,
-        "lcf": true,
-        "compile": true,
-        "link": true,
-        "checkModules": true,
-        "checkSymbols": false,
-        "rom": true
-      },
-      "tuRange": {
-        "start": "0x021116c8",
-        "end": "0x021118b8",
-        "differingBytes": 0,
-        "firstDiff": null
-      },
-      "tuRanges": [
-        {
-          "section": ".text",
-          "start": "0x021116c8",
-          "end": "0x021118b8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".init",
-          "start": "0x02112bbc",
-          "end": "0x02112c28",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".ctor",
-          "start": "0x02112da8",
-          "end": "0x02112dac",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".bss",
-          "start": "0x02113eb4",
-          "end": "0x02113edc",
-          "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".data",
-          "start": "0x02112f74",
-          "end": "0x02112fd4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov026_021132b0",
-          "start": "0x021132b0",
-          "end": "0x02113450",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.data_ov026_02113600",
-          "start": "0x02113600",
-          "end": "0x021137c0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.wlLate",
-          "start": "0x02113b5c",
-          "end": "0x02113c24",
-          "differingBytes": 0,
-          "firstDiff": null
-        }
-      ],
-      "objectAudit": {
-        "counts": {
-          "LICENSED": 13
-        },
-        "emittedTextOrderIsRomAscending": true,
-        "nonLicensedSymbols": [],
-        "unlicensedSections": []
-      },
-      "nontextSectionOrder": {
-        "groups": [
-          {
-            "section": ".init",
-            "original": [
-              44
-            ],
-            "desired": [
-              44
-            ]
-          },
-          {
-            "section": ".ctor",
-            "original": [
-              42
-            ],
-            "desired": [
-              42
-            ]
-          },
-          {
-            "section": ".bss",
-            "original": [
-              21,
-              22,
-              23,
-              24
-            ],
-            "desired": [
-              24,
-              22,
-              23,
-              21
-            ]
-          }
-        ],
-        "objisolate": {
-          "reordered": [
-            {
-              "section": ".bss",
-              "original": [
-                21,
-                22,
-                23,
-                24
-              ],
-              "desired": [
-                24,
-                22,
-                23,
-                21
-              ],
-              "slots": [
-                21,
-                22,
-                23,
-                24
-              ]
-            }
-          ],
-          "symbolIndices": 4,
-          "sectionLinks": 0,
-          "sectionInfos": 0,
-          "error": null
-        },
-        "errors": null
-      },
-      "linkedStorageAliases": null,
-      "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [],
-      "symbolCheckBaselineErrors": [],
-      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
-      "rom": {
-        "bytes": 16777216,
-        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
-        "matchesStockRom": true
-      },
-      "linkerOutput": null
-    }
+ "id": "ov026/daObjWlKoopaShutter_c",
+ "module": "ov026",
+ "source": "src/game/actors/d_a_obj_wl_koopa_shutter.cpp",
+ "promoted_source": "src/game/actors/d_a_obj_wl_koopa_shutter.cpp",
+ "production_mode": "intact-object",
+ "status": "promoted",
+ "boundary_confidence": "medium",
+ "boundary_evidence": [
+  "contiguous linker run: 0x21116c8..0x2111888, 6 function(s), from build/tu_map.json (tools/tu_map.py)",
+  "class label(s): daObjWlKoopaShutter_c",
+  "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+  "classInit fold: the daObjWlKoopaShutter_c_classInit registry factory (profile WL_KOOPA_SHUTTER, historical alias BowserShutter_Spawn), 0x02111888..0x021118b8, abuts this TU's InitResources with no gap; tu_map leaves it unlabelled because it cuts on symbol name. Folded as `return new daObjWlKoopaShutter_c();` at the end of the file (defer_codegen off, source order). The unit is now 0x021116c8..0x021118b8, 7 functions, bounded above by daObjWlSubmarine_c's D1 at 0x021118b8 (src/game/actors/d_a_obj_wl_submarine.cpp)."
+ ],
+ "sections": [
+  {
+   "name": ".text",
+   "start": "0x021116c8",
+   "end": "0x021118b8"
   },
-  "compiler_only_output": [
+  {
+   "name": ".init",
+   "start": "0x02112bbc",
+   "end": "0x02112c28"
+  },
+  {
+   "name": ".ctor",
+   "start": "0x02112da8",
+   "end": "0x02112dac"
+  },
+  {
+   "name": ".data",
+   "start": "0x02113b5c",
+   "end": "0x02113c24"
+  },
+  {
+   "name": ".bss",
+   "start": "0x02113eb4",
+   "end": "0x02113edc"
+  }
+ ],
+ "functions": [
+  {
+   "symbol": "_ZN21daObjWlKoopaShutter_cD1Ev",
+   "address": "0x021116c8",
+   "size": "0x00000044",
+   "legacy_source": "src/_ZN21daObjWlKoopaShutter_cD1Ev.cpp",
+   "ordinal": 0
+  },
+  {
+   "symbol": "_ZN21daObjWlKoopaShutter_cD0Ev",
+   "address": "0x0211170c",
+   "size": "0x00000058",
+   "legacy_source": "src/_ZN21daObjWlKoopaShutter_cD0Ev.cpp",
+   "ordinal": 1
+  },
+  {
+   "symbol": "_ZN21daObjWlKoopaShutter_c16CleanupResourcesEv",
+   "address": "0x02111764",
+   "size": "0x00000044",
+   "legacy_source": "src/_ZN21daObjWlKoopaShutter_c16CleanupResourcesEv.cpp",
+   "ordinal": 2
+  },
+  {
+   "symbol": "_ZN21daObjWlKoopaShutter_c6RenderEv",
+   "address": "0x021117a8",
+   "size": "0x00000028",
+   "legacy_source": "src/_ZN21daObjWlKoopaShutter_c6RenderEv.cpp",
+   "ordinal": 3
+  },
+  {
+   "symbol": "_ZN21daObjWlKoopaShutter_c8BehaviorEv",
+   "address": "0x021117d0",
+   "size": "0x00000008",
+   "legacy_source": "src/_ZN21daObjWlKoopaShutter_c8BehaviorEv.cpp",
+   "ordinal": 4
+  },
+  {
+   "symbol": "_ZN21daObjWlKoopaShutter_c13InitResourcesEv",
+   "address": "0x021117d8",
+   "size": "0x000000b0",
+   "legacy_source": "src/_ZN21daObjWlKoopaShutter_c13InitResourcesEv.cpp",
+   "ordinal": 5
+  },
+  {
+   "symbol": "_Z31daObjWlKoopaShutter_c_classInitv",
+   "address": "0x02111888",
+   "size": "0x00000030",
+   "legacy_source": "src/d_a_obj_wl_koopa_shutter.c",
+   "ordinal": 6
+  }
+ ],
+ "data": [
+  {
+   "symbol": "_ZTI21daObjWlKoopaShutter_c",
+   "address": "0x02113b5c",
+   "size": "0xc",
+   "evidence": "compiler emission of the class key function"
+  },
+  {
+   "symbol": "_ZTS21daObjWlKoopaShutter_c",
+   "address": "0x02113b68",
+   "size": "0x18",
+   "evidence": "compiler emission of the class key function"
+  },
+  {
+   "symbol": "g_profile_WL_KOOPA_SHUTTER",
+   "address": "0x02113b80",
+   "size": "0x1c",
+   "evidence": "compiler emission of the class key function"
+  },
+  {
+   "symbol": "_ZTV21daObjWlKoopaShutter_c",
+   "address": "0x02113ba4",
+   "size": "0x88",
+   "evidence": "compiler emission of the class key function",
+   "emitted_storage_address": "0x02113b9c",
+   "address_point_bias": "0x8"
+  }
+ ],
+ "bss": [
+  {
+   "symbol": "BowserShutter_ClsnFile",
+   "address": "0x02113eb4",
+   "size": "0x8",
+   "binding": "STB_GLOBAL",
+   "evidence": "collision resource handle constructed with file ID 0x6da"
+  },
+  {
+   "symbol": "BowserShutter_ModelFile",
+   "address": "0x02113ebc",
+   "size": "0x8",
+   "binding": "STB_GLOBAL",
+   "evidence": "model resource handle constructed with file ID 0x6d9"
+  },
+  {
+   "symbol": "@61",
+   "address": "0x02113ec4",
+   "size": "0xc",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler-generated destructor-registration node for the 0x6da collision handle"
+  },
+  {
+   "symbol": "@62",
+   "address": "0x02113ed0",
+   "size": "0xc",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler-generated destructor-registration node for the 0x6d9 model handle"
+  }
+ ],
+ "notes": [
+  "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+  "Fold verified text-only: 6/6 MATCH, objisolate clean, reloc-destinations clean. 12 unlicensed output(s) reported by verify: 1 .text (_ZN21daObjWlKoopaShutter_cD2Ev) and 11 .data (_ZTV/_ZTI/_ZTS for daObjWlKoopaShutter_c and its dBgActor_c/dActor_c/dBase_c/fBase_c ancestor chain). This TU is the class's key-function TU, so the vtable/RTTI emission is expected; .data licensing is separate, sequenced work and was NOT attempted on this fold branch. Hand fix: the duplicated D0 destructor body from tubuild create was removed.",
+  "Fold verified text-only (pre-promotion shadow, reverse source order): 6/6 MATCH, objisolate clean, reloc-destinations clean. 12 unlicensed output(s) reported by that verify: 1 .text (_ZN21daObjWlKoopaShutter_cD2Ev) and 11 .data (_ZTV/_ZTI/_ZTS for daObjWlKoopaShutter_c and its dBgActor_c/dActor_c/dBase_c/fBase_c ancestor chain). compiler_only_output now licenses those 12 (homeless D2 plus the 11-row dBgActor ancestor-chain deadstrip-data, 2*5+1); homes copied from symbols.txt; reason shape matches merged ov022/daObjFl_Ukiyuka_c (#2891) / ov033/daObjTtWater_c (#2931). Promoted source rewritten ROM-ascending under #pragma defer_codegen off (kinopio #2898 / #2891 landing pattern). Re-verify of the rewritten TU needs the build box.",
+  "Folded __sinit_ov026_02112bbc: two file-scope resource handles (model 0x6d9, collision file 0x6da) are defined for real through declared-only SharedFilePtr subclasses whose constructor and destructor alias the retail veneer pairs (func_02017acc/func_02017ab4 for the model, func_02017b4c/SharedFilePtr_Destruct_Clsn for the collision). The handles keep the TU's own BowserShutter_ModelFile/BowserShutter_ClsnFile spellings, so the externs at the top of the file are redeclared in the wrapper types. The claims pick up .init 0x02112bbc..0x02112c28, .ctor 0x02112da8..0x02112dac and .bss 0x02113eb4..0x02113edc; the two destructor-registration nodes are renumbered @387 -> @61 and @386 -> @62 via defined_symbol_renames because the in-flight ov036 fold already claims those compiler temps. Retired src/unnamed/ov026/__sinit_ov026_02112bbc.c.",
+  "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records)."
+ ],
+ "verification": {
+  "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+  "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "object": "build/tu/ov026-daObjWlKoopaShutter_c/daObjWlKoopaShutter_c.o (gitignored)",
+  "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+  "functions_matched": 7,
+  "functions_declared": 7,
+  "compilerOnlyOutput": {
+   "requested": [
+    "_ZN21daObjWlKoopaShutter_cD2Ev",
+    "_ZN10dBgActor_cD2Ev"
+   ],
+   "deadstripped": [
+    "_ZN10dBgActor_cD2Ev",
+    "_ZN21daObjWlKoopaShutter_cD2Ev"
+   ],
+   "droppedSections": [
+    9,
+    10,
+    19,
+    20,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41
+   ],
+   "data": [
+    "_ZTI7fBase_c",
+    "_ZTS7fBase_c",
+    "_ZTS7dBase_c",
+    "_ZTS8dActor_c",
+    "_ZTI7dBase_c",
+    "_ZTI10dBgActor_c",
+    "_ZTS10dBgActor_c",
+    "_ZTI8dActor_c"
+   ],
+   "dataExternalized": [
+    "_ZTI10dBgActor_c",
+    "_ZTI7dBase_c",
+    "_ZTI7fBase_c",
+    "_ZTI8dActor_c",
+    "_ZTS10dBgActor_c",
+    "_ZTS7dBase_c",
+    "_ZTS7fBase_c",
+    "_ZTS8dActor_c"
+   ]
+  },
+  "criteria": {
+   "every_declared_function_defined": "PASS",
+   "every_declared_function_bytes_match": "PASS",
+   "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 19 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
+   "functions_occur_in_expected_order": "PASS",
+   "relocation_destinations_verified": "PASS"
+  },
+  "linkcheck": {
+   "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+   "result": "scratch-data-verified",
+   "scratch": "build/tu/ov026-daObjWlKoopaShutter_c/link (gitignored)",
+   "phases": {
+    "delink": true,
+    "lcf": true,
+    "compile": true,
+    "link": true,
+    "checkModules": true,
+    "checkSymbols": false,
+    "rom": true
+   },
+   "tuRange": {
+    "start": "0x021116c8",
+    "end": "0x021118b8",
+    "differingBytes": 0,
+    "firstDiff": null
+   },
+   "tuRanges": [
     {
-      "symbol": "_ZTI7fBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086d70",
-      "reason": "Text-only TU: externalize to canonical public address 0x02086d70."
+     "section": ".text",
+     "start": "0x021116c8",
+     "end": "0x021118b8",
+     "differingBytes": 0,
+     "firstDiff": null
     },
     {
-      "symbol": "_ZTS7fBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e60",
-      "reason": "Text-only TU: externalize to canonical public address 0x02086e60."
+     "section": ".init",
+     "start": "0x02112bbc",
+     "end": "0x02112c28",
+     "differingBytes": 0,
+     "firstDiff": null
     },
     {
-      "symbol": "_ZTS7dBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e54",
-      "reason": "Text-only TU: externalize to canonical public address 0x02086e54."
+     "section": ".ctor",
+     "start": "0x02112da8",
+     "end": "0x02112dac",
+     "differingBytes": 0,
+     "firstDiff": null
     },
     {
-      "symbol": "_ZTS8dActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e384",
-      "reason": "Text-only TU: externalize to canonical public address 0x0208e384."
+     "section": ".data",
+     "start": "0x02113b5c",
+     "end": "0x02113c24",
+     "differingBytes": 0,
+     "firstDiff": null
     },
     {
-      "symbol": "_ZTI7dBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e78",
-      "reason": "Text-only TU: externalize to canonical public address 0x02086e78."
-    },
-    {
-      "symbol": "_ZTI10dBgActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x021089ec",
-      "reason": "Text-only TU: externalize to canonical public address 0x021089ec."
-    },
-    {
-      "symbol": "_ZTS10dBgActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov002",
-      "canonical_address": "0x02108a04",
-      "reason": "Text-only TU: externalize to canonical public address 0x02108a04."
-    },
-    {
-      "symbol": "_ZTI8dActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e390",
-      "reason": "Text-only TU: externalize to canonical public address 0x0208e390."
-    },
-    {
-      "symbol": "_ZN21daObjWlKoopaShutter_cD2Ev",
-      "disposition": "deadstrip",
-      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
-    },
-    {
-      "symbol": "_ZN10dBgActor_cD2Ev",
-      "disposition": "deadstrip",
-      "reason": "`return new daObjWlKoopaShutter_c();` in daObjWlKoopaShutter_c_classInit synthesizes the implicit default constructor, which emits the immediate base dBgActor_c's base-object destructor as an unwind helper (same as the ov033/daObjTtWater_c classInit fold). No configured ROM symbol and no inbound relocation."
+     "section": ".bss",
+     "start": "0x02113eb4",
+     "end": "0x02113edc",
+     "comparison": "NOBITS -- symbol/module gates",
+     "differingBytes": 0,
+     "firstDiff": null
     }
-  ],
-  "init": [
-    {
-      "symbol": "__sinit_d_a_obj_wl_koopa_shutter.cpp",
-      "address": "0x02112bbc",
-      "size": "0x0000006c",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated static initializer is byte-identical to retail __sinit_ov026_02112bbc and carries the same 10 relocation sites"
-    }
-  ],
-  "ctor": [
-    {
-      "symbol": ".p__sinit_d_a_obj_wl_koopa_shutter.cpp",
-      "address": "0x02112da8",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
-    }
-  ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN24KoopaShutterModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
+   ],
+   "objectAudit": {
+    "counts": {
+     "LICENSED": 13
     },
-    {
-      "symbol": "_ZN24KoopaShutterModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail destructor-registration destination and the model wrapper destructor's exact ABS32 relocation"
-    },
-    {
-      "symbol": "_ZN28KoopaShutterCollisionFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b4c",
-      "evidence": "retail initializer call destination and the collision wrapper constructor's exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN28KoopaShutterCollisionFilePtrD1Ev",
-      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b34",
-      "evidence": "retail destructor-registration destination and the collision wrapper destructor's exact ABS32 relocation"
-    }
-  ],
-  "symbol_binding_rewrites": [
-    {
-      "symbol": "__sinit_d_a_obj_wl_koopa_shutter.cpp",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
-    },
-    {
-      "symbol": ".p__sinit_d_a_obj_wl_koopa_shutter.cpp",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
-    },
-    {
-      "symbol": "@61",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local collision-handle registration node is a configured initializer relocation destination at 0x02113ec4"
-    },
-    {
-      "symbol": "@62",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local model-handle registration node is a configured initializer relocation destination at 0x02113ed0"
-    }
-  ],
-  "defined_symbol_renames": [
-    {
-      "from": "@377",
-      "to": "@61",
-      "evidence": "mwcc numbers this registration node @387 per TU and the in-flight ov036 fold already claims that compiler temp, so the batch link would multiply-define it Re-keyed from @397 to @375 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @375 to @377 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
-    },
-    {
-      "from": "@376",
-      "to": "@62",
-      "evidence": "mwcc numbers this registration node @386 per TU and the in-flight ov036 fold already claims that compiler temp, so the batch link would multiply-define it Re-keyed from @396 to @374 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @374 to @376 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
-    }
-  ],
-  "relocations": [
-    {
+    "emittedTextOrderIsRomAscending": true,
+    "nonLicensedSymbols": [],
+    "unlicensedSections": []
+   },
+   "nontextSectionOrder": {
+    "groups": [
+     {
       "section": ".init",
-      "source": "0x02112bcc",
-      "type": "R_ARM_PC24",
-      "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
-      "addend": -8,
-      "target_module": "arm9",
-      "target_address": "0x02017acc"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112bdc",
-      "type": "R_ARM_PC24",
-      "kind": "arm_call",
-      "symbol": "__register_global_object",
-      "addend": -8,
-      "target_module": "arm9",
-      "target_address": "0x020731dc"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112be8",
-      "type": "R_ARM_PC24",
-      "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
-      "addend": -8,
-      "target_module": "arm9",
-      "target_address": "0x02017b4c"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112bf8",
-      "type": "R_ARM_PC24",
-      "kind": "arm_call",
-      "symbol": "__register_global_object",
-      "addend": -8,
-      "target_module": "arm9",
-      "target_address": "0x020731dc"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112c08",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "BowserShutter_ModelFile",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113ebc"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112c10",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02017ab4"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112c14",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "@62",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113ed0"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112c18",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "BowserShutter_ClsnFile",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113eb4"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112c20",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02017b34"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112c24",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "@61",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113ec4"
-    },
-    {
+      "original": [
+       44
+      ],
+      "desired": [
+       44
+      ]
+     },
+     {
       "section": ".ctor",
-      "source": "0x02112da8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "__sinit_d_a_obj_wl_koopa_shutter.cpp",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02112bbc"
+      "original": [
+       42
+      ],
+      "desired": [
+       42
+      ]
+     },
+     {
+      "section": ".bss",
+      "original": [
+       21,
+       22,
+       23,
+       24
+      ],
+      "desired": [
+       24,
+       22,
+       23,
+       21
+      ]
+     }
+    ],
+    "objisolate": {
+     "reordered": [
+      {
+       "section": ".bss",
+       "original": [
+        21,
+        22,
+        23,
+        24
+       ],
+       "desired": [
+        24,
+        22,
+        23,
+        21
+       ],
+       "slots": [
+        21,
+        22,
+        23,
+        24
+       ]
+      }
+     ],
+     "symbolIndices": 4,
+     "sectionLinks": 0,
+     "sectionInfos": 0,
+     "error": null
     },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b80",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_Z31daObjWlKoopaShutter_c_classInitv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111888"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113ba0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI21daObjWlKoopaShutter_c",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113b5c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113be0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02043494"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bdc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual38Ejj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0204349c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bd8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual34Ejj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0204357c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bd4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02043ac0"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113c1c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x020100dc"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113c18",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010124"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113c14",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0201012c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113c10",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010130"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113c0c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010134"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113c08",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnPushedERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010138"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113c04",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnKickedERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0201013c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113c00",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010140"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bfc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010144"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bf8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010148"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bf4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c9Virtual50Ev",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0201014c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bf0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010154"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bec",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010160"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bd0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11AfterRenderEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010f6c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bcc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c12BeforeRenderEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010f78"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bc4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010fc8"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bc0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010fd4"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bb8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011214"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bb4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011220"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bac",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011244"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113ba8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011268"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113c20",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN10dBgActor_c4KillEv",
-      "addend": 0,
-      "target_module": "overlays(2,7)",
-      "target_address": "0x020ee55c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113be8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN21daObjWlKoopaShutter_cD0Ev",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x0211170c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bc8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN21daObjWlKoopaShutter_c6RenderEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x021117a8"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bbc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN21daObjWlKoopaShutter_c8BehaviorEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x021117d0"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113bb0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN21daObjWlKoopaShutter_c16CleanupResourcesEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111764"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113ba4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN21daObjWlKoopaShutter_c13InitResourcesEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x021117d8"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113be4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN21daObjWlKoopaShutter_cD1Ev",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x021116c8"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b60",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTS21daObjWlKoopaShutter_c",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113b68"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b64",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI10dBgActor_c",
-      "addend": 0,
-      "target_module": "ov002",
-      "target_address": "0x021089ec"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b5c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTVN3abi20__si_class_type_infoE",
-      "addend": 8,
-      "target_module": "arm9",
-      "target_address": "0x0209a764"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112f98",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov026_021132b0",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x021132b0"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112fa0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov026_02113600",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113600"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112fa8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov026_02112e90",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02112e90"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112fb0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov026_02112ed0",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02112ed0"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112fb8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov026_02112eb0",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02112eb0"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112fc0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov026_02112ec0",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02112ec0"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112fc8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov026_02112e60",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02112e60"
-    },
-    {
-      "section": ".data",
-      "source": "0x02112fd0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov026_02112e70",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02112e70"
-    }
-  ]
+    "errors": null
+   },
+   "linkedStorageAliases": null,
+   "symbolCheckNewVsBaseline": [],
+   "symbolCheckErrors": [],
+   "symbolCheckBaselineErrors": [],
+   "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+   "rom": {
+    "bytes": 16777216,
+    "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "matchesStockRom": true
+   },
+   "linkerOutput": null
+  }
+ },
+ "compiler_only_output": [
+  {
+   "symbol": "_ZTI7fBase_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02086d70",
+   "reason": "Text-only TU: externalize to canonical public address 0x02086d70."
+  },
+  {
+   "symbol": "_ZTS7fBase_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02086e60",
+   "reason": "Text-only TU: externalize to canonical public address 0x02086e60."
+  },
+  {
+   "symbol": "_ZTS7dBase_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02086e54",
+   "reason": "Text-only TU: externalize to canonical public address 0x02086e54."
+  },
+  {
+   "symbol": "_ZTS8dActor_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x0208e384",
+   "reason": "Text-only TU: externalize to canonical public address 0x0208e384."
+  },
+  {
+   "symbol": "_ZTI7dBase_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02086e78",
+   "reason": "Text-only TU: externalize to canonical public address 0x02086e78."
+  },
+  {
+   "symbol": "_ZTI10dBgActor_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "ov002",
+   "canonical_address": "0x021089ec",
+   "reason": "Text-only TU: externalize to canonical public address 0x021089ec."
+  },
+  {
+   "symbol": "_ZTS10dBgActor_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "ov002",
+   "canonical_address": "0x02108a04",
+   "reason": "Text-only TU: externalize to canonical public address 0x02108a04."
+  },
+  {
+   "symbol": "_ZTI8dActor_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x0208e390",
+   "reason": "Text-only TU: externalize to canonical public address 0x0208e390."
+  },
+  {
+   "symbol": "_ZN21daObjWlKoopaShutter_cD2Ev",
+   "disposition": "deadstrip",
+   "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+  },
+  {
+   "symbol": "_ZN10dBgActor_cD2Ev",
+   "disposition": "deadstrip",
+   "reason": "`return new daObjWlKoopaShutter_c();` in daObjWlKoopaShutter_c_classInit synthesizes the implicit default constructor, which emits the immediate base dBgActor_c's base-object destructor as an unwind helper (same as the ov033/daObjTtWater_c classInit fold). No configured ROM symbol and no inbound relocation."
+  }
+ ],
+ "init": [
+  {
+   "symbol": "__sinit_d_a_obj_wl_koopa_shutter.cpp",
+   "address": "0x02112bbc",
+   "size": "0x0000006c",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler-generated static initializer is byte-identical to retail __sinit_ov026_02112bbc and carries the same 10 relocation sites"
+  }
+ ],
+ "ctor": [
+  {
+   "symbol": ".p__sinit_d_a_obj_wl_koopa_shutter.cpp",
+   "address": "0x02112da8",
+   "size": "0x4",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+  }
+ ],
+ "undefined_symbol_aliases": [
+  {
+   "symbol": "_ZN24KoopaShutterModelFilePtrC1Ej",
+   "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02017acc",
+   "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
+  },
+  {
+   "symbol": "_ZN24KoopaShutterModelFilePtrD1Ev",
+   "canonical_symbol": "_Z13func_02017ab4i",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02017ab4",
+   "evidence": "retail destructor-registration destination and the model wrapper destructor's exact ABS32 relocation"
+  },
+  {
+   "symbol": "_ZN28KoopaShutterCollisionFilePtrC1Ej",
+   "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02017b4c",
+   "evidence": "retail initializer call destination and the collision wrapper constructor's exact PC24 relocation"
+  },
+  {
+   "symbol": "_ZN28KoopaShutterCollisionFilePtrD1Ev",
+   "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02017b34",
+   "evidence": "retail destructor-registration destination and the collision wrapper destructor's exact ABS32 relocation"
+  }
+ ],
+ "symbol_binding_rewrites": [
+  {
+   "symbol": "__sinit_d_a_obj_wl_koopa_shutter.cpp",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+  },
+  {
+   "symbol": ".p__sinit_d_a_obj_wl_koopa_shutter.cpp",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+  },
+  {
+   "symbol": "@61",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "compiler-local collision-handle registration node is a configured initializer relocation destination at 0x02113ec4"
+  },
+  {
+   "symbol": "@62",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "compiler-local model-handle registration node is a configured initializer relocation destination at 0x02113ed0"
+  }
+ ],
+ "defined_symbol_renames": [
+  {
+   "from": "@377",
+   "to": "@61",
+   "evidence": "mwcc numbers this registration node @387 per TU and the in-flight ov036 fold already claims that compiler temp, so the batch link would multiply-define it Re-keyed from @397 to @375 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @375 to @377 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+  },
+  {
+   "from": "@376",
+   "to": "@62",
+   "evidence": "mwcc numbers this registration node @386 per TU and the in-flight ov036 fold already claims that compiler temp, so the batch link would multiply-define it Re-keyed from @396 to @374 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @374 to @376 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+  }
+ ],
+ "relocations": [
+  {
+   "section": ".init",
+   "source": "0x02112bcc",
+   "type": "R_ARM_PC24",
+   "kind": "arm_call",
+   "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+   "addend": -8,
+   "target_module": "arm9",
+   "target_address": "0x02017acc"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112bdc",
+   "type": "R_ARM_PC24",
+   "kind": "arm_call",
+   "symbol": "__register_global_object",
+   "addend": -8,
+   "target_module": "arm9",
+   "target_address": "0x020731dc"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112be8",
+   "type": "R_ARM_PC24",
+   "kind": "arm_call",
+   "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+   "addend": -8,
+   "target_module": "arm9",
+   "target_address": "0x02017b4c"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112bf8",
+   "type": "R_ARM_PC24",
+   "kind": "arm_call",
+   "symbol": "__register_global_object",
+   "addend": -8,
+   "target_module": "arm9",
+   "target_address": "0x020731dc"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112c08",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "BowserShutter_ModelFile",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113ebc"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112c10",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_Z13func_02017ab4i",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02017ab4"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112c14",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "@62",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113ed0"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112c18",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "BowserShutter_ClsnFile",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113eb4"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112c20",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02017b34"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112c24",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "@61",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113ec4"
+  },
+  {
+   "section": ".ctor",
+   "source": "0x02112da8",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "__sinit_d_a_obj_wl_koopa_shutter.cpp",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02112bbc"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b80",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_Z31daObjWlKoopaShutter_c_classInitv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111888"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113ba0",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZTI21daObjWlKoopaShutter_c",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113b5c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113be0",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02043494"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bdc",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN7fBase_c9Virtual38Ejj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0204349c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bd8",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN7fBase_c9Virtual34Ejj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0204357c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bd4",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02043ac0"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113c1c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x020100dc"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113c18",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010124"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113c14",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0201012c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113c10",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010130"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113c0c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010134"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113c08",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c8OnPushedERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010138"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113c04",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c8OnKickedERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0201013c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113c00",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010140"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bfc",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010144"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bf8",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010148"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bf4",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c9Virtual50Ev",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0201014c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bf0",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010154"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bec",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010160"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bd0",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c11AfterRenderEj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010f6c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bcc",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c12BeforeRenderEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010f78"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bc4",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010fc8"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bc0",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010fd4"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bb8",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02011214"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bb4",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02011220"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bac",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02011244"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113ba8",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02011268"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113c20",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN10dBgActor_c4KillEv",
+   "addend": 0,
+   "target_module": "overlays(2,7)",
+   "target_address": "0x020ee55c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113be8",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN21daObjWlKoopaShutter_cD0Ev",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x0211170c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bc8",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN21daObjWlKoopaShutter_c6RenderEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x021117a8"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bbc",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN21daObjWlKoopaShutter_c8BehaviorEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x021117d0"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113bb0",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN21daObjWlKoopaShutter_c16CleanupResourcesEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111764"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113ba4",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN21daObjWlKoopaShutter_c13InitResourcesEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x021117d8"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113be4",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN21daObjWlKoopaShutter_cD1Ev",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x021116c8"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b60",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZTS21daObjWlKoopaShutter_c",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113b68"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b64",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZTI10dBgActor_c",
+   "addend": 0,
+   "target_module": "ov002",
+   "target_address": "0x021089ec"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b5c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZTVN3abi20__si_class_type_infoE",
+   "addend": 8,
+   "target_module": "arm9",
+   "target_address": "0x0209a764"
+  }
+ ]
 }

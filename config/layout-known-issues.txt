@@ -27,18 +27,6 @@ L2 func_ov065_02116364
 L2 func_ov084_021298d0
 L2 func_ov084_0212d564
 
-# --- L3: data TUs in an overlay address bucket -----------------------------------
-# srcpath's address-stem pattern is ^(?:func|FUN|__sinit)_..., so a data_ovNNN_<addr>
-# stem answers "not an address name" whichever bucket holds it. These units are plain
-# word tables: mwccarm names every plain object's input section .data/.rodata/.bss and
-# the lcf selects input sections by name, so one unit carries at most one contiguous run
-# per section name. Overlays 8 and 41 carry no code at all; the others carry the
-# unconsumed data of a code overlay, and a module whose section another unit has split
-# with its own claim needs one data unit per run. src/data/ is the retracted campaign's
-# shape. Every unit's ranges are claimed in its module's delinks.txt.
-L3 src/unnamed/ov026/data_ov026.c
-L3 src/unnamed/ov026/data_ov026_02112ffc.c
-
 # --- L3: module-wide data TU ------------------------------------------------------
 # The file carries the module base in its stem, but srcpath._UNNAMED_RE recognises
 # only func/FUN/__sinit as address-named, so a data_ stem still reads as a name to

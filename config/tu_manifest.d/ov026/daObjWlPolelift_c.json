@@ -1,882 +1,870 @@
 {
-  "id": "ov026/daObjWlPolelift_c",
-  "module": "ov026",
-  "source": "src/game/actors/d_a_obj_wl_polelift.cpp",
-  "promoted_source": "src/game/actors/d_a_obj_wl_polelift.cpp",
-  "status": "promoted",
-  "production_mode": "intact-object",
-  "boundary_confidence": "high",
-  "boundary_evidence": [
-    "contiguous linker run: 0x021111a0..0x021116c8, nine functions with no foreign symbol inside the span (config/arm9/overlays/ov026/symbols.txt runs _ZN17daObjWlPolelift_cD1Ev .. daObjWlPolelift_c_classInit with nothing else between)",
-    "single class label over the whole run (daObjWlPolelift_c, ROM RTTI _ZTS17daObjWlPolelift_c at ov026:0x02113aa8); the neighbour above is a different class (_ZN21daObjWlKoopaShutter_cD1Ev begins at 0x021116c8) and the run starts at the module's .text edge (0x021111a0)",
-    "build/tu_map.json (tools/tu_map.py) splits this into ov026/daObjWlPolelift_c 0x021111a0..0x02111678 plus the single-function run @02111678-021116c8; the factory daObjWlPolelift_c_classInit is this class's own initializer -- it allocates sizeof(daObjWlPolelift_c) and stores this class's vtable -- so it is joined back on, the same shape landed for ov045/daObjKm2_Ami_Bou_c",
-    "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok (module-wide, NOT narrowed to this one TU)"
-  ],
-  "sections": [
-    {
-      "name": ".text",
-      "start": "0x021111a0",
-      "end": "0x021116c8"
-    },
-    {
-      "name": ".init",
-      "start": "0x02112b7c",
-      "end": "0x02112bbc"
-    },
-    {
-      "name": ".ctor",
-      "start": "0x02112da4",
-      "end": "0x02112da8"
-    },
-    {
-      "name": ".bss",
-      "start": "0x02113ea0",
-      "end": "0x02113eb4"
-    },
-    {
-      "name": ".data.data_ov026_02113a90",
-      "input_section": ".data",
-      "start": "0x02113a90",
-      "end": "0x02113aa8"
-    },
-    {
-      "name": ".data.wlLate",
-      "input_section": ".data",
-      "start": "0x02113aa8",
-      "end": "0x02113b5c"
-    }
-  ],
-  "functions": [
-    {
-      "symbol": "_ZN17daObjWlPolelift_cD1Ev",
-      "address": "0x021111a0",
-      "size": "0x00000040",
-      "legacy_source": "src/_ZN17daObjWlPolelift_cD1Ev.cpp",
-      "ordinal": 0
-    },
-    {
-      "symbol": "_ZN17daObjWlPolelift_cD0Ev",
-      "address": "0x021111e0",
-      "size": "0x00000054",
-      "legacy_source": "src/_ZN17daObjWlPolelift_cD0Ev.cpp",
-      "ordinal": 1
-    },
-    {
-      "symbol": "_ZN17daObjWlPolelift_c12UpdateShadowEv",
-      "address": "0x02111234",
-      "size": "0x00000070",
-      "legacy_source": "src/func_ov026_02111234.cpp",
-      "ordinal": 2
-    },
-    {
-      "symbol": "_ZN17daObjWlPolelift_c20UpdateModelTransformEv",
-      "address": "0x021112a4",
-      "size": "0x00000040",
-      "legacy_source": "src/func_ov026_021112a4.c",
-      "ordinal": 3
-    },
-    {
-      "symbol": "_ZN17daObjWlPolelift_c16CleanupResourcesEv",
-      "address": "0x021112e4",
-      "size": "0x00000024",
-      "legacy_source": "src/_ZN17daObjWlPolelift_c16CleanupResourcesEv.cpp",
-      "ordinal": 4
-    },
-    {
-      "symbol": "_ZN17daObjWlPolelift_c6RenderEv",
-      "address": "0x02111308",
-      "size": "0x00000028",
-      "legacy_source": "src/_ZN17daObjWlPolelift_c6RenderEv.cpp",
-      "ordinal": 5
-    },
-    {
-      "symbol": "_ZN17daObjWlPolelift_c8BehaviorEv",
-      "address": "0x02111330",
-      "size": "0x00000268",
-      "legacy_source": "src/_ZN17daObjWlPolelift_c8BehaviorEv.cpp",
-      "ordinal": 6
-    },
-    {
-      "symbol": "_ZN17daObjWlPolelift_c13InitResourcesEv",
-      "address": "0x02111598",
-      "size": "0x000000e0",
-      "legacy_source": "src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp",
-      "ordinal": 7
-    },
-    {
-      "symbol": "_Z27daObjWlPolelift_c_classInitv",
-      "address": "0x02111678",
-      "size": "0x00000050",
-      "legacy_source": "src/d_a_obj_wl_polelift.cpp",
-      "ordinal": 8
-    }
-  ],
-  "bss": [
-    {
-      "symbol": "data_ov026_02113ea0",
-      "address": "0x02113ea0",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "model file handle constructed with file ID 0x6db; InitResources loads it and the destructor path releases it"
-    },
-    {
-      "symbol": "@127",
-      "address": "0x02113ea8",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated destructor-registration node for the 0x6db model handle"
-    }
-  ],
-  "notes": [
-    "Promoted from nine per-function sources. The destructor was moved inline into include/daObjWlPolelift_c.h: written out of line mwccarm 2004/b56 emits the synthesized D0 ahead of the written D1 and adds a homeless D2, which is the reverse of the cartridge's 0x021111a0 (D1) / 0x021111e0 (D0) pair. Inline emits D1 then D0 and no D2, and moves the key function to the first non-inline virtual, InitResources -- which is why this TU now emits the class vtable and RTTI chain as compiler-only output.",
-    "func_ov026_02111234 and func_ov026_021112a4 keep their placeholder names. They are file-local helpers with no ROM-proven spelling; the delinked .c source for func_ov026_021112a4 was rewritten as C++ with an explicit extern \"C\" definition and a daObjWlPolelift_c* parameter so one TU can declare and define it once. The bodies still walk a char cursor because the fields they touch are still modelled as padding.",
-    "The factory's vptr store changed spelling from `*(void **)actor = &_ZTV17daObjWlPolelift_c;` to `*(int *)actor = (int)&_ZTV17daObjWlPolelift_c[2];`. The per-function shard referenced the ROM's data symbol, which config/arm9/overlays/ov026/symbols.txt records at the public address point 0x02113ae0. This TU emits its own vtable, whose _ZTV symbol addresses the vtable object eight bytes lower, so the source has to compute the same address point itself -- the measured eight-byte bias tools/objisolate.py and tools/reloc_audit.py both pin. The symbols.txt address is unchanged.",
-    "Static initializer folded: the PoleliftModelFile handle (file 0x6db) and its destructor-registration node make mwcc emit __sinit_d_a_obj_wl_polelift.cpp itself (0x40, raw-byte-identical to retail __sinit_ov026_02112b7c with the same instruction sequence, literal pool order and relocation sites); the handwritten shard is retired. @422 clashed with the fleet and is renamed (@422->@127).",
-    "Collision property member calls replace local helper declarations. Reconciled 1 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (23 sections, 102 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
-  ],
-  "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
-    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov026-daObjWlPolelift_c/d_a_obj_wl_polelift.o (gitignored)",
-    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 9,
-    "functions_declared": 9,
-    "compilerOnlyOutput": {
-      "requested": [
-        "_ZN7Vector3D1Ev"
-      ],
-      "deadstripped": [
-        "_ZN7Vector3D1Ev"
-      ],
-      "droppedSections": [
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        18,
-        19,
-        20,
-        34
-      ],
-      "data": [
-        "_ZTI7fBase_c",
-        "_ZTS7fBase_c",
-        "_ZTI7dBase_c",
-        "_ZTS7dBase_c",
-        "_ZTI8dActor_c",
-        "_ZTS8dActor_c",
-        "_ZTI17daObjWlPolelift_c"
-      ],
-      "dataExternalized": [
-        "_ZTI17daObjWlPolelift_c",
-        "_ZTI7dBase_c",
-        "_ZTI7fBase_c",
-        "_ZTI8dActor_c",
-        "_ZTS7dBase_c",
-        "_ZTS7fBase_c",
-        "_ZTS8dActor_c"
-      ]
-    },
-    "criteria": {
-      "every_declared_function_defined": "PASS",
-      "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 2 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
-      "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
-    },
-    "linkcheck": {
-      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
-      "result": "scratch-data-verified",
-      "scratch": "build/tu/ov026-daObjWlPolelift_c/link (gitignored)",
-      "phases": {
-        "delink": true,
-        "lcf": true,
-        "compile": true,
-        "link": true,
-        "checkModules": true,
-        "checkSymbols": false,
-        "rom": true
-      },
-      "tuRange": {
-        "start": "0x021111a0",
-        "end": "0x021116c8",
-        "differingBytes": 0,
-        "firstDiff": null
-      },
-      "tuRanges": [
-        {
-          "section": ".text",
-          "start": "0x021111a0",
-          "end": "0x021116c8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".init",
-          "start": "0x02112b7c",
-          "end": "0x02112bbc",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".ctor",
-          "start": "0x02112da4",
-          "end": "0x02112da8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".bss",
-          "start": "0x02113ea0",
-          "end": "0x02113eb4",
-          "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".data.data_ov026_02113a90",
-          "start": "0x02113a90",
-          "end": "0x02113aa8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.wlLate",
-          "start": "0x02113aa8",
-          "end": "0x02113b5c",
-          "differingBytes": 0,
-          "firstDiff": null
-        }
-      ],
-      "objectAudit": {
-        "counts": {
-          "LICENSED": 13
-        },
-        "emittedTextOrderIsRomAscending": true,
-        "nonLicensedSymbols": [],
-        "unlicensedSections": []
-      },
-      "nontextSectionOrder": {
-        "groups": [
-          {
-            "section": ".init",
-            "original": [
-              41
-            ],
-            "desired": [
-              41
-            ]
-          },
-          {
-            "section": ".ctor",
-            "original": [
-              39
-            ],
-            "desired": [
-              39
-            ]
-          },
-          {
-            "section": ".bss",
-            "original": [
-              5,
-              17
-            ],
-            "desired": [
-              5,
-              17
-            ]
-          }
-        ],
-        "objisolate": null,
-        "errors": null
-      },
-      "linkedStorageAliases": null,
-      "symbolCheckNewVsBaseline": [],
-      "symbolCheckErrors": [],
-      "symbolCheckBaselineErrors": [],
-      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
-      "rom": {
-        "bytes": 16777216,
-        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
-        "matchesStockRom": true
-      },
-      "linkerOutput": null
-    }
+ "id": "ov026/daObjWlPolelift_c",
+ "module": "ov026",
+ "source": "src/game/actors/d_a_obj_wl_polelift.cpp",
+ "promoted_source": "src/game/actors/d_a_obj_wl_polelift.cpp",
+ "status": "promoted",
+ "production_mode": "intact-object",
+ "boundary_confidence": "high",
+ "boundary_evidence": [
+  "contiguous linker run: 0x021111a0..0x021116c8, nine functions with no foreign symbol inside the span (config/arm9/overlays/ov026/symbols.txt runs _ZN17daObjWlPolelift_cD1Ev .. daObjWlPolelift_c_classInit with nothing else between)",
+  "single class label over the whole run (daObjWlPolelift_c, ROM RTTI _ZTS17daObjWlPolelift_c at ov026:0x02113aa8); the neighbour above is a different class (_ZN21daObjWlKoopaShutter_cD1Ev begins at 0x021116c8) and the run starts at the module's .text edge (0x021111a0)",
+  "build/tu_map.json (tools/tu_map.py) splits this into ov026/daObjWlPolelift_c 0x021111a0..0x02111678 plus the single-function run @02111678-021116c8; the factory daObjWlPolelift_c_classInit is this class's own initializer -- it allocates sizeof(daObjWlPolelift_c) and stores this class's vtable -- so it is joined back on, the same shape landed for ov045/daObjKm2_Ami_Bou_c",
+  "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok (module-wide, NOT narrowed to this one TU)"
+ ],
+ "sections": [
+  {
+   "name": ".text",
+   "start": "0x021111a0",
+   "end": "0x021116c8"
   },
-  "compiler_only_output": [
+  {
+   "name": ".init",
+   "start": "0x02112b7c",
+   "end": "0x02112bbc"
+  },
+  {
+   "name": ".ctor",
+   "start": "0x02112da4",
+   "end": "0x02112da8"
+  },
+  {
+   "name": ".data",
+   "start": "0x02113a90",
+   "end": "0x02113b5c"
+  },
+  {
+   "name": ".bss",
+   "start": "0x02113ea0",
+   "end": "0x02113eb4"
+  }
+ ],
+ "functions": [
+  {
+   "symbol": "_ZN17daObjWlPolelift_cD1Ev",
+   "address": "0x021111a0",
+   "size": "0x00000040",
+   "legacy_source": "src/_ZN17daObjWlPolelift_cD1Ev.cpp",
+   "ordinal": 0
+  },
+  {
+   "symbol": "_ZN17daObjWlPolelift_cD0Ev",
+   "address": "0x021111e0",
+   "size": "0x00000054",
+   "legacy_source": "src/_ZN17daObjWlPolelift_cD0Ev.cpp",
+   "ordinal": 1
+  },
+  {
+   "symbol": "_ZN17daObjWlPolelift_c12UpdateShadowEv",
+   "address": "0x02111234",
+   "size": "0x00000070",
+   "legacy_source": "src/func_ov026_02111234.cpp",
+   "ordinal": 2
+  },
+  {
+   "symbol": "_ZN17daObjWlPolelift_c20UpdateModelTransformEv",
+   "address": "0x021112a4",
+   "size": "0x00000040",
+   "legacy_source": "src/func_ov026_021112a4.c",
+   "ordinal": 3
+  },
+  {
+   "symbol": "_ZN17daObjWlPolelift_c16CleanupResourcesEv",
+   "address": "0x021112e4",
+   "size": "0x00000024",
+   "legacy_source": "src/_ZN17daObjWlPolelift_c16CleanupResourcesEv.cpp",
+   "ordinal": 4
+  },
+  {
+   "symbol": "_ZN17daObjWlPolelift_c6RenderEv",
+   "address": "0x02111308",
+   "size": "0x00000028",
+   "legacy_source": "src/_ZN17daObjWlPolelift_c6RenderEv.cpp",
+   "ordinal": 5
+  },
+  {
+   "symbol": "_ZN17daObjWlPolelift_c8BehaviorEv",
+   "address": "0x02111330",
+   "size": "0x00000268",
+   "legacy_source": "src/_ZN17daObjWlPolelift_c8BehaviorEv.cpp",
+   "ordinal": 6
+  },
+  {
+   "symbol": "_ZN17daObjWlPolelift_c13InitResourcesEv",
+   "address": "0x02111598",
+   "size": "0x000000e0",
+   "legacy_source": "src/_ZN17daObjWlPolelift_c13InitResourcesEv.cpp",
+   "ordinal": 7
+  },
+  {
+   "symbol": "_Z27daObjWlPolelift_c_classInitv",
+   "address": "0x02111678",
+   "size": "0x00000050",
+   "legacy_source": "src/d_a_obj_wl_polelift.cpp",
+   "ordinal": 8
+  }
+ ],
+ "bss": [
+  {
+   "symbol": "data_ov026_02113ea0",
+   "address": "0x02113ea0",
+   "size": "0x8",
+   "binding": "STB_GLOBAL",
+   "evidence": "model file handle constructed with file ID 0x6db; InitResources loads it and the destructor path releases it"
+  },
+  {
+   "symbol": "@127",
+   "address": "0x02113ea8",
+   "size": "0xc",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler-generated destructor-registration node for the 0x6db model handle"
+  }
+ ],
+ "notes": [
+  "Promoted from nine per-function sources. The destructor was moved inline into include/daObjWlPolelift_c.h: written out of line mwccarm 2004/b56 emits the synthesized D0 ahead of the written D1 and adds a homeless D2, which is the reverse of the cartridge's 0x021111a0 (D1) / 0x021111e0 (D0) pair. Inline emits D1 then D0 and no D2, and moves the key function to the first non-inline virtual, InitResources -- which is why this TU now emits the class vtable and RTTI chain as compiler-only output.",
+  "func_ov026_02111234 and func_ov026_021112a4 keep their placeholder names. They are file-local helpers with no ROM-proven spelling; the delinked .c source for func_ov026_021112a4 was rewritten as C++ with an explicit extern \"C\" definition and a daObjWlPolelift_c* parameter so one TU can declare and define it once. The bodies still walk a char cursor because the fields they touch are still modelled as padding.",
+  "The factory's vptr store changed spelling from `*(void **)actor = &_ZTV17daObjWlPolelift_c;` to `*(int *)actor = (int)&_ZTV17daObjWlPolelift_c[2];`. The per-function shard referenced the ROM's data symbol, which config/arm9/overlays/ov026/symbols.txt records at the public address point 0x02113ae0. This TU emits its own vtable, whose _ZTV symbol addresses the vtable object eight bytes lower, so the source has to compute the same address point itself -- the measured eight-byte bias tools/objisolate.py and tools/reloc_audit.py both pin. The symbols.txt address is unchanged.",
+  "Static initializer folded: the PoleliftModelFile handle (file 0x6db) and its destructor-registration node make mwcc emit __sinit_d_a_obj_wl_polelift.cpp itself (0x40, raw-byte-identical to retail __sinit_ov026_02112b7c with the same instruction sequence, literal pool order and relocation sites); the handwritten shard is retired. @422 clashed with the fleet and is renamed (@422->@127).",
+  "Collision property member calls replace local helper declarations. Reconciled 1 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (23 sections, 102 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
+ ],
+ "verification": {
+  "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+  "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+  "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+  "object": "build/tu/ov026-daObjWlPolelift_c/d_a_obj_wl_polelift.o (gitignored)",
+  "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+  "functions_matched": 9,
+  "functions_declared": 9,
+  "compilerOnlyOutput": {
+   "requested": [
+    "_ZN7Vector3D1Ev"
+   ],
+   "deadstripped": [
+    "_ZN7Vector3D1Ev"
+   ],
+   "droppedSections": [
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    18,
+    19,
+    20,
+    34
+   ],
+   "data": [
+    "_ZTI7fBase_c",
+    "_ZTS7fBase_c",
+    "_ZTI7dBase_c",
+    "_ZTS7dBase_c",
+    "_ZTI8dActor_c",
+    "_ZTS8dActor_c",
+    "_ZTI17daObjWlPolelift_c"
+   ],
+   "dataExternalized": [
+    "_ZTI17daObjWlPolelift_c",
+    "_ZTI7dBase_c",
+    "_ZTI7fBase_c",
+    "_ZTI8dActor_c",
+    "_ZTS7dBase_c",
+    "_ZTS7fBase_c",
+    "_ZTS8dActor_c"
+   ]
+  },
+  "criteria": {
+   "every_declared_function_defined": "PASS",
+   "every_declared_function_bytes_match": "PASS",
+   "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 2 unlicensed section/symbol(s), 0 compiler-only policy error(s)",
+   "functions_occur_in_expected_order": "PASS",
+   "relocation_destinations_verified": "PASS"
+  },
+  "linkcheck": {
+   "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+   "result": "scratch-data-verified",
+   "scratch": "build/tu/ov026-daObjWlPolelift_c/link (gitignored)",
+   "phases": {
+    "delink": true,
+    "lcf": true,
+    "compile": true,
+    "link": true,
+    "checkModules": true,
+    "checkSymbols": false,
+    "rom": true
+   },
+   "tuRange": {
+    "start": "0x021111a0",
+    "end": "0x021116c8",
+    "differingBytes": 0,
+    "firstDiff": null
+   },
+   "tuRanges": [
     {
-      "symbol": "_ZN7Vector3D1Ev",
-      "disposition": "deadstrip-duplicate",
-      "canonical_module": "arm9",
-      "canonical_address": "0x020072c0",
-      "reason": "include/types.h gives Vector3 an inline empty destructor -- declared because the ROM destroys arrays of it -- so every TU that builds Vector3 locals re-emits the trivial vague-linkage D1. Behavior builds six of them. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by an enrolled source; rombuild compares this object's body against those cartridge bytes before discarding the duplicate."
+     "section": ".text",
+     "start": "0x021111a0",
+     "end": "0x021116c8",
+     "differingBytes": 0,
+     "firstDiff": null
     },
     {
-      "symbol": "_ZTI7fBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086d70",
-      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims."
+     "section": ".init",
+     "start": "0x02112b7c",
+     "end": "0x02112bbc",
+     "differingBytes": 0,
+     "firstDiff": null
     },
     {
-      "symbol": "_ZTS7fBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e60",
-      "reason": "Vague-linkage type-name string for the inherited base fBase_c. Cartridge copy at arm9:0x02086e60, outside this entry's .text claim."
+     "section": ".ctor",
+     "start": "0x02112da4",
+     "end": "0x02112da8",
+     "differingBytes": 0,
+     "firstDiff": null
     },
     {
-      "symbol": "_ZTI7dBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e78",
-      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c. Cartridge copy at arm9:0x02086e78, outside this entry's .text claim."
+     "section": ".data",
+     "start": "0x02113a90",
+     "end": "0x02113b5c",
+     "differingBytes": 0,
+     "firstDiff": null
     },
     {
-      "symbol": "_ZTS7dBase_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02086e54",
-      "reason": "Vague-linkage type-name string for the inherited base dBase_c. Cartridge copy at arm9:0x02086e54, outside this entry's .text claim."
-    },
-    {
-      "symbol": "_ZTI8dActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e390",
-      "reason": "Vague-linkage typeinfo record for the direct base dActor_c. Cartridge copy at arm9:0x0208e390, outside this entry's .text claim."
-    },
-    {
-      "symbol": "_ZTS8dActor_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0208e384",
-      "reason": "Vague-linkage type-name string for the direct base dActor_c. Cartridge copy at arm9:0x0208e384, outside this entry's .text claim."
+     "section": ".bss",
+     "start": "0x02113ea0",
+     "end": "0x02113eb4",
+     "comparison": "NOBITS -- symbol/module gates",
+     "differingBytes": 0,
+     "firstDiff": null
     }
-  ],
-  "init": [
-    {
-      "symbol": "__sinit_d_a_obj_wl_polelift.cpp",
-      "address": "0x02112b7c",
-      "size": "0x40",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov026_02112b7c (0x40, same instruction sequence and literal pool) and carries the same relocation sites: one handle construction with destructor registration"
-    }
-  ],
-  "ctor": [
-    {
-      "symbol": ".p__sinit_d_a_obj_wl_polelift.cpp",
-      "address": "0x02112da4",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail; the other .ctor words belong to the remaining shards"
-    }
-  ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN17PoleliftModelFileC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
+   ],
+   "objectAudit": {
+    "counts": {
+     "LICENSED": 13
     },
-    {
-      "symbol": "_ZN17PoleliftModelFileD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
-    }
-  ],
-  "defined_symbol_renames": [
-    {
-      "from": "@492",
-      "to": "@127",
-      "evidence": "mwcc numbers this registration node @422 per TU and the fleet already defines a global @422, so the scratch link would multiply-define it; the first target @108 collides with ov064 daObjFl_Amilift_c's global @108 on main, so it lands on @127 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @484 to @482 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @484 to @451 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @449 to @447 when func_ov026_02111234 / 021112a4 became daObjWlPolelift_c members and their two named-parameter extern declarations left the TU (measured from the compiled object). Re-keyed from @447 to @442 when d_a_obj_wl_polelift dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @442 to @479 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @479 to @491 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @491 to @496 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @496 to @498 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @498 to @492 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object)."
-    }
-  ],
-  "symbol_binding_rewrites": [
-    {
-      "symbol": "__sinit_d_a_obj_wl_polelift.cpp",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
-    },
-    {
-      "symbol": ".p__sinit_d_a_obj_wl_polelift.cpp",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
-    },
-    {
-      "symbol": "@127",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02113ea8"
-    }
-  ],
-  "relocations": [
-    {
+    "emittedTextOrderIsRomAscending": true,
+    "nonLicensedSymbols": [],
+    "unlicensedSections": []
+   },
+   "nontextSectionOrder": {
+    "groups": [
+     {
+      "section": ".init",
+      "original": [
+       41
+      ],
+      "desired": [
+       41
+      ]
+     },
+     {
       "section": ".ctor",
-      "source": "0x02112da4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "__sinit_d_a_obj_wl_polelift.cpp",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02112b7c"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112b8c",
-      "type": "R_ARM_PC24",
-      "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
-      "addend": -8,
-      "target_module": "arm9",
-      "target_address": "0x02017acc"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112b9c",
-      "type": "R_ARM_PC24",
-      "kind": "arm_call",
-      "symbol": "__register_global_object",
-      "addend": -8,
-      "target_module": "arm9",
-      "target_address": "0x020731dc"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112bac",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov026_02113ea0",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113ea0"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112bb4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02017ab4"
-    },
-    {
-      "section": ".init",
-      "source": "0x02112bb8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "@127",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113ea8"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113abc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_Z27daObjWlPolelift_c_classInitv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111678"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113adc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI17daObjWlPolelift_c",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113a90"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b1c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02043494"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b18",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual38Ejj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0204349c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b14",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c9Virtual34Ejj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0204357c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b10",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02043ac0"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b58",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x020100dc"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b54",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010124"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b50",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0201012c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b4c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010130"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b48",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010134"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b44",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnPushedERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010138"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b40",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c8OnKickedERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0201013c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b3c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010140"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b38",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010144"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b34",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010148"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b30",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c9Virtual50Ev",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0201014c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b2c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010154"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b28",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010160"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b0c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c11AfterRenderEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010f6c"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b08",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c12BeforeRenderEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010f78"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b00",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010fc8"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113afc",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02010fd4"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113af4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011214"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113af0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011220"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113ae8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011244"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113ae4",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x02011268"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b24",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN17daObjWlPolelift_cD0Ev",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x021111e0"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b04",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN17daObjWlPolelift_c6RenderEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111308"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113af8",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN17daObjWlPolelift_c8BehaviorEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111330"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113aec",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN17daObjWlPolelift_c16CleanupResourcesEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x021112e4"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113ae0",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN17daObjWlPolelift_c13InitResourcesEv",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02111598"
-    },
-    {
-      "section": ".data.wlLate",
-      "source": "0x02113b20",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZN17daObjWlPolelift_cD1Ev",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x021111a0"
-    },
-    {
-      "section": ".data.data_ov026_02113a90",
-      "source": "0x02113a90",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTVN3abi20__si_class_type_infoE",
-      "addend": 8,
-      "target_module": "arm9",
-      "target_address": "0x0209a764"
-    },
-    {
-      "section": ".data.data_ov026_02113a90",
-      "source": "0x02113a94",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTS17daObjWlPolelift_c",
-      "addend": 0,
-      "target_module": "ov026",
-      "target_address": "0x02113aa8"
-    },
-    {
-      "section": ".data.data_ov026_02113a90",
-      "source": "0x02113a98",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "_ZTI8dActor_c",
-      "addend": 0,
-      "target_module": "arm9",
-      "target_address": "0x0208e390"
-    }
-  ],
-  "data": [
-    {
-      "symbol": "_ZTI17daObjWlPolelift_c",
-      "address": "0x02113a90",
-      "size": "0xc",
-      "evidence": "compiler emission of the class key function"
-    },
-    {
-      "symbol": "data_ov026_02113a9c",
-      "address": "0x02113a9c",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "collider offset (0, 0x28000, 0) between the typeinfo and the name"
-    },
-    {
-      "symbol": "_ZTS17daObjWlPolelift_c",
-      "address": "0x02113aa8",
-      "size": "0x14",
-      "evidence": "compiler emission of the class key function"
-    },
-    {
-      "symbol": "g_profile_WL_POLELIFT",
-      "address": "0x02113abc",
-      "size": "0x1c",
-      "evidence": "compiler emission of the class key function"
-    },
-    {
-      "symbol": "_ZTV17daObjWlPolelift_c",
-      "address": "0x02113ae0",
-      "size": "0x84",
-      "evidence": "compiler emission of the class key function",
-      "emitted_storage_address": "0x02113ad8",
-      "address_point_bias": "0x8"
-    }
-  ]
+      "original": [
+       39
+      ],
+      "desired": [
+       39
+      ]
+     },
+     {
+      "section": ".bss",
+      "original": [
+       5,
+       17
+      ],
+      "desired": [
+       5,
+       17
+      ]
+     }
+    ],
+    "objisolate": null,
+    "errors": null
+   },
+   "linkedStorageAliases": null,
+   "symbolCheckNewVsBaseline": [],
+   "symbolCheckErrors": [],
+   "symbolCheckBaselineErrors": [],
+   "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+   "rom": {
+    "bytes": 16777216,
+    "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "matchesStockRom": true
+   },
+   "linkerOutput": null
+  }
+ },
+ "compiler_only_output": [
+  {
+   "symbol": "_ZN7Vector3D1Ev",
+   "disposition": "deadstrip-duplicate",
+   "canonical_module": "arm9",
+   "canonical_address": "0x020072c0",
+   "reason": "include/types.h gives Vector3 an inline empty destructor -- declared because the ROM destroys arrays of it -- so every TU that builds Vector3 locals re-emits the trivial vague-linkage D1. Behavior builds six of them. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), owned by an enrolled source; rombuild compares this object's body against those cartridge bytes before discarding the duplicate."
+  },
+  {
+   "symbol": "_ZTI7fBase_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02086d70",
+   "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims."
+  },
+  {
+   "symbol": "_ZTS7fBase_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02086e60",
+   "reason": "Vague-linkage type-name string for the inherited base fBase_c. Cartridge copy at arm9:0x02086e60, outside this entry's .text claim."
+  },
+  {
+   "symbol": "_ZTI7dBase_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02086e78",
+   "reason": "Vague-linkage typeinfo record for the inherited base dBase_c. Cartridge copy at arm9:0x02086e78, outside this entry's .text claim."
+  },
+  {
+   "symbol": "_ZTS7dBase_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02086e54",
+   "reason": "Vague-linkage type-name string for the inherited base dBase_c. Cartridge copy at arm9:0x02086e54, outside this entry's .text claim."
+  },
+  {
+   "symbol": "_ZTI8dActor_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x0208e390",
+   "reason": "Vague-linkage typeinfo record for the direct base dActor_c. Cartridge copy at arm9:0x0208e390, outside this entry's .text claim."
+  },
+  {
+   "symbol": "_ZTS8dActor_c",
+   "disposition": "deadstrip-data",
+   "canonical_module": "arm9",
+   "canonical_address": "0x0208e384",
+   "reason": "Vague-linkage type-name string for the direct base dActor_c. Cartridge copy at arm9:0x0208e384, outside this entry's .text claim."
+  }
+ ],
+ "init": [
+  {
+   "symbol": "__sinit_d_a_obj_wl_polelift.cpp",
+   "address": "0x02112b7c",
+   "size": "0x40",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler-generated static initializer is raw-byte-identical to retail __sinit_ov026_02112b7c (0x40, same instruction sequence and literal pool) and carries the same relocation sites: one handle construction with destructor registration"
+  }
+ ],
+ "ctor": [
+  {
+   "symbol": ".p__sinit_d_a_obj_wl_polelift.cpp",
+   "address": "0x02112da4",
+   "size": "0x4",
+   "binding": "STB_GLOBAL",
+   "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail; the other .ctor words belong to the remaining shards"
+  }
+ ],
+ "undefined_symbol_aliases": [
+  {
+   "symbol": "_ZN17PoleliftModelFileC1Ej",
+   "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02017acc",
+   "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
+  },
+  {
+   "symbol": "_ZN17PoleliftModelFileD1Ev",
+   "canonical_symbol": "_Z13func_02017ab4i",
+   "canonical_module": "arm9",
+   "canonical_address": "0x02017ab4",
+   "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
+  }
+ ],
+ "defined_symbol_renames": [
+  {
+   "from": "@492",
+   "to": "@127",
+   "evidence": "mwcc numbers this registration node @422 per TU and the fleet already defines a global @422, so the scratch link would multiply-define it; the first target @108 collides with ov064 daObjFl_Amilift_c's global @108 on main, so it lands on @127 | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az); including math/MtxStack.h in place of local prototypes shifts this local number (#4570) Re-keyed from @484 to @482 when the TU's cstd divide calls became NitroSDK FX_ calls through nitro/fx/fx_cp.h (measured from the compiled object). Re-keyed from @484 to @451 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @449 to @447 when func_ov026_02111234 / 021112a4 became daObjWlPolelift_c members and their two named-parameter extern declarations left the TU (measured from the compiled object). Re-keyed from @447 to @442 when d_a_obj_wl_polelift dropped its local copies of the math/CalcLib.h helpers for the header (measured from the compiled object). Re-keyed from @442 to @479 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @479 to @491 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @491 to @496 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @496 to @498 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @498 to @492 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object)."
+  }
+ ],
+ "symbol_binding_rewrites": [
+  {
+   "symbol": "__sinit_d_a_obj_wl_polelift.cpp",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+  },
+  {
+   "symbol": ".p__sinit_d_a_obj_wl_polelift.cpp",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+  },
+  {
+   "symbol": "@127",
+   "from": "STB_LOCAL",
+   "to": "STB_GLOBAL",
+   "evidence": "compiler-local destructor-registration node is a configured initializer relocation destination at 0x02113ea8"
+  }
+ ],
+ "relocations": [
+  {
+   "section": ".ctor",
+   "source": "0x02112da4",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "__sinit_d_a_obj_wl_polelift.cpp",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02112b7c"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112b8c",
+   "type": "R_ARM_PC24",
+   "kind": "arm_call",
+   "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+   "addend": -8,
+   "target_module": "arm9",
+   "target_address": "0x02017acc"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112b9c",
+   "type": "R_ARM_PC24",
+   "kind": "arm_call",
+   "symbol": "__register_global_object",
+   "addend": -8,
+   "target_module": "arm9",
+   "target_address": "0x020731dc"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112bac",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "data_ov026_02113ea0",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113ea0"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112bb4",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_Z13func_02017ab4i",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02017ab4"
+  },
+  {
+   "section": ".init",
+   "source": "0x02112bb8",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "@127",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113ea8"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113abc",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_Z27daObjWlPolelift_c_classInitv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111678"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113adc",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZTI17daObjWlPolelift_c",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113a90"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b1c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02043494"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b18",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN7fBase_c9Virtual38Ejj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0204349c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b14",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN7fBase_c9Virtual34Ejj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0204357c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b10",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02043ac0"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b58",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x020100dc"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b54",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010124"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b50",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0201012c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b4c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010130"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b48",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010134"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b44",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c8OnPushedERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010138"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b40",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c8OnKickedERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0201013c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b3c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010140"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b38",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010144"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b34",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010148"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b30",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c9Virtual50Ev",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0201014c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b2c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010154"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b28",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010160"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b0c",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c11AfterRenderEj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010f6c"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b08",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c12BeforeRenderEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010f78"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b00",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010fc8"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113afc",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02010fd4"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113af4",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02011214"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113af0",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02011220"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113ae8",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02011244"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113ae4",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x02011268"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b24",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN17daObjWlPolelift_cD0Ev",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x021111e0"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b04",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN17daObjWlPolelift_c6RenderEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111308"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113af8",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN17daObjWlPolelift_c8BehaviorEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111330"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113aec",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN17daObjWlPolelift_c16CleanupResourcesEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x021112e4"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113ae0",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN17daObjWlPolelift_c13InitResourcesEv",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02111598"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113b20",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZN17daObjWlPolelift_cD1Ev",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x021111a0"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113a90",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZTVN3abi20__si_class_type_infoE",
+   "addend": 8,
+   "target_module": "arm9",
+   "target_address": "0x0209a764"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113a94",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZTS17daObjWlPolelift_c",
+   "addend": 0,
+   "target_module": "ov026",
+   "target_address": "0x02113aa8"
+  },
+  {
+   "section": ".data",
+   "source": "0x02113a98",
+   "type": "R_ARM_ABS32",
+   "kind": "load",
+   "symbol": "_ZTI8dActor_c",
+   "addend": 0,
+   "target_module": "arm9",
+   "target_address": "0x0208e390"
+  }
+ ],
+ "data": [
+  {
+   "symbol": "_ZTI17daObjWlPolelift_c",
+   "address": "0x02113a90",
+   "size": "0xc",
+   "evidence": "compiler emission of the class key function"
+  },
+  {
+   "symbol": "data_ov026_02113a9c",
+   "address": "0x02113a9c",
+   "size": "0xc",
+   "binding": "STB_GLOBAL",
+   "evidence": "collider offset (0, 0x28000, 0) between the typeinfo and the name"
+  },
+  {
+   "symbol": "_ZTS17daObjWlPolelift_c",
+   "address": "0x02113aa8",
+   "size": "0x14",
+   "evidence": "compiler emission of the class key function"
+  },
+  {
+   "symbol": "g_profile_WL_POLELIFT",
+   "address": "0x02113abc",
+   "size": "0x1c",
+   "evidence": "compiler emission of the class key function"
+  },
+  {
+   "symbol": "_ZTV17daObjWlPolelift_c",
+   "address": "0x02113ae0",
+   "size": "0x84",
+   "evidence": "compiler emission of the class key function",
+   "emitted_storage_address": "0x02113ad8",
+   "address_point_bias": "0x8"
+  }
+ ]
 }
