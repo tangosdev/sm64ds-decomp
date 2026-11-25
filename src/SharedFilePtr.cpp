@@ -61,6 +61,13 @@ int myFS_ReadFile(void *a, void *b, int c);
 
 unsigned int TrimModelFile(void *file);
 
+/* A file tagged "LZ77" carries the compressed stream immediately after the
+   tag; lzStream is that stream's header word. */
+struct TaggedLz77File {
+    u32 tag;
+    u32 lzStream;
+};
+
 void *SharedFilePtr::func_02017e48(unsigned int id) {
     func_02017e0c(id);
     return this;
@@ -89,7 +96,7 @@ void *SharedFilePtr::Load() {
         unsigned int size;
         void *mem;
         if (func_02018568(p)) {
-            unsigned int *q = (unsigned int *)(p + 4);
+            unsigned int *q = &((TaggedLz77File *)p)->lzStream;
             size = func_02018ac4(q);
             mem = Memory::Allocate(size);
             DecompressLZ16(q, mem);
@@ -126,7 +133,7 @@ void *SharedFilePtr::Load() {
     func_02018770();
     if (func_02018568(raw) != 0) {
         unsigned int t;
-        cp = (void *)(raw + 4);
+        cp = &((TaggedLz77File *)raw)->lzStream;
         t = func_02018ac4((unsigned int *)cp);
         csize = fsize - 4;
         fsize = t;
