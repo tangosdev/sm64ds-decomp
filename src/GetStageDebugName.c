@@ -5,7 +5,7 @@
  * The stage twin of GetActorDebugName. */
 extern signed char gCurrentSublevel; /* the current level id */
 extern char *STAGE_DEBUG_NAMES[];
-extern char data_02092654[12];
+char data_02092654[12] = "*NOT STAGE*";
 char *GetStageDebugName(void) {
     unsigned int i = gCurrentSublevel;
     return i < 0x34 ? STAGE_DEBUG_NAMES[i] : data_02092654;
