@@ -13,18 +13,6 @@
   ],
   "sections": [
     {
-      "name": ".data.tdBta",
-      "input_section": ".data",
-      "start": "0x02112f64",
-      "end": "0x02112f7c"
-    },
-    {
-      "name": ".data.tdClps",
-      "input_section": ".data",
-      "start": "0x02112fb8",
-      "end": "0x02112fd0"
-    },
-    {
       "name": ".text",
       "start": "0x02112698",
       "end": "0x021128f0"
@@ -43,35 +31,6 @@
       "name": ".bss",
       "start": "0x02113af4",
       "end": "0x02113b20"
-    },
-    {
-      "name": ".rodata",
-      "start": "0x021128f0",
-      "end": "0x021128f4"
-    },
-    {
-      "name": ".rodata.tdWaterScale",
-      "input_section": ".rodata",
-      "start": "0x021128fc",
-      "end": "0x02112900"
-    },
-    {
-      "name": ".rodata.tdWaterMat",
-      "input_section": ".rodata",
-      "start": "0x0211291c",
-      "end": "0x02112938"
-    },
-    {
-      "name": ".rodata.tdWaterTrans",
-      "input_section": ".rodata",
-      "start": "0x02112aa4",
-      "end": "0x02112c10"
-    },
-    {
-      "name": ".data.tdWaterName",
-      "input_section": ".data",
-      "start": "0x02112edc",
-      "end": "0x02112ee8"
     },
     {
       "name": ".data",
@@ -131,27 +90,6 @@
     }
   ],
   "data": [
-    {
-      "symbol": "data_ov032_02112f64",
-      "address": "0x02112f64",
-      "size": "0x18",
-      "binding": "STB_GLOBAL",
-      "evidence": "BTA header: 91 frames, one material."
-    },
-    {
-      "symbol": "data_ov032_02112fb8",
-      "address": "0x02112fb8",
-      "size": "0x18",
-      "binding": "STB_GLOBAL",
-      "evidence": "CLPS words owned before the next symbol."
-    },
-    {
-      "symbol": "data_ov032_02112edc",
-      "address": "0x02112edc",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "the BMD material name the animation record resolves: water_mat"
-    },
     {
       "symbol": "_ZTI14daObjTdWater_c",
       "address": "0x02113960",
@@ -322,20 +260,6 @@
       },
       "tuRanges": [
         {
-          "section": ".data.tdBta",
-          "start": "0x02112f64",
-          "end": "0x02112f7c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.tdClps",
-          "start": "0x02112fb8",
-          "end": "0x02112fd0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".text",
           "start": "0x02112698",
           "end": "0x021128f0",
@@ -363,41 +287,6 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
-          "section": ".rodata",
-          "start": "0x021128f0",
-          "end": "0x021128f4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.tdWaterScale",
-          "start": "0x021128fc",
-          "end": "0x02112900",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.tdWaterMat",
-          "start": "0x0211291c",
-          "end": "0x02112938",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.tdWaterTrans",
-          "start": "0x02112aa4",
-          "end": "0x02112c10",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.tdWaterName",
-          "start": "0x02112edc",
-          "end": "0x02112ee8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".data",
           "start": "0x02113960",
           "end": "0x02113a40",
@@ -407,7 +296,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 20
+          "LICENSED": 19
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -416,103 +305,114 @@
       "nontextSectionOrder": {
         "groups": [
           {
-            "section": ".data.tdBta",
-            "original": [
-              27
-            ],
-            "desired": [
-              27
-            ]
-          },
-          {
-            "section": ".data.tdClps",
-            "original": [
-              29
-            ],
-            "desired": [
-              29
-            ]
-          },
-          {
             "section": ".init",
             "original": [
-              53
+              48
             ],
             "desired": [
-              53
+              48
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              51
+              46
             ],
             "desired": [
-              51
+              46
             ]
           },
           {
             "section": ".bss",
             "original": [
+              5,
+              6,
               9,
-              10,
-              21,
-              24
+              17,
+              22
             ],
             "desired": [
+              6,
               9,
-              10,
-              21,
-              24
-            ]
-          },
-          {
-            "section": ".rodata",
-            "original": [
-              5
-            ],
-            "desired": [
+              22,
+              17,
               5
             ]
           },
           {
-            "section": ".rodata.tdWaterScale",
+            "section": ".data",
             "original": [
-              6
+              20,
+              24,
+              25,
+              27,
+              28
             ],
             "desired": [
-              6
-            ]
-          },
-          {
-            "section": ".rodata.tdWaterMat",
-            "original": [
-              30
-            ],
-            "desired": [
-              30
-            ]
-          },
-          {
-            "section": ".rodata.tdWaterTrans",
-            "original": [
-              34
-            ],
-            "desired": [
-              34
-            ]
-          },
-          {
-            "section": ".data.tdWaterName",
-            "original": [
-              16
-            ],
-            "desired": [
-              16
+              20,
+              24,
+              25,
+              28,
+              27
             ]
           }
         ],
-        "objisolate": null,
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                9,
+                17,
+                22
+              ],
+              "desired": [
+                6,
+                9,
+                22,
+                17,
+                5
+              ],
+              "slots": [
+                5,
+                6,
+                9,
+                17,
+                22
+              ]
+            },
+            {
+              "section": ".data",
+              "original": [
+                20,
+                24,
+                25,
+                27,
+                28
+              ],
+              "desired": [
+                20,
+                24,
+                25,
+                28,
+                27
+              ],
+              "slots": [
+                20,
+                24,
+                25,
+                27,
+                28
+              ]
+            }
+          ],
+          "symbolIndices": 10,
+          "sectionLinks": 0,
+          "sectionInfos": 3,
+          "error": null
+        },
         "errors": null
       },
       "linkedStorageAliases": null,
@@ -621,46 +521,6 @@
       "target_address": "0x02112e28"
     },
     {
-      "section": ".data.tdBta",
-      "source": "0x02112f68",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov032_021128fc",
-      "addend": 0,
-      "target_module": "ov032",
-      "target_address": "0x021128fc"
-    },
-    {
-      "section": ".data.tdBta",
-      "source": "0x02112f6c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov032_021128f0",
-      "addend": 0,
-      "target_module": "ov032",
-      "target_address": "0x021128f0"
-    },
-    {
-      "section": ".data.tdBta",
-      "source": "0x02112f70",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov032_02112aa4",
-      "addend": 0,
-      "target_module": "ov032",
-      "target_address": "0x02112aa4"
-    },
-    {
-      "section": ".data.tdBta",
-      "source": "0x02112f78",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov032_0211291c",
-      "addend": 0,
-      "target_module": "ov032",
-      "target_address": "0x0211291c"
-    },
-    {
       "section": ".init",
       "source": "0x02112e38",
       "type": "R_ARM_PC24",
@@ -759,16 +619,6 @@
       "addend": 0,
       "target_module": "ov032",
       "target_address": "0x02113b04"
-    },
-    {
-      "section": ".rodata.tdWaterMat",
-      "source": "0x02112920",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov032_02112edc",
-      "addend": 0,
-      "target_module": "ov032",
-      "target_address": "0x02112edc"
     },
     {
       "section": ".data",
@@ -1209,34 +1059,5 @@
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @408 now; licensed under the existing pin @394 Re-keyed from @389 to @362 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @362 to @364 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
-  "rodata": [
-    {
-      "symbol": "data_ov032_021128f0",
-      "address": "0x021128f0",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "rotation key of the huge-water texture-SRT animation: the identity angle"
-    },
-    {
-      "symbol": "data_ov032_021128fc",
-      "address": "0x021128fc",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "scale key of the huge-water texture-SRT animation: 0x1000, an unscaled texture"
-    },
-    {
-      "symbol": "data_ov032_0211291c",
-      "address": "0x0211291c",
-      "size": "0x1c",
-      "binding": "STB_GLOBAL",
-      "evidence": "the huge water's BTA material record; func_02046b64 fills in its material id"
-    },
-    {
-      "symbol": "data_ov032_02112aa4",
-      "address": "0x02112aa4",
-      "size": "0x16c",
-      "binding": "STB_GLOBAL",
-      "evidence": "91 texture-translation keys, one per animation frame, named by the record's transS/transT ranges"
-    }
-  ]
+  "rodata": []
 }

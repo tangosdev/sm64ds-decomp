@@ -43,19 +43,8 @@ struct WcObj04CollisionFilePtr : SharedFilePtr {
 extern WcObj04ModelFilePtr data_ov029_0211432c;
 extern WcObj04CollisionFilePtr data_ov029_02114324;
 
-/* 'CLPS' collision-property block: tag, count/stride header, entries. */
-struct CLPS_Block {
-    u32 tag;
-    u32 header;
-    u32 entries[6];
-};
-
-/* The float board's floor and wall pair. */
-CLPS_Block data_ov029_0211304c = {
-    0x53504c43,
-    0x00020008,
-    {0x01000fc0, 0x000000ff, 0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff},
-};
+/* The float board's floor and wall pair; stage data in d_s_map_ov029.c. */
+extern CLPS_Block data_ov029_0211304c;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */

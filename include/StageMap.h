@@ -79,6 +79,16 @@ typedef struct TeleportDest {
     u16 param; /* 0x06 */
 } TeleportDest;
 
+/* One 8-byte fog record. The loader packs color[0..2] into the low, middle
+ * and high five bits of the hardware color and passes the two halfwords to
+ * Fog::Init as the near/far pair. */
+typedef struct FogEntry {
+    u8 enabled;  /* 0x00 */
+    u8 color[3]; /* 0x01 */
+    u16 near;    /* 0x04 */
+    u16 far;     /* 0x06 */
+} FogEntry;
+
 /* 0xe. SetViewObjs steps this far. */
 typedef struct ViewEntry {
     u8 type;    /* 0x00 */
@@ -121,6 +131,7 @@ typedef char DoorEntry_size_must_be_0xc[sizeof(DoorEntry) == 0xc ? 1 : -1];
 typedef char ExitEntry_size_must_be_0xe[sizeof(ExitEntry) == 0xe ? 1 : -1];
 typedef char TeleportSourceEntry_size_must_be_8[sizeof(TeleportSourceEntry) == 8 ? 1 : -1];
 typedef char TeleportDest_size_must_be_8[sizeof(TeleportDest) == 8 ? 1 : -1];
+typedef char FogEntry_size_must_be_8[sizeof(FogEntry) == 8 ? 1 : -1];
 typedef char PathNode_size_must_be_6[sizeof(PathNode) == 6 ? 1 : -1];
 typedef char ViewEntry_size_must_be_0xe[sizeof(ViewEntry) == 0xe ? 1 : -1];
 typedef char Area_size_must_be_0xc[sizeof(Area) == 0xc ? 1 : -1];

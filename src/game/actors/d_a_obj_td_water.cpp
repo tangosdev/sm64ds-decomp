@@ -21,8 +21,8 @@
  * first and emits no D2 body.
  *
  * What stays:
- * - data_ov032_02113afc / 02113af4 / 02112f64 / 02112fb8 BMD / KCL / BTA /
- *   CLPS handles; this TU consumes them, overlay .data owns them.
+ * - data_ov032_02113afc / 02113af4 BMD / KCL handles live here; the BTA /
+ *   CLPS stage data is in d_s_map_ov032.c.
  * - S14: g_profile_TD_WATER stays outside the licensed .text.
  * - no daPly_c.h / dCamera_c.h.
  */
@@ -42,10 +42,6 @@ enum d_a_obj_td_water_AssetId { ASSET_TD_OBJ_WATER_BMD = 0x06b7, ASSET_TD_OBJ_WA
 
 struct KCL_File;
 
-struct CLPS_Block {
-    u32 words[6];
-};
-
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4; collision handles construct through func_02017b4c and
  * destroy through SharedFilePtr_Destruct_Clsn. The manifest aliases those
@@ -62,57 +58,11 @@ struct TdWaterClsnFileHandle : SharedFilePtr {
 
 extern TdWaterModelFilePtr data_ov032_02113afc;   /* the water model's BMD */
 extern TdWaterClsnFileHandle data_ov032_02113af4; /* the collision KCL */
-extern const fx32 data_ov032_021128fc[];
-extern const u16 data_ov032_021128f0[];
-extern const fx32 data_ov032_02112aa4[];
-extern const BTAMaterialRecord data_ov032_0211291c[];
-extern char data_ov032_02112edc[];
 
-BTA_File data_ov032_02112f64 = {
-    91,
-    0,
-    (fx32 *)data_ov032_021128fc,
-    (u16 *)data_ov032_021128f0,
-    (fx32 *)data_ov032_02112aa4,
-    1,
-    0,
-    (BTAMaterialRecord *)data_ov032_0211291c,
-};
-
-/* The keys and the material record of the file table above. Retail keeps
- * them in .rodata, interleaved with the second water BTA file's keys, so each
- * one gets its own named section. func_02046b64 patches the record's material
- * id in place, so the file table takes its address through a non-const
- * pointer. */
-
-/* Both keys are the identity value: no texture rotation, no scaling. */
-const u16 data_ov032_021128f0[2] = {0, 0};
-const fx32 data_ov032_021128fc[1] = {0x1000};
-
-const BTAMaterialRecord data_ov032_0211291c[1] = {
-    {0xffff, 0, data_ov032_02112edc, {1, 0}, {1, 0}, {1, 0}, {91, 0}, {91, 0}},
-};
-
-/* Texture translation ramps linearly from 0 to 0x1000 across the 91-frame
- * loop, so the surface scrolls exactly one texture width per cycle. */
-const fx32 data_ov032_02112aa4[91] = {
-    0x00000000, 0x0000002e, 0x0000005b, 0x00000089, 0x000000b6, 0x000000e4, 0x00000111, 0x0000013f,
-    0x0000016c, 0x0000019a, 0x000001c7, 0x000001f5, 0x00000222, 0x00000250, 0x0000027d, 0x000002ab,
-    0x000002d8, 0x00000306, 0x00000333, 0x00000361, 0x0000038e, 0x000003bc, 0x000003e9, 0x00000417,
-    0x00000444, 0x00000472, 0x0000049f, 0x000004cd, 0x000004fa, 0x00000528, 0x00000555, 0x00000583,
-    0x000005b0, 0x000005de, 0x0000060b, 0x00000639, 0x00000666, 0x00000694, 0x000006c1, 0x000006ef,
-    0x0000071c, 0x0000074a, 0x00000777, 0x000007a5, 0x000007d2, 0x00000800, 0x0000082e, 0x0000085b,
-    0x00000889, 0x000008b6, 0x000008e4, 0x00000911, 0x0000093f, 0x0000096c, 0x0000099a, 0x000009c7,
-    0x000009f5, 0x00000a22, 0x00000a50, 0x00000a7d, 0x00000aab, 0x00000ad8, 0x00000b06, 0x00000b33,
-    0x00000b61, 0x00000b8e, 0x00000bbc, 0x00000be9, 0x00000c17, 0x00000c44, 0x00000c72, 0x00000c9f,
-    0x00000ccd, 0x00000cfa, 0x00000d28, 0x00000d55, 0x00000d83, 0x00000db0, 0x00000dde, 0x00000e0b,
-    0x00000e39, 0x00000e66, 0x00000e94, 0x00000ec1, 0x00000eef, 0x00000f1c, 0x00000f4a, 0x00000f77,
-    0x00000fa5, 0x00000fd2, 0x00001000,
-};
-
-CLPS_Block data_ov032_02112fb8 = {
-    0x53504c43, 0x00010008, 0x00000fe0, 0x000000ff, 0xffffffff, 0xffffffff,
-};
+/* Stage data owned by d_s_map_ov032.c: the water's texture animation and
+   its collision properties. */
+extern BTA_File data_ov032_02112f64;
+extern CLPS_Block data_ov032_02112fb8;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -182,9 +132,6 @@ s32 daObjTdWater_c::CleanupResources() {
  * the model's SharedFilePtr, then the collision file's. */
 TdWaterModelFilePtr data_ov032_02113afc(ASSET_TD_OBJ_WATER_BMD);
 TdWaterClsnFileHandle data_ov032_02113af4(ASSET_TD_OBJ_WATER_KCL);
-
-/* The BMD material the texture animation above drives. */
-char data_ov032_02112edc[12] = "water_mat";
 
 extern "C" {
 u32 data_ov032_02113b1c[1];

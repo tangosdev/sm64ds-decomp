@@ -18,9 +18,6 @@ enum d_a_obj_td_futa_AssetId { ASSET_TD_OBJ_FUTA_BMD = 0x06b5, ASSET_TD_OBJ_FUTA
 #include "SpawnInfo.h"
 
 struct KCL_File;
-struct CLPS_Block {
-    u32 words[8];
-};
 
 /* dExtSimpleModel_c handles construct through func_02017acc and destroy through
  * func_02017ab4; collision handles construct through func_02017b4c and
@@ -38,9 +35,7 @@ struct TdFutaClsnFileHandle : SharedFilePtr {
 
 extern TdFutaClsnFileHandle data_ov032_02113acc;
 extern TdFutaModelFilePtr data_ov032_02113ad4;
-CLPS_Block data_ov032_02112f98 = {
-    0x53504c43, 0x00010008, 0x00040fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
-};
+extern CLPS_Block data_ov032_02112f98;
 
 /* Every instruction the cartridge has here falls out of the one `new`.
  * 0x0211266c loads 0x320 -- the class's own size -- into the header's leaf

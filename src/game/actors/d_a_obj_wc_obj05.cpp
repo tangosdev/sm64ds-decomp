@@ -43,13 +43,7 @@ struct WcObj05CollisionFilePtr : SharedFilePtr {
 
 extern WcObj05ModelFilePtr gWcObj05ModelFile;
 extern WcObj05CollisionFilePtr gWcObj05CollisionFile;
-struct CLPS_Block {
-    u32 words[8];
-};
-
-CLPS_Block data_ov029_0211306c = {
-    0x53504c43, 0x00020008, 0x01000fc0, 0x000000ff, 0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff,
-};
+extern CLPS_Block data_ov029_0211306c;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
