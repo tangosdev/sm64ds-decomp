@@ -1,14 +1,20 @@
 #include "types.h"
 extern void func_0203da2c(int v);
 extern void func_0203da4c(void);
-extern u8 data_0209fc5c[];
-extern signed char data_0209fc64[];
-extern u8 data_0209fc50;
-extern u8 data_0209fc58;
-extern int data_0209fc68;
-extern int data_0209fc60;
-extern u8 data_0209fc54;
 extern u8 gSoftResetDisabled;
+
+/* The link session's state block at 0x0209fc50: present slots (fc5c, fc5d
+   interior), re-ranked slots (fc64), player count (fc50), disconnect bits
+   (fc58), a second state word (fc60) and the session state machine
+   (fc68) the per-frame dispatcher func_02030e4c calls through
+   data_020927ec. */
+u8 data_0209fc50;
+u8 data_0209fc54;
+u8 data_0209fc58;
+u8 data_0209fc5c[4];
+int data_0209fc60;
+signed char data_0209fc64[4];
+int data_0209fc68;
 
 /* Start a session in link mode arg (func_0203da2c; d_s_entry_methods.cpp
    passes 0, 1 and 3, d_s_mb.cpp 2) and clear the link error bits

@@ -37,7 +37,7 @@
     {
       "name": ".bss",
       "start": "0x0209f5f8",
-      "end": "0x0209f648"
+      "end": "0x0209fc48"
     }
   ],
   "functions": [
@@ -232,6 +232,13 @@
       "size": "0x2c",
       "evidence": "the namespace-scope dWipe_c singleton (sizeof 0x2c); retail __sinit_02074f80 calls _ZN7dWipe_cC1Ev on it and registers _ZN7dWipe_cD1Ev. Bracketed by this TU's own scanline tables at 0x0209f648 above and its IRQ index words at 0x0209f5f8..0x0209f60c below.",
       "binding": "STB_GLOBAL"
+    },
+    {
+      "symbol": "data_0209f648",
+      "address": "0x0209f648",
+      "size": "0x600",
+      "binding": "STB_GLOBAL",
+      "evidence": "the two 0x300-byte iris-wipe scanline tables (int[2][192]) the HBlank handler fills and the IRQ latches; the luigi overlay externs it as int[][192]"
     }
   ],
   "compiler_only_output": [
@@ -521,16 +528,16 @@
         5,
         6,
         8,
-        9,
         10,
         11,
-        12,
+        14,
+        15,
         16,
         17,
-        55,
-        56,
-        63,
-        64
+        57,
+        58,
+        65,
+        66
       ],
       "data": [
         "_ZTI8dFader_c",
@@ -608,7 +615,7 @@
         {
           "section": ".bss",
           "start": "0x0209f5f8",
-          "end": "0x0209f648",
+          "end": "0x0209fc48",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],

@@ -142,57 +142,59 @@ char data_02099e24[72] = {
     0x65, 0x63, 0x6f, 0x76, 0x65, 0x72, 0x65, 0x64, 0x29, 0x0a, 0x00, 0x00,
 };
 char data_02099e6c[] = "rom";
-extern u8 data_020a0ef0;
-extern u8 data_020a0ef4;
-extern u8 data_020a0ef8;
-extern u8 data_020a0efc;
-extern u8 data_020a0f00;
-extern u8 data_020a0f04;
-extern u8 data_020a0f08;
-extern unsigned char data_020a0f0c;
-extern u8 data_020a0f10;
-extern unsigned short data_020a0f14;
-extern s16 data_020a0f18;
-extern u16 data_020a0f1c;
-extern u16 data_020a0f20; /* 0x020a0f20 - counter */
-extern unsigned short data_020a0f24;
-extern unsigned short data_020a0f28;
-extern unsigned short data_020a0f2c;
-extern u16 data_020a0f30;
-extern unsigned short data_020a0f34;
-extern int data_020a0f38;
-extern void *data_020a0f3c;
-extern s32 data_020a0f40;
+u8 data_020a0ef0;
+u8 data_020a0ef4;
+u8 data_020a0ef8;
+u8 data_020a0efc;
+u8 data_020a0f00;
+u8 data_020a0f04;
+u8 data_020a0f08;
+unsigned char data_020a0f0c;
+u8 data_020a0f10;
+unsigned short data_020a0f14;
+s16 data_020a0f18;
+u16 data_020a0f1c;
+u16 data_020a0f20; /* 0x020a0f20 - counter */
+unsigned short data_020a0f24;
+unsigned short data_020a0f28;
+unsigned short data_020a0f2c;
+u16 data_020a0f30;
+unsigned short data_020a0f34;
+int data_020a0f38;
+void *data_020a0f3c;
+s32 data_020a0f40;
 
 /* The WMParentParam func_0203fbc4 hands to WM_SetParentParameter. */
-extern WMParentParam *data_020a0f44;
+WMParentParam *data_020a0f44;
 
-extern void *data_020a0f48;
-extern void *data_020a0f4c;
-extern s32 data_020a0f50;
-extern WMBssDesc *data_020a0f54;
-extern unsigned int data_020a0f58;
-extern int data_020a0f5c;
-extern void *data_020a0f60;
-extern unsigned int data_020a0f64;
-extern void *data_020a0f68;
-extern s32 data_020a0f6c;
-extern int data_020a0f70;
-extern WMDataSharingInfo *data_020a0f74;
-extern s32 data_020a0f78;
-extern void *data_020a0f7c;
-extern WMDataSet *data_020a0f80;
-extern int data_020a0f84;
-extern int data_020a0f88;
-extern int data_020a0f8c;
-extern int data_020a0f94;
-extern int data_020a0f98;
-extern u8 data_020a0f9d[4];
-extern u16 data_020a0fa0[][3];
-extern u8 data_020a0fb8[];
-extern u16 data_020a0fbe[4][3];
-extern u16 data_020a0fd0[];
-extern MBGameRegistry data_020a0fec;
+void *data_020a0f48;
+void *data_020a0f4c;
+s32 data_020a0f50;
+WMBssDesc *data_020a0f54;
+unsigned int data_020a0f58;
+int data_020a0f5c;
+void *data_020a0f60;
+unsigned int data_020a0f64;
+void *data_020a0f68;
+s32 data_020a0f6c;
+int data_020a0f70;
+WMDataSharingInfo *data_020a0f74;
+s32 data_020a0f78;
+void *data_020a0f7c;
+WMDataSet *data_020a0f80;
+int data_020a0f84;
+int data_020a0f88;
+int data_020a0f8c;
+ChannelMeasureCallback data_020a0f90;
+int data_020a0f94;
+int data_020a0f98;
+u8 data_020a0f9c[4]; /* slot 0 is unused; uses start at data_020a0f9d */
+extern u8 data_020a0f9d[];
+u16 data_020a0fa0[4][3];
+u16 data_020a0fb8[4][3];
+extern u16 data_020a0fbe[][3];
+u16 data_020a0fd0[0xe];
+MBGameRegistry data_020a0fec;
 
 /* data_020a1020 is the packet this console sends each frame, packed from
    the local record and unpacked the same way into data_020a1154 below: +0x0
@@ -201,10 +203,10 @@ extern MBGameRegistry data_020a0fec;
    0x11 bytes at the record's 0x12. While data_020a0ef8 counts down it
    carries instead a chunk index at +0x2 and one of the 0x16-byte chunks at
    data_020a10a4 at +0x3. */
-extern u8 data_020a1020[0x20];
+u8 data_020a1020[0x20] __attribute__((aligned(32)));
 
 /* The WMParentParam template func_0203db64 keeps. */
-extern WMParentParam data_020a1064;
+WMParentParam data_020a1064;
 
 /* A player's 0x16-byte profile as the link exchanges it (func_0203ea5c sends
    them a chunk at a time): the owner's favourite colour and nickname.
@@ -215,15 +217,17 @@ extern WMParentParam data_020a1064;
    settings. Entries 1..3 of
    data_020a10fc are the download-play children's, which func_0203e20c
    fills in as they connect. */
-extern MBUserInfo data_020a10a4[4];
-extern MBUserInfo data_020a10fc[4];
-extern char data_020a11e4[];
+MBUserInfo data_020a10a4[4];
+MBUserInfo data_020a10fc[4];
+PlayerInputRecord data_020a1040;
+PlayerInputRecord data_020a1154[4];
+char data_020a11e4[0x498];
 
-/* A worker thread; its 0x400-byte stack is data_020a11e4, just below it
- * (WFSi_CreateTaskThread creates it). */
+/* data_020a15e4 is the OSThread constructed at +0x400 in this task block. */
 extern OSThread data_020a15e4;
 
-extern WMStatus data_020a1680;
+WMStatus data_020a1680 __attribute__((aligned(32)));
+WFSWork data_020a1fc0 __attribute__((aligned(32)));
 extern char data_020a2400[];
 extern char data_020a2404[];
 extern u8 data_020a2408[];
@@ -605,13 +609,9 @@ void WFSi_TaskThread(void) {
     }
 }
 
-/* Start the file-share parent's loader thread (WFSi_TaskThread) in its block
-   at data_020a11e4: the 0x400-byte stack, then the OSThread (also the
-   symbol data_020a15e4, which WFSi_NotifyBusy wakes). OS_CreateThread takes
-   (thread, entry, arg, stack top, stack size, priority 15 here), and
-   OS_WakeupThreadDirect then wakes the thread. Both this and WFSi_EndTaskThread
-   reach the block through a pointer cast; declaring data_020a11e4 itself a
-   WFSiTask changes the code of both. */
+/* Start the file-share parent's loader thread (WFSi_TaskThread).
+   OS_CreateThread takes (thread, entry, argument, stack top, stack size,
+   priority 15 here), and OS_WakeupThreadDirect then wakes the thread. */
 void WFSi_CreateTaskThread(void) {
     WFSiTask *blk = (WFSiTask *)data_020a11e4;
     blk->threadQueue = 0;
@@ -2747,7 +2747,7 @@ void func_0203ea5c(void) {
 
 /* The parent state callback func_0203e20c installs
    (MB_CommSetParentStateCallback). When child aid (0..3) connects it keeps
-   the child's MAC address from the WM record in data_020a0fb8; on
+   the child's MAC address in that slot of data_020a0fb8; on
    MB_COMM_PSTATE_END it raises data_020a0f70, which func_0203e20c waits on.
    The other states are ignored. */
 void func_0203e9a8(u16 aid, u32 status, void *arg) {
@@ -2760,7 +2760,7 @@ void func_0203e9a8(u16 aid, u32 status, void *arg) {
             return;
         if (arg == 0)
             return;
-        MI_CpuCopy8(((WmStartParentCallback *)arg)->macAddress, data_020a0fb8 + aid * 6, 6);
+        MI_CpuCopy8(((WmStartParentCallback *)arg)->macAddress, data_020a0fb8[aid], 6);
         break;
     case MB_COMM_PSTATE_DISCONNECTED:
     case MB_COMM_PSTATE_KICKED:
@@ -3230,7 +3230,7 @@ void func_0203db64(void *parentParam, const void *gameRegistry) {
         MI_CpuCopy8(buf.nickName, data_020a10fc[0].name, buf.nickNameLength * 2);
         MI_CpuCopy8(buf.nickName, data_020a10a4[0].name, buf.nickNameLength * 2);
         data_020a0f00 = buf.language;
-        OS_GetMacAddress(data_020a0fb8);
+        OS_GetMacAddress(data_020a0fb8[0]);
         OS_GetMacAddress(data_020a0fa0);
     }
     data_020a0ef0 = 1;

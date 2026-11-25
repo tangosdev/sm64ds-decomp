@@ -841,11 +841,12 @@ src/runtime/graphics/fader/d_wipe.cpp:
     .init start:0x02074f80 end:0x02074fb8
     .ctor start:0x02086b90 end:0x02086b94
     .data start:0x020926d0 end:0x02092718
-    .bss start:0x0209f5f8 end:0x0209f648
+    .bss start:0x0209f5f8 end:0x0209fc48
 
 src/engine/view/d_view.cpp:
     complete
     .text start:0x0202fc98 end:0x0202fd4c
+    .bss start:0x0209fc48 end:0x0209fc50
 
 src/Quaternion_FromVector3.cpp:
     complete
@@ -923,6 +924,7 @@ src/unnamed/arm9/0203/func_02030a78.c:
 src/unnamed/arm9/0203/func_02030aa4.c:
     complete
     .text start:0x02030aa4 end:0x02030b58
+    .bss start:0x0209fc50 end:0x0209fc6c
 
 src/unnamed/arm9/0203/func_02030b58.c:
     complete
@@ -952,17 +954,10 @@ src/data/arm9/data_02075d14.c:
     complete
     .rodata start:0x02075d14 end:0x02075f14
 
-src/data/arm9/data_0209f648.c:
-    complete
-    .bss start:0x0209f648 end:0x020a0c5c
-
-src/data/arm9/data_020a0ef0.c:
-    complete
-    .bss start:0x020a0ef0 end:0x020a4b6c
-
 src/Message3.cpp:
     complete
     .text start:0x02030fa8 end:0x02034a78
+    .bss start:0x0209fc6c end:0x020a0c5c
 
 src/game/stages/d_s_mb.cpp:
     complete
@@ -1357,14 +1352,17 @@ src/engine/link/unit0203d7b8.cpp:
     .ctor start:0x02086bb4 end:0x02086bb8
     .rodata start:0x02082158 end:0x02082178
     .data start:0x02099e18 end:0x02099e70
+    .bss start:0x020a0ef0 end:0x020a4b40
 
 src/engine/save/SaveData2.cpp:
     complete
     .text start:0x02042804 end:0x02042fe4
+    .bss start:0x020a4b40 end:0x020a4b48
 
 src/runtime/actor/ActorBase.cpp:
     complete
     .text start:0x02042fe4 end:0x020440e8
+    .bss start:0x020a4b48 end:0x020a4b6c
 
 src/data/arm9/data_02082178.c:
     complete

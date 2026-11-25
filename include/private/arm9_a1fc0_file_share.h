@@ -183,10 +183,10 @@ typedef struct WFSWork {
     /* 0x40 -- the MP send buffer, 32-byte aligned (0x020a2000): WFSi_SetMPData
      * builds the next packet in it (WBT's parent or child send hook) and hands
      * it to WM_SetMPDataToPort. Its extent is the gap up to context. */
-    unsigned char send_buf[0x400];
+    unsigned char send_buf[0x400] __attribute__((aligned(32)));
     union {
-        WFSParentContext parent;
-        WFSChildContext child;
+        WFSParentContext parent __attribute__((aligned(32)));
+        WFSChildContext child __attribute__((aligned(32)));
     } context; /* 0x440 -- parent or child, by is_parent */
 } WFSWork;
 
@@ -194,12 +194,10 @@ typedef char WFSiFileList_size_must_be_0xcc0[sizeof(WFSiFileList) == FILE_SHARE_
 typedef char WFSParentContext_size_must_be_0x2730[sizeof(WFSParentContext) == 0x2730 ? 1 : -1];
 typedef char WFSChildContext_size_must_be_0xc7c[sizeof(WFSChildContext) == 0xc7c ? 1 : -1];
 typedef char WFSiMessage_size_must_be_0xc[sizeof(WFSiMessage) == 0xc ? 1 : -1];
-typedef char WFSWork_size_must_be_0x2b70[sizeof(WFSWork) == 0x2b70 ? 1 : -1];
+typedef char WFSWork_size_must_be_0x2b80[sizeof(WFSWork) == 0x2b80 ? 1 : -1];
 
-/* The work block itself, in .bss: it ends at 0x020a4b30, below the next
- * symbol (0x020a4b40). data_020a2400 (context) and data_020a3fc0 (block +
- * 0x2000, the literal WFS_GetCurrentBitmap and WFS_EnableSync load) are
- * labels inside it: dsd needs a symbol at every relocation target. */
+/* data_020a2400 (context) and data_020a3fc0 (block + 0x2000) are labels
+ * inside the work block: dsd needs a symbol at every relocation target. */
 extern WFSWork data_020a1fc0;
 
 /* The block through a pointer cast. Read as data_020a1fc0.context, context's
