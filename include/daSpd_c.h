@@ -28,6 +28,12 @@
  * _ZTV7daSpd_c 0x02122c2c. d_a_spd.cpp emits all three and the manifest
  * compares them against the cartridge. */
 struct daSpd_c : dActor_c {
+    typedef int (daSpd_c::*StateFunc)();
+    struct StateRow {
+        StateFunc enter;
+        StateFunc run;
+    };
+
     dExtAnmModel_c mAnmModel;                /* 0x0d4 */
     dExtShadowModel_c mShadowModel;                /* 0x138 */
     dCcAc_c mdCcAc_c;  /* 0x160 */
@@ -35,7 +41,7 @@ struct daSpd_c : dActor_c {
     /* Drop-shadow matrix. */
     Matrix4x3 mShadowMtx; /* 0x350 */
     /* Current row of data_ov071_02122fa8. Two pointer-to-member calls. */
-    void *mStateRow;                         /* 0x380 */
+    StateRow *mStateRow;                     /* 0x380 */
     Vector3 mHome;                           /* 0x384 */
     /* Where the bug walks back to. Refreshed from mPos when it lands. */
     Vector3 mAnchor;                         /* 0x390 */

@@ -31,9 +31,6 @@ enum daBttBk_c_AssetId { ASSET_BATTA_BLOCK_BMD = 0x02ac };
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
-/* State-table rows are 8-byte mwcc pointer-to-member pairs. */
-typedef void (daBttBk_c::*PMF)();
-
 /* dExtSimpleModel_c-file handle. The derived constructor and destructor are the retail
  * SharedFilePtr pair; this TU does not define them. */
 struct BttBkModelFilePtr : SharedFilePtr {
@@ -41,11 +38,7 @@ struct BttBkModelFilePtr : SharedFilePtr {
     ~BttBkModelFilePtr();
 };
 
-typedef int (daBttBk_c::*daBttBk_StateFn)();
-struct daBttBk_StateRow {
-    daBttBk_StateFn enter;
-    daBttBk_StateFn update;
-};
+typedef daBttBk_c::StateRow daBttBk_StateRow;
 
 extern BttBkModelFilePtr gBattaBlockModelFile;
 extern daBttBk_StateRow data_ov080_0212847c[3];
@@ -278,19 +271,19 @@ int daBttBk_c::StateFallInit() {
 
 /* Runs the current state row's update function (second PMF). */
 void daBttBk_c::UpdateState() {
-    PMF *p = (PMF *)mStateRow + 1;
+    StateFunc *p = &mStateRow->update;
     (this->**p)();
 }
 
 /* Runs the current state row's enter function (first PMF). */
 void daBttBk_c::EnterState() {
-    PMF *p = (PMF *)mStateRow;
+    StateFunc *p = &mStateRow->enter;
     (this->**p)();
 }
 
 /* Changes state: points mStateRow at row i of the state table, then enters it. */
 void daBttBk_c::SetState(int i) {
-    mStateRow = (char *)data_ov080_0212847c + (i << 4);
+    mStateRow = &data_ov080_0212847c[i];
     EnterState();
 }
 

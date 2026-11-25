@@ -275,7 +275,7 @@ int daBmb_c::Behavior()
             }
 
             if (mWithMeshClsn.IsOnGround()) {
-                if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4))) {
+                if (SurfaceInfo_TestFlag0x20((int *)&mWithMeshClsn.GetFloorResult()->surface)) {
                     func_ov102_0214ae1c();
                     return 1;
                 }

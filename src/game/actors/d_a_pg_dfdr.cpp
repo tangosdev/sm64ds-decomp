@@ -47,11 +47,6 @@ enum daPgDfdr_c_AssetId {
 struct BMD_File;
 struct BTP_File;
 
-/* Two 8-byte daPgDfdr_c member pointers (enter, then the per-frame tick). */
-struct StatePair {
-    int w[4];
-};
-
 enum {
     kStateTurn = 0,
     kStateWalk = 1,
@@ -85,13 +80,8 @@ struct PgDfdrCollisionFilePtr : SharedFilePtr {
     ~PgDfdrCollisionFilePtr();
 };
 
-/* One 8-byte state word (a pointer-to-member: function address, this-delta).
- * The four words live in .data; the state table copies each of them. */
-typedef void (daPgDfdr_c::*DfdrStateFunc)();
-
-struct DfdrStateTable {
-    DfdrStateFunc a, b, c, d;
-};
+typedef daPgDfdr_c::StateFunc DfdrStateFunc;
+typedef daPgDfdr_c::State DfdrStateTable;
 
 extern PgDfdrCollisionFilePtr data_ov027_02113c6c;
 extern PgDfdrModelFile data_ov027_02113c7c;
@@ -106,7 +96,7 @@ extern SharedFilePtr *const data_ov027_02112ca4[3] = {
     &data_ov027_02113c74,
     &data_ov027_02113c8c,
 };
-extern DfdrStateTable data_ov027_02113ce4;
+extern DfdrStateTable data_ov027_02113ce4[2];
 struct PatrolStep {
     s32 distance;
     s32 speed;
@@ -209,19 +199,17 @@ s32 daPgDfdr_c::CleanupResources() {
 
 /* Select state idx and run its enter function. */
 void daPgDfdr_c::SetState(int idx) {
-    mStateTable = &data_ov027_02113ce4.a + idx * 2;
+    mStateTable = &data_ov027_02113ce4[idx];
     CallStateInit();
 }
 
 void daPgDfdr_c::CallStateInit() {
-    typedef void (daPgDfdr_c::*Fn)();
-    Fn *fn = (Fn *)mStateTable;
+    DfdrStateFunc *fn = &mStateTable->init;
     (this->**fn)();
 }
 
 void daPgDfdr_c::CallStateBehavior() {
-    typedef void (daPgDfdr_c::*Fn)();
-    Fn *fn = (Fn *)mStateTable + 1;
+    DfdrStateFunc *fn = &mStateTable->behavior;
     (this->**fn)();
 }
 
@@ -342,7 +330,7 @@ PgDfdrTexSequenceFilePtr data_ov027_02113c94(ASSET_PENGUIN_WAIT1_BTP);
 PgDfdrCollisionFilePtr data_ov027_02113c6c(ASSET_PENGUIN_KCL);
 /* turn-enter, turn, walk-enter, walk; mwcc writes the four member images
    this initializer copies as the .data words at 0x021139c4..0x021139dc. */
-DfdrStateTable data_ov027_02113ce4 = {
+DfdrStateTable data_ov027_02113ce4[2] = {
     (DfdrStateFunc)&daPgDfdr_c::InitStateTurn, (DfdrStateFunc)&daPgDfdr_c::StateTurn,
     (DfdrStateFunc)&daPgDfdr_c::InitStateWalk, (DfdrStateFunc)&daPgDfdr_c::StateWalk};
 

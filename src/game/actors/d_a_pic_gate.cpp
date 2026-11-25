@@ -247,18 +247,18 @@ void daPicGate_c::BuildNormals() {
             q = (int *)&n;  q[0] = z; q[1] = z; q[2] = z;
 
             if (j == 0)
-                VEC_Subtract((VecFx32 *)p, (VecFx32 *)(p + 1), &ej);
+                VEC_Subtract(&p->pos, &p[1].pos, &ej);
             else if (j == mCols - 1)
-                VEC_Subtract((VecFx32 *)(p - 1), (VecFx32 *)p, &ej);
+                VEC_Subtract(&p[-1].pos, &p->pos, &ej);
             else
-                VEC_Subtract((VecFx32 *)(p - 1), (VecFx32 *)(p + 1), &ej);
+                VEC_Subtract(&p[-1].pos, &p[1].pos, &ej);
 
             if (i == 0)
-                VEC_Subtract((VecFx32 *)p, (VecFx32 *)(p + mRows), &ei);
+                VEC_Subtract(&p->pos, &(p + mRows)->pos, &ei);
             else if (i == mRows - 1)
-                VEC_Subtract((VecFx32 *)(p - mRows), (VecFx32 *)p, &ei);
+                VEC_Subtract(&(p - mRows)->pos, &p->pos, &ei);
             else
-                VEC_Subtract((VecFx32 *)(p - mRows), (VecFx32 *)(p + mRows), &ei);
+                VEC_Subtract(&(p - mRows)->pos, &(p + mRows)->pos, &ei);
 
             VEC_CrossProduct(&ej, &ei, &n);
             n.z >>= 1;

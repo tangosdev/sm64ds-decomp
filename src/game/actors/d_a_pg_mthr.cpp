@@ -90,11 +90,8 @@ struct PgMthrTexSeqFileHandle : SharedFilePtr {
 };
 
 /* The three {enter, update} state pairs __sinit_d_a_pg_mthr.cpp copies
-   from the PMF literals at 0211394c (see the header comment). */
-struct PgMthrState {
-    int (daPgMthr_c::*enter)();
-    int (daPgMthr_c::*update)();
-};
+   from the PMF literals at 0211394c. */
+typedef daPgMthr_c::State PgMthrState;
 extern "C" {
 extern int AngleDiff(int a, int b);
 /* 0x0201267c plays Sound::Play(3, id, pos). Sound::PlayBank3 is the
@@ -104,7 +101,6 @@ extern PgMthrTexSeqFileHandle gPenguinAngryTextureSequenceFile;
 extern PgMthrTexSeqFileHandle gPenguinWait1TextureSequenceFile;
 extern PgMthrAnimFileResHandle gPenguinWait1AnimationFile;
 extern PgMthrState data_ov018_02113c4c[3];
-typedef void (daPgMthr_c::*PMF)();
 extern PgMthrModelFileHandle data_ov018_02113c00;
 extern SharedFilePtr *data_ov018_02112c04[2];
 extern SharedFilePtr *data_ov018_02112c0c[2];
@@ -194,12 +190,12 @@ void daPgMthr_c::ChangeState(int i) {
 }
 
 void daPgMthr_c::CallStateEnter() {
-    PMF *enter = (PMF *)mState;
+    StateFunc *enter = &mState->enter;
     (this->**enter)();
 }
 
 void daPgMthr_c::CallStateUpdate() {
-    PMF *update = (PMF *)mState + 1;
+    StateFunc *update = &mState->update;
     (this->**update)();
 }
 

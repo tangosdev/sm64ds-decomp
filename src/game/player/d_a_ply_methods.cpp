@@ -57,6 +57,7 @@
 #include "ParticleIds.h"
 #include "common.h"
 #include "daPly_c.h"
+#include "daBtn_c.h"
 #include "EndingFlyPoint.h"
 #include "SpawnInfo.h"
 #include "dExtAnm2Model_c.h"
@@ -1062,11 +1063,26 @@ extern SharedFilePtr data_ov002_0210ecb8;
 }
 
 extern int func_ov002_020f030c(int sel);
+/* Partial view of the untyped arm9 object at data_0209ee90. Only the words
+   this TU reads are recovered; the rest of the 0x348-byte object is padding. */
+struct PlayerShared9ee90 {
+    char pad_000[0x238];
+    s32 unk_238;
+    s32 unk_23c;
+    s32 unk_240;
+    s32 unk_244;
+    s32 unk_248;
+    s32 unk_24c;
+    char pad_250[0x1c];
+    s32 flag26c;
+};
+extern PlayerShared9ee90 data_0209ee90;
+
 extern "C" {
 extern void func_ov002_020d7430(daPly_c &player);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
-extern void func_ov002_020e6b74(void *model, int *saved);
-extern int *func_ov002_020e6bb0(void *model);
+extern void func_ov002_020e6b74(dExtSimpleModel_c *model, int *saved);
+extern int *func_ov002_020e6bb0(dExtSimpleModel_c *model);
 }
 
 extern "C" short GetAngleToCamera(int i);
@@ -1086,7 +1102,7 @@ extern void func_ov002_020db54c(void *self, int a, int b, short c);
 extern void func_ov002_020dc09c(daPly_c *player);
 extern void func_ov002_020e69c0(void *unused);
 extern void func_ov002_020e6a78(void *ramp, int blend);
-extern void func_ov002_020e6b3c(void *model);
+extern void func_ov002_020e6b3c(dExtSimpleModel_c *model);
 extern signed char data_02092114;
 extern unsigned char data_0209f2bc;
 extern int gWaterHeight;
@@ -2119,8 +2135,8 @@ void daPly_c::TurnOffToonShading(unsigned int j) {
 
 void daPly_c::UpdateCharacterChange() {
     extern char data_ov002_02110804[];
-    void *bodyModel;
-    void *headModel;
+    dExtSimpleModel_c *bodyModel;
+    dExtSimpleModel_c *headModel;
     int flickerPeriod;
     int timerRow;
     u16 capFlags;
@@ -5834,9 +5850,7 @@ int daPly_c::St_Squish_Main() {
                     dActor_c *a = mAttachedActor;
                     if (a != 0) {
                         if (IsActorID(a, 0xa4) || IsActorID(a, 0xa5))
-                            /* daBtn_c::unk_407: daBtn_c.h is not included here (it would
-                               renumber this file's compiler-generated names). */
-                            *((u8 *)a + 0x407) = 1;
+                            ((daBtn_c *)a)->unk_407 = 1;
                     }
                 }
             } else {
@@ -9133,8 +9147,6 @@ void daPly_c::func_ov002_020cd71c() {
 int daPly_c::St_Swim_Main() {
     extern int *func_02037dc4(int);
     extern ControllerInput data_0209f498[];
-    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
-    extern char data_0209ee90[];
     int t4;
     Vector3 pos;
     int* fr;
@@ -9187,7 +9199,7 @@ int daPly_c::St_Swim_Main() {
             vec.y = 0;
             at = at + 0x8000;
             yaw = (short)at;
-            vec.z = (*(int *)((char *)data_0209ee90 + 0x244)) << 0xc;
+            vec.z = data_0209ee90.unk_244 << 0xc;
             Vec3_RotateYAndTranslate(&out, &mPos, yaw, &vec);
             mPos.x = out.x;
             mPos.y = out.y;
@@ -13025,8 +13037,6 @@ void daPly_c::func_ov002_020d6368() {
 }
 
 int daPly_c::St_Swallow_Main() {
-    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
-    extern int data_0209ee90[];
     dActor_c *p360;
 
     if (mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(3)) {
@@ -13047,7 +13057,7 @@ int daPly_c::St_Swallow_Main() {
                     (unsigned short)(mStateFlags & 0x1000) == 0) {
                     unsigned char flag = 0;
                     if (IsActorID(mObjInMouth, 0xc2) ||
-                        *(int *)((char *)data_0209ee90 + 0x238) != 0) {
+                        data_0209ee90.unk_238 != 0) {
                         flag |= 1;
                     }
                     mEggParams |= (flag + 1);
@@ -14356,8 +14366,6 @@ void daPly_c::func_ov002_020d91b8(int a) {
 }
 
 int daPly_c::func_ov002_020d91e0(int damage, int doPre) {
-    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
-    extern char data_0209ee90[];
     if (doPre != 0)
         DropHeldObj();
 
@@ -14371,7 +14379,7 @@ int daPly_c::func_ov002_020d91e0(int damage, int doPre) {
             return 0;
     }
 
-    if (*(int*)(data_0209ee90 + 0x248) == 0) {
+    if (data_0209ee90.unk_248 == 0) {
         Heal(-damage);
     }
     if (GetHealth() != 0)
@@ -14951,8 +14959,6 @@ int daPly_c::St_GrabBowserTail_Main() {
     extern void func_02012694(unsigned int id, const Vector3 *v);
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
-    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
-    extern char data_0209ee90[];
     switch (mStateStep) {
     case 0:
         if (this->FinishedAnim()) {
@@ -14973,7 +14979,7 @@ int daPly_c::St_GrabBowserTail_Main() {
             func_ov002_020daa74();
             return 1;
         }
-        if (*(int*)(data_0209ee90 + 0x24c) != 0)
+        if (data_0209ee90.unk_24c != 0)
             mStateWork = 0;
         if (data_0209f498[gActivePlayerSlot].mag == 0) {
             u8 v = mStateWork;
@@ -16140,8 +16146,6 @@ void daPly_c::TiltBodyButtSlide() {
 
 int daPly_c::St_StomachSlide_Main() {
     extern u16 data_0209f49e[];
-    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
-    extern u8 data_0209ee90;
     dActor_c *light0 = mHeldObj;
     if (light0 != 0) {
         u32 *p = &light0->mFlags;
@@ -16209,7 +16213,7 @@ int daPly_c::St_StomachSlide_Main() {
             if (this->IsState(data_ov002_0211031c)) {
                 mStatePhase = 1;
                 mStateStep = 0;
-                if (*(int*)((char*)&data_0209ee90 + 0x244) != 0) {
+                if (data_0209ee90.unk_244 != 0) {
                     if ((mStateArg | mSlideType) != 0) {
                         mSpeed.y = 0x15000;
                     }
@@ -19719,11 +19723,6 @@ void daPly_c::func_ov002_020e4bb8() {
 int daPly_c::Behavior() {
     struct C3;
     typedef int (C3::*PMF)();
-    struct G_ee90 {
-        char pad[0x26c];
-        s32 flag26c;
-    };
-    extern G_ee90 data_0209ee90;
     extern s16 data_0209f4a6;
     s32 scale;
     s32 r2;
@@ -20556,14 +20555,8 @@ unsigned short *func_ov002_020e6ad4(unsigned short *ramp) {
 }
 }
 
-/* What the three material helpers below read from a model: its resource
- * at +0x08 (material count at +0x24) and its runtime materials at +0x0c,
- * 0x30 bytes each with TEXIMAGE_PARAM at +0x1c. */
-struct ModelMaterialRes {
-    char pad[0x24];
-    unsigned int numMaterials; /* 0x24 */
-};
-
+/* The runtime material record behind ModelComponents::materials; the file
+   record has TEXIMAGE_PARAM at a different offset. */
 struct ModelMaterial {
     char pad[0x1c];
     unsigned int texImageParam; /* 0x1c */
@@ -20571,31 +20564,29 @@ struct ModelMaterial {
 };
 extern "C" {
 /* Zeroes every material's TEXIMAGE_PARAM (the untextured cap flash). */
-void func_ov002_020e6b3c(void *model) {
-    void **p = (void **)((char *)model + 8);
-    ModelMaterialRes *res = (ModelMaterialRes *)p[0];
-    unsigned int n = res->numMaterials;
-    ModelMaterial *mat = (ModelMaterial *)p[1];
+void func_ov002_020e6b3c(dExtSimpleModel_c *model) {
+    ModelComponents *components = &model->data;
+    unsigned int n = components->modelFile->numMaterials;
+    ModelMaterial *mat = (ModelMaterial *)components->materials;
     unsigned int i;
     for (i = 0; i < n; i++, mat++)
         mat->texImageParam = 0;
 }
 
 /* Writes the words func_ov002_020e6bb0 saved back into the materials. */
-void func_ov002_020e6b74(void *model, int *saved) {
-    void **p = (void **)((char *)model + 8);
-    ModelMaterialRes *res = (ModelMaterialRes *)p[0];
-    unsigned int n = res->numMaterials;
-    ModelMaterial *dst = (ModelMaterial *)p[1];
+void func_ov002_020e6b74(dExtSimpleModel_c *model, int *saved) {
+    ModelComponents *components = &model->data;
+    unsigned int n = components->modelFile->numMaterials;
+    ModelMaterial *dst = (ModelMaterial *)components->materials;
     unsigned int i;
     for (i = 0; i < n; i++, dst++, saved++)
         dst->texImageParam = *saved;
 }
 
 /* Allocates one word per material and saves each TEXIMAGE_PARAM into it. */
-int *func_ov002_020e6bb0(void *model) {
+int *func_ov002_020e6bb0(dExtSimpleModel_c *model) {
     void **pp;
-    ModelMaterialRes *res;
+    BMD_File *res;
     unsigned int count;
     int *out;
     int *p;
@@ -20603,7 +20594,7 @@ int *func_ov002_020e6bb0(void *model) {
     unsigned int i;
 
     pp = (void **)((long long)(int)((char *)model + 8));
-    res = (ModelMaterialRes *)pp[0];
+    res = (BMD_File *)pp[0];
     count = res->numMaterials;
     out = (int *)::operator new[](count << 2);
 

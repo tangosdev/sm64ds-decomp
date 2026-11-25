@@ -136,13 +136,13 @@ s32 daObjGuragura_c::InitResourcesFrom(ResourceDescriptor *descriptor) {
  * scratch matrix, double the toucher's vertical component in slab space,
  * and make mTiltTarget the rotation that carries +Y onto it. Arms
  * mSettleDelay with 10 frames. */
-void daObjGuragura_c::TiltToward(unsigned char *arg) {
+void daObjGuragura_c::TiltToward(unsigned char *rider) {
     Vector3 v;
     Vector3 axis;
     mBumped = 1;
     gScratchMtx = mClsnMat;
     MTX_Inverse43(&gScratchMtx, &gScratchMtx);
-    MTX_MultVec43((Vector3 *)(arg + 0x5c), &gScratchMtx, &v);
+    MTX_MultVec43(&((dActor_c *)rider)->mPos, &gScratchMtx, &v);
     v.y = v.y << 1;
     axis.x = 0;
     axis.z = 0;
@@ -157,7 +157,7 @@ void daObjGuragura_c::TiltToward(unsigned char *arg) {
  * the other two into TiltToward. long_calls is the ROM's pooled absolute
  * tail-call. */
 #pragma long_calls on
-void daObjGuragura_c::StoodOnCallback(void *collider, daObjGuragura_c *self, unsigned char *arg) {
-    self->TiltToward(arg);
+void daObjGuragura_c::StoodOnCallback(void *collider, daObjGuragura_c *self, unsigned char *rider) {
+    self->TiltToward(rider);
 }
 #pragma long_calls off

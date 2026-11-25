@@ -73,12 +73,8 @@ TgzAnimFile gTgzWalkAnimFile(ASSET_TOGEZO_WALK_BCA);
 /* One {enter, update} record per state; SetState selects one and
  * CallStateEnter and CallStateUpdate call through it. State 1's entry returns
  * nothing, so its pointer is cast to the shared record type. */
-typedef int (daTgz_c::*TgzState)();
-
-struct TgzStateRecord {
-    TgzState enter;
-    TgzState update;
-};
+typedef daTgz_c::StateFunc TgzState;
+typedef daTgz_c::State TgzStateRecord;
 
 TgzStateRecord gTgzStates[6] = {
     {&daTgz_c::St_Spin_Init, &daTgz_c::St_Spin_Main},
@@ -691,12 +687,12 @@ int daTgz_c::St_Spin_Init() {
 }
 
 void daTgz_c::CallStateUpdate() {
-    TgzState *p = (TgzState *)this->mStateDesc + 1;
+    TgzState *p = &this->mStateDesc->update;
     (this->**p)();
 }
 
 void daTgz_c::CallStateEnter() {
-    TgzState *p = (TgzState *)this->mStateDesc;
+    TgzState *p = &this->mStateDesc->enter;
     (this->**p)();
 }
 
