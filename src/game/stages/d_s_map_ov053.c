@@ -14,7 +14,15 @@ typedef struct {
     u16 count;
     struct CLPS entries[6];
     u32 tail[2];
+    u32 pad[3];
 } Clps_02112514;
+
+/* The ROM image carries a zero halfword of alignment padding after this record,
+ * so it is written as part of the object. */
+typedef struct {
+    u16 minimapTile;
+    u16 pad;
+} MinimapTile;
 
 extern const u16 data_ov053_021111a0[2];
 extern const u16 data_ov053_021111a4[2];
@@ -50,7 +58,7 @@ extern const u8 data_ov053_0211194c[540];
 extern const fx32 data_ov053_02111b68[151];
 extern const fx32 data_ov053_02111dc4[181];
 extern const fx32 data_ov053_02112098[181];
-extern u16 data_ov053_02112380[1];
+extern MinimapTile data_ov053_02112380;
 extern ObjTable data_ov053_02112384;
 extern ObjSubTable data_ov053_0211238c[1];
 extern char data_ov053_02112394[8];
@@ -75,42 +83,6 @@ extern ViewEntry data_ov053_021124dc[2];
 extern LevelRec data_ov053_021124f8;
 extern Clps_02112514 data_ov053_02112514;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const fx32 data_ov053_021111d0[1] = {0x00001000};
 
 const u16 data_ov053_021111b8[2] = {0x0000, 0x0000};
@@ -123,7 +95,7 @@ const u16 data_ov053_021111b4[2] = {0x0000, 0x0000};
 
 const u16 data_ov053_021111bc[2] = {0x0000, 0x0000};
 
-u16 data_ov053_02112380[1] = {0x072d};
+MinimapTile data_ov053_02112380 = {0x072d, 0x0000};
 
 const u16 data_ov053_021111ac[2] = {0x0000, 0x0000};
 
@@ -426,6 +398,7 @@ Clps_02112514 data_ov053_02112514 = {
         {0x02030fc0, 0x000000ff},
     },
     {0xffffffff, 0xffffffff},
+    {0x00000000, 0x00000000, 0x00000000},
 };
 const fx32 data_ov053_021114f8[61] = {
     0x00000000, 0xfffffe1d, 0xfffffea9, 0xfffffff7, 0x00000186, 0x000002d4, 0x00000360, 0x00000315,

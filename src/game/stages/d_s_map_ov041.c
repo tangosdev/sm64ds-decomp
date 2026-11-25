@@ -15,19 +15,34 @@ typedef struct {
     u32 tail[4];
 } Clps_021119f8;
 
+/* The ROM image carries a zero halfword of alignment padding after these
+ * records, so it is written as part of the object. */
+typedef struct {
+    s16 value;
+    u16 pad;
+} ScalarEntryS16;
+typedef struct {
+    u16 value;
+    u16 pad;
+} ScalarEntryU16;
+typedef struct {
+    ExitEntry entries[1];
+    u16 pad;
+} ExitEntries1;
+
 extern const u16 data_ov041_021111a0[2];
 extern const fx32 data_ov041_021111a4[1];
 extern const BTAMaterialRecord data_ov041_021111a8[2];
 extern const fx32 data_ov041_021111e0[420];
-extern s16 data_ov041_02111880[1];
-extern u16 data_ov041_02111884[1];
+extern ScalarEntryS16 data_ov041_02111880;
+extern ScalarEntryU16 data_ov041_02111884;
 extern u32 data_ov041_02111888;
 extern ObjTable data_ov041_0211188c;
 extern ObjTable data_ov041_02111894;
 extern char data_ov041_0211189c[12];
 extern char data_ov041_021118a8[12];
 extern Area data_ov041_021118b4[1];
-extern ExitEntry data_ov041_021118c0[1];
+extern ExitEntries1 data_ov041_021118c0;
 extern ObjSubTable data_ov041_021118d0[2];
 extern struct PathDef data_ov041_021118e0[4];
 extern BTA_File data_ov041_021118f8;
@@ -38,31 +53,13 @@ extern ObjSubTable data_ov041_02111978[8];
 extern StandardEntry data_ov041_021119b8[4];
 extern Clps_021119f8 data_ov041_021119f8;
 extern StandardEntry data_ov041_02111a58[19];
-extern SimpleEntry data_ov041_02111b88[52];
+extern SimpleEntry data_ov041_02111b88[55];
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-u16 data_ov041_02111884[1] = {0x07a0};
+ScalarEntryU16 data_ov041_02111884 = {0x07a0, 0x0000};
 
 const u16 data_ov041_021111a0[2] = {0, 0};
 
-
-s16 data_ov041_02111880[1] = {0x0960};
+ScalarEntryS16 data_ov041_02111880 = {0x0960, 0x0000};
 
 u32 data_ov041_02111888 = 0x00000224;
 
@@ -78,14 +75,18 @@ char data_ov041_021118a8[12] = "water_mat";
 
 Area data_ov041_021118b4[1] = {
     {&data_ov041_0211188c, &data_ov041_021118f8, 0x00, {0x02, 0x04, 0x10}}};
-ExitEntry data_ov041_021118c0[1] = {
-    {0x0000, (s16)0xfe3e, 0x1068, (s16)0xc000, 0x0000, {0x01, 0x09, 0xff, 0x6c}}};
+ExitEntries1 data_ov041_021118c0 = {
+    {
+        {0x0000, (s16)0xfe3e, 0x1068, (s16)0xc000, 0x0000, {0x01, 0x09, 0xff, 0x6c}},
+    },
+    0x0000,
+};
 ObjSubTable data_ov041_021118d0[2] = {{0x00, 0x13, {0, 0}, &data_ov041_02111a58[0]},
-                                     {0x05, 0x34, {0, 0}, &data_ov041_02111b88[0]}};
+                                      {0x05, 0x34, {0, 0}, &data_ov041_02111b88[0]}};
 struct PathDef data_ov041_021118e0[4] = {{0x0000, 0x02, 0xff, 0x03, 0x7f},
-                                        {0x0002, 0x02, 0xff, 0x02, 0x7f},
-                                        {0x0004, 0x02, 0xff, 0x03, 0x7f},
-                                        {0x0006, 0x02, 0xff, 0xff, 0x7f}};
+                                         {0x0002, 0x02, 0xff, 0x02, 0x7f},
+                                         {0x0004, 0x02, 0xff, 0x03, 0x7f},
+                                         {0x0006, 0x02, 0xff, 0xff, 0x7f}};
 BTA_File data_ov041_021118f8 = {210,
                                 0,
                                 (fx32 *)&data_ov041_021111a4[0],
@@ -117,9 +118,9 @@ const BTAMaterialRecord data_ov041_021111a8[2] = {
     {0xffff, 0, (char *)&data_ov041_0211189c[0], {1, 0}, {1, 0}, {1, 0}, {210, 210}, {1, 0}}};
 ObjSubTable data_ov041_02111978[8] = {
     {0x02, 0x08, {0, 0}, &data_ov041_02111948[0]}, {0x03, 0x04, {0, 0}, &data_ov041_021118e0[0]},
-    {0x04, 0x02, {0, 0}, &data_ov041_02111910[0]}, {0x0b, 0x01, {0, 0}, &data_ov041_02111884[0]},
-    {0x01, 0x04, {0, 0}, &data_ov041_021119b8[0]}, {0x0c, 0x01, {0, 0}, &data_ov041_02111880[0]},
-    {0x0e, 0x01, {0, 0}, &data_ov041_02111888},    {0x0a, 0x01, {0, 0}, &data_ov041_021118c0[0]}};
+    {0x04, 0x02, {0, 0}, &data_ov041_02111910[0]}, {0x0b, 0x01, {0, 0}, &data_ov041_02111884},
+    {0x01, 0x04, {0, 0}, &data_ov041_021119b8[0]}, {0x0c, 0x01, {0, 0}, &data_ov041_02111880},
+    {0x0e, 0x01, {0, 0}, &data_ov041_02111888},    {0x0a, 0x01, {0, 0}, &data_ov041_021118c0}};
 StandardEntry data_ov041_021119b8[4] = {
     {0x0000, (s16)0xef98, 0x01a4, (s16)0xffce, 0x0000, 0x4000, 0x0000, 0x0208},
     {0x0000, (s16)0xeed0, 0x01a4, 0x0064, 0x0000, 0x4000, 0x0000, 0x0278},
@@ -160,7 +161,7 @@ StandardEntry data_ov041_02111a58[19] = {
     {0x0090, 0x01a4, 0x0000, (s16)0xe3d6, 0x0000, 0x0000, 0x0000, 0xffff},
     {0x00fe, (s16)0xfede, 0x015a, (s16)0xe96f, 0x0000, 0x0000, 0x0000, 0x0004},
     {0x00fe, 0x0190, 0x0065, (s16)0xfcae, 0x0000, 0x0000, 0x0000, 0x0104}};
-SimpleEntry data_ov041_02111b88[52] = {
+SimpleEntry data_ov041_02111b88[55] = {
     {0x2226, 0x03ac, 0x00fa, (s16)0xf133},
     {0x2226, 0x03a9, 0x00fa, (s16)0xf30c},
     {0x2226, 0x0061, (s16)0xfeec, (s16)0xea8a},
