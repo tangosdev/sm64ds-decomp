@@ -964,10 +964,6 @@ src/data/arm9/data_02075d14.c:
     complete
     .rodata start:0x02075d14 end:0x02075f14
 
-src/data/arm9/data_02075f14.c:
-    complete
-    .rodata start:0x02075f14 end:0x02082128
-
 src/data/arm9/data_0209f648.c:
     complete
     .bss start:0x0209f648 end:0x020a0c5c
