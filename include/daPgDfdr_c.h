@@ -35,10 +35,16 @@
  */
 
 struct daPgDfdr_c : dBgActor_c {
+    typedef void (daPgDfdr_c::*StateFunc)();
+    struct State {
+        StateFunc init;
+        StateFunc behavior;
+    };
+
     dExtAnmModel_c mAnmModel;         /* 0x320 */
     dExtAnmTexPat_c mTextureSequence; /* 0x384 */
     dCcAc_c mdCcAc_c;                 /* 0x398 */
-    void *mStateTable;                /* 0x3cc */
+    State *mStateTable;               /* 0x3cc */
     s32 mIsWalking;                   /* 0x3d0 */
     s32 mDistanceLeft;                /* 0x3d4 */
     u8 mTimer;                        /* 0x3d8 */
