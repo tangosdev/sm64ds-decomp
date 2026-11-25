@@ -6366,6 +6366,10 @@ def cmd_linkcheck(args):
         print(f"BASELINE CONTROL: modules {'PASS' if module_ok else 'FAIL'}, "
               f"dsd check symbols --fail {'PASS' if symbols_ok else 'FAIL'}, "
               f"ROM {'built' if rom_ok else 'not built' if rom_ok is False else 'skipped'}.")
+        halfword = report.get("halfwordText") or {}
+        print(f"      halfword placement: {halfword.get('patchedObjects', 0)} "
+              f"contribution(s) extended, {len(halfword.get('objects', []))} object edit(s), "
+              f"error={report.get('halfwordTextError')!r}")
         print("This is the same scratch pipeline with NO TU substitution: anything failing "
               "here is pre-existing and belongs to the tree, not to any TU.")
     elif verified:

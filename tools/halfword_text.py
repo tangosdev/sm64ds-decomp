@@ -18,6 +18,7 @@ keeps the ROM address: a halfword start is two bytes into that object.
 is applied after that check, immediately before ``mwldarm``.
 """
 import io
+import os
 import pathlib
 import re
 import struct
@@ -215,12 +216,36 @@ def _force_align(path, indexes, shoff, shentsize, little, align):
     return changed
 
 
+def _path_name(text):
+    """Basename of either host path spelling, independent of the Python host."""
+    return pathlib.PurePosixPath(str(text).replace("\\", "/")).name
+
+
+def _host_path(text):
+    """Path of an object-list row on this host.
+
+    The linker and dsd are Windows executables. On the Linux validation worker
+    they run under Wine, so an object list can spell a Linux file as ``Z:\\home``
+    or use backslash-separated relative rows even though Python itself is POSIX.
+    Treat both spellings as paths; the Windows path remains native there.
+    """
+    raw = str(text).strip()
+    if os.name != "nt":
+        value = raw[4:] if raw.startswith("\\\\?\\") else raw
+        drive = re.match(r"^([A-Za-z]):[\\/](.*)$", value)
+        if drive and drive.group(1).upper() == "Z":
+            return pathlib.Path("/" + drive.group(2).replace("\\", "/"))
+        if "\\" in value:
+            return pathlib.Path(value.replace("\\", "/"))
+    return pathlib.Path(raw)
+
+
 def _objects(objects_txt):
     rows = []
     for line in pathlib.Path(objects_txt).read_text(encoding="utf-8", errors="ignore").splitlines():
         line = line.strip()
         if line and not line.startswith("#"):
-            rows.append(pathlib.Path(line))
+            rows.append(_host_path(line))
     return rows
 
 
@@ -583,7 +608,7 @@ def _drop_inputs(lcf_path, objects_txt, dropped):
     obj_nl = "\r\n" if "\r\n" in obj_text else "\n"
     obj_kept = []
     for line in obj_text.splitlines():
-        name = pathlib.Path(line.strip()).name
+        name = _path_name(line.strip())
         if line.strip() and name not in referenced and any(
                 kind_name[1] == name for kind_name in dropped):
             continue

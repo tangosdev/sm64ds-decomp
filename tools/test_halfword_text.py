@@ -156,8 +156,12 @@ class ApplyTests(unittest.TestCase):
             fills = {"_dsd_gap@main_0.o": 0x11, "stub.o": 0x22, "_dsd_gap@main_1.o": 0x33}
             for name, size, align in names:
                 (objects / name).write_bytes(_elf_text(size, align, name, fills[name]))
+            # dsd/mwldarm are Windows tools even on the Linux validation worker.
+            # Spell rows with backslashes so the pass cannot depend on pathlib's
+            # host-specific separator rules.
             (root / "objects.txt").write_text(
-                "\n".join(str(objects / name) for name, _size, _align in names) + "\n",
+                "\n".join(str(objects / name).replace("/", "\\")
+                          for name, _size, _align in names) + "\n",
                 encoding="utf-8")
             lcf = root / "arm9.lcf"
             original = (
