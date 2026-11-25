@@ -45,8 +45,9 @@ struct SubmarineCollisionFilePtr : SharedFilePtr {
 extern SubmarineCollisionFilePtr Submarine_ClsnFile;
 
 /* The platform's own collision block in the stage-map TU, fed to the mesh
- * collider by InitResources. */
-extern CLPS_Block data_ov026_02112fd4;
+ * collider by InitResources. Its entries are sized there. */
+struct Clps_02112fd4;
+extern Clps_02112fd4 data_ov026_02112fd4;
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */
@@ -78,7 +79,8 @@ s32 daObjWlSubmarine_c::InitResources() {
     UpdateClsnPosAndRot();
     {
         KCL_File *k = dBgW_Kc::LoadFile(Submarine_ClsnFile);
-        mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngle.y, data_ov026_02112fd4);
+        mMeshCollider.SetFile(k, mClsnMat, 0x199, mAngle.y,
+                              *reinterpret_cast<CLPS_Block *>(&data_ov026_02112fd4));
     }
     if (gSaveBlock.file.flags1 & 0x204)
         return 0;
