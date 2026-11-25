@@ -1062,6 +1062,21 @@ extern SharedFilePtr data_ov002_0210ecb8;
 }
 
 extern int func_ov002_020f030c(int sel);
+/* Partial view of the untyped arm9 object at data_0209ee90. Only the words
+   this TU reads are recovered; the rest of the 0x348-byte object is padding. */
+struct PlayerShared9ee90 {
+    char pad_000[0x238];
+    s32 unk_238;
+    s32 unk_23c;
+    s32 unk_240;
+    s32 unk_244;
+    s32 unk_248;
+    s32 unk_24c;
+    char pad_250[0x1c];
+    s32 flag26c;
+};
+extern PlayerShared9ee90 data_0209ee90;
+
 extern "C" {
 extern void func_ov002_020d7430(daPly_c &player);
 extern int func_ov002_020db5f4(daPly_c *c, dActor_c *arg);
@@ -9133,8 +9148,6 @@ void daPly_c::func_ov002_020cd71c() {
 int daPly_c::St_Swim_Main() {
     extern int *func_02037dc4(int);
     extern ControllerInput data_0209f498[];
-    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
-    extern char data_0209ee90[];
     int t4;
     Vector3 pos;
     int* fr;
@@ -9187,7 +9200,7 @@ int daPly_c::St_Swim_Main() {
             vec.y = 0;
             at = at + 0x8000;
             yaw = (short)at;
-            vec.z = (*(int *)((char *)data_0209ee90 + 0x244)) << 0xc;
+            vec.z = data_0209ee90.unk_244 << 0xc;
             Vec3_RotateYAndTranslate(&out, &mPos, yaw, &vec);
             mPos.x = out.x;
             mPos.y = out.y;
@@ -13025,8 +13038,6 @@ void daPly_c::func_ov002_020d6368() {
 }
 
 int daPly_c::St_Swallow_Main() {
-    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
-    extern int data_0209ee90[];
     dActor_c *p360;
 
     if (mModels.mBodyModels[this->GetBodyModelID(param1 & 0xff, 0)]->WillHitFrame(3)) {
@@ -13047,7 +13058,7 @@ int daPly_c::St_Swallow_Main() {
                     (unsigned short)(mStateFlags & 0x1000) == 0) {
                     unsigned char flag = 0;
                     if (IsActorID(mObjInMouth, 0xc2) ||
-                        *(int *)((char *)data_0209ee90 + 0x238) != 0) {
+                        data_0209ee90.unk_238 != 0) {
                         flag |= 1;
                     }
                     mEggParams |= (flag + 1);
@@ -14356,8 +14367,6 @@ void daPly_c::func_ov002_020d91b8(int a) {
 }
 
 int daPly_c::func_ov002_020d91e0(int damage, int doPre) {
-    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
-    extern char data_0209ee90[];
     if (doPre != 0)
         DropHeldObj();
 
@@ -14371,7 +14380,7 @@ int daPly_c::func_ov002_020d91e0(int damage, int doPre) {
             return 0;
     }
 
-    if (*(int*)(data_0209ee90 + 0x248) == 0) {
+    if (data_0209ee90.unk_248 == 0) {
         Heal(-damage);
     }
     if (GetHealth() != 0)
@@ -14951,8 +14960,6 @@ int daPly_c::St_GrabBowserTail_Main() {
     extern void func_02012694(unsigned int id, const Vector3 *v);
     extern u16 data_0209f49e[];
     extern s16 data_0209f4a0[];
-    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
-    extern char data_0209ee90[];
     switch (mStateStep) {
     case 0:
         if (this->FinishedAnim()) {
@@ -14973,7 +14980,7 @@ int daPly_c::St_GrabBowserTail_Main() {
             func_ov002_020daa74();
             return 1;
         }
-        if (*(int*)(data_0209ee90 + 0x24c) != 0)
+        if (data_0209ee90.unk_24c != 0)
             mStateWork = 0;
         if (data_0209f498[gActivePlayerSlot].mag == 0) {
             u8 v = mStateWork;
@@ -16140,8 +16147,6 @@ void daPly_c::TiltBodyButtSlide() {
 
 int daPly_c::St_StomachSlide_Main() {
     extern u16 data_0209f49e[];
-    /* Raw on purpose: data_0209ee90 (untyped arm9 .bss, 8 TUs) has no recovered layout. */
-    extern u8 data_0209ee90;
     dActor_c *light0 = mHeldObj;
     if (light0 != 0) {
         u32 *p = &light0->mFlags;
@@ -16209,7 +16214,7 @@ int daPly_c::St_StomachSlide_Main() {
             if (this->IsState(data_ov002_0211031c)) {
                 mStatePhase = 1;
                 mStateStep = 0;
-                if (*(int*)((char*)&data_0209ee90 + 0x244) != 0) {
+                if (data_0209ee90.unk_244 != 0) {
                     if ((mStateArg | mSlideType) != 0) {
                         mSpeed.y = 0x15000;
                     }
@@ -19719,11 +19724,6 @@ void daPly_c::func_ov002_020e4bb8() {
 int daPly_c::Behavior() {
     struct C3;
     typedef int (C3::*PMF)();
-    struct G_ee90 {
-        char pad[0x26c];
-        s32 flag26c;
-    };
-    extern G_ee90 data_0209ee90;
     extern s16 data_0209f4a6;
     s32 scale;
     s32 r2;
