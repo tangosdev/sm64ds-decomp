@@ -11,13 +11,13 @@
  * dBgW_Kc::SetFile: the 'CLPS' header (entry stride 8 at +4, live-entry count
  * at +6), two entry slots and all-ones filler to the end of the record. A
  * count-1 block carries the filler in its second slot as well. */
-struct CLPS_Block {
+typedef struct CLPS_Block {
     u32 tag;
     u16 stride;
     u16 count;
     struct CLPS entries[2];
     u32 tail[2];
-};
+} CLPS_Block;
 
 typedef struct {
     u32 tag;
