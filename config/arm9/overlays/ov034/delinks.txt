@@ -2,28 +2,17 @@
     .rodata     start:0x02113820 end:0x021138ec kind:rodata align:4
     .init       start:0x021138ec end:0x02114078 kind:code align:4
     .ctor       start:0x02114078 end:0x0211407c kind:rodata align:4
-    .data.hanachanLevel start:0x02114080 end:0x0211433c kind:data align:32
-    .data.hanachanTimer start:0x0211433c end:0x02114358 kind:data align:4
-    .data.gap1  start:0x02114358 end:0x02114408 kind:data align:4
-    .data.hanachanNames start:0x02114408 end:0x0211445c kind:data align:4
-    .data.gap2  start:0x0211445c end:0x02114468 kind:data align:4
-    .data.hanachanStartName start:0x02114468 end:0x02114478 kind:data align:4
-    .data.gap3  start:0x02114478 end:0x02114488 kind:data align:4
-    .data.hanachanSpeeds start:0x02114488 end:0x02114498 kind:data align:4
-    .data.gap4  start:0x02114498 end:0x02114538 kind:data align:4
-    .data       start:0x02114538 end:0x02114614 kind:data align:8
-    .data.gap5  start:0x02114614 end:0x02114620 kind:data align:4
+    .data       start:0x02114080 end:0x02114620 kind:data align:32
     .bss        start:0x02114620 end:0x021148e0 kind:bss align:32
+src/game/stages/d_s_map_ov034.c:
+    complete
+    .data start:0x02114080 end:0x0211433c
+
 src/game/actors/d_a_hanachan.cpp:
     complete
     .text start:0x021111a0 end:0x02113820
     .rodata start:0x02113820 end:0x021138ec
     .init start:0x021138ec end:0x02114078
     .ctor start:0x02114078 end:0x0211407c
-    .data.hanachanLevel start:0x02114080 end:0x0211433c
-    .data.hanachanTimer start:0x0211433c end:0x02114358
-    .data.hanachanNames start:0x02114408 end:0x0211445c
-    .data.hanachanStartName start:0x02114468 end:0x02114478
-    .data.hanachanSpeeds start:0x02114488 end:0x02114498
-    .data start:0x02114538 end:0x02114614
+    .data start:0x0211433c end:0x02114614
     .bss start:0x02114620 end:0x021148e0
