@@ -234,14 +234,6 @@
       "evidence": "include/cMgSmartball_object_c.h documents per-reader signedness across0x031..0x033; cMgSmartball_wing_c::GetAngle casts the named byte storage. Fresh b56 compile preserves the entire production-prepared Smartball object byte-for-byte versus a317608eec;132/132 owned strict function checks VERIFIED; build/review3955-smartball-proof/proof.json."
     },
     {
-      "path": "src/game/player/d_a_ply_methods.cpp",
-      "rule": "handspelled-member",
-      "match": "_ZN13SharedFilePtr9ConstructEj",
-      "count": 295,
-      "reason": "__sinit_ov002_021019d0 is the enrolled C initializer under #pragma cplusplus off, so SharedFilePtr::Construct cannot be spelled as a member call. Follow-up: keep this initializer in C until a C++ spelling reproduces the same .init bytes.",
-      "evidence": "Retired src/unnamed/ov002/__sinit_ov002_021019d0.c, folded into src/game/player/d_a_ply_methods.cpp; ov002/daPly_c .init 0x021019d0 size 0x5470 TEXT-VERIFIED"
-    },
-    {
       "path": "src/_ZN10dScEntry_c17RenderWaitingTextEv.cpp",
       "rule": "handspelled-member",
       "match": "_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi",
