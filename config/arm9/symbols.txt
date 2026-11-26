@@ -3150,9 +3150,6 @@ data_02075b14 kind:data(any) addr:0x02075b14
 data_02075d14 kind:data(any) addr:0x02075d14
 data_02075f14 kind:data(any) addr:0x02075f14
 data_02078000 kind:data(any) addr:0x02078000
-data_0207fbf4 kind:data(any) addr:0x0207fbf4
-data_02080000 kind:data(any) addr:0x02080000
-data_0208050a kind:data(any) addr:0x0208050a
 data_02081967 kind:data(any) addr:0x02081967
 IDENTITY_MATRIX4X3 kind:data(any) addr:0x02082128
 data_02082158 kind:data(any) addr:0x02082158
@@ -3968,7 +3965,6 @@ data_0208ffd8 kind:data(any) addr:0x0208ffd8
 data_0208ffe4 kind:data(any) addr:0x0208ffe4
 data_0208fff0 kind:data(any) addr:0x0208fff0
 data_0208fffc kind:data(any) addr:0x0208fffc
-data_02090000 kind:data(any) addr:0x02090000
 data_02090008 kind:data(any) addr:0x02090008
 data_02090014 kind:data(any) addr:0x02090014
 data_02090020 kind:data(any) addr:0x02090020
@@ -4116,14 +4112,12 @@ data_020907c0 kind:data(any) addr:0x020907c0
 data_020907d4 kind:data(any) addr:0x020907d4
 data_020907e8 kind:data(any) addr:0x020907e8
 data_020907fc kind:data(any) addr:0x020907fc
-data_02090800 kind:data(any) addr:0x02090800
 data_02090810 kind:data(any) addr:0x02090810
 data_02090824 kind:data(any) addr:0x02090824
 data_02090838 kind:data(any) addr:0x02090838
 data_0209084c kind:data(any) addr:0x0209084c
 ACTOR_SPAWN_TABLE kind:data(any) addr:0x02090864
 ACTOR_DEBUG_NAMES kind:data(any) addr:0x02090e80
-data_02091000 kind:data(any) addr:0x02091000
 data_020914a0 kind:data(any) addr:0x020914a0
 g_profile_BOOT kind:data(any) addr:0x020914a8
 _ZTS8dScene_c kind:data(any) addr:0x020914b0
@@ -4896,7 +4890,6 @@ data_0209fd18 kind:bss addr:0x0209fd18
 data_0209fd1c kind:bss addr:0x0209fd1c
 data_0209fd20 kind:bss addr:0x0209fd20
 data_0209fd5c kind:bss addr:0x0209fd5c
-data_020a0244 kind:bss(size=0x0) addr:0x020a0244
 sPrevHeap$390 kind:bss addr:0x020a0c5c
 _ZGVsPrevHeap$390 kind:bss addr:0x020a0c60
 sMBJobDone kind:bss addr:0x020a0c64
