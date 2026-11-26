@@ -74,8 +74,8 @@
     "pad_layout": 10
   },
   "totals": {
-    "c_extension": 749,
+    "c_extension": 756,
     "cpp_extension": 699,
-    "src_files": 1448
+    "src_files": 1455
   }
 }
