@@ -36,12 +36,6 @@
       "name": ".data",
       "start": "0x021130ac",
       "end": "0x021130b8"
-    },
-    {
-      "name": ".data.km2FallBlockClps",
-      "input_section": ".data",
-      "start": "0x021125f0",
-      "end": "0x02112610"
     }
   ],
   "functions": [
@@ -87,13 +81,6 @@
       "address": "0x021130ac",
       "size": "0xc",
       "binding": "STB_GLOBAL"
-    },
-    {
-      "symbol": "data_ov045_021125f0",
-      "address": "0x021125f0",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "one entry: floor 0x00000fc0, the falling block's surface"
     }
   ],
   "bss": [
@@ -197,13 +184,6 @@
           "section": ".data",
           "start": "0x021130ac",
           "end": "0x021130b8",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.km2FallBlockClps",
-          "start": "0x021125f0",
-          "end": "0x02112610",
           "differingBytes": 0,
           "firstDiff": null
         }
