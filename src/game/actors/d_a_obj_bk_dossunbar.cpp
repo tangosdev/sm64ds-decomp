@@ -54,7 +54,6 @@ struct StateEntry {
     PMF handler;
 };
 
-
 enum { kMovingBarBigActorId = 0x35 };
 
 static inline int IsBigBar(dActor_c *actor) {
@@ -292,20 +291,9 @@ DossunbarModelFile gBkDossunbarSModelFile(0x058d);
 DossunbarCollisionFile gBkDossunbarSCollisionFile(0x058e);
 DossunbarModelFile gBkDossunbarLModelFile(0x058b);
 DossunbarCollisionFile gBkDossunbarLCollisionFile(0x058c);
-struct CLPS_Block {
-    u32 tag;
-    u32 hdr;
-    u32 w0;
-    u32 w1;
-    u32 w2;
-    u32 w3;
-    u32 tail0;
-    u32 tail1;
-};
-CLPS_Block data_ov015_021135b4 = {0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff,
-                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
-CLPS_Block data_ov015_02113634 = {0x53504c43, 0x00010008, 0x01000fc4, 0x000000ff,
-                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+extern struct CLPS_Block data_ov015_021135b4;
+extern struct CLPS_Block data_ov015_02113634;
+
 SharedFilePtr *data_ov015_02114534[6] = {
     &gBkDossunbarSModelFile, &gBkDossunbarSCollisionFile, (SharedFilePtr *)&data_ov015_021135b4,
     &gBkDossunbarLModelFile, &gBkDossunbarLCollisionFile, (SharedFilePtr *)&data_ov015_02113634,

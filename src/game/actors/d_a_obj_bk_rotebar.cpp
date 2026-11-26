@@ -45,18 +45,7 @@ struct BkRotebarCollisionFilePtr : SharedFilePtr {
 
 extern BkRotebarCollisionFilePtr data_ov015_02114a84; /* collision KCL */
 extern BkRotebarModelFilePtr data_ov015_02114a8c;     /* bar BMD */
-struct CLPS_Block {
-    u32 tag;
-    u32 hdr;
-    u32 w0;
-    u32 w1;
-    u32 w2;
-    u32 w3;
-    u32 tail0;
-    u32 tail1;
-};
-CLPS_Block data_ov015_02113654 = {0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff,
-                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+extern struct CLPS_Block data_ov015_02113654;
 
 daObjBk_Rotebar_c *daObjBk_Rotebar_c_classInit() {
     return new daObjBk_Rotebar_c();

@@ -256,7 +256,7 @@ extern int data_ov007_02103260;
 extern int data_ov007_02103340;
 extern int data_ov007_02103344;
 extern int data_ov014_02114700[];
-extern int data_ov016_02113bac[];
+extern struct CLPS_Block data_ov016_02113bac;
 extern int data_ov018_02112f48[];
 extern int data_ov025_02112654(void *);
 extern int data_ov029_02112b2c[];
