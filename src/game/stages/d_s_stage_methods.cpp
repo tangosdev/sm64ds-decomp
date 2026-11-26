@@ -4835,7 +4835,7 @@ void LoadFont3D(void);
 extern "C" {
 void SetBg0Offset(int a, int b);
 u32 LoadCompressedFileAt(int fileID, void *target);
-int LoadFileAt(int handle, int dest);
+int LoadFileAt(int handle, void *dest);
 void SetSubBg0Offset(int a, int b);
 void SetSubBg1Offset(int a, int b);
 void SetSubBg2Offset(int a, int b);
@@ -4869,7 +4869,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         } else {
             LoadCompressedFileAt(0xa00f, G2_GetBG2CharPtr());
         }
-        LoadFileAt(0x980b, HW_BG_PLTT);
+        LoadFileAt(0x980b, (void *)HW_BG_PLTT);
         screenMap = (char *)G2_GetBG2ScrPtr();
         LoadCompressedFileAt(0x9808, screenMap);
         LoadCompressedFileAt(0x9809, screenMap + 0x800);
@@ -4895,11 +4895,11 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
                               GX_BG_CHARBASE_0x00000);
 
         LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NCG_BIN, G2S_GetBG0CharPtr());
-        LoadFileAt(ASSET_D_2D_OP_BG_CL_NCL_BIN, HW_DB_BG_PLTT);
+        LoadFileAt(ASSET_D_2D_OP_BG_CL_NCL_BIN, (void *)HW_DB_BG_PLTT);
         LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL02_NSC_BIN, G2S_GetBG0ScrPtr());
         LoadCompressedFileAt(ASSET_D_2D_OP_BG_CL01_NSC_BIN, G2S_GetBG1ScrPtr());
         LoadCompressedFileAt(ASSET_D_2D_OP_OBJ_CL_NCG_BIN, G2S_GetOBJCharPtr());
-        LoadFileAt(ASSET_D_2D_OP_OBJ_CL_NCL_BIN, HW_DB_OBJ_PLTT);
+        LoadFileAt(ASSET_D_2D_OP_OBJ_CL_NCL_BIN, (void *)HW_DB_OBJ_PLTT);
         {
             char *clearScreenMap = (char *)G2S_GetBG2ScrPtr();
             volatile u16 fillTile = 0x10d0;
@@ -4937,7 +4937,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         LoadCompressedFileAt(0xa00d, G2S_GetBG0CharPtr());
     }
 
-    LoadFileAt(0x9807, HW_DB_BG_PLTT);
+    LoadFileAt(0x9807, (void *)HW_DB_BG_PLTT);
     screenMap = (char *)G2S_GetBG1ScrPtr();
     LoadCompressedFileAt(0x9804, screenMap + 0x800);
     LoadCompressedFileAt(0x9803, screenMap + 0x1000);
@@ -4978,7 +4978,7 @@ void dScStage_c::LoadGraphics2D(bool vsMode, int sublevel) {
         } else {
             LoadCompressedFileAt(0xa00f, G2_GetBG2CharPtr());
         }
-        LoadFileAt(0x980b, HW_BG_PLTT);
+        LoadFileAt(0x980b, (void *)HW_BG_PLTT);
         LoadCompressedFileAt(ASSET_D_2D_UPR_TOUCH_TO_SELECT_NSC_BIN,
                              (char *)G2_GetBG2ScrPtr() + 0x1800);
         LoadCompressedFileAt(0x9801, screenMap + 0x2800);

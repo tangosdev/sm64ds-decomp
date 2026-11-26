@@ -123,7 +123,7 @@ int gMessageDataSection;
 u8 *gCurrentMsgEntry;
 /* The text cursor. Message2.cpp reads it as u8 *. */
 int data_0209d6f4;
-int data_0209d6f8;
+void *data_0209d6f8;
 int gMessageBankBase;
 int data_0209d700;
 s32 data_0209d704;

@@ -23,7 +23,7 @@
 #include "common.h"
 
 extern "C" {
-void func_02018434(const char *path, int dst, int size);
+void func_02018434(const char *path, void *dst, int size);
 extern char data_020994d4[];
 /* PATH_DEFS through the administrator name buffer, then the two words that
  * finish the claimed BSS run at 0x020a0db8. One claim, the symbols.txt names. */
@@ -36,7 +36,7 @@ int data_020a0db4;
 }
 
 void func_0203ad84(void) {
-    func_02018434(data_020994d4, (int)gBuildTimeString, 31);
+    func_02018434(data_020994d4, gBuildTimeString, 31);
     gBuildTimeString[31] = 0;
 }
 

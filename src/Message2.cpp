@@ -77,7 +77,7 @@ extern u16 data_0209d6e0;
 extern u8 gMsgChoicePositions[];
 extern u8 *gCurrentMsgEntry;
 extern u8 *data_0209d6f4;
-extern int data_0209d6f8;
+extern void *data_0209d6f8;
 extern int data_0209d700;
 extern int data_0209d704;
 extern u8 data_0209d710[];

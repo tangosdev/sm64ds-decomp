@@ -3,8 +3,8 @@
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
  */
 
-extern int func_02018270(unsigned int handle, int dest, int size);
+extern int func_02018270(unsigned int handle, void *dest, int size);
 
-int LoadFileAt(int handle, int dest) {
+int LoadFileAt(int handle, void *dest) {
     return func_02018270(handle, dest, -1);
 }

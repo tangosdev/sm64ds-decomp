@@ -1112,8 +1112,8 @@ int dScMgBase_c::GetSaveTable() {
 namespace s20adc4c {
 extern "C" {
 extern void *sMgWorkBuffer;
-int Mg_GetWorkBuffer(void) {
-    return (int)sMgWorkBuffer;
+void *Mg_GetWorkBuffer(void) {
+    return sMgWorkBuffer;
 }
 }
 }

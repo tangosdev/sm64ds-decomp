@@ -12,19 +12,19 @@ extern int func_02018568(int a);
    read), close it and unload any archive the open mounted. The length read,
    or 0 if the read came up short. The LZ77-tag test on the result is made
    and dropped: this path never decompresses. */
-int func_020184e0(FSFile *self, unsigned int buf, unsigned int n) {
+int func_020184e0(FSFile *self, void *buf, unsigned int n) {
     int r;
     unsigned int len = FS_GetLength(self);
     if (len > n)
         len = n;
-    DC_FlushRange((void *)buf, len);
-    r = myFS_ReadFile(self, (void *)buf, len);
+    DC_FlushRange(buf, len);
+    r = myFS_ReadFile(self, buf, len);
     FS_CloseFile(self);
     func_02018770();
     if (len != r)
         return 0;
-    func_02018568(buf);
-    DC_StoreRange((void *)buf, len);
+    func_02018568((int)buf);
+    DC_StoreRange(buf, len);
     return len;
 }
 }
