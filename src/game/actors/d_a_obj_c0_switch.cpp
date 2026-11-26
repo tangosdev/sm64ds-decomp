@@ -37,6 +37,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_c0_switch_AssetId { ASSET_C0_SWITCH_BMD = 0x05a9, ASSET_C0_SWITCH_KCL = 0x05aa };
 
+#include "CLPS.h"
 #include "daObjC0_Switch_c.h"
 #include "SharedFilePtr.h"
 #include "SaveBlock.h"
@@ -59,13 +60,16 @@ struct C0SwitchCollisionFilePtr : SharedFilePtr {
  * end of this file so the constructors do not enter .text. */
 extern C0SwitchModelFilePtr data_ov012_021124a8;
 extern C0SwitchCollisionFilePtr data_ov012_021124a0;
-struct CLPS_Block {
-    u32 words[8];
-};
+typedef struct CLPS_Block {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[2];
+    u32 tail[2];
+} CLPS_Block;
 
-CLPS_Block data_ov012_02111cd0 = {
-    0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
-};
+/* Stage collision properties owned by d_s_map_ov012.c. */
+extern CLPS_Block data_ov012_02111cd0;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */

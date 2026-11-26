@@ -13,18 +13,6 @@
   ],
   "sections": [
     {
-      "name": ".data.c0Bta",
-      "input_section": ".data",
-      "start": "0x02111c24",
-      "end": "0x02111c3c"
-    },
-    {
-      "name": ".data.c0Clps",
-      "input_section": ".data",
-      "start": "0x02111c90",
-      "end": "0x02111cb0"
-    },
-    {
       "name": ".text",
       "start": "0x02111450",
       "end": "0x02111768"
@@ -43,35 +31,6 @@
       "name": ".bss",
       "start": "0x021124c8",
       "end": "0x02112500"
-    },
-    {
-      "name": ".rodata",
-      "start": "0x02111768",
-      "end": "0x0211176c"
-    },
-    {
-      "name": ".rodata.c0WaterScale",
-      "input_section": ".rodata",
-      "start": "0x02111770",
-      "end": "0x02111774"
-    },
-    {
-      "name": ".rodata.c0WaterMat",
-      "input_section": ".rodata",
-      "start": "0x02111778",
-      "end": "0x02111794"
-    },
-    {
-      "name": ".rodata.c0WaterTrans",
-      "input_section": ".rodata",
-      "start": "0x0211191c",
-      "end": "0x02111a88"
-    },
-    {
-      "name": ".data.c0WaterName",
-      "input_section": ".data",
-      "start": "0x02111bc4",
-      "end": "0x02111bd0"
     }
   ],
   "functions": [
@@ -143,29 +102,7 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "data": [
-    {
-      "symbol": "data_ov012_02111c24",
-      "address": "0x02111c24",
-      "size": "0x18",
-      "binding": "STB_GLOBAL",
-      "evidence": "BTA header: 91 frames, one material."
-    },
-    {
-      "symbol": "data_ov012_02111c90",
-      "address": "0x02111c90",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "CLPS words for the castle water."
-    },
-    {
-      "symbol": "data_ov012_02111bc4",
-      "address": "0x02111bc4",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "the BMD material name the animation record resolves: obj_water"
-    }
-  ],
+  "data": [],
   "bss": [
     {
       "symbol": "data_ov012_021124c8",
@@ -194,8 +131,7 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated model destructor-registration node"
-    }
-  ,
+    },
     {
       "symbol": "data_ov012_021124f0",
       "address": "0x021124f0",
@@ -270,46 +206,6 @@
       "addend": 0,
       "target_module": "ov012",
       "target_address": "0x02111af4"
-    },
-    {
-      "section": ".data.c0Bta",
-      "source": "0x02111c28",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov012_02111770",
-      "addend": 0,
-      "target_module": "ov012",
-      "target_address": "0x02111770"
-    },
-    {
-      "section": ".data.c0Bta",
-      "source": "0x02111c2c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov012_02111768",
-      "addend": 0,
-      "target_module": "ov012",
-      "target_address": "0x02111768"
-    },
-    {
-      "section": ".data.c0Bta",
-      "source": "0x02111c30",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov012_0211191c",
-      "addend": 0,
-      "target_module": "ov012",
-      "target_address": "0x0211191c"
-    },
-    {
-      "section": ".data.c0Bta",
-      "source": "0x02111c38",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov012_02111778",
-      "addend": 0,
-      "target_module": "ov012",
-      "target_address": "0x02111778"
     },
     {
       "section": ".init",
@@ -410,16 +306,6 @@
       "addend": 0,
       "target_module": "ov012",
       "target_address": "0x021124d8"
-    },
-    {
-      "section": ".rodata.c0WaterMat",
-      "source": "0x0211177c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov012_02111bc4",
-      "addend": 0,
-      "target_module": "ov012",
-      "target_address": "0x02111bc4"
     }
   ],
   "notes": [
@@ -523,20 +409,6 @@
       },
       "tuRanges": [
         {
-          "section": ".data.c0Bta",
-          "start": "0x02111c24",
-          "end": "0x02111c3c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.c0Clps",
-          "start": "0x02111c90",
-          "end": "0x02111cb0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".text",
           "start": "0x02111450",
           "end": "0x02111768",
@@ -562,41 +434,6 @@
           "start": "0x021124c8",
           "end": "0x02112500",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".rodata",
-          "start": "0x02111768",
-          "end": "0x0211176c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.c0WaterScale",
-          "start": "0x02111770",
-          "end": "0x02111774",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.c0WaterMat",
-          "start": "0x02111778",
-          "end": "0x02111794",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.c0WaterTrans",
-          "start": "0x0211191c",
-          "end": "0x02111a88",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.c0WaterName",
-          "start": "0x02111bc4",
-          "end": "0x02111bd0",
-          "differingBytes": 0,
-          "firstDiff": null
         }
       ],
       "objectAudit": {
@@ -810,34 +647,5 @@
       "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @427 now; licensed under the existing pin @413 Re-keyed from @412 to @385 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @385 to @387 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
     }
   ],
-  "rodata": [
-    {
-      "symbol": "data_ov012_02111768",
-      "address": "0x02111768",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "rotation key of the water texture-SRT animation; the file table at 0x02111c24 indexes firstKey 0"
-    },
-    {
-      "symbol": "data_ov012_02111770",
-      "address": "0x02111770",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "scale key of the water texture-SRT animation: 0x1000, an unscaled texture"
-    },
-    {
-      "symbol": "data_ov012_02111778",
-      "address": "0x02111778",
-      "size": "0x1c",
-      "binding": "STB_GLOBAL",
-      "evidence": "the water's single BTA material record, materialId filled in at load by func_02046b64"
-    },
-    {
-      "symbol": "data_ov012_0211191c",
-      "address": "0x0211191c",
-      "size": "0x16c",
-      "binding": "STB_GLOBAL",
-      "evidence": "91 texture-translation keys, one per animation frame, named by the record's transS range"
-    }
-  ]
+  "rodata": []
 }

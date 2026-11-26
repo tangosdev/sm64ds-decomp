@@ -72,9 +72,10 @@
       "end": "0x02114740"
     },
     {
-      "name": ".data",
+      "name": ".data.wanwanState",
       "start": "0x0211476c",
-      "end": "0x021147e4"
+      "end": "0x021147e4",
+      "input_section": ".data"
     },
     {
       "name": ".bss",
@@ -753,7 +754,7 @@
       "target_address": "0x02113118"
     },
     {
-      "section": ".data",
+      "section": ".data.wanwanState",
       "source": "0x0211477c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -763,7 +764,7 @@
       "target_address": "0x02114690"
     },
     {
-      "section": ".data",
+      "section": ".data.wanwanState",
       "source": "0x02114790",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -773,7 +774,7 @@
       "target_address": "0x02114688"
     },
     {
-      "section": ".data",
+      "section": ".data.wanwanState",
       "source": "0x021147a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -783,7 +784,7 @@
       "target_address": "0x02114698"
     },
     {
-      "section": ".data",
+      "section": ".data.wanwanState",
       "source": "0x021147b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -793,7 +794,7 @@
       "target_address": "0x0211470c"
     },
     {
-      "section": ".data",
+      "section": ".data.wanwanState",
       "source": "0x021147cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -803,7 +804,7 @@
       "target_address": "0x02114724"
     },
     {
-      "section": ".data",
+      "section": ".data.wanwanState",
       "source": "0x021147e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -985,7 +986,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.wanwanState",
           "start": "0x0211476c",
           "end": "0x021147e4",
           "differingBytes": 0,
