@@ -15,8 +15,7 @@
  * Source order is reverse ROM order. The constructor is written before D1.
  *
  * leftovers:
- *  - The 0xf4 shadow flags word has no member name; its measured launder
- *    form stays. UpdateCapPos reads mCapIcon.mFlags (+0x17f) through a
+ *  - UpdateCapPos reads mCapIcon.mFlags (+0x17f) through a
  *    local bitfield view, and func_02005ed8 shifts bit 2 out of it: a
  *    plain `& 4` test is a word shorter.
  *    AddCap's mFlags &= ~1 and its mCapId store go through plain `&member`
@@ -200,11 +199,6 @@ struct dActor_c * dCapEnemy_c::RespawnIfHasCap()
     return r;
 }
 
-/* The u64 no-op mask sits on the mDormantFlags read, not on the mFlags store.
-   Demoting that load out of its fold-onto-[r4,#0xf4] value-numbering class is
-   what lets the RMW-pool chain lead the tail; the plain member read schedules
-   the 0xf4 load ahead of the mCapId pool load (4 words, re-measured #821). The masked mCapId RMW is the
-   usual 6g launder. */
 int dCapEnemy_c::GetCapState() {
     if (mIsDormant == 0) {
         return 2;
@@ -223,14 +217,13 @@ int dCapEnemy_c::GetCapState() {
 
     unsigned int b = mCapIcon.mFlags;
     b = (b << 0x1e) >> 0x1f;
-    if (b == 0) {
-        return 0;
+    if (b != 0) {
+        mIsDormant = 0;
+        mFlags = mDormantFlags;
+        mCapId &= 7;
+        return 1;
     }
-
-    mIsDormant = 0;
-    mFlags = *(int *)((long long)(int)&mDormantFlags);
-    mCapId &= 7;
-    return 1;
+    return 0;
 }
 
 int dCapEnemy_c::DestroyIfCapNotNeeded() {
