@@ -313,16 +313,6 @@
       "addend": 0,
       "target_module": "ov016",
       "target_address": "0x02113a50"
-    },
-    {
-      "section": ".rodata.slideBoxKeys",
-      "source": "0x02113558",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov016_02113af8",
-      "addend": 0,
-      "target_module": "ov016",
-      "target_address": "0x02113af8"
     }
   ],
   "notes": [
