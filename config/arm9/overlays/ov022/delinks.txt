@@ -1,19 +1,21 @@
     .text       start:0x021111a0 end:0x02112950 kind:code align:32
-    .rodata.data_ov022_02112950 start:0x02112950 end:0x02112c98 kind:rodata align:4
-    .rodata     start:0x02112c98 end:0x02112ca8 kind:rodata align:4
+    .rodata     start:0x02112950 end:0x02112ca8 kind:rodata align:4
     .init       start:0x02112ca8 end:0x021130f8 kind:code align:4
     .ctor       start:0x021130f8 end:0x02113120 kind:rodata align:4
-    .data.data_ov022_02113140 start:0x02113140 end:0x02113cd4 kind:data align:32
-    .data       start:0x02113cd4 end:0x02114500 kind:data align:4
+    .data       start:0x02113140 end:0x02114500 kind:data align:32
     .bss        start:0x02114500 end:0x021146a0 kind:bss align:32
+src/game/stages/d_s_map_ov022.c:
+    complete
+    .rodata start:0x02112950 end:0x02112c98
+    .data start:0x02113140 end:0x02113cc8
+
 src/game/actors/d_a_obj_fl_ring.cpp:
     complete
     .text start:0x021111a0 end:0x021115a8
     .init start:0x02112ca8 end:0x02112d14
     .ctor start:0x021130f8 end:0x021130fc
     .bss start:0x02114500 end:0x02114528
-    .data.data_ov022_02113140 start:0x02113140 end:0x02113cd4
-    .data start:0x02113cd4 end:0x02113d98
+    .data start:0x02113cc8 end:0x02113d98
 
 src/game/actors/d_a_obj_fl_koma_d.cpp:
     complete
@@ -82,7 +84,6 @@ src/game/actors/d_a_obj_fl_maruta.cpp:
 src/game/actors/d_a_obj_volcano_cannon.cpp:
     complete
     .text start:0x021125e0 end:0x02112950
-    .rodata.data_ov022_02112950 start:0x02112950 end:0x02112c98
     .init start:0x021130bc end:0x021130f8
     .ctor start:0x0211311c end:0x02113120
     .bss start:0x02114690 end:0x021146a0

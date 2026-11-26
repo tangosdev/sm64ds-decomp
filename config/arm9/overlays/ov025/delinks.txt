@@ -2,27 +2,26 @@
     .rodata     start:0x02112654 end:0x02112970 kind:rodata align:4
     .init       start:0x02112970 end:0x02112b18 kind:code align:4
     .ctor       start:0x02112b18 end:0x02112b28 kind:rodata align:4
-    .data start:0x02112b40 end:0x02112ce8 kind:data align:32
-    .data.brockClps start:0x02112ce8 end:0x02112d08 kind:data align:4
-    .data.liftClps start:0x02112d08 end:0x02112d28 kind:data align:4
-    .data.dkkClps start:0x02112d28 end:0x02112d48 kind:data align:4
-    .data.dkkTail start:0x02112d48 end:0x02113a60 kind:data align:4
+    .data       start:0x02112b40 end:0x02113a60 kind:data align:32
     .bss        start:0x02113a60 end:0x02113b00 kind:bss align:32
+src/game/stages/d_s_map_ov025.c:
+    complete
+    .rodata start:0x02112654 end:0x02112970
+    .data start:0x02112b40 end:0x02113724
+
 src/game/actors/d_a_dgr.cpp:
     complete
     .text start:0x021111a0 end:0x021118c8
     .init start:0x02112970 end:0x021129dc
     .ctor start:0x02112b18 end:0x02112b1c
     .bss start:0x02113a60 end:0x02113a88
-    .data start:0x02112c28 end:0x02112c48
 
 src/game/actors/d_a_dkk.cpp:
     complete
     .text start:0x021118c8 end:0x02111d40
     .init start:0x021129dc end:0x02112a44
     .ctor start:0x02112b1c end:0x02112b20
-    .data.dkkClps start:0x02112d28 end:0x02112d48
-    .data.dkkTail start:0x02113814 end:0x0211382c
+    .data start:0x02113814 end:0x0211382c
     .bss start:0x02113a88 end:0x02113ab0
 
 src/game/actors/d_a_obj_dp_brock.cpp:
@@ -30,7 +29,6 @@ src/game/actors/d_a_obj_dp_brock.cpp:
     .text start:0x02111d40 end:0x021120e4
     .init start:0x02112a44 end:0x02112aac
     .ctor start:0x02112b20 end:0x02112b24
-    .data.brockClps start:0x02112ce8 end:0x02112d08
     .bss start:0x02113ab0 end:0x02113ad8
 
 src/game/actors/d_a_dp_lift.cpp:
@@ -38,5 +36,4 @@ src/game/actors/d_a_dp_lift.cpp:
     .text start:0x021120e4 end:0x02112654
     .init start:0x02112aac end:0x02112b18
     .ctor start:0x02112b24 end:0x02112b28
-    .data.liftClps start:0x02112d08 end:0x02112d28
     .bss start:0x02113ad8 end:0x02113b00

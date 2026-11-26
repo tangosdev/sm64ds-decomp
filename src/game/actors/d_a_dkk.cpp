@@ -24,6 +24,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daDkk_c_AssetId { ASSET_DONKAKU_BMD = 0x02dc, ASSET_DONKAKU_KCL = 0x02dd };
 
+#include "CLPS.h"
 #include "daDkk_c.h"
 #include "common.h"
 #include "decl_common.h"
@@ -200,12 +201,16 @@ DkkModelFilePtr gDonkakuModelFile(ASSET_DONKAKU_BMD);
 DkkClsnFileHandler gDonkakuCollisionFile(ASSET_DONKAKU_KCL);
 
 /* Grindel's collision-property block and the resource table that names it. */
-struct CLPS_Block {
-    u32 words[8];
-};
+typedef struct CLPS_Block {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[2];
+    u32 tail[2];
+} CLPS_Block;
 
-CLPS_Block data_ov025_02112d28 = {0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff,
-                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+extern CLPS_Block data_ov025_02112d28;
+
 DsnBaseFileTable data_ov025_02113814 = {
     &gDonkakuModelFile, &gDonkakuCollisionFile, &data_ov025_02112d28, 0, 0x1a0000, 0x170000,
 };
