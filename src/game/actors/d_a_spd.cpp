@@ -46,8 +46,11 @@ enum Scuttlebug_AssetId {
 /* Flat 0x30-byte matrix block, as UpdateModelAndShadow and the scratch matrix
  * at arm9:0x020a0e68 are used: whole-block assignment, never by field. */
 
-typedef daSpd_c::StateFunc PMF;
-typedef daSpd_c::StateRow ScuttlebugStateRow;
+typedef void (daSpd_c::*PMF)();
+
+/* One row of the state table at ov071:0x02122fa8: enter handler, then the
+ * per-frame run handler. The static initializer copies it from .data words. */
+typedef struct { PMF enter, run; } ScuttlebugStateRow;
 
 /* ------------------------------------------------------------------------
  * ABI imports.  One declaration per symbol, hand-reconciled: the generated
@@ -116,12 +119,13 @@ extern PMF data_ov071_02122ba8;
 extern PMF data_ov071_02122ba0;
 extern PMF data_ov071_02122b98;
 
-ScuttlebugStateRow data_ov071_02122fa8[9] = {
-    {data_ov071_02122b88, data_ov071_02122b80}, {data_ov071_02122b68, data_ov071_02122b70},
-    {data_ov071_02122b78, data_ov071_02122b60}, {data_ov071_02122be8, data_ov071_02122be0},
-    {data_ov071_02122bd8, data_ov071_02122bd0}, {data_ov071_02122bc8, data_ov071_02122bc0},
-    {data_ov071_02122bb8, data_ov071_02122b90}, {data_ov071_02122bb0, data_ov071_02122ba8},
-    {data_ov071_02122ba0, data_ov071_02122b98},
+PMF data_ov071_02122fa8[18] = {
+    data_ov071_02122b88, data_ov071_02122b80, data_ov071_02122b68,
+    data_ov071_02122b70, data_ov071_02122b78, data_ov071_02122b60,
+    data_ov071_02122be8, data_ov071_02122be0, data_ov071_02122bd8,
+    data_ov071_02122bd0, data_ov071_02122bc8, data_ov071_02122bc0,
+    data_ov071_02122bb8, data_ov071_02122b90, data_ov071_02122bb0,
+    data_ov071_02122ba8, data_ov071_02122ba0, data_ov071_02122b98,
 };
 
 daSpd_c *daSpd_c_classInit(void) {
@@ -217,19 +221,19 @@ int daSpd_c::CleanupResources() {
 /* Points mStateRow at one row of the table and tail-calls its entry handler. */
 
 void daSpd_c::SetState(int idx) {
-    mStateRow = &data_ov071_02122fa8[idx];
+    mStateRow = (ScuttlebugStateRow *)data_ov071_02122fa8 + idx;
     CallStateEnter();
 }
 
 void daSpd_c::CallStateEnter() {
-    PMF *p = &mStateRow->enter;
+    PMF *p = (PMF *)mStateRow;
     (this->**p)();
 }
 
 /* Call the state's per-frame handler, one slot further into the row. */
 
 void daSpd_c::RunState() {
-    PMF *p = &mStateRow->run;
+    PMF *p = (PMF *)mStateRow + 1;
     (this->**p)();
 }
 
