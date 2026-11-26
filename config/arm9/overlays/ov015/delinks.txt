@@ -15,6 +15,7 @@
 
 src/game/stages/d_s_map_ov015.c:
     complete
+    .rodata start:0x02112e0c end:0x02112f9c
     .data start:0x02113440 end:0x02114318
 
 src/game/actors/d_a_obj_bk_billboard.cpp:
