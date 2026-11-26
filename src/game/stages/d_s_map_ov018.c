@@ -12,13 +12,14 @@ typedef struct {
     u16 pad;
 } Pad_02112ecc;
 
-typedef struct {
+/* The small actor blocks reserve three entry slots. Counts of one or two leave
+ * the remaining slots as all-ones padding. */
+typedef struct CLPS_Block {
     u32 tag;
     u16 stride;
     u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_02112f48;
+    struct CLPS entries[3];
+} CLPS_Block;
 
 typedef struct {
     u32 tag;
@@ -47,7 +48,7 @@ extern TeleportSourceEntry data_ov018_02112eec[2];
 extern BTA_File data_ov018_02112efc;
 extern struct PathDef data_ov018_02112f14[4];
 extern LevelRec data_ov018_02112f2c;
-extern Clps_02112f48 data_ov018_02112f48;
+extern CLPS_Block data_ov018_02112f48;
 extern StandardEntry data_ov018_02112f68[2];
 extern StandardEntry data_ov018_02112f88[2];
 extern StandardEntry data_ov018_02112fa8[2];
@@ -334,12 +335,15 @@ ViewEntry data_ov018_02113058[4] = {
 
 u32 data_ov018_02112e84[1] = {0x00100114};
 
-Clps_02112f48 data_ov018_02112f48 = {
+CLPS_Block data_ov018_02112f48 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00000fc5, 0x000000ff}, {0x01000fc5, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {
+        {0x00000fc5, 0x000000ff},
+        {0x01000fc5, 0x000000ff},
+        {0xffffffff, 0xffffffff},
+    },
 };
 
 StandardEntry data_ov018_02113090[4] = {
