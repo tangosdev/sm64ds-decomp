@@ -16,10 +16,12 @@ typedef struct PlayerInputRecord {
     u16 flags;
     u16 keys;          /* 0x0e -- pressed buttons */
     u16 inputYaw;      /* 0x10 -- the camera's input yaw (func_0203dafc) */
-    u8 settings[0x10]; /* 0x12 -- the link settings bytes (GetPlayerFlagByte) */
-    /* 0x22 -- compared across the four records by func_0203ea5c (a mismatch
-     * sets link error bit 3); func_0203da4c and func_0203ea5c clear it */
-    u8 unk22;
+    /* 0x12 -- the link settings bytes (GetPlayerFlagByte, func_0203db3c). The
+     * last, settings[0x10] at 0x22, is the desync check dScStage_c writes
+     * through func_0203db3c(0x10, ...): func_0203ea5c compares it across the
+     * four records (a mismatch sets link error bit 3), and func_0203da4c and
+     * func_0203ea5c clear it */
+    u8 settings[0x11];
     u8 unk23; /* 0x23 */
 } PlayerInputRecord;
 

@@ -2707,10 +2707,10 @@ void func_0203ea5c(void) {
         own = &data_020a1154[data_020a0f10];
         for (verIdx = 0, verRec = data_020a1154; verIdx < 4; verIdx++, verRec++) {
             if (verRec->flags & 0x8000) {
-                if (verRec->unk22 != own->unk22) {
+                if (verRec->settings[0x10] != own->settings[0x10]) {
                     data_020a0f1c |= 8;
                     break;
-                } else if (verRec->unk22 != own->unk22) {
+                } else if (verRec->settings[0x10] != own->settings[0x10]) {
                     /* Unreachable: the cartridge tests the same byte twice
                        (unk23 here moves the code). */
                     data_020a0f1c |= 0x10;
@@ -2723,10 +2723,10 @@ void func_0203ea5c(void) {
         }
         if (data_020a0efc != 0) {
             data_020a0f1c &= 0xFF60;
-            /* The cartridge stores unk22 twice and never clears unk23
+            /* The cartridge stores settings[0x10] twice and never clears unk23
                (unk23 in the second store moves 22 words). */
-            data_020a1040.unk22 = 0;
-            data_020a1040.unk22 = 0;
+            data_020a1040.settings[0x10] = 0;
+            data_020a1040.settings[0x10] = 0;
             data_020a0f30 = 0;
             data_020a1040.flags &= 0xEFFF;
             data_020a0efc--;
@@ -3020,7 +3020,7 @@ void func_0203e20c(void) {
     }
 
     /* The same copy as func_0203e0ac, without clearing 0x8000. Here the
-       settings bytes (and unk22) go through two walking byte pointers: an
+       settings bytes go through two walking byte pointers: an
        indexed settings[i] loop colours the registers differently. */
     {
         u8 *src = (u8 *)&data_020a1040;
@@ -3052,7 +3052,7 @@ void func_0203e20c(void) {
    it stores the next, which is how mwccarm evaluates a = b = c, and takes
    the touch samples of records 3, 2 and 1 from their own addresses (the
    pool's 0x020a11c4, 0x020a11a0 and 0x020a117c). The byte loop runs 0x11
-   times, through settings and on into unk22. */
+   times, over every settings byte. */
 void func_0203e0ac(void) {
     int i;
 
@@ -3314,15 +3314,15 @@ unsigned short func_0203da80(unsigned short x) {
     return data_020a0f1c & x;
 }
 
-/* Clear the link error bits 0x9f of data_020a0f1c and unk22 (byte 0x22) of
+/* Clear the link error bits 0x9f of data_020a0f1c and settings[0x10] (byte 0x22) of
    the local input record data_020a1040. func_02030aa4 calls it when a session
    starts, and dMeter_c when it sets up. func_0203ea5c runs the same three
    statements inline in its error countdown, so the two shared a translation
-   unit. The cartridge stores unk22 twice here as well. */
+   unit. The cartridge stores settings[0x10] twice here as well. */
 void func_0203da4c(void) {
     data_020a0f1c &= 0xff60;
-    data_020a1040.unk22 = 0;
-    data_020a1040.unk22 = 0;
+    data_020a1040.settings[0x10] = 0;
+    data_020a1040.settings[0x10] = 0;
 }
 
 /* The link mode data_020a0f04 that func_0203da2c sets (0 local only, 1 and 2
