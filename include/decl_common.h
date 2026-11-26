@@ -86,7 +86,6 @@ extern struct daObjFloatBoard_c_Resources data_ov016_02114b8c;
 extern char data_ov024_02112d00[];
 extern struct CLPS_Block data_ov027_021130e8;
 
-extern char data_ov056_02112c68[];
 extern char data_ov065_0211d360[];
 extern char data_ov065_0211d364[];
 extern char data_ov073_021231bc[];
@@ -272,7 +271,6 @@ extern int data_ov055_02111b68;
 extern int data_ov055_02111b6c;
 extern int data_ov056_02111a60[];
 extern int data_ov056_02112158[];
-extern int data_ov056_02112c04[];
 extern int data_ov059_021114c8[];
 extern int data_ov059_02111680[];
 extern int data_ov060_0211ab20[];
@@ -579,7 +577,6 @@ extern void StartFile(s8, u8);
 extern void UnloadArchive(int);
 extern void UnloadArchives(void);
 extern void WarpPlayer(int, int);
-extern void data_ov052_02111e84(void *);
 extern void MI_SendGXCommand(unsigned int, const void *, unsigned int);
 /* func_02005348 removed: it is the member dScBoot_c::func_02005348(), declared in include/dScBoot_c.h */
 extern void Vec3fSetDistAndAngle(struct Vector3 *, const struct Vector3 *, int, short, short);
