@@ -26,6 +26,12 @@
 #include "dActor_c.h"
 
 struct daPgMthr_c : dActor_c {
+    typedef int (daPgMthr_c::*StateFunc)();
+    struct State {
+        StateFunc enter;
+        StateFunc update;
+    };
+
     dExtAnmModel_c mAnmModel;         /* 0x0d4 */
     dExtAnmTexPat_c mTextureSequence; /* 0x138 */
     dExtShadowModel_c mShadowModel;        /* 0x14c */
@@ -34,7 +40,7 @@ struct daPgMthr_c : dActor_c {
     Vector3 mHomePos;                /* 0x364 */
     /* ChangeState writes data_ov018_02113c4c + (i<<4) here; CallStateEnter
        and CallStateUpdate call through it as a PMF pair. */
-    void *mState;                    /* 0x370 */
+    State *mState; /* 0x370 */
     /* ClosestPlayer / FindWithID result. StartTalk, ShowMessage,
        GetTalkState, DropActor take it as daPly_c. */
     daPly_c *mPlayer; /* 0x374 */

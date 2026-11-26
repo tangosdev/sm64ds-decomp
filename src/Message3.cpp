@@ -1152,7 +1152,7 @@ void Message::func_02032f9c(int a) {
 
     w = 256 - data_0209fc88;
     data_0209fc7c = ((w >> 1) & 7);
-    q = (u16 *)((char *)G2_GetBG3ScrPtr() + 0x40) + (u16)(w / 8 >> 1);
+    q = (u16 *)G2_GetBG3ScrPtr() + 0x20 + (u16)(w / 8 >> 1);
     c = data_0209fc7c;
     n = (data_0209fc88 + c + 7) >> 3;
     i = 0;
@@ -1533,7 +1533,7 @@ void Message::func_02033bb8(int param0) {
     Message_DrawLineBG2VS();
     n = data_0209fc88;
     m = (n + 7) / 8;
-    scr = (short *)((char *)G2_GetBG2ScrPtr() + 0x40 + (16 - m / 2) * 2);
+    scr = (short *)G2_GetBG2ScrPtr() + 0x20 + (16 - m / 2);
     i = 0;
     if (m > 0) {
         int v2 = m + 0x280;
@@ -1550,7 +1550,7 @@ void Message::func_02033bb8(int param0) {
     Message_DrawLineBG2VS();
     n = data_0209fc88;
     m = (n + 7) / 8;
-    scr = (short *)((char *)G2_GetBG2ScrPtr() + 0x840 + (16 - m / 2) * 2);
+    scr = (short *)G2_GetBG2ScrPtr() + 0x420 + (16 - m / 2);
     i = 0;
     if (m > 0) {
         int mm = (n + 7) / 8;
@@ -1571,7 +1571,7 @@ void Message::func_02033bb8(int param0) {
     Message_DrawLineBG2VS();
     n = data_0209fc88;
     m = (n + 7) / 8;
-    scr = (short *)((char *)G2_GetBG2ScrPtr() + 0x1040 + (16 - m / 2) * 2);
+    scr = (short *)G2_GetBG2ScrPtr() + 0x820 + (16 - m / 2);
     i = 0;
     if (m > 0) {
         int mm = (n + 7) / 8;

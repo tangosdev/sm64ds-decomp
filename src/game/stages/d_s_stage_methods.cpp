@@ -460,6 +460,15 @@ static StageArea *data_0209f314;
 /* The stage's camera: LoadEntranceObjects spawns it (profile 0x14c) once the
    players are placed, and CleanupResources clears it. */
 dCamera_c *gCamera;
+struct FogObjEntry {
+    u8 enabled;
+    u8 red;
+    u8 green;
+    u8 blue;
+    u16 nearv;
+    u16 farv;
+};
+
 static char *sFogObjs;
 /* The level model's components, kept by LoadModel and cleared by
    CleanupResources; CopyTexPalFromLevelModel reads it. */
@@ -3889,19 +3898,18 @@ void dScStage_c::LoadFog() {
         return;
     }
     {
-        unsigned char *fogRecord = (unsigned char *)sFogObjs;
+        FogObjEntry *fogRecord = (FogObjEntry *)sFogObjs;
         Fog *fog = mFog;
         int fogIndex;
         for (fogIndex = 0; fogIndex < sNumFogObjs; fogIndex++) {
-            if (fogRecord[0] != 1) {
+            if (fogRecord->enabled != 1) {
                 fog->mEnabled = 0;
             } else {
-                unsigned short color = ((fogRecord[1] >> 3) | ((fogRecord[2] >> 3) << 5)) |
-                                       ((fogRecord[3] >> 3) << 10);
-                fog->Init(color, *((unsigned short *)(fogRecord + 4)),
-                          *((unsigned short *)(fogRecord + 6)));
+                unsigned short color = ((fogRecord->red >> 3) | ((fogRecord->green >> 3) << 5)) |
+                                       ((fogRecord->blue >> 3) << 10);
+                fog->Init(color, fogRecord->nearv, fogRecord->farv);
             }
-            fogRecord += 8;
+            fogRecord++;
             fog++;
         }
     }

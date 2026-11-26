@@ -46,6 +46,12 @@
  * registry profile.
  */
 struct daBttBk_c : dActor_c {
+    typedef int (daBttBk_c::*StateFunc)();
+    struct StateRow {
+        StateFunc enter;
+        StateFunc update;
+    };
+
     /* dExtSimpleModel_c member, named by the class's own destructor calling
        dExtSimpleModel_c's D1 at +0x0d4. [daBttBk_c D0, src/game/actors/d_a_btt_bk.cpp] */
     dExtSimpleModel_c mModel; /* 0x0d4 */
@@ -60,7 +66,7 @@ struct daBttBk_c : dActor_c {
        [daBttBk_c_classInit and D0, src/game/actors/d_a_btt_bk.cpp] */
     dBgCh_Actr mWithMeshClsn; /* 0x180 */
     Matrix4x3 mShadowMtx;     /* 0x33c -- the drop shadow's matrix (UpdateModelTransform) */
-    char *mStateRow;          /* 0x36c -- current row of the state table */
+    StateRow *mStateRow;      /* 0x36c -- current row of the state table */
     s32 mState;               /* 0x370 -- index stored by each state's enter function */
     dActor_c *mCarrier;       /* 0x374 -- the actor this crate rides, or null */
 

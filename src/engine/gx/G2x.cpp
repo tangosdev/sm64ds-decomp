@@ -16,6 +16,15 @@
 
 #include "Matrix2x2.h"
 
+/* The BG affine registers as this writer programs them: PA/PB and PC/PD as
+   packed halfword pairs, then the X and Y reference-point words. */
+typedef struct GXBGAffineRegs {
+    volatile u32 pa_pb;
+    volatile u32 pc_pd;
+    volatile int x;
+    volatile int y;
+} GXBGAffineRegs;
+
 /* Loads a background's affine transform into the hardware registers behind `p`.
  *
  * The four matrix terms go out as TWO 32-bit writes, packed in pairs, each term
@@ -27,21 +36,23 @@
  * caller gives a point to rotate ABOUT and a point to rotate TO, and this
  * resolves them into the single origin the hardware actually takes. */
 void G2x_SetBGyAffine_(volatile unsigned short *p, Matrix2x2 *m, int a, int b, int c, int d) {
+    GXBGAffineRegs *regs = (GXBGAffineRegs *)p;
+
     u16 pa = (u16)(s16)(m->m00 >> 4);
     u16 pb = (u16)(s16)(m->m01 >> 4);
-    *(volatile unsigned int *)p = pa | (pb << 16);
+    regs->pa_pb = pa | (pb << 16);
 
     u16 pc = (u16)(s16)(m->m10 >> 4);
     u16 pd = (u16)(s16)(m->m11 >> 4);
-    *(volatile unsigned int *)(p + 2) = pc | (pd << 16);
+    regs->pc_pd = pc | (pd << 16);
 
     int dx = c - a;
     int dy = d - b;
     int x = m->m00 * dx + m->m01 * dy + (a << 12);
     int y = m->m10 * dx + m->m11 * dy + (b << 12);
 
-    *(volatile int *)(p + 4) = x >> 4;
-    *(volatile int *)(p + 6) = y >> 4;
+    regs->x = x >> 4;
+    regs->y = y >> 4;
 }
 
 /* The final argument is 32-bit: the ROM loads its stack slot with `ldr`,

@@ -340,7 +340,7 @@ void MBi_InitSendFixedBeacon(void) {
         data_020a9d2c.srcp = (u8 *)p;
     } else {
         data_020a9d2c.fragmentMaxNum = 4;
-        data_020a9d2c.srcp = (u8 *)p + 0x220;
+        data_020a9d2c.srcp = (u8 *)&p->fixed.parent;
     }
     data_020a9d2c.state = 3;
 }

@@ -530,13 +530,10 @@ extern "C" void *MenuText_GetSourceScreen(void) {
 }
 
 /* Draws the record board of save slot `slot` into plane 2 (ov007 0x020b8188,
- * 0x360 bytes). Eighteen lines: line 0 prints the slot heading
- * (MenuText_DrawSlotHeading) and the entry count at records[slot + 2]; line 1
- * prints one of two headings (0x1f57, then 0x1f62 or 0x1f58 by `alt`); line
- * 0x11 prints message 0x13b0 and the byte at *(int *)records + slot + 0x98;
- * lines 2..0x10 print one record each from the 0x1388 messages plus three
- * bytes of the record at *(int *)records + slot * 0xf + line - 2 (the first
- * clamped to 7 when it reaches 8).
+ * 0x360 bytes). Line 0 prints the slot heading and the slot's star count;
+ * line 1 prints one of two headings by `alt`; line 0x11 prints the level-0x1d
+ * star count. Lines 2..0x10 print one course each: its other-star count
+ * (clamped to 7), coin record and first-star marker.
  *
  * The ROM keeps the repeated constants in the frame (0x1c..0x4c) and reloads
  * them at each use; mwcc does that by itself for the literals. Shapes that
@@ -572,7 +569,7 @@ extern "C" void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
             MenuText_DrawGlyph(2, 0x4d);
             MenuText_DrawGlyph(2, 0xf0);
             MenuText_DrawGlyph(2, 0xef);
-            MenuText_DrawNumber(2, ((s16 *)(records + 4))[slot]);
+            MenuText_DrawNumber(2, ((Ov007Settings *)records)->starCounts[slot]);
             break;
         case 1:
             data_ov007_02103464 = 0x30;
@@ -595,7 +592,7 @@ extern "C" void MenuText_DrawRecordBoard(int slot, char *records, int alt) {
             data_ov007_02103464 = 0x9c;
             MenuText_DrawGlyph(2, 0xf0);
             MenuText_DrawGlyph(2, 0xef);
-            MenuText_DrawNumber(2, *(u8 *)(slot + *(int *)records + 0x98));
+            MenuText_DrawNumber(2, ((Ov007Settings *)records)->bootArgs->level1dStars[slot]);
             break;
         default: {
             int row = MenuText_MessageIDToIndex(0x1388);

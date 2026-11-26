@@ -337,7 +337,7 @@ int daBtn_c::InitResources()
 
     mTipLift = 0;
     mShouldRender = 1;
-    unk_407 = 0;
+    mPlayerSquashed = 0;
     mResumePending = 0;
     mStateTimer = 0;
 
@@ -1012,7 +1012,7 @@ void daBtn_c::func_ov079_02124dec()
 
 /* State 6, lying flat. Phases below 10 belong to the class's own handler
    (the king's hit counting, the plain Whomp's coin/defeat check); after
-   100 frames (120 for the king), or 30 once unk_407 is armed, the body
+   100 frames (120 for the king), or 30 once mPlayerSquashed is set, the body
    starts to get up (phase 11). Phase 10, after the king's hurt shake,
    waits 30 frames and gets up too. Phase 11 pitches back up to level, then
    either resumes the state a hit interrupted or walks again (state 1, or 2
@@ -1034,12 +1034,12 @@ void daBtn_c::UpdateGettingUp() {
             int lim = mIsKing * 20 + 100;
             u16 cur = mStateTimer;
             if (cur <= lim) {
-                if (unk_407 != 1)
+                if (mPlayerSquashed != 1)
                     return;
                 if (cur <= 0x1e)
                     return;
             }
-            unk_407 = 0;
+            mPlayerSquashed = 0;
             mSubState = 0xb;
             mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5 + 2]->filePtr, 0x40000000,
                               0x1000, 0);
@@ -1054,7 +1054,7 @@ void daBtn_c::UpdateGettingUp() {
         mSubTimer++;
         if (mSubTimer <= 30)
             return;
-        unk_407 = 0;
+        mPlayerSquashed = 0;
         mSubState++;
         mAnmModel.SetAnim((BCA_File *)data_ov079_021275ec[mIsKing * 5 + 2]->filePtr, 0x40000000,
                           0x1000, 0);

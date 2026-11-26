@@ -206,14 +206,14 @@ void daIbl_c::UpdateWallAndFloor() {
     else
         mWithMeshClsn.func_02038414();
     if (mWithMeshClsn.IsOnWall() != 0) {
-        ((SurfaceInfo *)((char *)mWithMeshClsn.GetWallResult() + 4))->CopyNormalTo(mWallNormal);
+        mWithMeshClsn.GetWallResult()->surface.CopyNormalTo(mWallNormal);
         short a = cstd::atan2(mWallNormal.x, mWallNormal.z);
         if (GetSubtraction(mPrevAngle.y, a) > 0x4000)
             mHitWall = 1;
     }
     if (mWithMeshClsn.IsOnGround() == 0)
         return;
-    ((SurfaceInfo *)((char *)mWithMeshClsn.GetFloorResult() + 4))->CopyNormalTo(mFloorNormal);
+    mWithMeshClsn.GetFloorResult()->surface.CopyNormalTo(mFloorNormal);
     if (mHitWall != 0) return;
     mPos.x = mPrevPos.x;
     mPos.z = mPrevPos.z;

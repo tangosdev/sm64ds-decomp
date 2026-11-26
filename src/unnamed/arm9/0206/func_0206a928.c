@@ -1,12 +1,7 @@
-/* recovered: debug printf formatter core. DFA-table % parser (state table data_0209a0a0,
-   8 states x 9 character classes; class table data_0209a130), 64-byte chunked output
-   through the stream callback at +0x10, conversions b c d i s u o x X f e E g G; %f %e %g
-   go through the soft-double helpers func_0206bc8c (digit extract), func_0206bdb4 (/10 and
-   normalize), func_0206c244 (x10), func_0206c51c (add). Every byte access is the cluster's
-   unaligned-safe u16 read-modify-write pair (READ8/WRITE8). The compiled function is
-   0x1364 bytes: its fourth literal-pool word (the data_0208689c address, loaded at +0x12c0)
-   sits at +0x1360, one word past the size recorded for the symbol in config/arm9/symbols.txt
-   (config/arm9/relocs.txt lists that load at 0x0206bc88). */
+/* Debug printf formatter core: a DFA-table % parser with 64-byte chunked
+   output through the stream callback. It supports b c d i s u o x X f e E g G;
+   the floating-point conversions use the cluster's soft-double helpers. Byte
+   accesses use its unaligned-safe u16 read-modify-write pair (READ8/WRITE8). */
 #include "types.h"
 
 #define READ8(a) ((((int)(a)) & 1) ? (((*(u16 *)((a) - 1)) & 0xff00) >> 8) : ((*(u16 *)(a)) & 0xff))
@@ -16,34 +11,18 @@
     else \
         *(u16 *)(a) = (*(u16 *)(a) & 0xff00) | ((v) & 0xff)
 
-/* optimize_for_size is this library's own build setting, not a matching lever:
-   the ISD debug console and its soft-float helpers were shipped size-optimized. */
+/* The ISD debug console library was size-optimized. */
 #pragma optimize_for_size on
-/* opt_common_subs stays off: measured with tools/prepush_linkcheck.py, which is the
-   only gate in the tree that can judge this file -- build_pin.verify (and so
-   tools/delaunder.py) compares exactly the 0x1360 config/arm9/symbols.txt records for
-   the symbol, and the formatter compiles to 0x1364 because of the literal-pool word
-   noted above, so those two call the file non-reproducing either way. Under the
-   delink-sized comparison it reproduces with the pragma and is NO-REPRO without it.
-   tools/fdiff.py over the full 0x1364 bytes agrees: 0/1241 with it, 13/1241 without
-   (common-subexpression elimination reuses the fraction digit's WRITE8 parity test for
-   the READ8 after it, and two stack slots swap).
-   Kept (#821, measured 2026-11-16 by fdiff over the full 0x1364 bytes, pragma off):
-     READ8 with a (u32), (unsigned int) or (long) address cast: 12/1241 words
-       differ (one parity test fixed; the slot swap stays).
-     WRITE8 with a (u32) cast: 12. (s32), or (u32) on both: 13.
-     READ8/WRITE8 as inline functions (both or one): 13.
-     the WRITE8 target spelled `frac + k` directly: 13.
-     `b = frac + k` assigned again before each access: 23.
-   The pragma is not a setting shared by the whole cluster. Toggled on its siblings,
-   func_0206c244 and func_0206c8b4 also need CSE off (26/182 words, and a size
-   change). func_0206bdb4, func_0206ca7c and func_0206cb0c break with it off,
-   and func_0206bc8c, c51c, c93c, c9f4, ca44 and cbc0 match either way. That
-   fits per-file build settings in the original library, but it does not
-   prove them. */
 #pragma opt_common_subs off
 
 typedef void (*WriteFn)(void *self, const char *buf, int len);
+
+/* IEEE-754 double bits in little-endian byte order. */
+struct Ieee754DoubleBytes {
+    u8 fractionLow[6];
+    u8 exponentLowAndFractionHigh;
+    u8 signAndExponent;
+};
 
 /* The output stream; the callback at +0x10 takes each chunk (func_0206c9f4
    spells the same record). */
@@ -418,15 +397,13 @@ void func_0206a928(struct Stream *ctx, const char *fmt, int **ap) {
             nz = 0;
             strip = 1;
             flags |= 0x2000;
-            /* Byte 7 of the double is its sign byte, addressed the way
-               func_0206c90c does. A union local (u64 / u32[2] / char[8])
-               in place of d and these casts compiles to 0x13b4, not 0x1364. */
-            b = (char *)&d + 7;
+            /* Record a negative sign, then clear it in the magnitude. */
+            b = (char *)&((struct Ieee754DoubleBytes *)&d)->signAndExponent;
             if (READ8(b) & 0x80) {
                 flags |= 0x4000;
-                b = (char *)&d + 7;
+                b = (char *)&((struct Ieee754DoubleBytes *)&d)->signAndExponent;
                 ch = READ8(b) & 0x7f;
-                b = (char *)&d + 7;
+                b = (char *)&((struct Ieee754DoubleBytes *)&d)->signAndExponent;
                 if (((int)b) & 1)
                     *(u16 *)(b - 1) = (*(u16 *)(b - 1) & 0xff) | (ch << 8);
                 else
