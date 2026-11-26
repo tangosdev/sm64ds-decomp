@@ -31,6 +31,7 @@ enum daPgDfdr_c_AssetId {
     ASSET_PENGUIN_WALK2_BCA = 0x0409
 };
 
+#include "CLPS.h"
 #include "common.h"
 #include "daPgDfdr_c.h"
 #include "daPly_c.h"
@@ -46,6 +47,16 @@ enum daPgDfdr_c_AssetId {
 
 struct BMD_File;
 struct BTP_File;
+
+/* Stage collision-property blocks are defined by d_s_map_ov027.c. */
+typedef struct CLPS_Block {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[3];
+} CLPS_Block;
+
+extern CLPS_Block data_ov027_021130e8;
 
 enum {
     kStateTurn = 0,
@@ -333,11 +344,3 @@ PgDfdrCollisionFilePtr data_ov027_02113c6c(ASSET_PENGUIN_KCL);
 DfdrStateTable data_ov027_02113ce4[2] = {
     (DfdrStateFunc)&daPgDfdr_c::InitStateTurn, (DfdrStateFunc)&daPgDfdr_c::StateTurn,
     (DfdrStateFunc)&daPgDfdr_c::InitStateWalk, (DfdrStateFunc)&daPgDfdr_c::StateWalk};
-
-/* The collision-property block InitResources hands to dBgW_KcMbg::SetFile. */
-struct CLPS_Block {
-    u32 words[8];
-};
-
-CLPS_Block data_ov027_021130e8 = {0x53504c43, 0x00030008, 0x01002fc0, 0x000000ff,
-                                  0x01000fc0, 0x000000ff, 0x01001fc0, 0x000000ff};

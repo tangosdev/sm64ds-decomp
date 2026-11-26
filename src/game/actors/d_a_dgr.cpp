@@ -26,6 +26,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daDgr_c_AssetId { ASSET_DONGURU_BMD = 0x02da, ASSET_DONGURU_KCL = 0x02db };
 
+#include "CLPS.h"
 #include "common.h"
 #include "daDgr_c.h"
 #include "SharedFilePtr.h"
@@ -65,18 +66,16 @@ enum {
 
 extern DgrModelFilePtr data_ov025_02113a68;
 extern DgrCollisionFilePtr data_ov025_02113a60;
-/* CLPS.h keeps the block opaque: header with the entry stride at +4, then
-   the entries. This TU hands SetFile a one-entry block. */
-struct CLPS_Block {
-    u32 words[8];
-};
+/* Stage collision-property blocks are defined by d_s_map_ov025.c. */
+typedef struct CLPS_Block {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[2];
+    u32 tail[2];
+} CLPS_Block;
 
-/* CLPS block SetFile takes: CLPS header, one entry, four all-ones words. The
-   cartridge also labels the last of them 0x02112c44 -- it is this block's
-   eighth word, not a separate object. */
-CLPS_Block data_ov025_02112c28 = {
-    0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
-};
+extern CLPS_Block data_ov025_02112c28;
 
 /* local extern: arm9 C helpers with no shared header yet. */
 void func_02012694(unsigned int, const Vector3 *);

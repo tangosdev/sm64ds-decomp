@@ -35,16 +35,9 @@
       "end": "0x02113ab0"
     },
     {
-      "name": ".data.dkkClps",
-      "start": "0x02112d28",
-      "end": "0x02112d48",
-      "input_section": ".data"
-    },
-    {
-      "name": ".data.dkkTail",
+      "name": ".data",
       "start": "0x02113814",
-      "end": "0x0211382c",
-      "input_section": ".data"
+      "end": "0x0211382c"
     }
   ],
   "functions": [
@@ -113,13 +106,6 @@
     }
   ],
   "data": [
-    {
-      "symbol": "data_ov025_02112d28",
-      "address": "0x02112d28",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "Donkey Kong's collision-property block handed to dBgW_KcMbg::SetFile"
-    },
     {
       "symbol": "data_ov025_02113814",
       "address": "0x02113814",
@@ -305,14 +291,7 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
-          "section": ".data.dkkClps",
-          "start": "0x02112d28",
-          "end": "0x02112d48",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.dkkTail",
+          "section": ".data",
           "start": "0x02113814",
           "end": "0x0211382c",
           "differingBytes": 0,
@@ -363,16 +342,7 @@
             ]
           },
           {
-            "section": ".data.dkkClps",
-            "original": [
-              29
-            ],
-            "desired": [
-              29
-            ]
-          },
-          {
-            "section": ".data.dkkTail",
+            "section": ".data",
             "original": [
               27
             ],
@@ -733,7 +703,7 @@
       "target_address": "0x021129dc"
     },
     {
-      "section": ".data.dkkTail",
+      "section": ".data",
       "source": "0x02113814",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -743,7 +713,7 @@
       "target_address": "0x02113a88"
     },
     {
-      "section": ".data.dkkTail",
+      "section": ".data",
       "source": "0x02113818",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -753,7 +723,7 @@
       "target_address": "0x02113a90"
     },
     {
-      "section": ".data.dkkTail",
+      "section": ".data",
       "source": "0x0211381c",
       "type": "R_ARM_ABS32",
       "kind": "load",

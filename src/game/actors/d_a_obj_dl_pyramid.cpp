@@ -24,12 +24,13 @@
  * The two resource handles below (model gDlPyramidModelFile, collision
  * gDlPyramidCollisionFile) are defined by this TU; mwcc builds
  * __sinit_d_a_obj_dl_pyramid.cpp from them. data_ov024_021129f0 is the
- * 16-byte collision CLPS block (the 0xFF tail is not part of it).
+ * stage collision-property block in d_s_map_ov024.c.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjDlPyramid_c_AssetId { ASSET_DL_PYRAMID_BMD = 0x05dd, ASSET_DL_PYRAMID_KCL = 0x05de };
 
+#include "CLPS.h"
 #include "daObjDlPyramid_c.h"
 #include "daObjDlPyramidDummy_c.h"
 #include "common.h"
@@ -45,9 +46,15 @@ enum daObjDlPyramid_c_AssetId { ASSET_DL_PYRAMID_BMD = 0x05dd, ASSET_DL_PYRAMID_
 
 struct BMD_File;
 struct KCL_File;
-struct CLPS_Block;
+typedef struct CLPS_Block {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[2];
+    u32 tail[2];
+} CLPS_Block;
 
-extern char data_ov024_021129f0[16];
+extern CLPS_Block data_ov024_021129f0;
 
 /* The retail static initializer constructs these two 8-byte resource handles
  * in source order (model 1501, then collision 1502) and lets the C++ runtime
@@ -219,9 +226,7 @@ int daObjDlPyramid_c::InitResources() {
     UpdateModelMatrix();
     UpdateClsnMatrix();
     KCL_File *kcl = dBgW_Kc::LoadFile(gDlPyramidCollisionFile);
-    /* Kept (#821 r76): genuine; this TU defines the CLPS block as its bytes and CLPS_Block is
-       opaque (CLPS.h). */
-    mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngle.y, *(CLPS_Block *)&data_ov024_021129f0);
+    mMeshCollider.SetFile(kcl, mClsnMat2, 0x199, mAngle.y, data_ov024_021129f0);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosAndAngs);
     mMeshCollider.Enable(this);
     mHomePos.x = mPos.x;
@@ -267,6 +272,3 @@ daObjDlPyramid_c *daObjDlPyramid_c_classInit() {
  * __sinit_d_a_obj_dl_pyramid.cpp from these two definitions. */
 DlPyramidModelFilePtr gDlPyramidModelFile(ASSET_DL_PYRAMID_BMD);
 DlPyramidCollisionFilePtr gDlPyramidCollisionFile(ASSET_DL_PYRAMID_KCL);
-char data_ov024_021129f0[16] = {
-    0x43, 0x4c, 0x50, 0x53, 0x08, 0x00, 0x01, 0x00, 0xc4, 0x3f, 0x00, 0x00, 0xff, 0x00, 0x00, 0x00,
-};

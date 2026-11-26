@@ -29,6 +29,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daDpLift_c_AssetId { ASSET_DP_LIFT_BMD = 0x05e1, ASSET_DP_LIFT_KCL = 0x05e2 };
 
+#include "CLPS.h"
 #include "daDpLift_c.h"
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx.h"
@@ -57,12 +58,15 @@ extern DpLiftModelFilePtr data_ov025_02113ae0;
 extern SharedFilePtr data_ov002_0210d9f0;
 extern DpLiftCollisionFilePtr data_ov025_02113ad8;
 
-struct CLPS_Block {
-    u32 words[8];
-};
+typedef struct CLPS_Block {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[2];
+    u32 tail[2];
+} CLPS_Block;
 
-CLPS_Block data_ov025_02112d08 = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
-                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+extern CLPS_Block data_ov025_02112d08;
 
 daDpLift_c::~daDpLift_c() {}
 

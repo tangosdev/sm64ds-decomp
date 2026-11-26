@@ -33,10 +33,9 @@
       "end": "0x02113c6c"
     },
     {
-      "name": ".data.donketu",
+      "name": ".data",
       "start": "0x021138f4",
-      "end": "0x02113928",
-      "input_section": ".data"
+      "end": "0x02113928"
     }
   ],
   "functions": [
@@ -305,7 +304,7 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
-          "section": ".data.donketu",
+          "section": ".data",
           "start": "0x021138f4",
           "end": "0x02113928",
           "differingBytes": 0,
@@ -368,7 +367,7 @@
             ]
           },
           {
-            "section": ".data.donketu",
+            "section": ".data",
             "original": [
               33
             ],
@@ -870,7 +869,7 @@
       "target_address": "0x02112d1c"
     },
     {
-      "section": ".data.donketu",
+      "section": ".data",
       "source": "0x021138f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -880,7 +879,7 @@
       "target_address": "0x02113c10"
     },
     {
-      "section": ".data.donketu",
+      "section": ".data",
       "source": "0x021138f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -890,7 +889,7 @@
       "target_address": "0x02113c18"
     },
     {
-      "section": ".data.donketu",
+      "section": ".data",
       "source": "0x021138fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -900,7 +899,7 @@
       "target_address": "0x02113c08"
     },
     {
-      "section": ".data.donketu",
+      "section": ".data",
       "source": "0x02113900",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -910,7 +909,7 @@
       "target_address": "0x02113c20"
     },
     {
-      "section": ".data.donketu",
+      "section": ".data",
       "source": "0x02113904",
       "type": "R_ARM_ABS32",
       "kind": "load",
