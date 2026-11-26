@@ -6,8 +6,8 @@
     "extern_vtable": 0,
     "extern_vtable_classes": 0,
     "inline_asm": 5,
-    "launder_or_forced": 18,
-    "launder_sites": 30,
+    "launder_or_forced": 17,
+    "launder_sites": 29,
     "pragma_by_name": {
       "opt_common_subs": 12,
       "opt_lifetimes": 1,
@@ -74,8 +74,8 @@
     "pad_layout": 10
   },
   "totals": {
-    "c_extension": 728,
+    "c_extension": 739,
     "cpp_extension": 699,
-    "src_files": 1427
+    "src_files": 1438
   }
 }
