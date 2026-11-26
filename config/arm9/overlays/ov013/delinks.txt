@@ -4,12 +4,16 @@
     .ctor       start:0x02111760 end:0x02111768 kind:rodata align:4
     .data       start:0x02111780 end:0x02112280 kind:data align:32
     .bss        start:0x02112280 end:0x021122c0 kind:bss align:32
+src/game/stages/d_s_map_ov013.c:
+    complete
+    .data start:0x02111780 end:0x021120e0
+
 src/game/actors/d_a_obj_clock_huriko.cpp:
     complete
     .text start:0x021111a0 end:0x021113bc
     .init start:0x021116b8 end:0x021116f8
     .ctor start:0x02111760 end:0x02111764
-    .data start:0x02111780 end:0x021121a4
+    .data start:0x021120e0 end:0x021121a4
     .bss start:0x02112280 end:0x02112294
 
 src/game/actors/d_a_obj_clock.cpp:
