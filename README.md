@@ -29,7 +29,7 @@ LINKED     ███████████████████████
 
 <!-- data:start -->
 ```
-DATA       ██████████████████████░░░░░░░░  73.1%   14,563 / 19,918
+DATA       ██████████████████████░░░░░░░░  74.8%   14,903 / 19,918
 ```
 
 Data progress: [notes/data-tracking.md](notes/data-tracking.md).
