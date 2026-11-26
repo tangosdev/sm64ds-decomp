@@ -31,7 +31,7 @@ struct daBDonketu_c : daOts_c {
     int Behavior();
     int InitResources();
     int Render();
-    virtual int UpdateRunState();
+    virtual void UpdateRunState();
     virtual void UpdateDeathState();
 };
 
