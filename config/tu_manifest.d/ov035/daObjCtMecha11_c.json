@@ -13,12 +13,6 @@
   ],
   "sections": [
     {
-      "name": ".data.m11Clps",
-      "input_section": ".data",
-      "start": "0x02112238",
-      "end": "0x02112258"
-    },
-    {
       "name": ".data.m11Ang",
       "input_section": ".data",
       "start": "0x02112b80",
@@ -111,13 +105,6 @@
     }
   ],
   "data": [
-    {
-      "symbol": "data_ov035_02112238",
-      "address": "0x02112238",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "CLPS words for the second mechanism."
-    },
     {
       "symbol": "sTTCSpinnerSpeeds",
       "address": "0x02112b80",
@@ -353,13 +340,6 @@
         "firstDiff": null
       },
       "tuRanges": [
-        {
-          "section": ".data.m11Clps",
-          "start": "0x02112238",
-          "end": "0x02112258",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
         {
           "section": ".data.m11Ang",
           "start": "0x02112b80",

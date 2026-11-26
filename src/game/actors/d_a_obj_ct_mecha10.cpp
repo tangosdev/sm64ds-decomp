@@ -87,11 +87,7 @@ extern Mecha10ModelFilePtr
 extern Mecha10ClsnFilePtr gCtMechaObj10CollisionFile; /* collision KCL of the id 0x77 cog */
 extern Mecha10ModelFilePtr gCtMechaObj12lModelFile;   /* model of id 0x79 (CT_MECHA12L) */
 extern Mecha10ModelFilePtr gCtMechaObj10ModelFile;    /* model of id 0x77 (CT_MECHA10) */
-struct CLPS_Block {
-    u32 words[1];
-};
-
-CLPS_Block data_ov035_021121d8 = {0x53504c43};
+extern CLPS_Block data_ov035_021121d8;
 
 extern const s16 sTTC2DRotatorSpeeds[2] = {0xfbbc, 0xf334};
 
@@ -99,7 +95,7 @@ extern const s16 data_ov035_02111ef4[2][4] = {
     {20, 5, 5, 0},
     {20, 5, 5, 0},
 };
-extern u8 data_0209f2c0;             /* arm9 clock setting */
+extern u8 data_0209f2c0; /* arm9 clock setting */
 
 daObjCtMecha10_c *daObjCtMecha10_c_classInit_CT_MECHA10() {
     return new daObjCtMecha10_c();

@@ -19,12 +19,6 @@
       "end": "0x02111f04"
     },
     {
-      "name": ".data.m10Clps",
-      "input_section": ".data",
-      "start": "0x021121d8",
-      "end": "0x021121dc"
-    },
-    {
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x021116ec"
@@ -110,15 +104,7 @@
       "ordinal": 8
     }
   ],
-  "data": [
-    {
-      "symbol": "data_ov035_021121d8",
-      "address": "0x021121d8",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "CLPS magic word; the next symbol owns the following bytes."
-    }
-  ],
+  "data": [],
   "rodata": [
     {
       "symbol": "sTTC2DRotatorSpeeds",
@@ -577,13 +563,6 @@
           "section": ".rodata",
           "start": "0x02111ef0",
           "end": "0x02111f04",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.m10Clps",
-          "start": "0x021121d8",
-          "end": "0x021121dc",
           "differingBytes": 0,
           "firstDiff": null
         },

@@ -263,7 +263,6 @@ extern int data_ov025_02112654(void *);
 extern int data_ov029_02112b2c[];
 extern struct daObjFloatBoard_c_Resources data_ov029_02113be8;
 extern struct daObjFloatBoard_c_Resources data_ov029_02113f00;
-extern int data_ov035_02111bfc[];
 extern struct CLPS_Block data_ov036_02112b48;
 extern int data_ov055_02111a90;
 extern int data_ov055_02111b60;
