@@ -7386,13 +7386,12 @@ void daPly_c::func_ov002_020c9ac0() {
     this->SetAnim(0x93, 0x40000000, 0x1000, 0);
 }
 
-int daPly_c::func_ov002_020c9b10() {
+void daPly_c::func_ov002_020c9b10() {
     mStateStep=0xe;
     this->SetAnim(0x47, 0, 0x1000, 0);
     mStateTimer = 20;
     this->mHorzSpeed=0;
     this->mSpeed.y = 0;
-    return 0;
 }
 
 void daPly_c::func_ov002_020c9b5c() {
@@ -7417,14 +7416,13 @@ void daPly_c::func_ov002_020c9b7c() {
     this->mSpeed.y = 0;
 }
 
-int daPly_c::func_ov002_020c9c00() {
+void daPly_c::func_ov002_020c9c00() {
     if(mIsAirborne!=0){
         this->SetAnim(0x54, 0x40000000, 0x1000, 0);
     }
     mStateStep=0;
     this->mHorzSpeed=0;
     this->mSpeed.y = 0;
-    return 0;
 }
 
 void daPly_c::func_ov002_020c9c4c() {
@@ -7449,13 +7447,12 @@ void daPly_c::func_ov002_020c9cc0() {
         mOpacity = 0;
 }
 
-int daPly_c::func_ov002_020c9d1c() {
+void daPly_c::func_ov002_020c9d1c() {
     mStateStep=4;
     mAngleYSpeed=0x4000;
     this->SetAnim(0x47, 0, 0x1000, 0);
     this->mHorzSpeed=0;
     this->mSpeed.y = 0;
-    return 0;
 }
 
 void daPly_c::func_ov002_020c9d68() {
@@ -13071,8 +13068,6 @@ int daPly_c::St_Swallow_Main() {
 }
 
 int daPly_c::St_Swallow_Init() {
-    daPly_c::State;
-
     if (mObjInMouth) {
         void *o = mObjInMouth;
         if (((dActor_c *)o)->OnYoshiTryEat() == 4) {
@@ -21354,26 +21349,13 @@ void (daPly_c::*data_ov002_0211073c[4])() = {
     &daPly_c::func_ov002_020e1c20,
 };
 void (daPly_c::*data_ov002_02110884[20])() = {
-    data_ov002_02109dfc.pmf,
-    data_ov002_0210a264.pmf,
-    data_ov002_0210a244.pmf,
-    data_ov002_0210a23c.pmf,
-    &daPly_c::func_ov002_020c9d68,
-    (void(daPly_c::*)()) & daPly_c::func_ov002_020c9d1c,
-    &daPly_c::func_ov002_020c9cc0,
-    &daPly_c::func_ov002_020c9c4c,
-    (void(daPly_c::*)()) & daPly_c::func_ov002_020c9c00,
-    &daPly_c::func_ov002_020c9b7c,
-    &daPly_c::func_ov002_020c9b5c,
-    &daPly_c::func_ov002_020c9ac0,
-    (void(daPly_c::*)()) & daPly_c::func_ov002_020c9b10,
-    &daPly_c::func_ov002_020c9a04,
-    &daPly_c::func_ov002_020c9998,
-    &daPly_c::func_ov002_020c990c,
-    &daPly_c::func_ov002_020c98a4,
-    &daPly_c::func_ov002_020c9840,
-    &daPly_c::func_ov002_020c97f8,
-    &daPly_c::func_ov002_020c97e0,
+    data_ov002_02109dfc.pmf,       data_ov002_0210a264.pmf,       data_ov002_0210a244.pmf,
+    data_ov002_0210a23c.pmf,       &daPly_c::func_ov002_020c9d68, &daPly_c::func_ov002_020c9d1c,
+    &daPly_c::func_ov002_020c9cc0, &daPly_c::func_ov002_020c9c4c, &daPly_c::func_ov002_020c9c00,
+    &daPly_c::func_ov002_020c9b7c, &daPly_c::func_ov002_020c9b5c, &daPly_c::func_ov002_020c9ac0,
+    &daPly_c::func_ov002_020c9b10, &daPly_c::func_ov002_020c9a04, &daPly_c::func_ov002_020c9998,
+    &daPly_c::func_ov002_020c990c, &daPly_c::func_ov002_020c98a4, &daPly_c::func_ov002_020c9840,
+    &daPly_c::func_ov002_020c97f8, &daPly_c::func_ov002_020c97e0,
 };
 void (daPly_c::*data_ov002_0211075c[7])() = {
     &daPly_c::func_ov002_020c75f0, &daPly_c::func_ov002_020c7350, &daPly_c::func_ov002_020c71e0,
