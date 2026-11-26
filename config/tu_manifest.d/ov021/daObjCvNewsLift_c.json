@@ -29,9 +29,10 @@
       "end": "0x02113738"
     },
     {
-      "name": ".rodata",
+      "name": ".rodata.actor",
       "start": "0x02114740",
-      "end": "0x02114748"
+      "end": "0x02114748",
+      "input_section": ".rodata"
     },
     {
       "name": ".data.actors",
@@ -404,7 +405,7 @@
           "firstDiff": null
         },
         {
-          "section": ".rodata",
+          "section": ".rodata.actor",
           "start": "0x02114740",
           "end": "0x02114748",
           "differingBytes": 0,
