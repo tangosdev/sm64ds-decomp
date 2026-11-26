@@ -60,13 +60,6 @@ struct C0SwitchCollisionFilePtr : SharedFilePtr {
  * end of this file so the constructors do not enter .text. */
 extern C0SwitchModelFilePtr data_ov012_021124a8;
 extern C0SwitchCollisionFilePtr data_ov012_021124a0;
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
 
 /* Stage collision properties owned by d_s_map_ov012.c. */
 extern CLPS_Block data_ov012_02111cd0;

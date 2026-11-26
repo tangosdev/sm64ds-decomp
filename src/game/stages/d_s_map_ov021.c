@@ -6,22 +6,6 @@
 
 /* Definition order is what makes the compiler's size sort match address order. */
 
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
-
-typedef struct Clps_2114068 {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[24];
-    u32 tail[6];
-} Clps_2114068;
-
 typedef struct PathDefs_2113768 {
     struct PathDef entries[1];
     u16 pad;
@@ -111,7 +95,7 @@ extern DoorEntry data_ov021_02113dd8[12];
 extern StandardEntry data_ov021_02113f08[10];
 extern StandardEntry data_ov021_02113e68[10];
 extern SimpleEntry data_ov021_02113fa8[24];
-extern Clps_2114068 data_ov021_02114068;
+extern CLPS_Block224 data_ov021_02114068;
 extern StandardEntry data_ov021_02114148[14];
 extern PathNodes_2114228 data_ov021_02114228;
 extern StandardEntry data_ov021_02114350[30];
@@ -313,23 +297,26 @@ const BTAMaterialRecord data_ov021_02112f3c[1] = {
     {0xffff, 0x0000, (char *)&data_ov021_021137e0, {1, 0}, {1, 0}, {1, 0}, {181, 0}, {181, 0}},
 };
 
-CLPS_Block data_ov021_02113a60 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov021_02113a60 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov021_02113a80 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {{0x00001fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov021_02113a80 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00001fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov021_02113aa0 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {{0x00058fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov021_02113aa0 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00058fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 StandardEntry data_ov021_02113ac0[2] = {
     {0x0101, (s16)0xf286, (s16)0xeda4, 0x0dac, 0x0000, 0x0000, 0x0000, 0xffff},
@@ -381,11 +368,12 @@ StandardEntry data_ov021_021139e0[2] = {
     {0x000f, (s16)0xecd6, (s16)0xf0bc, (s16)0xf145, 0x0000, 0x0000, 0x0000, 0xffff},
 };
 
-CLPS_Block data_ov021_02113a00 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {{0x01000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov021_02113a00 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x01000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 StandardEntry data_ov021_02113a20[2] = {
     {0x000f, (s16)0xf448, 0x07d0, 0x13ec, 0x0000, 0x0000, 0x0000, 0xf2f2},
@@ -553,7 +541,7 @@ SimpleEntry data_ov021_02113fa8[24] = {
     {0x423f, (s16)0xf27a, (s16)0xee6c, 0x0d9f}, {0xe3ff, (s16)0xf2c1, (s16)0xf9e7, (s16)0xe6ff},
 };
 
-Clps_2114068 data_ov021_02114068 = {
+CLPS_Block224 data_ov021_02114068 = {
     0x53504c43,
     0x0008,
     0x0018,
@@ -564,8 +552,9 @@ Clps_2114068 data_ov021_02114068 = {
      {0x01040fcc, 0x000000ff}, {0x01180fcc, 0x000000ff}, {0x01000fcc, 0x000000ff},
      {0x00044fc4, 0x000000ff}, {0x00043fc4, 0x000000ff}, {0x00240fc0, 0x000000ff},
      {0x04880fc0, 0x000000ff}, {0x01040fc2, 0x000000ff}, {0x02040fc0, 0x000000ff},
-     {0x04000fc0, 0x000000ff}, {0x00880fcc, 0x000000ff}, {0x00044fc2, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff}};
+     {0x04000fc0, 0x000000ff}, {0x00880fcc, 0x000000ff}, {0x00044fc2, 0x000000ff},
+     {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 StandardEntry data_ov021_02114148[14] = {
     {0x002b, (s16)0xfec0, (s16)0xecf0, 0x099c, 0x0000, (s16)0xc000, 0x0000, 0xff08},

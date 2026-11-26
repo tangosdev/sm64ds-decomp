@@ -10,21 +10,6 @@
  * dBgW_Kc::SetFile: the 'CLPS' header (entry stride 8 at +4, live-entry count
  * at +6), two entry slots and all-ones filler to the end of the record. A
  * count-1 block carries the filler in its second slot as well. */
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[10];
-    u32 tail[2];
-} Clps_02112720;
 
 /* The 14-byte table is followed by two zero bytes before the
  * next object, so the padding is written as part of the object. */
@@ -76,7 +61,7 @@ extern ViewEntries3 data_ov045_02112630;
 extern ObjSubTable data_ov045_0211265c[7];
 extern PathNode data_ov045_02112694[10];
 extern StandardEntry data_ov045_021126d0[5];
-extern Clps_02112720 data_ov045_02112720;
+extern CLPS_Block96 data_ov045_02112720;
 extern SimpleEntry data_ov045_02112780[56];
 extern StandardEntry data_ov045_02112940[55];
 
@@ -174,65 +159,75 @@ LevelRec data_ov045_021124d4 = {(struct CLPS_Block *)&data_ov045_02112720,
                                 0x0640,
                                 0x0000007f};
 
-CLPS_Block data_ov045_021125d0 = {0x53504c43,
-                                  0x0008,
-                                  0x0002,
-                                  {{0x00000fc0, 0x000000ff}, {0x00000fc4, 0x000000ff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov045_021125d0 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {{0x00000fc0, 0x000000ff}, {0x00000fc4, 0x000000ff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov045_021125f0 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov045_021125f0 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov045_021124f0 = {0x53504c43,
-                                  0x0008,
-                                  0x0002,
-                                  {{0x00002fc0, 0x000000ff}, {0x00000fc0, 0x000000ff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov045_021124f0 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {{0x00002fc0, 0x000000ff}, {0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov045_02112510 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {{0x01880fcc, 0x000000ff}, {0xffffffff, 0xffffffff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov045_02112510 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x01880fcc, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov045_02112530 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov045_02112530 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov045_02112550 = {0x53504c43,
-                                  0x0008,
-                                  0x0002,
-                                  {{0x00000fc0, 0x000000ff}, {0x00002fc0, 0x000000ff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov045_02112550 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {{0x00000fc0, 0x000000ff}, {0x00002fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov045_02112570 = {0x53504c43,
-                                  0x0008,
-                                  0x0002,
-                                  {{0x00000fc0, 0x000000ff}, {0x00000fc4, 0x000000ff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov045_02112570 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {{0x00000fc0, 0x000000ff}, {0x00000fc4, 0x000000ff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov045_02112590 = {0x53504c43,
-                                  0x0008,
-                                  0x0002,
-                                  {{0x00000fc0, 0x000000ff}, {0x00000fc4, 0x000000ff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov045_02112590 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {{0x00000fc0, 0x000000ff}, {0x00000fc4, 0x000000ff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov045_021125b0 = {0x53504c43,
-                                  0x0008,
-                                  0x0002,
-                                  {{0x00000fc0, 0x000000ff}, {0x01880fcc, 0x000000ff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov045_021125b0 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {{0x00000fc0, 0x000000ff}, {0x01880fcc, 0x000000ff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov045_02112610 = {0x53504c43,
-                                  0x0008,
-                                  0x0002,
-                                  {{0x00000fc0, 0x000000ff}, {0x01880fcc, 0x000000ff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov045_02112610 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {{0x00000fc0, 0x000000ff}, {0x01880fcc, 0x000000ff}, {0xffffffff, 0xffffffff}},
+};
 
 ViewEntries3 data_ov045_02112630 = {
     {{0x02, 0xff, (s16)0xe1ec, (s16)0xf830, 0x02bc, {0x00, 0x00}, (s16)0x8000, 0x0000},
@@ -267,20 +262,22 @@ StandardEntry data_ov045_021126d0[5] = {
     {0x0000, 0x1644, 0x13ec, 0x0064, 0x0000, 0x4000, 0x0000, 0x0210},
 };
 
-Clps_02112720 data_ov045_02112720 = {0x53504c43,
-                                     0x0008,
-                                     0x000a,
-                                     {{0x00048fc0, 0x000000ff},
-                                      {0x000c8fc0, 0x000000ff},
-                                      {0x0004cfc0, 0x000000ff},
-                                      {0x0004afc0, 0x000000ff},
-                                      {0x011c8fc0, 0x000000ff},
-                                      {0x01048fc0, 0x000000ff},
-                                      {0x01000fcc, 0x000000ff},
-                                      {0x0104afcc, 0x000000ff},
-                                      {0x018c8fcc, 0x000000ff},
-                                      {0x0104cfc0, 0x000000ff}},
-                                     {0xffffffff, 0xffffffff}};
+CLPS_Block96 data_ov045_02112720 = {
+    0x53504c43,
+    0x0008,
+    0x000a,
+    {{0x00048fc0, 0x000000ff},
+     {0x000c8fc0, 0x000000ff},
+     {0x0004cfc0, 0x000000ff},
+     {0x0004afc0, 0x000000ff},
+     {0x011c8fc0, 0x000000ff},
+     {0x01048fc0, 0x000000ff},
+     {0x01000fcc, 0x000000ff},
+     {0x0104afcc, 0x000000ff},
+     {0x018c8fcc, 0x000000ff},
+     {0x0104cfc0, 0x000000ff},
+     {0xffffffff, 0xffffffff}},
+};
 
 SimpleEntry data_ov045_02112780[56] = {
     {0xe225, (s16)0xf510, (s16)0xf529, (s16)0xfd5d},

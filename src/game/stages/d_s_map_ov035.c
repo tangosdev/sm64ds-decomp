@@ -11,22 +11,6 @@ typedef struct U16Run1 {
     u16 pad;
 } U16Run1;
 
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
-
-typedef struct Clps12 {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[12];
-    u32 tail[6];
-} Clps12;
-
 extern const u16 data_ov035_02111bd0[2];
 extern const u16 data_ov035_02111bd4[2];
 extern const fx32 data_ov035_02111bd8[1];
@@ -64,7 +48,7 @@ extern ObjSubTable data_ov035_02112278[6];
 extern SimpleEntry data_ov035_021122a8[6];
 extern StandardEntry data_ov035_021122d8[4];
 extern ViewEntry data_ov035_02112318[6];
-extern Clps12 data_ov035_0211236c;
+extern CLPS_Block128 data_ov035_0211236c;
 extern SimpleEntry data_ov035_021123ec[31];
 extern StandardEntry data_ov035_021124e4[90];
 
@@ -173,32 +157,26 @@ LevelRec data_ov035_021120bc = {(struct CLPS_Block *)&data_ov035_0211236c,
                                 0x0258,
                                 0x0000000f};
 
-CLPS_Block data_ov035_02112178 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {
-                                      {0x00001fc0, 0x000000ff},
-                                      {0xffffffff, 0xffffffff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov035_02112178 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00001fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov035_021121b8 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {
-                                      {0x00001fc0, 0x000000ff},
-                                      {0xffffffff, 0xffffffff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov035_021121b8 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00001fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov035_021121d8 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {
-                                      {0x00000fc0, 0x000000ff},
-                                      {0xffffffff, 0xffffffff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov035_021121d8 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 ObjSubTable data_ov035_02112218[4] = {
     {0x00, 0x5a, {0x00, 0x00}, &data_ov035_021124e4},
@@ -207,86 +185,68 @@ ObjSubTable data_ov035_02112218[4] = {
     {0xe5, 0x06, {0x00, 0x00}, &data_ov035_021122a8},
 };
 
-CLPS_Block data_ov035_02112238 = {0x53504c43,
-                                  0x0008,
-                                  0x0002,
-                                  {
-                                      {0x01000fc0, 0x000000ff},
-                                      {0x01001fc0, 0x000000ff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov035_02112238 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {{0x01000fc0, 0x000000ff}, {0x01001fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov035_021120d8 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {
-                                      {0x00001fc0, 0x000000ff},
-                                      {0xffffffff, 0xffffffff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov035_021120d8 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00001fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov035_021120f8 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {
-                                      {0x00001fc0, 0x000000ff},
-                                      {0xffffffff, 0xffffffff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov035_021120f8 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00001fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov035_02112118 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {
-                                      {0x00001fc0, 0x000000ff},
-                                      {0xffffffff, 0xffffffff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov035_02112118 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00001fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov035_02112138 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {
-                                      {0x00001fc0, 0x000000ff},
-                                      {0xffffffff, 0xffffffff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov035_02112138 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00001fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov035_02112158 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {
-                                      {0x00001fc0, 0x000000ff},
-                                      {0xffffffff, 0xffffffff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov035_02112158 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00001fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov035_02112198 = {0x53504c43,
-                                  0x0008,
-                                  0x0002,
-                                  {
-                                      {0x00000fc5, 0x000000ff},
-                                      {0x01003fc5, 0x000000ff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov035_02112198 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {{0x00000fc5, 0x000000ff}, {0x01003fc5, 0x000000ff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov035_021121f8 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {
-                                      {0x00001fc0, 0x000000ff},
-                                      {0xffffffff, 0xffffffff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov035_021121f8 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00001fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov035_02112258 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {
-                                      {0x00000fc0, 0x000000ff},
-                                      {0xffffffff, 0xffffffff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov035_02112258 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 ObjSubTable data_ov035_02112278[6] = {
     {0x04, 0x06, {0x00, 0x00}, &data_ov035_02112318},
@@ -319,25 +279,26 @@ ViewEntry data_ov035_02112318[6] = {
     {0x02, 0xff, 0x0578, (s16)0xef4c, 0x0320, {0x00, 0x00}, (s16)0x8000, 0x0000},
 };
 
-Clps12 data_ov035_0211236c = {
+CLPS_Block128 data_ov035_0211236c = {
     0x53504c43,
     0x0008,
     0x000c,
-    {
-        {0x00230000, 0x000000ff},
-        {0x008b200c, 0x000000ff},
-        {0x008b000c, 0x000000ff},
-        {0x018b000c, 0x000000ff},
-        {0x0103000c, 0x000000ff},
-        {0x00000fc5, 0x000000ff},
-        {0x01030005, 0x000000ff},
-        {0x00052045, 0x000000ff},
-        {0x00032fc5, 0x000000ff},
-        {0x00032005, 0x000000ff},
-        {0x000320c5, 0x000000ff},
-        {0x00032105, 0x000000ff},
-    },
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff}};
+    {{0x00230000, 0x000000ff},
+     {0x008b200c, 0x000000ff},
+     {0x008b000c, 0x000000ff},
+     {0x018b000c, 0x000000ff},
+     {0x0103000c, 0x000000ff},
+     {0x00000fc5, 0x000000ff},
+     {0x01030005, 0x000000ff},
+     {0x00052045, 0x000000ff},
+     {0x00032fc5, 0x000000ff},
+     {0x00032005, 0x000000ff},
+     {0x000320c5, 0x000000ff},
+     {0x00032105, 0x000000ff},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff}},
+};
 
 SimpleEntry data_ov035_021123ec[31] = {
     {0xc43f, (s16)0xf8ee, 0x0082, (s16)0xfc9a},
