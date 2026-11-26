@@ -4,7 +4,10 @@
 #include "private/BTA_File.h"
 #include "types.h"
 
-/* Definition order is what makes the compiler's size sort match address order. */
+/* The linker selects input sections by name. These slices keep the three
+ * read-only collision islands distinct from the mutable stage-map data around
+ * them; definition order is what makes the compiler's size sort match address
+ * order inside each slice. */
 
 /* The fixed 0x20-byte collision-property record the platform actors hand to
  * dBgW_Kc::SetFile: the 'CLPS' header (entry stride 8 at +4, live-entry count
@@ -63,6 +66,14 @@ extern Clps_02111cd4 data_ov047_02111cd4;
 extern SimpleEntry data_ov047_02111d54[47];
 extern StandardEntry data_ov047_02111ecc[56];
 
+#pragma define_section map_ov047_pre ".data.map_pre" ".data.map_pre" ".data.map_pre" far_data
+#pragma define_section map_ov047_before_axle ".data.map_before_axle" ".data.map_before_axle" ".data.map_before_axle" far_data
+#pragma define_section map_ov047_mid ".data.map_mid" ".data.map_mid" ".data.map_mid" far_data
+#pragma define_section map_ov047_kuruma_ro ".rodata.km3_kuruma" ".rodata.km3_kuruma" ".rodata.km3_kuruma" far_data
+#pragma define_section map_ov047_axle_ro ".rodata.km3_axle_clps" ".rodata.km3_axle_clps" ".rodata.km3_axle_clps" far_data
+#pragma define_section map_ov047_kaitendai_ro ".rodata.kaitendai" ".rodata.kaitendai" ".rodata.kaitendai" far_data
+
+#pragma section map_ov047_pre begin
 ObjTable data_ov047_021119e8 = {0x0002, {0x00, 0x00}, &data_ov047_02111a30[0]};
 
 ObjTable data_ov047_021119e0 = {0x0007, {0x00, 0x00}, &data_ov047_02111c4c[0]};
@@ -108,13 +119,17 @@ LevelRec data_ov047_02111a58 = {(struct CLPS_Block *)&data_ov047_02111cd4,
                                 0x00,
                                 0x0640,
                                 0x000000bf};
+#pragma section map_ov047_pre end
 
+#pragma section map_ov047_axle_ro begin
 CLPS_Block gKm3KurumajikuClps = {0x53504c43,
                                  0x0008,
                                  0x0001,
                                  {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
                                  {0xffffffff, 0xffffffff}};
+#pragma section map_ov047_axle_ro end
 
+#pragma section map_ov047_mid begin
 CLPS_Block data_ov047_02111b74 = {0x53504c43,
                                   0x0008,
                                   0x0001,
@@ -132,25 +147,33 @@ CLPS_Block data_ov047_02111bd4 = {0x53504c43,
                                   0x0002,
                                   {{0x00004fc0, 0x000000ff}, {0x00000fc0, 0x000000ff}},
                                   {0xffffffff, 0xffffffff}};
+#pragma section map_ov047_mid end
 
+#pragma section map_ov047_before_axle begin
 CLPS_Block data_ov047_02111ad4 = {0x53504c43,
                                   0x0008,
                                   0x0002,
                                   {{0x00000fc0, 0x000000ff}, {0x00000fc5, 0x000000ff}},
                                   {0xffffffff, 0xffffffff}};
+#pragma section map_ov047_before_axle end
 
+#pragma section map_ov047_kuruma_ro begin
 CLPS_Block gKm3KurumaClps = {0x53504c43,
                              0x0008,
                              0x0001,
                              {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
                              {0xffffffff, 0xffffffff}};
+#pragma section map_ov047_kuruma_ro end
 
+#pragma section map_ov047_pre begin
 CLPS_Block data_ov047_02111a94 = {0x53504c43,
                                   0x0008,
                                   0x0002,
                                   {{0x00000fc0, 0x000000ff}, {0x00004fc0, 0x000000ff}},
                                   {0xffffffff, 0xffffffff}};
+#pragma section map_ov047_pre end
 
+#pragma section map_ov047_before_axle begin
 CLPS_Block data_ov047_02111af4 = {0x53504c43,
                                   0x0008,
                                   0x0001,
@@ -168,24 +191,31 @@ CLPS_Block data_ov047_02111b34 = {0x53504c43,
                                   0x0001,
                                   {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
                                   {0xffffffff, 0xffffffff}};
+#pragma section map_ov047_before_axle end
 
+#pragma section map_ov047_mid begin
 CLPS_Block data_ov047_02111b94 = {0x53504c43,
                                   0x0008,
                                   0x0002,
                                   {{0x00000fc0, 0x000000ff}, {0x00004fc0, 0x000000ff}},
                                   {0xffffffff, 0xffffffff}};
+#pragma section map_ov047_mid end
 
+#pragma section map_ov047_kaitendai_ro begin
 CLPS_Block gKm3KaitendaiClps = {0x53504c43,
                                 0x0008,
                                 0x0002,
                                 {{0x00000fc0, 0x000000ff}, {0x00000fc4, 0x000000ff}},
                                 {0xffffffff, 0xffffffff}};
+#pragma section map_ov047_kaitendai_ro end
 
+#pragma section map_ov047_pre begin
 CLPS_Block data_ov047_02111a74 = {0x53504c43,
                                   0x0008,
                                   0x0002,
                                   {{0x00000fc0, 0x000000ff}, {0x00004fc0, 0x000000ff}},
                                   {0xffffffff, 0xffffffff}};
+#pragma section map_ov047_pre end
 
 ViewEntry data_ov047_02111c14[4] = {
     {0x02, 0xff, (s16)0xe53e, (s16)0xef90, 0x03b6, {0x00, 0x00}, (s16)0x8000, 0x0000},
