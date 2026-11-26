@@ -5,3 +5,7 @@
 src/game/actors/d_a_obj_closet.cpp:
     complete
     .text start:0x021111a0 end:0x021116e4
+
+src/game/stages/d_s_map_ov058.c:
+    complete
+    .data start:0x02111700 end:0x02111a30

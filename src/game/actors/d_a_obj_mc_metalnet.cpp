@@ -16,6 +16,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_mc_metalnet_AssetId { ASSET_MC_METALNET_BMD = 0x0691, ASSET_MC_METALNET_KCL = 0x0692 };
 
+#include "CLPS.h"
 #include "daObjMc_Metalnet_c.h"
 #include "SharedFilePtr.h"
 #include "SaveBlock.h"
@@ -31,19 +32,17 @@ struct McMetalnetClsnFileHandle : SharedFilePtr {
     ~McMetalnetClsnFileHandle();
 };
 
-/* 'CLPS' collision-property block: tag, count/stride header, entries. */
-struct CLPS_Block {
+/* Stage collision-property blocks are defined by d_s_map_ov009.c. */
+typedef struct CLPS_Block {
     u32 tag;
-    u32 header;
-    u32 entries[6];
-};
+    u16 stride;
+    u16 count;
+    struct CLPS entries[2];
+    u32 tail[2];
+} CLPS_Block;
 
-/* The net's collision properties: one floor entry. */
-CLPS_Block data_ov009_02112bf8 = {
-    0x53504c43,
-    0x00010008,
-    {0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
-};
+/* The net's collision properties. */
+extern CLPS_Block data_ov009_02112bf8;
 
 extern McMetalnetModelFilePtr data_ov009_02113e90;   /* the net's BMD        */
 extern McMetalnetClsnFileHandle data_ov009_02113e88; /* its collision KCL    */

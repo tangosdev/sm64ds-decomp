@@ -28,9 +28,10 @@
       "end": "0x02113ac0"
     },
     {
-      "name": ".data",
+      "name": ".data.moray",
       "start": "0x02114878",
-      "end": "0x02114908"
+      "end": "0x02114908",
+      "input_section": ".data"
     },
     {
       "name": ".data.morayBend",
@@ -605,7 +606,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.moray",
           "start": "0x02114878",
           "end": "0x02114908",
           "differingBytes": 0,
@@ -899,7 +900,7 @@
       "target_address": "0x021136ec"
     },
     {
-      "section": ".data",
+      "section": ".data.moray",
       "source": "0x02114878",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -909,7 +910,7 @@
       "target_address": "0x02111534"
     },
     {
-      "section": ".data",
+      "section": ".data.moray",
       "source": "0x02114880",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -919,7 +920,7 @@
       "target_address": "0x021118b4"
     },
     {
-      "section": ".data",
+      "section": ".data.moray",
       "source": "0x02114888",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -929,7 +930,7 @@
       "target_address": "0x02111994"
     },
     {
-      "section": ".data",
+      "section": ".data.moray",
       "source": "0x02114890",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -939,7 +940,7 @@
       "target_address": "0x021115c0"
     },
     {
-      "section": ".data",
+      "section": ".data.moray",
       "source": "0x02114898",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -949,7 +950,7 @@
       "target_address": "0x021115a4"
     },
     {
-      "section": ".data",
+      "section": ".data.moray",
       "source": "0x021148a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -959,7 +960,7 @@
       "target_address": "0x02111bac"
     },
     {
-      "section": ".data",
+      "section": ".data.moray",
       "source": "0x021148a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -969,7 +970,7 @@
       "target_address": "0x021119ec"
     },
     {
-      "section": ".data",
+      "section": ".data.moray",
       "source": "0x021148b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -979,7 +980,7 @@
       "target_address": "0x02111718"
     },
     {
-      "section": ".data",
+      "section": ".data.moray",
       "source": "0x021148b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -989,7 +990,7 @@
       "target_address": "0x02111860"
     },
     {
-      "section": ".data",
+      "section": ".data.moray",
       "source": "0x021148c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -999,7 +1000,7 @@
       "target_address": "0x02111758"
     },
     {
-      "section": ".data",
+      "section": ".data.moray",
       "source": "0x021148d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1009,7 +1010,7 @@
       "target_address": "0x0209a764"
     },
     {
-      "section": ".data",
+      "section": ".data.moray",
       "source": "0x021148d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1019,7 +1020,7 @@
       "target_address": "0x021148c8"
     },
     {
-      "section": ".data",
+      "section": ".data.moray",
       "source": "0x021148dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1029,7 +1030,7 @@
       "target_address": "0x021081c0"
     },
     {
-      "section": ".data",
+      "section": ".data.moray",
       "source": "0x021148e0",
       "type": "R_ARM_ABS32",
       "kind": "load",

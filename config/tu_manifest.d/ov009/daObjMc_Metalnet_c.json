@@ -33,12 +33,6 @@
       "end": "0x02113eb0"
     },
     {
-      "name": ".data.data_ov009_02112bf8",
-      "input_section": ".data",
-      "start": "0x02112bf8",
-      "end": "0x02112c18"
-    },
-    {
       "name": ".data",
       "start": "0x02113a98",
       "end": "0x02113b60"
@@ -103,13 +97,6 @@
     }
   ],
   "data": [
-    {
-      "symbol": "data_ov009_02112bf8",
-      "address": "0x02112bf8",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "the net's collision properties: one floor entry"
-    },
     {
       "symbol": "_ZTI18daObjMc_Metalnet_c",
       "address": "0x02113a98",
@@ -291,13 +278,6 @@
           "start": "0x02113e88",
           "end": "0x02113eb0",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".data.data_ov009_02112bf8",
-          "start": "0x02112bf8",
-          "end": "0x02112c18",
-          "differingBytes": 0,
-          "firstDiff": null
         },
         {
           "section": ".data",

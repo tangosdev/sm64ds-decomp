@@ -35,6 +35,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjDpBrock_c_AssetId { ASSET_DP_BROCK_BMD = 0x05df, ASSET_DP_BROCK_KCL = 0x05e0 };
 
+#include "CLPS.h"
 #include "daObjDpBrock_c.h"
 #include "SharedFilePtr.h"
 #include "math/MtxStack.h"
@@ -57,12 +58,15 @@ struct BrockCollisionFilePtr : SharedFilePtr {
 extern BrockModelFilePtr data_ov025_02113ab8;
 extern BrockCollisionFilePtr data_ov025_02113ab0;
 
-struct CLPS_Block {
-    u32 words[8];
-};
+typedef struct CLPS_Block {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[2];
+    u32 tail[2];
+} CLPS_Block;
 
-CLPS_Block data_ov025_02112ce8 = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
-                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+extern CLPS_Block data_ov025_02112ce8;
 
 /* mState values, how long each lasts, and the 20.12 step.
  * kVertStep is 5.0 per frame. A full drop is that times

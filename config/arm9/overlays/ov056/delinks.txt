@@ -7,8 +7,12 @@
 src/game/actors/d_a_obj_ewm_ice_block.cpp:
     complete
     .text start:0x021111a0 end:0x021115cc
-    .rodata start:0x021115cc end:0x02112b48
     .init start:0x02112b48 end:0x02112bb4
     .ctor start:0x02112bb4 end:0x02112bb8
-    .data start:0x02112bc0 end:0x02113320
+    .data start:0x02113314 end:0x02113320
     .bss start:0x02113400 end:0x02113440
+
+src/game/stages/d_s_map_ov056.c:
+    complete
+    .rodata start:0x021115cc end:0x02112b48
+    .data start:0x02112bc0 end:0x02113314

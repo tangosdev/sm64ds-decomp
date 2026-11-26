@@ -69,18 +69,8 @@ struct BkLiftCollisionFilePtr : SharedFilePtr {
 
 extern BkLiftCollisionFilePtr data_ov015_02114a5c; /* collision KCL */
 extern BkLiftModelFilePtr data_ov015_02114a64;     /* step BMD */
-struct CLPS_Block {
-    u32 tag;
-    u32 hdr;
-    u32 w0;
-    u32 w1;
-    u32 w2;
-    u32 w3;
-    u32 tail0;
-    u32 tail1;
-};
-CLPS_Block data_ov015_02113594 = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
-                                  0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+extern struct CLPS_Block data_ov015_02113594;
+
 extern s8 gCurrentSublevel;
 extern u8 gCurrentStarId;
 

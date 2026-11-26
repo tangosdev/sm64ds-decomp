@@ -30,11 +30,6 @@
       "name": ".bss",
       "start": "0x02113a60",
       "end": "0x02113a88"
-    },
-    {
-      "name": ".data",
-      "start": "0x02112c28",
-      "end": "0x02112c48"
     }
   ],
   "functions": [
@@ -109,15 +104,7 @@
       "ordinal": 9
     }
   ],
-  "data": [
-    {
-      "symbol": "data_ov025_02112c28",
-      "address": "0x02112c28",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "CLPS block the door mesh collider is handed: CLPS header, one entry 0x01000fc0, four all-ones words. The cartridge also labels the last word 0x02112c44; it is this block eighth word."
-    }
-  ],
+  "data": [],
   "bss": [
     {
       "symbol": "data_ov025_02113a60",
@@ -278,13 +265,6 @@
           "start": "0x02113a60",
           "end": "0x02113a88",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".data",
-          "start": "0x02112c28",
-          "end": "0x02112c48",
-          "differingBytes": 0,
-          "firstDiff": null
         }
       ],
       "objectAudit": {

@@ -1,7 +1,7 @@
     .text       start:0x021111a0 end:0x021130ac kind:code align:32
     .init       start:0x021130ac end:0x02113368 kind:code align:4
     .ctor       start:0x02113368 end:0x02113374 kind:rodata align:4
-    .data.gap0  start:0x02113380 end:0x02114688 kind:data align:32
+    .data       start:0x02113380 end:0x02114688 kind:data align:32
     .data.w4688 start:0x02114688 end:0x02114690 kind:data align:1
     .data.w4690 start:0x02114690 end:0x02114698 kind:data align:1
     .data.w4698 start:0x02114698 end:0x021146a0 kind:data align:1
@@ -12,9 +12,14 @@
     .data.w4724 start:0x02114724 end:0x02114730 kind:data align:1
     .data.w4730 start:0x02114730 end:0x02114740 kind:data align:1
     .data.gap2  start:0x02114740 end:0x0211476c kind:data align:4
-    .data       start:0x0211476c end:0x021147e4 kind:data align:4
+    .data.wanwanState start:0x0211476c end:0x021147e4 kind:data align:4
     .data.gap3  start:0x021147e4 end:0x02114940 kind:data align:4
     .bss        start:0x02114940 end:0x021149e0 kind:bss align:32
+
+src/game/stages/d_s_map_ov014.c:
+    complete
+    .data start:0x02113380 end:0x02114558
+
 src/game/actors/d_a_obj_b_swdoor.cpp:
     complete
     .text start:0x021111a0 end:0x02111308
@@ -34,7 +39,7 @@ src/game/actors/d_a_wanwan.cpp:
     .data.w470c start:0x0211470c end:0x02114718
     .data.w4724 start:0x02114724 end:0x02114730
     .data.w4730 start:0x02114730 end:0x02114740
-    .data start:0x0211476c end:0x021147e4
+    .data.wanwanState start:0x0211476c end:0x021147e4
     .bss start:0x02114968 end:0x021149b8
 
 src/game/actors/d_a_obj_wanwan_shutter.cpp:

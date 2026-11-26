@@ -1,0 +1,174 @@
+#include "CLPS.h"
+#include "PathPtr.h"
+#include "StageMap.h"
+#include "private/BTA_File.h"
+#include "types.h"
+
+/* Definition order is what makes the compiler's size sort match address order.
+ */
+
+typedef struct {
+    u16 value;
+    u16 pad;
+} ScalarEntryU16;
+
+typedef struct {
+    struct PathDef entries[1];
+    u16 pad;
+} PathDefs1;
+
+typedef struct {
+    PathNode entries[3];
+    u16 pad;
+} PathNodes3;
+
+typedef struct {
+    ViewEntry entries[5];
+    u16 pad;
+} ViewEntries5;
+
+typedef struct {
+    ExitEntry entries[5];
+    u16 pad;
+} ExitEntries5;
+
+typedef struct {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[15];
+} Clps_02111920;
+
+extern ScalarEntryU16 data_ov058_02111700;
+extern PathDefs1 data_ov058_02111704;
+extern ObjTable data_ov058_0211170c;
+extern ObjTable data_ov058_02111714;
+extern ObjSubTable data_ov058_0211171c[1];
+extern ObjSubTable data_ov058_02111724[1];
+extern ObjSubTable data_ov058_0211172c[1];
+extern ObjTable data_ov058_02111734;
+extern ObjTable data_ov058_0211173c;
+extern StandardEntry data_ov058_02111744[1];
+extern PathNodes3 data_ov058_02111754;
+extern LevelRec data_ov058_02111768;
+extern StandardEntry data_ov058_02111784[2];
+extern Area data_ov058_021117a4[3];
+extern StandardEntry data_ov058_021117c8[3];
+extern ObjSubTable data_ov058_021117f8[7];
+extern ViewEntries5 data_ov058_02111830;
+extern ExitEntries5 data_ov058_02111878;
+extern StandardEntry data_ov058_021118c0[6];
+extern Clps_02111920 data_ov058_02111920;
+extern DoorEntry data_ov058_021119a0[12];
+
+ScalarEntryU16 data_ov058_02111700 = {0x07a5, 0x0000};
+ObjSubTable data_ov058_0211171c[1] = {{0x00, 0x02, {0x00, 0x00}, &data_ov058_02111784[0]}};
+ObjTable data_ov058_0211173c = {0x0001, {0x00, 0x00}, &data_ov058_0211171c[0]};
+ObjTable data_ov058_02111734 = {0x0001, {0x00, 0x00}, &data_ov058_0211172c[0]};
+ObjSubTable data_ov058_02111724[1] = {{0x00, 0x03, {0x00, 0x00}, &data_ov058_021117c8[0]}};
+ObjTable data_ov058_0211170c = {0x0007, {0x00, 0x00}, &data_ov058_021117f8[0]};
+ObjSubTable data_ov058_0211172c[1] = {{0x00, 0x01, {0x00, 0x00}, &data_ov058_02111744[0]}};
+PathDefs1 data_ov058_02111704 = {{{0x0000, 0x03, 0xff, 0xff, 0xff}}, 0x0000};
+ObjTable data_ov058_02111714 = {0x0001, {0x00, 0x00}, &data_ov058_02111724[0]};
+StandardEntry data_ov058_02111744[1] = {
+    {0x004b, 0x0244, 0x02d5, (s16)0xf830, (s16)0xffff, 0x4e38, 0x0000, 0x070d}};
+PathNodes3 data_ov058_02111754 = {{
+                                      {0x11e9, 0x0258, (s16)0xf049},
+                                      {0x130e, 0x0258, (s16)0xedb5},
+                                      {0x10ca, 0x0258, (s16)0xee06},
+                                  },
+                                  0x0000};
+LevelRec data_ov058_02111768 = {(struct CLPS_Block *)&data_ov058_02111920,
+                                (struct ObjTable *)&data_ov058_0211170c,
+                                0x07a6,
+                                0x07a4,
+                                0x07a7,
+                                0x07a8,
+                                (struct Area *)&data_ov058_021117a4[0],
+                                0x03,
+                                0x00,
+                                0x0640,
+                                0x0000000f};
+StandardEntry data_ov058_02111784[2] = {
+    {0x002a, 0x1372, 0x02bc, (s16)0xf002, 0x0000, (s16)0xa000, 0x0000, 0x0e22},
+    {0x00ed, 0x1324, 0x0258, (s16)0xeda4, 0x0000, (s16)0xd556, 0x0000, 0x1200},
+};
+Area data_ov058_021117a4[3] = {
+    {(struct ObjTable *)&data_ov058_02111734, 0, 0x00, {0x01, 0x40, 0x06}},
+    {(struct ObjTable *)&data_ov058_02111714, 0, 0x00, {0x01, 0x40, 0x06}},
+    {(struct ObjTable *)&data_ov058_0211173c, 0, 0x00, {0x01, 0x40, 0x06}},
+};
+StandardEntry data_ov058_021117c8[3] = {
+    {0x0050, 0x0c1e, 0x0258, (s16)0xf0c4, (s16)0xffff, (s16)0xe000, 0x0000, 0x0b06},
+    {0x004a, 0x0da8, 0x028a, (s16)0xef3d, 0x0000, (s16)0xe000, 0x0000, 0xffff},
+    {0x002a, 0x09ee, 0x02bc, (s16)0xeea4, 0x0000, 0x2000, 0x0000, 0x1222},
+};
+ObjSubTable data_ov058_021117f8[7] = {
+    {0x02, 0x03, {0x00, 0x00}, &data_ov058_02111754},
+    {0x03, 0x01, {0x00, 0x00}, &data_ov058_02111704},
+    {0x04, 0x05, {0x00, 0x00}, &data_ov058_02111830},
+    {0x0b, 0x01, {0x00, 0x00}, &data_ov058_02111700},
+    {0x01, 0x06, {0x00, 0x00}, &data_ov058_021118c0[0]},
+    {0x09, 0x0c, {0x00, 0x00}, &data_ov058_021119a0[0]},
+    {0x0a, 0x05, {0x00, 0x00}, &data_ov058_02111878},
+};
+ViewEntries5 data_ov058_02111830 = {
+    {
+        {0x02, 0xff, 0x0357, 0x0320, (s16)0xf97b, {0x00, 0x00}, 0x6000, 0x0000},
+        {0x04, 0x00, 0x0f19, 0x04e2, (s16)0xee82, {0x00, 0x00}, 0x4000, 0x0000},
+        {0x04, 0x00, 0x0c12, 0x047e, (s16)0xf47a, {0x00, 0x00}, 0x6e38, 0x0000},
+        {0x02, 0xff, 0x0d48, 0x0320, (s16)0xf1f0, {0x00, 0x00}, (s16)0x8000, 0x0000},
+        {0x02, 0xff, 0x0578, 0x02ee, (s16)0xf768, {0x00, 0x00}, 0x6000, 0x0000},
+    },
+    0x0000};
+ExitEntries5 data_ov058_02111878 = {
+    {
+        {0x1372, 0x02bc, (s16)0xf002, 0x0000, (s16)0xa000, {0x2c, 0x00, 0x03, 0x22}},
+        {0x08fc, 0x0302, (s16)0xfa24, 0x0000, (s16)0xa000, {0x1d, 0x04, 0x00, 0x32}},
+        {0x0275, 0x0258, (s16)0xfa5f, 0x0000, 0x6000, {0x02, 0x0f, 0xff, 0x11}},
+        {0x09ee, 0x02bc, (s16)0xeea4, 0x0000, 0x2000, {0x2b, 0x00, 0x02, 0x22}},
+        {0x09ee, 0x02bc, (s16)0xeea4, 0x0000, 0x2000, {0x2b, 0x00, 0x02, 0x22}},
+    },
+    0x0000};
+StandardEntry data_ov058_021118c0[6] = {
+    {0x0000, 0x03b1, 0x0258, (s16)0xf92a, 0x0000, 0x6000, 0x0000, 0x0700},
+    {0x0000, 0x01ee, 0x0352, (s16)0xf76d, 0x0000, 0x4e38, 0x0000, 0x05f8},
+    {0x0000, 0x09ee, 0x0352, (s16)0xeea4, 0x0000, 0x2000, 0x0000, 0x05f9},
+    {0x0000, 0x1372, 0x0352, (s16)0xf002, 0x0000, (s16)0xa000, 0x0000, 0x05fa},
+    {0x0000, 0x0d5c, 0x0226, (s16)0xef66, 0x0000, (s16)0xe000, 0x0000, 0x0019},
+    {0x0000, 0x05d2, 0x0514, (s16)0xf6fa, 0x0000, (s16)0xe000, 0x0000, 0x0220},
+};
+Clps_02111920 data_ov058_02111920 = {0x53504c43,
+                                     0x0008,
+                                     0x000f,
+                                     {
+                                         {0x00000fc0, 0x000000ff},
+                                         {0x00030fc4, 0x000000ff},
+                                         {0x00003044, 0x000000ff},
+                                         {0x04000fc0, 0x000000ff},
+                                         {0x00033045, 0x000000ff},
+                                         {0x00033042, 0x000000ff},
+                                         {0x00030042, 0x000000ff},
+                                         {0x00030045, 0x000000ff},
+                                         {0x00030040, 0x000000ff},
+                                         {0x00000fc4, 0x000000ff},
+                                         {0x00003084, 0x000000ff},
+                                         {0x00030085, 0x000000ff},
+                                         {0x00030084, 0x000000ff},
+                                         {0x00030fc1, 0x000000ff},
+                                         {0x00050fc1, 0x000000ff},
+                                     }};
+DoorEntry data_ov058_021119a0[12] = {
+    {0x0524, 0x0258, (s16)0xf257, 0x0000, 0x0000, 0x0014},
+    {0x0650, 0x0258, (s16)0xf257, (s16)0x8000, 0x0000, 0x0014},
+    {0x0704, 0x0258, (s16)0xf257, 0x0000, 0x0000, 0x0013},
+    {0x0830, 0x0258, (s16)0xf257, (s16)0x8000, 0x0000, 0x0013},
+    {0x0a7c, 0x0258, (s16)0xf4a8, (s16)0xc000, 0x0000, 0x0015},
+    {0x0a7c, 0x0258, (s16)0xf5d4, 0x4000, 0x0000, 0x0015},
+    {0x0a7c, 0x0258, (s16)0xf688, (s16)0xc000, 0x0000, 0x0017},
+    {0x0a7c, 0x0258, (s16)0xf7b4, 0x4000, 0x0000, 0x0017},
+    {0x095c, 0x0258, (s16)0xf2a3, (s16)0xe000, 0x0100, 0x0001},
+    {0x023f, 0x0258, (s16)0xfa29, (s16)0xe000, 0x0000, 0x000d},
+    {0x0f90, 0x0258, (s16)0xefb7, (s16)0xe000, 0x1200, 0x0005},
+    {0x0a30, 0x0258, (s16)0xf377, 0x6000, 0x1000, 0x0001},
+};

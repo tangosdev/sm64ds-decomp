@@ -59,13 +59,7 @@ struct Mecha11ClsnFilePtr : SharedFilePtr {
 extern Mecha11ClsnFilePtr RotatingClockHand_ClsnFile;
 extern Mecha11ModelFilePtr RotatingClockHand_ModelFile;
 extern unsigned char data_0209f2c0;
-struct CLPS_Block {
-    u32 words[8];
-};
-
-CLPS_Block data_ov035_02112238 = {
-    0x53504c43, 0x00020008, 0x01000fc0, 0x000000ff, 0x01001fc0, 0x000000ff, 0xffffffff, 0xffffffff,
-};
+extern CLPS_Block data_ov035_02112238;
 
 short sTTCSpinnerSpeeds[4] = {
     200,

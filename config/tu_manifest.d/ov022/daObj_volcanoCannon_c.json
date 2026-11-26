@@ -18,12 +18,6 @@
       "end": "0x02112950"
     },
     {
-      "name": ".rodata.data_ov022_02112950",
-      "input_section": ".rodata",
-      "start": "0x02112950",
-      "end": "0x02112c98"
-    },
-    {
       "name": ".init",
       "start": "0x021130bc",
       "end": "0x021130f8"
@@ -151,15 +145,7 @@
       "evidence": "Zero tail of this file. The placeholder name stays."
     }
   ],
-  "rodata": [
-    {
-      "symbol": "data_ov022_02112950",
-      "address": "0x02112950",
-      "size": "0x348",
-      "binding": "STB_GLOBAL",
-      "evidence": "read-only table that begins where this class's code ends"
-    }
-  ],
+  "rodata": [],
   "bss": [
     {
       "symbol": "data_ov022_02114690",
@@ -655,16 +641,6 @@
       "addend": 8,
       "target_module": "arm9",
       "target_address": "0x0209a764"
-    },
-    {
-      "section": ".rodata.data_ov022_02112950",
-      "source": "0x0211295c",
-      "type": "R_ARM_ABS32",
-      "kind": "load",
-      "symbol": "data_ov022_02113168",
-      "addend": 0,
-      "target_module": "ov022",
-      "target_address": "0x02113168"
     }
   ],
   "verification": {
@@ -749,13 +725,6 @@
           "section": ".text",
           "start": "0x021125e0",
           "end": "0x02112950",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".rodata.data_ov022_02112950",
-          "start": "0x02112950",
-          "end": "0x02112c98",
           "differingBytes": 0,
           "firstDiff": null
         },

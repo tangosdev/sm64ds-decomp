@@ -2,25 +2,22 @@
     .rodata     start:0x02112e0c end:0x02112f9c kind:rodata align:4
     .init       start:0x02112f9c end:0x02113410 kind:code align:4
     .ctor       start:0x02113410 end:0x0211342c kind:rodata align:4
-    .data_pre start:0x02113440 end:0x02113574 kind:data align:32
-    .data.botaosi start:0x02113574 end:0x02113594 kind:data align:4
-    .data.lift start:0x02113594 end:0x021135b4 kind:data align:4
-    .data.dos_clps0 start:0x021135b4 end:0x021135d4 kind:data align:4
-    .data_gap0 start:0x021135d4 end:0x02113614 kind:data align:4
-    .data.uki_clps start:0x02113614 end:0x02113634 kind:data align:4
-    .data.dos_clps1 start:0x02113634 end:0x02113654 kind:data align:4
-    .data.rote start:0x02113654 end:0x02113674 kind:data align:4
-    .data_gap1 start:0x02113674 end:0x021136b4 kind:data align:4
-    .data.fb_clps start:0x021136b4 end:0x021136d4 kind:data align:4
-    .data_gap2 start:0x021136d4 end:0x02114534 kind:data align:4
+    .data       start:0x02113440 end:0x02114318 kind:data align:32
+    .data_gap2  start:0x02114318 end:0x02114534 kind:data align:4
     .data.dos_ptr start:0x02114534 end:0x0211454c kind:data align:4
-    .data_gap4 start:0x0211454c end:0x02114794 kind:data align:4
+    .data_gap4  start:0x0211454c end:0x02114794 kind:data align:4
     .data.uki_angle start:0x02114794 end:0x02114796 kind:data align:2
     .data_gap4b start:0x02114798 end:0x021147a4 kind:data align:4
-    .data start:0x021147a4 end:0x02114880 kind:data align:4
+    .data.post  start:0x021147a4 end:0x02114880 kind:data align:4
     .data.fb_res start:0x02114880 end:0x0211488c kind:data align:4
-    .data_gap6 start:0x0211488c end:0x02114960 kind:data align:4
+    .data_gap6  start:0x0211488c end:0x02114960 kind:data align:4
     .bss        start:0x02114960 end:0x02114b00 kind:bss align:32
+
+src/game/stages/d_s_map_ov015.c:
+    complete
+    .rodata start:0x02112e0c end:0x02112f9c
+    .data start:0x02113440 end:0x02114318
+
 src/game/actors/d_a_obj_bk_billboard.cpp:
     complete
     .text start:0x021111a0 end:0x02111314
@@ -34,7 +31,6 @@ src/game/actors/d_a_obj_bk_botaosi.cpp:
     .init start:0x02112fdc end:0x02113048
     .ctor start:0x02113414 end:0x02113418
     .bss start:0x02114974 end:0x0211499c
-    .data.botaosi start:0x02113574 end:0x02113594
 
 src/game/actors/d_a_obj_bk_dossunbar.cpp:
     complete
@@ -42,8 +38,6 @@ src/game/actors/d_a_obj_bk_dossunbar.cpp:
     .init start:0x02113048 end:0x02113264
     .ctor start:0x02113418 end:0x0211341c
     .bss start:0x0211499c end:0x02114a5c
-    .data.dos_clps0 start:0x021135b4 end:0x021135d4
-    .data.dos_clps1 start:0x02113634 end:0x02113654
     .data.dos_ptr start:0x02114534 end:0x0211454c
 
 src/game/actors/d_a_obj_bk_lift.cpp:
@@ -52,7 +46,6 @@ src/game/actors/d_a_obj_bk_lift.cpp:
     .init start:0x02113264 end:0x021132d0
     .ctor start:0x0211341c end:0x02113420
     .bss start:0x02114a5c end:0x02114a84
-    .data.lift start:0x02113594 end:0x021135b4
 
 src/game/actors/d_a_obj_bk_rotebar.cpp:
     complete
@@ -60,7 +53,6 @@ src/game/actors/d_a_obj_bk_rotebar.cpp:
     .init start:0x021132d0 end:0x0211333c
     .ctor start:0x02113420 end:0x02113424
     .bss start:0x02114a84 end:0x02114aac
-    .data.rote start:0x02113654 end:0x02113674
 
 src/game/actors/d_a_obj_bk_ukisima.cpp:
     complete
@@ -68,17 +60,14 @@ src/game/actors/d_a_obj_bk_ukisima.cpp:
     .init start:0x0211333c end:0x021133a8
     .ctor start:0x02113424 end:0x02113428
     .bss start:0x02114aac end:0x02114ad4
-    .data start:0x021147a4 end:0x02114868
-    .data.uki_clps start:0x02113614 end:0x02113634
+    .data.post start:0x021147a4 end:0x02114868
     .data.uki_angle start:0x02114794 end:0x02114796
 
 src/game/actors/d_a_obj_bk_fall_block.cpp:
     complete
     .text start:0x02112cf4 end:0x02112e0c
-    .rodata start:0x02112e0c end:0x02112f9c
     .init start:0x021133a8 end:0x02113410
     .ctor start:0x02113428 end:0x0211342c
     .bss start:0x02114ad4 end:0x02114b00
-    .data.fb_clps start:0x021136b4 end:0x021136d4
-    .data start:0x02114868 end:0x02114880
+    .data.post start:0x02114868 end:0x02114880
     .data.fb_res start:0x02114880 end:0x0211488c

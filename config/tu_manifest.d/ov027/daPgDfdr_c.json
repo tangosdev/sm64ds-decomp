@@ -32,22 +32,14 @@
       "end": "0x02113d04"
     },
     {
-      "name": ".rodata.dfdrTable",
+      "name": ".rodata",
       "start": "0x02112ca4",
-      "end": "0x02112cb0",
-      "input_section": ".rodata"
+      "end": "0x02112cb0"
     },
     {
-      "name": ".data.pgDfdrClps",
-      "start": "0x021130e8",
-      "end": "0x02113108",
-      "input_section": ".data"
-    },
-    {
-      "name": ".data.dfdrDesc",
+      "name": ".data",
       "start": "0x021139c4",
-      "end": "0x021139e4",
-      "input_section": ".data"
+      "end": "0x021139e4"
     }
   ],
   "functions": [
@@ -183,13 +175,6 @@
     }
   ],
   "data": [
-    {
-      "symbol": "data_ov027_021130e8",
-      "address": "0x021130e8",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "the penguin's collision-property block handed to dBgW_KcMbg::SetFile"
-    },
     {
       "symbol": "data_ov027_021139c4",
       "address": "0x021139c4",
@@ -786,7 +771,7 @@
       "target_address": "0x02112df8"
     },
     {
-      "section": ".rodata.dfdrTable",
+      "section": ".rodata",
       "source": "0x02112ca4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -796,7 +781,7 @@
       "target_address": "0x02113c84"
     },
     {
-      "section": ".rodata.dfdrTable",
+      "section": ".rodata",
       "source": "0x02112ca8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -806,7 +791,7 @@
       "target_address": "0x02113c74"
     },
     {
-      "section": ".rodata.dfdrTable",
+      "section": ".rodata",
       "source": "0x02112cac",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -816,7 +801,7 @@
       "target_address": "0x02113c8c"
     },
     {
-      "section": ".data.dfdrDesc",
+      "section": ".data",
       "source": "0x021139c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -826,7 +811,7 @@
       "target_address": "0x02111a28"
     },
     {
-      "section": ".data.dfdrDesc",
+      "section": ".data",
       "source": "0x021139cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -836,7 +821,7 @@
       "target_address": "0x02111c48"
     },
     {
-      "section": ".data.dfdrDesc",
+      "section": ".data",
       "source": "0x021139d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -846,7 +831,7 @@
       "target_address": "0x02111ca8"
     },
     {
-      "section": ".data.dfdrDesc",
+      "section": ".data",
       "source": "0x021139dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -991,21 +976,14 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
-          "section": ".rodata.dfdrTable",
+          "section": ".rodata",
           "start": "0x02112ca4",
           "end": "0x02112cb0",
           "differingBytes": 0,
           "firstDiff": null
         },
         {
-          "section": ".data.pgDfdrClps",
-          "start": "0x021130e8",
-          "end": "0x02113108",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.dfdrDesc",
+          "section": ".data",
           "start": "0x021139c4",
           "end": "0x021139e4",
           "differingBytes": 0,
@@ -1074,7 +1052,7 @@
             ]
           },
           {
-            "section": ".rodata.dfdrTable",
+            "section": ".rodata",
             "original": [
               24
             ],
@@ -1083,16 +1061,7 @@
             ]
           },
           {
-            "section": ".data.pgDfdrClps",
-            "original": [
-              43
-            ],
-            "desired": [
-              43
-            ]
-          },
-          {
-            "section": ".data.dfdrDesc",
+            "section": ".data",
             "original": [
               10,
               12,
@@ -1158,7 +1127,7 @@
               ]
             },
             {
-              "section": ".data.dfdrDesc",
+              "section": ".data",
               "original": [
                 10,
                 12,

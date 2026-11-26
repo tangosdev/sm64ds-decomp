@@ -2,14 +2,16 @@
     .rodata     start:0x021118ac end:0x02112808 kind:rodata align:4
     .init       start:0x02112808 end:0x02112874 kind:code align:4
     .ctor       start:0x02112874 end:0x02112878 kind:rodata align:4
-    .data.gap0  start:0x02112880 end:0x021129f0 kind:data align:32
-    .data.clps  start:0x021129f0 end:0x02112a00 kind:data align:1
-    .data.gap1  start:0x02112a00 end:0x02113960 kind:data align:4
+    .data       start:0x02112880 end:0x02113960 kind:data align:32
     .bss        start:0x02113960 end:0x021139a0 kind:bss align:32
+src/game/stages/d_s_map_ov024.c:
+    complete
+    .rodata start:0x021118ac end:0x02112808
+    .data start:0x02112880 end:0x021137c0
+
 src/game/actors/d_a_obj_dl_pyramid.cpp:
     complete
     .text start:0x021111a0 end:0x021118ac
     .init start:0x02112808 end:0x02112874
     .ctor start:0x02112874 end:0x02112878
-    .data.clps start:0x021129f0 end:0x02112a00
     .bss start:0x02113960 end:0x02113988

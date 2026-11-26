@@ -2,21 +2,17 @@
     .rodata     start:0x021114b8 end:0x0211198c kind:rodata align:4
     .init       start:0x0211198c end:0x021119f8 kind:code align:4
     .ctor       start:0x021119f8 end:0x021119fc kind:rodata align:4
-    .data.ksPre   start:0x02111a00 end:0x02111a18 kind:data align:32
-    .data.ksWaterName start:0x02111a18 end:0x02111a24 kind:data align:4
-    .data.w11a24  start:0x02111a24 end:0x02111a60 kind:data align:4
-    .data.ksBta   start:0x02111a60 end:0x02111a78 kind:data align:4
-    .data.ksMid   start:0x02111a78 end:0x02111a94 kind:data align:4
-    .data.ksClps  start:0x02111a94 end:0x02111ab4 kind:data align:4
-    .data.ksRest  start:0x02111ab4 end:0x02111c80 kind:data align:4
+    .data       start:0x02111a00 end:0x02111c80 kind:data align:32
     .bss        start:0x02111c80 end:0x02111cc0 kind:bss align:32
+
+src/game/stages/d_s_map_ov017.c:
+    complete
+    .rodata start:0x021114b8 end:0x0211198c
+    .data start:0x02111a00 end:0x02111bb4
+
 src/game/actors/d_a_obj_ks_water.cpp:
     complete
     .text start:0x021111a0 end:0x021114b8
-    .rodata start:0x021114b8 end:0x0211198c
     .init start:0x0211198c end:0x021119f8
     .ctor start:0x021119f8 end:0x021119fc
-    .data.ksBta start:0x02111a60 end:0x02111a78
-    .data.ksWaterName start:0x02111a18 end:0x02111a24
-    .data.ksClps start:0x02111a94 end:0x02111ab4
     .bss start:0x02111c80 end:0x02111ca8
