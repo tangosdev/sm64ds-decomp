@@ -18,11 +18,6 @@
       "end": "0x02112e0c"
     },
     {
-      "name": ".rodata",
-      "start": "0x02112e0c",
-      "end": "0x02112f9c"
-    },
-    {
       "name": ".init",
       "start": "0x021133a8",
       "end": "0x02113410"
@@ -33,13 +28,7 @@
       "end": "0x0211342c"
     },
     {
-      "name": ".data.fb_clps",
-      "input_section": ".data",
-      "start": "0x021136b4",
-      "end": "0x021136d4"
-    },
-    {
-      "name": ".data",
+      "name": ".data.post",
       "start": "0x02114868",
       "end": "0x02114880"
     },
@@ -94,13 +83,6 @@
   ],
   "data": [
     {
-      "symbol": "data_ov015_021136b4",
-      "address": "0x021136b4",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "falling-block CLPS block"
-    },
-    {
       "symbol": "_ZTI20daObjBk_Fall_Block_c",
       "address": "0x02114868",
       "size": "0xc",
@@ -120,15 +102,7 @@
       "evidence": "model, collision, and CLPS descriptor"
     }
   ],
-  "rodata": [
-    {
-      "symbol": "data_ov015_02112e0c",
-      "address": "0x02112e0c",
-      "size": "0x190",
-      "binding": "STB_GLOBAL",
-      "evidence": "read-only table that begins where this class's code ends"
-    }
-  ],
+  "rodata": [],
   "bss": [
     {
       "symbol": "gBkDownBCollisionFile",
@@ -157,8 +131,7 @@
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated destructor-registration node"
-    }
-  ,
+    },
     {
       "symbol": "data_ov015_02114afc",
       "address": "0x02114afc",
@@ -287,13 +260,6 @@
           "firstDiff": null
         },
         {
-          "section": ".rodata",
-          "start": "0x02112e0c",
-          "end": "0x02112f9c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".init",
           "start": "0x021133a8",
           "end": "0x02113410",
@@ -308,14 +274,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data.fb_clps",
-          "start": "0x021136b4",
-          "end": "0x021136d4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data",
+          "section": ".data.post",
           "start": "0x02114868",
           "end": "0x02114880",
           "differingBytes": 0,

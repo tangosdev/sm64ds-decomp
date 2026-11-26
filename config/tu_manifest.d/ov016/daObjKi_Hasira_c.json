@@ -34,12 +34,6 @@
       "name": ".bss",
       "start": "0x02114e1c",
       "end": "0x02114e44"
-    },
-    {
-      "name": ".data.hasira",
-      "input_section": ".data",
-      "start": "0x02113cac",
-      "end": "0x02113ccc"
     }
   ],
   "functions": [
@@ -100,15 +94,7 @@
       "ordinal": 7
     }
   ],
-  "data": [
-    {
-      "symbol": "data_ov016_02113cac",
-      "address": "0x02113cac",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "CLPS header 0x53504c43 and one collision entry for the rock pillar"
-    }
-  ],
+  "data": [],
   "bss": [
     {
       "symbol": "RockPillar_ClsnFile",
@@ -270,13 +256,6 @@
           "start": "0x02114e1c",
           "end": "0x02114e44",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".data.hasira",
-          "start": "0x02113cac",
-          "end": "0x02113ccc",
-          "differingBytes": 0,
-          "firstDiff": null
         }
       ],
       "objectAudit": {

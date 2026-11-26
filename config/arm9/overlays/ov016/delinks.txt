@@ -1,24 +1,24 @@
     .text       start:0x021111a0 end:0x0211354c kind:code align:32
-    .rodata     start:0x021136dc end:0x021136ec kind:rodata align:4
-    .rodata.slideBoxKeys start:0x0211354c end:0x021136dc kind:rodata align:4
+    .rodata     start:0x0211354c end:0x021136ec kind:rodata align:4
     .init       start:0x021136ec end:0x02113abc kind:code align:4
     .ctor       start:0x02113abc end:0x02113ad0 kind:rodata align:4
-    .data.slideBox start:0x02113ae0 end:0x02113bcc kind:data align:32
-    .data.hasira_head start:0x02113bcc end:0x02113bec kind:data align:4
-    .data.kiItaClps start:0x02113bec end:0x02113c0c kind:data align:4
-    .data.hasira_mid start:0x02113c0c end:0x02113c4c kind:data align:4
-    .data.kiFuneClps start:0x02113c4c end:0x02113c8c kind:data align:4
-    .data.hasira start:0x02113c8c end:0x02114878 kind:data align:4
-    .data       start:0x02114878 end:0x02114908 kind:data align:4
+    .data       start:0x02113ae0 end:0x02114878 kind:data align:32
+    .data.moray start:0x02114878 end:0x02114908 kind:data align:4
     .data.morayBend start:0x02114908 end:0x02114950 kind:data align:4
     .data.morayTail start:0x02114950 end:0x02114d20 kind:data align:4
     .bss        start:0x02114d20 end:0x02114ea0 kind:bss align:32
+
+src/game/stages/d_s_map_ov016.c:
+    complete
+    .rodata start:0x0211354c end:0x021136dc
+    .data start:0x02113ae0 end:0x02114878
+
 src/game/actors/d_a_moray.cpp:
     complete
     .text start:0x021111a0 end:0x0211260c
     .init start:0x021136ec end:0x021138bc
     .ctor start:0x02113abc end:0x02113ac0
-    .data start:0x02114878 end:0x02114908
+    .data.moray start:0x02114878 end:0x02114908
     .data.morayBend start:0x02114908 end:0x02114950
     .bss start:0x02114d20 end:0x02114dcc
 
@@ -28,7 +28,6 @@ src/game/actors/d_a_obj_ki_fune.cpp:
     .text start:0x0211260c end:0x02112a00
     .init start:0x021138bc end:0x02113978
     .ctor start:0x02113ac0 end:0x02113ac4
-    .data.kiFuneClps start:0x02113c4c end:0x02113c8c
     .data.morayTail start:0x021149d4 end:0x021149dc
     .bss start:0x02114dcc end:0x02114e1c
 
@@ -37,7 +36,6 @@ src/game/actors/d_a_obj_ki_hasira.cpp:
     .text start:0x02112a00 end:0x02112ef4
     .init start:0x02113978 end:0x021139e4
     .ctor start:0x02113ac4 end:0x02113ac8
-    .data.hasira start:0x02113cac end:0x02113ccc
     .bss start:0x02114e1c end:0x02114e44
 
 src/game/actors/d_a_obj_ki_ita.cpp:
@@ -45,15 +43,12 @@ src/game/actors/d_a_obj_ki_ita.cpp:
     .text start:0x02112ef4 end:0x02112ff8
     .init start:0x021139e4 end:0x02113a50
     .ctor start:0x02113ac8 end:0x02113acc
-    .data.kiItaClps start:0x02113bec end:0x02113c0c
     .data.morayTail start:0x02114b8c end:0x02114b98
     .bss start:0x02114e44 end:0x02114e6c
 
 src/game/actors/d_a_slide_box.cpp:
     complete
     .text start:0x02112ff8 end:0x0211354c
-    .rodata.slideBoxKeys start:0x0211354c end:0x021136dc
     .init start:0x02113a50 end:0x02113abc
     .ctor start:0x02113acc end:0x02113ad0
-    .data.slideBox start:0x02113bac end:0x02113bcc
     .bss start:0x02114e6c end:0x02114ea0

@@ -39,10 +39,7 @@
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
-enum daSlide_Box_c_AssetId {
-    ASSET_KI_SLIDE_BOX_BMD = 0x0645,
-    ASSET_KI_SLIDE_BOX_KCL = 0x0646
-};
+enum daSlide_Box_c_AssetId { ASSET_KI_SLIDE_BOX_BMD = 0x0645, ASSET_KI_SLIDE_BOX_KCL = 0x0646 };
 
 #include "daSlide_Box_c.h"
 #include "SharedFilePtr.h"
@@ -71,11 +68,9 @@ struct SlideBoxClsnFilePtr : SharedFilePtr {
 extern "C" SlideBoxModelFilePtr gKiSlideBoxModelFile;
 extern "C" SlideBoxClsnFilePtr gKiSlideBoxCollisionFile;
 
-extern "C" {
-int data_ov016_02113bac[8] = {
-    0x53504c43, 0x00010008, 0x01000fc5, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
-};
+extern struct CLPS_Block data_ov016_02113bac;
 
+extern "C" {
 extern void hold_d_a_slide_box(void *thiz, void *kcl, void *mtx, int scale, short angleY,
                                void *clps);
 }
@@ -92,30 +87,18 @@ enum { kSlideScale = 140, kHorzPosMax = 0x4ff000, kHorzPosMin = -0x32000, kFixRo
 
 /* How close a player has to be, and how fast the crate has to be
  * moving, before the rolling sound would start. 2000.0 and 3.0. */
-enum {
-    kSoundRange = 0x7d0000,
-    kSoundSpeed = 0x3000,
-    kRollSound = 0x9f,
-    kSoundPlayer = 3
-};
+enum { kSoundRange = 0x7d0000, kSoundSpeed = 0x3000, kRollSound = 0x9f, kSoundPlayer = 3 };
 
 /* Extra downward speed once the crate is on the deck, 8.0 in 20.12. */
 enum { kDeckSink = 0x8000 };
 
 /* Gravity and terminal velocity, -2.0 and -20.0. */
-enum {
-    kGravity = -0x2000,
-    kTerminalVelocity = -0x14000
-};
+enum { kGravity = -0x2000, kTerminalVelocity = -0x14000 };
 
 /* KI_FUNE_UP. */
 enum { kShipActorId = 0x39 };
 
-enum {
-    kStateSeekShip = 0,
-    kStateFall = 1,
-    kStateRide = 2
-};
+enum { kStateSeekShip = 0, kStateFall = 1, kStateRide = 2 };
 
 #define FixMul(a, b) ((int)(((long long)(a) * (b) + kFixRound) >> 12))
 
@@ -126,12 +109,9 @@ enum {
 
 /* Empty on purpose. mwccarm destroys mWithMeshClsn, then the inlined
  * dBgActor_c teardown, and emits D1 followed by D0. */
-daSlide_Box_c::~daSlide_Box_c()
-{
-}
+daSlide_Box_c::~daSlide_Box_c() {}
 
-void daSlide_Box_c::UpdateModel()
-{
+void daSlide_Box_c::UpdateModel() {
     Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
     /* The translation is at 1/8. */
     mModel.mat4x3.t.x = mPos.x >> 3;
@@ -139,8 +119,7 @@ void daSlide_Box_c::UpdateModel()
     mModel.mat4x3.t.z = mPos.z >> 3;
 }
 
-int daSlide_Box_c::CleanupResources()
-{
+int daSlide_Box_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
@@ -149,14 +128,12 @@ int daSlide_Box_c::CleanupResources()
     return 1;
 }
 
-int daSlide_Box_c::Render()
-{
+int daSlide_Box_c::Render() {
     mModel.Render(0);
     return 1;
 }
 
-int daSlide_Box_c::Behavior()
-{
+int daSlide_Box_c::Behavior() {
     Vector3 normal;
 
     switch (mState) {
@@ -227,15 +204,13 @@ int daSlide_Box_c::Behavior()
     return 1;
 }
 
-int daSlide_Box_c::InitResources()
-{
+int daSlide_Box_c::InitResources() {
     BMD_File *modelFile = dExtSimpleModel_c::LoadFile(ModelFile);
     mModel.SetFile(modelFile, 1, -1);
     UpdateModel();
     UpdateClsnPosAndRot();
     KCL_File *clsnFile = dBgW_Kc::LoadFile(ClsnFile);
-    mMeshCollider.SetFile((clsnFile), mClsnMat, kMeshScale, mAngle.y,
-                          *(CLPS_Block *)(data_ov016_02113bac));
+    mMeshCollider.SetFile((clsnFile), mClsnMat, kMeshScale, mAngle.y, data_ov016_02113bac);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mWithMeshClsn.Init(this, kClsnRadius, kClsnRadius, 0, 0);
     mVertAccel = kGravity;
@@ -265,31 +240,3 @@ u32 data_ov016_02114e94[3];
 }
 
 /* The four zero bytes this class's data points at, then the texture keys. */
-extern char data_ov016_02113af8[];
-extern const u32 data_ov016_0211354c[100] = {
-    0,          0x00001000, 0x0000ffff, (u32)&data_ov016_02113af8,
-    0x00000001, 0x00000001, 0x00000001, 0x0000005b,
-    0x0000005b, 0x00000000, 0x0000002e, 0x0000005b,
-    0x00000089, 0x000000b6, 0x000000e4, 0x00000111,
-    0x0000013f, 0x0000016c, 0x0000019a, 0x000001c7,
-    0x000001f5, 0x00000222, 0x00000250, 0x0000027d,
-    0x000002ab, 0x000002d8, 0x00000306, 0x00000333,
-    0x00000361, 0x0000038e, 0x000003bc, 0x000003e9,
-    0x00000417, 0x00000444, 0x00000472, 0x0000049f,
-    0x000004cd, 0x000004fa, 0x00000528, 0x00000555,
-    0x00000583, 0x000005b0, 0x000005de, 0x0000060b,
-    0x00000639, 0x00000666, 0x00000694, 0x000006c1,
-    0x000006ef, 0x0000071c, 0x0000074a, 0x00000777,
-    0x000007a5, 0x000007d2, 0x00000800, 0x0000082e,
-    0x0000085b, 0x00000889, 0x000008b6, 0x000008e4,
-    0x00000911, 0x0000093f, 0x0000096c, 0x0000099a,
-    0x000009c7, 0x000009f5, 0x00000a22, 0x00000a50,
-    0x00000a7d, 0x00000aab, 0x00000ad8, 0x00000b06,
-    0x00000b33, 0x00000b61, 0x00000b8e, 0x00000bbc,
-    0x00000be9, 0x00000c17, 0x00000c44, 0x00000c72,
-    0x00000c9f, 0x00000ccd, 0x00000cfa, 0x00000d28,
-    0x00000d55, 0x00000d83, 0x00000db0, 0x00000dde,
-    0x00000e0b, 0x00000e39, 0x00000e66, 0x00000e94,
-    0x00000ec1, 0x00000eef, 0x00000f1c, 0x00000f4a,
-    0x00000f77, 0x00000fa5, 0x00000fd2, 0x00001000,
-};

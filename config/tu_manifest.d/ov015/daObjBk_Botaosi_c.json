@@ -28,12 +28,6 @@
       "end": "0x02113418"
     },
     {
-      "name": ".data.botaosi",
-      "input_section": ".data",
-      "start": "0x02113574",
-      "end": "0x02113594"
-    },
-    {
       "name": ".bss",
       "start": "0x02114974",
       "end": "0x0211499c"
@@ -132,15 +126,7 @@
       "ordinal": 12
     }
   ],
-  "data": [
-    {
-      "symbol": "data_ov015_02113574",
-      "address": "0x02113574",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "seesaw plank CLPS block"
-    }
-  ],
+  "data": [],
   "production_mode": "intact-object",
   "bss": [
     {
@@ -495,13 +481,6 @@
           "section": ".ctor",
           "start": "0x02113414",
           "end": "0x02113418",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.botaosi",
-          "start": "0x02113574",
-          "end": "0x02113594",
           "differingBytes": 0,
           "firstDiff": null
         },

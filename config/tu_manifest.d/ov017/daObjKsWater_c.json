@@ -13,18 +13,6 @@
   ],
   "sections": [
     {
-      "name": ".data.ksBta",
-      "input_section": ".data",
-      "start": "0x02111a60",
-      "end": "0x02111a78"
-    },
-    {
-      "name": ".data.ksClps",
-      "input_section": ".data",
-      "start": "0x02111a94",
-      "end": "0x02111ab4"
-    },
-    {
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x021114b8"
@@ -43,17 +31,6 @@
       "name": ".bss",
       "start": "0x02111c80",
       "end": "0x02111ca8"
-    },
-    {
-      "name": ".rodata",
-      "start": "0x021114b8",
-      "end": "0x0211198c"
-    },
-    {
-      "name": ".data.ksWaterName",
-      "input_section": ".data",
-      "start": "0x02111a18",
-      "end": "0x02111a24"
     }
   ],
   "functions": [
@@ -107,29 +84,7 @@
       "ordinal": 6
     }
   ],
-  "data": [
-    {
-      "symbol": "data_ov017_02111a60",
-      "address": "0x02111a60",
-      "size": "0x18",
-      "binding": "STB_GLOBAL",
-      "evidence": "BTA header: 300 frames, one material."
-    },
-    {
-      "symbol": "data_ov017_02111a94",
-      "address": "0x02111a94",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "CLPS words for the sunken-ship water."
-    },
-    {
-      "symbol": "data_ov017_02111a18",
-      "address": "0x02111a18",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "the BMD material name the animation record resolves: water_mat"
-    }
-  ],
+  "data": [],
   "bss": [
     {
       "symbol": "data_ov017_02111c80",
@@ -343,20 +298,6 @@
       },
       "tuRanges": [
         {
-          "section": ".data.ksBta",
-          "start": "0x02111a60",
-          "end": "0x02111a78",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.ksClps",
-          "start": "0x02111a94",
-          "end": "0x02111ab4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".text",
           "start": "0x021111a0",
           "end": "0x021114b8",
@@ -382,20 +323,6 @@
           "start": "0x02111c80",
           "end": "0x02111ca8",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".rodata",
-          "start": "0x021114b8",
-          "end": "0x0211198c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.ksWaterName",
-          "start": "0x02111a18",
-          "end": "0x02111a24",
-          "differingBytes": 0,
-          "firstDiff": null
         }
       ],
       "objectAudit": {

@@ -28,7 +28,7 @@
       "end": "0x02113ac0"
     },
     {
-      "name": ".data",
+      "name": ".data.moray",
       "start": "0x02114878",
       "end": "0x02114908"
     },
@@ -605,7 +605,7 @@
           "firstDiff": null
         },
         {
-          "section": ".data",
+          "section": ".data.moray",
           "start": "0x02114878",
           "end": "0x02114908",
           "differingBytes": 0,
