@@ -14,12 +14,6 @@
   ],
   "sections": [
     {
-      "name": ".data.c0Sw",
-      "input_section": ".data",
-      "start": "0x02111cd0",
-      "end": "0x02111cf0"
-    },
-    {
       "name": ".text",
       "start": "0x021111a0",
       "end": "0x02111450"
@@ -116,15 +110,7 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "data": [
-    {
-      "symbol": "data_ov012_02111cd0",
-      "address": "0x02111cd0",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "CLPS words for the castle switch."
-    }
-  ],
+  "data": [],
   "bss": [
     {
       "symbol": "data_ov012_021124a0",
@@ -423,13 +409,6 @@
         "firstDiff": null
       },
       "tuRanges": [
-        {
-          "section": ".data.c0Sw",
-          "start": "0x02111cd0",
-          "end": "0x02111cf0",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
         {
           "section": ".text",
           "start": "0x021111a0",

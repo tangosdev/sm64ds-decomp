@@ -2,15 +2,14 @@
     .rodata     start:0x02112228 end:0x02112458 kind:rodata align:4
     .init       start:0x02112458 end:0x02112b34 kind:code align:4
     .ctor       start:0x02112b34 end:0x02112b44 kind:rodata align:4
-    .data.gap0  start:0x02112b60 end:0x02112bc4 kind:data align:32
-    .data.data_ov009_02112bc4 start:0x02112bc4 end:0x02112bdc kind:data align:4
-    .data.gap1  start:0x02112bdc end:0x02112bf8 kind:data align:4
-    .data.data_ov009_02112bf8 start:0x02112bf8 end:0x02112c18 kind:data align:4
-    .data.gap2  start:0x02112c18 end:0x02112c38 kind:data align:4
-    .data.data_ov009_02112c38 start:0x02112c38 end:0x02112c58 kind:data align:4
-    .data.data_ov009_02112c58 start:0x02112c58 end:0x021138fc kind:data align:4
-    .data       start:0x021138fc end:0x02113c20 kind:data align:4
+    .data       start:0x02112b60 end:0x02113c20 kind:data align:32
     .bss        start:0x02113c20 end:0x02113ee0 kind:bss align:32
+
+src/game/stages/d_s_map_ov009.c:
+    complete
+    .rodata start:0x02112228 end:0x02112458
+    .data start:0x02112b60 end:0x021138fc
+
 src/game/actors/d_a_s_bird.cpp:
     complete
     .text start:0x021111a0 end:0x02111a70
@@ -24,13 +23,6 @@ src/game/actors/d_a_obj_mc_water.cpp:
     .text start:0x02111a70 end:0x02111dc4
     .init start:0x02112524 end:0x02112a5c
     .ctor start:0x02112b38 end:0x02112b3c
-    .data.data_ov009_02112bc4 start:0x02112bc4 end:0x02112bdc
-    .data.gap2 start:0x02112c18 end:0x02112c38
-    .data.data_ov009_02112c38 start:0x02112c38 end:0x02112c58
-    .rodata start:0x02112230 end:0x02112458
-    .data.gap0 start:0x02112b60 end:0x02112bc4
-    .data.gap1 start:0x02112bdc end:0x02112bf8
-    .data.data_ov009_02112c58 start:0x02112c58 end:0x021138fc
     .bss start:0x02113c68 end:0x02113e88
     .data start:0x021139d4 end:0x02113a98
 
@@ -39,7 +31,6 @@ src/game/actors/d_a_obj_mc_metalnet.cpp:
     .text start:0x02111dc4 end:0x02112078
     .init start:0x02112a5c end:0x02112ac8
     .ctor start:0x02112b3c end:0x02112b40
-    .data.data_ov009_02112bf8 start:0x02112bf8 end:0x02112c18
     .bss start:0x02113e88 end:0x02113eb0
     .data start:0x02113a98 end:0x02113b60
 

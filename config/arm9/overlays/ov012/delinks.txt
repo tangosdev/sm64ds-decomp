@@ -1,41 +1,25 @@
     .text       start:0x021111a0 end:0x02111768 kind:code align:32
-    .rodata            start:0x02111768 end:0x0211176c kind:rodata align:4
-    .rodata.w1176c     start:0x0211176c end:0x02111770 kind:rodata align:4
-    .rodata.c0WaterScale start:0x02111770 end:0x02111774 kind:rodata align:4
-    .rodata.w11774     start:0x02111774 end:0x02111778 kind:rodata align:4
-    .rodata.c0WaterMat start:0x02111778 end:0x02111794 kind:rodata align:4
-    .rodata.w11794     start:0x02111794 end:0x0211191c kind:rodata align:4
-    .rodata.c0WaterTrans start:0x0211191c end:0x02111a88 kind:rodata align:4
+    .rodata     start:0x02111768 end:0x02111a88 kind:rodata align:4
     .init       start:0x02111a88 end:0x02111b60 kind:code align:4
     .ctor       start:0x02111b60 end:0x02111b68 kind:rodata align:4
-    .data.c0Pre   start:0x02111b80 end:0x02111bc4 kind:data align:32
-    .data.c0WaterName start:0x02111bc4 end:0x02111bd0 kind:data align:4
-    .data.w11bd0  start:0x02111bd0 end:0x02111c24 kind:data align:4
-    .data.c0Bta   start:0x02111c24 end:0x02111c3c kind:data align:4
-    .data.c0Mid   start:0x02111c3c end:0x02111c90 kind:data align:4
-    .data.c0Clps  start:0x02111c90 end:0x02111cb0 kind:data align:4
-    .data.c0Mid2  start:0x02111cb0 end:0x02111cd0 kind:data align:4
-    .data.c0Sw    start:0x02111cd0 end:0x02111cf0 kind:data align:4
-    .data.c0Rest  start:0x02111cf0 end:0x021124a0 kind:data align:4
+    .data       start:0x02111b80 end:0x021124a0 kind:data align:32
     .bss        start:0x021124a0 end:0x02112500 kind:bss align:32
+
+src/game/stages/d_s_map_ov012.c:
+    complete
+    .rodata start:0x02111768 end:0x02111a88
+    .data start:0x02111b80 end:0x02112300
+
 src/game/actors/d_a_obj_c0_switch.cpp:
     complete
     .text start:0x021111a0 end:0x02111450
     .init start:0x02111a88 end:0x02111af4
     .ctor start:0x02111b60 end:0x02111b64
-    .data.c0Sw start:0x02111cd0 end:0x02111cf0
     .bss start:0x021124a0 end:0x021124c8
 
 src/game/actors/d_a_obj_c0_water.cpp:
     complete
     .text start:0x02111450 end:0x02111768
-    .rodata start:0x02111768 end:0x0211176c
-    .rodata.c0WaterScale start:0x02111770 end:0x02111774
-    .rodata.c0WaterMat start:0x02111778 end:0x02111794
-    .rodata.c0WaterTrans start:0x0211191c end:0x02111a88
     .init start:0x02111af4 end:0x02111b60
     .ctor start:0x02111b64 end:0x02111b68
-    .data.c0WaterName start:0x02111bc4 end:0x02111bd0
-    .data.c0Bta start:0x02111c24 end:0x02111c3c
-    .data.c0Clps start:0x02111c90 end:0x02111cb0
     .bss start:0x021124c8 end:0x02112500
