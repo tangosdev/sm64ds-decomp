@@ -28,12 +28,6 @@
       "end": "0x021119cc"
     },
     {
-      "name": ".rodata.kaitendai",
-      "input_section": ".rodata",
-      "start": "0x02111bf4",
-      "end": "0x02111c0c"
-    },
-    {
       "name": ".data",
       "start": "0x02112320",
       "end": "0x021123fc"
@@ -127,14 +121,7 @@
       "evidence": "compiler storage includes the two-word vtable preamble at 0x02112374; the configured public address point is eight bytes later and all 32 slot relocations match without inventing a second name for the ABI preamble"
     }
   ],
-  "rodata": [
-    {
-      "symbol": "gKm3KaitendaiClps",
-      "address": "0x02111bf4",
-      "size": "0x18",
-      "evidence": "Native CLPS header plus two eight-byte entries. Header entryCount=2 and all 44 KCL prisms use indices 0 or 1; the following eight FF bytes are excluded, not asserted to be padding."
-    }
-  ],
+  "rodata": [],
   "bss": [
     {
       "symbol": "data_ov047_02112608",
@@ -999,13 +986,6 @@
           "firstDiff": null
         },
         {
-          "section": ".rodata.kaitendai",
-          "start": "0x02111bf4",
-          "end": "0x02111c0c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".data",
           "start": "0x02112320",
           "end": "0x021123fc",
@@ -1045,15 +1025,6 @@
             ],
             "desired": [
               50
-            ]
-          },
-          {
-            "section": ".rodata.kaitendai",
-            "original": [
-              31
-            ],
-            "desired": [
-              31
             ]
           },
           {

@@ -36,18 +36,6 @@
       "name": ".bss",
       "start": "0x02112658",
       "end": "0x02112720"
-    },
-    {
-      "name": ".data.km3DorifuClps",
-      "input_section": ".data",
-      "start": "0x02111a74",
-      "end": "0x02111ab4"
-    },
-    {
-      "name": ".data.km3DorifuMidClps",
-      "input_section": ".data",
-      "start": "0x02111bb4",
-      "end": "0x02111bd4"
     }
   ],
   "functions": [
@@ -94,27 +82,6 @@
       "size": "0x28",
       "binding": "STB_GLOBAL",
       "evidence": "Three resource rows and the next row's model pointer."
-    },
-    {
-      "symbol": "data_ov047_02111a74",
-      "address": "0x02111a74",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "first plank group, two entries: the 0x00000fc0 floor and the 0x00004fc0 wall"
-    },
-    {
-      "symbol": "data_ov047_02111a94",
-      "address": "0x02111a94",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "second plank group, same two entries as the first"
-    },
-    {
-      "symbol": "data_ov047_02111bb4",
-      "address": "0x02111bb4",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "third plank group, two entries: the 0x00000fc0 floor and the 0x00002fc0 wall"
     }
   ],
   "bss": [
@@ -400,20 +367,6 @@
           "start": "0x02112658",
           "end": "0x02112720",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".data.km3DorifuClps",
-          "start": "0x02111a74",
-          "end": "0x02111ab4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.km3DorifuMidClps",
-          "start": "0x02111bb4",
-          "end": "0x02111bd4",
-          "differingBytes": 0,
-          "firstDiff": null
         }
       ],
       "objectAudit": {

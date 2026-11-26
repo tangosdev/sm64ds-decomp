@@ -10,8 +10,8 @@
  * in mMountedActorIds. ov047 sinit constructs those SharedFilePtrs as
  * runtime handles 1665 / 1666; their stored file IDs are resolved at construction.
  *
- * The resource descriptor and single-entry collision-property block are
- * defined here. Retail .data order is typeinfo, descriptor, type-name,
+ * The resource descriptor is defined here; the collision-property block is
+ * stage-map data. Retail .data order is typeinfo, descriptor, type-name,
  * profile, vtable.
  *
  * daObjKm3_Kurumajiku_c_classInit is reconstructed (RTTI
@@ -50,26 +50,15 @@ typedef char
 typedef char
     Km3KurumajikuClsnFilePtr_size_must_be_8[sizeof(Km3KurumajikuClsnFilePtr) == 8 ? 1 : -1];
 
-struct Km3KurumajikuClpsBlock {
-    char magic[4];
-    unsigned short entrySize;
-    unsigned short entryCount;
-    CLPS entries[1];
-};
-typedef char Km3KurumajikuClpsBlock_size_must_be_16[sizeof(Km3KurumajikuClpsBlock) == 16 ? 1 : -1];
-
 extern Km3KurumajikuModelFilePtr gKm3KurumajikuModelFile;
 extern Km3KurumajikuClsnFilePtr gKm3KurumajikuCollisionFile;
-/* All sixteen real KCL prisms use entry zero. The following sixteen FF
- * bytes are outside this native block and remain ROM-owned. */
-extern const Km3KurumajikuClpsBlock gKm3KurumajikuClps = {
-    {'C', 'L', 'P', 'S'}, 8, 1, {{0x00000fc0, 0x000000ff}}};
+extern CLPS_Block gKm3KurumajikuClps;
 
 /* Retail data order: own typeinfo, this descriptor, type name, profile, vtable. */
 daObjKurumajiku_c::Resources gKm3KurumajikuResources = {
     &gKm3KurumajikuModelFile, &gKm3KurumajikuCollisionFile,
     /* The legacy SetFile API retains this read-only collision-property block. */
-    (CLPS_Block *)&gKm3KurumajikuClps};
+    &gKm3KurumajikuClps};
 
 #include "daObjKm3_Kurumajiku_c.h"
 #include "SpawnInfo.h"

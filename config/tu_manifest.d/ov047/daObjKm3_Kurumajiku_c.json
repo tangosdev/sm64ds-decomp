@@ -19,12 +19,6 @@
       "end": "0x021112bc"
     },
     {
-      "name": ".rodata.km3_axle_clps",
-      "input_section": ".rodata",
-      "start": "0x02111b54",
-      "end": "0x02111b64"
-    },
-    {
       "name": ".init",
       "start": "0x021116dc",
       "end": "0x02111748"
@@ -117,14 +111,7 @@
       "evidence": "compiler-emitted vtable object starts with the two-word ABI preamble at 0x02112298; the configured public address point is eight bytes later at 0x021122a0 and all 32 slot relocations match"
     }
   ],
-  "rodata": [
-    {
-      "symbol": "gKm3KurumajikuClps",
-      "address": "0x02111b54",
-      "size": "0x10",
-      "evidence": "Native8-byte header and one8-byte CLPS entry; hash-bound KCL has16real prisms all selecting index0. Following16FFbytes excluded."
-    }
-  ],
+  "rodata": [],
   "bss": [
     {
       "symbol": "gKm3KurumajikuCollisionFile",
@@ -993,13 +980,6 @@
           "firstDiff": null
         },
         {
-          "section": ".rodata.km3_axle_clps",
-          "start": "0x02111b54",
-          "end": "0x02111b64",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".init",
           "start": "0x021116dc",
           "end": "0x02111748",
@@ -1037,15 +1017,6 @@
       },
       "nontextSectionOrder": {
         "groups": [
-          {
-            "section": ".rodata.km3_axle_clps",
-            "original": [
-              27
-            ],
-            "desired": [
-              27
-            ]
-          },
           {
             "section": ".init",
             "original": [

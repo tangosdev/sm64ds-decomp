@@ -38,12 +38,6 @@
       "name": ".data",
       "start": "0x02112f08",
       "end": "0x02112f14"
-    },
-    {
-      "name": ".data.ukishimaClps",
-      "input_section": ".data",
-      "start": "0x02112550",
-      "end": "0x02112570"
     }
   ],
   "functions": [
@@ -89,13 +83,6 @@
       "address": "0x02112f08",
       "size": "0xc",
       "binding": "STB_GLOBAL"
-    },
-    {
-      "symbol": "data_ov045_02112550",
-      "address": "0x02112550",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "two entries: the 0x00000fc0 floor and the 0x00002fc0 wall"
     }
   ],
   "bss": [
@@ -385,13 +372,6 @@
           "section": ".data",
           "start": "0x02112f08",
           "end": "0x02112f14",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.ukishimaClps",
-          "start": "0x02112550",
-          "end": "0x02112570",
           "differingBytes": 0,
           "firstDiff": null
         }

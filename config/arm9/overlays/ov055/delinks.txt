@@ -1,15 +1,16 @@
     .text       start:0x021111a0 end:0x021118d4 kind:code align:32
     .init       start:0x021118d4 end:0x02111910 kind:code align:4
     .ctor       start:0x02111910 end:0x02111914 kind:rodata align:4
-    .data.lgPre   start:0x02111920 end:0x02111a90 kind:data align:32
-    .data.lgFade  start:0x02111a90 end:0x02111a94 kind:data align:4
-    .data         start:0x02111a94 end:0x02111b60 kind:data align:4
+    .data       start:0x02111920 end:0x02111b60 kind:data align:32
     .bss        start:0x02111b60 end:0x02111b80 kind:bss align:32
+src/game/stages/d_s_map_ov055.c:
+    complete
+    .data start:0x02111920 end:0x02111a90
+
 src/game/actors/d_a_luigi.cpp:
     complete
     .text start:0x021111a0 end:0x021118d4
     .init start:0x021118d4 end:0x02111910
     .ctor start:0x02111910 end:0x02111914
-    .data.lgFade start:0x02111a90 end:0x02111a94
-    .data start:0x02111a94 end:0x02111aa4
+    .data start:0x02111a90 end:0x02111aa4
     .bss start:0x02111b70 end:0x02111b80

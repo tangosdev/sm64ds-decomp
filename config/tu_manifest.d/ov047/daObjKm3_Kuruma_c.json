@@ -28,11 +28,6 @@
       "end": "0x021119d0"
     },
     {
-      "name": ".rodata",
-      "start": "0x02111ab4",
-      "end": "0x02111ac4"
-    },
-    {
       "name": ".data",
       "start": "0x021123fc",
       "end": "0x021124cc"
@@ -114,14 +109,7 @@
       "evidence": "compiler storage includes the two-word vtable preamble at 0x02112444; the configured public address point is eight bytes later and all 32 slot relocations match without inventing a second name for the ABI preamble"
     }
   ],
-  "rodata": [
-    {
-      "symbol": "gKm3KurumaClps",
-      "address": "0x02111ab4",
-      "size": "0x10",
-      "evidence": "CLPS header, stride 8, inferred count 1, one entry; KCL uses index zero. Source assignment groups the block with its consumer; original TU/section identity is unknown. Following 16 bytes of padding remain unclaimed."
-    }
-  ],
+  "rodata": [],
   "bss": [
     {
       "symbol": "gKm3KurumaCollisionFile",
@@ -1002,13 +990,6 @@
           "firstDiff": null
         },
         {
-          "section": ".rodata",
-          "start": "0x02111ab4",
-          "end": "0x02111ac4",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".data",
           "start": "0x021123fc",
           "end": "0x021124cc",
@@ -1048,15 +1029,6 @@
             ],
             "desired": [
               48
-            ]
-          },
-          {
-            "section": ".rodata",
-            "original": [
-              27
-            ],
-            "desired": [
-              27
             ]
           },
           {

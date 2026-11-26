@@ -14,8 +14,7 @@
  * daObjKm3_Kuruma_c_classInit is reconstructed (RTTI daObjKm3_Kuruma_c,
  * KM3_KURUMA registry). Retail does not store that spelling.
  *
- * The resource names describe observed uses. The CLPS block is grouped
- * with its consumer here; its original source-file ownership is unknown.
+ * The resource names describe observed uses. The CLPS block is stage-map data.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -44,24 +43,13 @@ typedef char Km3KurumaClsnFilePtr_size_must_be_8[sizeof(Km3KurumaClsnFilePtr) ==
 extern Km3KurumaModelFilePtr gKm3KurumaModelFile;
 extern Km3KurumaClsnFilePtr gKm3KurumaCollisionFile;
 
-struct Km3KurumaClpsBlock {
-    char magic[4];
-    unsigned short entrySize;
-    unsigned short entryCount;
-    CLPS entries[1];
-};
-typedef char Km3KurumaClpsBlock_size_must_be_16[sizeof(Km3KurumaClpsBlock) == 16 ? 1 : -1];
-
-/* One property entry: all twelve KCL prisms use index zero. The +6
- * halfword is interpreted as the count; the lookup checks only entrySize. */
-extern const Km3KurumaClpsBlock gKm3KurumaClps = {
-    {'C', 'L', 'P', 'S'}, 8, 1, {{0x00000fc0, 0x000000ff}}};
+extern CLPS_Block gKm3KurumaClps;
 
 /* Defined here because this TU owns the descriptor in overlay .data. */
 daObjKuruma_c::Resources gKm3KurumaResources = {
     &gKm3KurumaModelFile, &gKm3KurumaCollisionFile,
     /* SetFile retains this read-only block through its opaque legacy API. */
-    (CLPS_Block *)&gKm3KurumaClps};
+    &gKm3KurumaClps};
 
 #include "daObjKm3_Kuruma_c.h"
 #include "SpawnInfo.h"

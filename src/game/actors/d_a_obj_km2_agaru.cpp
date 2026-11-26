@@ -16,11 +16,6 @@ enum d_a_obj_km2_agaru_AssetId { ASSET_KM2_AGARU_BMD = 0x065b, ASSET_KM2_AGARU_K
 #include "SharedFilePtr.h"
 
 struct KCL_File;
-/* CLPS.h keeps the block opaque: an 8-byte header whose halfword at +4 is
-   the entry stride, then N entries. This TU's block is 0x20 bytes. */
-struct CLPS_Block {
-    u32 words[8];
-};
 
 /* Retail constructs these 8-byte handles in this order and registers
  * their destructors. The wrapper names are local; the ctor/dtor
@@ -37,9 +32,7 @@ struct AgaruCollisionFilePtr : SharedFilePtr {
 
 extern AgaruCollisionFilePtr data_ov045_02113180; /* the KCL */
 extern AgaruModelFilePtr data_ov045_02113188;     /* the BMD */
-CLPS_Block data_ov045_021125d0 = {
-    0x53504c43, 0x00020008, 0x00000fc0, 0x000000ff, 0x00000fc4, 0x000000ff, 0xffffffff, 0xffffffff,
-};
+extern CLPS_Block data_ov045_021125d0;
 
 enum {
     kPlayerActorID = 0xbf,

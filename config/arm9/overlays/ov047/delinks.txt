@@ -1,23 +1,17 @@
     .text       start:0x021111a0 end:0x021116dc kind:code align:32
     .init       start:0x021116dc end:0x021119c4 kind:code align:4
     .ctor       start:0x021119c4 end:0x021119d4 kind:rodata align:4
-    .data_pre start:0x021119e0 end:0x02111a74 kind:data align:32
-    .data.km3DorifuClps start:0x02111a74 end:0x02111ab4 kind:data align:4
-    .rodata     start:0x02111ab4 end:0x02111ac4 kind:rodata align:4
-    .data.before_km3_axle_clps start:0x02111ac4 end:0x02111b54 kind:data align:4
-    .rodata.km3_axle_clps start:0x02111b54 end:0x02111b64 kind:rodata align:4
-    .data_mid start:0x02111b64 end:0x02111bb4 kind:data align:4
-    .data.km3DorifuMidClps start:0x02111bb4 end:0x02111bd4 kind:data align:4
-    .data.w11bd4 start:0x02111bd4 end:0x02111bf4 kind:data align:4
-    .rodata.kaitendai start:0x02111bf4 end:0x02111c0c kind:rodata align:4
-    .data       start:0x02111c0c end:0x021125e0 kind:data align:4
+    .data       start:0x021119e0 end:0x021125e0 kind:data align:32
     .bss        start:0x021125e0 end:0x02112720 kind:bss align:32
+src/game/stages/d_s_map_ov047.c:
+    complete
+    .data start:0x021119e0 end:0x0211224c
+
 src/game/actors/d_a_obj_km3_kurumajiku.cpp:
     complete
     .text start:0x021111a0 end:0x021112bc
     .init start:0x021116dc end:0x02111748
     .ctor start:0x021119c4 end:0x021119c8
-    .rodata.km3_axle_clps start:0x02111b54 end:0x02111b64
     .data start:0x0211224c end:0x02112320
     .bss start:0x021125e0 end:0x02112608
 
@@ -26,7 +20,6 @@ src/game/actors/d_a_obj_km3_kaitendai.cpp:
     .text start:0x021112bc end:0x021113f8
     .init start:0x02111748 end:0x021117b4
     .ctor start:0x021119c8 end:0x021119cc
-    .rodata.kaitendai start:0x02111bf4 end:0x02111c0c
     .data start:0x02112320 end:0x021123fc
     .bss start:0x02112608 end:0x02112630
 
@@ -35,7 +28,6 @@ src/game/actors/d_a_obj_km3_kuruma.cpp:
     .text start:0x021113f8 end:0x02111510
     .init start:0x021117b4 end:0x0211181c
     .ctor start:0x021119cc end:0x021119d0
-    .rodata start:0x02111ab4 end:0x02111ac4
     .data start:0x021123fc end:0x021124cc
     .bss start:0x02112630 end:0x02112658
 
@@ -44,7 +36,5 @@ src/game/actors/d_a_obj_km3_dorifu.cpp:
     .text start:0x02111510 end:0x021116dc
     .init start:0x0211181c end:0x021119c4
     .ctor start:0x021119d0 end:0x021119d4
-    .data.km3DorifuClps start:0x02111a74 end:0x02111ab4
-    .data.km3DorifuMidClps start:0x02111bb4 end:0x02111bd4
     .data start:0x02112508 end:0x02112530
     .bss start:0x02112658 end:0x02112720
