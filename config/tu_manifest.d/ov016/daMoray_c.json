@@ -30,7 +30,8 @@
     {
       "name": ".data.moray",
       "start": "0x02114878",
-      "end": "0x02114908"
+      "end": "0x02114908",
+      "input_section": ".data"
     },
     {
       "name": ".data.morayBend",

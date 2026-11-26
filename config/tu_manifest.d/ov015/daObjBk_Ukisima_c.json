@@ -37,7 +37,8 @@
     {
       "name": ".data.post",
       "start": "0x021147a4",
-      "end": "0x02114868"
+      "end": "0x02114868",
+      "input_section": ".data"
     },
     {
       "name": ".bss",
