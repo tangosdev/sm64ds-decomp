@@ -1,4 +1,4 @@
-typedef void (*CopyFn)(void *self, void *buf, int len);
+typedef void (*CopyFn)(void *self, const void *buf, int len);
 
 struct Stream {
     char pad[0x10];

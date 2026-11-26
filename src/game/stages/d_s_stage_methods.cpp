@@ -3935,7 +3935,6 @@ int dScStage_c::CanPause() {
  */
 
 void dScStage_c::OnPendingDestroy() {
-    this;
 }
 
 void func_020391f0(void);

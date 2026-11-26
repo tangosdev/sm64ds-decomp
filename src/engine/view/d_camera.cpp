@@ -618,7 +618,6 @@ int dCamera_c::Render()
 /* No-op override; the camera does nothing extra when flagged for destruction. */
 void dCamera_c::OnPendingDestroy()
 {
-    this;
 }
 
 /* Frees the owned fixed-view-position record at 0x148 and reports success.

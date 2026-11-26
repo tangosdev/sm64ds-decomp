@@ -119,7 +119,7 @@ extern int gWaterfallSoundsDisabled[];
 /* Record fields are unaligned little-endian, so a script spells them byte by
  * byte. A pointer argument cannot be a constant byte, so each KS_PTR becomes a
  * store in this file's static initializer. */
-#define KS_S16(v) (v), ((v) >> 8)
+#define KS_S16(v) ((v) & 0xff), (((v) >> 8) & 0xff)
 #define KS_PTR(p) (u32) & (p) & 0xff, ((u32) & (p) >> 8) & 0xff, ((u32) & (p) >> 16) & 0xff, ((u32) & (p) >> 24) & 0xff
 
 /* The camera paths below are CutsceneSpline objects (CutsceneSpline.h).

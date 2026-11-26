@@ -103,6 +103,7 @@ static void MBi_SetSegmentInfo(const RomHeaderView *mbRomHeaderp, const MbSegmen
                                MbSegmentInfo *seg_infop, u32 *child_recv_buff_addr);
 static void MBi_ReadSegmentHeader(const MBiSegmentHeaderInfo *p, u32 top, u32 bottom, BOOL clean);
 static BOOL IsAbleToLoad(u8 segment_no, u32 address, u32 size);
+BOOL MBi_MakeBlockInfoTable(MB_BlockInfoTable *, MbDownloadFileInfoHeader *);
 
 u32 MB_GetSegmentLength(FSFile *file) {
     enum { ROM_HEADER_SIZE_SMALL = 0x60 };

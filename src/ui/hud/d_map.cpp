@@ -352,7 +352,6 @@ void dMap_c::UpdateLevelSpecific()
  */
 s32 dMap_c::CleanupResources()
 {
-    this;
     return 1;
 }
 
@@ -361,7 +360,6 @@ s32 dMap_c::CleanupResources()
  */
 void dMap_c::OnPendingDestroy()
 {
-    this;
 }
 
 static inline int IsVsMode(void) {
