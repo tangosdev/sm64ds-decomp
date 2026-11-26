@@ -4,13 +4,17 @@
     .ctor       start:0x02114dd0 end:0x02114ddc kind:rodata align:4
     .data       start:0x02114de0 end:0x02115c80 kind:data align:32
     .bss        start:0x02115c80 end:0x02115ec0 kind:bss align:32
+src/game/stages/d_s_map_ov030.c:
+    complete
+    .rodata start:0x02114690 end:0x02114824
+    .data start:0x02114de0 end:0x02115934
+
 src/game/actors/d_a_obj_hm_bskt.cpp:
     complete
     .text start:0x021111a0 end:0x0211155c
     .init start:0x0211484c end:0x021148b8
     .ctor start:0x02114dd0 end:0x02114dd4
     .bss start:0x02115c80 end:0x02115ca8
-    .data start:0x02114ee4 end:0x02114f04
 
 src/game/actors/d_a_obj_hm_maruta.cpp:
     complete

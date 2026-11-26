@@ -31,11 +31,6 @@
       "name": ".bss",
       "start": "0x02115c80",
       "end": "0x02115ca8"
-    },
-    {
-      "name": ".data",
-      "start": "0x02114ee4",
-      "end": "0x02114f04"
     }
   ],
   "functions": [
@@ -96,15 +91,7 @@
       "ordinal": 7
     }
   ],
-  "data": [
-    {
-      "symbol": "data_ov030_02114ee4",
-      "address": "0x02114ee4",
-      "size": "0x20",
-      "binding": "STB_GLOBAL",
-      "evidence": "CLPS block the basket mesh collider is handed: CLPS header, layer 1, entry 0x01000fc0, all-ones terminator"
-    }
-  ],
+  "data": [],
   "production_mode": "intact-object",
   "bss": [
     {
@@ -411,7 +398,8 @@
         "_ZTS7fBase_c",
         "_ZTS8dActor_c",
         "_ZTV13daObjHmBskt_c"
-      ]
+      ],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",
@@ -466,13 +454,6 @@
           "start": "0x02115c80",
           "end": "0x02115ca8",
           "comparison": "NOBITS -- symbol/module gates"
-        },
-        {
-          "section": ".data",
-          "start": "0x02114ee4",
-          "end": "0x02114f04",
-          "differingBytes": 0,
-          "firstDiff": null
         }
       ],
       "objectAudit": {
