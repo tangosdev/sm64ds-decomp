@@ -2339,29 +2339,9 @@ src/unnamed/arm9/0207/func_02071910.cpp:
     complete
     .text start:0x02071910 end:0x02071974
 
-src/sys_writec.c:
+src/lib/runtime/semihosted_console_io.c:
     complete
-    .text start:0x02071974 end:0x02071988
-
-src/sys_readc.c:
-    complete
-    .text start:0x02071988 end:0x0207199c
-
-src/sys_exit.c:
-    complete
-    .text start:0x0207199c end:0x020719ac
-
-src/__close_console.c:
-    complete
-    .text start:0x020719ac end:0x020719b4
-
-src/__write_console.c:
-    complete
-    .text start:0x020719b4 end:0x020719ec
-
-src/__read_console.c:
-    complete
-    .text start:0x020719ec end:0x02071a50
+    .text start:0x02071974 end:0x02071a50
 
 src/unnamed/arm9/0207/func_02071a50.cpp:
     complete
