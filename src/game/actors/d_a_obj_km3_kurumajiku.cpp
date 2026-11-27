@@ -31,27 +31,8 @@ enum d_a_obj_km3_kurumajiku_AssetId {
 #include "CLPS.h"
 #include "daObjKurumajiku_c.h"
 
-/* The constructor resolves each runtime asset handle to the stored ID.
- * The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct Km3KurumajikuModelFilePtr : SharedFilePtr {
-    Km3KurumajikuModelFilePtr(unsigned int fileID);
-    ~Km3KurumajikuModelFilePtr();
-};
-
-struct Km3KurumajikuClsnFilePtr : SharedFilePtr {
-    Km3KurumajikuClsnFilePtr(unsigned int fileID);
-    ~Km3KurumajikuClsnFilePtr();
-};
-
-typedef char
-    Km3KurumajikuModelFilePtr_size_must_be_8[sizeof(Km3KurumajikuModelFilePtr) == 8 ? 1 : -1];
-typedef char
-    Km3KurumajikuClsnFilePtr_size_must_be_8[sizeof(Km3KurumajikuClsnFilePtr) == 8 ? 1 : -1];
-
-extern Km3KurumajikuModelFilePtr gKm3KurumajikuModelFile;
-extern Km3KurumajikuClsnFilePtr gKm3KurumajikuCollisionFile;
+extern ModelFile gKm3KurumajikuModelFile;
+extern ClsnFile gKm3KurumajikuCollisionFile;
 extern CLPS_Block gKm3KurumajikuClps;
 
 /* Retail data order: own typeinfo, this descriptor, type name, profile, vtable. */
@@ -90,5 +71,5 @@ s32 daObjKm3_Kurumajiku_c::CleanupResources() {
 
 /* Source order is construction order: model file 1665, then the collision
  * file 1666. The compiler registers each destructor beside the object. */
-Km3KurumajikuModelFilePtr gKm3KurumajikuModelFile(ASSET_KM3_KURUMAJIKU_BMD);
-Km3KurumajikuClsnFilePtr gKm3KurumajikuCollisionFile(ASSET_KM3_KURUMAJIKU_KCL);
+ModelFile gKm3KurumajikuModelFile(ASSET_KM3_KURUMAJIKU_BMD);
+ClsnFile gKm3KurumajikuCollisionFile(ASSET_KM3_KURUMAJIKU_KCL);

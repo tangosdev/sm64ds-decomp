@@ -31,9 +31,7 @@
  * NOTES:
  * - UpdateModelTransform (0x020bc488) is this class's only non-virtual
  *   member; InitResources is its one caller.
- * - data_ov002_0210e0d4 / _0210e0dc keep their ROM bss names. The model
- *   handle constructs through ModelFile::ModelFile; the animation handle
- *   constructs through AnimFile::AnimFile.
+ * - data_ov002_0210e0d4 / _0210e0dc keep their ROM bss names.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -43,22 +41,8 @@ enum d_a_obj_wakame_AssetId { ASSET_OBJ_WAKAME_BMD = 0x0495, ASSET_OBJ_WAKAME_WA
 #include "SharedFilePtr.h"
 #include "math/MtxStack.h"
 
-/* dExtSimpleModel_c: ModelFile::ModelFile / ModelFile::~ModelFile. Animation: AnimFile::AnimFile /
- * AnimFile::~AnimFile. filePtr is the file LoadFile just filled in. */
-struct WakameModelFilePtr : SharedFilePtr {
-    WakameModelFilePtr(unsigned int fileId);
-    ~WakameModelFilePtr();
-};
-struct WakameAnimationFileHandle : SharedFilePtr {
-    WakameAnimationFileHandle(unsigned int fileId);
-    ~WakameAnimationFileHandle();
-};
-typedef char WakameModelFilePtr_size_must_be_8[sizeof(WakameModelFilePtr) == 8 ? 1 : -1];
-typedef char
-    WakameAnimationFileHandle_size_must_be_8[sizeof(WakameAnimationFileHandle) == 8 ? 1 : -1];
-
-extern WakameModelFilePtr data_ov002_0210e0dc;        /* BMD model */
-extern WakameAnimationFileHandle data_ov002_0210e0d4; /* BCA animation */
+extern ModelFile data_ov002_0210e0dc; /* BMD model */
+extern AnimFile data_ov002_0210e0d4;  /* BCA animation */
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -150,7 +134,6 @@ void daObjWakame_c::UpdateModelTransform() {
  * the leaf measurement that makes it safe.) */
 
 /* Construction order is the retail initializer: model 1173, then animation
- * 1174. The constructors and destructors are the ROM veneers the manifest
- * aliases; mwcc emits __sinit_d_a_obj_wakame.cpp from these definitions. */
-WakameModelFilePtr data_ov002_0210e0dc(ASSET_OBJ_WAKAME_BMD);
-WakameAnimationFileHandle data_ov002_0210e0d4(ASSET_OBJ_WAKAME_WAIT_BCA);
+ * 1174; mwcc emits __sinit_d_a_obj_wakame.cpp from these definitions. */
+ModelFile data_ov002_0210e0dc(ASSET_OBJ_WAKAME_BMD);
+AnimFile data_ov002_0210e0d4(ASSET_OBJ_WAKAME_WAIT_BCA);

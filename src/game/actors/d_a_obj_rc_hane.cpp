@@ -63,26 +63,16 @@ enum d_a_obj_rc_hane_AssetId { ASSET_RC_HANE_BMD = 0x06a6 };
 #include "math/CalcLib.h"
 #include "nitro/fx/fx_trig.h"
 
-/* 8-byte model handle. The constructor and destructor are the retail
- * ModelFile::ModelFile / ModelFile::~ModelFile pair; the manifest aliases the generated
- * names onto those ROM symbols. */
-struct RcHaneModelFilePtr : SharedFilePtr {
-    RcHaneModelFilePtr(unsigned int fileID);
-    ~RcHaneModelFilePtr();
-};
-
-typedef char RcHaneModelFilePtr_size_must_be_8[sizeof(RcHaneModelFilePtr) == 8 ? 1 : -1];
-
 /* Externs: the union of the legacy files', kept at their legacy spelling.
  *
- * data_ov036_02114070 is a real SharedFilePtr in ov036 carrying no coined
+ * data_ov036_02114070 is a real ModelFile in ov036 carrying no coined
  * alias, so the address-true name stands.
  *
  * gScratchMtx (math/MtxStack.h) is the global scratch Matrix4x3 the
  * Matrix4x3_* helpers compose into; UpdateModelTransform below copies the
  * finished matrix out of it. */
 
-extern RcHaneModelFilePtr data_ov036_02114070; /* the wing's BMD */
+extern ModelFile data_ov036_02114070; /* the wing's BMD */
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -217,7 +207,7 @@ s32 daObjRc_Hane_c::CleanupResources() {
  */
 
 /* File 1702. The compiler registers ModelFile::~ModelFile beside the object. */
-RcHaneModelFilePtr data_ov036_02114070(ASSET_RC_HANE_BMD);
+ModelFile data_ov036_02114070(ASSET_RC_HANE_BMD);
 
 extern "C" SpawnInfo<daObjRc_Hane_c> g_profile_RC_HANE = {
     daObjRc_Hane_c_classInit, 125, 255, 0x00000002, 0x00000000, 0x001f4000, 0x01f40000, 0x01f40000};

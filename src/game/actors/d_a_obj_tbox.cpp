@@ -25,21 +25,6 @@ enum daObjTbox_c_AssetId { ASSET_T_BOX_BMD = 0x04a6, ASSET_T_BOX_OPEN_BCA = 0x04
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
-/* The resource handles as the ROM lays them out: {id, loaded file}. The
-   model handle constructs through ModelFile::ModelFile and destroys through
-   ModelFile::~ModelFile; the animation handle constructs through
-   AnimFile::AnimFile and destroys through AnimFile::~AnimFile.
-   The manifest aliases those undefined members onto the ROM symbols. */
-struct TboxModelFilePtr : SharedFilePtr {
-    TboxModelFilePtr(u32 fileID);
-    ~TboxModelFilePtr();
-};
-
-struct TboxAnimationFileHandle : SharedFilePtr {
-    TboxAnimationFileHandle(u32 fileID);
-    ~TboxAnimationFileHandle();
-};
-
 extern "C" {
 s32 AngleDiff(s32 a, s32 b);
 }
@@ -48,8 +33,8 @@ void func_02012694(u32 code, const Vector3 *pos);
 /* The overlay's three {init, behavior} pointer-to-member pairs, filled by the
  * static initializer this TU now carries at 0x0211b59c. */
 extern daObjTbox_c::StateFunc data_ov064_0211c98c[][2];
-extern TboxModelFilePtr data_ov064_0211c96c;
-extern TboxAnimationFileHandle data_ov064_0211c964;
+extern ModelFile data_ov064_0211c96c;
+extern AnimFile data_ov064_0211c964;
 extern SharedFilePtr data_ov002_0210d9a8;
 extern SharedFilePtr data_ov002_0210da38;
 
@@ -258,11 +243,9 @@ void daObjTbox_c::UpdateModelTransform() {
 /* D1 and D0 come from the inline destructor in daObjTbox_c.h. */
 
 /* The two file-scope resource handles, in retail initializer order: the
-   model file (ModelFile::ModelFile / ModelFile::~ModelFile), then the animation file
-   (AnimFile::AnimFile / AnimFile::~AnimFile). The manifest
-   aliases each wrapper ctor/dtor onto those ROM symbols. */
-TboxModelFilePtr data_ov064_0211c96c(ASSET_T_BOX_BMD);
-TboxAnimationFileHandle data_ov064_0211c964(ASSET_T_BOX_OPEN_BCA);
+   model file, then the animation file. */
+ModelFile data_ov064_0211c96c(ASSET_T_BOX_BMD);
+AnimFile data_ov064_0211c964(ASSET_T_BOX_OPEN_BCA);
 
 /* One {init, behavior} pointer-to-member pair per state. mwcc cannot
    link-time-initialize them, so the initializer copies six descriptor

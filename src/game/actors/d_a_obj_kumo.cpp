@@ -21,11 +21,8 @@
  * What stays: inline destructor (out-of-line emits D0 before D1).
  * What stays: data_ov039_021118e0 is this TU's own load-count int, kept as a
  *   plain definition below; gOV039ObjKumoModelFile is the model handle the
- *   compiler constructs at load (file ID 1141), so it is a
- *   SharedFilePtr-derived object, not an extern array. Its constructor and
- *   destructor are the ROM's SharedFilePtr pair (ModelFile::ModelFile /
- *   ModelFile::~ModelFile); this TU declares but never defines them, and the
- *   manifest aliases those two undefined members onto the ROM symbols.
+ *   compiler constructs at load (file ID 1141), so it is a ModelFile
+ *   object, not an extern array.
  *   data_ov039_021118f8 pads the .bss claim to the section end; see the
  *   definition below for the measurement.
  */
@@ -38,16 +35,7 @@ enum d_a_obj_kumo_AssetId { ASSET_OBJ_KUMO_BMD = 0x0475 };
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
-/* dExtSimpleModel_c-file handle. The derived constructor and destructor are the retail
- * SharedFilePtr pair (ModelFile::ModelFile / ModelFile::~ModelFile); this TU declares but
- * never defines them. The cartridge keeps its 8 bytes between 0x021118e4 and
- * 0x021118ec. */
-struct KumoModelFilePtr : SharedFilePtr {
-    KumoModelFilePtr(u32 fileID);
-    ~KumoModelFilePtr();
-};
-
-extern KumoModelFilePtr gOV039ObjKumoModelFile;
+extern ModelFile gOV039ObjKumoModelFile;
 extern int data_ov039_021118e0;
 
 /* -------------------------------------------------------------------------- */
@@ -134,7 +122,7 @@ void daObjKumo_c::UpdateModelMatrix() {
  * constructs the handle with file ID 1141 and registers its destructor,
  * exactly the two calls the retired handwritten sinit transcribed. */
 int data_ov039_021118e0;
-KumoModelFilePtr gOV039ObjKumoModelFile(ASSET_OBJ_KUMO_BMD);
+ModelFile gOV039ObjKumoModelFile(ASSET_OBJ_KUMO_BMD);
 
 /* Trailing .bss the module reserves but no relocation names. MEASURED: the
  * overlay header keeps 0x20 .bss bytes (0x021118e0..0x02111900) while the

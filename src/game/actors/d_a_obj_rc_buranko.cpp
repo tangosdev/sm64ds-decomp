@@ -50,25 +50,9 @@ enum d_a_obj_rc_buranko_AssetId { ASSET_RC_BURANKO_BMD = 0x0695, ASSET_RC_BURANK
 #include "dBgW.h"
 #include "math/MtxStack.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct RcBurankoModelFilePtr : SharedFilePtr {
-    RcBurankoModelFilePtr(unsigned int fileID);
-    ~RcBurankoModelFilePtr();
-};
-
-struct RcBurankoClsnFilePtr : SharedFilePtr {
-    RcBurankoClsnFilePtr(unsigned int fileID);
-    ~RcBurankoClsnFilePtr();
-};
-
-typedef char RcBurankoModelFilePtr_size_must_be_8[sizeof(RcBurankoModelFilePtr) == 8 ? 1 : -1];
-typedef char RcBurankoClsnFilePtr_size_must_be_8[sizeof(RcBurankoClsnFilePtr) == 8 ? 1 : -1];
-
 struct KCL_File;
-extern RcBurankoClsnFilePtr data_ov036_02114020;  /* the collision KCL  */
-extern RcBurankoModelFilePtr data_ov036_02114028; /* the platform's BMD */
+extern ClsnFile data_ov036_02114020;  /* the collision KCL  */
+extern ModelFile data_ov036_02114028; /* the platform's BMD */
 extern CLPS_Block data_ov036_02112b68;
 
 /* -------------------------------------------------------------------------- */
@@ -174,5 +158,5 @@ void daObjRcBuranko_c::UpdateModelMatrix() {
 
 /* Source order is construction order: model file 1685, then the collision
  * file 1686. The compiler registers each destructor beside the object. */
-RcBurankoModelFilePtr data_ov036_02114028(ASSET_RC_BURANKO_BMD);
-RcBurankoClsnFilePtr data_ov036_02114020(ASSET_RC_BURANKO_KCL);
+ModelFile data_ov036_02114028(ASSET_RC_BURANKO_BMD);
+ClsnFile data_ov036_02114020(ASSET_RC_BURANKO_KCL);

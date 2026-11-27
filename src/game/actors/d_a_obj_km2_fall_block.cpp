@@ -25,24 +25,10 @@ enum d_a_obj_km2_fall_block_AssetId {
 #include "daObjKm2_Fall_Block_c.h"
 #include "SharedFilePtr.h"
 
-/* The model handle constructs through ModelFile::ModelFile and destroys through
- * ModelFile::~ModelFile. The collision handle constructs through ClsnFile::ClsnFile and
- * destroys through ClsnFile::~ClsnFile. The descriptor stays ROM data. */
-struct Km2FallModelFilePtr : SharedFilePtr {
-    Km2FallModelFilePtr(unsigned int fileId);
-    ~Km2FallModelFilePtr();
-};
-struct Km2FallClsnFileHandle : SharedFilePtr {
-    Km2FallClsnFileHandle(unsigned int fileId);
-    ~Km2FallClsnFileHandle();
-};
-typedef char Km2FallModelFilePtr_size_must_be_8[sizeof(Km2FallModelFilePtr) == 8 ? 1 : -1];
-typedef char Km2FallClsnFileHandle_size_must_be_8[sizeof(Km2FallClsnFileHandle) == 8 ? 1 : -1];
-
 #include "ResourceDescriptor.h"
 
-extern Km2FallModelFilePtr gKm2KuzureModelFile;
-extern Km2FallClsnFileHandle gKm2KuzureCollisionFile;
+extern ModelFile gKm2KuzureModelFile;
+extern ClsnFile gKm2KuzureCollisionFile;
 extern CLPS_Block data_ov045_021125f0;
 
 ResourceDescriptor data_ov045_021130ac = {
@@ -65,8 +51,8 @@ s32 daObjKm2_Fall_Block_c::CleanupResources() {
 
 /* Retail construction order: model 1633, then collision 1634.
  * mwcc emits __sinit_d_a_obj_km2_fall_block.cpp. */
-Km2FallModelFilePtr gKm2KuzureModelFile(ASSET_KM2_KUZURE_BMD);
-Km2FallClsnFileHandle gKm2KuzureCollisionFile(ASSET_KM2_KUZURE_KCL);
+ModelFile gKm2KuzureModelFile(ASSET_KM2_KUZURE_BMD);
+ClsnFile gKm2KuzureCollisionFile(ASSET_KM2_KUZURE_KCL);
 
 /* ROM picture of the unclaimed run. Interior labels stay in symbols.txt. */
 u8 data_ov045_02113270[0x10];

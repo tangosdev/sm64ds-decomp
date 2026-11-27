@@ -41,22 +41,8 @@ enum daObjPushblock_c_AssetId {
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
-/* The model handle constructs through ModelFile::ModelFile and destroys through
- * ModelFile::~ModelFile; the mesh-collision handle constructs through ClsnFile::ClsnFile
- * and destroys through ClsnFile::~ClsnFile. The manifest aliases
- * those undefined members onto the ROM symbols. */
-struct PushblockModelFilePtr : SharedFilePtr {
-    PushblockModelFilePtr(u32 fileID);
-    ~PushblockModelFilePtr();
-};
-
-struct PushblockClsnFilePtr : SharedFilePtr {
-    PushblockClsnFilePtr(u32 fileID);
-    ~PushblockClsnFilePtr();
-};
-
-extern PushblockModelFilePtr data_ov002_0210df9c;
-extern PushblockClsnFilePtr data_ov002_0210df94;
+extern ModelFile data_ov002_0210df9c;
+extern ClsnFile data_ov002_0210df94;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -298,5 +284,5 @@ void daObjPushblock_c::Kill() {
 
 /* Order is the retail initializer: model 0x486, mesh-collision 0x487. mwcc
  * emits __sinit_d_a_obj_pushblock.cpp from these two definitions. */
-PushblockModelFilePtr data_ov002_0210df9c(ASSET_OBJ_PUSHBLOCK_BMD);
-PushblockClsnFilePtr data_ov002_0210df94(ASSET_OBJ_PUSHBLOCK_KCL);
+ModelFile data_ov002_0210df9c(ASSET_OBJ_PUSHBLOCK_BMD);
+ClsnFile data_ov002_0210df94(ASSET_OBJ_PUSHBLOCK_KCL);

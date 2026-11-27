@@ -13,12 +13,8 @@
  * The five-entry table is defined in this TU (retail places it
  * after the profile, before the vtable).
  *
- * The ten file handles at 02112658..021126a8 are defined here too.
- * dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile; collision handles construct through ClsnFile::ClsnFile
- * and destroy through ClsnFile::~ClsnFile. The manifest
- * aliases those undefined members onto the ROM symbols, and mwcc
- * emits __sinit_d_a_obj_km1_dorifu.cpp from the definitions at the
+ * The ten file handles at 02112658..021126a8 are defined here too;
+ * mwcc emits __sinit_d_a_obj_km1_dorifu.cpp from the definitions at the
  * bottom (retail initializer order, file IDs 0x649..0x652).
  *
  * daObjKm1_Dorifu_c_classInit is reconstructed (RTTI
@@ -27,8 +23,7 @@
  *
  * The CLPS names follow the km1_dorifu0..4 collision assets. Each
  * block has two entries, both used by that asset's KCL triangles.
- * These are inferred names; the file handles retain numeric names
- * and their local storage wrappers still need fuller reconstruction.
+ * These are inferred names; the file handles retain numeric names.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -49,30 +44,20 @@ enum d_a_obj_km1_dorifu_AssetId {
 #include "SpawnInfo.h"
 #include "CLPS.h"
 
-struct DorifuModelFilePtr : SharedFilePtr {
-    DorifuModelFilePtr(u32 fileID);
-    ~DorifuModelFilePtr();
-};
-
-struct DorifuCollisionFilePtr : SharedFilePtr {
-    DorifuCollisionFilePtr(u32 fileID);
-    ~DorifuCollisionFilePtr();
-};
-
-extern DorifuModelFilePtr data_ov043_021126a0;
-extern DorifuCollisionFilePtr data_ov043_02112678;
+extern ModelFile data_ov043_021126a0;
+extern ClsnFile data_ov043_02112678;
 extern CLPS_Block sKm1Dorifu0Clps;
-extern DorifuModelFilePtr data_ov043_02112680;
-extern DorifuCollisionFilePtr data_ov043_02112658;
+extern ModelFile data_ov043_02112680;
+extern ClsnFile data_ov043_02112658;
 extern CLPS_Block sKm1Dorifu1Clps;
-extern DorifuModelFilePtr data_ov043_02112668;
-extern DorifuCollisionFilePtr data_ov043_02112670;
+extern ModelFile data_ov043_02112668;
+extern ClsnFile data_ov043_02112670;
 extern CLPS_Block sKm1Dorifu2Clps;
-extern DorifuModelFilePtr data_ov043_02112688;
-extern DorifuCollisionFilePtr data_ov043_02112698;
+extern ModelFile data_ov043_02112688;
+extern ClsnFile data_ov043_02112698;
 extern CLPS_Block sKm1Dorifu3Clps;
-extern DorifuModelFilePtr data_ov043_02112690;
-extern DorifuCollisionFilePtr data_ov043_02112660;
+extern ModelFile data_ov043_02112690;
+extern ClsnFile data_ov043_02112660;
 extern CLPS_Block sKm1Dorifu4Clps;
 
 daObjKm1_Dorifu_c *daObjKm1_Dorifu_c_classInit() {
@@ -107,15 +92,13 @@ s32 daObjKm1_Dorifu_c::CleanupResources() {
 /* Order is the retail initializer: models 0x649/0x64b/0x64d/0x64f/0x651,
  * then collisions 0x64a/0x64c/0x64e/0x650/0x652. mwcc emits
  * __sinit_d_a_obj_km1_dorifu.cpp from these ten definitions. */
-DorifuModelFilePtr data_ov043_021126a0(ASSET_KM1_DORIFU0_BMD);
-DorifuModelFilePtr data_ov043_02112680(ASSET_KM1_DORIFU1_BMD);
-DorifuModelFilePtr data_ov043_02112668(ASSET_KM1_DORIFU2_BMD);
-DorifuModelFilePtr data_ov043_02112688(ASSET_KM1_DORIFU3_BMD);
-DorifuModelFilePtr data_ov043_02112690(ASSET_KM1_DORIFU4_BMD);
-DorifuCollisionFilePtr data_ov043_02112678(ASSET_KM1_DORIFU0_KCL);
-DorifuCollisionFilePtr data_ov043_02112658(ASSET_KM1_DORIFU1_KCL);
-DorifuCollisionFilePtr data_ov043_02112670(ASSET_KM1_DORIFU2_KCL);
-DorifuCollisionFilePtr data_ov043_02112698(ASSET_KM1_DORIFU3_KCL);
-DorifuCollisionFilePtr data_ov043_02112660(ASSET_KM1_DORIFU4_KCL);
-
-
+ModelFile data_ov043_021126a0(ASSET_KM1_DORIFU0_BMD);
+ModelFile data_ov043_02112680(ASSET_KM1_DORIFU1_BMD);
+ModelFile data_ov043_02112668(ASSET_KM1_DORIFU2_BMD);
+ModelFile data_ov043_02112688(ASSET_KM1_DORIFU3_BMD);
+ModelFile data_ov043_02112690(ASSET_KM1_DORIFU4_BMD);
+ClsnFile data_ov043_02112678(ASSET_KM1_DORIFU0_KCL);
+ClsnFile data_ov043_02112658(ASSET_KM1_DORIFU1_KCL);
+ClsnFile data_ov043_02112670(ASSET_KM1_DORIFU2_KCL);
+ClsnFile data_ov043_02112698(ASSET_KM1_DORIFU3_KCL);
+ClsnFile data_ov043_02112660(ASSET_KM1_DORIFU4_KCL);

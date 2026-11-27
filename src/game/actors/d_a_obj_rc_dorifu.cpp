@@ -51,32 +51,16 @@ extern CLPS_Block data_ov036_02112be8;
 
 extern CLPS_Block data_ov036_02112ae8;
 
-/* File-scope objects at the end of this file construct the ten resource
- * handles (model files 1690/1692/1694/1696/1698, collision files
- * 1691/1693/1695/1697/1699). mwcc emits __sinit_d_a_obj_rc_dorifu.cpp from
- * those definitions. The wrapper names are local; the handle constructors
- * and destructors are the ROM resource-family functions, aliased in the
- * manifest. */
-struct RcDorifuModelFilePtr : SharedFilePtr {
-    RcDorifuModelFilePtr(u32 fileID);
-    ~RcDorifuModelFilePtr();
-};
-
-struct RcDorifuCollisionFilePtr : SharedFilePtr {
-    RcDorifuCollisionFilePtr(u32 fileID);
-    ~RcDorifuCollisionFilePtr();
-};
-
-extern RcDorifuModelFilePtr data_ov036_0211411c;
-extern RcDorifuCollisionFilePtr data_ov036_021140f4;
-extern RcDorifuModelFilePtr data_ov036_021140fc;
-extern RcDorifuCollisionFilePtr data_ov036_021140d4;
-extern RcDorifuModelFilePtr data_ov036_021140e4;
-extern RcDorifuCollisionFilePtr data_ov036_021140ec;
-extern RcDorifuModelFilePtr data_ov036_02114104;
-extern RcDorifuCollisionFilePtr data_ov036_02114114;
-extern RcDorifuModelFilePtr data_ov036_0211410c;
-extern RcDorifuCollisionFilePtr data_ov036_021140dc;
+extern ModelFile data_ov036_0211411c;
+extern ClsnFile data_ov036_021140f4;
+extern ModelFile data_ov036_021140fc;
+extern ClsnFile data_ov036_021140d4;
+extern ModelFile data_ov036_021140e4;
+extern ClsnFile data_ov036_021140ec;
+extern ModelFile data_ov036_02114104;
+extern ClsnFile data_ov036_02114114;
+extern ModelFile data_ov036_0211410c;
+extern ClsnFile data_ov036_021140dc;
 
 daObjRc_Dorifu_c *daObjRc_Dorifu_c_classInit() {
     return new daObjRc_Dorifu_c();
@@ -111,13 +95,13 @@ s32 daObjRc_Dorifu_c::CleanupResources() {
  * Definition order is the retail initializer's construction order: the five
  * model handles (files 1690/1692/1694/1696/1698), then the five collision
  * handles (files 1691/1693/1695/1697/1699). */
-RcDorifuModelFilePtr data_ov036_0211411c(ASSET_RC_DORIFU0_BMD);
-RcDorifuModelFilePtr data_ov036_021140fc(ASSET_RC_DORIFU1_BMD);
-RcDorifuModelFilePtr data_ov036_021140e4(ASSET_RC_DORIFU2_BMD);
-RcDorifuModelFilePtr data_ov036_02114104(ASSET_RC_DORIFU3_BMD);
-RcDorifuModelFilePtr data_ov036_0211410c(ASSET_RC_DORIFU4_BMD);
-RcDorifuCollisionFilePtr data_ov036_021140f4(ASSET_RC_DORIFU0_KCL);
-RcDorifuCollisionFilePtr data_ov036_021140d4(ASSET_RC_DORIFU1_KCL);
-RcDorifuCollisionFilePtr data_ov036_021140ec(ASSET_RC_DORIFU2_KCL);
-RcDorifuCollisionFilePtr data_ov036_02114114(ASSET_RC_DORIFU3_KCL);
-RcDorifuCollisionFilePtr data_ov036_021140dc(ASSET_RC_DORIFU4_KCL);
+ModelFile data_ov036_0211411c(ASSET_RC_DORIFU0_BMD);
+ModelFile data_ov036_021140fc(ASSET_RC_DORIFU1_BMD);
+ModelFile data_ov036_021140e4(ASSET_RC_DORIFU2_BMD);
+ModelFile data_ov036_02114104(ASSET_RC_DORIFU3_BMD);
+ModelFile data_ov036_0211410c(ASSET_RC_DORIFU4_BMD);
+ClsnFile data_ov036_021140f4(ASSET_RC_DORIFU0_KCL);
+ClsnFile data_ov036_021140d4(ASSET_RC_DORIFU1_KCL);
+ClsnFile data_ov036_021140ec(ASSET_RC_DORIFU2_KCL);
+ClsnFile data_ov036_02114114(ASSET_RC_DORIFU3_KCL);
+ClsnFile data_ov036_021140dc(ASSET_RC_DORIFU4_KCL);

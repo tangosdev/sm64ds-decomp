@@ -99,26 +99,9 @@ union Matrix4x3;
 /* shadow struct 'CLPS_Block' */
 struct CLPS_Block; struct Vector3_16;
 
-/* The retail static initializer constructs these two 8-byte resource handles
- * in source order (model 0x491, collision 0x492) and lets the C++ runtime
- * register their destructors. The family spellings are reconstructed; the
- * constructor/destructor addresses, file IDs, object widths, BSS order, and
- * registration topology are direct ROM evidence. The intact-TU manifest maps
- * their compiler-generated undefined member imports onto the existing
- * evidence-bounded ROM symbols. */
-struct SignPostModelFilePtr : SharedFilePtr {
-    SignPostModelFilePtr(u32 fileID);
-    ~SignPostModelFilePtr();
-};
-
-struct SignPostCollisionFilePtr : SharedFilePtr {
-    SignPostCollisionFilePtr(u32 fileID);
-    ~SignPostCollisionFilePtr();
-};
-
 /* BMD (dExtSimpleModel_c::LoadFile) and KCL (dBgW_Kc::LoadFile). Cleanup releases both. */
-extern "C" SignPostModelFilePtr SignPost_ModelFile;
-extern "C" SignPostCollisionFilePtr SignPost_ClsnFile;
+extern "C" ModelFile SignPost_ModelFile;
+extern "C" ClsnFile SignPost_ClsnFile;
 
 /* Actor IDs, as symbols/actor_debug_names.tsv lists them. */
 enum {
@@ -1066,8 +1049,8 @@ void daObjTatefuda_c::Reset()
 /* __sinit_d_a_obj_tatefuda.cpp constructs the two file handles in retail
  * order, then copies the ten anonymous pointer-to-member descriptors into
  * the {enter, update} state table SetState and UpdateState index by mState. */
-SignPostModelFilePtr SignPost_ModelFile(ASSET_OBJ_TATEFUDA_BMD);
-SignPostCollisionFilePtr SignPost_ClsnFile(ASSET_OBJ_TATEFUDA_KCL);
+ModelFile SignPost_ModelFile(ASSET_OBJ_TATEFUDA_BMD);
+ClsnFile SignPost_ClsnFile(ASSET_OBJ_TATEFUDA_KCL);
 Entry data_ov002_0210e084[5] = {
     { &daObjTatefuda_c::InitIdle,    &daObjTatefuda_c::Idle    },
     { &daObjTatefuda_c::InitTalk,    &daObjTatefuda_c::Talk    },

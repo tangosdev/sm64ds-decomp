@@ -22,23 +22,6 @@ enum d_a_obj_km1_kuruma_AssetId { ASSET_KM1_KURUMA_BMD = 0x0653, ASSET_KM1_KURUM
 #include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 
-/* File-scope objects at the end of this file construct the two resource
- * handles (model file 0x653, collision file 0x654). mwcc emits
- * __sinit_d_a_obj_km1_kuruma.cpp from those definitions. The wrapper names
- * are local; the handle constructors and destructors are the ROM
- * resource-family functions, aliased in the manifest. Nothing in this TU
- * names the handles directly; the Resources record data_ov043_02112418
- * points at them. */
-struct Km1KurumaModelFile : SharedFilePtr {
-    Km1KurumaModelFile(u32 fileID);
-    ~Km1KurumaModelFile();
-};
-
-struct Km1KurumaCollisionFilePtr : SharedFilePtr {
-    Km1KurumaCollisionFilePtr(u32 fileID);
-    ~Km1KurumaCollisionFilePtr();
-};
-
 extern daObjKuruma_c::Resources data_ov043_02112418;
 
 /* The CLPS block the record's third word names; it stays overlay data. */
@@ -66,10 +49,13 @@ s32 daObjKm1_Kuruma_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov043_02112418);
 }
 
-/* Static-init globals (was the handwritten __sinit_ov043_021118d4 shard).
- * Definition order is the retail initializer's construction order. */
-Km1KurumaModelFile gKm1KurumaModelFile(ASSET_KM1_KURUMA_BMD);
-Km1KurumaCollisionFilePtr gKm1KurumaCollisionFile(ASSET_KM1_KURUMA_KCL);
+/* The two resource handles (model file 0x653, collision file 0x654), in the
+ * retail initializer's construction order: mwcc emits
+ * __sinit_d_a_obj_km1_kuruma.cpp from these definitions. Nothing in this TU
+ * names them directly; the Resources record data_ov043_02112418 points at
+ * them. */
+ModelFile gKm1KurumaModelFile(ASSET_KM1_KURUMA_BMD);
+ClsnFile gKm1KurumaCollisionFile(ASSET_KM1_KURUMA_KCL);
 
 /* The resource record both InitResources and CleanupResources hand to the
    shared ov002 helpers: model handle, collision handle, CLPS block. */

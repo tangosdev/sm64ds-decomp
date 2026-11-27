@@ -31,21 +31,8 @@ enum {
     kOnScreenRange = 0x400000 /* 1024.0 */
 };
 
-/* Retail constructs these 8-byte handles in this order and registers
- * their destructors. The wrapper names are local; the ctor/dtor
- * addresses are the ROM resource-family functions. */
-struct AmiBouModelFilePtr : SharedFilePtr {
-    AmiBouModelFilePtr(u32 fileID);
-    ~AmiBouModelFilePtr();
-};
-
-struct AmiBouCollisionFilePtr : SharedFilePtr {
-    AmiBouCollisionFilePtr(u32 fileID);
-    ~AmiBouCollisionFilePtr();
-};
-
-extern AmiBouCollisionFilePtr data_ov045_021131a8; /* KCL */
-extern AmiBouModelFilePtr data_ov045_021131b0;     /* BMD */
+extern ClsnFile data_ov045_021131a8;  /* KCL */
+extern ModelFile data_ov045_021131b0; /* BMD */
 extern CLPS_Block data_ov045_02112510;
 /* local extern: the shared arm9 sine table has no header. */
 
@@ -104,5 +91,7 @@ s32 daObjKm2_Ami_Bou_c::CleanupResources() {
 
 /* The inline destructor in the header emits D1 then D0, and no D2. */
 
-AmiBouModelFilePtr data_ov045_021131b0(ASSET_KM2_AMI_BOU_BMD);
-AmiBouCollisionFilePtr data_ov045_021131a8(ASSET_KM2_AMI_BOU_KCL);
+/* Retail construction order; the compiler registers each destructor
+ * beside its object. */
+ModelFile data_ov045_021131b0(ASSET_KM2_AMI_BOU_BMD);
+ClsnFile data_ov045_021131a8(ASSET_KM2_AMI_BOU_KCL);

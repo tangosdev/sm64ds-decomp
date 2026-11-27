@@ -39,28 +39,10 @@ struct FlyingCarpetResources {
 typedef char
     FlyingCarpetResources_size_must_be_0x0c[sizeof(FlyingCarpetResources) == 0x0c ? 1 : -1];
 
-/* Retail constructs these 8-byte handles in this order and registers
- * their destructors. The wrapper names are local; the ctor/dtor
- * addresses are the ROM resource-family functions. */
-struct CarpetModelFilePtr : SharedFilePtr {
-    CarpetModelFilePtr(u32 fileID);
-    ~CarpetModelFilePtr();
-};
-
-struct CarpetAnimationFilePtr : SharedFilePtr {
-    CarpetAnimationFilePtr(u32 fileID);
-    ~CarpetAnimationFilePtr();
-};
-
-struct CarpetCollisionFilePtr : SharedFilePtr {
-    CarpetCollisionFilePtr(u32 fileID);
-    ~CarpetCollisionFilePtr();
-};
-
 extern SharedFilePtr data_ov002_0210d9f0;
-extern CarpetModelFilePtr gRcCarpetModelFile;
-extern CarpetAnimationFilePtr gRcCarpetWaitAnimationFile;
-extern CarpetCollisionFilePtr gRcCarpetCollisionFile;
+extern ModelFile gRcCarpetModelFile;
+extern AnimFile gRcCarpetWaitAnimationFile;
+extern ClsnFile gRcCarpetCollisionFile;
 
 /* The flying carpet's floor entry. */
 extern CLPS_Block data_ov036_02112b28;
@@ -153,9 +135,11 @@ void daObjRcCarpet_c::UpdateClsnTransform() {
 }
 /* ROM ordinals 0/1 are emitted by the inline virtual destructor:*/
 
-CarpetModelFilePtr gRcCarpetModelFile(ASSET_RC_CARPET_BMD);
-CarpetAnimationFilePtr gRcCarpetWaitAnimationFile(ASSET_RC_CARPET_WAIT_BCA);
-CarpetCollisionFilePtr gRcCarpetCollisionFile(ASSET_RC_CARPET_KCL);
+/* Retail construction order; the compiler registers each destructor
+ * beside its object. */
+ModelFile gRcCarpetModelFile(ASSET_RC_CARPET_BMD);
+AnimFile gRcCarpetWaitAnimationFile(ASSET_RC_CARPET_WAIT_BCA);
+ClsnFile gRcCarpetCollisionFile(ASSET_RC_CARPET_KCL);
 
 extern "C" {
 u32 data_ov036_021141d8[2];

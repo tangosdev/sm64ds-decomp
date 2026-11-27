@@ -28,20 +28,6 @@ enum d_a_obj_km1_kurumajiku_AssetId {
 #include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 
-/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the model, ClsnFile::ClsnFile /
- * ClsnFile::~ClsnFile for the collision), spelled through
- * declared-only subclasses so the static initializer names the real entry
- * points. */
-struct Km1KurumajikuModelFilePtr : SharedFilePtr {
-    Km1KurumajikuModelFilePtr(u32 fileID);
-    ~Km1KurumajikuModelFilePtr();
-};
-struct Km1KurumajikuCollisionFilePtr : SharedFilePtr {
-    Km1KurumajikuCollisionFilePtr(u32 fileID);
-    ~Km1KurumajikuCollisionFilePtr();
-};
-
 extern daObjKurumajiku_c::Resources data_ov043_02112344;
 
 /* The axle's floor entry; retail's slot is 0x14 bytes. */
@@ -74,8 +60,8 @@ s32 daObjKm1_Kurumajiku_c::CleanupResources() {
 
 /* The axle's model and collision file handles; data_ov043_02112344.model
  * and .kcl point at them. */
-Km1KurumajikuModelFilePtr gKm1KurumajikuModelFile(ASSET_KM1_KURUMAJIKU_BMD);
-Km1KurumajikuCollisionFilePtr gKm1KurumajikuCollisionFile(ASSET_KM1_KURUMAJIKU_KCL);
+ModelFile gKm1KurumajikuModelFile(ASSET_KM1_KURUMAJIKU_BMD);
+ClsnFile gKm1KurumajikuCollisionFile(ASSET_KM1_KURUMAJIKU_KCL);
 
 daObjKurumajiku_c::Resources data_ov043_02112344 = {
     &gKm1KurumajikuModelFile,
