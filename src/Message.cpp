@@ -180,7 +180,8 @@ void Message::SetTextGlobals() {
     gMessageInfoSection = (MessageInfoSection *)infoSection;
     int dataSection = infoSection + ((MessageInfoSection *)infoSection)->sectionSize;
     gMessageDataSection = dataSection;
-    gMessageEntries = (MessageEntry *)(bankBase + 0x30);
+    gMessageEntries =
+        (MessageEntry *)((u8 *)bankBase + sizeof(MessageBankHeader) + sizeof(MessageInfoSection));
 }
 
 void dScStage_c::UpdateMessage() {
@@ -1501,9 +1502,7 @@ void Message::ResetAllGlobals()
     data_0209d660 = 0;
 }
 
-enum LoadFont_AssetId {
-    ASSET_D_2D_MARIO_3DFONT_NCL_BIN = 0x0237
-};
+enum LoadFont_AssetId { ASSET_D_2D_MARIO_3DFONT_NCL_BIN = 0x0237 };
 
 extern "C" void LoadFont(unsigned char arg) {
     void *file;
