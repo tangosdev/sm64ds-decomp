@@ -1167,61 +1167,9 @@ src/unnamed/arm9/0203/func_0203bd24.c:
     complete
     .text start:0x0203bd24 end:0x0203bd28
 
-src/Matrix4x3_FromRotationZ.c:
+src/runtime/math/Matrix4x3.c:
     complete
-    .text start:0x0203bd28 end:0x0203bd6c
-
-src/Matrix4x3_FromRotationY.c:
-    complete
-    .text start:0x0203bd6c end:0x0203bdb0
-
-src/Matrix4x3_FromRotationX.c:
-    complete
-    .text start:0x0203bdb0 end:0x0203bdf4
-
-src/Matrix4x3_FromRotationZXYExt.c:
-    complete
-    .text start:0x0203bdf4 end:0x0203be9c
-
-src/Matrix4x3_FromRotationXYZExt.c:
-    complete
-    .text start:0x0203be9c end:0x0203bf44
-
-src/Matrix4x3_FromTranslation.c:
-    complete
-    .text start:0x0203bf44 end:0x0203bf90
-
-src/Matrix4x3_ApplyInPlaceToRotationZ.c:
-    complete
-    .text start:0x0203bf90 end:0x0203bfc0
-
-src/Matrix4x3_ApplyInPlaceToRotationY.c:
-    complete
-    .text start:0x0203bfc0 end:0x0203bff0
-
-src/Matrix4x3_ApplyInPlaceToRotationX.c:
-    complete
-    .text start:0x0203bff0 end:0x0203c020
-
-src/Matrix4x3_ApplyInPlaceToRotationZXYExt.c:
-    complete
-    .text start:0x0203c020 end:0x0203c0b4
-
-src/Matrix4x3_ApplyInPlaceToRotationXYZExt.c:
-    complete
-    .text start:0x0203c0b4 end:0x0203c148
-
-src/Matrix4x3_ApplyInPlaceToScale.c:
-    complete
-    .text start:0x0203c148 end:0x0203c178
-
-src/unnamed/arm9/0203/func_0203c178.c:
-    complete
-    .text start:0x0203c178 end:0x0203c184
-
-src/Matrix4x3_ApplyInPlaceToTranslation.c:
-    complete
-    .text start:0x0203c184 end:0x0203c1b4
+    .text start:0x0203bd28 end:0x0203c1b4
 
 src/engine/heap/Heap.cpp:
     complete
