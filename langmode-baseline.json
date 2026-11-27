@@ -29,7 +29,7 @@
     "by_kind": {
       "C1": {
         "draft": 0,
-        "migrated": 94,
+        "migrated": 95,
         "unmigrated": 0
       },
       "C2": {
@@ -60,8 +60,8 @@
     },
     "cpp_still_handspelled": 0,
     "mangled_c": 0,
-    "mangled_cpp": 9019,
-    "mangled_total": 9019,
+    "mangled_cpp": 9020,
+    "mangled_total": 9020,
     "nonmatching_drafts": 0,
     "unmigrated_total": 0
   },
