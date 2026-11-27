@@ -175,7 +175,7 @@ u8 data_ov074_02122d80[4] = {16, 9, 6, 3};
 extern SharedFilePtr gScaleUpKinokoModelFile;
 extern ModelFile data_ov084_02130cf8;
 extern BMA_File data_ov084_0213089c;
-extern KrbAnimationFileHandle data_ov084_02130cc8;
+extern AnimFile data_ov084_02130cc8;
 extern ModelFile gKurikingModelModelFile;
 extern TexSeqFile gKurikingAngerTextureSequenceFile;
 extern AnimFile data_ov074_02123030;
@@ -1859,12 +1859,12 @@ daKuriKing_c *daKuriKing_c_classInit_KURIKING_VANISH(void) {
 daKuriKing_c *daKuriKing_c_classInit_KURIKING(void) {
     return new daKuriKing_c;
 }
-extern KrbAnimationFileHandle data_ov084_02130ce8;
-extern KrbAnimationFileHandle data_ov084_02130ce0;
-extern KrbAnimationFileHandle data_ov084_02130cd0;
-extern KrbAnimationFileHandle data_ov084_02130cc0;
-extern KrbAnimationFileHandle gKuriboRecoverAnimationFile;
-extern KrbAnimationFileHandle data_ov084_02130cf0;
+extern AnimFile data_ov084_02130ce8;
+extern AnimFile data_ov084_02130ce0;
+extern AnimFile data_ov084_02130cd0;
+extern AnimFile data_ov084_02130cc0;
+extern AnimFile gKuriboRecoverAnimationFile;
+extern AnimFile data_ov084_02130cf0;
 
 SharedFilePtr *const sKurikingMinionAnimationFiles[7] = {
     &data_ov084_02130ce8,         &data_ov084_02130ce0, &data_ov084_02130cd0, &data_ov084_02130cc0,

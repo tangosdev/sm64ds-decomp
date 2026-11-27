@@ -184,13 +184,8 @@ struct Ent
   char pad30[0x1c];
 };
 
-/* shadow struct 'SharedFilePtr' */
-struct SharedFilePtr;
-
 /* shadow struct 'BMD_File' */
 struct BMD_File;
-
-/* shadow struct 'Vector3' */
 
 /* shadow typedef 's32' */
 typedef int s32;
@@ -200,21 +195,6 @@ typedef unsigned char u8;
 
 /* shadow typedef 'u16' */
 typedef unsigned short u16;
-
-/* shadow typedef 'Vector3' */
-
-struct DemoModelFile : SharedFilePtr {
-    DemoModelFile(unsigned int fileID);
-    ~DemoModelFile();
-};
-struct DemoAnimFile : SharedFilePtr {
-    DemoAnimFile(unsigned int fileID);
-    ~DemoAnimFile();
-};
-struct DemoTexSeqFile : SharedFilePtr {
-    DemoTexSeqFile(unsigned int fileID);
-    ~DemoTexSeqFile();
-};
 
 extern "C" {
 
@@ -3390,40 +3370,40 @@ OamAttr data_ov002_0210b868[1] = {{0x00f8, 0x41f8, 0x705e, 0xffff}};
 struct OamAttr *data_ov002_0210b6a8[2] = {data_ov002_0210b768, data_ov002_0210b868};
 extern "C" {
 
-DemoModelFile data_ov002_02110b50(0x49b);
-DemoModelFile data_ov002_02110b98(0x3ef);
-DemoModelFile data_ov002_02110c18(0x3f3);
-DemoAnimFile data_ov002_02110bf8(0x3f4);
-DemoAnimFile data_ov002_02110c10(0x3d6);
-DemoAnimFile data_ov002_02110bd0(0x3da);
-DemoAnimFile data_ov002_02110b28(0x3ea);
-DemoAnimFile data_ov002_02110bf0(0x3e0);
-DemoAnimFile data_ov002_02110b68(0x3e2);
-DemoAnimFile data_ov002_02110ba0(0x3e4);
-DemoAnimFile data_ov002_02110bb0(0x3dc);
-DemoAnimFile data_ov002_02110b48(0x3de);
-DemoAnimFile data_ov002_02110b30(0x3e6);
-DemoAnimFile data_ov002_02110be8(0x3d8);
-DemoAnimFile data_ov002_02110c08(0x3e8);
-DemoAnimFile data_ov002_02110c00(0x3ec);
-DemoAnimFile data_ov002_02110bd8(0x3ed);
-DemoTexSeqFile data_ov002_02110b60(0x3d7);
-DemoTexSeqFile data_ov002_02110be0(0x3d9);
-DemoTexSeqFile data_ov002_02110b90(0x3db);
-DemoTexSeqFile data_ov002_02110bc0(0x3dd);
-DemoTexSeqFile data_ov002_02110b80(0x3df);
-DemoTexSeqFile data_ov002_02110b88(0x3e1);
-DemoTexSeqFile data_ov002_02110b38(0x3e3);
-DemoTexSeqFile data_ov002_02110ba8(0x3e5);
-DemoTexSeqFile data_ov002_02110b20(0x3e7);
-DemoTexSeqFile data_ov002_02110b40(0x3e9);
-DemoTexSeqFile data_ov002_02110b58(0x3eb);
-DemoTexSeqFile data_ov002_02110bb8(0x3ee);
-DemoTexSeqFile data_ov002_02110b10(0x3f5);
-DemoTexSeqFile data_ov002_02110bc8(0x3f8);
-DemoTexSeqFile data_ov002_02110b18(0x3fa);
-DemoModelFile data_ov002_02110b70(0x461);
-DemoModelFile data_ov002_02110b78(0x475);
+ModelFile data_ov002_02110b50(0x49b);
+ModelFile data_ov002_02110b98(0x3ef);
+ModelFile data_ov002_02110c18(0x3f3);
+AnimFile data_ov002_02110bf8(0x3f4);
+AnimFile data_ov002_02110c10(0x3d6);
+AnimFile data_ov002_02110bd0(0x3da);
+AnimFile data_ov002_02110b28(0x3ea);
+AnimFile data_ov002_02110bf0(0x3e0);
+AnimFile data_ov002_02110b68(0x3e2);
+AnimFile data_ov002_02110ba0(0x3e4);
+AnimFile data_ov002_02110bb0(0x3dc);
+AnimFile data_ov002_02110b48(0x3de);
+AnimFile data_ov002_02110b30(0x3e6);
+AnimFile data_ov002_02110be8(0x3d8);
+AnimFile data_ov002_02110c08(0x3e8);
+AnimFile data_ov002_02110c00(0x3ec);
+AnimFile data_ov002_02110bd8(0x3ed);
+TexSeqFile data_ov002_02110b60(0x3d7);
+TexSeqFile data_ov002_02110be0(0x3d9);
+TexSeqFile data_ov002_02110b90(0x3db);
+TexSeqFile data_ov002_02110bc0(0x3dd);
+TexSeqFile data_ov002_02110b80(0x3df);
+TexSeqFile data_ov002_02110b88(0x3e1);
+TexSeqFile data_ov002_02110b38(0x3e3);
+TexSeqFile data_ov002_02110ba8(0x3e5);
+TexSeqFile data_ov002_02110b20(0x3e7);
+TexSeqFile data_ov002_02110b40(0x3e9);
+TexSeqFile data_ov002_02110b58(0x3eb);
+TexSeqFile data_ov002_02110bb8(0x3ee);
+TexSeqFile data_ov002_02110b10(0x3f5);
+TexSeqFile data_ov002_02110bc8(0x3f8);
+TexSeqFile data_ov002_02110b18(0x3fa);
+ModelFile data_ov002_02110b70(0x461);
+ModelFile data_ov002_02110b78(0x475);
 
 /* One-entry file lists InitResources hands to anmModel_c::func_ov002_020f6618:
    the BCA list and the BTP list for param1 0x12 (0x0210b60c, 0x0210b608) and
