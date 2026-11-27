@@ -15,7 +15,7 @@
   {
    "name": ".text",
    "start": "0x0205ff70",
-   "end": "0x020602bc"
+   "end": "0x02060364"
   },
   {
    "name": ".bss",
@@ -86,6 +86,20 @@
    "size": "0x00000094",
    "legacy_source": "src/unnamed/arm9/0206/func_02060228.c",
    "ordinal": 8
+  },
+  {
+   "symbol": "CARDi_TaskThread",
+   "address": "0x020602bc",
+   "size": "0x00000054",
+   "legacy_source": "src/CARDi_TaskThread.cpp",
+   "ordinal": 9
+  },
+  {
+   "symbol": "CARDi_OnFifoRecv",
+   "address": "0x02060310",
+   "size": "0x00000054",
+   "legacy_source": "src/CARDi_OnFifoRecv.c",
+   "ordinal": 10
   }
  ],
  "data": [],
@@ -124,7 +138,7 @@
   "linkcheck": {
    "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
    "result": "scratch-data-verified",
-   "scratch": "build/tu/arm9-PM/link (gitignored)",
+   "scratch": "build/tu/arm9-CARD_Common/link (gitignored)",
    "phases": {
     "delink": true,
     "lcf": true,
@@ -137,7 +151,7 @@
    "tuRange": {
     "section": ".text",
     "start": "0x0205ff70",
-    "end": "0x020602bc",
+    "end": "0x02060364",
     "differingBytes": 0,
     "firstDiff": null
    },
@@ -145,7 +159,7 @@
     {
      "section": ".text",
      "start": "0x0205ff70",
-     "end": "0x020602bc",
+     "end": "0x02060364",
      "differingBytes": 0,
      "firstDiff": null
     },

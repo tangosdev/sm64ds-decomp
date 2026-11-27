@@ -1,6 +1,6 @@
 //cpp
 /* Card access common code (the Nitro SDK's card_common.c),
- * arm9 .text 0x0205ff70..0x020602bc.
+ * arm9 .text 0x0205ff70..0x02060364.
  *
  * pret/pokediamond's NitroSDK CARD_common.c has these nine functions in this
  * order: CARDi_SetTask, CARDi_LockResource, CARDi_UnlockResource,
@@ -45,7 +45,38 @@ CARDiCommandArg cardi_arg;
 CARDiCommon cardi_common;
 u32 cardi_thread_stack[0x100];
 /* The word just past cardi_thread_stack: its address is the stack's top. */
-extern int *data_020a8760;
+struct CardBackupSpec;
+extern struct CardBackupSpec *data_020a8760;
+
+typedef int BOOL;
+
+/* The PXI callback for the FS tag, registered by CARDi_InitCommon. ARM7's
+ * reply ends the request in flight: clear CARD_STAT_REQ and wake the thread
+ * that sent it. */
+void CARDi_OnFifoRecv(PXIFifoTag tag, u32 data, BOOL err) {
+    if ((tag == PXI_FIFO_TAG_FS) && err) {
+        CARDiCommon *const p = &cardi_common;
+        p->flag &= ~CARD_STAT_REQ;
+        OS_WakeupThreadDirect(p->cur_th);
+    }
+}
+
+/* The card thread's body. It sleeps until CARDi_SetTask raises CARD_STAT_TASK,
+ * runs the task, and the task's CARDi_EndTask clears the bit again. */
+void CARDi_TaskThread(void *arg) {
+    CARDiCommon *const p = &cardi_common;
+    for (;;) {
+        OSIntrMode bak_psr = OS_DisableInterrupts();
+        for (;;) {
+            if (p->flag & CARD_STAT_TASK)
+                break;
+            p->cur_th = &p->thread;
+            OS_SleepThread(0);
+        }
+        OS_RestoreInterrupts(bak_psr);
+        (*p->task_func)(p);
+    }
+}
 
 void CARDi_SetTask(void (*task)(CARDiCommon *)) {
     CARDiCommon *const p = &cardi_common;

@@ -2085,69 +2085,21 @@ src/engine/spi/PM.c:
 
 src/engine/card/CARD_Common.cpp:
     complete
-    .text start:0x0205ff70 end:0x020602bc
+    .text start:0x0205ff70 end:0x02060364
     .bss start:0x020a8160 end:0x020a8760
 
-src/CARDi_TaskThread.cpp:
+src/engine/card/CARD_Backup.c:
     complete
-    .text start:0x020602bc end:0x02060310
-
-src/CARDi_OnFifoRecv.c:
-    complete
-    .text start:0x02060310 end:0x02060364
-
-src/unnamed/arm9/0206/func_02060364.c:
-    complete
-    .text start:0x02060364 end:0x02060398
-    .bss start:0x020a8760 end:0x020a8780
-
-src/unnamed/arm9/0206/func_02060398.c:
-    complete
-    .text start:0x02060398 end:0x020603c8
+    .text start:0x02060364 end:0x02060890
     .rodata start:0x020867bc end:0x0208685c
-
-src/CARD_IdentifyBackup.cpp:
-    complete
-    .text start:0x020603c8 end:0x0206045c
-
-src/CARD_GetBackupTotalSize.c:
-    complete
-    .text start:0x0206045c end:0x02060470
-
-src/CARD_GetCurrentBackupType.c:
-    complete
-    .text start:0x02060470 end:0x02060484
-
-src/unnamed/arm9/0206/func_02060484.cpp:
-    complete
-    .text start:0x02060484 end:0x02060558
-
-src/unnamed/arm9/0206/func_02060558.cpp:
-    complete
-    .text start:0x02060558 end:0x0206062c
-
-src/unnamed/arm9/0206/func_0206062c.cpp:
-    complete
-    .text start:0x0206062c end:0x0206071c
-
-src/unnamed/arm9/0206/func_0206071c.cpp:
-    complete
-    .text start:0x0206071c end:0x020607e8
-
-src/unnamed/arm9/0206/func_020607e8.c:
-    complete
-    .text start:0x020607e8 end:0x0206081c
-
-src/CARDi_EndTask.cpp:
-    complete
-    .text start:0x0206081c end:0x02060890
+    .bss start:0x020a8760 end:0x020a8780
 
 src/engine/card/CARD_Rom.c:
     complete
     .text start:0x02060890 end:0x02060f60
     .bss start:0x020a8780 end:0x020a89a0
 
-src/CARDi_Request.cpp:
+src/engine/card/CARD_Request.c:
     complete
     .text start:0x02060f60 end:0x020610ac
 
