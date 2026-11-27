@@ -37,7 +37,7 @@
 #include "Particle__System.h"
 #include "ParticleIds.h"
 
-extern SharedFilePtr gFeatherModelFile;
+extern ModelFile gFeatherModelFile;
 extern unsigned char gGameMode;
 extern dCamera_c *gCamera;
 

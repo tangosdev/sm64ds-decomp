@@ -16,7 +16,7 @@
  * retail D1/D0 plus the class RTTI, type name, and vtable.
  *
  * Notes:
- * - gScaleUpKinokoModelFile is the ov002 SharedFilePtr handle for
+ * - gScaleUpKinokoModelFile is the ov002 ModelFile handle for
  *   scale_up_kinoko.bmd; ov002_handles.cpp owns it.
  * - Behavior links the nearest PILE (actor ID 0x1b) back to this tag through
  *   daObjPile_c::mLinkedTag.
@@ -29,7 +29,7 @@
 #include "daObjPile_c.h"
 #include "math/CalcLib.h"
 
-extern SharedFilePtr gScaleUpKinokoModelFile;
+extern ModelFile gScaleUpKinokoModelFile;
 
 daObjKinokoTag_c *daObjKinokoTag_c_classInit_KINOKO_TAG() {
     return new daObjKinokoTag_c();

@@ -119,9 +119,9 @@ struct BCA_File;
 
 extern signed char gCurrentSublevel;
 void func_02012694(unsigned int, const Vector3 *);
-extern SharedFilePtr data_ov002_0210da40;
-extern SharedFilePtr data_ov002_0210d9a0;
-extern SharedFilePtr data_ov002_0210d9c0;
+extern ModelFile data_ov002_0210da40;
+extern ModelFile data_ov002_0210d9a0;
+extern ModelFile data_ov002_0210d9c0;
 extern daPly_c *gPlayers[];
 
 /* Actor ids (symbols/actor_debug_names.tsv). */

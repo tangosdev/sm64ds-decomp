@@ -127,9 +127,9 @@ extern AnimFile data_ov063_0211ede4;
 extern ModelFile data_ov063_0211edec;
 extern ModelFile data_ov063_0211edf4;
 
-extern SharedFilePtr gCoinBluePoly32ModelFile;
-extern SharedFilePtr gCoinRedPoly32ModelFile;
-extern SharedFilePtr gCoinYellowPoly32ModelFile;
+extern ModelFile gCoinBluePoly32ModelFile;
+extern ModelFile gCoinRedPoly32ModelFile;
+extern ModelFile gCoinYellowPoly32ModelFile;
 
 /* File-local helpers and engine entry points, with the C-linkage spellings
  * these bodies were matched against. */

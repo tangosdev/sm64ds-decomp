@@ -97,7 +97,7 @@ extern SharedFilePtr *const data_ov065_0211c08c[7] = {
     &gDossyLegRCollisionFile,
 };
 extern CLPS_Block *data_ov065_0211cd68[7];
-extern SharedFilePtr data_ov002_0210d9c0;
+extern ModelFile data_ov002_0210d9c0;
 
 int *Vec3_LslInPlace(Vector3 *v, s32 sh);
 extern int AngleDiff(int a, int b);

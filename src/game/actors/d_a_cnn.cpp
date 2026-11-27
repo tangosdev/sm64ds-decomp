@@ -71,7 +71,7 @@ typedef void (daCnn_c::*State)();
 /* The two models the water bomb loads (d_a_wbm.cpp defines
    data_ov098_0213c91c), which InitResources preloads for the bombs it fires. */
 extern ModelFile data_ov098_0213c91c;
-extern SharedFilePtr data_ov002_0210da38;
+extern ModelFile data_ov002_0210da38;
 /* The smoke particles' base rotation, x/y/z. */
 extern u16 data_ov098_0213c63c[3];
 

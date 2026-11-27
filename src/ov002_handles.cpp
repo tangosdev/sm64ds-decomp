@@ -1,46 +1,35 @@
 //cpp
 /* ov002's shared file handles: shells, the Mega Mushroom, the Bob-omb, the
  * Power Flower, the water ring, the number texture and the rest. Defining
- * them here is what emits __sinit_ov002_handles.cpp. The wrapper names are
- * local; the manifest aliases their constructors and destructors to the
- * retail veneers. Definition order is the retail construction order. */
+ * them here is what emits __sinit_ov002_handles.cpp. Definition order is the
+ * retail construction order. */
 
 #include "SharedFilePtr.h"
 
-struct Ov002ModelFile : SharedFilePtr {
-    Ov002ModelFile(unsigned int fileID);
-    ~Ov002ModelFile();
-};
-
-struct Ov002TexSeqFile : SharedFilePtr {
-    Ov002TexSeqFile(unsigned int fileID);
-    ~Ov002TexSeqFile();
-};
-
-Ov002ModelFile gShellGreenModelFile(0x03c7);
-Ov002ModelFile gShellRedModelFile(0x03c8);
-Ov002ModelFile gOneUpMushroomModelFile(0x9c0f);
-Ov002ModelFile gScaleUpKinokoModelFile(0x049f);
-Ov002ModelFile gBombheiModelFile(0x02b6);
-Ov002ModelFile gCoinYellowPoly4ModelFile(0x8006);
-Ov002ModelFile gCoinYellowPoly32ModelFile(0x8005);
-Ov002ModelFile gCoinRedPoly4ModelFile(0x8008);
-Ov002ModelFile gCoinRedPoly32ModelFile(0x8007);
-Ov002ModelFile gCoinBluePoly4ModelFile(0x9c07);
-Ov002ModelFile gCoinBluePoly32ModelFile(0x9c06);
-Ov002ModelFile gFeatherModelFile(0x800c);
-Ov002ModelFile gPFlowerCloseModelFile(0x0483);
-Ov002ModelFile gPFlowerOpenModelFile(0x0484);
-Ov002ModelFile data_ov002_0210da40(0x8011);
-Ov002ModelFile data_ov002_0210d9a0(0x8010);
-Ov002ModelFile data_ov002_0210d9c0(0x8014);
-Ov002ModelFile data_ov002_0210d9a8(0x8009);
-Ov002ModelFile gSilverNumberModelFile(0x800b);
-Ov002TexSeqFile gNumberTextureSequenceFile(0x800a);
-Ov002TexSeqFile gSNumberTextureSequenceFile(0x0453); /* s_number.btp, the silver digits */
-Ov002ModelFile data_ov002_0210da38(0x8004);
-Ov002ModelFile gWRingModelFile(0x04aa);
-Ov002ModelFile data_ov002_0210d9f0(0x9c0c);
+ModelFile gShellGreenModelFile(0x03c7);
+ModelFile gShellRedModelFile(0x03c8);
+ModelFile gOneUpMushroomModelFile(0x9c0f);
+ModelFile gScaleUpKinokoModelFile(0x049f);
+ModelFile gBombheiModelFile(0x02b6);
+ModelFile gCoinYellowPoly4ModelFile(0x8006);
+ModelFile gCoinYellowPoly32ModelFile(0x8005);
+ModelFile gCoinRedPoly4ModelFile(0x8008);
+ModelFile gCoinRedPoly32ModelFile(0x8007);
+ModelFile gCoinBluePoly4ModelFile(0x9c07);
+ModelFile gCoinBluePoly32ModelFile(0x9c06);
+ModelFile gFeatherModelFile(0x800c);
+ModelFile gPFlowerCloseModelFile(0x0483);
+ModelFile gPFlowerOpenModelFile(0x0484);
+ModelFile data_ov002_0210da40(0x8011);
+ModelFile data_ov002_0210d9a0(0x8010);
+ModelFile data_ov002_0210d9c0(0x8014);
+ModelFile data_ov002_0210d9a8(0x8009);
+ModelFile gSilverNumberModelFile(0x800b);
+TexSeqFile gNumberTextureSequenceFile(0x800a);
+TexSeqFile gSNumberTextureSequenceFile(0x0453); /* s_number.btp, the silver digits */
+ModelFile data_ov002_0210da38(0x8004);
+ModelFile gWRingModelFile(0x04aa);
+ModelFile data_ov002_0210d9f0(0x9c0c);
 
 /* First function in ov002. It lives in this file so the TU has a .text section:
  * the handles' initializer is renamed from .text to .init, and a TU with no

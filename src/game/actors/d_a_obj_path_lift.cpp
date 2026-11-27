@@ -36,7 +36,7 @@ extern CLPS_Block data_ov002_0210d7d4;
 extern signed char gCurrentSublevel;
 extern unsigned char gGameMode;
 
-extern SharedFilePtr data_ov002_0210d9f0;
+extern ModelFile data_ov002_0210d9f0;
 
 extern ModelFile data_ov100_02148a54;
 extern ClsnFile data_ov100_02148a5c;

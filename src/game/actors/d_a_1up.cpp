@@ -985,8 +985,8 @@ extern PMF data_ov002_0210dc00[14];
    starts particle effect 0xd2 through Particle::System::NewSimple at the
    mushroom's position, 40 units (0x28000) above it. */
 int da1up_c::CleanupResources() {
-    extern SharedFilePtr gOneUpMushroomModelFile;
-    extern SharedFilePtr gScaleUpKinokoModelFile;
+    extern ModelFile gOneUpMushroomModelFile;
+    extern ModelFile gScaleUpKinokoModelFile;
 
     int s = mMushroomType;
     if (s != 0xb && s != 0xc) {
@@ -1083,9 +1083,9 @@ extern const unsigned char data_ov002_020ff050[16] = {0, 0, 0, 1, 0, 0, 1, 0,
                                                       1, 0, 0, 0, 0, 0, 0, 0};
 
 int da1up_c::InitResources() {
-    extern SharedFilePtr gCoinYellowPoly32ModelFile;
-    extern SharedFilePtr gOneUpMushroomModelFile;
-    extern SharedFilePtr gScaleUpKinokoModelFile;
+    extern ModelFile gCoinYellowPoly32ModelFile;
+    extern ModelFile gOneUpMushroomModelFile;
+    extern ModelFile gScaleUpKinokoModelFile;
     extern signed char gCurrentSublevel;
     extern unsigned char gCurrentStarId;
 

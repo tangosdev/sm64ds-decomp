@@ -48,7 +48,7 @@ extern "C" {
 int AngleDiff(int a, int b);
 }
 
-extern SharedFilePtr gWRingModelFile; /* the ring's BMD */
+extern ModelFile gWRingModelFile; /* the ring's BMD */
 
 daWater_Ring_c::~daWater_Ring_c() {}
 

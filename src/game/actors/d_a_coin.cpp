@@ -710,7 +710,7 @@ s32 daCoin_c::CleanupResources()
      * star-tracking slot, decrements the live-coin count on the FL_COIN puzzle
      * manager that spawned it and, unless it is disappearing on a timer, puts up
      * the collection sparkle a little above itself. */
-    extern SharedFilePtr data_ov002_0210d9a8;
+    extern ModelFile data_ov002_0210d9a8;
     extern SharedFilePtr *const sCoinPoly32ModelFiles[];
     extern SharedFilePtr *const sCoinPoly4ModelFiles[];
 
@@ -826,7 +826,7 @@ s32 daCoin_c::InitResources()
     extern u8 gGameMode;
     extern SharedFilePtr *const sCoinPoly32ModelFiles[];
     extern SharedFilePtr *const sCoinPoly4ModelFiles[];
-    extern SharedFilePtr data_ov002_0210d9a8;
+    extern ModelFile data_ov002_0210d9a8;
 
     s32 ccRadius;
     s32 ccHeight;
@@ -1054,12 +1054,12 @@ CoinHandler data_ov002_0210dc70[9] = {
     &daCoin_c::StateFollowTarget};
 
 /* Initialized data this file is the only complete referrer for. */
-extern SharedFilePtr gCoinYellowPoly4ModelFile;
-extern SharedFilePtr gCoinRedPoly4ModelFile;
-extern SharedFilePtr gCoinBluePoly4ModelFile;
-extern SharedFilePtr gCoinYellowPoly32ModelFile;
-extern SharedFilePtr gCoinRedPoly32ModelFile;
-extern SharedFilePtr gCoinBluePoly32ModelFile;
+extern ModelFile gCoinYellowPoly4ModelFile;
+extern ModelFile gCoinRedPoly4ModelFile;
+extern ModelFile gCoinBluePoly4ModelFile;
+extern ModelFile gCoinYellowPoly32ModelFile;
+extern ModelFile gCoinRedPoly32ModelFile;
+extern ModelFile gCoinBluePoly32ModelFile;
 extern SharedFilePtr *const sCoinPoly4ModelFiles[3] = {
     &gCoinYellowPoly4ModelFile,
     &gCoinRedPoly4ModelFile,

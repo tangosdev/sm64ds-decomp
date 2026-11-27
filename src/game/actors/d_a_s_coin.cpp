@@ -17,7 +17,7 @@
  *   only moves the pin.
  * - LinkToBlock's ID tests go through the int-returning HasActorID: a
  *   direct `actorID == id` in the for/else-if loop size-DIFFs.
- * - data_ov002_0210d9a8 (the ov002 SharedFilePtr handle) and func_02012790
+ * - data_ov002_0210d9a8 (an ov002 ModelFile handle) and func_02012790
  *   (the no-position jingle player, id 0x25 here) have no recovered names.
  */
 
@@ -32,7 +32,7 @@
 #include "Sound.h"
 #include "math/CalcLib.h"
 
-extern SharedFilePtr data_ov002_0210d9a8;
+extern ModelFile data_ov002_0210d9a8;
 
 /* int-returning, so the ROM materializes the 0/1 of each ID test before
  * branching on it; a direct `actorID == id` does not. */

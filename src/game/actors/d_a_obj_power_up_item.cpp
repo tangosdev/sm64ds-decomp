@@ -88,8 +88,8 @@ enum {
 
 extern "C" {
 extern dCamera_c *gCamera;
-extern SharedFilePtr gPFlowerCloseModelFile;
-extern SharedFilePtr gPFlowerOpenModelFile;
+extern ModelFile gPFlowerCloseModelFile;
+extern ModelFile gPFlowerOpenModelFile;
 }
 extern void func_02012694(unsigned int id, const Vector3 *v);
 

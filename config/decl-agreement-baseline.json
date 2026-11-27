@@ -91,68 +91,6 @@
    "src/WBT_InitParent.cpp": ["return:int"],
    "src/unnamed/arm9/0206/func_02065af0.cpp": ["return:int"]
   },
-  "data_ov002_0210d9a0": {
-   "src/game/actors/d_a_hyuhyu.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_jango.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_kinopio.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_mky.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_key.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_mario_cap.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_snm_bth.cpp": ["return:SharedFilePtr"],
-   "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"],
-   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
-  },
-  "data_ov002_0210d9a8": {
-   "src/game/actors/d_a_manta.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_number.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_tbox.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_s_coin.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_star.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_water_hakidasi.cpp": ["return:SharedFilePtr"],
-   "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"],
-   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
-  },
-  "data_ov002_0210d9c0": {
-   "src/game/actors/d_a_dossy.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_hyuhyu.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_jango.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_kinopio.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_mky.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_key.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_mario_cap.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_snm_bth.cpp": ["return:SharedFilePtr"],
-   "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"],
-   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
-  },
-  "data_ov002_0210d9f0": {
-   "src/game/actors/d_a_dp_lift.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_path_lift.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_rc_carpet.cpp": ["return:SharedFilePtr"],
-   "src/runtime/actor/d_path_lift_actor.cpp": ["return:SharedFilePtr"]
-  },
-  "data_ov002_0210da38": {
-   "src/game/actors/d_a_cnn.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_eykn.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_f_pkn.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_tbox.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_pkn.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_wbm.cpp": ["return:SharedFilePtr"],
-   "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"]
-  },
-  "data_ov002_0210da40": {
-   "src/game/actors/d_a_hyuhyu.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_jango.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_kinopio.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_mky.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_key.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_mario_cap.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_snm_bth.cpp": ["return:SharedFilePtr"],
-   "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"],
-   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
-  },
   "data_ov070_0212360c": {
    "include/decl_common.h": ["return:int []"]
   },
@@ -168,42 +106,6 @@
   "func_ov079_02123d4c": {
    "src/game/actors/d_a_btn.cpp": ["arity:1", "return:Vector3"]
   },
-  "gBombheiModelFile": {
-   "src/game/actors/d_a_bmb.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_e_switch.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"]
-  },
-  "gCoinBluePoly32ModelFile": {
-   "src/game/actors/d_a_coin.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_trs.cpp": ["return:SharedFilePtr"],
-   "src/runtime/actor/d_actor.cpp": ["return:SharedFilePtr"]
-  },
-  "gCoinBluePoly4ModelFile": {
-   "src/game/actors/d_a_coin.cpp": ["return:SharedFilePtr"],
-   "src/runtime/actor/d_actor.cpp": ["return:SharedFilePtr"]
-  },
-  "gCoinRedPoly32ModelFile": {
-   "src/game/actors/d_a_coin.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_trs.cpp": ["return:SharedFilePtr"],
-   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
-  },
-  "gCoinRedPoly4ModelFile": {
-   "src/game/actors/d_a_coin.cpp": ["return:SharedFilePtr"],
-   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
-  },
-  "gCoinYellowPoly32ModelFile": {
-   "src/game/actors/d_a_coin.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_trs.cpp": ["return:SharedFilePtr"],
-   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
-  },
-  "gCoinYellowPoly4ModelFile": {
-   "src/game/actors/d_a_coin.cpp": ["return:SharedFilePtr"],
-   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
-  },
-  "gFeatherModelFile": {
-   "src/game/actors/d_a_feather.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"]
-  },
   "gMessageBankBase": {
    "src/ui/messages/_ZN7Message8LoadTextEv.cpp": ["return:void *"]
   },
@@ -217,54 +119,8 @@
    "src/minigames/d_s_mg_m_carlo.cpp": ["return:unsigned short"],
    "src/minigames/d_s_mg_roulette_methods.cpp": ["return:unsigned short"]
   },
-  "gNumberTextureSequenceFile": {
-   "src/game/actors/d_a_obj_number.cpp": ["return:SharedFilePtr"]
-  },
-  "gOneUpMushroomModelFile": {
-   "src/game/actors/d_a_btfly.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_choropu.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_block_item_tag.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"]
-  },
-  "gPFlowerCloseModelFile": {
-   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_power_up_item.cpp": ["return:SharedFilePtr"]
-  },
-  "gPFlowerOpenModelFile": {
-   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_power_up_item.cpp": ["return:SharedFilePtr"]
-  },
   "gRunningKuppaScript": {
    "src/KuppaScript.cpp": ["return:unsigned char *"]
-  },
-  "gSNumberTextureSequenceFile": {
-   "src/game/actors/d_a_obj_number.cpp": ["return:SharedFilePtr"]
-  },
-  "gScaleUpKinokoModelFile": {
-   "src/game/actors/d_a_king_donketu.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_kuri_king.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_block_item_tag.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_kinoko_tag.cpp": ["return:SharedFilePtr"]
-  },
-  "gShellGreenModelFile": {
-   "src/game/actors/d_a_nknk.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_block_item_tag.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_shl.cpp": ["return:SharedFilePtr"]
-  },
-  "gShellRedModelFile": {
-   "src/game/actors/d_a_nknk.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_shl.cpp": ["return:SharedFilePtr"]
-  },
-  "gSilverNumberModelFile": {
-   "src/game/actors/d_a_obj_number.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_star.cpp": ["return:SharedFilePtr"]
-  },
-  "gWRingModelFile": {
-   "src/game/actors/d_a_manta.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_water_hakidasi.cpp": ["return:SharedFilePtr"],
-   "src/game/actors/d_a_water_ring.cpp": ["return:SharedFilePtr"]
   },
   "sBootJobDone": {
    "src/game/stages/d_s_boot_methods.cpp": ["return:unsigned char"]

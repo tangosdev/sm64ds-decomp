@@ -68,7 +68,7 @@ typedef void (daBtfly_c::*ButterflyState)();
 extern "C" {
 /* Init LoadFile: ov002 BMD shared with the other small fauna, this overlay's
  * BCA, the still-model BMD, and the animated-model BMD. Cleanup Release. */
-extern SharedFilePtr gOneUpMushroomModelFile;
+extern ModelFile gOneUpMushroomModelFile;
 extern AnimFile gButterflyFlyAnimationFile;
 extern ModelFile data_ov100_02148668;
 extern ModelFile gButterflyModelFile;

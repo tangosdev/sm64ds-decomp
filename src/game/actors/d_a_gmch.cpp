@@ -774,7 +774,7 @@ int daGmch_c::Behavior()
 int daGmch_c::InitResources()
 {
     extern ModelFile data_ov081_02128ed4;
-    extern SharedFilePtr gCoinYellowPoly32ModelFile;
+    extern ModelFile gCoinYellowPoly32ModelFile;
 
     Vector3 pos;
     BMD_File *modelFile = dExtSimpleModel_c::LoadFile(data_ov081_02128ed4);

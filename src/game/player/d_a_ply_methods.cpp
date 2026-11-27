@@ -846,11 +846,11 @@ static inline int IsBeingEaten(dActor_c *actor) {
  * CalcLib.h overload takes the game's Vector3, casts it at the call. */
 VecFx32 data_ov002_0210a590 = {0, -0xcd000, 0x19a000};
 extern "C" {
-extern SharedFilePtr data_ov002_0210d9a0;
-extern SharedFilePtr data_ov002_0210d9a8;
-extern SharedFilePtr data_ov002_0210d9c0;
-extern SharedFilePtr data_ov002_0210da38;
-extern SharedFilePtr data_ov002_0210da40;
+extern ModelFile data_ov002_0210d9a0;
+extern ModelFile data_ov002_0210d9a8;
+extern ModelFile data_ov002_0210d9c0;
+extern ModelFile data_ov002_0210da38;
+extern ModelFile data_ov002_0210da40;
 extern int data_ov002_0210f92c[];
 extern int data_ov055_02111b64;
 extern int data_ov055_02111b6c;

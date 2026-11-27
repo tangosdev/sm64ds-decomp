@@ -72,8 +72,8 @@ extern int SublevelToLevel(int);
 }
 extern int IsStarCollected(int r0, int r1);
 
-extern SharedFilePtr gWRingModelFile;
-extern SharedFilePtr data_ov002_0210d9a8;
+extern ModelFile gWRingModelFile;
+extern ModelFile data_ov002_0210d9a8;
 extern signed char gCurrentSublevel;
 extern unsigned char gCurrentStarId;
 

@@ -104,7 +104,7 @@ void SetStarMarker(int i, dActor_c *self, int v);
 
 extern ModelFile data_ov084_02130dfc;              /* the plant's model */
 extern SharedFilePtr *const data_ov084_021302f4[]; /* the six shared animation handles */
-extern SharedFilePtr data_ov002_0210da38;          /* the sleep-bubble model, out of ov002 */
+extern ModelFile data_ov002_0210da38;              /* the sleep-bubble model, out of ov002 */
 extern AnimFile data_ov084_02130df4;               /* idle animation */
 extern AnimFile data_ov084_02130e04;               /* spit animation */
 extern AnimFile data_ov084_02130e14;               /* grow-in lunge animation */

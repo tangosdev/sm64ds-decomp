@@ -210,7 +210,7 @@ extern daKing_Donketu_c::State data_ov073_02123410;
 extern "C" {
 
 struct BCA_File;
-extern SharedFilePtr gScaleUpKinokoModelFile;
+extern ModelFile gScaleUpKinokoModelFile;
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 extern void MTX_MultVec43(const Vector3 *in, const Matrix4x3 *m, Vector3 *out);

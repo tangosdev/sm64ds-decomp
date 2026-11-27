@@ -92,7 +92,7 @@ int AngleDiff(int a, int b);
 
 /* Sine and cosine pairs indexed by (angle >> 4) * 2. */
 extern s8 gCurrentSublevel; /* current sublevel id */
-extern SharedFilePtr data_ov002_0210da38; /* sleep-bubble model, out of ov002 */
+extern ModelFile data_ov002_0210da38; /* sleep-bubble model, out of ov002 */
 extern SharedFilePtr *const gEyknTextureSequenceFiles[2] = {&gEyknCloseTextureSequenceFile,
                                                             &gEyknOpenTextureSequenceFile};
 extern SharedFilePtr *const gEyknDeathAnimationFilePtr = &gEyknDeathAnimationFile;

@@ -910,9 +910,9 @@ ObjKeyStateTable data_ov089_02132cec;
 
 /* Collect animations, models, and the extra-model row. Defined after the
    static-init objects so this file's @NNN numbers stay put. */
-extern "C" SharedFilePtr data_ov002_0210da40;
-extern "C" SharedFilePtr data_ov002_0210d9a0;
-extern "C" SharedFilePtr data_ov002_0210d9c0;
+extern "C" ModelFile data_ov002_0210da40;
+extern "C" ModelFile data_ov002_0210d9a0;
+extern "C" ModelFile data_ov002_0210d9c0;
 extern "C" ModelFile data_ov085_021305d8;
 extern AnimFile *const data_ov089_02132880[5] = {
     0,

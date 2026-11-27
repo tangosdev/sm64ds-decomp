@@ -56,8 +56,7 @@ AnimFile data_ov084_02130df4(ASSET_PAKKUN_SLEEP_LOOP_BCA); /* idle animation */
 AnimFile data_ov084_02130e04(ASSET_PAKKUN_FIRE_BCA);       /* spit animation */
 AnimFile data_ov084_02130e1c(ASSET_PAKKUN_FIRE_ED_BCA);    /* post-spit animation */
 
-extern SharedFilePtr
-    data_ov002_0210da38; /* BUBBLE_MODEL_PTR -- sleep bubble, shared out of ov002 */
+extern ModelFile data_ov002_0210da38; /* BUBBLE_MODEL_PTR -- sleep bubble, shared out of ov002 */
 
 /* Six animation handles, held indirectly: the table is pointers, not objects. */
 extern SharedFilePtr *const data_ov084_021302f4[6];

@@ -71,8 +71,8 @@ extern ShlState data_ov102_0214ea48;
 extern ShlState data_ov102_0214ea58;
 extern ShlState data_ov102_0214ea68;
 extern ShlStateEnd data_ov102_0214ea78;
-extern SharedFilePtr gShellGreenModelFile;
-extern SharedFilePtr gShellRedModelFile;
+extern ModelFile gShellGreenModelFile;
+extern ModelFile gShellRedModelFile;
 extern SharedFilePtr *const data_ov102_0214d70c[2] = {
     &gShellGreenModelFile,
     &gShellRedModelFile,

@@ -15,7 +15,7 @@
 #include "Event.h"
 #include "daBmb_c.h"
 
-extern SharedFilePtr gBombheiModelFile;
+extern ModelFile gBombheiModelFile;
 
 daESwitch_c *daESwitch_c_classInit() {
     return new daESwitch_c;
