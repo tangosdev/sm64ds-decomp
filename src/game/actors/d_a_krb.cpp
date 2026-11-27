@@ -91,16 +91,7 @@ typedef struct {
     unsigned char flag : 1;
 } Flags;
 
-/* Resource handles: the files the Goombas load are read through filePtr.
-   dExtSimpleModel_c handles construct through
-   ModelFile::ModelFile and destroy through ModelFile::~ModelFile. Animation handles
-   construct through AnimFile::AnimFile and destroy through
-   AnimFile::~AnimFile. The manifest aliases those undefined members
-   onto the ROM symbols. */
-struct KrbModelFilePtr : SharedFilePtr {
-    KrbModelFilePtr(u32 fileID);
-    ~KrbModelFilePtr();
-};
+/* Resource handles: the files the Goombas load are read through filePtr. */
 
 /* A state handler: data_ov084_02130d74 holds one pointer-to-member per
    daKrb_c::State. */
@@ -168,8 +159,8 @@ extern KrbAnimationFileHandle gKuriboRecoverAnimationFile;
 extern KrbAnimationFileHandle data_ov084_02130ce0;
 extern KrbAnimationFileHandle data_ov084_02130ce8;
 extern KrbAnimationFileHandle data_ov084_02130cf0;
-extern KrbModelFilePtr data_ov084_02130cf8;
-extern KrbModelFilePtr gKuriboLowModelModelFile;
+extern ModelFile data_ov084_02130cf8;
+extern ModelFile gKuriboLowModelModelFile;
 extern StateHandler data_ov084_02130d74[];
 extern "C" int func_02037e20(int *p);
 void func_02012694(unsigned int id, const Vector3 *pos);
@@ -1847,12 +1838,10 @@ SpawnInfo<daKrb_c> g_profile_KURIBO_L = {
     0x01000000,
 };
 
-/* The nine file-scope resource handles, in retail initializer order. Two
-   model files (ModelFile::ModelFile / ModelFile::~ModelFile), then seven animation files
-   (AnimFile::AnimFile / AnimFile::~AnimFile); the manifest
-   aliases each wrapper ctor/dtor onto those ROM symbols. */
-KrbModelFilePtr data_ov084_02130cf8(ASSET_KURIBO_MODEL_BMD);
-KrbModelFilePtr gKuriboLowModelModelFile(ASSET_KURIBO_LOW_MODEL_BMD);
+/* The nine file-scope resource handles, in retail initializer order: two
+   model files, then seven animation files. */
+ModelFile data_ov084_02130cf8(ASSET_KURIBO_MODEL_BMD);
+ModelFile gKuriboLowModelModelFile(ASSET_KURIBO_LOW_MODEL_BMD);
 KrbAnimationFileHandle data_ov084_02130ce8(ASSET_KURIBO_WALK_BCA);
 KrbAnimationFileHandle data_ov084_02130ce0(ASSET_KURIBO_ROLLING_BCA);
 KrbAnimationFileHandle data_ov084_02130cd0(ASSET_KURIBO_STRETCH_BCA);

@@ -35,20 +35,12 @@ enum daKirai_c_AssetId { ASSET_KOOPA_BOMB_BMD = 0x0382 };
 
 typedef void (daKirai_c::*KiraiState)();
 
-/* The model file handle constructs through ModelFile::ModelFile and destroys through
- * ModelFile::~ModelFile; the manifest aliases the wrapper's undefined members onto
- * those ROM symbols. */
-struct KiraiModelFilePtr : SharedFilePtr {
-    KiraiModelFilePtr(u32 fileID);
-    ~KiraiModelFilePtr();
-};
-
 /* arm9 C helpers with no shared header. */
 void ClearSpikeBomb(int idx);
 extern "C" int AddSpikeBomb(dActor_c *p);
 void func_02012694(unsigned int a, const Vector3 *b);
 
-extern KiraiModelFilePtr data_ov060_0211b1c4;
+extern ModelFile data_ov060_0211b1c4;
 extern KiraiState data_ov060_0211b1d8[4];
 
 /* mFlags 0x08 is the framework's off-screen bit (dActor_c.h bit table). */
@@ -308,7 +300,7 @@ int daKirai_c::InitResources() {
 /* The model handle and the state table are this TU's static-init globals:
  * mwcc emits the initializer that constructs the handle (file 0x382),
  * registers its destructor, and copies the four pointer-to-member records. */
-KiraiModelFilePtr data_ov060_0211b1c4(ASSET_KOOPA_BOMB_BMD);
+ModelFile data_ov060_0211b1c4(ASSET_KOOPA_BOMB_BMD);
 
 KiraiState data_ov060_0211b1d8[4] = {
     &daKirai_c::StateArmed,

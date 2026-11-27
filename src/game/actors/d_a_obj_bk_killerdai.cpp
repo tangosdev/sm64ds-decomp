@@ -57,26 +57,13 @@ enum daObjBkKillerdai_c_AssetId {
     ASSET_BK_KILLER_DAI_KCL = 0x0598
 };
 
-/* The handles reach their files through these wrappers' constructor and
- * destructor veneers; the manifest maps each to the retail destination.
- * Descriptive local types, not recovered spellings. */
-struct BkKillerdaiModelFile : SharedFilePtr {
-    BkKillerdaiModelFile(u32 fileID);
-    ~BkKillerdaiModelFile();
-};
-
-struct BkKillerdaiCollisionFile : SharedFilePtr {
-    BkKillerdaiCollisionFile(u32 fileID);
-    ~BkKillerdaiCollisionFile();
-};
-
 /* This TU's statics, in the order the retail initializer (0x02127a10)
  * builds them: the bill's face and body models (d_a_klr.cpp reads both
  * through externs), then the launcher model and mesh. */
-BkKillerdaiModelFile data_ov079_021282f0(ASSET_KILLER_FACE_BMD);
-BkKillerdaiModelFile data_ov079_02128300(ASSET_KILLER_BODY_BMD);
-BkKillerdaiModelFile gBkKillerDaiModelFile(ASSET_BK_KILLER_DAI_BMD);
-BkKillerdaiCollisionFile gBkKillerDaiCollisionFile(ASSET_BK_KILLER_DAI_KCL);
+ModelFile data_ov079_021282f0(ASSET_KILLER_FACE_BMD);
+ModelFile data_ov079_02128300(ASSET_KILLER_BODY_BMD);
+ModelFile gBkKillerDaiModelFile(ASSET_BK_KILLER_DAI_BMD);
+ClsnFile gBkKillerDaiCollisionFile(ASSET_BK_KILLER_DAI_KCL);
 
 /* Collision properties: the 'CLPS' tag, the 8-byte stride header with one
  * entry, then the default entries. */

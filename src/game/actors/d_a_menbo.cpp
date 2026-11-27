@@ -46,19 +46,7 @@
 struct BMD_File;
 struct BCA_File;
 
-/* 8-byte file handles: filePtr is the loaded file. The model constructs
- * with ModelFile::ModelFile and destroys with ModelFile::~ModelFile; the anims use
- * AnimFile::AnimFile and
- * AnimFile::~AnimFile. Manifest aliases carry the spellings. */
-struct MenboModelFilePtr : SharedFilePtr {
-    MenboModelFilePtr(u32 fileID);
-    ~MenboModelFilePtr();
-};
-
-struct MenboAnimationFilePtr : SharedFilePtr {
-    MenboAnimationFilePtr(u32 fileID);
-    ~MenboAnimationFilePtr();
-};
+/* 8-byte file handles: filePtr is the loaded file. */
 
 extern "C" void Vec3_Lsl(Vector3 *out, const Vector3 *in, int n);
 extern "C" void Vec3_Asr(void *dst, void *src, int n);
@@ -88,11 +76,11 @@ struct MenboCylinderOffset {
     fx32 x, y, z;
 };
 extern MenboCylinderOffset data_ov090_0213412c;
-extern MenboAnimationFilePtr data_ov090_02134480; /* patrol anim, file 0x3a1 */
-extern MenboAnimationFilePtr data_ov090_02134488; /* water-chase anim, file 0x3a0 */
-extern MenboAnimationFilePtr data_ov090_02134490; /* water-rest anim, file 0x3a2 */
-extern MenboAnimationFilePtr data_ov090_02134498; /* idle anim, file 0x3a3 */
-extern MenboModelFilePtr     data_ov090_021344a0; /* model, file 0x39f */
+extern AnimFile data_ov090_02134480;  /* patrol anim, file 0x3a1 */
+extern AnimFile data_ov090_02134488;  /* water-chase anim, file 0x3a0 */
+extern AnimFile data_ov090_02134490;  /* water-rest anim, file 0x3a2 */
+extern AnimFile data_ov090_02134498;  /* idle anim, file 0x3a3 */
+extern ModelFile data_ov090_021344a0; /* model, file 0x39f */
 /* Each node is the (entry, update) PMF pair the Behavior installs.
  * e4 idle, f4 water chase, 504 water rest, 514 patrol. */
 extern daMenbo_c::StateFn data_ov090_021344e4[2];
@@ -832,11 +820,11 @@ s32 daMenbo_c::OnYoshiTryEat()
 /* The five file handles and the four state nodes. mwccarm emits
    __sinit_d_a_menbo.cpp from these definitions: construct+register for each
    handle, then the eight PMF descriptor copies. */
-MenboModelFilePtr     data_ov090_021344a0(0x39f);
-MenboAnimationFilePtr data_ov090_02134488(0x3a0);
-MenboAnimationFilePtr data_ov090_02134480(0x3a1);
-MenboAnimationFilePtr data_ov090_02134490(0x3a2);
-MenboAnimationFilePtr data_ov090_02134498(0x3a3);
+ModelFile data_ov090_021344a0(0x39f);
+AnimFile data_ov090_02134488(0x3a0);
+AnimFile data_ov090_02134480(0x3a1);
+AnimFile data_ov090_02134490(0x3a2);
+AnimFile data_ov090_02134498(0x3a3);
 daMenbo_c::StateFn data_ov090_021344f4[2] = {
     &daMenbo_c::St_WaterChase_Init,
     &daMenbo_c::St_WaterChase_Main,

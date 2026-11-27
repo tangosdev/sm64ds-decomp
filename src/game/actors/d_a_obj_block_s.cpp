@@ -145,21 +145,8 @@ struct BlockSStateEntry {
 };
 extern BlockSStateEntry data_ov098_0213c878[];
 
-/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the model, ClsnFile::ClsnFile /
- * ClsnFile::~ClsnFile for the collision), spelled through
- * declared-only subclasses so the static initializer names the real entry
- * points. */
-struct BlockSModelFilePtr : SharedFilePtr {
-    BlockSModelFilePtr(u32 fileID);
-    ~BlockSModelFilePtr();
-};
-struct BlockSCollisionFilePtr : SharedFilePtr {
-    BlockSCollisionFilePtr(u32 fileID);
-    ~BlockSCollisionFilePtr();
-};
-extern BlockSModelFilePtr gBrokenBlockSModelFile;
-extern BlockSCollisionFilePtr gBrokenBlockSCollisionFile;
+extern ModelFile gBrokenBlockSModelFile;
+extern ClsnFile gBrokenBlockSCollisionFile;
 
 /* Throw speeds (20.12) for the four character weights: horizontal and
    vertical, copied by value in EnterThrown. */
@@ -1269,8 +1256,8 @@ daObjBlockS_c *daObjBlockS_c_classInit() {
     return new daObjBlockS_c();
 }
 
-BlockSModelFilePtr gBrokenBlockSModelFile(ASSET_BROKEN_BLOCK_S_BMD);       /* model */
-BlockSCollisionFilePtr gBrokenBlockSCollisionFile(ASSET_BROKEN_BLOCK_S_KCL);   /* collision */
+ModelFile gBrokenBlockSModelFile(ASSET_BROKEN_BLOCK_S_BMD);    /* model */
+ClsnFile gBrokenBlockSCollisionFile(ASSET_BROKEN_BLOCK_S_KCL); /* collision */
 
 ResourceDescriptor data_ov098_0213c4c8 = {
     &gBrokenBlockSModelFile,

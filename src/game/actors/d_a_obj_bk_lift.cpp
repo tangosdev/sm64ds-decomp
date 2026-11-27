@@ -55,20 +55,8 @@ enum daObjBk_Lift_c_AssetId { ASSET_BK_LIFT01_BMD = 0x0599, ASSET_BK_LIFT01_KCL 
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 
-/* The constructors and destructors are the ROM resource-family veneers,
- * aliased in the manifest. */
-struct BkLiftModelFilePtr : SharedFilePtr {
-    BkLiftModelFilePtr(u32 fileID);
-    ~BkLiftModelFilePtr();
-};
-
-struct BkLiftCollisionFilePtr : SharedFilePtr {
-    BkLiftCollisionFilePtr(u32 fileID);
-    ~BkLiftCollisionFilePtr();
-};
-
-extern BkLiftCollisionFilePtr data_ov015_02114a5c; /* collision KCL */
-extern BkLiftModelFilePtr data_ov015_02114a64;     /* step BMD */
+extern ClsnFile data_ov015_02114a5c;  /* collision KCL */
+extern ModelFile data_ov015_02114a64; /* step BMD */
 extern struct CLPS_Block data_ov015_02113594;
 
 extern s8 gCurrentSublevel;
@@ -266,5 +254,5 @@ void daObjBk_Lift_c::Kill() {
 /* The ROM's initializer constructs the model handle with file ID 1433 and
  * the collision handle with file ID 1434, registering a destructor node for
  * each. mwcc emits __sinit_d_a_obj_bk_lift.cpp from these definitions. */
-BkLiftModelFilePtr data_ov015_02114a64(ASSET_BK_LIFT01_BMD);
-BkLiftCollisionFilePtr data_ov015_02114a5c(ASSET_BK_LIFT01_KCL);
+ModelFile data_ov015_02114a64(ASSET_BK_LIFT01_BMD);
+ClsnFile data_ov015_02114a5c(ASSET_BK_LIFT01_KCL);

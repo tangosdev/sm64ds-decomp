@@ -32,20 +32,12 @@
 #include "SharedFilePtr.h"
 #include "math/MtxStack.h"
 
-/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile. The manifest aliases those undefined members onto the ROM
- * symbols. */
-struct ClockModelFilePtr : SharedFilePtr {
-    ClockModelFilePtr(u32 fileID);
-    ~ClockModelFilePtr();
-};
-
 u8 IsAreaShowing(int areaId);
 
 extern s8 gNextSublevel; /* hands advance while it is not positive */
 extern u8 data_0209f2c0; /* clock setting: 0 slow, 1 fast, 2 random, 3 stopped */
-extern ClockModelFilePtr data_ov013_02112294;
-extern ClockModelFilePtr data_ov013_0211229c;
+extern ModelFile data_ov013_02112294;
+extern ModelFile data_ov013_0211229c;
 
 extern const s16 data_ov013_021116ac[2] = {0xfe80, 0xffe0};
 
@@ -169,8 +161,8 @@ void daObjClock_c::UpdateModelTransform() {
 /* File-scope objects: the short hand's model file (0x5b2) and the long
  * hand's model file (0x5b1); the two constructions
  * __sinit_d_a_obj_clock.cpp performs, in retail order. */
-ClockModelFilePtr data_ov013_0211229c(0x5b1);
-ClockModelFilePtr data_ov013_02112294(0x5b2);
+ModelFile data_ov013_0211229c(0x5b1);
+ModelFile data_ov013_02112294(0x5b2);
 
 extern "C" {
 u32 data_ov013_021122bc[1];

@@ -168,7 +168,8 @@ enum Bool { FALSE, TRUE };
  * and the loaded-file pointer at +4. Byte +3 is alignment padding.
  * The model payload is BMD_File; animation payloads are BCA_File.
  * CleanupResources releases the actor's references; the registered
- * handle destructors only publish the file ID through SharedFilePtr::~SharedFilePtr (D2). */
+ * handle destructors only publish the file ID through
+ * SharedFilePtr::~SharedFilePtr (D2). */
 
 extern AnimFile gKingIceDonketuDeadAnimationFile;   /* anim, file 0x355 */
 extern AnimFile gKingIceDonketuWalkAnimationFile;   /* anim, file 0x35b */

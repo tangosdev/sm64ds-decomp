@@ -75,20 +75,6 @@ typedef void (daKpa3Bg_c::*Handler)();
 struct HandlerEntry { Handler pmf; };
 extern HandlerEntry data_ov060_0211b1ac[];
 
-/* The ten model handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile; the ten collision handles construct through ClsnFile::ClsnFile
- * and destroy through ClsnFile::~ClsnFile. The wrappers are declared,
- * never defined: the manifest aliases their members onto the ROM veneers. */
-struct Kpa3BgModelFilePtr : SharedFilePtr {
-    Kpa3BgModelFilePtr(u32 fileID);
-    ~Kpa3BgModelFilePtr();
-};
-
-struct Kpa3BgCollisionFilePtr : SharedFilePtr {
-    Kpa3BgCollisionFilePtr(u32 fileID);
-    ~Kpa3BgCollisionFilePtr();
-};
-
 #pragma defer_codegen off
 daKpa3Bg_c::~daKpa3Bg_c() {}
 #pragma defer_codegen on
@@ -269,26 +255,26 @@ void daKpa3Bg_c::StateFall() {
  * one ctor veneer plus destructor registration per file handle, then the
  * three pointer-to-member records copied into the dispatch table. Order
  * matches the retail initializer exactly. */
-Kpa3BgModelFilePtr data_ov060_0211b06c(0x625);
-Kpa3BgModelFilePtr data_ov060_0211b034(0x627);
-Kpa3BgModelFilePtr data_ov060_0211b0a4(0x629);
-Kpa3BgModelFilePtr data_ov060_0211b03c(0x62b);
-Kpa3BgModelFilePtr data_ov060_0211b0b4(0x62d);
-Kpa3BgModelFilePtr data_ov060_0211b044(0x62f);
-Kpa3BgModelFilePtr data_ov060_0211b094(0x631);
-Kpa3BgModelFilePtr data_ov060_0211b09c(0x633);
-Kpa3BgModelFilePtr data_ov060_0211b054(0x635);
-Kpa3BgModelFilePtr data_ov060_0211b024(0x637);
-Kpa3BgCollisionFilePtr data_ov060_0211b0ac(0x626);
-Kpa3BgCollisionFilePtr data_ov060_0211b02c(0x628);
-Kpa3BgCollisionFilePtr data_ov060_0211b05c(0x62a);
-Kpa3BgCollisionFilePtr data_ov060_0211b064(0x62c);
-Kpa3BgCollisionFilePtr data_ov060_0211b07c(0x62e);
-Kpa3BgCollisionFilePtr data_ov060_0211b01c(0x630);
-Kpa3BgCollisionFilePtr data_ov060_0211b074(0x632);
-Kpa3BgCollisionFilePtr data_ov060_0211b084(0x634);
-Kpa3BgCollisionFilePtr data_ov060_0211b08c(0x636);
-Kpa3BgCollisionFilePtr data_ov060_0211b04c(0x638);
+ModelFile data_ov060_0211b06c(0x625);
+ModelFile data_ov060_0211b034(0x627);
+ModelFile data_ov060_0211b0a4(0x629);
+ModelFile data_ov060_0211b03c(0x62b);
+ModelFile data_ov060_0211b0b4(0x62d);
+ModelFile data_ov060_0211b044(0x62f);
+ModelFile data_ov060_0211b094(0x631);
+ModelFile data_ov060_0211b09c(0x633);
+ModelFile data_ov060_0211b054(0x635);
+ModelFile data_ov060_0211b024(0x637);
+ClsnFile data_ov060_0211b0ac(0x626);
+ClsnFile data_ov060_0211b02c(0x628);
+ClsnFile data_ov060_0211b05c(0x62a);
+ClsnFile data_ov060_0211b064(0x62c);
+ClsnFile data_ov060_0211b07c(0x62e);
+ClsnFile data_ov060_0211b01c(0x630);
+ClsnFile data_ov060_0211b074(0x632);
+ClsnFile data_ov060_0211b084(0x634);
+ClsnFile data_ov060_0211b08c(0x636);
+ClsnFile data_ov060_0211b04c(0x638);
 
 extern SharedFilePtr *const data_ov060_02119514[] = {
     &data_ov060_0211b06c, &data_ov060_0211b034, &data_ov060_0211b0a4, &data_ov060_0211b03c,

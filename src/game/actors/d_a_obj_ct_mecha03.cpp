@@ -52,15 +52,6 @@ struct CLPS_Block;
 
 /* Resource handles constructed by this TU's static initializer. The
  * constructor and destructor bodies stay out of line; mwcc registers them. */
-struct Mecha03ModelFilePtr : SharedFilePtr {
-    Mecha03ModelFilePtr(u32 fileID);
-    ~Mecha03ModelFilePtr();
-};
-
-struct Mecha03ClsnFilePtr : SharedFilePtr {
-    Mecha03ClsnFilePtr(u32 fileID);
-    ~Mecha03ClsnFilePtr();
-};
 
 extern u8 data_0209f2c0;
 extern const s16 sTTCPendulumInitialAccels[4] = {
@@ -69,8 +60,8 @@ extern const s16 sTTCPendulumInitialAccels[4] = {
     13,
     0,
 };
-extern Mecha03ModelFilePtr data_ov065_0211d88c;
-extern Mecha03ClsnFilePtr data_ov065_0211d894;
+extern ModelFile data_ov065_0211d88c;
+extern ClsnFile data_ov065_0211d894;
 extern CLPS_Block data_ov035_02112198;
 
 daObjCtMecha03_c *daObjCtMecha03_c_classInit() {
@@ -210,5 +201,5 @@ void daObjCtMecha03_c::UpdateShadow() {
  * included class header makes mwccarm emit retail's D1 then D0 order without
  * the otherwise homeless D2 variant. */
 
-Mecha03ModelFilePtr data_ov065_0211d88c(ASSET_CT_MECHA_OBJ03_BMD);
-Mecha03ClsnFilePtr data_ov065_0211d894(ASSET_CT_MECHA_OBJ03_KCL);
+ModelFile data_ov065_0211d88c(ASSET_CT_MECHA_OBJ03_BMD);
+ClsnFile data_ov065_0211d894(ASSET_CT_MECHA_OBJ03_KCL);

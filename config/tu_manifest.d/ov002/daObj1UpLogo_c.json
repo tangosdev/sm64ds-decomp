@@ -478,36 +478,6 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail; the other .ctor words belong to the remaining shards"
     }
   ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN18OneUpLogoModelFileC1Ej",
-      "canonical_symbol": "_ZN9ModelFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN18OneUpLogoModelFileD1Ev",
-      "canonical_symbol": "_ZN9ModelFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
-    },
-    {
-      "symbol": "_ZN22OneUpLogoTexSeqFilePtrC1Ej",
-      "canonical_symbol": "_ZN10TexSeqFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017934",
-      "evidence": "retail initializer call destination and the texture-sequence wrapper constructor exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN22OneUpLogoTexSeqFilePtrD1Ev",
-      "canonical_symbol": "_ZN10TexSeqFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0201791c",
-      "evidence": "retail destructor registration destination and the texture-sequence wrapper destructor exact ABS32 relocation"
-    }
-  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_d_a_obj1up_logo.cpp",
@@ -648,14 +618,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@527",
+      "from": "@525",
       "to": "@383",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @399 now; licensed under the existing pin @383 | compiler temp; including Particle__System.h and math/MtxStack.h in place of the local stubs moves the per-TU @NNN uniquifier, so mwcc emits it under this name now | Re-keyed @511 -> @516 (measured, both .bss size 0xc in the same order) when the pop particle moved into the by-reference SpawnPopParticle inline (#821). Re-keyed from @516 to @504 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @504 to @516 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @516 to @521 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @521 to @523 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @523 to @527 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @399 now; licensed under the existing pin @383 | compiler temp; including Particle__System.h and math/MtxStack.h in place of the local stubs moves the per-TU @NNN uniquifier, so mwcc emits it under this name now | Re-keyed @511 -> @516 (measured, both .bss size 0xc in the same order) when the pop particle moved into the by-reference SpawnPopParticle inline (#821). Re-keyed from @516 to @504 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @504 to @516 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @516 to @521 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @521 to @523 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @523 to @527 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @527 to @525 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@528",
+      "from": "@526",
       "to": "@384",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @400 now; licensed under the existing pin @384 | compiler temp; including Particle__System.h and math/MtxStack.h in place of the local stubs moves the per-TU @NNN uniquifier, so mwcc emits it under this name now | Re-keyed @512 -> @517 (measured, both .bss size 0xc in the same order) when the pop particle moved into the by-reference SpawnPopParticle inline (#821). Re-keyed from @517 to @505 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @505 to @517 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @517 to @522 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @522 to @524 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @524 to @528 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @400 now; licensed under the existing pin @384 | compiler temp; including Particle__System.h and math/MtxStack.h in place of the local stubs moves the per-TU @NNN uniquifier, so mwcc emits it under this name now | Re-keyed @512 -> @517 (measured, both .bss size 0xc in the same order) when the pop particle moved into the by-reference SpawnPopParticle inline (#821). Re-keyed from @517 to @505 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @505 to @517 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @517 to @522 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @522 to @524 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @524 to @528 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @528 to @526 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     }
   ]
 }

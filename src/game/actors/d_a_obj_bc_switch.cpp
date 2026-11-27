@@ -108,21 +108,10 @@ enum d_a_obj_bc_switch_AssetId {
 #include "math/CalcLib.h"
 
 /* File 1084 / 1085 resource handles. The static initializer registers
- * their destructors; the spellings are this TU's, mapped onto
- * ModelFile::ModelFile / ModelFile::~ModelFile and ClsnFile::ClsnFile /
- * ClsnFile::~ClsnFile. */
-struct BcSwitchModelFilePtr : SharedFilePtr {
-    BcSwitchModelFilePtr(u32 fileID);
-    ~BcSwitchModelFilePtr();
-};
+ * their destructors. */
 
-struct BcSwitchCollisionFilePtr : SharedFilePtr {
-    BcSwitchCollisionFilePtr(u32 fileID);
-    ~BcSwitchCollisionFilePtr();
-};
-
-extern BcSwitchCollisionFilePtr daObjBC_Switch_c_ClsnFile;
-extern BcSwitchModelFilePtr daObjBC_Switch_c_ModelFile;
+extern ClsnFile daObjBC_Switch_c_ClsnFile;
+extern ModelFile daObjBC_Switch_c_ModelFile;
 extern CLPS_Block data_ov002_0210d6f4;
 
 extern u8 IsAreaShowing(s32 idx);
@@ -363,7 +352,7 @@ int daObjBC_Switch_c::CleanupResources() {
 /* Definitions stay after the last .text function so they do not insert
  * a function into the ROM-ascending run. Construction order is the model
  * handle, then the collision handle. */
-BcSwitchModelFilePtr daObjBC_Switch_c_ModelFile(ASSET_B_COIN_SWITCH_BMD);
-BcSwitchCollisionFilePtr daObjBC_Switch_c_ClsnFile(ASSET_B_COIN_SWITCH_KCL);
+ModelFile daObjBC_Switch_c_ModelFile(ASSET_B_COIN_SWITCH_BMD);
+ClsnFile daObjBC_Switch_c_ClsnFile(ASSET_B_COIN_SWITCH_KCL);
 
 int gWaterfallSoundsDisabled[4];

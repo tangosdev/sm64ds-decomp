@@ -54,24 +54,13 @@ enum d_a_nknk_AssetId {
 #include "math/MtxStack.h"
 #include "LevelRng.h"
 
-/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the two models,
- * AnimFile::AnimFile / AnimFile::~AnimFile for the nine
- * animation handles), spelled through declared-only subclasses so the
- * static initializer names the real entry points. The code reaches them
+/* File-scope resource handles: the two models and the nine animation
+ * handles. The code reaches them
  * through the data_ov062_0211ced8/cee0/cee8 pointer tables. The model and
  * animation initialization paths both store a u16 file ID at +0, a byte
  * reference count at +2, and a loaded-file pointer at +4. */
-struct NknkModelFilePtr : SharedFilePtr {
-    NknkModelFilePtr(u32 fileID);
-    ~NknkModelFilePtr();
-};
-struct NknkAnimationFileHandle : SharedFilePtr {
-    NknkAnimationFileHandle(u32 fileID);
-    ~NknkAnimationFileHandle();
-};
 
-extern NknkAnimationFileHandle *const data_ov062_0211cee8[9];
+extern AnimFile *const data_ov062_0211cee8[9];
 extern const int data_ov062_0211cf0c[9];
 
 extern SharedFilePtr *const data_ov062_0211ced8[2];
@@ -1048,17 +1037,17 @@ void daNknk_c::KillOnWaterFloor() {
 /* Two model handles (param1 & 1 selects the variant through
  * data_ov062_0211ced8) and nine animation handles (the shared noko-noko
  * clip set indexed by data_ov062_0211cee8). */
-NknkModelFilePtr gNokonokoModelFile(ASSET_NOKONOKO_BMD);
-NknkModelFilePtr gNokonokoRedModelFile(ASSET_NOKONOKO_RED_BMD);
-NknkAnimationFileHandle gNokonokoWalkStAnimationFile(ASSET_NOKONOKO_WALK_ST_BCA);
-NknkAnimationFileHandle gNokonokoWalkAnimationFile(ASSET_NOKONOKO_WALK_BCA);
-NknkAnimationFileHandle gNokonokoWalkEdAnimationFile(ASSET_NOKONOKO_WALK_ED_BCA);
-NknkAnimationFileHandle gNokonokoRunAnimationFile(ASSET_NOKONOKO_RUN_BCA);
-NknkAnimationFileHandle gNokonokoWait1AnimationFile(ASSET_NOKONOKO_WAIT1_BCA);
-NknkAnimationFileHandle gNokonokoWait2AnimationFile(ASSET_NOKONOKO_WAIT2_BCA);
-NknkAnimationFileHandle gNokonokoDiveStAnimationFile(ASSET_NOKONOKO_DIVE_ST_BCA);
-NknkAnimationFileHandle gNokonokoDiveAnimationFile(ASSET_NOKONOKO_DIVE_BCA);
-NknkAnimationFileHandle gNokonokoDiveEdAnimationFile(ASSET_NOKONOKO_DIVE_ED_BCA);
+ModelFile gNokonokoModelFile(ASSET_NOKONOKO_BMD);
+ModelFile gNokonokoRedModelFile(ASSET_NOKONOKO_RED_BMD);
+AnimFile gNokonokoWalkStAnimationFile(ASSET_NOKONOKO_WALK_ST_BCA);
+AnimFile gNokonokoWalkAnimationFile(ASSET_NOKONOKO_WALK_BCA);
+AnimFile gNokonokoWalkEdAnimationFile(ASSET_NOKONOKO_WALK_ED_BCA);
+AnimFile gNokonokoRunAnimationFile(ASSET_NOKONOKO_RUN_BCA);
+AnimFile gNokonokoWait1AnimationFile(ASSET_NOKONOKO_WAIT1_BCA);
+AnimFile gNokonokoWait2AnimationFile(ASSET_NOKONOKO_WAIT2_BCA);
+AnimFile gNokonokoDiveStAnimationFile(ASSET_NOKONOKO_DIVE_ST_BCA);
+AnimFile gNokonokoDiveAnimationFile(ASSET_NOKONOKO_DIVE_BCA);
+AnimFile gNokonokoDiveEdAnimationFile(ASSET_NOKONOKO_DIVE_ED_BCA);
 
 extern SharedFilePtr *const data_ov062_0211ced8[2] = {
     &gNokonokoModelFile,
@@ -1068,7 +1057,7 @@ extern SharedFilePtr *const data_ov062_0211cee0[2] = {
     &gShellGreenModelFile,
     &gShellRedModelFile,
 };
-extern NknkAnimationFileHandle *const data_ov062_0211cee8[9] = {
+extern AnimFile *const data_ov062_0211cee8[9] = {
     &gNokonokoWalkStAnimationFile, &gNokonokoWalkAnimationFile,  &gNokonokoWalkEdAnimationFile,
     &gNokonokoRunAnimationFile,    &gNokonokoWait1AnimationFile, &gNokonokoWait2AnimationFile,
     &gNokonokoDiveStAnimationFile, &gNokonokoDiveAnimationFile,  &gNokonokoDiveEdAnimationFile,

@@ -95,24 +95,6 @@ enum daKuriKing_c_AssetId {
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 
-/* Resource handles this TU's static initializer constructs. The wrapper
- * spellings are reconstructed; constructor and destructor addresses, file
- * IDs, widths, and BSS order are the ROM's. */
-struct KuriKingModelFilePtr : SharedFilePtr {
-    KuriKingModelFilePtr(u32 fileID);
-    ~KuriKingModelFilePtr();
-};
-
-struct KuriKingTexSeqFilePtr : SharedFilePtr {
-    KuriKingTexSeqFilePtr(u32 fileID);
-    ~KuriKingTexSeqFilePtr();
-};
-
-struct KuriKingAnimationFilePtr : SharedFilePtr {
-    KuriKingAnimationFilePtr(u32 fileID);
-    ~KuriKingAnimationFilePtr();
-};
-
 typedef void (daKuriKing_c::*KuriKingStateFn)();
 
 /* Three state slots target free (void) stubs, not members, so those
@@ -191,23 +173,23 @@ extern "C" int func_02037e20(int *p);
 extern "C" unsigned int func_0201277c(unsigned int a);
 u8 data_ov074_02122d80[4] = {16, 9, 6, 3};
 extern SharedFilePtr gScaleUpKinokoModelFile;
-extern SharedFilePtr data_ov084_02130cf8;
+extern ModelFile data_ov084_02130cf8;
 extern BMA_File data_ov084_0213089c;
 extern KrbAnimationFileHandle data_ov084_02130cc8;
-extern KuriKingModelFilePtr gKurikingModelModelFile;
-extern KuriKingTexSeqFilePtr gKurikingAngerTextureSequenceFile;
-extern KuriKingAnimationFilePtr data_ov074_02123030;
-extern KuriKingAnimationFilePtr gKurikingAngerAnimationFile;
-extern KuriKingAnimationFilePtr gKurikingDamageBAnimationFile;
-extern KuriKingAnimationFilePtr gKurikingDamageFAnimationFile;
-extern KuriKingAnimationFilePtr gKurikingDownStartAnimationFile;
-extern KuriKingAnimationFilePtr gKurikingDownAnimationFile;
-extern KuriKingAnimationFilePtr gKurikingSerchWaitAnimationFile;
-extern KuriKingAnimationFilePtr gKurikingTurnAnimationFile;
-extern KuriKingAnimationFilePtr gKurikingWalkAnimationFile;
-extern KuriKingAnimationFilePtr gKurikingWalkEndAnimationFile;
-extern KuriKingAnimationFilePtr gKurikingWalkStartAnimationFile;
-extern KuriKingAnimationFilePtr gKurikingSpawnAnimationFile;
+extern ModelFile gKurikingModelModelFile;
+extern TexSeqFile gKurikingAngerTextureSequenceFile;
+extern AnimFile data_ov074_02123030;
+extern AnimFile gKurikingAngerAnimationFile;
+extern AnimFile gKurikingDamageBAnimationFile;
+extern AnimFile gKurikingDamageFAnimationFile;
+extern AnimFile gKurikingDownStartAnimationFile;
+extern AnimFile gKurikingDownAnimationFile;
+extern AnimFile gKurikingSerchWaitAnimationFile;
+extern AnimFile gKurikingTurnAnimationFile;
+extern AnimFile gKurikingWalkAnimationFile;
+extern AnimFile gKurikingWalkEndAnimationFile;
+extern AnimFile gKurikingWalkStartAnimationFile;
+extern AnimFile gKurikingSpawnAnimationFile;
 extern SharedFilePtr *const sKurikingMinionAnimationFiles[7];
 extern SharedFilePtr *const sKurikingAnimationFiles[12];
 
@@ -1827,20 +1809,20 @@ int daKuriKing_c::InitVanishResources() {
  * then the twelve animation handles. Their registration nodes are compiler
  * temporaries, like the PMF descriptors the table initializer below
  * materializes. */
-KuriKingModelFilePtr gKurikingModelModelFile(ASSET_KURIKING_MODEL_BMD);
-KuriKingTexSeqFilePtr gKurikingAngerTextureSequenceFile(ASSET_KURIKING_ANGER_BTP);
-KuriKingAnimationFilePtr gKurikingAngerAnimationFile(ASSET_KURIKING_ANGER_BCA);
-KuriKingAnimationFilePtr gKurikingDamageBAnimationFile(ASSET_KURIKING_DAMAGE_B_BCA);
-KuriKingAnimationFilePtr gKurikingDamageFAnimationFile(ASSET_KURIKING_DAMAGE_F_BCA);
-KuriKingAnimationFilePtr gKurikingDownStartAnimationFile(ASSET_KURIKING_DOWN_START_BCA);
-KuriKingAnimationFilePtr gKurikingDownAnimationFile(ASSET_KURIKING_DOWN_BCA);
-KuriKingAnimationFilePtr gKurikingSerchWaitAnimationFile(ASSET_KURIKING_SERCH_WAIT_BCA);
-KuriKingAnimationFilePtr gKurikingTurnAnimationFile(ASSET_KURIKING_TURN_BCA);
-KuriKingAnimationFilePtr data_ov074_02123030(ASSET_KURIKING_WAIT_BCA);
-KuriKingAnimationFilePtr gKurikingWalkAnimationFile(ASSET_KURIKING_WALK_BCA);
-KuriKingAnimationFilePtr gKurikingWalkEndAnimationFile(ASSET_KURIKING_WALK_END_BCA);
-KuriKingAnimationFilePtr gKurikingWalkStartAnimationFile(ASSET_KURIKING_WALK_START_BCA);
-KuriKingAnimationFilePtr gKurikingSpawnAnimationFile(ASSET_KURIKING_SPAWN_BCA);
+ModelFile gKurikingModelModelFile(ASSET_KURIKING_MODEL_BMD);
+TexSeqFile gKurikingAngerTextureSequenceFile(ASSET_KURIKING_ANGER_BTP);
+AnimFile gKurikingAngerAnimationFile(ASSET_KURIKING_ANGER_BCA);
+AnimFile gKurikingDamageBAnimationFile(ASSET_KURIKING_DAMAGE_B_BCA);
+AnimFile gKurikingDamageFAnimationFile(ASSET_KURIKING_DAMAGE_F_BCA);
+AnimFile gKurikingDownStartAnimationFile(ASSET_KURIKING_DOWN_START_BCA);
+AnimFile gKurikingDownAnimationFile(ASSET_KURIKING_DOWN_BCA);
+AnimFile gKurikingSerchWaitAnimationFile(ASSET_KURIKING_SERCH_WAIT_BCA);
+AnimFile gKurikingTurnAnimationFile(ASSET_KURIKING_TURN_BCA);
+AnimFile data_ov074_02123030(ASSET_KURIKING_WAIT_BCA);
+AnimFile gKurikingWalkAnimationFile(ASSET_KURIKING_WALK_BCA);
+AnimFile gKurikingWalkEndAnimationFile(ASSET_KURIKING_WALK_END_BCA);
+AnimFile gKurikingWalkStartAnimationFile(ASSET_KURIKING_WALK_START_BCA);
+AnimFile gKurikingSpawnAnimationFile(ASSET_KURIKING_SPAWN_BCA);
 
 /* The three descriptors that target free stubs, not members, stay named
  * here in ROM address order. The fifteen member descriptors are named

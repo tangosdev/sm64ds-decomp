@@ -45,23 +45,14 @@ struct TrapStateRec {
 
 /* 8-byte resource handles. The ctor/dtor bodies are the ROM functions the
  * initializer calls; this TU only names them. */
-struct TrapModelFilePtr : SharedFilePtr {
-    TrapModelFilePtr(u32 fileID);
-    ~TrapModelFilePtr();
-};
-
-struct TrapCollisionFilePtr : SharedFilePtr {
-    TrapCollisionFilePtr(u32 fileID);
-    ~TrapCollisionFilePtr();
-};
 
 /* The block the door's mesh collider takes. CLPS.h keeps CLPS_Block opaque:
    an eight-byte header whose halfword at +4 is the entry stride, then one
    eight-byte CLPS per collider class. */
 
 extern CLPS_Block data_ov010_021122f8;
-extern TrapModelFilePtr data_ov010_02112d08;
-extern TrapCollisionFilePtr data_ov010_02112d00;
+extern ModelFile data_ov010_02112d08;
+extern ClsnFile data_ov010_02112d00;
 extern TrapStateRec data_ov010_02112d28;
 
 /* Reconstructed source-style name: SM64DS proves daObjC1_Trap_c through RTTI,
@@ -306,8 +297,8 @@ void daObjC1_Trap_c::StateHeldOpen() {
  * InitResources-owned vtable: D1 at 0x021111a0, D0 at 0x021111ec. */
 
 /* mwcc copies these descriptors in __sinit_d_a_obj_c1_trap.cpp. */
-TrapModelFilePtr data_ov010_02112d08(ASSET_C1_TRAP_BMD);
-TrapCollisionFilePtr data_ov010_02112d00(ASSET_C1_TRAP_KCL);
+ModelFile data_ov010_02112d08(ASSET_C1_TRAP_BMD);
+ClsnFile data_ov010_02112d00(ASSET_C1_TRAP_KCL);
 TrapStateRec data_ov010_02112d28 = {
     &daObjC1_Trap_c::StateClosed,  &daObjC1_Trap_c::StateOpening,  &daObjC1_Trap_c::StateOpen,
     &daObjC1_Trap_c::StateClosing, &daObjC1_Trap_c::StateHeldOpen,

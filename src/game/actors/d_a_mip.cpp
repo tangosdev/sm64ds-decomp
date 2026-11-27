@@ -79,34 +79,23 @@ typedef int (daMip_c::*daMip_cStateFn)();
  * handles (model files 0x452/0x3a4, animation files 0x3a5/0x3a6/0x3a7/
  * 0x3a8/0x3a9), build the four carry-offset vectors, fill the eight state
  * pairs and read the glowing-rabbit count. mwcc emits __sinit_d_a_mip.cpp
- * from those definitions. The wrapper names are local; the handle
- * constructors and destructors are the ROM resource-family functions,
- * aliased in the manifest. The carry offsets are one Vector3[4]: mwcc
+ * from those definitions. The carry offsets are one Vector3[4]: mwcc
  * builds and registers each element in turn, with the destructor alias
  * pointing at the ROM's canonical Vector3 D1. (r63 measured four separate
  * Vector3 globals, which hoist each x `mov` ahead of the address load;
  * the array does not, #821 r77.) */
-struct DaMipModelFile : SharedFilePtr {
-    DaMipModelFile(u32 fileID);
-    ~DaMipModelFile();
-};
-
-struct DaMipAnimationFilePtr : SharedFilePtr {
-    DaMipAnimationFilePtr(u32 fileID);
-    ~DaMipAnimationFilePtr();
-};
 
 struct MipStatePair {
     daMip_cStateFn a, b;
 };
 
-extern DaMipModelFile data_ov085_021305d8;
-extern DaMipModelFile data_ov085_021305e0;
-extern DaMipAnimationFilePtr data_ov085_021305b8;
-extern DaMipAnimationFilePtr gMipRunAnimationFile;
-extern DaMipAnimationFilePtr data_ov085_021305b0;
-extern DaMipAnimationFilePtr data_ov085_021305c8;
-extern DaMipAnimationFilePtr data_ov085_021305c0;
+extern ModelFile data_ov085_021305d8;
+extern ModelFile data_ov085_021305e0;
+extern AnimFile data_ov085_021305b8;
+extern AnimFile gMipRunAnimationFile;
+extern AnimFile data_ov085_021305b0;
+extern AnimFile data_ov085_021305c8;
+extern AnimFile data_ov085_021305c0;
 extern Vector3 data_ov085_021306ec[4];
 extern MipStatePair data_ov085_021306cc;
 extern MipStatePair data_ov085_0213066c;
@@ -261,7 +250,7 @@ int daMip_c::StateSaveTalkMain()
 
 int daMip_c::StateSaveTalkInit()
 {
-    extern DaMipAnimationFilePtr data_ov085_021305c0;
+    extern AnimFile data_ov085_021305c0;
 
     mActionStep = 0;
     func_02013944();
@@ -385,7 +374,7 @@ int daMip_c::StateReleasedMain()
 
 int daMip_c::StateReleasedInit()
 {
-    extern DaMipAnimationFilePtr data_ov085_021305c0;
+    extern AnimFile data_ov085_021305c0;
 
     mVertAccel = -0x1000;
     mCatchState = 1;
@@ -580,7 +569,7 @@ int daMip_c::StateCaughtMain()
 
 int daMip_c::StateCaughtInit()
 {
-    extern DaMipAnimationFilePtr data_ov085_021305b8;
+    extern AnimFile data_ov085_021305b8;
 
     mActionStep = 0;
     mHorzSpeed = 0;
@@ -601,7 +590,7 @@ int daMip_c::StateRestMain()
 
 int daMip_c::StateRestInit()
 {
-    extern DaMipAnimationFilePtr data_ov085_021305b0;
+    extern AnimFile data_ov085_021305b0;
 
     mAnmModel.SetAnim((BCA_File *)data_ov085_021305b0.filePtr, 0x40000000, 0x1000, 0);
     return 1;
@@ -716,7 +705,7 @@ int daMip_c::StateFleeMain() {
 /* Whichever neighbouring node is further from the player becomes mPathDir. */
 int daMip_c::StateFleeInit()
 {
-    extern DaMipAnimationFilePtr gMipRunAnimationFile;
+    extern AnimFile gMipRunAnimationFile;
 
     Vector3 v;
     Vector3 nodes[2];
@@ -763,7 +752,7 @@ int daMip_c::StateStartleMain()
 
 int daMip_c::StateStartleInit()
 {
-    extern DaMipAnimationFilePtr data_ov085_021305c8;
+    extern AnimFile data_ov085_021305c8;
 
     mAnmModel.SetAnim((BCA_File *)data_ov085_021305c8.filePtr, 0x40000000, 0x1000, 0);
     return 1;
@@ -779,10 +768,10 @@ int daMip_c::StateIdleMain()
        the three stores. Vector3's empty destructor emits no cleanup; its D1
        is already this TU's deadstrip-duplicate (Behavior's locals). */
     extern MipStatePair data_ov085_0213066c;
-    extern DaMipAnimationFilePtr gMipRunAnimationFile;
-    extern DaMipAnimationFilePtr data_ov085_021305b0;
-    extern DaMipAnimationFilePtr data_ov085_021305c0;
-    extern DaMipAnimationFilePtr data_ov085_021305c8;
+    extern AnimFile gMipRunAnimationFile;
+    extern AnimFile data_ov085_021305b0;
+    extern AnimFile data_ov085_021305c0;
+    extern AnimFile data_ov085_021305c8;
 
     daPly_c *player = ClosestPlayer();
     if (player == 0) return 1;
@@ -856,7 +845,7 @@ int daMip_c::StateIdleMain()
 
 int daMip_c::StateIdleInit()
 {
-    extern DaMipAnimationFilePtr data_ov085_021305c0;
+    extern AnimFile data_ov085_021305c0;
 
     mAnmModel.SetAnim((BCA_File *)data_ov085_021305c0.filePtr, 0, 0x1000, 0);
     mIdlePos = mPos;
@@ -948,13 +937,13 @@ void daMip_c::UpdateMirrorShadow()
    data_ov085_021305d8 is the handle the key actor releases too. */
 int daMip_c::CleanupResources()
 {
-    extern DaMipModelFile data_ov085_021305d8;
-    extern DaMipAnimationFilePtr data_ov085_021305b8;
-    extern DaMipAnimationFilePtr gMipRunAnimationFile;
-    extern DaMipAnimationFilePtr data_ov085_021305b0;
-    extern DaMipAnimationFilePtr data_ov085_021305c8;
-    extern DaMipAnimationFilePtr data_ov085_021305c0;
-    extern DaMipModelFile data_ov085_021305e0;
+    extern ModelFile data_ov085_021305d8;
+    extern AnimFile data_ov085_021305b8;
+    extern AnimFile gMipRunAnimationFile;
+    extern AnimFile data_ov085_021305b0;
+    extern AnimFile data_ov085_021305c8;
+    extern AnimFile data_ov085_021305c0;
+    extern ModelFile data_ov085_021305e0;
 
     data_ov085_021305d8.Release();
     data_ov085_021305b8.Release();
@@ -1049,7 +1038,7 @@ int daMip_c::Behavior()
     extern s8 gCurrentSublevel;
     extern s8 gCurrentAreaId;
     extern dActor_c *gCastleKeyRabbit;
-    extern DaMipAnimationFilePtr data_ov085_021305c0;
+    extern AnimFile data_ov085_021305c0;
     extern MipStatePair data_ov085_0213068c;
     extern MipStatePair data_ov085_021306ac;
     extern MipStatePair data_ov085_021306bc;
@@ -1202,13 +1191,13 @@ int daMip_c::Behavior()
 
 int daMip_c::InitResources()
 {
-    extern DaMipAnimationFilePtr data_ov085_021305b8;
-    extern DaMipAnimationFilePtr gMipRunAnimationFile;
-    extern DaMipAnimationFilePtr data_ov085_021305b0;
-    extern DaMipAnimationFilePtr data_ov085_021305c8;
-    extern DaMipAnimationFilePtr data_ov085_021305c0;
-    extern DaMipModelFile data_ov085_021305d8;
-    extern DaMipModelFile data_ov085_021305e0;
+    extern AnimFile data_ov085_021305b8;
+    extern AnimFile gMipRunAnimationFile;
+    extern AnimFile data_ov085_021305b0;
+    extern AnimFile data_ov085_021305c8;
+    extern AnimFile data_ov085_021305c0;
+    extern ModelFile data_ov085_021305d8;
+    extern ModelFile data_ov085_021305e0;
     extern MipStatePair data_ov085_021306cc;
     extern s32 data_ov085_021305ac;
     extern s8 gCurrentSublevel;
@@ -1354,13 +1343,13 @@ daMip_c *daMip_c_classInit(void) {
  * 0x3a5/0x3a6/0x3a7/0x3a8/0x3a9), the four carry-offset vectors (first plain,
  * the rest volatile), the eight state pairs copied from the ROM PMF
  * constants, then the glowing-rabbit count. */
-DaMipModelFile data_ov085_021305d8(ASSET_MIP_KEY_BMD);
-DaMipModelFile data_ov085_021305e0(ASSET_MIP_BMD);
-DaMipAnimationFilePtr data_ov085_021305b8(ASSET_MIP_HOLD_BCA);
-DaMipAnimationFilePtr gMipRunAnimationFile(ASSET_MIP_RUN_BCA);
-DaMipAnimationFilePtr data_ov085_021305b0(ASSET_MIP_RUN_ED_BCA);
-DaMipAnimationFilePtr data_ov085_021305c8(ASSET_MIP_RUN_ST_BCA);
-DaMipAnimationFilePtr data_ov085_021305c0(ASSET_MIP_WAIT_BCA);
+ModelFile data_ov085_021305d8(ASSET_MIP_KEY_BMD);
+ModelFile data_ov085_021305e0(ASSET_MIP_BMD);
+AnimFile data_ov085_021305b8(ASSET_MIP_HOLD_BCA);
+AnimFile gMipRunAnimationFile(ASSET_MIP_RUN_BCA);
+AnimFile data_ov085_021305b0(ASSET_MIP_RUN_ED_BCA);
+AnimFile data_ov085_021305c8(ASSET_MIP_RUN_ST_BCA);
+AnimFile data_ov085_021305c0(ASSET_MIP_WAIT_BCA);
 Vector3 data_ov085_021306ec[4] = {
     Vector3(0x1c000, -0x2a000, 0x18000),
     Vector3(0x1c000, -0x14000, 0x32000),

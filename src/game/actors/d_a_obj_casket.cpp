@@ -45,17 +45,7 @@ struct CasketState {
 };
 
 /* Resource handles this TU's static initializer constructs. File IDs and
- * widths are the ROM's; constructor/destructor addresses are aliased in
- * the manifest (daIwante_c idiom). */
-struct CasketModelFilePtr : SharedFilePtr {
-    CasketModelFilePtr(u32 fileID);
-    ~CasketModelFilePtr();
-};
-
-struct CasketCollisionFilePtr : SharedFilePtr {
-    CasketCollisionFilePtr(u32 fileID);
-    ~CasketCollisionFilePtr();
-};
+ * widths are the ROM's. */
 
 /* Pointer-to-member descriptors the initializer copies into the state
  * table, and the state names (all ROM .data, owned by no TU). */
@@ -68,8 +58,8 @@ extern char data_ov071_02122e6c[];
 /* The state table, indexed by mState. Defined at the end of this file. */
 extern CasketState data_ov071_02122ecc[];
 /* The casket's model and collision files. Defined at the end of this file. */
-extern CasketModelFilePtr data_ov071_021230d0;
-extern CasketCollisionFilePtr data_ov071_021230d8;
+extern ModelFile data_ov071_021230d0;
+extern ClsnFile data_ov071_021230d8;
 /* The CLPS block handed to dBgW_KcMbg::SetFile. */
 extern CLPS_Block data_ov063_0211ebd8;
 
@@ -264,8 +254,8 @@ void daObjCasket_c::UpdateModelTransform() {
 /* Definition order is the retail initializer's construction order: the
  * model handle, then the collision handle, then the state table whose
  * pointer-to-member slots copy the ROM descriptors. */
-CasketModelFilePtr data_ov071_021230d0(ASSET_CASKET_BMD);
-CasketCollisionFilePtr data_ov071_021230d8(ASSET_CASKET_KCL);
+ModelFile data_ov071_021230d0(ASSET_CASKET_BMD);
+ClsnFile data_ov071_021230d8(ASSET_CASKET_KCL);
 
 /* The state names the table points at. */
 char data_ov071_02122e64[8] = "WAIT";

@@ -24,20 +24,6 @@ enum d_a_obj_bk_fall_block_AssetId { ASSET_BK_DOWN_B_BMD = 0x058f, ASSET_BK_DOWN
 #include "daObjBk_Fall_Block_c.h"
 #include "SharedFilePtr.h"
 
-/* The model handle constructs through ModelFile::ModelFile and destroys through
- * ModelFile::~ModelFile. The collision handle constructs through ClsnFile::ClsnFile and
- * destroys through ClsnFile::~ClsnFile. */
-struct FallBlockModelFilePtr : SharedFilePtr {
-    FallBlockModelFilePtr(unsigned int fileId);
-    ~FallBlockModelFilePtr();
-};
-struct FallBlockClsnFileHandle : SharedFilePtr {
-    FallBlockClsnFileHandle(unsigned int fileId);
-    ~FallBlockClsnFileHandle();
-};
-typedef char FallBlockModelFilePtr_size_must_be_8[sizeof(FallBlockModelFilePtr) == 8 ? 1 : -1];
-typedef char FallBlockClsnFileHandle_size_must_be_8[sizeof(FallBlockClsnFileHandle) == 8 ? 1 : -1];
-
 #include "ResourceDescriptor.h"
 
 extern ResourceDescriptor data_ov015_02114880;
@@ -56,8 +42,8 @@ s32 daObjBk_Fall_Block_c::CleanupResources() {
 
 /* Retail construction order: model 1423, then collision 1424.
  * mwcc emits __sinit_d_a_obj_bk_fall_block.cpp. */
-FallBlockModelFilePtr gBkDownBModelFile(ASSET_BK_DOWN_B_BMD);
-FallBlockClsnFileHandle gBkDownBCollisionFile(ASSET_BK_DOWN_B_KCL);
+ModelFile gBkDownBModelFile(ASSET_BK_DOWN_B_BMD);
+ClsnFile gBkDownBCollisionFile(ASSET_BK_DOWN_B_KCL);
 
 extern struct CLPS_Block data_ov015_021136b4;
 

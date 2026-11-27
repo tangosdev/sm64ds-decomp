@@ -240,25 +240,6 @@ typedef void (daKpa_c::*PMF)();
 /* One row of those tables: a single member-function pointer. */
 struct PmfEnt { PMF pmf; };
 
-/* The static-init file handles: the model file constructs through
- * ModelFile::ModelFile and destroys through ModelFile::~ModelFile, animation handles through
- * AnimFile::AnimFile/AnimFile::~AnimFile, and texture-sequence
- * handles through TexSeqFile::TexSeqFile/TexSeqFile::~TexSeqFile.
- * Each wrapper's ctor and dtor stay undefined here; the manifest aliases them
- * onto those ROM veneers. */
-struct KpaModelFilePtr : SharedFilePtr {
-    KpaModelFilePtr(u32 fileID);
-    ~KpaModelFilePtr();
-};
-struct KpaAnimationFileHandle : SharedFilePtr {
-    KpaAnimationFileHandle(u32 fileID);
-    ~KpaAnimationFileHandle();
-};
-struct KpaTexSequenceFilePtr : SharedFilePtr {
-    KpaTexSequenceFilePtr(u32 fileID);
-    ~KpaTexSequenceFilePtr();
-};
-
 /* Tail's own PMF: sBowserTailStateTable is a daKpaTail_c state table, unlike
  * PmfEnt's daKpa_c one. */
 typedef void (daKpaTail_c::*KpaTailState)();
@@ -272,7 +253,7 @@ extern "C" {
 extern dCamera_c *gCamera;
 /* Eases a camera vector toward a target; 1 when it arrives (d_camera.cpp). */
 extern int func_020092c4(void *, void *, void *);
-extern KpaAnimationFileHandle data_ov060_0211acd0;
+extern AnimFile data_ov060_0211acd0;
 extern const unsigned char data_ov060_02119264[];
 extern PmfEnt sBowserHoldStateTable[];
 /* Sound::Play(3, id, pos) (sound/Sound.cpp). The legacy shards passed a third
@@ -280,14 +261,14 @@ extern PmfEnt sBowserHoldStateTable[];
  * signature. */
 /* Veneer to dBgCh_Actr::UpdateContinuousExceptSlot0. */
 extern PmfEnt sBowserStateTable[];
-extern KpaAnimationFileHandle data_ov060_0211ac88;
-extern KpaAnimationFileHandle data_ov060_0211ac60;
-extern KpaAnimationFileHandle data_ov060_0211abe0;
-extern KpaAnimationFileHandle data_ov060_0211acd8;
-extern KpaAnimationFileHandle data_ov060_0211acf0;
-extern KpaAnimationFileHandle data_ov060_0211ac20;
-extern KpaAnimationFileHandle data_ov060_0211ac68;
-extern KpaAnimationFileHandle data_ov060_0211ac70;
+extern AnimFile data_ov060_0211ac88;
+extern AnimFile data_ov060_0211ac60;
+extern AnimFile data_ov060_0211abe0;
+extern AnimFile data_ov060_0211acd8;
+extern AnimFile data_ov060_0211acf0;
+extern AnimFile data_ov060_0211ac20;
+extern AnimFile data_ov060_0211ac68;
+extern AnimFile data_ov060_0211ac70;
 extern s16 data_ov060_0211a4e0[];
 /* Sound.cpp 0xc-byte cleanup veneer. */
 extern void func_02011cfc(void);
@@ -300,28 +281,28 @@ extern void func_02011cfc(void);
  *                               LoadFile, then ->Release()
  *   gKoopaKeyModelFile          Bowser's key model handle in ov089
  *   data_ov060_0211b208         a model handle (ModelFile)
- *   sKoopaModelFile             Bowser's model handle (KpaModelFilePtr) */
+ *   sKoopaModelFile             Bowser's model handle (ModelFile) */
 extern SharedFilePtr *const sKoopaAnimationFiles[];
 extern SharedFilePtr *const sKoopaTextureSequenceFiles[];
 extern SharedFilePtr gKoopaKeyModelFile;
 /* daFRing_c defines this handle. decl_common.h no longer declares it. */
 extern ModelFile data_ov060_0211b208;
-extern KpaModelFilePtr sKoopaModelFile;
-extern KpaTexSequenceFilePtr data_ov060_0211ac28;
+extern ModelFile sKoopaModelFile;
+extern TexSeqFile data_ov060_0211ac28;
 /* The other texture-pattern handles InitAnimation picks from. */
-extern KpaTexSequenceFilePtr data_ov060_0211ac40;
-extern KpaTexSequenceFilePtr data_ov060_0211acb8;
-extern KpaTexSequenceFilePtr data_ov060_0211ac10;
-extern KpaTexSequenceFilePtr data_ov060_0211abf0;
-extern KpaTexSequenceFilePtr data_ov060_0211ac30;
+extern TexSeqFile data_ov060_0211ac40;
+extern TexSeqFile data_ov060_0211acb8;
+extern TexSeqFile data_ov060_0211ac10;
+extern TexSeqFile data_ov060_0211abf0;
+extern TexSeqFile data_ov060_0211ac30;
 /* Animation handles 0x11, 0x12, 0x18, 0x19, 0xf and 0xd, the ones the footfall
  * windows in UpdateFootfalls compare against. */
-extern KpaAnimationFileHandle data_ov060_0211acb0;
-extern KpaAnimationFileHandle data_ov060_0211ac00;
-extern KpaAnimationFileHandle data_ov060_0211ace0;
-extern KpaAnimationFileHandle data_ov060_0211aca0;
-extern KpaAnimationFileHandle data_ov060_0211abf8;
-extern KpaAnimationFileHandle data_ov060_0211ac90;
+extern AnimFile data_ov060_0211acb0;
+extern AnimFile data_ov060_0211ac00;
+extern AnimFile data_ov060_0211ace0;
+extern AnimFile data_ov060_0211aca0;
+extern AnimFile data_ov060_0211abf8;
+extern AnimFile data_ov060_0211ac90;
 /* The arena-tilt table walked by ActTiltLavaPlatform. Rows of three halfwords
  * (sign, scale, end frame). One object; the +2 and +4 column labels are
  * symbols inside it. The linker aligns a section to 4, so those labels are
@@ -3028,41 +3009,41 @@ void daKpa_c::UpdateFootfalls() {
 /* The static-init globals: one ctor veneer and destructor registration per
  * file handle (the @NNN nodes and .data descriptors are compiler
  * temporaries), then the three pointer-to-member state tables. */
-KpaModelFilePtr sKoopaModelFile(ASSET_KOOPA_MODEL_BMD);
-KpaAnimationFileHandle data_ov060_0211ac88(ASSET_KOOPA_DAMAGE_BCA);
-KpaAnimationFileHandle data_ov060_0211ac50(ASSET_KOOPA_DAMAGE2_ST_BCA);
-KpaAnimationFileHandle data_ov060_0211ac58(ASSET_KOOPA_DAMAGE2_ED_BCA);
-KpaAnimationFileHandle data_ov060_0211ac60(ASSET_KOOPA_DEAD_BCA);
-KpaAnimationFileHandle data_ov060_0211ac18(ASSET_KOOPA_DEAD_ED_BCA);
-KpaAnimationFileHandle data_ov060_0211acd0(ASSET_KOOPA_DEAD_ST_BCA);
-KpaAnimationFileHandle data_ov060_0211ac68(ASSET_KOOPA_FIRE_BCA);
-KpaAnimationFileHandle data_ov060_0211ac70(ASSET_KOOPA_FIRE_ED_BCA);
-KpaAnimationFileHandle data_ov060_0211ac20(ASSET_KOOPA_FIRE_ST_BCA);
-KpaAnimationFileHandle data_ov060_0211ac80(ASSET_KOOPA_HOLD_BCA);
-KpaAnimationFileHandle data_ov060_0211abe8(ASSET_KOOPA_HOLD_ST_BCA);
-KpaAnimationFileHandle data_ov060_0211ac48(ASSET_KOOPA_JUMP1_BCA);
-KpaAnimationFileHandle data_ov060_0211ac38(ASSET_KOOPA_JUMP2_BCA);
-KpaAnimationFileHandle data_ov060_0211ac90(ASSET_KOOPA_STAND_UP_BCA);
-KpaAnimationFileHandle data_ov060_0211ac98(ASSET_KOOPA_THROW_BCA);
-KpaAnimationFileHandle data_ov060_0211abf8(ASSET_KOOPA_VEXING_BCA);
-KpaAnimationFileHandle data_ov060_0211aca8(ASSET_KOOPA_WAIT1_BCA);
-KpaAnimationFileHandle data_ov060_0211acb0(ASSET_KOOPA_WALK_BCA);
-KpaAnimationFileHandle data_ov060_0211ac00(ASSET_KOOPA_WALK_ED_BCA);
-KpaAnimationFileHandle data_ov060_0211ac08(ASSET_KOOPA_WALK_ST_BCA);
-KpaAnimationFileHandle data_ov060_0211abe0(ASSET_KOOPA_FIRE2_BCA);
-KpaAnimationFileHandle data_ov060_0211acd8(ASSET_KOOPA_FIRE3_BCA);
-KpaAnimationFileHandle data_ov060_0211acf0(ASSET_KOOPA_FIRE3_ST_BCA);
-KpaAnimationFileHandle data_ov060_0211ace8(ASSET_KOOPA_FIRE3_ED_BCA);
-KpaAnimationFileHandle data_ov060_0211ace0(ASSET_KOOPA_DUSH_ST_BCA);
-KpaAnimationFileHandle data_ov060_0211aca0(ASSET_KOOPA_DUSH_BCA);
-KpaAnimationFileHandle data_ov060_0211acc8(ASSET_KOOPA_DUSH_ED_BCA);
-KpaAnimationFileHandle data_ov060_0211acc0(ASSET_KOOPA_STRETCH_BCA);
-KpaTexSequenceFilePtr data_ov060_0211ac40(ASSET_KOOPA_DAMAGE2_ST_BTP);
-KpaTexSequenceFilePtr data_ov060_0211acb8(ASSET_KOOPA_DAMAGE2_ED_BTP);
-KpaTexSequenceFilePtr data_ov060_0211ac10(ASSET_KOOPA_DEAD_BTP);
-KpaTexSequenceFilePtr data_ov060_0211abf0(ASSET_KOOPA_THROW_BTP);
-KpaTexSequenceFilePtr data_ov060_0211ac28(ASSET_KOOPA_WAIT_BTP);
-KpaTexSequenceFilePtr data_ov060_0211ac30(ASSET_KOOPA_HOLD_BTP);
+ModelFile sKoopaModelFile(ASSET_KOOPA_MODEL_BMD);
+AnimFile data_ov060_0211ac88(ASSET_KOOPA_DAMAGE_BCA);
+AnimFile data_ov060_0211ac50(ASSET_KOOPA_DAMAGE2_ST_BCA);
+AnimFile data_ov060_0211ac58(ASSET_KOOPA_DAMAGE2_ED_BCA);
+AnimFile data_ov060_0211ac60(ASSET_KOOPA_DEAD_BCA);
+AnimFile data_ov060_0211ac18(ASSET_KOOPA_DEAD_ED_BCA);
+AnimFile data_ov060_0211acd0(ASSET_KOOPA_DEAD_ST_BCA);
+AnimFile data_ov060_0211ac68(ASSET_KOOPA_FIRE_BCA);
+AnimFile data_ov060_0211ac70(ASSET_KOOPA_FIRE_ED_BCA);
+AnimFile data_ov060_0211ac20(ASSET_KOOPA_FIRE_ST_BCA);
+AnimFile data_ov060_0211ac80(ASSET_KOOPA_HOLD_BCA);
+AnimFile data_ov060_0211abe8(ASSET_KOOPA_HOLD_ST_BCA);
+AnimFile data_ov060_0211ac48(ASSET_KOOPA_JUMP1_BCA);
+AnimFile data_ov060_0211ac38(ASSET_KOOPA_JUMP2_BCA);
+AnimFile data_ov060_0211ac90(ASSET_KOOPA_STAND_UP_BCA);
+AnimFile data_ov060_0211ac98(ASSET_KOOPA_THROW_BCA);
+AnimFile data_ov060_0211abf8(ASSET_KOOPA_VEXING_BCA);
+AnimFile data_ov060_0211aca8(ASSET_KOOPA_WAIT1_BCA);
+AnimFile data_ov060_0211acb0(ASSET_KOOPA_WALK_BCA);
+AnimFile data_ov060_0211ac00(ASSET_KOOPA_WALK_ED_BCA);
+AnimFile data_ov060_0211ac08(ASSET_KOOPA_WALK_ST_BCA);
+AnimFile data_ov060_0211abe0(ASSET_KOOPA_FIRE2_BCA);
+AnimFile data_ov060_0211acd8(ASSET_KOOPA_FIRE3_BCA);
+AnimFile data_ov060_0211acf0(ASSET_KOOPA_FIRE3_ST_BCA);
+AnimFile data_ov060_0211ace8(ASSET_KOOPA_FIRE3_ED_BCA);
+AnimFile data_ov060_0211ace0(ASSET_KOOPA_DUSH_ST_BCA);
+AnimFile data_ov060_0211aca0(ASSET_KOOPA_DUSH_BCA);
+AnimFile data_ov060_0211acc8(ASSET_KOOPA_DUSH_ED_BCA);
+AnimFile data_ov060_0211acc0(ASSET_KOOPA_STRETCH_BCA);
+TexSeqFile data_ov060_0211ac40(ASSET_KOOPA_DAMAGE2_ST_BTP);
+TexSeqFile data_ov060_0211acb8(ASSET_KOOPA_DAMAGE2_ED_BTP);
+TexSeqFile data_ov060_0211ac10(ASSET_KOOPA_DEAD_BTP);
+TexSeqFile data_ov060_0211abf0(ASSET_KOOPA_THROW_BTP);
+TexSeqFile data_ov060_0211ac28(ASSET_KOOPA_WAIT_BTP);
+TexSeqFile data_ov060_0211ac30(ASSET_KOOPA_HOLD_BTP);
 
 /* Overlay .rodata. const so the section is not executable; a named route
  * refuses an executable section. */

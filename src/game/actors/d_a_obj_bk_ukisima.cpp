@@ -26,19 +26,7 @@ enum d_a_obj_bk_ukisima_AssetId { ASSET_BK_UKISIMA_BMD = 0x05a1, ASSET_BK_UKISIM
 #include "daObjBk_Ukisima_c.h"
 #include "SharedFilePtr.h"
 
-/* The model handle constructs through ModelFile::ModelFile and destroys through
- * ModelFile::~ModelFile. The collision handle constructs through ClsnFile::ClsnFile and
- * destroys through ClsnFile::~ClsnFile. The descriptor stays ROM data. */
-struct UkisimaModelFilePtr : SharedFilePtr {
-    UkisimaModelFilePtr(unsigned int fileId);
-    ~UkisimaModelFilePtr();
-};
-struct UkisimaClsnFileHandle : SharedFilePtr {
-    UkisimaClsnFileHandle(unsigned int fileId);
-    ~UkisimaClsnFileHandle();
-};
-typedef char UkisimaModelFilePtr_size_must_be_8[sizeof(UkisimaModelFilePtr) == 8 ? 1 : -1];
-typedef char UkisimaClsnFileHandle_size_must_be_8[sizeof(UkisimaClsnFileHandle) == 8 ? 1 : -1];
+/* The descriptor stays ROM data. */
 
 #include "ResourceDescriptor.h"
 
@@ -60,8 +48,8 @@ s32 daObjBk_Ukisima_c::CleanupResources() {
 }
 
 /* Retail construction order. mwcc emits __sinit_d_a_obj_bk_ukisima.cpp. */
-UkisimaModelFilePtr gBkUkisimaModelFile(ASSET_BK_UKISIMA_BMD);
-UkisimaClsnFileHandle gBkUkisimaCollisionFile(ASSET_BK_UKISIMA_KCL);
+ModelFile gBkUkisimaModelFile(ASSET_BK_UKISIMA_BMD);
+ClsnFile gBkUkisimaCollisionFile(ASSET_BK_UKISIMA_KCL);
 
 ResourceDescriptor data_ov015_021147a4 = {
     &gBkUkisimaModelFile,

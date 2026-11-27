@@ -43,18 +43,8 @@ enum d_a_obj_c1_hikari_AssetId { ASSET_C1_HIKARI_BMD = 0x05ad };
 #include "nitro/fx/fx.h"
 #include "SaveBlock.h"
 
-/* The beam's file-scope SharedFilePtr object, spelled through the same
-   wrapper idiom the landed folds use: the handle's code is the veneer pair
-   the cartridge already carries, so the wrapper gets no bodies of its own.
-   The constructor aliases ModelFile::ModelFile and the destructor ModelFile::~ModelFile in
-   this unit's manifest. */
-struct C1HikariModelFilePtr : SharedFilePtr {
-    C1HikariModelFilePtr(unsigned int id);
-    ~C1HikariModelFilePtr();
-};
-
 /* Defined at the end of this file so its constructor does not enter .text. */
-extern C1HikariModelFilePtr gC1HikariModelFile;
+extern ModelFile gC1HikariModelFile;
 
 /* local extern: arm9 math and save helpers with no shared header. */
 extern "C" {
@@ -191,7 +181,7 @@ void daObjC1Hikari_c::UpdateModelTransform() {
 /* The initializer constructs the model handle with file ID 1453 and
  * registers its destructor; the registration node is a compiler
  * temporary. */
-C1HikariModelFilePtr gC1HikariModelFile(ASSET_C1_HIKARI_BMD);
+ModelFile gC1HikariModelFile(ASSET_C1_HIKARI_BMD);
 
 extern "C" SpawnInfo<daObjC1Hikari_c> g_profile_C1_HIKARI = {
     daObjC1Hikari_c_classInit, 37, 324, 0x00000003, 0x00000000, 0x007d0000, 0x00fa0000, 0x00000000};

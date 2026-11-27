@@ -31,20 +31,8 @@ enum d_a_obj_bk_rotebar_AssetId { ASSET_BK_ROTEBAR_BMD = 0x059b, ASSET_BK_ROTEBA
 struct KCL_File;
 struct CLPS_Block;
 
-/* The constructors and destructors are the ROM resource-family veneers,
- * aliased in the manifest. */
-struct BkRotebarModelFilePtr : SharedFilePtr {
-    BkRotebarModelFilePtr(u32 fileID);
-    ~BkRotebarModelFilePtr();
-};
-
-struct BkRotebarCollisionFilePtr : SharedFilePtr {
-    BkRotebarCollisionFilePtr(u32 fileID);
-    ~BkRotebarCollisionFilePtr();
-};
-
-extern BkRotebarCollisionFilePtr data_ov015_02114a84; /* collision KCL */
-extern BkRotebarModelFilePtr data_ov015_02114a8c;     /* bar BMD */
+extern ClsnFile data_ov015_02114a84;  /* collision KCL */
+extern ModelFile data_ov015_02114a8c; /* bar BMD */
 extern struct CLPS_Block data_ov015_02113654;
 
 daObjBk_Rotebar_c *daObjBk_Rotebar_c_classInit() {
@@ -117,5 +105,5 @@ s32 daObjBk_Rotebar_c::CleanupResources() {
 /* The ROM's initializer constructs the model handle with file ID 1435 and
  * the collision handle with file ID 1436, registering a destructor node for
  * each. mwcc emits __sinit_d_a_obj_bk_rotebar.cpp from these definitions. */
-BkRotebarModelFilePtr data_ov015_02114a8c(ASSET_BK_ROTEBAR_BMD);
-BkRotebarCollisionFilePtr data_ov015_02114a84(ASSET_BK_ROTEBAR_KCL);
+ModelFile data_ov015_02114a8c(ASSET_BK_ROTEBAR_BMD);
+ClsnFile data_ov015_02114a84(ASSET_BK_ROTEBAR_KCL);

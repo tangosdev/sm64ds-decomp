@@ -929,8 +929,7 @@ ObjKeyStateTable data_ov089_02132cec;
 extern "C" SharedFilePtr data_ov002_0210da40;
 extern "C" SharedFilePtr data_ov002_0210d9a0;
 extern "C" SharedFilePtr data_ov002_0210d9c0;
-struct DaMipModelFile;
-extern "C" DaMipModelFile data_ov085_021305d8;
+extern "C" ModelFile data_ov085_021305d8;
 extern ObjKeyFile *const data_ov089_02132880[5] = {
     0,
     &gKoopaKeyGetAnimationFile,

@@ -35,7 +35,8 @@ enum daDkk_c_AssetId { ASSET_DONKAKU_BMD = 0x02dc, ASSET_DONKAKU_KCL = 0x02dd };
 #include "Particle__System.h"
 #include "ParticleIds.h"
 
-/* Grindel's resource table; overlay .data owns the bytes. Sound.h declares
+/* Grindel's resource table, the file table (DsnBaseFileTable,
+ * daDsnBase_c.h); overlay .data owns the bytes. Sound.h declares
  * func_0201267c. */
 extern DsnBaseFileTable data_ov025_02113814;
 

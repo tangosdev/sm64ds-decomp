@@ -29,12 +29,8 @@ extern dCamera_c *gCamera;
 extern u8 data_0209d660;
 extern u8 data_0209d684;
 /* MIPS's model-file handle, owned and constructed by d_a_mip.cpp's static
- * init. Same TU-local wrapper spelling as the owning TU. */
-struct DaMipModelFile : SharedFilePtr {
-    DaMipModelFile(u32 fileID);
-    ~DaMipModelFile();
-};
-extern DaMipModelFile data_ov085_021305d8;
+ * init. */
+extern ModelFile data_ov085_021305d8;
 extern MipKeyState data_ov085_0213071c;
 extern MipKeyState data_ov085_0213072c;
 

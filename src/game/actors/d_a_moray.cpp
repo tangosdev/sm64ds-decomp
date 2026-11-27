@@ -57,24 +57,10 @@ enum {
     ACTOR_STAR = 178,
 };
 
-/* The model handle's ctor/dtor are the cartridge's ModelFile::ModelFile /
- * ModelFile::~ModelFile pair; the manifest aliases these. */
-struct MorayModelFileHandle : SharedFilePtr {
-    MorayModelFileHandle(u32 fileID);
-    ~MorayModelFileHandle();
-};
-
-/* The three animation handles construct through AnimFile::AnimFile
- * and register AnimFile::~AnimFile; the manifest aliases these. */
-struct MorayAnimResFileHandle : SharedFilePtr {
-    MorayAnimResFileHandle(u32 fileID);
-    ~MorayAnimResFileHandle();
-};
-
-extern MorayModelFileHandle data_ov016_02114d38;   /* model, file 0x3b5 */
-extern MorayAnimResFileHandle data_ov016_02114d20; /* lunge anim, file 0x3b6 */
-extern MorayAnimResFileHandle data_ov016_02114d30; /* path-swim anim, file 0x3b7 */
-extern MorayAnimResFileHandle data_ov016_02114d28; /* den / swim-out anim, file 0x3b8 */
+extern ModelFile data_ov016_02114d38; /* model, file 0x3b5 */
+extern AnimFile data_ov016_02114d20;  /* lunge anim, file 0x3b6 */
+extern AnimFile data_ov016_02114d30;  /* path-swim anim, file 0x3b7 */
+extern AnimFile data_ov016_02114d28;  /* den / swim-out anim, file 0x3b8 */
 
 /* State tables filled by __sinit_d_a_moray.cpp from the PMFs at 0x02114878.
  * 02114d7c retreat (daMoray_c::StateRetreatInit, then daMoray_c::StateRetreatMain),
@@ -793,10 +779,10 @@ extern "C" u32 data_ov016_021148fc[3] = {0, 0, 0};
 /* Construction order is source order: the four file handles first, then the
  * five State rows in the order the initializer copies them. The registration
  * nodes and the PMF literals are compiler temporaries. */
-MorayModelFileHandle data_ov016_02114d38(ASSET_MORAY_BMD);
-MorayAnimResFileHandle data_ov016_02114d20(ASSET_MORAY_SEARCH_BCA);
-MorayAnimResFileHandle data_ov016_02114d30(ASSET_MORAY_SWIM_BCA);
-MorayAnimResFileHandle data_ov016_02114d28(ASSET_MORAY_SWIM_START_BCA);
+ModelFile data_ov016_02114d38(ASSET_MORAY_BMD);
+AnimFile data_ov016_02114d20(ASSET_MORAY_SEARCH_BCA);
+AnimFile data_ov016_02114d30(ASSET_MORAY_SWIM_BCA);
+AnimFile data_ov016_02114d28(ASSET_MORAY_SWIM_START_BCA);
 
 daMoray_c::State data_ov016_02114d8c = {&daMoray_c::StateDenWaitInit, &daMoray_c::StateDenWaitMain};
 daMoray_c::State data_ov016_02114d9c = {&daMoray_c::StateLungeInit, &daMoray_c::StateLungeMain};

@@ -26,22 +26,8 @@ enum daKpa2Bg_c_AssetId { ASSET_KB2_STAGE_BMD = 0x0623, ASSET_KB2_STAGE_KCL = 0x
 
 struct CLPS_Block;
 
-/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the model, ClsnFile::ClsnFile /
- * ClsnFile::~ClsnFile for the collision), spelled through
- * declared-only subclasses so the static initializer names the real entry
- * points. */
-struct Kpa2BgModelFilePtr : SharedFilePtr {
-    Kpa2BgModelFilePtr(u32 fileID);
-    ~Kpa2BgModelFilePtr();
-};
-struct Kpa2BgCollisionFilePtr : SharedFilePtr {
-    Kpa2BgCollisionFilePtr(u32 fileID);
-    ~Kpa2BgCollisionFilePtr();
-};
-
-extern Kpa2BgModelFilePtr daKpa2Bg_c_ModelFile;
-extern Kpa2BgCollisionFilePtr daKpa2Bg_c_ClsnFile;
+extern ModelFile daKpa2Bg_c_ModelFile;
+extern ClsnFile daKpa2Bg_c_ClsnFile;
 extern CLPS_Block data_ov046_021115bc;
 
 int Sound_PlayIfNotActive(int handle, int a, int b, short c);
@@ -122,5 +108,5 @@ daKpa2Bg_c *daKpa2Bg_c_classInit(void) {
 
 /* The KOOPA2BG model and collision file handles; the extern block above
  * declares them for CleanupResources / InitResources. */
-Kpa2BgModelFilePtr daKpa2Bg_c_ModelFile(ASSET_KB2_STAGE_BMD);
-Kpa2BgCollisionFilePtr daKpa2Bg_c_ClsnFile(ASSET_KB2_STAGE_KCL);
+ModelFile daKpa2Bg_c_ModelFile(ASSET_KB2_STAGE_BMD);
+ClsnFile daKpa2Bg_c_ClsnFile(ASSET_KB2_STAGE_KCL);

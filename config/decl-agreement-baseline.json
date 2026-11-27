@@ -120,17 +120,11 @@
   "data_ov002_02110964": {
    "src/game/actors/d_a_obj_key.cpp": ["return:ObjKeyFile"]
   },
-  "data_ov002_02110aa4": {
-   "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"]
-  },
   "data_ov026_02113f4c": {
    "src/game/actors/d_a_water_suikomi.cpp": ["return:Vector3"]
   },
   "data_ov081_02128d90": {
    "src/game/actors/d_a_snowball.cpp": ["return:SharedFilePtr"]
-  },
-  "data_ov084_02130cf8": {
-   "src/game/actors/d_a_kuri_king.cpp": ["return:SharedFilePtr"]
   },
   "fsi_card_lock_id": {
    "include/private/fs_rom.h": ["return:int"]

@@ -1094,7 +1094,7 @@ extern daPly_c *gPlayers[];
 extern int func_02012120(unsigned int p0, unsigned int p1, unsigned int p2, const Vector3 *p3,
                          short p4);
 extern "C" {
-extern SharedFilePtr data_ov002_02110aa4;
+extern ModelFile data_ov002_02110aa4;
 extern void MulMat4x3Mat4x3(void *a, void *b, void *c);
 /* local extern: MtxStack's named parameters take an @NNN in every includer. */
 extern void Matrix4x3_ApplyInPlaceToTranslation(union Matrix4x3 *mF, fx32 x, fx32 y, fx32 z);

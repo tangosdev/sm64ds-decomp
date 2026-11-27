@@ -43,21 +43,10 @@ enum {
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x436, texture-sequence file 0x437). mwcc emits
- * __sinit_d_a_obj1up_logo.cpp from those definitions. The wrapper names
- * are local; the handle constructors and destructors are the ROM
- * resource-family functions, aliased in the manifest. */
-struct OneUpLogoModelFile : SharedFilePtr {
-    OneUpLogoModelFile(u32 fileID);
-    ~OneUpLogoModelFile();
-};
+ * __sinit_d_a_obj1up_logo.cpp from those definitions. */
 
-struct OneUpLogoTexSeqFilePtr : SharedFilePtr {
-    OneUpLogoTexSeqFilePtr(u32 fileID);
-    ~OneUpLogoTexSeqFilePtr();
-};
-
-extern OneUpLogoModelFile data_ov002_02110aa4;     /* BMD */
-extern OneUpLogoTexSeqFilePtr data_ov002_02110a9c; /* BTP */
+extern ModelFile data_ov002_02110aa4;  /* BMD */
+extern TexSeqFile data_ov002_02110a9c; /* BTP */
 
 /* Emission order is ROM order. Do not reorder. */
 #pragma defer_codegen off
@@ -172,5 +161,5 @@ daObj1UpLogo_c *daObj1UpLogo_c_classInit() {
  * Definition order is the retail initializer's construction order: the
  * model handle (file 0x436), then the texture-sequence handle
  * (file 0x437). */
-OneUpLogoModelFile data_ov002_02110aa4(ASSET_BIG_1UP_NUMBER_BMD);
-OneUpLogoTexSeqFilePtr data_ov002_02110a9c(ASSET_BIG_1UP_NUMBER_BTP);
+ModelFile data_ov002_02110aa4(ASSET_BIG_1UP_NUMBER_BMD);
+TexSeqFile data_ov002_02110a9c(ASSET_BIG_1UP_NUMBER_BTP);
