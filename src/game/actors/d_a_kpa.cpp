@@ -241,9 +241,9 @@ typedef void (daKpa_c::*PMF)();
 struct PmfEnt { PMF pmf; };
 
 /* The static-init file handles: the model file constructs through
- * func_02017acc and destroys through func_02017ab4, animation handles through
- * SharedFilePtr::Construct/SharedFilePtr_Destruct_Anim, and texture-sequence
- * handles through SharedFilePtr_Construct_TexSeq/SharedFilePtr_Destruct_TexSeq.
+ * ModelFile::ModelFile and destroys through ModelFile::~ModelFile, animation handles through
+ * AnimFile::AnimFile/AnimFile::~AnimFile, and texture-sequence
+ * handles through TexSeqFile::TexSeqFile/TexSeqFile::~TexSeqFile.
  * Each wrapper's ctor and dtor stay undefined here; the manifest aliases them
  * onto those ROM veneers. */
 struct KpaModelFilePtr : SharedFilePtr {

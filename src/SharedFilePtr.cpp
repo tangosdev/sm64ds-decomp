@@ -10,15 +10,13 @@
  * four are members of other classes, but the cartridge emits them in this
  * run, so they live here.
  *
- * The unnamed helpers keep their address names and C linkage. Each one is a
- * two-call shape that hands `self` back: push {r4, lr} / mov r4, r0 / bl ... /
- * mov r0, r4. The construct helpers chain to func_02017e48 and the destroy
- * helpers to func_02017e34. A construct helper never touches r1, so the file
- * ID its caller leaves there reaches func_02017e0c untouched. The parameter
- * is spelled out here and forwarded, which is byte-identical, because a
- * host ABI would lose the value otherwise. Their signatures are the ones the
- * retired one-function files defined, so every caller's declaration agrees
- * or disagrees exactly as before.
+ * The constructors and destructors are the handle kinds' own (coined class
+ * names, see include/SharedFilePtr.h). Each derived one is the shape mwcc
+ * gives an empty body over a base: push {r4, lr} / mov r4, r0 / bl <base> /
+ * mov r0, r4 -- the constructor returns `this` and enters the base's C2, the
+ * destructor enters its D2. The file ID rides in r1 untouched down to
+ * func_02017e0c. mwcc emits all four variants of each; the ones the cartridge
+ * does not carry are deadstripped compiler output in the manifest.
  *
  * Layout: +0x0 u16 fileID, +0x2 u8 numRefs, +0x4 void *filePtr, as
  * include/SharedFilePtr.h declares it. Every member below reads it.
@@ -61,14 +59,13 @@ int myFS_ReadFile(void *a, void *b, int c);
 
 unsigned int TrimModelFile(void *file);
 
-void *SharedFilePtr::func_02017e48(unsigned int id) {
+SharedFilePtr::SharedFilePtr(unsigned int id) {
     func_02017e0c(id);
-    return this;
 }
 
-void *SharedFilePtr::func_02017e34() {
+/* Publishes the file ID, like every entry point; freeing is Release's job. */
+SharedFilePtr::~SharedFilePtr() {
     gLastUsedFileID = fileID;
-    return this;
 }
 
 /* Stamps a fresh handle: no file, no holders, and the FAT file ID that
@@ -182,15 +179,9 @@ void SharedFilePtr::Release() {
     func_02017c24();
 }
 
-void *SharedFilePtr::func_02017b4c(unsigned int id) {
-    func_02017e48(id);
-    return this;
-}
+ClsnFile::ClsnFile(unsigned int id) : SharedFilePtr(id) {}
 
-int SharedFilePtr_Destruct_Clsn(int self) {
-    reinterpret_cast<SharedFilePtr *>(self)->func_02017e34();
-    return self;
-}
+ClsnFile::~ClsnFile() {}
 
 /* Loads a KCL collision file; the first holder rebases its offsets. */
 KCL_File *dBgW_Kc::LoadFile(SharedFilePtr &ptr) {
@@ -206,25 +197,9 @@ KCL_File *dBgW_Kc::LoadFile(SharedFilePtr &ptr) {
     return file;
 }
 
-void *SharedFilePtr::func_02017ae4(unsigned int id) {
-    func_02017e48(id);
-    return this;
-}
+ModelFile::ModelFile(unsigned int id) : SharedFilePtr(id) {}
 
-void *SharedFilePtr::func_02017acc(unsigned int id) {
-    func_02017e48(id);
-    return this;
-}
-
-int func_02017ab4(int self) {
-    reinterpret_cast<SharedFilePtr *>(self)->func_02017e34();
-    return self;
-}
-
-int SharedFilePtr::func_02017a9c() {
-    func_02017e34();
-    return (int)this;
-}
+ModelFile::~ModelFile() {}
 
 /* Gives the model file back the heap space past its real size. */
 void SharedFilePtr::ReallocateModelFile() {
@@ -245,15 +220,9 @@ BMD_File *dExtSimpleModel_c::LoadFile(SharedFilePtr &ptr) {
     return filePtr;
 }
 
-void *SharedFilePtr::func_02017a24(unsigned int id) {
-    func_02017ae4(id);
-    return this;
-}
+ModelFileA::ModelFileA(unsigned int id) : ModelFile(id) {}
 
-int SharedFilePtr::func_02017a0c() {
-    func_02017a9c();
-    return (int)this;
-}
+ModelFileA::~ModelFileA() {}
 
 /* Loads a BMD through the handle and gives it to a dExtModel_c. If SetFile
    refuses it, the reference is handed back. */
@@ -271,16 +240,9 @@ int SharedFilePtr::func_020179b4(dExtModel_c *model, int arg) {
     return result;
 }
 
-/* Hands the handle back so the caller can chain. */
-SharedFilePtr &SharedFilePtr::Construct(unsigned int fileID) {
-    func_02017e48(fileID);
-    return *this;
-}
+AnimFile::AnimFile(unsigned int id) : SharedFilePtr(id) {}
 
-extern "C" int SharedFilePtr_Destruct_Anim(int self) {
-    reinterpret_cast<SharedFilePtr *>(self)->func_02017e34();
-    return self;
-}
+AnimFile::~AnimFile() {}
 
 /* Loads a BCA animation; the first holder rebases its offsets. */
 BCA_File *dExtFrameCtrl_c::LoadFile(SharedFilePtr &ptr) {
@@ -296,15 +258,9 @@ BCA_File *dExtFrameCtrl_c::LoadFile(SharedFilePtr &ptr) {
     return file;
 }
 
-extern "C" void *SharedFilePtr_Construct_TexSeq(void *self, unsigned int fileID) {
-    static_cast<SharedFilePtr *>(self)->func_02017e48(fileID);
-    return self;
-}
+TexSeqFile::TexSeqFile(unsigned int id) : SharedFilePtr(id) {}
 
-extern "C" int SharedFilePtr_Destruct_TexSeq(int self) {
-    reinterpret_cast<SharedFilePtr *>(self)->func_02017e34();
-    return self;
-}
+TexSeqFile::~TexSeqFile() {}
 
 /* Loads a BTP texture animation; the first holder rebases its offsets. */
 BTP_File *dExtAnmTexPat_c::LoadFile(SharedFilePtr &ptr) {
@@ -317,15 +273,9 @@ BTP_File *dExtAnmTexPat_c::LoadFile(SharedFilePtr &ptr) {
     return filePtr;
 }
 
-void *SharedFilePtr::func_020178cc(unsigned int id) {
-    func_02017ae4(id);
-    return this;
-}
+ModelFileB::ModelFileB(unsigned int id) : ModelFile(id) {}
 
-int SharedFilePtr::func_020178b4() {
-    func_02017a9c();
-    return (int)this;
-}
+ModelFileB::~ModelFileB() {}
 
 /* A BMD LoadFile that rebases the file but, unlike dExtSimpleModel_c::LoadFile, neither
    registers it in the common model data array nor trims its allocation. */

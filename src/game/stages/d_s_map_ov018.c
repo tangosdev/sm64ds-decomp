@@ -7,28 +7,23 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    ExitEntry entries[1];
-    u16 pad;
-} Pad_02112ecc;
-
 /* The small actor blocks reserve three entry slots. Counts of one or two leave
  * the remaining slots as all-ones padding. */
 
-extern const u16 data_ov018_02112a74[2];
+extern const u16 data_ov018_02112a74[1];
 extern const fx32 data_ov018_02112a78[1];
 extern const BTAMaterialRecord data_ov018_02112a7c[1];
 extern const fx32 data_ov018_02112a98[91];
-extern u16 data_ov018_02112e80[2];
+extern u16 data_ov018_02112e80[1];
 extern u32 data_ov018_02112e84[1];
 extern SimpleEntry data_ov018_02112e88[1];
 extern ObjTable data_ov018_02112e90;
 extern SimpleEntry data_ov018_02112e98[1];
 extern ObjTable data_ov018_02112ea0;
-extern char data_ov018_02112ea8[12];
+extern char data_ov018_02112ea8[];
 extern Area data_ov018_02112eb4[1];
 extern DoorEntry data_ov018_02112ec0[1];
-extern Pad_02112ecc data_ov018_02112ecc;
+extern ExitEntry data_ov018_02112ecc[1];
 extern FogEntry data_ov018_02112edc[2];
 extern TeleportSourceEntry data_ov018_02112eec[2];
 extern BTA_File data_ov018_02112efc;
@@ -51,7 +46,7 @@ extern CLPS_Block288 data_ov018_02113270;
 extern SimpleEntry data_ov018_02113390[63];
 extern StandardEntry data_ov018_02113588[48];
 
-char data_ov018_02112ea8[12] = "mat_water";
+char data_ov018_02112ea8[] = "mat_water";
 
 CLPS_Block288 data_ov018_02113270 = {
     0x53504c43,
@@ -263,11 +258,8 @@ DoorEntry data_ov018_02112ec0[1] = {
     {0x0990, (s16)0xee6c, 0x1027, (s16)0xa000, 0x0000, 0x0008},
 };
 
-Pad_02112ecc data_ov018_02112ecc = {
-    {
-        {(s16)0xff4f, 0x0b86, (s16)0xfaba, (s16)0xc000, 0x0000, {0x0b, 0x00, 0xff, 0x11}},
-    },
-    0x0000,
+ExitEntry data_ov018_02112ecc[1] = {
+    {(s16)0xff4f, 0x0b86, (s16)0xfaba, (s16)0xc000, 0x0000, {0x0b, 0x00, 0xff, 0x11}},
 };
 
 PathNode data_ov018_021131c8[28] = {
@@ -335,7 +327,7 @@ StandardEntry data_ov018_02113090[4] = {
     {0x000f, 0x1460, (s16)0xee6c, 0x01ec, 0x0000, 0x4000, 0x0000, 0xf2f0},
 };
 
-u16 data_ov018_02112e80[2] = {0x07be, 0x0000};
+u16 data_ov018_02112e80[1] = {0x07be};
 
 FogEntry data_ov018_02112edc[2] = {
     {0xc6, {0xf8, 0xca, 0x0a}, 0xfe84, 0x0002},
@@ -390,7 +382,7 @@ ObjSubTable data_ov018_02113170[11] = {{0x00, 0x30, {0x00, 0x00}, (void *)&data_
 Area data_ov018_02112eb4[1] = {
     {(struct ObjTable *)&data_ov018_02112ea0, (void *)&data_ov018_02112efc, 0, {0x00, 0x7c, 0x15}}};
 
-const u16 data_ov018_02112a74[2] = {0x0000, 0x0000};
+const u16 data_ov018_02112a74[1] = {0x0000};
 
 struct PathDef data_ov018_02112f14[4] = {
     {0x0000, 0x02, 0xff, 0xff, 0x7f},

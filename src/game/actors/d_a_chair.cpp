@@ -8,7 +8,7 @@
  * InitResources is the key function, so this TU emits the vtable (RTTI
  * _ZTS 0x021149d8, _ZTV 0x02114a14); both destructor variants are
  * inline. common.h comes before daChair_c.h so the shadow-matrix copy
- * stays twelve words. opt_common_subs off holds ApproachStateValue.
+ * stays twelve words.
  */
 // What stays, and why:
 // - The extern "C" block holds the arm9 helpers that have no shared header
@@ -43,14 +43,7 @@ enum daChair_c_AssetId { ASSET_CHAIR_BMD = 0x02d0 };
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
-/* Only ApproachStateValue needs this: without it the two (short)accel casts
- * share one sign-extend and both smulbb become muls (21 of 44 words differ). */
-/* Kept (#821 r79): uncast -accel and mult with +=, a short step local, ?: for the sign flip and
-   a scoped short copy of vel[0] are 0xac or 0xb0; none keeps both smulbb and the second vel
-   load. */
-#pragma opt_common_subs off
-
-/* 8-byte file handle. The model uses func_02017acc / func_02017ab4. The
+/* 8-byte file handle. The model uses ModelFile::ModelFile / ModelFile::~ModelFile. The
  * spelling is local; the manifest aliases the generated names to those ROM
  * symbols. */
 struct ChairModelFilePtr : SharedFilePtr {
@@ -154,7 +147,7 @@ void daChair_c::Break() {
     MarkForDestruction();
 }
 
-int daChair_c::ApproachStateValue(s16 *pos, s16 *vel, s32 target, s16 thresh, s32 accel, s16 mult) {
+int daChair_c::ApproachStateValue(s16 *pos, s16 *vel, s32 target, s16 thresh, s16 accel, s16 mult) {
     short old = pos[0];
     pos[0] = old + vel[0];
     short now = pos[0];
@@ -165,10 +158,10 @@ int daChair_c::ApproachStateValue(s16 *pos, s16 *vel, s32 target, s16 thresh, s3
         return 1;
     }
     if (now >= target)
-        accel = (short)-accel;
-    if ((short)vel[0] * (short)accel < 0)
-        accel = (short)accel * mult;
-    vel[0] = vel[0] + accel;
+        accel = -accel;
+    if (vel[0] * accel < 0)
+        accel *= mult;
+    vel[0] += accel;
     return 0;
 }
 

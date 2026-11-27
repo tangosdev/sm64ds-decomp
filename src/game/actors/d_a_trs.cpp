@@ -117,10 +117,9 @@ unsigned char NumStars(void);
 int IsStarCollectedInCurLevel(int n);
 u8 IsAreaShowing(int idx);
 
-/* The seven file handles __sinit_ov063_0211e29c constructs. SharedFilePtr
- * declares no constructor of its own, so the model handles get the
- * model-file pair func_02017acc/func_02017ab4 and the animation handles get
- * SharedFilePtr::Construct plus the anim destructor through thin
+/* The seven file handles __sinit_ov063_0211e29c constructs. The model
+ * handles get the model-file pair ModelFile::ModelFile/~ModelFile and the
+ * animation handles get AnimFile::AnimFile/~AnimFile through thin
  * declaration-only wrappers; the manifest aliases those mangled spellings to
  * the arm9 destinations the retail initializer calls. The destructor chain records the file ID; actor cleanup releases handles
  * separately. These local wrappers retain the existing lifecycle aliases. */

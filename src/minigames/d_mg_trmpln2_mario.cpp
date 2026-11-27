@@ -66,8 +66,8 @@ extern BCA_File *sTrmpAnimJump, *sTrmpAnimDoubleJump1, *sTrmpAnimWallJump, *sTrm
     *sTrmpAnimTurnEnd, *sTrmpAnimBounce, *sTrmpAnimStruggle, *sTrmpAnimSdown;
 BCA_File **sTrmpBounceAnimTable[] = {&sTrmpAnimJump, &sTrmpAnimDoubleJump1, &sTrmpAnimWallJump};
 
-/* The model handle constructs through func_02017a24, the animation handles
- * through SharedFilePtr::Construct. Neither constructor nor destructor is
+/* The model handle constructs through ModelFileA::ModelFileA, the animation handles
+ * through AnimFile::AnimFile. Neither constructor nor destructor is
  * defined here. */
 struct Trmpln2ModelFilePtr : SharedFilePtr {
     Trmpln2ModelFilePtr(unsigned int fileId);

@@ -6,17 +6,7 @@
 
 /* Definition order is what makes the compiler size sort match address order. */
 
-typedef struct {
-    PathNode entries[49];
-    u16 pad;
-} PathNodes49;
-
-typedef struct {
-    u16 entries[1];
-    u16 pad;
-} U16s1;
-
-extern U16s1 data_ov014_02113380;
+extern u16 data_ov014_02113380[1];
 extern u32 data_ov014_02113384[1];
 extern SimpleEntry data_ov014_02113388[1];
 extern SimpleEntry data_ov014_02113390[1];
@@ -44,15 +34,12 @@ extern StandardEntry data_ov014_021137b0[11];
 extern StandardEntry data_ov014_02113860[11];
 extern StandardEntry data_ov014_02113910[12];
 extern CLPS_Block224 data_ov014_021139d0;
-extern PathNodes49 data_ov014_02113ab0;
+extern PathNode data_ov014_02113ab0[49];
 extern StandardEntry data_ov014_02113bd8[19];
 extern SimpleEntry data_ov014_02113d08[88];
 extern StandardEntry data_ov014_02113fc8[89];
 
-U16s1 data_ov014_02113380 = {
-    {0x06e4},
-    0x0000,
-};
+u16 data_ov014_02113380[1] = {0x06e4};
 
 u32 data_ov014_02113384[1] = {0x00010114};
 
@@ -124,16 +111,15 @@ StandardEntry data_ov014_021134c8[4] = {
     {0x0000, (s16)0xe6ad, 0x0000, 0x12ff, 0x0000, 0x4000, 0x0000, 0x0078},
     {0x0000, (s16)0xe752, 0x0000, 0x17fd, 0x0000, 0x4000, 0x0000, 0x0078}};
 
-ObjSubTable data_ov014_02113508[9] = {
-    {0x0002, 0x0031, {0x00, 0x00}, &data_ov014_02113ab0.entries[0]},
-    {0x0003, 0x0004, {0x00, 0x00}, &data_ov014_021133ec[0]},
-    {0x0004, 0x0004, {0x00, 0x00}, &data_ov014_02113490[0]},
-    {0x000b, 0x0001, {0x00, 0x00}, &data_ov014_02113380.entries[0]},
-    {0x0001, 0x0004, {0x00, 0x00}, &data_ov014_021134c8[0]},
-    {0x0006, 0x0004, {0x00, 0x00}, &data_ov014_02113470[0]},
-    {0x0007, 0x0004, {0x00, 0x00}, &data_ov014_02113450[0]},
-    {0x0008, 0x0001, {0x00, 0x00}, &data_ov014_021133a8[0]},
-    {0x000e, 0x0001, {0x00, 0x00}, &data_ov014_02113384[0]}};
+ObjSubTable data_ov014_02113508[9] = {{0x0002, 0x0031, {0x00, 0x00}, &data_ov014_02113ab0[0]},
+                                      {0x0003, 0x0004, {0x00, 0x00}, &data_ov014_021133ec[0]},
+                                      {0x0004, 0x0004, {0x00, 0x00}, &data_ov014_02113490[0]},
+                                      {0x000b, 0x0001, {0x00, 0x00}, &data_ov014_02113380[0]},
+                                      {0x0001, 0x0004, {0x00, 0x00}, &data_ov014_021134c8[0]},
+                                      {0x0006, 0x0004, {0x00, 0x00}, &data_ov014_02113470[0]},
+                                      {0x0007, 0x0004, {0x00, 0x00}, &data_ov014_02113450[0]},
+                                      {0x0008, 0x0001, {0x00, 0x00}, &data_ov014_021133a8[0]},
+                                      {0x000e, 0x0001, {0x00, 0x00}, &data_ov014_02113384[0]}};
 
 ObjSubTable data_ov014_02113550[16] = {{0x0000, 0x0059, {0x00, 0x00}, &data_ov014_02113fc8[0]},
                                        {0x0005, 0x0058, {0x00, 0x00}, &data_ov014_02113d08[0]},
@@ -243,58 +229,55 @@ CLPS_Block224 data_ov014_021139d0 = {
      {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
-PathNodes49 data_ov014_02113ab0 = {
-    {{0x0582, 0x0e3c, (s16)0xe92b},
-     {0x0c58, 0x0da8, (s16)0xe5dd},
-     {0x1338, 0x0c22, (s16)0xea27},
-     {0x1346, 0x0b95, (s16)0xf250},
-     {0x0c14, 0x0b10, (s16)0xf719},
-     {0x0a66, 0x0626, (s16)0xf7aa},
-     {0x0825, 0x0529, (s16)0xfb10},
-     {(s16)0xf94a, 0x0000, (s16)0xfd82},
-     {0x015e, 0x09d2, (s16)0xe9bc},
-     {0x0bca, 0x095d, (s16)0xe407},
-     {0x152d, 0x07be, (s16)0xe8dc},
-     {0x165d, 0x0730, (s16)0xf4c3},
-     {0x0a20, 0x05cf, (s16)0xfa95},
-     {(s16)0xf18c, 0x0000, 0x13ec},
-     {(s16)0xf380, 0x0000, 0x157c},
-     {0x0320, 0x02ee, 0x157c},
-     {0x07d0, 0x02ed, 0x12c0},
-     {0x076c, 0x02ee, 0x0ed8},
-     {(s16)0xf9c0, 0x02ee, 0x0708},
-     {(s16)0xf510, 0x0000, 0x044c},
-     {(s16)0xfd44, 0x0026, (s16)0xfda8},
-     {0x0b54, 0x0634, (s16)0xfaec},
-     {0x189c, 0x0779, (s16)0xf254},
-     {0x170c, 0x080c, (s16)0xe638},
-     {0x0bb8, 0x0963, (s16)0xe37c},
-     {(s16)0xfe0c, 0x09f8, (s16)0xebb0},
-     {0x00c8, 0x0a4f, (s16)0xf128},
-     {0x02bc, 0x0a86, (s16)0xf448},
-     {0x08fc, 0x0b20, (s16)0xf830},
-     {0x0ce4, 0x0b4e, (s16)0xf8f8},
-     {0x1388, 0x0ba0, (s16)0xf254},
-     {0x1324, 0x0c23, (s16)0xea20},
-     {0x0bb8, 0x0dc9, (s16)0xe5d4},
-     {0x03e8, 0x0e59, (s16)0xea20},
-     {0x03e8, 0x0edf, (s16)0xf2b8},
-     {0x0bb8, 0x0f6f, (s16)0xf510},
-     {0x117c, 0x0ff6, (s16)0xf208},
-     {0x1193, 0x101b, (s16)0xeff8},
-     {0x0bbd, 0x1060, (s16)0xef02},
-     {0x0d48, 0x0319, 0x0cb2},
-     {0x0c1c, 0x0344, 0x1482},
-     {0x1388, 0x02f0, 0x1806},
-     {0x1a2c, 0x0361, 0x14b4},
-     {0x1964, 0x037d, 0x0d48},
-     {0x0af0, 0x02bc, 0x079e},
-     {0x0d7a, 0x029a, 0x0064},
-     {0x13ec, 0x02b3, (s16)0xff06},
-     {0x189c, 0x02e1, 0x015e},
-     {0x18ce, 0x035b, 0x06d6}},
-    0x0000,
-};
+PathNode data_ov014_02113ab0[49] = {{0x0582, 0x0e3c, (s16)0xe92b},
+                                    {0x0c58, 0x0da8, (s16)0xe5dd},
+                                    {0x1338, 0x0c22, (s16)0xea27},
+                                    {0x1346, 0x0b95, (s16)0xf250},
+                                    {0x0c14, 0x0b10, (s16)0xf719},
+                                    {0x0a66, 0x0626, (s16)0xf7aa},
+                                    {0x0825, 0x0529, (s16)0xfb10},
+                                    {(s16)0xf94a, 0x0000, (s16)0xfd82},
+                                    {0x015e, 0x09d2, (s16)0xe9bc},
+                                    {0x0bca, 0x095d, (s16)0xe407},
+                                    {0x152d, 0x07be, (s16)0xe8dc},
+                                    {0x165d, 0x0730, (s16)0xf4c3},
+                                    {0x0a20, 0x05cf, (s16)0xfa95},
+                                    {(s16)0xf18c, 0x0000, 0x13ec},
+                                    {(s16)0xf380, 0x0000, 0x157c},
+                                    {0x0320, 0x02ee, 0x157c},
+                                    {0x07d0, 0x02ed, 0x12c0},
+                                    {0x076c, 0x02ee, 0x0ed8},
+                                    {(s16)0xf9c0, 0x02ee, 0x0708},
+                                    {(s16)0xf510, 0x0000, 0x044c},
+                                    {(s16)0xfd44, 0x0026, (s16)0xfda8},
+                                    {0x0b54, 0x0634, (s16)0xfaec},
+                                    {0x189c, 0x0779, (s16)0xf254},
+                                    {0x170c, 0x080c, (s16)0xe638},
+                                    {0x0bb8, 0x0963, (s16)0xe37c},
+                                    {(s16)0xfe0c, 0x09f8, (s16)0xebb0},
+                                    {0x00c8, 0x0a4f, (s16)0xf128},
+                                    {0x02bc, 0x0a86, (s16)0xf448},
+                                    {0x08fc, 0x0b20, (s16)0xf830},
+                                    {0x0ce4, 0x0b4e, (s16)0xf8f8},
+                                    {0x1388, 0x0ba0, (s16)0xf254},
+                                    {0x1324, 0x0c23, (s16)0xea20},
+                                    {0x0bb8, 0x0dc9, (s16)0xe5d4},
+                                    {0x03e8, 0x0e59, (s16)0xea20},
+                                    {0x03e8, 0x0edf, (s16)0xf2b8},
+                                    {0x0bb8, 0x0f6f, (s16)0xf510},
+                                    {0x117c, 0x0ff6, (s16)0xf208},
+                                    {0x1193, 0x101b, (s16)0xeff8},
+                                    {0x0bbd, 0x1060, (s16)0xef02},
+                                    {0x0d48, 0x0319, 0x0cb2},
+                                    {0x0c1c, 0x0344, 0x1482},
+                                    {0x1388, 0x02f0, 0x1806},
+                                    {0x1a2c, 0x0361, 0x14b4},
+                                    {0x1964, 0x037d, 0x0d48},
+                                    {0x0af0, 0x02bc, 0x079e},
+                                    {0x0d7a, 0x029a, 0x0064},
+                                    {0x13ec, 0x02b3, (s16)0xff06},
+                                    {0x189c, 0x02e1, 0x015e},
+                                    {0x18ce, 0x035b, 0x06d6}};
 
 StandardEntry data_ov014_02113bd8[19] = {
     {0x0017, (s16)0xed13, 0x03e8, (s16)0xfd12, 0x0000, 0x0000, 0x0000, 0xffff},

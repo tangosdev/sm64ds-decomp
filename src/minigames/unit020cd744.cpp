@@ -79,7 +79,7 @@ typedef TrmpLine::Vtx Vec3;
 
 /* The three ring model handles (files 0x21a..0x21c), defined at the end of the
    file. The wrapper's constructor and destructor alias the ROM resource-family
-   pair func_02017acc / func_02017ab4 (see the manifest's
+   pair ModelFile::ModelFile / ModelFile::~ModelFile (see the manifest's
    undefined_symbol_aliases). */
 struct TrmpItemRingModelFile : SharedFilePtr {
     TrmpItemRingModelFile(u32 fileID);

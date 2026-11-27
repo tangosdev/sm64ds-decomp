@@ -1224,7 +1224,7 @@
       "source": "0x0213323c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017a24Ej",
+      "symbol": "_ZN10ModelFileAC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017a24"
@@ -1254,7 +1254,7 @@
       "source": "0x02133264",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN13SharedFilePtr13func_02017a0cEv",
+      "symbol": "_ZN10ModelFileAD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017a0c"
@@ -1585,14 +1585,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN23Trampoline2ModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017a24Ej",
+      "canonical_symbol": "_ZN10ModelFileAC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a24",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN23Trampoline2ModelFilePtrD1Ev",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017a0cEv",
+      "canonical_symbol": "_ZN10ModelFileAD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a0c",
       "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"

@@ -75,7 +75,6 @@ struct WalkPath {
 
 /* local extern: address-named arm9 routines, no owning header. */
 
-int func_02017ab4(int);
 unsigned int func_02012174(unsigned int, unsigned int);
 extern "C" {
 void func_0203cebc(void *, void *, void *, void *);
@@ -141,66 +140,6 @@ extern BTA_File sPresenterMissTexAnim;
 extern BTA_File sPresenterTextureAnim;
 extern BTA_File sPresenterCheerTexAnim;
 extern BTA_File sPresenterMatchTexAnim;
-
-/* The file handles' constructors and destructors are the arm9 veneers the
-   ROM calls: func_02017acc / func_02017ab4 for a model file,
-   SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim for an animation.
-   No ov006 body exists for them, so they are inline, and defined only here:
-   each use expands into the veneer call. */
-inline DealerModelFilePtr::DealerModelFilePtr(u32 fileID) {
-    this->func_02017acc(fileID);
-}
-inline DealerModelFilePtr::~DealerModelFilePtr() {
-    func_02017ab4((int)this);
-}
-inline DealerAnimationFileHandle::DealerAnimationFileHandle(u32 fileID) {
-    Construct(fileID);
-}
-inline DealerAnimationFileHandle::~DealerAnimationFileHandle() {
-    SharedFilePtr_Destruct_Anim((int)this);
-}
-inline MascotWalkerModelFilePtr::MascotWalkerModelFilePtr(u32 fileID) {
-    this->func_02017acc(fileID);
-}
-inline MascotWalkerModelFilePtr::~MascotWalkerModelFilePtr() {
-    func_02017ab4((int)this);
-}
-inline MascotWalkerAnimationFileHandle::MascotWalkerAnimationFileHandle(u32 fileID) {
-    Construct(fileID);
-}
-inline MascotWalkerAnimationFileHandle::~MascotWalkerAnimationFileHandle() {
-    SharedFilePtr_Destruct_Anim((int)this);
-}
-inline PresenterModelFilePtr::PresenterModelFilePtr(u32 fileID) {
-    this->func_02017acc(fileID);
-}
-inline PresenterModelFilePtr::~PresenterModelFilePtr() {
-    func_02017ab4((int)this);
-}
-inline PresenterAnimationFileHandle::PresenterAnimationFileHandle(u32 fileID) {
-    Construct(fileID);
-}
-inline PresenterAnimationFileHandle::~PresenterAnimationFileHandle() {
-    SharedFilePtr_Destruct_Anim((int)this);
-}
-inline PresenterTexSeqFileHandle::PresenterTexSeqFileHandle(u32 fileID) {
-    SharedFilePtr_Construct_TexSeq(this, fileID);
-}
-inline PresenterTexSeqFileHandle::~PresenterTexSeqFileHandle() {
-    SharedFilePtr_Destruct_TexSeq((int)this);
-}
-inline FlowerFaceModelFilePtr::FlowerFaceModelFilePtr(u32 fileID) {
-    this->func_02017acc(fileID);
-}
-inline FlowerFaceModelFilePtr::~FlowerFaceModelFilePtr() {
-    func_02017ab4((int)this);
-}
-inline FlowerFaceAnimationFileHandle::FlowerFaceAnimationFileHandle(u32 fileID) {
-    Construct(fileID);
-}
-inline FlowerFaceAnimationFileHandle::~FlowerFaceAnimationFileHandle() {
-    SharedFilePtr_Destruct_Anim((int)this);
-}
 
 /* ---- FallingPetal::FallingPetal ---- */
 /* mModel is the only member with a constructor. */

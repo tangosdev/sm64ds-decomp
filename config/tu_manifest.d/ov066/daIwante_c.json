@@ -489,154 +489,154 @@
       "address": "0x0211ae14",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "collision resource handle constructed with file ID 0x33c and registered with SharedFilePtr_Destruct_Clsn"
+      "evidence": "collision resource handle constructed with file ID 0x33c and registered with _ZN8ClsnFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae1c",
       "address": "0x0211ae1c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "collision resource handle constructed with file ID 0x343 and registered with SharedFilePtr_Destruct_Clsn"
+      "evidence": "collision resource handle constructed with file ID 0x343 and registered with _ZN8ClsnFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae24",
       "address": "0x0211ae24",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "collision resource handle constructed with file ID 0x332 and registered with SharedFilePtr_Destruct_Clsn"
+      "evidence": "collision resource handle constructed with file ID 0x332 and registered with _ZN8ClsnFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae2c",
       "address": "0x0211ae2c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "texture-sequence resource handle constructed with file ID 0x33d and registered with SharedFilePtr_Destruct_TexSeq"
+      "evidence": "texture-sequence resource handle constructed with file ID 0x33d and registered with _ZN10TexSeqFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae34",
       "address": "0x0211ae34",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "collision resource handle constructed with file ID 0x345 and registered with SharedFilePtr_Destruct_Clsn"
+      "evidence": "collision resource handle constructed with file ID 0x345 and registered with _ZN8ClsnFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae3c",
       "address": "0x0211ae3c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "texture-sequence resource handle constructed with file ID 0x333 and registered with SharedFilePtr_Destruct_TexSeq"
+      "evidence": "texture-sequence resource handle constructed with file ID 0x333 and registered with _ZN10TexSeqFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae44",
       "address": "0x0211ae44",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation resource handle constructed with file ID 0x344 and registered with SharedFilePtr_Destruct_Anim"
+      "evidence": "animation resource handle constructed with file ID 0x344 and registered with _ZN8AnimFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae4c",
       "address": "0x0211ae4c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 0x33f and registered with func_02017ab4"
+      "evidence": "model resource handle constructed with file ID 0x33f and registered with _ZN9ModelFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae54",
       "address": "0x0211ae54",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation resource handle constructed with file ID 0x340 and registered with SharedFilePtr_Destruct_Anim"
+      "evidence": "animation resource handle constructed with file ID 0x340 and registered with _ZN8AnimFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae5c",
       "address": "0x0211ae5c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation resource handle constructed with file ID 0x335 and registered with SharedFilePtr_Destruct_Anim"
+      "evidence": "animation resource handle constructed with file ID 0x335 and registered with _ZN8AnimFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae64",
       "address": "0x0211ae64",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation resource handle constructed with file ID 0x342 and registered with SharedFilePtr_Destruct_Anim"
+      "evidence": "animation resource handle constructed with file ID 0x342 and registered with _ZN8AnimFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae6c",
       "address": "0x0211ae6c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 0x339 and registered with func_02017ab4"
+      "evidence": "model resource handle constructed with file ID 0x339 and registered with _ZN9ModelFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae74",
       "address": "0x0211ae74",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation resource handle constructed with file ID 0x346 and registered with SharedFilePtr_Destruct_Anim"
+      "evidence": "animation resource handle constructed with file ID 0x346 and registered with _ZN8AnimFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae7c",
       "address": "0x0211ae7c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation resource handle constructed with file ID 0x347 and registered with SharedFilePtr_Destruct_Anim"
+      "evidence": "animation resource handle constructed with file ID 0x347 and registered with _ZN8AnimFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae84",
       "address": "0x0211ae84",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation resource handle constructed with file ID 0x336 and registered with SharedFilePtr_Destruct_Anim"
+      "evidence": "animation resource handle constructed with file ID 0x336 and registered with _ZN8AnimFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae8c",
       "address": "0x0211ae8c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation resource handle constructed with file ID 0x338 and registered with SharedFilePtr_Destruct_Anim"
+      "evidence": "animation resource handle constructed with file ID 0x338 and registered with _ZN8AnimFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae94",
       "address": "0x0211ae94",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation resource handle constructed with file ID 0x341 and registered with SharedFilePtr_Destruct_Anim"
+      "evidence": "animation resource handle constructed with file ID 0x341 and registered with _ZN8AnimFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211ae9c",
       "address": "0x0211ae9c",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "texture-sequence resource handle constructed with file ID 0x33e and registered with SharedFilePtr_Destruct_TexSeq"
+      "evidence": "texture-sequence resource handle constructed with file ID 0x33e and registered with _ZN10TexSeqFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211aea4",
       "address": "0x0211aea4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation resource handle constructed with file ID 0x337 and registered with SharedFilePtr_Destruct_Anim"
+      "evidence": "animation resource handle constructed with file ID 0x337 and registered with _ZN8AnimFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211aeac",
       "address": "0x0211aeac",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "collision resource handle constructed with file ID 0x33b and registered with SharedFilePtr_Destruct_Clsn"
+      "evidence": "collision resource handle constructed with file ID 0x33b and registered with _ZN8ClsnFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211aeb4",
       "address": "0x0211aeb4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with file ID 0x33a and registered with func_02017ab4"
+      "evidence": "model resource handle constructed with file ID 0x33a and registered with _ZN9ModelFileD1Ev"
     },
     {
       "symbol": "data_ov066_0211aebc",
       "address": "0x0211aebc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "texture-sequence resource handle constructed with file ID 0x334 and registered with SharedFilePtr_Destruct_TexSeq"
+      "evidence": "texture-sequence resource handle constructed with file ID 0x334 and registered with _ZN10TexSeqFileD1Ev"
     },
     {
       "symbol": "@2176",
@@ -1649,56 +1649,56 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN18EyerokModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN18EyerokModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor's exact ABS32 relocation"
     },
     {
       "symbol": "_ZN22EyerokAnimationFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x0201799c",
       "evidence": "retail initializer call destination and the animation constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN22EyerokAnimationFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
       "evidence": "retail destructor registration destination and the animation SharedFilePtr family identity"
     },
     {
       "symbol": "_ZN24EyerokTextureSequencePtrC1Ej",
-      "canonical_symbol": "SharedFilePtr_Construct_TexSeq",
+      "canonical_symbol": "_ZN10TexSeqFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017934",
       "evidence": "retail initializer call destination and the texture-sequence constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN24EyerokTextureSequencePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_TexSeq",
+      "canonical_symbol": "_ZN10TexSeqFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x0201791c",
       "evidence": "retail destructor registration destination and the texture-sequence SharedFilePtr family identity"
     },
     {
       "symbol": "_ZN22EyerokCollisionFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "canonical_symbol": "_ZN8ClsnFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the collision constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN22EyerokCollisionFilePtrD1Ev",
-      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
+      "canonical_symbol": "_ZN8ClsnFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
@@ -1856,7 +1856,7 @@
       "source": "0x0211a428",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1876,7 +1876,7 @@
       "source": "0x0211a444",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1896,7 +1896,7 @@
       "source": "0x0211a460",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1916,7 +1916,7 @@
       "source": "0x0211a47c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1936,7 +1936,7 @@
       "source": "0x0211a498",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1956,7 +1956,7 @@
       "source": "0x0211a4b4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1976,7 +1976,7 @@
       "source": "0x0211a4d0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1996,7 +1996,7 @@
       "source": "0x0211a4ec",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2016,7 +2016,7 @@
       "source": "0x0211a508",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2036,7 +2036,7 @@
       "source": "0x0211a524",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2056,7 +2056,7 @@
       "source": "0x0211a540",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2076,7 +2076,7 @@
       "source": "0x0211a55c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2096,7 +2096,7 @@
       "source": "0x0211a578",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2116,7 +2116,7 @@
       "source": "0x0211a594",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017934"
@@ -2136,7 +2136,7 @@
       "source": "0x0211a5b0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017934"
@@ -2156,7 +2156,7 @@
       "source": "0x0211a5cc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017934"
@@ -2176,7 +2176,7 @@
       "source": "0x0211a5e8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017934"
@@ -2196,7 +2196,7 @@
       "source": "0x0211a604",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -2216,7 +2216,7 @@
       "source": "0x0211a620",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -2236,7 +2236,7 @@
       "source": "0x0211a63c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -2256,7 +2256,7 @@
       "source": "0x0211a658",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -2276,7 +2276,7 @@
       "source": "0x0211a674",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -2306,7 +2306,7 @@
       "source": "0x0211a9e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -2376,7 +2376,7 @@
       "source": "0x0211aa08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017984"
@@ -2586,7 +2586,7 @@
       "source": "0x0211aa78",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_TexSeq",
+      "symbol": "_ZN10TexSeqFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0201791c"
@@ -2676,7 +2676,7 @@
       "source": "0x0211aaa8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
+      "symbol": "_ZN8ClsnFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017b34"

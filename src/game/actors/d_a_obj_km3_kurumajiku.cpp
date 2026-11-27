@@ -32,8 +32,8 @@ enum d_a_obj_km3_kurumajiku_AssetId {
 #include "daObjKurumajiku_c.h"
 
 /* The constructor resolves each runtime asset handle to the stored ID.
- * The model uses func_02017acc / func_02017ab4 and the
- * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
+ * The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
+ * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct Km3KurumajikuModelFilePtr : SharedFilePtr {
     Km3KurumajikuModelFilePtr(unsigned int fileID);

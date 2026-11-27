@@ -19,9 +19,9 @@ enum d_a_mc_flag_AssetId { ASSET_MC_FLAG_BMD = 0x068d, ASSET_MC_FLAG_WAIT_BCA = 
 #include "math/MtxStack.h"
 #include "SpawnInfo.h"
 
-/* The model handle constructs through func_02017acc and registers
-   func_02017ab4; the animation handle constructs through
-   SharedFilePtr::Construct and registers SharedFilePtr_Destruct_Anim.
+/* The model handle constructs through ModelFile::ModelFile and registers
+   ModelFile::~ModelFile; the animation handle constructs through
+   AnimFile::AnimFile and registers AnimFile::~AnimFile.
    The manifest aliases these. */
 struct McFlagModelFileHandle : SharedFilePtr {
     McFlagModelFileHandle(u32 fileID);

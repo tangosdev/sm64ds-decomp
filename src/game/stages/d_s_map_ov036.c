@@ -9,12 +9,7 @@
 /* The small actor blocks reserve three entry slots. Counts of one or two leave
  * the remaining slots as all-ones padding. */
 
-typedef struct {
-    ViewEntry entries[5];
-    u16 pad;
-} ViewEntries5;
-
-extern u16 data_ov036_02112a00[2];
+extern u16 data_ov036_02112a00[1];
 extern u32 data_ov036_02112a04[1];
 extern ObjTable data_ov036_02112a08;
 extern ObjTable data_ov036_02112a10;
@@ -40,13 +35,13 @@ extern CLPS_Block data_ov036_02112c08;
 extern struct PathDef data_ov036_02112c28[7];
 extern StandardEntry data_ov036_02112c54[4];
 extern ObjSubTable data_ov036_02112c94[8];
-extern ViewEntries5 data_ov036_02112cd4;
+extern ViewEntry data_ov036_02112cd4[5];
 extern CLPS_Block224 data_ov036_02112d1c;
 extern PathNode data_ov036_02112dfc[104];
 extern SimpleEntry data_ov036_0211306c[99];
 extern StandardEntry data_ov036_02113384[109];
 
-u16 data_ov036_02112a00[2] = {0x07aa, 0x0000};
+u16 data_ov036_02112a00[1] = {0x07aa};
 
 u32 data_ov036_02112a04[1] = {0x11111114};
 
@@ -198,7 +193,7 @@ StandardEntry data_ov036_02112c54[4] = {
 ObjSubTable data_ov036_02112c94[8] = {
     {0x02, 0x68, {0x00, 0x00}, &data_ov036_02112dfc[0]},
     {0x03, 0x07, {0x00, 0x00}, &data_ov036_02112c28[0]},
-    {0x04, 0x05, {0x00, 0x00}, &data_ov036_02112cd4.entries[0]},
+    {0x04, 0x05, {0x00, 0x00}, &data_ov036_02112cd4[0]},
     {0x0b, 0x01, {0x00, 0x00}, &data_ov036_02112a00[0]},
     {0x01, 0x04, {0x00, 0x00}, &data_ov036_02112c54[0]},
     {0x06, 0x02, {0x00, 0x00}, &data_ov036_02112a24[0]},
@@ -206,15 +201,12 @@ ObjSubTable data_ov036_02112c94[8] = {
     {0x0e, 0x01, {0x00, 0x00}, &data_ov036_02112a04[0]},
 };
 
-ViewEntries5 data_ov036_02112cd4 = {
-    {
-        {0x02, 0xff, 0x0672, (s16)0xfbb4, 0x0d48, {0x00, 0x00}, 0x6000, 0x0000},
-        {0x07, 0xff, (s16)0xfce0, 0x026a, (s16)0xde04, {0x00, 0x00}, 0x0000, 0x0000},
-        {0x04, 0x02, (s16)0xf4de, 0x0ed8, (s16)0xf0f6, {0x00, 0x00}, (s16)0xa000, 0x0000},
-        {0x02, 0x00, (s16)0xf510, 0x0ed8, (s16)0xf3b2, {0x00, 0x00}, (s16)0xc000, 0x0000},
-        {0x02, 0x00, (s16)0xf1be, 0x198b, (s16)0xf02e, {0x00, 0x00}, (s16)0xa000, 0x0000},
-    },
-    0x0000,
+ViewEntry data_ov036_02112cd4[5] = {
+    {0x02, 0xff, 0x0672, (s16)0xfbb4, 0x0d48, {0x00, 0x00}, 0x6000, 0x0000},
+    {0x07, 0xff, (s16)0xfce0, 0x026a, (s16)0xde04, {0x00, 0x00}, 0x0000, 0x0000},
+    {0x04, 0x02, (s16)0xf4de, 0x0ed8, (s16)0xf0f6, {0x00, 0x00}, (s16)0xa000, 0x0000},
+    {0x02, 0x00, (s16)0xf510, 0x0ed8, (s16)0xf3b2, {0x00, 0x00}, (s16)0xc000, 0x0000},
+    {0x02, 0x00, (s16)0xf1be, 0x198b, (s16)0xf02e, {0x00, 0x00}, (s16)0xa000, 0x0000},
 };
 
 CLPS_Block224 data_ov036_02112d1c = {

@@ -6,33 +6,23 @@
 
 /* Definition order is what makes the compiler's size sort match address order. */
 
-typedef struct ViewRun_2113b18 {
-    ViewEntry entries[1];
-    u16 pad;
-} ViewRun_2113b18;
-
-typedef struct ExitRun_2113b28 {
-    ExitEntry entries[1];
-    u16 pad;
-} ExitRun_2113b28;
-
 extern const fx32 data_ov016_02113550[1];
-extern const u16 data_ov016_0211354c[2];
+extern const u16 data_ov016_0211354c[1];
 extern const BTAMaterialRecord data_ov016_02113554[1];
 extern const fx32 data_ov016_02113570[91];
-extern u16 data_ov016_02113ae0[2];
+extern u16 data_ov016_02113ae0[1];
 extern u32 data_ov016_02113ae4[1];
 extern ObjTable data_ov016_02113af0;
 extern char data_ov016_02113af8[8];
 extern ObjTable data_ov016_02113ae8;
 extern Area data_ov016_02113b0c[1];
 extern struct PathDef data_ov016_02113b00[2];
-extern ExitRun_2113b28 data_ov016_02113b28;
+extern ExitEntry data_ov016_02113b28[1];
 extern StandardEntry data_ov016_02113b58[1];
 extern FogEntry data_ov016_02113b68[2];
 extern StandardEntry data_ov016_02113b38[1];
 extern StandardEntry data_ov016_02113b48[1];
-extern ViewRun_2113b18 data_ov016_02113b18;
+extern ViewEntry data_ov016_02113b18[1];
 extern BTA_File data_ov016_02113b78;
 extern LevelRec data_ov016_02113b90;
 extern CLPS_Block data_ov016_02113c6c;
@@ -56,7 +46,7 @@ extern StandardEntry data_ov016_021141b8[108];
 
 const fx32 data_ov016_02113550[1] = {0x00001000};
 
-const u16 data_ov016_0211354c[2] = {0x0000, 0x0000};
+const u16 data_ov016_0211354c[1] = {0x0000};
 
 const BTAMaterialRecord data_ov016_02113554[1] = {
     {0xffff, 0x0000, (char *)&data_ov016_02113af8, {1, 0}, {1, 0}, {1, 0}, {91, 0}, {91, 0}},
@@ -76,7 +66,7 @@ const fx32 data_ov016_02113570[91] = {
     0x00000e39, 0x00000e66, 0x00000e94, 0x00000ec1, 0x00000eef, 0x00000f1c, 0x00000f4a, 0x00000f77,
     0x00000fa5, 0x00000fd2, 0x00001000};
 
-u16 data_ov016_02113ae0[2] = {0x0760, 0x0000};
+u16 data_ov016_02113ae0[1] = {0x0760};
 
 u32 data_ov016_02113ae4[1] = {0x00000004};
 
@@ -98,11 +88,8 @@ struct PathDef data_ov016_02113b00[2] = {
     {0x0009, 0x0d, 0xff, 0xff, 0xff},
 };
 
-ExitRun_2113b28 data_ov016_02113b28 = {
-    {
-        {0x15ae, (s16)0xed0e, 0x0753, (s16)0xe71d, (s16)0xf8e4, {0x09, 0x00, 0xff, 0x33}},
-    },
-    0x0000,
+ExitEntry data_ov016_02113b28[1] = {
+    {0x15ae, (s16)0xed0e, 0x0753, (s16)0xe71d, (s16)0xf8e4, {0x09, 0x00, 0xff, 0x33}},
 };
 
 StandardEntry data_ov016_02113b58[1] = {
@@ -122,11 +109,8 @@ StandardEntry data_ov016_02113b48[1] = {
     {0x00fe, 0x0ed8, (s16)0xec78, 0x0672, 0x0000, 0x1555, 0x0000, 0x1004},
 };
 
-ViewRun_2113b18 data_ov016_02113b18 = {
-    {
-        {0x02, 0xff, (s16)0xe638, 0x04b0, (s16)0xfd44, {0x00, 0x00}, 0x2000, 0x0000},
-    },
-    0x0000,
+ViewEntry data_ov016_02113b18[1] = {
+    {0x02, 0xff, (s16)0xe638, 0x04b0, (s16)0xfd44, {0x00, 0x00}, 0x2000, 0x0000},
 };
 
 BTA_File data_ov016_02113b78 = {0x005b,

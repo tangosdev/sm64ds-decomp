@@ -35,9 +35,9 @@ enum daDkk_c_AssetId { ASSET_DONKAKU_BMD = 0x02dc, ASSET_DONKAKU_KCL = 0x02dd };
 #include "Particle__System.h"
 #include "ParticleIds.h"
 
-/* The model handle constructs through func_02017acc and destroys through
- * func_02017ab4. The collision handle constructs through func_02017b4c and
- * destroys through SharedFilePtr_Destruct_Clsn. data_ov025_02113814 is
+/* The model handle constructs through ModelFile::ModelFile and destroys through
+ * ModelFile::~ModelFile. The collision handle constructs through ClsnFile::ClsnFile and
+ * destroys through ClsnFile::~ClsnFile. data_ov025_02113814 is
  * the file table (DsnBaseFileTable, daDsnBase_c.h). */
 struct DkkModelFilePtr : SharedFilePtr {
     DkkModelFilePtr(unsigned int fileId);

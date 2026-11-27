@@ -7,24 +7,9 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    struct PathDef entries[1];
-    u16 pad;
-} Pad_02112b88;
-
-typedef struct {
-    ViewEntry entries[1];
-    u16 pad;
-} Pad_02112be8;
-
-typedef struct {
-    ExitEntry entries[1];
-    u16 pad;
-} Pad_02112bf8;
-
-extern u16 data_ov019_02112b80[2];
+extern u16 data_ov019_02112b80[1];
 extern u32 data_ov019_02112b84[1];
-extern Pad_02112b88 data_ov019_02112b88;
+extern struct PathDef data_ov019_02112b88[1];
 extern SimpleEntry data_ov019_02112b90[1];
 extern SimpleEntry data_ov019_02112b98[1];
 extern ObjTable data_ov019_02112ba0;
@@ -35,8 +20,8 @@ extern SimpleEntry data_ov019_02112bc0[1];
 extern SimpleEntry data_ov019_02112bc8[1];
 extern Area data_ov019_02112bd0[1];
 extern DoorEntry data_ov019_02112bdc[1];
-extern Pad_02112be8 data_ov019_02112be8;
-extern Pad_02112bf8 data_ov019_02112bf8;
+extern ViewEntry data_ov019_02112be8[1];
+extern ExitEntry data_ov019_02112bf8[1];
 extern StandardEntry data_ov019_02112c08[1];
 extern StandardEntry data_ov019_02112c18[1];
 extern StandardEntry data_ov019_02112c28[1];
@@ -52,15 +37,12 @@ extern ObjSubTable data_ov019_02112db4[14];
 extern PathNode data_ov019_02112e24[86];
 extern SimpleEntry data_ov019_02113028[73];
 
-SimpleEntry data_ov019_02112b98[1] = {
+SimpleEntry data_ov019_02112b90[1] = {
     {0x463f, (s16)0xe412, (s16)0xea20, (s16)0xe66a},
 };
 
-Pad_02112b88 data_ov019_02112b88 = {
-    {
-        {0x0000, 0x56, 0xff, 0xff, 0x7f},
-    },
-    0x0000,
+struct PathDef data_ov019_02112b88[1] = {
+    {0x0000, 0x56, 0xff, 0xff, 0x7f},
 };
 
 ObjSubTable data_ov019_02112db4[14] = {{0x00, 0x05, {0x00, 0x00}, (void *)&data_ov019_02112d04},
@@ -206,18 +188,12 @@ CLPS_Block96 data_ov019_02112d54 = {
      {0xffffffff, 0xffffffff}},
 };
 
-Pad_02112be8 data_ov019_02112be8 = {
-    {
-        {0x02, 0xff, (s16)0xeb4c, 0x19c8, (s16)0xeab6, {0x00, 0x00}, (s16)0xa000, 0x0000},
-    },
-    0x0000,
+ViewEntry data_ov019_02112be8[1] = {
+    {0x02, 0xff, (s16)0xeb4c, 0x19c8, (s16)0xeab6, {0x00, 0x00}, (s16)0xa000, 0x0000},
 };
 
-Pad_02112bf8 data_ov019_02112bf8 = {
-    {
-        {(s16)0xe2e6, (s16)0xe9bc, (s16)0xe55c, 0x0000, 0x4000, {0x0a, 0x04, 0xff, 0x21}},
-    },
-    0x0000,
+ExitEntry data_ov019_02112bf8[1] = {
+    {(s16)0xe2e6, (s16)0xe9bc, (s16)0xe55c, 0x0000, 0x4000, {0x0a, 0x04, 0xff, 0x21}},
 };
 
 ObjSubTable data_ov019_02112c84[8] = {{0x02, 0x56, {0x00, 0x00}, (void *)&data_ov019_02112e24},
@@ -301,7 +277,7 @@ StandardEntry data_ov019_02112c08[1] = {
     {0x00a0, (s16)0xeb4c, 0x1964, (s16)0xe890, 0x0000, (s16)0xc000, 0x0000, 0x0300},
 };
 
-u16 data_ov019_02112b80[2] = {0x07c3, 0x0000};
+u16 data_ov019_02112b80[1] = {0x07c3};
 
 StandardEntry data_ov019_02112d04[5] = {
     {0x004c, (s16)0xeb4c, 0x1964, (s16)0xe700, (s16)0xffff, 0x0000, 0x0000, 0x0741},
@@ -319,7 +295,7 @@ SimpleEntry data_ov019_02112bb8[1] = {
     {0x463f, (s16)0xe412, (s16)0xea20, (s16)0xe66a},
 };
 
-SimpleEntry data_ov019_02112b90[1] = {
+SimpleEntry data_ov019_02112b98[1] = {
     {0x463f, (s16)0xe412, (s16)0xea20, (s16)0xe66a},
 };
 

@@ -50,8 +50,8 @@ enum d_a_obj_rc_buranko_AssetId { ASSET_RC_BURANKO_BMD = 0x0695, ASSET_RC_BURANK
 #include "dBgW.h"
 #include "math/MtxStack.h"
 
-/* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
- * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
+/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
+ * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct RcBurankoModelFilePtr : SharedFilePtr {
     RcBurankoModelFilePtr(unsigned int fileID);

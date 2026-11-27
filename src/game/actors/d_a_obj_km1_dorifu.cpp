@@ -14,9 +14,9 @@
  * after the profile, before the vtable).
  *
  * The ten file handles at 02112658..021126a8 are defined here too.
- * dExtSimpleModel_c handles construct through func_02017acc and destroy through
- * func_02017ab4; collision handles construct through func_02017b4c
- * and destroy through SharedFilePtr_Destruct_Clsn. The manifest
+ * dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
+ * ModelFile::~ModelFile; collision handles construct through ClsnFile::ClsnFile
+ * and destroy through ClsnFile::~ClsnFile. The manifest
  * aliases those undefined members onto the ROM symbols, and mwcc
  * emits __sinit_d_a_obj_km1_dorifu.cpp from the definitions at the
  * bottom (retail initializer order, file IDs 0x649..0x652).

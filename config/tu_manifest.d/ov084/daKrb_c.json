@@ -528,7 +528,7 @@
   ],
   "production_mode": "intact-object",
   "notes": [
-    "FOLDED 2026-11-28: __sinit_ov084_0213035c folded in from src/unnamed/ov084. Nine file-scope resource handles -- two KrbModelFilePtr (ctor func_02017acc, dtor func_02017ab4) and seven KrbAnimationFileHandle (ctor SharedFilePtr::Construct, dtor SharedFilePtr_Destruct_Anim) -- plus the five-entry StateHandler table data_ov084_02130d74. Four of the five handlers are free functions, so the table slots materialize through KrbFreeHandler unions carrying the plain pointer; the STATE_AIRBORNE slot is a real daKrb_c pointer-to-member (@1954). Wrapper ctor/dtor symbols are aliased to the retail functions through undefined_symbol_aliases. Claims: .init 0x0213035c..0x02130558, .ctor 0x02130860..0x02130864, .data now 0x021308ac..0x021309c4 (five 8-byte descriptor records prepended), .bss 0x02130cc0..0x02130d9c (9 handles + 9 dtor nodes + 5-entry table). Copied from daKuriKing_c/daStar_c.",
+    "FOLDED 2026-11-28: __sinit_ov084_0213035c folded in from src/unnamed/ov084. Nine file-scope resource handles -- two KrbModelFilePtr (ctor _ZN9ModelFileC1Ej, dtor _ZN9ModelFileD1Ev) and seven KrbAnimationFileHandle (ctor _ZN8AnimFileC1Ej, dtor _ZN8AnimFileD1Ev) -- plus the five-entry StateHandler table data_ov084_02130d74. Four of the five handlers are free functions, so the table slots materialize through KrbFreeHandler unions carrying the plain pointer; the STATE_AIRBORNE slot is a real daKrb_c pointer-to-member (@1954). Wrapper ctor/dtor symbols are aliased to the retail functions through undefined_symbol_aliases. Claims: .init 0x0213035c..0x02130558, .ctor 0x02130860..0x02130864, .data now 0x021308ac..0x021309c4 (five 8-byte descriptor records prepended), .bss 0x02130cc0..0x02130d9c (9 handles + 9 dtor nodes + 5-entry table). Copied from daKuriKing_c/daStar_c.",
     "STATUS RECONCILED 2026-09-19: text-verified -> promoted. The consolidation had already happened; only the status field lagged. MEASURED, not inferred from missing legacy paths: exactly one .text stanza in config/arm9/overlays/ov084/delinks.txt overlaps this entry's run, it is 'complete', it covers 0x02129020..0x0212c10c exactly, and it names THIS entry's own promoted_source src/game/actors/d_a_krb.cpp -- not another entry's. All 35 declared functions fall inside the run, they tile it with no gap, and the first starts at the range start while the last ends at the range end. The absence of the 35 legacy one-function sources is the expected steady state of a completed promotion, not evidence of one.",
     "No production_mode is declared, and none is needed: this entry licenses .text only, so it takes the plain promotion shape rather than the intact-object path. Every promoted entry that claims a non-.text section carries production_mode 'intact-object' (23 of 23 at the time of this flip); this entry stays outside that set by claiming nothing but .text.",
     "FOLDED 2026-10-02: g_profile_KURIBO / _S / _L moved into this TU as KrbSpawnInfo (3 x 0x1c at ov084:0x021308ec / 0x02130908 / 0x02130924). The profile fold forced the .data claim to span ZTS + ZTI + 3 profiles + ZTV (0x021308d4..0x021309c4, 0xf0), which pulled the class's own _ZTS/_ZTV from compiler-only deadstrip into licensed data and flipped production_mode to intact-object. 38 .data relocation rows license every relocated word in the claim (si_class_type_info, ZTS, base ZTI, three classInits, own ZTI, 31 vtable slots). tubuild verify 35/35 TEXT-VERIFIED. Copied from daBmb_c.",
@@ -1188,28 +1188,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN15KrbModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail model-handle construction destination and the SharedFilePtr model family identity"
     },
     {
       "symbol": "_ZN15KrbModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the SharedFilePtr model family identity"
     },
     {
       "symbol": "_ZN22KrbAnimationFileHandleC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x0201799c",
       "evidence": "retail animation-handle construction destination and the SharedFilePtr animation family identity"
     },
     {
       "symbol": "_ZN22KrbAnimationFileHandleD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
       "evidence": "retail destructor registration destination and the SharedFilePtr animation family identity"
@@ -1759,7 +1759,7 @@
       "source": "0x213036c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1779,7 +1779,7 @@
       "source": "0x2130388",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1799,7 +1799,7 @@
       "source": "0x21303a4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1819,7 +1819,7 @@
       "source": "0x21303c0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1839,7 +1839,7 @@
       "source": "0x21303dc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1859,7 +1859,7 @@
       "source": "0x21303f8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1879,7 +1879,7 @@
       "source": "0x2130414",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1899,7 +1899,7 @@
       "source": "0x2130430",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1919,7 +1919,7 @@
       "source": "0x213044c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1949,7 +1949,7 @@
       "source": "0x021304dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1999,7 +1999,7 @@
       "source": "0x021304f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017984"

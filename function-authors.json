@@ -2631,11 +2631,11 @@
     },
     "arm9:0x020178b4": {
       "author": "tangosdev",
-      "name": "_Z13func_020178b4i"
+      "name": "_ZN10ModelFileBD1Ev"
     },
     "arm9:0x020178cc": {
       "author": "tangosdev",
-      "name": "_Z13func_020178ccPvj"
+      "name": "_ZN10ModelFileBC1Ej"
     },
     "arm9:0x020178e4": {
       "author": "tangosdev",
@@ -2643,11 +2643,11 @@
     },
     "arm9:0x0201791c": {
       "author": "tangosdev",
-      "name": "SharedFilePtr_Destruct_TexSeq"
+      "name": "_ZN10TexSeqFileD1Ev"
     },
     "arm9:0x02017934": {
       "author": "tangosdev",
-      "name": "SharedFilePtr_Construct_TexSeq"
+      "name": "_ZN10TexSeqFileC1Ej"
     },
     "arm9:0x0201794c": {
       "author": "tangosdev",
@@ -2655,11 +2655,11 @@
     },
     "arm9:0x02017984": {
       "author": "tangosdev",
-      "name": "SharedFilePtr_Destruct_Anim"
+      "name": "_ZN8AnimFileD1Ev"
     },
     "arm9:0x0201799c": {
       "author": "tangosdev",
-      "name": "_ZN13SharedFilePtr9ConstructEj"
+      "name": "_ZN8AnimFileC1Ej"
     },
     "arm9:0x020179b4": {
       "author": "tangosdev",
@@ -2667,11 +2667,11 @@
     },
     "arm9:0x02017a0c": {
       "author": "tangosdev",
-      "name": "_Z13func_02017a0ci"
+      "name": "_ZN10ModelFileAD1Ev"
     },
     "arm9:0x02017a24": {
       "author": "tangosdev",
-      "name": "_Z13func_02017a24Pvj"
+      "name": "_ZN10ModelFileAC1Ej"
     },
     "arm9:0x02017a3c": {
       "author": "tangosdev",
@@ -2683,19 +2683,19 @@
     },
     "arm9:0x02017a9c": {
       "author": "tangosdev",
-      "name": "_Z13func_02017a9ci"
+      "name": "_ZN9ModelFileD2Ev"
     },
     "arm9:0x02017ab4": {
       "author": "tangosdev",
-      "name": "_Z13func_02017ab4i"
+      "name": "_ZN9ModelFileD1Ev"
     },
     "arm9:0x02017acc": {
       "author": "tangosdev",
-      "name": "_Z13func_02017accPvj"
+      "name": "_ZN9ModelFileC1Ej"
     },
     "arm9:0x02017ae4": {
       "author": "tangosdev",
-      "name": "_Z13func_02017ae4Pvj"
+      "name": "_ZN9ModelFileC2Ej"
     },
     "arm9:0x02017afc": {
       "author": "tangosdev",
@@ -2703,11 +2703,11 @@
     },
     "arm9:0x02017b34": {
       "author": "tangosdev",
-      "name": "_Z27SharedFilePtr_Destruct_Clsni"
+      "name": "_ZN8ClsnFileD1Ev"
     },
     "arm9:0x02017b4c": {
       "author": "tangosdev",
-      "name": "_Z13func_02017b4cPvj"
+      "name": "_ZN8ClsnFileC1Ej"
     },
     "arm9:0x02017b64": {
       "author": "lplaat",
@@ -2731,11 +2731,11 @@
     },
     "arm9:0x02017e34": {
       "author": "tangosdev",
-      "name": "_Z13func_02017e34Pv"
+      "name": "_ZN13SharedFilePtrD2Ev"
     },
     "arm9:0x02017e48": {
       "author": "tangosdev",
-      "name": "_Z13func_02017e48Pvj"
+      "name": "_ZN13SharedFilePtrC2Ej"
     },
     "arm9:0x02017e60": {
       "author": "tangosdev",

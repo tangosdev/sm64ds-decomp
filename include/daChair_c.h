@@ -56,11 +56,8 @@ struct daChair_c : dActor_c {
     void State2();
     void State3();
 
-    /* Coined. The mangled suffix EPsS0_isis claims two s16* then int, s16,
-     * int, s16. A pointer and a reference generate identical ARM for this
-     * body, as do short and int in some of these slots, so the bytes cannot
-     * prove the exact original types. */
-    int ApproachStateValue(s16 *value, s16 *velocity, s32 target, s16 threshold, s32 acceleration,
+    /* Coined. */
+    int ApproachStateValue(s16 *value, s16 *velocity, s32 target, s16 threshold, s16 acceleration,
                            s16 multiplier);
     void Break();
     void UpdateModel();

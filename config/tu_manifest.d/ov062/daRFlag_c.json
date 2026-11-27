@@ -98,14 +98,14 @@
       "address": "0x0211e0d4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model file handle constructed with file ID 0x488 through func_02017acc"
+      "evidence": "model file handle constructed with file ID 0x488 through _ZN9ModelFileC1Ej"
     },
     {
       "symbol": "data_ov062_0211e0dc",
       "address": "0x0211e0dc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation file handle constructed with file ID 0x489 through _ZN13SharedFilePtr9ConstructEj"
+      "evidence": "animation file handle constructed with file ID 0x489 through _ZN8AnimFileC1Ej"
     },
     {
       "symbol": "@135",
@@ -428,28 +428,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN20RFlagModelFileHandleC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN20RFlagModelFileHandleD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
     },
     {
       "symbol": "_ZN22RFlagAnimResFileHandleC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x0201799c",
       "evidence": "retail initializer call destination and the animation file-handle wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN22RFlagAnimResFileHandleD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
       "evidence": "retail destructor registration destination and the animation file-handle wrapper destructor's exact ABS32 relocation"
@@ -471,7 +471,7 @@
       "source": "0x0211d6a0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -491,7 +491,7 @@
       "source": "0x0211d6bc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -521,7 +521,7 @@
       "source": "0x0211d6e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -551,7 +551,7 @@
       "source": "0x0211d6f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017984"

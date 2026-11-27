@@ -63,6 +63,44 @@ class AssetCatalogTests(unittest.TestCase):
         self.assertEqual(rows[0]["path"], "data/enemy/piano/piano.bmd")
         self.assertEqual(rows[1]["status"], "encoded-or-unresolved")
 
+    def test_reference_scan_reads_handle_class_definitions(self):
+        # A real-class handle is defined with its file ID as the constructor
+        # argument; the compiler's static initializer makes the call.  The
+        # definition owns itself, and a named constant is not a literal.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            (root / "sample.cpp").write_text(
+                "TexSeqFile data_ov002_0210e538(0x8021);\n"
+                "static ModelFileA data_ov006_02121234(0x25c);\n"
+                "AnimFile gNamedAnimationFile(ASSET_NAMED_BCA);\n"
+                "ModelFile MakeModelFile(unsigned int id);\n"
+                "struct Holder { ModelFileB mFile; };\n"
+                "void f(void) {\n"
+                "  _ZN8ClsnFileC1Ej(&data_ov002_0210e540, 0x25c);\n"
+                "}\n",
+                encoding="utf-8",
+            )
+            old_repo = AC.REPO
+            try:
+                AC.REPO = root
+                rows = AC.scan_references(root, [
+                    AC.AssetHandle(0x25C, 0x123, "data/enemy/piano/piano.bmd", 100),
+                ])
+            finally:
+                AC.REPO = old_repo
+        self.assertEqual(
+            [(row["line"], row["callee"], row["raw_id"], row["owner"], row["status"])
+             for row in rows],
+            [
+                ("1", "TexSeqFile::TexSeqFile", "0x8021", "data_ov002_0210e538",
+                 "encoded-or-unresolved"),
+                ("2", "ModelFileA::ModelFileA", "0x025c", "data_ov006_02121234",
+                 "runtime-handle"),
+                ("7", "_ZN8ClsnFileC1Ej", "0x025c", "&data_ov002_0210e540",
+                 "runtime-handle"),
+            ],
+        )
+
     def test_candidates_include_global_field_and_actor_layout_evidence(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = pathlib.Path(tmp)

@@ -30,14 +30,14 @@ in nearmiss/db.jsonl against matched src/, to stop a wrong signature burying an
 otherwise-correct candidate before it is landed. This runs over the LANDED tree in
 the opposite direction, looking for the signature that already matched and is still
 wrong, and it counts all callees rather than only `func_`-named ones -- the
-SharedFilePtr::Construct chain is reached through a mangled name and sigaudit's
-CALL_RE cannot see it. Its split_args/paren_span/nargs helpers are imported here
+SharedFilePtr handle constructors were reached through mangled names, which
+sigaudit's CALL_RE cannot see. Its split_args/paren_span/nargs helpers are imported here
 rather than copied.
 
     python tools/check_call_arity.py                  # the census
     python tools/check_call_arity.py --summary        # plus what was not decidable
     python tools/check_call_arity.py --json out.json
-    python tools/check_call_arity.py --callee func_02017e48
+    python tools/check_call_arity.py --callee func_02017e0c
 
 `f()` IS NOT `f(void)`. In C an empty parameter list means UNSPECIFIED, not zero, so
 a call reached through one cannot be scored against it. Those declarations are

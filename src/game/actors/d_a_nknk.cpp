@@ -55,8 +55,8 @@ enum d_a_nknk_AssetId {
 #include "LevelRng.h"
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (func_02017acc / func_02017ab4 for the two models,
- * SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim for the nine
+ * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the two models,
+ * AnimFile::AnimFile / AnimFile::~AnimFile for the nine
  * animation handles), spelled through declared-only subclasses so the
  * static initializer names the real entry points. The code reaches them
  * through the data_ov062_0211ced8/cee0/cee8 pointer tables. The model and

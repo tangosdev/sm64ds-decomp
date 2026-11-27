@@ -6,13 +6,8 @@
 
 /* Definition order is what makes the compiler's size sort match address order. */
 
-typedef struct ViewRun_2113884 {
-    ViewEntry entries[7];
-    u16 pad;
-} ViewRun_2113884;
-
-extern const u16 data_ov015_02112e0c[2];
-extern u16 data_ov015_02113440[2];
+extern const u16 data_ov015_02112e0c[1];
+extern u16 data_ov015_02113440[1];
 extern LevelRec data_ov015_02113518;
 extern const fx32 data_ov015_02112e30[91];
 extern const fx32 data_ov015_02112e10[1];
@@ -20,7 +15,7 @@ extern u32 data_ov015_02113444[1];
 extern ObjTable data_ov015_02113450;
 extern ObjTable data_ov015_02113448;
 extern Area data_ov015_02113464[1];
-extern char data_ov015_02113458[12];
+extern char data_ov015_02113458[];
 extern SimpleEntry data_ov015_021134d0[2];
 extern SimpleEntry data_ov015_02113470[2];
 extern TeleportSourceEntry data_ov015_021134f0[2];
@@ -54,15 +49,15 @@ extern StandardEntry data_ov015_021137a4[3];
 extern ObjSubTable data_ov015_021137d4[6];
 extern StandardEntry data_ov015_02113804[4];
 extern StandardEntry data_ov015_02113844[4];
-extern ViewRun_2113884 data_ov015_02113884;
+extern ViewEntry data_ov015_02113884[7];
 extern ObjSubTable data_ov015_021138e8[16];
 extern CLPS_Block320 data_ov015_02113968;
 extern SimpleEntry data_ov015_02113aa8[86];
 extern StandardEntry data_ov015_02113d58[92];
 
-const u16 data_ov015_02112e0c[2] = {0x0000, 0x0000};
+const u16 data_ov015_02112e0c[1] = {0x0000};
 
-u16 data_ov015_02113440[2] = {0x06df, 0x0000};
+u16 data_ov015_02113440[1] = {0x06df};
 
 LevelRec data_ov015_02113518 = {(struct CLPS_Block *)&data_ov015_02113968,
                                 (struct ObjTable *)&data_ov015_02113448,
@@ -105,7 +100,7 @@ Area data_ov015_02113464[1] = {
      {0x00, 0x10, 0x27}},
 };
 
-char data_ov015_02113458[12] = "water_mat";
+char data_ov015_02113458[] = "water_mat";
 
 SimpleEntry data_ov015_021134d0[2] = {
     {0xe10e, 0x0c08, 0x041a, (s16)0xf150},
@@ -313,17 +308,14 @@ StandardEntry data_ov015_02113844[4] = {
     {0x0014, 0x0a5a, 0x00fa, 0x10fe, 0x0003, 0x4000, 0x0000, 0xffff},
 };
 
-ViewRun_2113884 data_ov015_02113884 = {
-    {
-        {0x00, 0x00, 0x0000, 0x1165, 0x0000, {0x00, 0x00}, 0x0000, 0x0000},
-        {0x02, 0xff, 0x0f9f, 0x0380, 0x125f, {0x00, 0x00}, (s16)0xc000, 0x0000},
-        {0x02, 0xff, 0x1065, 0x0b4e, (s16)0xff0f, {0x00, 0x00}, (s16)0xc000, 0x0000},
-        {0x02, 0xff, 0x09c4, 0x0b5f, 0x0898, {0x00, 0x00}, (s16)0xc000, 0x0000},
-        {0x02, 0xff, 0x04b0, 0x0a8c, 0x0a8c, {0x00, 0x00}, (s16)0x8000, 0x0000},
-        {0x07, 0xff, 0x0000, 0x0dac, 0x0000, {0x00, 0x00}, 0x0000, 0x0000},
-        {0x00, 0xff, 0x0000, 0x1165, 0x0000, {0x00, 0x00}, 0x0000, 0x0000},
-    },
-    0x0000,
+ViewEntry data_ov015_02113884[7] = {
+    {0x00, 0x00, 0x0000, 0x1165, 0x0000, {0x00, 0x00}, 0x0000, 0x0000},
+    {0x02, 0xff, 0x0f9f, 0x0380, 0x125f, {0x00, 0x00}, (s16)0xc000, 0x0000},
+    {0x02, 0xff, 0x1065, 0x0b4e, (s16)0xff0f, {0x00, 0x00}, (s16)0xc000, 0x0000},
+    {0x02, 0xff, 0x09c4, 0x0b5f, 0x0898, {0x00, 0x00}, (s16)0xc000, 0x0000},
+    {0x02, 0xff, 0x04b0, 0x0a8c, 0x0a8c, {0x00, 0x00}, (s16)0x8000, 0x0000},
+    {0x07, 0xff, 0x0000, 0x0dac, 0x0000, {0x00, 0x00}, 0x0000, 0x0000},
+    {0x00, 0xff, 0x0000, 0x1165, 0x0000, {0x00, 0x00}, 0x0000, 0x0000},
 };
 
 ObjSubTable data_ov015_021138e8[16] = {

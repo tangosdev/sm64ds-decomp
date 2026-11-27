@@ -657,49 +657,49 @@
       "address": "0x02140438",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation file handle, file ID 32958, constructed by SharedFilePtr::Construct"
+      "evidence": "animation file handle, file ID 32958, constructed by _ZN8AnimFileC1Ej"
     },
     {
       "symbol": "sJump3DMarioSdownAnimFile",
       "address": "0x02140440",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation file handle, file ID 32914, constructed by SharedFilePtr::Construct"
+      "evidence": "animation file handle, file ID 32914, constructed by _ZN8AnimFileC1Ej"
     },
     {
       "symbol": "sJump3DMarioStruggleAnimFile",
       "address": "0x02140448",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation file handle, file ID 32932, constructed by SharedFilePtr::Construct"
+      "evidence": "animation file handle, file ID 32932, constructed by _ZN8AnimFileC1Ej"
     },
     {
       "symbol": "gMarioModelMgModelFile",
       "address": "0x02140450",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model file handle, file ID 534, constructed by func_02017a24"
+      "evidence": "model file handle, file ID 534, constructed by _ZN10ModelFileAC1Ej"
     },
     {
       "symbol": "sJump3DMarioRollJumpAnimFile",
       "address": "0x02140458",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation file handle, file ID 32910, constructed by SharedFilePtr::Construct"
+      "evidence": "animation file handle, file ID 32910, constructed by _ZN8AnimFileC1Ej"
     },
     {
       "symbol": "sJump3DMarioJumpAnimFile",
       "address": "0x02140460",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation file handle, file ID 32888, constructed by SharedFilePtr::Construct"
+      "evidence": "animation file handle, file ID 32888, constructed by _ZN8AnimFileC1Ej"
     },
     {
       "symbol": "sJump3DMarioDoubleJump1AnimFile",
       "address": "0x02140468",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation file handle, file ID 32797, constructed by SharedFilePtr::Construct"
+      "evidence": "animation file handle, file ID 32797, constructed by _ZN8AnimFileC1Ej"
     },
     {
       "symbol": "@871",
@@ -1455,31 +1455,31 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN22Jump3DMarioAnimFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x0201799c",
-      "evidence": "retail initializer calls SharedFilePtr::Construct for the six animation handles"
+      "evidence": "retail initializer calls _ZN8AnimFileC1Ej for the six animation handles"
     },
     {
       "symbol": "_ZN22Jump3DMarioAnimFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
-      "evidence": "retail registration of each animation handle names SharedFilePtr_Destruct_Anim"
+      "evidence": "retail registration of each animation handle names _ZN8AnimFileD1Ev"
     },
     {
       "symbol": "_ZN18Jump3DModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017a24Ej",
+      "canonical_symbol": "_ZN10ModelFileAC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a24",
-      "evidence": "retail initializer calls func_02017a24 to construct the model handle"
+      "evidence": "retail initializer calls _ZN10ModelFileAC1Ej to construct the model handle"
     },
     {
       "symbol": "_ZN18Jump3DModelFilePtrD1Ev",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017a0cEv",
+      "canonical_symbol": "_ZN10ModelFileAD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a0c",
-      "evidence": "retail registration of the model handle names func_02017a0c as its destructor"
+      "evidence": "retail registration of the model handle names _ZN10ModelFileAD1Ev as its destructor"
     }
   ],
   "symbol_binding_rewrites": [
@@ -1634,7 +1634,7 @@
       "source": "0x0212f53c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1654,7 +1654,7 @@
       "source": "0x0212f558",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1674,7 +1674,7 @@
       "source": "0x0212f574",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1694,7 +1694,7 @@
       "source": "0x0212f590",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1714,7 +1714,7 @@
       "source": "0x0212f5ac",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1734,7 +1734,7 @@
       "source": "0x0212f5c8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1754,7 +1754,7 @@
       "source": "0x0212f5e4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017a24Ej",
+      "symbol": "_ZN10ModelFileAC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017a24"
@@ -1784,7 +1784,7 @@
       "source": "0x0212f60c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017984"
@@ -1914,7 +1914,7 @@
       "source": "0x0212f658",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN13SharedFilePtr13func_02017a0cEv",
+      "symbol": "_ZN10ModelFileAD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017a0c"

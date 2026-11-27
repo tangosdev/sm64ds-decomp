@@ -57,7 +57,6 @@ data_ov034_02114094 kind:data(any) addr:0x02114094
 data_ov034_0211409c kind:data(any) addr:0x0211409c
 data_ov034_021140a4 kind:data(any) addr:0x021140a4
 data_ov034_021140b0 kind:data(any) addr:0x021140b0
-data_ov034_021140b8 kind:data(any) addr:0x021140b8 ambiguous
 data_ov034_021140c0 kind:data(any) addr:0x021140c0
 data_ov034_021140d0 kind:data(any) addr:0x021140d0
 data_ov034_021140e0 kind:data(any) addr:0x021140e0
@@ -109,7 +108,7 @@ _ZTI12daHanachan_c kind:data(any) addr:0x0211445c
 data_ov034_02114468 kind:data(any) addr:0x02114468
 _ZTS12daHanachan_c kind:data(any) addr:0x02114478
 data_ov034_02114488 kind:data(any) addr:0x02114488
-g_profile_HANACHAN kind:data(any) addr:0x02114498 ambiguous
+g_profile_HANACHAN kind:data(any) addr:0x02114498
 _ZTV12daHanachan_c kind:data(any) addr:0x021144bc
 data_ov034_02114538 kind:data(any) addr:0x02114538
 data_ov034_02114614 kind:data(any) addr:0x02114614 ambiguous
@@ -148,39 +147,39 @@ gHanachanBody03WaitAnimationFile kind:bss addr:0x02114718
 gHanachanBody04TextureSequenceFile kind:bss addr:0x02114720
 gHanachanBody01WalkAnimationFile kind:bss addr:0x02114728
 gHanachanHeadTextureSequenceFile kind:bss addr:0x02114730
-@1615 kind:bss addr:0x02114738
-@1616 kind:bss addr:0x02114744
-@1647 kind:bss addr:0x02114750
-@1617 kind:bss addr:0x0211475c
-@1618 kind:bss addr:0x02114768
-@1648 kind:bss addr:0x02114774
-@1619 kind:bss addr:0x02114780
-@1620 kind:bss addr:0x0211478c
-@1621 kind:bss addr:0x02114798
-@1622 kind:bss addr:0x021147a4
-@1624 kind:bss addr:0x021147b0
-@1625 kind:bss addr:0x021147bc
-@1626 kind:bss addr:0x021147c8
-@1627 kind:bss addr:0x021147d4
-@1628 kind:bss addr:0x021147e0
-@1629 kind:bss addr:0x021147ec
-@1630 kind:bss addr:0x021147f8
-@1631 kind:bss addr:0x02114804
-@1632 kind:bss addr:0x02114810
-@1633 kind:bss addr:0x0211481c
-@1634 kind:bss addr:0x02114828
-@1635 kind:bss addr:0x02114834
-@1636 kind:bss addr:0x02114840
-@1637 kind:bss addr:0x0211484c
-@1638 kind:bss addr:0x02114858
-@1639 kind:bss addr:0x02114864
-@1640 kind:bss addr:0x02114870
-@1641 kind:bss addr:0x0211487c
-@1623 kind:bss addr:0x02114888
-@1642 kind:bss addr:0x02114894
-@1643 kind:bss addr:0x021148a0
-@1644 kind:bss addr:0x021148ac
-@1645 kind:bss addr:0x021148b8
-@1646 kind:bss addr:0x021148c4
-@1614 kind:bss addr:0x021148d0
+@1615 kind:bss addr:0x02114738 local
+@1616 kind:bss addr:0x02114744 local
+@1647 kind:bss addr:0x02114750 local
+@1617 kind:bss addr:0x0211475c local
+@1618 kind:bss addr:0x02114768 local
+@1648 kind:bss addr:0x02114774 local
+@1619 kind:bss addr:0x02114780 local
+@1620 kind:bss addr:0x0211478c local
+@1621 kind:bss addr:0x02114798 local
+@1622 kind:bss addr:0x021147a4 local
+@1624 kind:bss addr:0x021147b0 local
+@1625 kind:bss addr:0x021147bc local
+@1626 kind:bss addr:0x021147c8 local
+@1627 kind:bss addr:0x021147d4 local
+@1628 kind:bss addr:0x021147e0 local
+@1629 kind:bss addr:0x021147ec local
+@1630 kind:bss addr:0x021147f8 local
+@1631 kind:bss addr:0x02114804 local
+@1632 kind:bss addr:0x02114810 local
+@1633 kind:bss addr:0x0211481c local
+@1634 kind:bss addr:0x02114828 local
+@1635 kind:bss addr:0x02114834 local
+@1636 kind:bss addr:0x02114840 local
+@1637 kind:bss addr:0x0211484c local
+@1638 kind:bss addr:0x02114858 local
+@1639 kind:bss addr:0x02114864 local
+@1640 kind:bss addr:0x02114870 local
+@1641 kind:bss addr:0x0211487c local
+@1623 kind:bss addr:0x02114888 local
+@1642 kind:bss addr:0x02114894 local
+@1643 kind:bss addr:0x021148a0 local
+@1644 kind:bss addr:0x021148ac local
+@1645 kind:bss addr:0x021148b8 local
+@1646 kind:bss addr:0x021148c4 local
+@1614 kind:bss addr:0x021148d0 local
 data_ov034_021148dc kind:bss addr:0x021148dc ambiguous

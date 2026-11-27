@@ -45,7 +45,7 @@ unsigned int func_02045a50(const void *, unsigned int);
 /* local extern: the camera matrix, declared per consumer (d_ext_model.cpp,
    d_ent_obj.cpp). */
 extern Matrix4x3 gViewMtx;
-/* File 0x8418. The ctor and dtor are func_020178cc / func_020178b4; this
+/* File 0x8418. The ctor and dtor are ModelFileB::ModelFileB / ModelFileB::~ModelFileB; this
    TU does not define them. The handler row is filled by the static
    initializer those two objects emit. */
 struct EntryMeshTexture : SharedFilePtr {

@@ -35,38 +35,8 @@
       "end": "0x0211407c"
     },
     {
-      "name": ".data.hanachanLevel",
-      "input_section": ".data",
-      "start": "0x02114080",
-      "end": "0x0211433c"
-    },
-    {
-      "name": ".data.hanachanTimer",
-      "input_section": ".data",
-      "start": "0x0211433c",
-      "end": "0x02114358"
-    },
-    {
-      "name": ".data.hanachanNames",
-      "input_section": ".data",
-      "start": "0x02114408",
-      "end": "0x0211445c"
-    },
-    {
-      "name": ".data.hanachanStartName",
-      "input_section": ".data",
-      "start": "0x02114468",
-      "end": "0x02114478"
-    },
-    {
-      "name": ".data.hanachanSpeeds",
-      "input_section": ".data",
-      "start": "0x02114488",
-      "end": "0x02114498"
-    },
-    {
       "name": ".data",
-      "start": "0x02114538",
+      "start": "0x0211433c",
       "end": "0x02114614"
     },
     {
@@ -324,256 +294,248 @@
   ],
   "data": [
     {
-      "symbol": "data_ov034_02114080",
-      "address": "0x02114080",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "two minimap-tile file ids, sublevel 26 object category 11"
-    },
-    {
-      "symbol": "data_ov034_02114084",
-      "address": "0x02114084",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "star-camera nibble word, object category 14"
-    },
-    {
-      "symbol": "data_ov034_02114088",
-      "address": "0x02114088",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "two minimap scales, object category 12"
-    },
-    {
-      "symbol": "data_ov034_0211408c",
-      "address": "0x0211408c",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "area object table, count 3, entries at data_ov034_021140e0"
-    },
-    {
-      "symbol": "data_ov034_02114094",
-      "address": "0x02114094",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "level-wide object table, count 7, entries at data_ov034_02114114"
-    },
-    {
-      "symbol": "data_ov034_0211409c",
-      "address": "0x0211409c",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "one fog record, object category 8"
-    },
-    {
-      "symbol": "data_ov034_021140a4",
-      "address": "0x021140a4",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "the level's one area: object table, null texture animation, minimap id 1"
-    },
-    {
-      "symbol": "data_ov034_021140b0",
-      "address": "0x021140b0",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "first 8 bytes of the single type-2 view record"
-    },
-    {
-      "symbol": "data_ov034_021140b8",
-      "address": "0x021140b8",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "view angleY 0xc000 and the zero tail through the next row"
-    },
-    {
-      "symbol": "data_ov034_021140c0",
-      "address": "0x021140c0",
-      "size": "0x10",
-      "binding": "STB_GLOBAL",
-      "evidence": "one exit record (0xe) plus two zero pad bytes"
-    },
-    {
-      "symbol": "data_ov034_021140d0",
-      "address": "0x021140d0",
-      "size": "0x10",
-      "binding": "STB_GLOBAL",
-      "evidence": "star-filtered standard object, category byte 0xa0"
-    },
-    {
-      "symbol": "data_ov034_021140e0",
-      "address": "0x021140e0",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "area sub-table 0 (6 standard objects) and the head of sub-table 1"
-    },
-    {
-      "symbol": "data_ov034_021140ec",
-      "address": "0x021140ec",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "simple-object pointer, then the star-filtered sub-table head and pointer"
-    },
-    {
-      "symbol": "data_ov034_021140f8",
-      "address": "0x021140f8",
-      "size": "0x10",
-      "binding": "STB_GLOBAL",
-      "evidence": "level record head: CLPS, object table, model 0x7e5, kcl 0x7e1, minimap files"
-    },
-    {
-      "symbol": "data_ov034_02114108",
-      "address": "0x02114108",
-      "size": "0xc",
-      "binding": "STB_GLOBAL",
-      "evidence": "area pointer, area count 1, far-camera flag, minimap scale, skybox word 0xf"
-    },
-    {
-      "symbol": "data_ov034_02114114",
-      "address": "0x02114114",
-      "size": "0x38",
-      "binding": "STB_GLOBAL",
-      "evidence": "seven level-wide object sub-tables"
-    },
-    {
-      "symbol": "data_ov034_0211414c",
-      "address": "0x0211414c",
-      "size": "0x50",
-      "binding": "STB_GLOBAL",
-      "evidence": "five entrance records"
-    },
-    {
-      "symbol": "data_ov034_0211419c",
-      "address": "0x0211419c",
-      "size": "0x30",
-      "binding": "STB_GLOBAL",
-      "evidence": "first three of the six standard objects"
-    },
-    {
-      "symbol": "data_ov034_021141cc",
-      "address": "0x021141cc",
-      "size": "0x30",
-      "binding": "STB_GLOBAL",
-      "evidence": "last three of the six standard objects"
-    },
-    {
-      "symbol": "data_ov034_021141fc",
-      "address": "0x021141fc",
-      "size": "0x80",
-      "binding": "STB_GLOBAL",
-      "evidence": "CLPS block, stride 8, 15 entries"
-    },
-    {
-      "symbol": "data_ov034_0211427c",
-      "address": "0x0211427c",
-      "size": "0x24",
-      "binding": "STB_GLOBAL",
-      "evidence": "first four simple objects and the fifth entry's raw and x"
-    },
-    {
-      "symbol": "data_ov034_021142a0",
-      "address": "0x021142a0",
-      "size": "0x9c",
-      "binding": "STB_GLOBAL",
-      "evidence": "rest of the 24 simple objects, starting at the fifth entry's y and z"
-    },
-    {
-      "symbol": "data_ov034_02114538",
-      "address": "0x02114538",
-      "size": "0xdc",
-      "binding": "STB_GLOBAL",
-      "evidence": "eleven-entry Hanachan state table: Init PMF at +0 and Main PMF at +8 copied at static-init time from the ROM PMF descriptors at 0x02114358..0x02114408, name pointer at +0x10 the only static part, matching the retail .data bytes and eleven name-pointer relocations"
-    },
-    {
       "symbol": "data_ov034_0211433c",
-      "address": "0x0211433c",
+      "address": "0x211433c",
       "size": "0x4",
       "binding": "STB_GLOBAL",
-      "evidence": "per-health state timer byte value, indexed by mHealth"
+      "evidence": "per-health damage-state timer bytes"
     },
     {
       "symbol": "data_ov034_02114340",
-      "address": "0x02114340",
-      "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "state name \"DEAD\""
+      "address": "0x2114340",
+      "size": "0x5"
     },
     {
       "symbol": "data_ov034_02114348",
-      "address": "0x02114348",
-      "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "state name \"MOVE\""
+      "address": "0x2114348",
+      "size": "0x5"
     },
     {
       "symbol": "data_ov034_02114350",
-      "address": "0x02114350",
-      "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "state name \"DAMAGE\""
+      "address": "0x2114350",
+      "size": "0x7"
+    },
+    {
+      "symbol": "data_ov034_02114358",
+      "binding": "STB_GLOBAL",
+      "address": "0x2114358",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_02114360",
+      "binding": "STB_GLOBAL",
+      "address": "0x2114360",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_02114368",
+      "binding": "STB_GLOBAL",
+      "address": "0x2114368",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_02114370",
+      "binding": "STB_GLOBAL",
+      "address": "0x2114370",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_02114378",
+      "binding": "STB_GLOBAL",
+      "address": "0x2114378",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_02114380",
+      "binding": "STB_GLOBAL",
+      "address": "0x2114380",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_02114388",
+      "binding": "STB_GLOBAL",
+      "address": "0x2114388",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_02114390",
+      "binding": "STB_GLOBAL",
+      "address": "0x2114390",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_02114398",
+      "binding": "STB_GLOBAL",
+      "address": "0x2114398",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_021143a0",
+      "binding": "STB_GLOBAL",
+      "address": "0x21143a0",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_021143a8",
+      "binding": "STB_GLOBAL",
+      "address": "0x21143a8",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_021143b0",
+      "binding": "STB_GLOBAL",
+      "address": "0x21143b0",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_021143b8",
+      "binding": "STB_GLOBAL",
+      "address": "0x21143b8",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_021143c0",
+      "binding": "STB_GLOBAL",
+      "address": "0x21143c0",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_021143c8",
+      "binding": "STB_GLOBAL",
+      "address": "0x21143c8",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_021143d0",
+      "binding": "STB_GLOBAL",
+      "address": "0x21143d0",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_021143d8",
+      "binding": "STB_GLOBAL",
+      "address": "0x21143d8",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_021143e0",
+      "binding": "STB_GLOBAL",
+      "address": "0x21143e0",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_021143e8",
+      "binding": "STB_GLOBAL",
+      "address": "0x21143e8",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_021143f0",
+      "binding": "STB_GLOBAL",
+      "address": "0x21143f0",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_021143f8",
+      "binding": "STB_GLOBAL",
+      "address": "0x21143f8",
+      "size": "0x8"
+    },
+    {
+      "symbol": "data_ov034_02114400",
+      "binding": "STB_GLOBAL",
+      "address": "0x2114400",
+      "size": "0x8"
     },
     {
       "symbol": "data_ov034_02114408",
-      "address": "0x02114408",
-      "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "state name \"DEMOWAIT\""
+      "address": "0x2114408",
+      "size": "0x9"
     },
     {
       "symbol": "data_ov034_02114414",
-      "address": "0x02114414",
-      "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "state name \"DEMOCALL\""
+      "address": "0x2114414",
+      "size": "0x9"
     },
     {
       "symbol": "data_ov034_02114420",
-      "address": "0x02114420",
-      "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "state name \"MOVE_STOP\""
+      "address": "0x2114420",
+      "size": "0xa"
     },
     {
       "symbol": "data_ov034_0211442c",
-      "address": "0x0211442c",
-      "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "state name \"DAMAGETALK\""
+      "address": "0x211442c",
+      "size": "0xb"
     },
     {
       "symbol": "data_ov034_02114438",
-      "address": "0x02114438",
-      "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "state name \"MOVE_START\""
+      "address": "0x2114438",
+      "size": "0xb"
     },
     {
       "symbol": "data_ov034_02114444",
-      "address": "0x02114444",
-      "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "state name \"DAMAGE_STOP\""
+      "address": "0x2114444",
+      "size": "0xc"
     },
     {
       "symbol": "data_ov034_02114450",
-      "address": "0x02114450",
-      "size": "0xc",
       "binding": "STB_GLOBAL",
-      "evidence": "state name \"DAMAGE_WAIT\""
+      "address": "0x2114450",
+      "size": "0xc"
+    },
+    {
+      "symbol": "_ZTI12daHanachan_c",
+      "address": "0x211445c",
+      "size": "0xc"
     },
     {
       "symbol": "data_ov034_02114468",
-      "address": "0x02114468",
-      "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "state name \"DAMAGE_START\""
+      "address": "0x2114468",
+      "size": "0xd"
+    },
+    {
+      "symbol": "_ZTS12daHanachan_c",
+      "address": "0x2114478",
+      "size": "0xf"
     },
     {
       "symbol": "data_ov034_02114488",
-      "address": "0x02114488",
+      "address": "0x2114488",
       "size": "0x10",
       "binding": "STB_GLOBAL",
-      "evidence": "ApproachLinear target speed indexed by 4 - mHealth, and the walk speed"
+      "evidence": "per-segment walk-speed targets"
+    },
+    {
+      "symbol": "g_profile_HANACHAN",
+      "address": "0x2114498",
+      "size": "0x1c",
+      "binding": "STB_GLOBAL",
+      "evidence": "typed SpawnInfo profile"
+    },
+    {
+      "symbol": "_ZTV12daHanachan_c",
+      "address": "0x021144bc",
+      "size": "0x84",
+      "emitted_storage_address": "0x021144b4",
+      "emitted_storage_size": "0x84",
+      "address_point_bias": 8
+    },
+    {
+      "symbol": "data_ov034_02114538",
+      "address": "0x2114538",
+      "size": "0xdc",
+      "binding": "STB_GLOBAL",
+      "evidence": "eleven native State rows"
     }
   ],
   "bss": [
@@ -826,245 +788,245 @@
       "symbol": "@1614",
       "address": "0x21148d0",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x31e model handle"
     },
     {
       "symbol": "@1615",
       "address": "0x2114738",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x302 model handle"
     },
     {
       "symbol": "@1616",
       "address": "0x2114744",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x309 model handle"
     },
     {
       "symbol": "@1617",
       "address": "0x211475c",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x310 model handle"
     },
     {
       "symbol": "@1618",
       "address": "0x2114768",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x317 model handle"
     },
     {
       "symbol": "@1619",
       "address": "0x2114780",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x322 animation handle"
     },
     {
       "symbol": "@1620",
       "address": "0x211478c",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x306 animation handle"
     },
     {
       "symbol": "@1621",
       "address": "0x2114798",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x30d animation handle"
     },
     {
       "symbol": "@1622",
       "address": "0x21147a4",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x314 animation handle"
     },
     {
       "symbol": "@1623",
       "address": "0x2114888",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x31b animation handle"
     },
     {
       "symbol": "@1624",
       "address": "0x21147b0",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x324 animation handle"
     },
     {
       "symbol": "@1625",
       "address": "0x21147bc",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x308 animation handle"
     },
     {
       "symbol": "@1626",
       "address": "0x21147c8",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x30f animation handle"
     },
     {
       "symbol": "@1627",
       "address": "0x21147d4",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x316 animation handle"
     },
     {
       "symbol": "@1628",
       "address": "0x21147e0",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x31d animation handle"
     },
     {
       "symbol": "@1629",
       "address": "0x21147ec",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x323 animation handle"
     },
     {
       "symbol": "@1630",
       "address": "0x21147f8",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x307 animation handle"
     },
     {
       "symbol": "@1631",
       "address": "0x2114804",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x30e animation handle"
     },
     {
       "symbol": "@1632",
       "address": "0x2114810",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x315 animation handle"
     },
     {
       "symbol": "@1633",
       "address": "0x211481c",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x31c animation handle"
     },
     {
       "symbol": "@1634",
       "address": "0x2114828",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x321 animation handle"
     },
     {
       "symbol": "@1635",
       "address": "0x2114834",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x305 animation handle"
     },
     {
       "symbol": "@1636",
       "address": "0x2114840",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x30c animation handle"
     },
     {
       "symbol": "@1637",
       "address": "0x211484c",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x313 animation handle"
     },
     {
       "symbol": "@1638",
       "address": "0x2114858",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x31a animation handle"
     },
     {
       "symbol": "@1639",
       "address": "0x2114864",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x320 animation handle"
     },
     {
       "symbol": "@1640",
       "address": "0x2114870",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x304 animation handle"
     },
     {
       "symbol": "@1641",
       "address": "0x211487c",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x30b animation handle"
     },
     {
       "symbol": "@1642",
       "address": "0x2114894",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x312 animation handle"
     },
     {
       "symbol": "@1643",
       "address": "0x21148a0",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x319 animation handle"
     },
     {
       "symbol": "@1644",
       "address": "0x21148ac",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x31f texture-sequence handle"
     },
     {
       "symbol": "@1645",
       "address": "0x21148b8",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x303 texture-sequence handle"
     },
     {
       "symbol": "@1646",
       "address": "0x21148c4",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x30a texture-sequence handle"
     },
     {
       "symbol": "@1647",
       "address": "0x2114750",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x311 texture-sequence handle"
     },
     {
       "symbol": "@1648",
       "address": "0x2114774",
       "size": "0xc",
-      "binding": "STB_GLOBAL",
+      "binding": "STB_LOCAL",
       "evidence": "compiler-generated destructor-registration node for the 0x318 texture-sequence handle"
     },
     {
@@ -1287,43 +1249,8 @@
           "firstDiff": null
         },
         {
-          "section": ".data.hanachanLevel",
-          "start": "0x02114080",
-          "end": "0x0211433c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.hanachanTimer",
-          "start": "0x0211433c",
-          "end": "0x02114358",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.hanachanNames",
-          "start": "0x02114408",
-          "end": "0x0211445c",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.hanachanStartName",
-          "start": "0x02114468",
-          "end": "0x02114478",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
-          "section": ".data.hanachanSpeeds",
-          "start": "0x02114488",
-          "end": "0x02114498",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".data",
-          "start": "0x02114538",
+          "start": "0x0211433c",
           "end": "0x02114614",
           "differingBytes": 0,
           "firstDiff": null
@@ -1337,7 +1264,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 132
+          "LICENSED": 159
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -1348,9 +1275,8 @@
           {
             "section": ".rodata",
             "original": [
-              147,
-              148,
               149,
+              150,
               151,
               153,
               155,
@@ -1358,12 +1284,12 @@
               159,
               161,
               163,
-              164
+              165,
+              166
             ],
             "desired": [
-              147,
-              148,
               149,
+              150,
               151,
               153,
               155,
@@ -1371,95 +1297,118 @@
               159,
               161,
               163,
-              164
+              165,
+              166
             ]
           },
           {
             "section": ".init",
             "original": [
-              199
+              246
             ],
             "desired": [
-              199
+              246
             ]
           },
           {
             "section": ".ctor",
             "original": [
-              197
+              244
             ],
             "desired": [
-              197
-            ]
-          },
-          {
-            "section": ".data.hanachanTimer",
-            "original": [
-              165,
-              166,
-              167,
-              168
-            ],
-            "desired": [
-              165,
-              166,
-              167,
-              168
-            ]
-          },
-          {
-            "section": ".data.hanachanNames",
-            "original": [
-              169,
-              170,
-              171,
-              172,
-              173,
-              174,
-              175
-            ],
-            "desired": [
-              169,
-              170,
-              171,
-              172,
-              173,
-              174,
-              175
-            ]
-          },
-          {
-            "section": ".data.hanachanStartName",
-            "original": [
-              176
-            ],
-            "desired": [
-              176
-            ]
-          },
-          {
-            "section": ".data.hanachanSpeeds",
-            "original": [
-              177
-            ],
-            "desired": [
-              177
+              244
             ]
           },
           {
             "section": ".data",
             "original": [
-              178
+              77,
+              167,
+              168,
+              169,
+              171,
+              173,
+              174,
+              176,
+              178,
+              179,
+              181,
+              183,
+              184,
+              186,
+              188,
+              189,
+              191,
+              193,
+              194,
+              196,
+              198,
+              199,
+              201,
+              203,
+              204,
+              206,
+              208,
+              209,
+              211,
+              213,
+              214,
+              216,
+              218,
+              219,
+              221,
+              223,
+              224,
+              227,
+              229,
+              230
             ],
             "desired": [
-              178
+              167,
+              208,
+              193,
+              198,
+              214,
+              176,
+              191,
+              169,
+              179,
+              186,
+              194,
+              189,
+              221,
+              219,
+              211,
+              171,
+              206,
+              174,
+              209,
+              216,
+              181,
+              204,
+              184,
+              201,
+              199,
+              196,
+              173,
+              178,
+              183,
+              203,
+              188,
+              213,
+              218,
+              230,
+              223,
+              229,
+              168,
+              77,
+              227,
+              224
             ]
           },
           {
             "section": ".bss",
             "original": [
-              77,
-              78,
               79,
               80,
               81,
@@ -1527,55 +1476,57 @@
               143,
               144,
               145,
-              146
+              146,
+              147,
+              148,
+              226
             ],
             "desired": [
-              128,
-              116,
-              120,
-              126,
               130,
-              100,
-              108,
-              134,
-              78,
-              106,
-              82,
-              110,
-              114,
-              80,
-              142,
+              118,
               122,
-              96,
+              128,
               132,
-              92,
-              88,
-              144,
-              94,
-              98,
               102,
-              104,
+              110,
               136,
+              80,
+              108,
               84,
               112,
-              86,
-              140,
-              118,
+              116,
+              82,
+              144,
               124,
-              146,
+              98,
+              134,
+              94,
               90,
+              146,
+              96,
+              100,
+              104,
+              106,
               138,
-              79,
+              86,
+              114,
+              88,
+              142,
+              120,
+              126,
+              148,
+              92,
+              140,
               81,
-              143,
               83,
-              85,
               145,
+              85,
               87,
+              147,
               89,
               91,
               93,
-              97,
+              95,
               99,
               101,
               103,
@@ -1593,167 +1544,152 @@
               127,
               129,
               131,
-              95,
               133,
+              97,
               135,
               137,
               139,
               141,
-              77
+              143,
+              79,
+              226
             ]
           }
         ],
         "objisolate": {
           "reordered": [
             {
-              "section": ".bss",
+              "section": ".data",
               "original": [
                 77,
-                78,
-                79,
-                80,
-                81,
-                82,
-                83,
-                84,
-                85,
-                86,
-                87,
-                88,
-                89,
-                90,
-                91,
-                92,
-                93,
-                94,
-                95,
-                96,
-                97,
-                98,
-                99,
-                100,
-                101,
-                102,
-                103,
-                104,
-                105,
-                106,
-                107,
-                108,
-                109,
-                110,
-                111,
-                112,
-                113,
-                114,
-                115,
-                116,
-                117,
-                118,
-                119,
-                120,
-                121,
-                122,
-                123,
-                124,
-                125,
-                126,
-                127,
-                128,
-                129,
-                130,
-                131,
-                132,
-                133,
-                134,
-                135,
-                136,
-                137,
-                138,
-                139,
-                140,
-                141,
-                142,
-                143,
-                144,
-                145,
-                146
+                167,
+                168,
+                169,
+                171,
+                173,
+                174,
+                176,
+                178,
+                179,
+                181,
+                183,
+                184,
+                186,
+                188,
+                189,
+                191,
+                193,
+                194,
+                196,
+                198,
+                199,
+                201,
+                203,
+                204,
+                206,
+                208,
+                209,
+                211,
+                213,
+                214,
+                216,
+                218,
+                219,
+                221,
+                223,
+                224,
+                227,
+                229,
+                230
               ],
               "desired": [
-                128,
-                116,
-                120,
-                126,
-                130,
-                100,
-                108,
-                134,
-                78,
-                106,
-                82,
-                110,
-                114,
-                80,
-                142,
-                122,
-                96,
-                132,
-                92,
-                88,
-                144,
-                94,
-                98,
-                102,
-                104,
-                136,
-                84,
-                112,
-                86,
-                140,
-                118,
-                124,
-                146,
-                90,
-                138,
-                79,
-                81,
-                143,
-                83,
-                85,
-                145,
-                87,
-                89,
-                91,
-                93,
-                97,
-                99,
-                101,
-                103,
-                105,
-                107,
-                109,
-                111,
-                113,
-                115,
-                117,
-                119,
-                121,
-                123,
-                125,
-                127,
-                129,
-                131,
-                95,
-                133,
-                135,
-                137,
-                139,
-                141,
-                77
+                167,
+                208,
+                193,
+                198,
+                214,
+                176,
+                191,
+                169,
+                179,
+                186,
+                194,
+                189,
+                221,
+                219,
+                211,
+                171,
+                206,
+                174,
+                209,
+                216,
+                181,
+                204,
+                184,
+                201,
+                199,
+                196,
+                173,
+                178,
+                183,
+                203,
+                188,
+                213,
+                218,
+                230,
+                223,
+                229,
+                168,
+                77,
+                227,
+                224
               ],
               "slots": [
                 77,
-                78,
+                167,
+                168,
+                169,
+                171,
+                173,
+                174,
+                176,
+                178,
+                179,
+                181,
+                183,
+                184,
+                186,
+                188,
+                189,
+                191,
+                193,
+                194,
+                196,
+                198,
+                199,
+                201,
+                203,
+                204,
+                206,
+                208,
+                209,
+                211,
+                213,
+                214,
+                216,
+                218,
+                219,
+                221,
+                223,
+                224,
+                227,
+                229,
+                230
+              ]
+            },
+            {
+              "section": ".bss",
+              "original": [
                 79,
                 80,
                 81,
@@ -1821,13 +1757,162 @@
                 143,
                 144,
                 145,
-                146
+                146,
+                147,
+                148,
+                226
+              ],
+              "desired": [
+                130,
+                118,
+                122,
+                128,
+                132,
+                102,
+                110,
+                136,
+                80,
+                108,
+                84,
+                112,
+                116,
+                82,
+                144,
+                124,
+                98,
+                134,
+                94,
+                90,
+                146,
+                96,
+                100,
+                104,
+                106,
+                138,
+                86,
+                114,
+                88,
+                142,
+                120,
+                126,
+                148,
+                92,
+                140,
+                81,
+                83,
+                145,
+                85,
+                87,
+                147,
+                89,
+                91,
+                93,
+                95,
+                99,
+                101,
+                103,
+                105,
+                107,
+                109,
+                111,
+                113,
+                115,
+                117,
+                119,
+                121,
+                123,
+                125,
+                127,
+                129,
+                131,
+                133,
+                97,
+                135,
+                137,
+                139,
+                141,
+                143,
+                79,
+                226
+              ],
+              "slots": [
+                79,
+                80,
+                81,
+                82,
+                83,
+                84,
+                85,
+                86,
+                87,
+                88,
+                89,
+                90,
+                91,
+                92,
+                93,
+                94,
+                95,
+                96,
+                97,
+                98,
+                99,
+                100,
+                101,
+                102,
+                103,
+                104,
+                105,
+                106,
+                107,
+                108,
+                109,
+                110,
+                111,
+                112,
+                113,
+                114,
+                115,
+                116,
+                117,
+                118,
+                119,
+                120,
+                121,
+                122,
+                123,
+                124,
+                125,
+                126,
+                127,
+                128,
+                129,
+                130,
+                131,
+                132,
+                133,
+                134,
+                135,
+                136,
+                137,
+                138,
+                139,
+                140,
+                141,
+                142,
+                143,
+                144,
+                145,
+                146,
+                147,
+                148,
+                226
               ]
             }
           ],
-          "symbolIndices": 70,
+          "symbolIndices": 111,
           "sectionLinks": 0,
-          "sectionInfos": 0,
+          "sectionInfos": 26,
           "error": null
         },
         "errors": null
@@ -1922,27 +2007,6 @@
       "reason": "inherited vague-linkage RTTI name; the canonical copy stays in ov002."
     },
     {
-      "symbol": "_ZTI12daHanachan_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov034",
-      "canonical_address": "0x0211445c",
-      "reason": "this class's __si_class_type_info, emitted because the out-of-line destructor is the key function. Already named in ov034 symbols at 0x0211445c; no second copy."
-    },
-    {
-      "symbol": "_ZTS12daHanachan_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov034",
-      "canonical_address": "0x02114478",
-      "reason": "type-name string 12daHanachan_c. Already named in ov034 symbols at 0x02114478; no second copy."
-    },
-    {
-      "symbol": "_ZTV12daHanachan_c",
-      "disposition": "deadstrip-data",
-      "canonical_module": "ov034",
-      "canonical_address": "0x021144bc",
-      "reason": "vtable, anchored by the out-of-line destructor. The word at 0x021144b8 is _ZTI12daHanachan_c. Homes at ov034:0x021144bc."
-    },
-    {
       "symbol": "_ZN7Vector3C1Ev",
       "disposition": "deadstrip-duplicate",
       "canonical_symbol": "func_0203d384",
@@ -1980,42 +2044,42 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN20HanachanModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x2017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN20HanachanModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x2017ab4",
       "evidence": "retail destructor-registration destination and the model wrapper destructor's exact ABS32 relocation"
     },
     {
       "symbol": "_ZN27HanachanAnimationFileHandleC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x201799c",
       "evidence": "retail initializer call destination and the animation wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN27HanachanAnimationFileHandleD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x2017984",
       "evidence": "retail destructor-registration destination and the animation wrapper destructor's exact ABS32 relocation"
     },
     {
       "symbol": "_ZN28HanachanTextureSeqFileHandleC1Ej",
-      "canonical_symbol": "SharedFilePtr_Construct_TexSeq",
+      "canonical_symbol": "_ZN10TexSeqFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x2017934",
       "evidence": "retail initializer call destination and the texture-sequence wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN28HanachanTextureSeqFileHandleD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_TexSeq",
+      "canonical_symbol": "_ZN10TexSeqFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x201791c",
       "evidence": "retail destructor-registration destination and the texture-sequence wrapper destructor's exact ABS32 relocation"
@@ -2035,214 +2099,202 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@1614",
+      "symbol": "data_ov034_02114340",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local model-handle registration node is a configured initializer relocation destination at 0x21148d0"
+      "evidence": "compiler-local state-name string literal; publish the configured global identity so ROM-data measurement can verify the emitted string and linker zero-fill without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1615",
+      "symbol": "data_ov034_02114348",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local model-handle registration node is a configured initializer relocation destination at 0x2114738"
+      "evidence": "compiler-local state-name string literal; publish the configured global identity so ROM-data measurement can verify the emitted string and linker zero-fill without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1616",
+      "symbol": "data_ov034_02114350",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local model-handle registration node is a configured initializer relocation destination at 0x2114744"
+      "evidence": "compiler-local state-name string literal; publish the configured global identity so ROM-data measurement can verify the emitted string and linker zero-fill without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1617",
+      "symbol": "data_ov034_02114408",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local model-handle registration node is a configured initializer relocation destination at 0x211475c"
+      "evidence": "compiler-local state-name string literal; publish the configured global identity so ROM-data measurement can verify the emitted string and linker zero-fill without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1618",
+      "symbol": "data_ov034_02114414",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local model-handle registration node is a configured initializer relocation destination at 0x2114768"
+      "evidence": "compiler-local state-name string literal; publish the configured global identity so ROM-data measurement can verify the emitted string and linker zero-fill without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1619",
+      "symbol": "data_ov034_02114420",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x2114780"
+      "evidence": "compiler-local state-name string literal; publish the configured global identity so ROM-data measurement can verify the emitted string and linker zero-fill without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1620",
+      "symbol": "data_ov034_0211442c",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x211478c"
+      "evidence": "compiler-local state-name string literal; publish the configured global identity so ROM-data measurement can verify the emitted string and linker zero-fill without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1621",
+      "symbol": "data_ov034_02114438",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x2114798"
+      "evidence": "compiler-local state-name string literal; publish the configured global identity so ROM-data measurement can verify the emitted string and linker zero-fill without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1622",
+      "symbol": "data_ov034_02114444",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x21147a4"
+      "evidence": "compiler-local state-name string literal; publish the configured global identity so ROM-data measurement can verify the emitted string and linker zero-fill without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1623",
+      "symbol": "data_ov034_02114450",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x2114888"
+      "evidence": "compiler-local state-name string literal; publish the configured global identity so ROM-data measurement can verify the emitted string and linker zero-fill without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1624",
+      "symbol": "data_ov034_02114468",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x21147b0"
+      "evidence": "compiler-local state-name string literal; publish the configured global identity so ROM-data measurement can verify the emitted string and linker zero-fill without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1625",
+      "symbol": "data_ov034_02114358",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x21147bc"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1626",
+      "symbol": "data_ov034_02114360",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x21147c8"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1627",
+      "symbol": "data_ov034_02114368",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x21147d4"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1628",
+      "symbol": "data_ov034_02114370",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x21147e0"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1629",
+      "symbol": "data_ov034_02114378",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x21147ec"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1630",
+      "symbol": "data_ov034_02114380",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x21147f8"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1631",
+      "symbol": "data_ov034_02114388",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x2114804"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1632",
+      "symbol": "data_ov034_02114390",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x2114810"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1633",
+      "symbol": "data_ov034_02114398",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x211481c"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1634",
+      "symbol": "data_ov034_021143a0",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x2114828"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1635",
+      "symbol": "data_ov034_021143a8",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x2114834"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1636",
+      "symbol": "data_ov034_021143b0",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x2114840"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1637",
+      "symbol": "data_ov034_021143b8",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x211484c"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1638",
+      "symbol": "data_ov034_021143c0",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x2114858"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1639",
+      "symbol": "data_ov034_021143c8",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x2114864"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1640",
+      "symbol": "data_ov034_021143d0",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x2114870"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1641",
+      "symbol": "data_ov034_021143d8",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x211487c"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1642",
+      "symbol": "data_ov034_021143e0",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x2114894"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1643",
+      "symbol": "data_ov034_021143e8",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local animation-handle registration node is a configured initializer relocation destination at 0x21148a0"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1644",
+      "symbol": "data_ov034_021143f0",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local texture-sequence-handle registration node is a configured initializer relocation destination at 0x21148ac"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1645",
+      "symbol": "data_ov034_021143f8",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local texture-sequence-handle registration node is a configured initializer relocation destination at 0x21148b8"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     },
     {
-      "symbol": "@1646",
+      "symbol": "data_ov034_02114400",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
-      "evidence": "compiler-local texture-sequence-handle registration node is a configured initializer relocation destination at 0x21148c4"
-    },
-    {
-      "symbol": "@1647",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local texture-sequence-handle registration node is a configured initializer relocation destination at 0x2114750"
-    },
-    {
-      "symbol": "@1648",
-      "from": "STB_LOCAL",
-      "to": "STB_GLOBAL",
-      "evidence": "compiler-local texture-sequence-handle registration node is a configured initializer relocation destination at 0x2114774"
+      "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
     }
   ],
   "relocations": [
@@ -2721,7 +2773,7 @@
       "source": "0x21138fc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x2017acc"
@@ -2741,7 +2793,7 @@
       "source": "0x2113918",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x2017acc"
@@ -2761,7 +2813,7 @@
       "source": "0x2113934",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x2017acc"
@@ -2781,7 +2833,7 @@
       "source": "0x2113950",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x2017acc"
@@ -2801,7 +2853,7 @@
       "source": "0x211396c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x2017acc"
@@ -2821,7 +2873,7 @@
       "source": "0x2113988",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -2841,7 +2893,7 @@
       "source": "0x21139a4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -2861,7 +2913,7 @@
       "source": "0x21139c0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -2881,7 +2933,7 @@
       "source": "0x21139dc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -2901,7 +2953,7 @@
       "source": "0x21139f8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -2921,7 +2973,7 @@
       "source": "0x2113a14",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -2941,7 +2993,7 @@
       "source": "0x2113a30",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -2961,7 +3013,7 @@
       "source": "0x2113a4c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -2981,7 +3033,7 @@
       "source": "0x2113a68",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3001,7 +3053,7 @@
       "source": "0x2113a84",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3021,7 +3073,7 @@
       "source": "0x2113aa0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3041,7 +3093,7 @@
       "source": "0x2113abc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3061,7 +3113,7 @@
       "source": "0x2113ad8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3081,7 +3133,7 @@
       "source": "0x2113af4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3101,7 +3153,7 @@
       "source": "0x2113b10",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3121,7 +3173,7 @@
       "source": "0x2113b2c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3141,7 +3193,7 @@
       "source": "0x2113b48",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3161,7 +3213,7 @@
       "source": "0x2113b64",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3181,7 +3233,7 @@
       "source": "0x2113b80",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3201,7 +3253,7 @@
       "source": "0x2113b9c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3221,7 +3273,7 @@
       "source": "0x2113bb8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3241,7 +3293,7 @@
       "source": "0x2113bd4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3261,7 +3313,7 @@
       "source": "0x2113bf0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3281,7 +3333,7 @@
       "source": "0x2113c0c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3301,7 +3353,7 @@
       "source": "0x2113c28",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x201799c"
@@ -3321,7 +3373,7 @@
       "source": "0x2113c44",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x2017934"
@@ -3341,7 +3393,7 @@
       "source": "0x2113c60",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x2017934"
@@ -3361,7 +3413,7 @@
       "source": "0x2113c7c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x2017934"
@@ -3381,7 +3433,7 @@
       "source": "0x2113c98",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x2017934"
@@ -3401,7 +3453,7 @@
       "source": "0x2113cb4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x2017934"
@@ -3431,7 +3483,7 @@
       "source": "0x2113e98",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x2017ab4"
@@ -3541,7 +3593,7 @@
       "source": "0x2113ed4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x2017984"
@@ -4051,7 +4103,7 @@
       "source": "0x2113fe8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_TexSeq",
+      "symbol": "_ZN10TexSeqFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x201791c"
@@ -4377,164 +4429,584 @@
       "target_address": "0x2114398"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x2114090",
+      "section": ".data",
+      "source": "0x02114498",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021140e0",
+      "symbol": "_Z22daHanachan_c_classInitv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x21140e0"
+      "target_module": "overlay(34)",
+      "target_address": "0x021136a4"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x2114098",
+      "section": ".data",
+      "source": "0x02114370",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114114",
+      "symbol": "_ZN12daHanachan_c17StateDemoWaitInitEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x2114114"
+      "target_module": "overlay(34)",
+      "target_address": "0x02112484"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x21140a4",
+      "section": ".data",
+      "source": "0x021143b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_0211408c",
+      "symbol": "_ZN12daHanachan_c17StateDemoWaitMainEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x211408c"
+      "target_module": "overlay(34)",
+      "target_address": "0x02112348"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x21140e4",
+      "section": ".data",
+      "source": "0x021143c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_0211419c",
+      "symbol": "_ZN12daHanachan_c17StateDemoCallInitEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x211419c"
+      "target_module": "overlay(34)",
+      "target_address": "0x02112330"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x21140ec",
+      "section": ".data",
+      "source": "0x02114360",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_0211427c",
+      "symbol": "_ZN12daHanachan_c17StateDemoCallMainEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x211427c"
+      "target_module": "overlay(34)",
+      "target_address": "0x02112284"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x21140f4",
+      "section": ".data",
+      "source": "0x02114378",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021140d0",
+      "symbol": "_ZN12daHanachan_c17StateMoveStopInitEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x21140d0"
+      "target_module": "overlay(34)",
+      "target_address": "0x02112270"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x21140f8",
+      "section": ".data",
+      "source": "0x021143d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021141fc",
+      "symbol": "_ZN12daHanachan_c17StateMoveStopMainEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x21141fc"
+      "target_module": "overlay(34)",
+      "target_address": "0x021120ac"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x21140fc",
+      "section": ".data",
+      "source": "0x021143e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114094",
+      "symbol": "_ZN12daHanachan_c18StateMoveStartInitEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x2114094"
+      "target_module": "overlay(34)",
+      "target_address": "0x02112020"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x2114108",
+      "section": ".data",
+      "source": "0x02114380",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021140a4",
+      "symbol": "_ZN12daHanachan_c18StateMoveStartMainEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x21140a4"
+      "target_module": "overlay(34)",
+      "target_address": "0x02111e68"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x2114118",
+      "section": ".data",
+      "source": "0x02114390",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021140b0",
+      "symbol": "_ZN12daHanachan_c13StateMoveInitEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x21140b0"
+      "target_module": "overlay(34)",
+      "target_address": "0x02111e4c"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x2114120",
+      "section": ".data",
+      "source": "0x02114368",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114080",
+      "symbol": "_ZN12daHanachan_c13StateMoveMainEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x2114080"
+      "target_module": "overlay(34)",
+      "target_address": "0x02111c48"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x2114128",
+      "section": ".data",
+      "source": "0x02114388",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_0211414c",
+      "symbol": "_ZN12daHanachan_c15StateDamageInitEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x211414c"
+      "target_module": "overlay(34)",
+      "target_address": "0x02111bb0"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x2114130",
+      "section": ".data",
+      "source": "0x02114400",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_0211409c",
+      "symbol": "_ZN12daHanachan_c15StateDamageMainEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x211409c"
+      "target_module": "overlay(34)",
+      "target_address": "0x02111a64"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x2114138",
+      "section": ".data",
+      "source": "0x021143f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114088",
+      "symbol": "_ZN12daHanachan_c19StateDamageTalkInitEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x2114088"
+      "target_module": "overlay(34)",
+      "target_address": "0x02111a0c"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x2114140",
+      "section": ".data",
+      "source": "0x021143f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_02114084",
+      "symbol": "_ZN12daHanachan_c19StateDamageTalkMainEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x2114084"
+      "target_module": "overlay(34)",
+      "target_address": "0x021119ac"
     },
     {
-      "section": ".data.hanachanLevel",
-      "source": "0x2114148",
+      "section": ".data",
+      "source": "0x021143e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "data_ov034_021140c0",
+      "symbol": "_ZN12daHanachan_c13StateDeadInitEv",
       "addend": 0,
-      "target_module": "ov034",
-      "target_address": "0x21140c0"
+      "target_module": "overlay(34)",
+      "target_address": "0x02111974"
+    },
+    {
+      "section": ".data",
+      "source": "0x021143b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daHanachan_c13StateDeadMainEv",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x02111788"
+    },
+    {
+      "section": ".data",
+      "source": "0x021143c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daHanachan_c19StateDamageStopInitEv",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x02111720"
+    },
+    {
+      "section": ".data",
+      "source": "0x021143a8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daHanachan_c19StateDamageStopMainEv",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x021115cc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114358",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daHanachan_c19StateDamageWaitInitEv",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x021115c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021143d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daHanachan_c19StateDamageWaitMainEv",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x02111588"
+    },
+    {
+      "section": ".data",
+      "source": "0x021143a0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daHanachan_c20StateDamageStartInitEv",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x02111520"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114398",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daHanachan_c20StateDamageStartMainEv",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x021113d4"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144b8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI12daHanachan_c",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x0211445c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144f8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144f4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144f0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144ec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114534",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114530",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211452c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114528",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER7daPly_c",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114524",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114520",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211451c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114518",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114514",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114510",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211450c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114508",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER7daPly_c",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114504",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144e8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144e4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144dc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144d8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144d0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144cc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144c4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144c0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "main",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114500",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daHanachan_cD0Ev",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x021112b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144e0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daHanachan_c6RenderEv",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x02112af4"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144bc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daHanachan_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x0211323c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144c8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daHanachan_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x02112a5c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144d4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daHanachan_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x02112b5c"
+    },
+    {
+      "section": ".data",
+      "source": "0x021144fc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN12daHanachan_cD1Ev",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x021111a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114460",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS12daHanachan_c",
+      "addend": 0,
+      "target_module": "overlay(34)",
+      "target_address": "0x02114478"
+    },
+    {
+      "section": ".data",
+      "source": "0x02114464",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI12dEnemyBase_c",
+      "addend": 0,
+      "target_module": "overlay(2)",
+      "target_address": "0x021081c0"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211445c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "main",
+      "target_address": "0x0209a764"
     }
   ],
   "externalized_output": [],
@@ -4713,6 +5185,171 @@
       "from": "@1847",
       "to": "@1648",
       "evidence": "Re-paired from the .init relocation against overlay_0034.bin. compiler temp; the types.h Vector3 ctors shift this TU's per-TU @NNN uniquifier, so mwcc emits it under this name now; licensed under the existing pin. Re-keyed from @1733 to @1692 when the opt pragma was removed (#821). Re-keyed from @1692 to @1729 when HandlePlayerHits' volatile player-position copy and IsStompedBy's volatile pad became plain Vector3 locals (#821). Re-keyed from @1729 to @1670 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @1670 to @1708 when the TU took NitroSDK's FX_SinIdx/FX_CosIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @1708 to @1711 when Re-keyed when cast Vector3 views became real Vector3 members/locals (#5210; measured from the compiled object: same section, size and order). (measured from the compiled object: same section, size and order). Re-keyed from @1711 to @1748 when math/CalcLib.h and math/MtxStack.h replaced the local FX externs (measured from the compiled object). Re-keyed from @1748 to @1744 when the animation-file externs were spelled void *[] to match decl_common.h (same section, offset, size, type and binding). Re-keyed from @1744 to @1728 when the unused declarations kept only to hold the count were removed (measured from the compiled object). Re-keyed from @1728 to @1776 when math/CalcLib.h gained its inline Vector3 VEC_* overloads and StateMoveMain's random draws went through the file's LevelRandom inline (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1776 to @1792 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1792 to @1797 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1797 to @1805 after the body-segment transform vectors became Vector3 locals (measured from the compiled object). Re-keyed from @1808 to @1833 when Matrix4x3 became one flat fx32 m[12] (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1833 to @1835 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @1835 to @1839 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @1839 to @1855 the segment-array pointer walks in the state functions, Render and InitResources' second loop became indexed member access (#821) (measured from the compiled object). Re-keyed from @1855 to @1846 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object)."
+    },
+    {
+      "from": "@1887",
+      "to": "data_ov034_02114340",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1872",
+      "to": "data_ov034_02114348",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1877",
+      "to": "data_ov034_02114350",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1894",
+      "to": "data_ov034_02114358",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1856",
+      "to": "data_ov034_02114360",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1871",
+      "to": "data_ov034_02114368",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1849",
+      "to": "data_ov034_02114370",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1859",
+      "to": "data_ov034_02114378",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1866",
+      "to": "data_ov034_02114380",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1874",
+      "to": "data_ov034_02114388",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1869",
+      "to": "data_ov034_02114390",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1901",
+      "to": "data_ov034_02114398",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1899",
+      "to": "data_ov034_021143a0",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1891",
+      "to": "data_ov034_021143a8",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1851",
+      "to": "data_ov034_021143b0",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1886",
+      "to": "data_ov034_021143b8",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1854",
+      "to": "data_ov034_021143c0",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1889",
+      "to": "data_ov034_021143c8",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1896",
+      "to": "data_ov034_021143d0",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1861",
+      "to": "data_ov034_021143d8",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1884",
+      "to": "data_ov034_021143e0",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1864",
+      "to": "data_ov034_021143e8",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1881",
+      "to": "data_ov034_021143f0",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1879",
+      "to": "data_ov034_021143f8",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1876",
+      "to": "data_ov034_02114400",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1852",
+      "to": "data_ov034_02114408",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1857",
+      "to": "data_ov034_02114414",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1862",
+      "to": "data_ov034_02114420",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1882",
+      "to": "data_ov034_0211442c",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1867",
+      "to": "data_ov034_02114438",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1892",
+      "to": "data_ov034_02114444",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1897",
+      "to": "data_ov034_02114450",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
+    },
+    {
+      "from": "@1902",
+      "to": "data_ov034_02114468",
+      "evidence": "native compiler-local string literal or pointer-to-member descriptor; identity established by its state-table initializer relocation site and method target"
     }
   ],
   "rodata": [
