@@ -14,20 +14,6 @@ typedef struct {
 
 /* The small actor blocks reserve three entry slots. Counts of one or two leave
  * the remaining slots as all-ones padding. */
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[3];
-} CLPS_Block;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[32];
-    u32 tail[6];
-} Clps_02113270;
 
 extern const u16 data_ov018_02112a74[2];
 extern const fx32 data_ov018_02112a78[1];
@@ -61,13 +47,13 @@ extern StandardEntry data_ov018_021130d0[5];
 extern ObjSubTable data_ov018_02113120[10];
 extern ObjSubTable data_ov018_02113170[11];
 extern PathNode data_ov018_021131c8[28];
-extern Clps_02113270 data_ov018_02113270;
+extern CLPS_Block288 data_ov018_02113270;
 extern SimpleEntry data_ov018_02113390[63];
 extern StandardEntry data_ov018_02113588[48];
 
 char data_ov018_02112ea8[12] = "mat_water";
 
-Clps_02113270 data_ov018_02113270 = {
+CLPS_Block288 data_ov018_02113270 = {
     0x53504c43,
     0x0008,
     0x0020,
@@ -81,8 +67,8 @@ Clps_02113270 data_ov018_02113270 = {
      {0x00040006, 0x000000ff}, {0x00744004, 0x000000ff}, {0x00742005, 0x000000ff},
      {0x00742001, 0x000000ff}, {0x00743006, 0x000000ff}, {0x00740004, 0x000000ff},
      {0x00740005, 0x000000ff}, {0x00043007, 0x000000ff}, {0x00043004, 0x000000ff},
-     {0x00043006, 0x000000ff}, {0x00044006, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+     {0x00043006, 0x000000ff}, {0x00044006, 0x000000ff}, {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
 StandardEntry data_ov018_02112f88[2] = {
@@ -339,11 +325,7 @@ CLPS_Block data_ov018_02112f48 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {
-        {0x00000fc5, 0x000000ff},
-        {0x01000fc5, 0x000000ff},
-        {0xffffffff, 0xffffffff},
-    },
+    {{0x00000fc5, 0x000000ff}, {0x01000fc5, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
 StandardEntry data_ov018_02113090[4] = {

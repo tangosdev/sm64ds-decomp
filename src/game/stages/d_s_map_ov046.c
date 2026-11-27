@@ -6,21 +6,6 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[3];
-} Clps_0211157c;
-
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
-
 extern const u16 data_ov046_021111a0[2];
 extern const fx32 data_ov046_021111a4[1];
 extern const BTAMaterialRecord data_ov046_021111a8[1];
@@ -35,9 +20,9 @@ extern Area data_ov046_0211152c[1];
 extern ViewEntry data_ov046_02111538[1];
 extern BTA_File data_ov046_02111548;
 extern LevelRec data_ov046_02111560;
-extern Clps_0211157c data_ov046_0211157c;
+extern CLPS_Block data_ov046_0211157c;
 extern ObjSubTable data_ov046_0211159c[4];
-extern struct CLPS_Block data_ov046_021115bc;
+extern CLPS_Block data_ov046_021115bc;
 extern StandardEntry data_ov046_021115dc[4];
 extern StandardEntry data_ov046_0211161c[11];
 
@@ -98,7 +83,7 @@ const BTAMaterialRecord data_ov046_021111a8[1] = {{0xffff,
                                                    {0x0001, 0x0000},
                                                    {0x00c8, 0x0001}}};
 
-Clps_0211157c data_ov046_0211157c = {
+CLPS_Block data_ov046_0211157c = {
     0x53504c43,
     0x0008,
     0x0003,
@@ -112,12 +97,11 @@ ObjSubTable data_ov046_0211159c[4] = {
     {0x08, 0x01, {0x00, 0x00}, &data_ov046_0211150c[0]},
 };
 
-struct CLPS_Block data_ov046_021115bc = {
+CLPS_Block data_ov046_021115bc = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00000fc0, 0x000000ff}, {0x00038fc4, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00000fc0, 0x000000ff}, {0x00038fc4, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
 StandardEntry data_ov046_021115dc[4] = {

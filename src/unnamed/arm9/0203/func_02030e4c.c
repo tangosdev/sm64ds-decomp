@@ -1,4 +1,4 @@
-extern unsigned short func_0203da80(unsigned short x);
+extern unsigned short GetLinkStatus(unsigned short mask);
 extern int func_0203d950(int i);
 extern void func_02030790(void);
 extern int data_0209fc68;
@@ -7,7 +7,7 @@ extern unsigned char data_0209fc54;
 extern void (*data_020927ec[])(void);
 
 /* The per-frame session check func_020197b8 runs. In states 1..4 a link
-   error (data_020a0f1c bits 0x9d, func_0203da80) ends the session
+   error (gLinkStatusFlags bits 0x9d, GetLinkStatus) ends the session
    (func_02030790). It sets disconnect bit 0x10 for error 4, 0x20 for
    error 0x80, else all four player bits, plus 0x20 before state 4. In
    states 3 and 4, losing the parent (slot 0) or the data_0209fc54 flag
@@ -17,10 +17,10 @@ extern void (*data_020927ec[])(void);
 int func_02030e4c(void)
 {
     void (*fn)(void);
-    if (data_0209fc68 != 0 && data_0209fc68 < 5 && func_0203da80(0x9d)) {
-        if (func_0203da80(4)) {
+    if (data_0209fc68 != 0 && data_0209fc68 < 5 && GetLinkStatus(0x9d)) {
+        if (GetLinkStatus(4)) {
             data_0209fc58 |= 0x10;
-        } else if (func_0203da80(0x80)) {
+        } else if (GetLinkStatus(0x80)) {
             data_0209fc58 |= 0x20;
         } else {
             data_0209fc58 |= 15;

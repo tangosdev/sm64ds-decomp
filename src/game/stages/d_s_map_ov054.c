@@ -6,14 +6,6 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[20];
-    u32 tail[6];
-} Clps_021116cc;
-
 extern ObjTable data_ov054_021111c0;
 extern ObjTable data_ov054_021111c8;
 extern ObjTable data_ov054_021111d0;
@@ -43,7 +35,7 @@ extern StandardEntry data_ov054_021114b0[6];
 extern ViewEntry data_ov054_02111510[8];
 extern DoorEntry data_ov054_02111580[13];
 extern StandardEntry data_ov054_0211161c[11];
-extern Clps_021116cc data_ov054_021116cc;
+extern CLPS_Block192 data_ov054_021116cc;
 extern ExitEntry data_ov054_0211178c[26];
 extern StandardEntry data_ov054_021118f8[31];
 extern StandardEntry data_ov054_02111ae8[39];
@@ -238,7 +230,7 @@ StandardEntry data_ov054_0211161c[11] = {
     {0x00fe, 0x2148, 0x0000, (s16)0xf0c4, 0x0000, 0x0000, 0x0000, 0x0204},
 };
 
-Clps_021116cc data_ov054_021116cc = {
+CLPS_Block192 data_ov054_021116cc = {
     0x53504c43,
     0x0008,
     0x0014,
@@ -248,8 +240,8 @@ Clps_021116cc data_ov054_021116cc = {
      {0x00032fc4, 0x000000ff}, {0x00032104, 0x000000ff}, {0x00030fc5, 0x000000ff},
      {0x00052fc4, 0x000000ff}, {0x0005204a, 0x000000ff}, {0x00052fca, 0x000000ff},
      {0x00030fc0, 0x000000ff}, {0x00000fc5, 0x000000ff}, {0x00030fcb, 0x000000ff},
-     {0x00040fc4, 0x000000ff}, {0x0003000b, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+     {0x00040fc4, 0x000000ff}, {0x0003000b, 0x000000ff}, {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
 ExitEntry data_ov054_0211178c[26] = {

@@ -7,94 +7,6 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_02111640;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_02111660;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_02111680;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_021116a0;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_021116c0;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_021116e0;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_02111700;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_02111720;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_02111740;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_02111760;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[4];
-    u32 tail[6];
-} Clps_02111780;
-
 extern const u16 data_ov048_021111a0[2];
 extern const BTAMaterialRecord data_ov048_021111a4[1];
 extern const BMAMaterialRecord data_ov048_021111c0[1];
@@ -112,17 +24,17 @@ extern BMA_File data_ov048_021115e4;
 extern BTA_File data_ov048_021115f4;
 extern ObjSubTable data_ov048_0211160c[3];
 extern LevelRec data_ov048_02111624;
-extern Clps_02111640 data_ov048_02111640;
-extern Clps_02111660 data_ov048_02111660;
-extern Clps_02111680 data_ov048_02111680;
-extern Clps_021116a0 data_ov048_021116a0;
-extern Clps_021116c0 data_ov048_021116c0;
-extern Clps_021116e0 data_ov048_021116e0;
-extern Clps_02111700 data_ov048_02111700;
-extern Clps_02111720 data_ov048_02111720;
-extern Clps_02111740 data_ov048_02111740;
-extern Clps_02111760 data_ov048_02111760;
-extern Clps_02111780 data_ov048_02111780;
+extern CLPS_Block data_ov048_02111640;
+extern CLPS_Block data_ov048_02111660;
+extern CLPS_Block data_ov048_02111680;
+extern CLPS_Block data_ov048_021116a0;
+extern CLPS_Block data_ov048_021116c0;
+extern CLPS_Block data_ov048_021116e0;
+extern CLPS_Block data_ov048_02111700;
+extern CLPS_Block data_ov048_02111720;
+extern CLPS_Block data_ov048_02111740;
+extern CLPS_Block data_ov048_02111760;
+extern CLPS_Block64 data_ov048_02111780;
 extern StandardEntry data_ov048_021117c0[4];
 extern StandardEntry data_ov048_02111800[16];
 
@@ -186,84 +98,74 @@ LevelRec data_ov048_02111624 = {(struct CLPS_Block *)&data_ov048_02111780,
                                 0x0320,
                                 0x000000bf};
 
-Clps_02111720 data_ov048_02111720 = {
+CLPS_Block data_ov048_02111720 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00000fc0, 0x000000ff}, {0x00038fc4, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00000fc0, 0x000000ff}, {0x00038fc4, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
-Clps_02111740 data_ov048_02111740 = {
+CLPS_Block data_ov048_02111740 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00000fc0, 0x000000ff}, {0x00038fc4, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00000fc0, 0x000000ff}, {0x00038fc4, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
-Clps_02111640 data_ov048_02111640 = {
+CLPS_Block data_ov048_02111640 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00038fc4, 0x000000ff}, {0x00000fc0, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00038fc4, 0x000000ff}, {0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
-Clps_02111660 data_ov048_02111660 = {
+CLPS_Block data_ov048_02111660 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00038fc4, 0x000000ff}, {0x00000fc0, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00038fc4, 0x000000ff}, {0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
-Clps_02111680 data_ov048_02111680 = {
+CLPS_Block data_ov048_02111680 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00000fc0, 0x000000ff}, {0x00038fc4, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00000fc0, 0x000000ff}, {0x00038fc4, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
-Clps_021116a0 data_ov048_021116a0 = {
+CLPS_Block data_ov048_021116a0 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00000fc0, 0x000000ff}, {0x00038fc4, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00000fc0, 0x000000ff}, {0x00038fc4, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
-Clps_021116c0 data_ov048_021116c0 = {
+CLPS_Block data_ov048_021116c0 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00000fc0, 0x000000ff}, {0x00038fc4, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00000fc0, 0x000000ff}, {0x00038fc4, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
-Clps_021116e0 data_ov048_021116e0 = {
+CLPS_Block data_ov048_021116e0 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00038fc4, 0x000000ff}, {0x00000fc0, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00038fc4, 0x000000ff}, {0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
-Clps_02111700 data_ov048_02111700 = {
+CLPS_Block data_ov048_02111700 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00038fc4, 0x000000ff}, {0x00000fc0, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00038fc4, 0x000000ff}, {0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
-Clps_02111760 data_ov048_02111760 = {
+CLPS_Block data_ov048_02111760 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00000fc0, 0x000000ff}, {0x00038fc4, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00000fc0, 0x000000ff}, {0x00038fc4, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
 const BMAMaterialRecord data_ov048_021111c0[1] = {{0xffff,
@@ -283,15 +185,17 @@ const BMAMaterialRecord data_ov048_021111c0[1] = {{0xffff,
                                                     {0x01, 0x00, 0x0001},
                                                     {0x01, 0x01, 0x0002}}}};
 
-Clps_02111780 data_ov048_02111780 = {
+CLPS_Block64 data_ov048_02111780 = {
     0x53504c43,
     0x0008,
     0x0004,
     {{0x00038fc4, 0x000000ff},
      {0x00038fc0, 0x000000ff},
      {0x00238fc0, 0x000000ff},
-     {0x01038fc0, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+     {0x01038fc0, 0x000000ff},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff}},
 };
 
 StandardEntry data_ov048_021117c0[4] = {

@@ -1,7 +1,7 @@
-extern int func_0203da9c(void);
+#include "LinkSettings.h"
+
 extern int func_0203d950(int i);
 extern int func_0203d890(void);
-extern void func_02020214(unsigned int flags);
 
 extern unsigned char data_0208f274;
 extern unsigned char data_0209fc5c[];
@@ -14,7 +14,7 @@ extern int data_0209fc68;
    An absent one clears slot 1, not its own slot, as the ROM does. Then
    rank the present slots, and once their count matches the player count
    the parent posts (func_0203d890) move to state 4 and post their mask
-   (func_02020214). */
+   (SetSessionPlayerMask). */
 void func_02030ca0(void) {
     int count;
     int i;
@@ -22,7 +22,7 @@ void func_02030ca0(void) {
     int k;
     unsigned char mask;
 
-    func_0203da9c();
+    GetLocalPlayerId();
     count = data_0208f274;
     for (i = 0; i < count; i++) {
         if (func_0203d950(i))
@@ -48,5 +48,5 @@ void func_02030ca0(void) {
         return;
     if (data_0209fc68 != 0)
         data_0209fc68 = 4;
-    func_02020214(mask);
+    SetSessionPlayerMask(mask);
 }

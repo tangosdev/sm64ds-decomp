@@ -6697,11 +6697,11 @@ matched: yes</title></rect><rect x="66.91" y="514.70" width="13.76" height="0.78
 module: arm9
 addr: 0x0203da3c
 size: 16 bytes
-matched: yes</title></rect><rect x="80.67" y="514.70" width="44.71" height="0.78" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0203da4c
+matched: yes</title></rect><rect x="80.67" y="514.70" width="44.71" height="0.78" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>ClearLinkErrors
 module: arm9
 addr: 0x0203da4c
 size: 52 bytes
-matched: yes</title></rect><rect x="125.38" y="514.70" width="24.08" height="0.78" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0203da80
+matched: yes</title></rect><rect x="125.38" y="514.70" width="24.08" height="0.78" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>GetLinkStatus
 module: arm9
 addr: 0x0203da80
 size: 28 bytes
@@ -6737,11 +6737,11 @@ matched: yes</title></rect><rect x="266.39" y="514.70" width="20.64" height="0.7
 module: arm9
 addr: 0x0203db24
 size: 24 bytes
-matched: yes</title></rect><rect x="287.03" y="514.70" width="13.76" height="0.78" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0203db3c
+matched: yes</title></rect><rect x="287.03" y="514.70" width="13.76" height="0.78" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SetLinkByte
 module: arm9
 addr: 0x0203db3c
 size: 16 bytes
-matched: yes</title></rect><rect x="300.78" y="514.70" width="20.64" height="0.78" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>GetPlayerFlagByte
+matched: yes</title></rect><rect x="300.78" y="514.70" width="20.64" height="0.78" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>GetLinkByte
 module: arm9
 addr: 0x0203db4c
 size: 24 bytes

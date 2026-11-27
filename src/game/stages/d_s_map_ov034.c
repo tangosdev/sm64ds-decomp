@@ -4,13 +4,6 @@
 
 /* Definition order is what makes the size-sort ties match address order. */
 
-typedef struct CLPS_Block15 {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[15];
-} CLPS_Block15;
-
 extern ObjTable data_ov034_0211408c;
 extern ObjTable data_ov034_02114094;
 extern ObjSubTable data_ov034_021140e0[3];
@@ -18,7 +11,7 @@ extern LevelRec data_ov034_021140f8;
 extern ObjSubTable data_ov034_02114114[7];
 extern StandardEntry data_ov034_0211414c[5];
 extern StandardEntry data_ov034_0211419c[6];
-extern CLPS_Block15 data_ov034_021141fc;
+extern CLPS_Block128 data_ov034_021141fc;
 extern SimpleEntry data_ov034_0211427c[24];
 
 u16 data_ov034_02114080[2] = {0x07e2, 0x07e3};
@@ -84,7 +77,7 @@ StandardEntry data_ov034_0211419c[6] = {
     {0x002c, (s16)0xf9f2, 0x0514, 0x0708, 0, 0, 0, 0x3c07},
 };
 
-CLPS_Block15 data_ov034_021141fc = {0x53504c43,
+CLPS_Block128 data_ov034_021141fc = {0x53504c43,
                                     8,
                                     15,
                                     {{0x00030fc4, 0x000000ff},

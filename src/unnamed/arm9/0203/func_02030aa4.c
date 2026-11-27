@@ -1,6 +1,6 @@
 #include "types.h"
 extern void func_0203da2c(int v);
-extern void func_0203da4c(void);
+extern void ClearLinkErrors(void);
 extern u8 gSoftResetDisabled;
 
 /* The link session's state block at 0x0209fc50: present slots (fc5c, fc5d
@@ -18,7 +18,7 @@ int data_0209fc68;
 
 /* Start a session in link mode arg (func_0203da2c; d_s_entry_methods.cpp
    passes 0, 1 and 3, d_s_mb.cpp 2) and clear the link error bits
-   (func_0203da4c). No slot is present yet and no disconnect bit is set.
+   (ClearLinkErrors). No slot is present yet and no disconnect bit is set.
    The session state data_0209fc68 starts at 1 for mode 3 and at 3
    otherwise; data_020927ec holds the per-frame handler for each state,
    func_02030e4c calls it. The skip flag gSoftResetDisabled is raised. */
@@ -26,7 +26,7 @@ void func_02030aa4(int arg)
 {
     int i;
     func_0203da2c(arg);
-    func_0203da4c();
+    ClearLinkErrors();
     for (i = 0; i < 4; i++) {
         data_0209fc5c[i] = 0;
         data_0209fc64[i] = -1;

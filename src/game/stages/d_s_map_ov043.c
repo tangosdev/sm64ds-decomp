@@ -7,12 +7,6 @@
 
 /* The small actor blocks reserve three entry slots. Counts of one or two leave
  * the remaining slots as all-ones padding. */
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[3];
-} CLPS_Block;
 
 typedef struct {
     ExitEntry entry;
@@ -23,14 +17,6 @@ typedef struct {
     ViewEntry entries[5];
     u16 pad;
 } ViewEntries5;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[9];
-    u32 tail[4];
-} Clps9;
 
 extern u16 data_ov043_02111b00[2];
 extern u16 data_ov043_02111b04[2];
@@ -53,7 +39,7 @@ extern CLPS_Block sKm1Dorifu3Clps;
 extern ObjSubTable data_ov043_02111ca0[5];
 extern ViewEntries5 data_ov043_02111cc8;
 extern StandardEntry data_ov043_02111d10[5];
-extern Clps9 data_ov043_02111d60;
+extern CLPS_Block96 data_ov043_02111d60;
 extern SimpleEntry data_ov043_02111dc0[66];
 extern StandardEntry data_ov043_02111fd0[42];
 
@@ -95,110 +81,70 @@ CLPS_Block sKm1Dorifu4Clps = {
     0x53504c43,
     0x0008,
     0x0002,
-    {
-        {0x00004fc0, 0x000000ff},
-        {0x00000fc0, 0x000000ff},
-        {0xffffffff, 0xffffffff},
-    },
+    {{0x00004fc0, 0x000000ff}, {0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
 CLPS_Block data_ov043_02111c00 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {
-        {0x00000fc0, 0x000000ff},
-        {0x00002fc0, 0x000000ff},
-        {0xffffffff, 0xffffffff},
-    },
+    {{0x00000fc0, 0x000000ff}, {0x00002fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
 CLPS_Block data_ov043_02111be0 = {
     0x53504c43,
     0x0008,
     0x0001,
-    {
-        {0x00000fc0, 0x000000ff},
-        {0xffffffff, 0xffffffff},
-        {0xffffffff, 0xffffffff},
-    },
+    {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
 CLPS_Block data_ov043_02111b80 = {
     0x53504c43,
     0x0008,
     0x0001,
-    {
-        {0x00000fc0, 0x000000ff},
-        {0xffffffff, 0xffffffff},
-        {0xffffffff, 0xffffffff},
-    },
+    {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
 CLPS_Block sKm1Dorifu2Clps = {
     0x53504c43,
     0x0008,
     0x0002,
-    {
-        {0x00000fc0, 0x000000ff},
-        {0x00004fc0, 0x000000ff},
-        {0xffffffff, 0xffffffff},
-    },
+    {{0x00000fc0, 0x000000ff}, {0x00004fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
 CLPS_Block data_ov043_02111bc0 = {
     0x53504c43,
     0x0008,
     0x0001,
-    {
-        {0x00000fc0, 0x000000ff},
-        {0xffffffff, 0xffffffff},
-        {0xffffffff, 0xffffffff},
-    },
+    {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
 CLPS_Block data_ov043_02111c20 = {
     0x53504c43,
     0x0008,
     0x0001,
-    {
-        {0x00000fc0, 0x000000ff},
-        {0xffffffff, 0xffffffff},
-        {0xffffffff, 0xffffffff},
-    },
+    {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
 CLPS_Block sKm1Dorifu0Clps = {
     0x53504c43,
     0x0008,
     0x0002,
-    {
-        {0x00000fc0, 0x000000ff},
-        {0x00002fc0, 0x000000ff},
-        {0xffffffff, 0xffffffff},
-    },
+    {{0x00000fc0, 0x000000ff}, {0x00002fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
 CLPS_Block sKm1Dorifu3Clps = {
     0x53504c43,
     0x0008,
     0x0002,
-    {
-        {0x00000fc0, 0x000000ff},
-        {0x00004fc0, 0x000000ff},
-        {0xffffffff, 0xffffffff},
-    },
+    {{0x00000fc0, 0x000000ff}, {0x00004fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
 CLPS_Block sKm1Dorifu1Clps = {
     0x53504c43,
     0x0008,
     0x0002,
-    {
-        {0x00000fc0, 0x000000ff},
-        {0x00004fc0, 0x000000ff},
-        {0xffffffff, 0xffffffff},
-    },
+    {{0x00000fc0, 0x000000ff}, {0x00004fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
 ObjSubTable data_ov043_02111ca0[5] = {
@@ -228,22 +174,21 @@ StandardEntry data_ov043_02111d10[5] = {
     {0x0000, 0x189a, 0x0e10, 0x0000, 0x0000, 0x4000, 0x0000, 0x0220},
 };
 
-Clps9 data_ov043_02111d60 = {
+CLPS_Block96 data_ov043_02111d60 = {
     0x53504c43,
     0x0008,
     0x0009,
-    {
-        {0x0004afc0, 0x000000ff},
-        {0x0004afc5, 0x000000ff},
-        {0x0004afc4, 0x000000ff},
-        {0x0004bfc0, 0x000000ff},
-        {0x01048fc0, 0x000000ff},
-        {0x00248fc0, 0x000000ff},
-        {0x00048fc0, 0x000000ff},
-        {0x00048fc4, 0x000000ff},
-        {0x00000fc0, 0x000000ff},
-    },
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+    {{0x0004afc0, 0x000000ff},
+     {0x0004afc5, 0x000000ff},
+     {0x0004afc4, 0x000000ff},
+     {0x0004bfc0, 0x000000ff},
+     {0x01048fc0, 0x000000ff},
+     {0x00248fc0, 0x000000ff},
+     {0x00048fc0, 0x000000ff},
+     {0x00048fc4, 0x000000ff},
+     {0x00000fc0, 0x000000ff},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff}},
 };
 
 SimpleEntry data_ov043_02111dc0[66] = {

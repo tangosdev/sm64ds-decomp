@@ -33,6 +33,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjFl_Amilift_c_AssetId { ASSET_FL_AMILIFT_BMD = 0x05ef, ASSET_FL_AMILIFT_KCL = 0x05f0 };
 
+#include "CLPS.h"
 #include "daObjFl_Amilift_c.h"
 #include "common.h"
 #include "SharedFilePtr.h"
@@ -64,12 +65,12 @@ struct LiftState {
 
 struct BMD_File;
 struct KCL_File;
-struct CLPS_Block {
-    u32 words[8];
-};
 
 CLPS_Block data_ov064_0211bb6c = {
-    0x53504c43, 0x00020008, 0x01880fcc, 0x000000ff, 0x01880fc0, 0x000000ff, 0xffffffff, 0xffffffff,
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {{0x01880fcc, 0x000000ff}, {0x01880fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
 extern "C" {

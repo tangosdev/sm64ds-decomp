@@ -32,13 +32,6 @@ typedef struct {
     u16 pad;
 } ExitEntries5;
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[15];
-} Clps_02111920;
-
 extern ScalarEntryU16 data_ov058_02111700;
 extern PathDefs1 data_ov058_02111704;
 extern ObjTable data_ov058_0211170c;
@@ -58,7 +51,7 @@ extern ObjSubTable data_ov058_021117f8[7];
 extern ViewEntries5 data_ov058_02111830;
 extern ExitEntries5 data_ov058_02111878;
 extern StandardEntry data_ov058_021118c0[6];
-extern Clps_02111920 data_ov058_02111920;
+extern CLPS_Block128 data_ov058_02111920;
 extern DoorEntry data_ov058_021119a0[12];
 
 ScalarEntryU16 data_ov058_02111700 = {0x07a5, 0x0000};
@@ -138,26 +131,26 @@ StandardEntry data_ov058_021118c0[6] = {
     {0x0000, 0x0d5c, 0x0226, (s16)0xef66, 0x0000, (s16)0xe000, 0x0000, 0x0019},
     {0x0000, 0x05d2, 0x0514, (s16)0xf6fa, 0x0000, (s16)0xe000, 0x0000, 0x0220},
 };
-Clps_02111920 data_ov058_02111920 = {0x53504c43,
-                                     0x0008,
-                                     0x000f,
-                                     {
-                                         {0x00000fc0, 0x000000ff},
-                                         {0x00030fc4, 0x000000ff},
-                                         {0x00003044, 0x000000ff},
-                                         {0x04000fc0, 0x000000ff},
-                                         {0x00033045, 0x000000ff},
-                                         {0x00033042, 0x000000ff},
-                                         {0x00030042, 0x000000ff},
-                                         {0x00030045, 0x000000ff},
-                                         {0x00030040, 0x000000ff},
-                                         {0x00000fc4, 0x000000ff},
-                                         {0x00003084, 0x000000ff},
-                                         {0x00030085, 0x000000ff},
-                                         {0x00030084, 0x000000ff},
-                                         {0x00030fc1, 0x000000ff},
-                                         {0x00050fc1, 0x000000ff},
-                                     }};
+CLPS_Block128 data_ov058_02111920 = {
+    0x53504c43,
+    0x0008,
+    0x000f,
+    {{0x00000fc0, 0x000000ff},
+     {0x00030fc4, 0x000000ff},
+     {0x00003044, 0x000000ff},
+     {0x04000fc0, 0x000000ff},
+     {0x00033045, 0x000000ff},
+     {0x00033042, 0x000000ff},
+     {0x00030042, 0x000000ff},
+     {0x00030045, 0x000000ff},
+     {0x00030040, 0x000000ff},
+     {0x00000fc4, 0x000000ff},
+     {0x00003084, 0x000000ff},
+     {0x00030085, 0x000000ff},
+     {0x00030084, 0x000000ff},
+     {0x00030fc1, 0x000000ff},
+     {0x00050fc1, 0x000000ff}},
+};
 DoorEntry data_ov058_021119a0[12] = {
     {0x0524, 0x0258, (s16)0xf257, 0x0000, 0x0000, 0x0014},
     {0x0650, 0x0258, (s16)0xf257, (s16)0x8000, 0x0000, 0x0014},

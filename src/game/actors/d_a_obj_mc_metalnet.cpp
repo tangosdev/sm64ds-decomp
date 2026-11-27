@@ -32,15 +32,6 @@ struct McMetalnetClsnFileHandle : SharedFilePtr {
     ~McMetalnetClsnFileHandle();
 };
 
-/* Stage collision-property blocks are defined by d_s_map_ov009.c. */
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
-
 /* The net's collision properties. */
 extern CLPS_Block data_ov009_02112bf8;
 

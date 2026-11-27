@@ -194,7 +194,6 @@ data_ov020_02114668 kind:data(any) addr:0x02114668
 data_ov020_021146f0 kind:data(any) addr:0x021146f0 ambiguous
 data_ov020_02114750 kind:data(any) addr:0x02114750 ambiguous
 data_ov020_02114768 kind:data(any) addr:0x02114768 ambiguous
-data_ov020_021147c4 kind:data(any) addr:0x021147c4 ambiguous
 data_ov020_02114824 kind:data(any) addr:0x02114824 ambiguous
 data_ov020_02114828 kind:data(any) addr:0x02114828
 _ZTS8daBook_c kind:data(any) addr:0x0211482c

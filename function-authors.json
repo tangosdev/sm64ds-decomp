@@ -3439,7 +3439,7 @@
     },
     "arm9:0x02020028": {
       "author": "tangosdev",
-      "name": "func_02020028"
+      "name": "PostControllerMode"
     },
     "arm9:0x02020054": {
       "author": "tangosdev",
@@ -3447,31 +3447,31 @@
     },
     "arm9:0x02020078": {
       "author": "tangosdev",
-      "name": "func_02020078"
+      "name": "SetCourseSelectAction"
     },
     "arm9:0x020200b8": {
       "author": "tangosdev",
-      "name": "func_020200b8"
+      "name": "GetCourseSelectAction"
     },
     "arm9:0x020200e0": {
       "author": "tangosdev",
-      "name": "func_020200e0"
+      "name": "ClearGoSignal"
     },
     "arm9:0x02020124": {
       "author": "tangosdev",
-      "name": "func_02020124"
+      "name": "RaiseGoSignal"
     },
     "arm9:0x02020168": {
       "author": "tangosdev",
-      "name": "func_02020168"
+      "name": "IsGoSignalRaised"
     },
     "arm9:0x02020190": {
       "author": "tangosdev",
-      "name": "func_02020190"
+      "name": "ClearLocalPlayerReadyForRematch"
     },
     "arm9:0x020201c0": {
       "author": "tangosdev",
-      "name": "func_020201c0"
+      "name": "SetLocalPlayerReadyForRematch"
     },
     "arm9:0x020201f0": {
       "author": "tangosdev",
@@ -3479,19 +3479,19 @@
     },
     "arm9:0x02020214": {
       "author": "tangosdev",
-      "name": "func_02020214"
+      "name": "SetSessionPlayerMask"
     },
     "arm9:0x02020254": {
       "author": "tangosdev",
-      "name": "func_02020254"
+      "name": "GetSessionPlayerMask"
     },
     "arm9:0x0202027c": {
       "author": "tangosdev",
-      "name": "func_0202027c"
+      "name": "IsPlayerInSession"
     },
     "arm9:0x0202029c": {
       "author": "tangosdev",
-      "name": "func_0202029c"
+      "name": "SetParentCourseIndex"
     },
     "arm9:0x020202dc": {
       "author": "tangosdev",
@@ -3499,11 +3499,11 @@
     },
     "arm9:0x02020304": {
       "author": "tangosdev",
-      "name": "func_02020304"
+      "name": "ClearLocalPlayerReady"
     },
     "arm9:0x02020334": {
       "author": "tangosdev",
-      "name": "func_02020334"
+      "name": "SetLocalPlayerReady"
     },
     "arm9:0x02020364": {
       "author": "tangosdev",
@@ -3511,7 +3511,7 @@
     },
     "arm9:0x02020388": {
       "author": "tangosdev",
-      "name": "func_02020388"
+      "name": "ClearPlayerWarp"
     },
     "arm9:0x020203c4": {
       "author": "tangosdev",
@@ -6771,15 +6771,15 @@
     },
     "arm9:0x0203da4c": {
       "author": "tangosdev",
-      "name": "func_0203da4c"
+      "name": "ClearLinkErrors"
     },
     "arm9:0x0203da80": {
       "author": "tangosdev",
-      "name": "func_0203da80"
+      "name": "GetLinkStatus"
     },
     "arm9:0x0203da9c": {
       "author": "tangosdev",
-      "name": "func_0203da9c"
+      "name": "GetLocalPlayerId"
     },
     "arm9:0x0203daac": {
       "author": "tangosdev",
@@ -6811,11 +6811,11 @@
     },
     "arm9:0x0203db3c": {
       "author": "tangosdev",
-      "name": "func_0203db3c"
+      "name": "SetLinkByte"
     },
     "arm9:0x0203db4c": {
       "author": "tangosdev",
-      "name": "GetPlayerFlagByte"
+      "name": "GetLinkByte"
     },
     "arm9:0x0203db64": {
       "author": "tangosdev",

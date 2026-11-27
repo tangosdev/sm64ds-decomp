@@ -16,11 +16,10 @@ typedef struct PlayerInputRecord {
     u16 flags;
     u16 keys;          /* 0x0e -- pressed buttons */
     u16 inputYaw;      /* 0x10 -- the camera's input yaw (func_0203dafc) */
-    u8 settings[0x10]; /* 0x12 -- the link settings bytes (GetPlayerFlagByte) */
-    /* 0x22 -- compared across the four records by func_0203ea5c (a mismatch
-     * sets link error bit 3); func_0203da4c and func_0203ea5c clear it */
-    u8 unk22;
-    u8 unk23; /* 0x23 */
+    /* 0x12 -- the link settings bytes (LinkSettings.h: GetLinkByte,
+     * SetLinkByte); the last is the desync check (LINK_BYTE_SYNC_*) */
+    u8 settings[0x11];
+    u8 unk23; /* 0x23 -- never read or written */
 } PlayerInputRecord;
 
 typedef char PlayerInputRecord_size_must_be_0x24[sizeof(PlayerInputRecord) == 0x24 ? 1 : -1];

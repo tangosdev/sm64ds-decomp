@@ -6,21 +6,13 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[1];
-    u32 tail[4];
-} Clps_02111218;
-
 extern ObjTable data_ov049_021111c0;
 extern ObjTable data_ov049_021111c8;
 extern ObjSubTable data_ov049_021111d0[1];
 extern Area data_ov049_021111d8[1];
 extern ObjSubTable data_ov049_021111e4[3];
 extern LevelRec data_ov049_021111fc;
-extern Clps_02111218 data_ov049_02111218;
+extern CLPS_Block data_ov049_02111218;
 extern struct PathDef data_ov049_02111238[10];
 extern StandardEntry data_ov049_02111274[4];
 extern StandardEntry data_ov049_021112b4[10];
@@ -53,12 +45,11 @@ LevelRec data_ov049_021111fc = {(struct CLPS_Block *)&data_ov049_02111218,
                                 0x0640,
                                 0x0000002f};
 
-Clps_02111218 data_ov049_02111218 = {
+CLPS_Block data_ov049_02111218 = {
     0x53504c43,
     0x0008,
     0x0001,
-    {{0x00040fc0, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+    {{0x00040fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
 struct PathDef data_ov049_02111238[10] = {

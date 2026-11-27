@@ -33,7 +33,7 @@ struct daDonketu_c : daOts_c {
     int CleanupResources();
     int Render();
     int InitResources();
-    virtual int UpdateRunState();
+    virtual void UpdateRunState();
     virtual void UpdateDeathState();
     virtual void PlayStepSound();
     virtual void PlayHitSound();
