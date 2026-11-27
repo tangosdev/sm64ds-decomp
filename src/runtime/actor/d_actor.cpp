@@ -139,7 +139,6 @@ dActor_c::dActor_c() : mActorListNode(this) {
        cleanup itself: both variants stay 0x148. */
     if (0) {
         Vector3s tmp[2];
-        tmp;
     }
 }
 

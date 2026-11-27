@@ -2862,16 +2862,13 @@ int daKpa_c::UpdateIntroCamera() {
 Switch the model to animation idx (entries 0..0x1b of the table at
 sKoopaAnimationFiles; each handle's filePtr is the file) and pick the texture
 pattern that goes with it. The third parameter reaches dExtAnmModel_c::SetAnim
-unchanged as its flags word: the local `a` below is never assigned, and the ROM
-passes the caller's third argument (still in r2) straight through. Callers pass
-0 or 0x40000000; the top two bits of an Animation's flag word choose between wrapping and clamping at the end (see
+unchanged as its flags word. Callers pass 0 or 0x40000000; the top two bits of an Animation's flag word choose between wrapping and clamping at the end (see
 dExtFrameCtrl_c::WillHitFrame), so 0x40000000 reads as play-once and 0 as looping.
 Texture pattern by idx: 1 uses data_ov060_0211ac40, 2 acb8 and 0xa ac30 (all
 with texture-sequence flags 0x40000000); 3 and 5 use ac10, 0xe uses abf0, and
 every other idx (0 included) uses ac28 (these three with flags 0). */
 void daKpa_c::InitAnimation(int idx, int animFlags) {
-    int a;  /* deliberately never assigned: it is animFlags, still in r2 (see above) */
-    this->mAnmModel.SetAnim((BCA_File *)(sKoopaAnimationFiles[idx]->filePtr), a, 0x1000, 0);
+    this->mAnmModel.SetAnim((BCA_File *)(sKoopaAnimationFiles[idx]->filePtr), animFlags, 0x1000, 0);
     switch (idx) {
     case 1:
         dExtAnmTexPat_c::Prepare(*(BMD_File *)sKoopaModelFile.filePtr,

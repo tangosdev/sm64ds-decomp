@@ -2862,7 +2862,7 @@ int daDemo_c::func_ov002_020f7410(unsigned char *in, int sel)
         p->y = 0x1800;
         p->z = -0x16000;
         this->mAngle.x = 0;
-        this->mAngle.y = 0xffffb3c0;
+        this->mAngle.y = -0x4c40;
         this->mAngle.z = 0;
         Message::func_0201f138();
     }
