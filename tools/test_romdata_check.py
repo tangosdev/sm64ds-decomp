@@ -349,6 +349,102 @@ class LinkerZeroFillExtentUpgrade(unittest.TestCase):
         self.assertEqual(s["verifiedAlignFill"], 0)
 
 
+class CoverageBoundaryAfterEmittedEnd(unittest.TestCase):
+    """Interior labels and section ends are boundaries only in the right direction.
+
+    `symbols.txt` carries labels inside large arrays. They are real addresses a
+    reference can land on, but they are not places where the next input object
+    starts. The coverage boundary for linker fill is therefore the first boundary
+    at or after the emitted object's end. Output-section ends are included so the
+    terminal `. = ALIGN(32)` zero-fill is visible when no symbol follows it.
+    """
+
+    def check(self, emitted, image, *, nominal_extent, bounds, name="data_table"):
+        base = 0x200
+
+        def rom_bytes(module, addr, size):
+            off = addr - base
+            if off < 0:
+                return None
+            return image[off:off + size]
+
+        elf = unittest.mock.Mock()
+        elf.get_section.return_value.data.return_value = b"prefix" + emitted + b"suffix"
+        with (unittest.mock.patch.object(RDC, "ELFFile", return_value=elf),
+              unittest.mock.patch.object(RDC.RA, "resolve_candidate",
+                                         return_value=("arm9", base)),
+              unittest.mock.patch.object(RDC, "rom_data_index",
+                                         return_value={("arm9", name): (base, nominal_extent)}),
+              unittest.mock.patch.object(RDC, "_bounds_by_module", {"arm9": bounds}),
+              unittest.mock.patch.object(RDC.LC, "func_relocs_typed", return_value=[]),
+              unittest.mock.patch.object(RDC.RV, "rom_bytes", side_effect=rom_bytes)):
+            return RDC.verify_data_symbol(b"object", name, 1, 6, len(emitted), names={})
+
+    def test_an_interior_label_does_not_hide_alignment_fill(self):
+        # The ov033 ExitEntry[3] shape: 42 emitted bytes, an ambiguous label at
+        # +0x18 inside the array, the real next object at +0x2c, and two zeros.
+        emitted = bytes(range(42))
+        image = emitted + b"\0\0" + b"next-object"
+        result = self.check(emitted, image, nominal_extent=0x18,
+                            bounds=[0x200, 0x218, 0x22c])
+        self.assertEqual(result["verdict"], RDC.VERIFIED)
+        self.assertEqual(result["bytes"], 0x2c)
+        self.assertEqual(result["fillBytes"], 2)
+        self.assertEqual(result["romExtent"], 0x2c)
+        self.assertEqual(result["nextLabelExtent"], 0x18)
+
+    def test_the_terminal_section_alignment_is_a_boundary(self):
+        # The ov041 SimpleEntry[52] shape: 416 emitted bytes, labels inside the
+        # array, no later symbol, and twenty-four zeros to the .data section end.
+        emitted = bytes((i & 0xff for i in range(416)))
+        image = emitted + b"\0" * 24
+        result = self.check(emitted, image, nominal_extent=0x4c,
+                            bounds=[0x200, 0x24c, 0x2cc, 0x3b8])
+        self.assertEqual(result["verdict"], RDC.VERIFIED)
+        self.assertEqual(result["bytes"], 440)
+        self.assertEqual(result["fillBytes"], 24)
+        self.assertEqual(result["romExtent"], 440)
+
+    def test_nonzero_terminal_fill_stays_real_object_content(self):
+        emitted = bytes((i & 0xff for i in range(416)))
+        image = emitted + b"\0" * 23 + b"\1"
+        result = self.check(emitted, image, nominal_extent=0x4c,
+                            bounds=[0x200, 0x24c, 0x2cc, 0x3b8])
+        self.assertEqual(result["verdict"], RDC.PARTIAL)
+        self.assertEqual(result["bytes"], 416)
+        self.assertNotIn("fillBytes", result)
+
+    def test_a_boundary_exactly_at_the_object_end_is_not_skipped(self):
+        emitted = bytes(range(42))
+        result = self.check(emitted, emitted + b"next", nominal_extent=0x18,
+                            bounds=[0x200, 0x218, 0x22a])
+        self.assertEqual(result["verdict"], RDC.VERIFIED)
+        self.assertEqual(result["bytes"], 42)
+        self.assertEqual(result["romExtent"], 42)
+        self.assertNotIn("fillBytes", result)
+
+    def test_output_section_ends_read_only_the_leading_section_table(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = pathlib.Path(td) / "delinks.txt"
+            path.write_text(
+                "    .rodata start:0x00001000 end:0x00001040 kind:rodata align:4\n"
+                "    .data   start:0x00001040 end:0x000010e0 kind:data align:32\n"
+                "    .bss    start:0x000010e0 end:0x00001100 kind:bss align:32\n"
+                "src/file.cpp:\n"
+                "    complete\n"
+                "    .data start:0x00001040 end:0x000010e0\n",
+                encoding="utf-8")
+            with unittest.mock.patch.object(RDC, "_delinks_path", return_value=path):
+                self.assertEqual(RDC._output_section_ends("ov041"), (0x1040, 0x10e0))
+
+    def test_an_output_section_end_sizes_the_last_symbol(self):
+        e = RDC._module_extents([(0x100, "data_x")], self.NEVER,
+                                extra_bounds=(0x120,))
+        self.assertEqual(e["data_x"], 0x20)
+
+    NEVER = staticmethod(lambda addr: False)
+
+
 class ExtentStopsAtTheVtablePreamble(unittest.TestCase):
     """`symbols.txt` points `_ZTV<C>` at the slot array, so the two words below it are
     the vtable object's own offset-to-top and typeinfo and belong to no symbol at all.

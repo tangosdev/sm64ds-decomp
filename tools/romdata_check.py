@@ -78,6 +78,9 @@ import tu_manifest as TUM  # noqa: E402
 # top-level import here would close that cycle. Nothing above _compile needs it.
 
 _SYM_RE = re.compile(r"^(\S+)\s+kind:(\S+?)[\s(].*?addr:0x([0-9a-fA-F]+)")
+_SECTION_RE = re.compile(
+    r"^\s+(\.\S+)\s+start:0x([0-9a-fA-F]+)\s+end:0x([0-9a-fA-F]+)\s+kind:(\S+)")
+_CONTENT_SECTION_KINDS = {"data", "rodata"}
 
 # VERIFIED  every byte of the ROM's extent for this symbol is accounted for: the
 #           emitted object compared equal for its full length, and any remainder
@@ -102,6 +105,11 @@ _manifest_lock = threading.Lock()
 _source_manifests = None
 _alias_lock = threading.Lock()
 _alias_by_source = None
+# module -> sorted object-boundary addresses, built alongside `_index`.
+# Symbol addresses alone are not enough: `ambiguous` labels often point INSIDE
+# one object, and the final ALIGN(32) bytes of an output section have no next
+# symbol at all. The boundary set therefore also carries the delinks section ends.
+_bounds_by_module = None
 
 
 def _rename_manifest(rel):
@@ -316,22 +324,65 @@ def _vtable_preamble_at(label, addr, typeinfo):
     return top == 0 and (info == 0 or info in typeinfo)
 
 
-def _module_extents(entries, has_preamble):
+def _delinks_path(module):
+    """The config delinks.txt for a canonical module label."""
+    cfg = REPO / "config" / "arm9"
+    if module == "arm9":
+        return cfg / "delinks.txt"
+    if module in ("itcm", "dtcm"):
+        return cfg / module / "delinks.txt"
+    return cfg / "overlays" / module / "delinks.txt"
+
+
+def _output_section_ends(module):
+    """End addresses of a module's cartridge content sections.
+
+    These are output-section boundaries, not per-file enrollment rows: only the
+    leading indented section table is read. They matter most at the end of `.data`,
+    where the linker script's terminal `. = ALIGN(32)` produces real zero bytes no
+    symbol follows. The intermediate ends are genuine output-section boundaries too
+    (`.rodata` before `.ctor`, and custom contiguous `.data.*` sections).
+    """
+    path = _delinks_path(module)
+    if not path.is_file():
+        return ()
+    ends = []
+    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        if line.startswith("src/"):
+            break
+        m = _SECTION_RE.match(line)
+        if m and m.group(4) in _CONTENT_SECTION_KINDS:
+            ends.append(int(m.group(3), 16))
+    return tuple(ends)
+
+
+def _module_extents(entries, has_preamble, extra_bounds=()):
     """{name: extent} for one module's `(addr, name)` list, sorted or not.
 
     Split out from `rom_data_index` so the boundary arithmetic is testable without a
-    cartridge: `has_preamble(addr)` is the only thing that reads one.
+    cartridge: `has_preamble(addr)` is the only thing that reads one. `extra_bounds`
+    carries output-section ends, which are object boundaries even though they are
+    not symbols.
     """
     entries = sorted(entries)
     bounds = sorted({a for a, _ in entries}
                     | {a - OI.VTABLE_PREAMBLE for a, n in entries
-                       if n.startswith("_ZTV") and has_preamble(a)})
+                       if n.startswith("_ZTV") and has_preamble(a)}
+                    | set(extra_bounds))
     out = {}
     for addr, name in entries:
         j = bisect.bisect_right(bounds, addr)
         if j < len(bounds):
             out[name] = bounds[j] - addr
     return out
+
+
+def _module_bounds(entries, has_preamble, extra_bounds=()):
+    """The sorted boundary addresses `_module_extents` uses, retained for coverage."""
+    return sorted({a for a, _ in entries}
+                  | {a - OI.VTABLE_PREAMBLE for a, n in entries
+                     if n.startswith("_ZTV") and has_preamble(a)}
+                  | set(extra_bounds))
 
 
 def rom_data_index():
@@ -347,14 +398,15 @@ def rom_data_index():
     them; a nonzero remainder stays PARTIAL, since those bytes are real object
     content only the source can emit.
 
-    A boundary is any symbol address, plus the start of each vtable OBJECT whose
-    preamble `_vtable_preamble_at` can see in the cartridge. Without that second kind
-    the symbol preceding a vtable is charged with the vtable's own two preamble words
-    and scores PARTIAL by exactly eight bytes forever. Where `symbols.txt` already names
-    one or both of those words the real symbol is the nearer boundary and wins, so an
-    already-covered preamble is left alone.
+    A boundary is any symbol address, any output-section end in the module's
+    delinks table, plus the start of each vtable OBJECT whose preamble
+    `_vtable_preamble_at` can see in the cartridge. Without that third kind the
+    symbol preceding a vtable is charged with the vtable's own two preamble words
+    and scores PARTIAL by exactly eight bytes forever. Where `symbols.txt` already
+    names one or both of those words the real symbol is the nearer boundary and wins,
+    so an already-covered preamble is left alone.
     """
-    global _index
+    global _index, _bounds_by_module
     with _index_lock:
         if _index is not None:
             return _index
@@ -367,16 +419,50 @@ def rom_data_index():
         arm9_typeinfo = {a for a, n in per_module.get("arm9", ())
                          if n.startswith("_ZTI")}
         index = {}
+        bounds_by_module = {}
         for label, entries in per_module.items():
             entries.sort()
             typeinfo = {a for a, n in entries if n.startswith("_ZTI")} | arm9_typeinfo
-            extents = _module_extents(
-                entries, lambda a: _vtable_preamble_at(label, a, typeinfo))
+            has_preamble = lambda a: _vtable_preamble_at(label, a, typeinfo)
+            section_ends = _output_section_ends(label)
+            extents = _module_extents(entries, has_preamble, section_ends)
+            bounds_by_module[label] = _module_bounds(entries, has_preamble, section_ends)
             for addr, name in entries:
                 if name in extents:
                     index[(label, name)] = (addr, extents[name])
+        # Assign the boundary map before the index it belongs to. A thread that can
+        # see `_index` must never find the boundary half absent.
+        _bounds_by_module = bounds_by_module
         _index = index
         return _index
+
+
+def _coverage_extent(module, addr, emitted_size, nominal_extent):
+    """Extent to the first object boundary at or after the emitted object's end.
+
+    `symbols.txt` carries `ambiguous` interior labels: addresses a relocation or an
+    old disassembly pointed at inside one larger array, not places where an input
+    object starts. Distance-from-symbol-start sizing cannot tell the difference and
+    truncates the extent at such a label. The emitted object itself is the evidence:
+    once its bytes have compared equal for `emitted_size`, every label before
+    `addr + emitted_size` is inside the object and cannot be the boundary the linker
+    aligned the NEXT object to. The first boundary at or after that end is the one
+    zero-fill can close to. Output-section ends are in the boundary set too, so the
+    terminal `. = ALIGN(32)` bytes are visible even when no symbol follows them.
+
+    If the config supplied no boundary beyond the object, keep the nominal extent:
+    that is conservative and can only leave a PARTIAL unfixed, never invent coverage.
+    """
+    if not _bounds_by_module:
+        return nominal_extent
+    bounds = _bounds_by_module.get(module)
+    if not bounds:
+        return nominal_extent
+    end = addr + emitted_size
+    j = bisect.bisect_left(bounds, end)
+    if j < len(bounds):
+        return bounds[j] - addr
+    return nominal_extent
 
 
 def emitted_data_symbols(raw, linked_global=()):
@@ -461,7 +547,7 @@ def verify_data_symbol(raw, name, shndx, value, size, names=None):
     if not resolved or resolved[0] is None:
         return {"symbol": name, "verdict": UNNAMED, "bytes": 0}
     module, addr = resolved
-    extent = rom_data_index().get((module, name), (addr, None))[1]
+    nominal_extent = rom_data_index().get((module, name), (addr, None))[1]
 
     elf = ELFFile(io.BytesIO(raw))
     body = elf.get_section(shndx).data()[value:value + size]
@@ -489,6 +575,7 @@ def verify_data_symbol(raw, name, shndx, value, size, names=None):
     # measured in bytes, not rounded down (or up) to whole words.
     blind_bytes = {off for start in blind
                    for off in range(max(0, start), min(len(linked), start + 4))}
+    extent = _coverage_extent(module, addr, len(linked), nominal_extent)
 
     retail = RV.rom_bytes(module, addr, len(linked))
     if retail is None or len(retail) < len(linked):
@@ -508,6 +595,8 @@ def verify_data_symbol(raw, name, shndx, value, size, names=None):
             differing += 1
     rec = {"symbol": name, "module": module, "addr": addr, "bytes": compared,
            "emitted": len(linked), "romExtent": extent, "blindWords": len(blind)}
+    if extent != nominal_extent:
+        rec["nextLabelExtent"] = nominal_extent
     if masked:
         rec["note"] = "RTTI-off secondary preamble masked"
     if differing:
@@ -515,7 +604,7 @@ def verify_data_symbol(raw, name, shndx, value, size, names=None):
         rec["differingBytes"] = differing
     elif compared and compared == len(linked) and not blind and extent is not None:
         # Every emitted byte compared equal and nothing is blind. What remains is
-        # only a question of coverage against the next-symbol extent.
+        # only a question of coverage against the next object boundary.
         if compared >= extent:
             rec["verdict"] = VERIFIED
         else:
@@ -533,8 +622,9 @@ def verify_data_symbol(raw, name, shndx, value, size, names=None):
                 rec["verdict"] = VERIFIED
                 rec["bytes"] = extent
                 rec["fillBytes"] = extent - len(linked)
-                rec["note"] = (f"linker zero-fill covers the trailing "
-                               f"{extent - len(linked)} byte(s) to the next symbol")
+                rec["note"] = (
+                    f"linker zero-fill covers the trailing {extent - len(linked)} "
+                    "byte(s) to the next object boundary")
             else:
                 rec["verdict"] = PARTIAL
     else:
