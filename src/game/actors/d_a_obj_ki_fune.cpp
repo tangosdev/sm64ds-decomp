@@ -26,8 +26,6 @@ enum d_a_obj_ki_fune_AssetId {
 #include "dBgW.h"
 #include "nitro/fx/fx_trig.h"
 
-/* The two file tables below stay ROM data. */
-
 /* local extern: no shared header declares these. */
 extern "C" {
 

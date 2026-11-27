@@ -76,7 +76,6 @@ enum { kMegaPoundScale = 0x2000 };
 /* PlayLong bank-3 id while |mAngleXSpeed| > 0xa. */
 enum { kTiltSound = 0x8b };
 
-
 extern const int data_ov095_02136f58[4] = {0x1000, 0x800, 0x1800, 0x1000};
 
 /* Per-variant asset row: the model file, the collision file and the CLPS block,

@@ -57,10 +57,6 @@ daObjFlMaruta_c *daObjFlMaruta_c_classInit(void) {
     return new daObjFlMaruta_c;
 }
 
-/* File-scope objects at the end of this file construct the two resource
- * handles (model file 0x05fb, collision file 0x05fc). Those definitions
- * are this file's static initializer. */
-
 /* Definition order is the retail initializer's construction order. */
 ModelFile gFlLogModelFile(0x05fb);
 ClsnFile gFlLogCollisionFile(0x05fc);

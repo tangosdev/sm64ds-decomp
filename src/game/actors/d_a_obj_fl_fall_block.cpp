@@ -30,10 +30,6 @@
 
 struct CLPS_Block;
 
-/* File-scope objects at the end of this file construct the two resource
- * handles (model file 0x5f9, collision file 0x5fa). Those definitions
- * are this file's static initializer. */
-
 #include "ResourceDescriptor.h"
 
 extern "C" ResourceDescriptor data_ov022_0211427c;

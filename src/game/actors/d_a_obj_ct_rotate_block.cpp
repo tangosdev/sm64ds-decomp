@@ -73,12 +73,6 @@ struct CtRotateBlockFiles {
 };
 extern CtRotateBlockFiles data_ov065_0211cfd0[2];
 
-/* File-scope objects at the end of this file construct the six resource
- * handles (model files 0x5b6/0x5b9/0x5b8/0x5bb, collision files 0x5b7/
- * 0x5ba). mwcc emits __sinit_d_a_obj_ct_rotate_block.cpp from those
- * definitions. Nothing in this TU names the handles directly; the variant
- * records above point at them. */
-
 extern u8 data_0209f2c0;
 
 #pragma defer_codegen off
@@ -285,8 +279,10 @@ daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA01() {
     return new daObjCtRotateBlock_c();
 }
 
-/* Static-init globals (was the handwritten __sinit_ov065_0211c660 shard).
- * Definition order is the retail initializer's construction order. */
+/* The six resource handles (model files 0x5b6/0x5b9/0x5b8/0x5bb, collision
+ * files 0x5b7/0x5ba), in the retail initializer's construction order: mwcc
+ * emits __sinit_d_a_obj_ct_rotate_block.cpp from these definitions. Nothing
+ * in this TU names them directly; the variant records point at them. */
 ModelFile gCtMechaObj01ModelFile(ASSET_CT_MECHA_OBJ01_BMD);
 ModelFile gCtMechaObj02ModelFile(ASSET_CT_MECHA_OBJ02_BMD);
 ModelFile gCtMechaObj01aModelFile(ASSET_CT_MECHA_OBJ01A_BMD);

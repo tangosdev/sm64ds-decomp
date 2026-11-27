@@ -74,10 +74,6 @@ namespace Sound {
 void LoadAndSetMusic_Layer3(unsigned int musicId);
 }
 
-/* File-scope objects at the end of this file construct the eight resource
- * handles and fill the eight-entry state table. mwcc emits
- * __sinit_d_a_obj_key.cpp from those definitions. */
-
 /* data_ov089_02132ca4 is a plain VecFx32 offset. A Vector3 static would
  * register a destructor and grow __sinit, which the retail initializer
  * does not do; the zero-init here emits plain BSS. */

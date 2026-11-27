@@ -45,14 +45,12 @@ enum daObjHmMaruta_c_AssetId { ASSET_HM_MARUTA_BMD = 0x061a, ASSET_HM_MARUTA_KCL
 #include "daObjHmMaruta_c.h"
 #include "SharedFilePtr.h"
 
-/* The descriptor below stays ROM data. */
-
 #include "ResourceDescriptor.h"
 
 /* The model/collision/CLPS triple InitResourcesFrom and CleanupResourcesFrom take.
  * ov030's copy: its three words relocate to 0x02115ca8 and 0x02115cb0, this
  * overlay's model and collision SharedFilePtrs, and to the CLPS block at
- * 0x02114f24. */
+ * 0x02114f24. The descriptor stays ROM data. */
 extern ResourceDescriptor data_ov030_02115a04;
 extern struct CLPS_Block data_ov030_02114f24;
 
