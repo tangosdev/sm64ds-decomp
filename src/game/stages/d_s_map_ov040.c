@@ -6,22 +6,6 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[1];
-    u32 tail[4];
-} Clps_02111244;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[8];
-    u32 tail[6];
-} Clps_02111310;
-
 extern s16 data_ov040_021111c0[1];
 extern u16 data_ov040_021111c4[1];
 extern u32 data_ov040_021111c8[1];
@@ -33,11 +17,11 @@ extern ExitEntry data_ov040_021111f0[1];
 extern ObjSubTable data_ov040_02111200[2];
 extern PathNode data_ov040_02111210[4];
 extern LevelRec data_ov040_02111228;
-extern Clps_02111244 data_ov040_02111244;
+extern CLPS_Block data_ov040_02111244;
 extern ViewEntry data_ov040_02111264[3];
 extern StandardEntry data_ov040_02111290[4];
 extern ObjSubTable data_ov040_021112d0[8];
-extern Clps_02111310 data_ov040_02111310;
+extern CLPS_Block96 data_ov040_02111310;
 extern SimpleEntry data_ov040_02111370[46];
 extern StandardEntry data_ov040_021114e0[35];
 
@@ -83,12 +67,11 @@ LevelRec data_ov040_02111228 = {(struct CLPS_Block *)&data_ov040_02111310,
                                 0x0578,
                                 0x0000000f};
 
-Clps_02111244 data_ov040_02111244 = {
+CLPS_Block data_ov040_02111244 = {
     0x53504c43,
     0x0008,
     0x0001,
-    {{0x00000fc0, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+    {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
 ViewEntry data_ov040_02111264[3] = {
@@ -115,7 +98,7 @@ ObjSubTable data_ov040_021112d0[8] = {
     {0x0a, 0x01, {0x00, 0x00}, &data_ov040_021111f0[0]},
 };
 
-Clps_02111310 data_ov040_02111310 = {
+CLPS_Block96 data_ov040_02111310 = {
     0x53504c43,
     0x0008,
     0x0008,
@@ -126,8 +109,10 @@ Clps_02111310 data_ov040_02111310 = {
      {0x00030fc0, 0x000000ff},
      {0x00048044, 0x000000ff},
      {0x0004a044, 0x000000ff},
-     {0x018c804c, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+     {0x018c804c, 0x000000ff},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff}},
 };
 
 SimpleEntry data_ov040_02111370[46] = {

@@ -49,12 +49,6 @@ struct BMD_File;
 struct BTP_File;
 
 /* Stage collision-property blocks are defined by d_s_map_ov027.c. */
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[3];
-} CLPS_Block;
 
 extern CLPS_Block data_ov027_021130e8;
 

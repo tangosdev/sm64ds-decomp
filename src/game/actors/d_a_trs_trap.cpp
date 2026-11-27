@@ -78,6 +78,7 @@ enum d_a_trs_trap_AssetId {
     ASSET_TH_TRAP_KCL = 0x06c4
 };
 
+#include "CLPS.h"
 #include "common.h"
 #include "daTrsTrap_c.h"
 #include "SharedFilePtr.h"
@@ -89,9 +90,6 @@ enum d_a_trs_trap_AssetId {
 
 /* CLPS.h forward-declares the block; these two tables are the plain 8-word
    layout every overlay uses. */
-struct CLPS_Block {
-    u32 w[8];
-};
 
 #pragma defer_codegen off
 
@@ -101,19 +99,38 @@ struct CLPS_Block {
    entry types are recovered. */
 extern SharedFilePtr *const data_ov063_0211e27c[4];
 extern SharedFilePtr *const data_ov063_0211e28c[4];
-int data_ov063_0211ebf8[8] = {0x53504c43, 0x00010008, 0x00000fc5, 0x000000ff,
-                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
-int data_ov063_0211ec18[8] = {0x53504c43, 0x00010008, 0x00000fcb, 0x000000ff,
-                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
-int data_ov063_0211ec58[8] = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
-                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
-int data_ov063_0211ec78[8] = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
-                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
-CLPS_Block data_ov063_0211ec38 = {{0x53504c43, 0x00010008, 0x01000fcc, 0x000000ff, 0xffffffff,
-                                   0xffffffff, 0xffffffff, 0xffffffff}};
-CLPS_Block *data_ov063_0211e9e8[4] = {
-    (CLPS_Block *)data_ov063_0211ec58, (CLPS_Block *)data_ov063_0211ebf8,
-    (CLPS_Block *)data_ov063_0211ec78, (CLPS_Block *)data_ov063_0211ec18};
+CLPS_Block data_ov063_0211ebf8 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fc5, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
+CLPS_Block data_ov063_0211ec18 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fcb, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
+CLPS_Block data_ov063_0211ec58 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fc4, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
+CLPS_Block data_ov063_0211ec78 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fc4, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
+CLPS_Block data_ov063_0211ec38 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x01000fcc, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
+CLPS_Block *data_ov063_0211e9e8[4] = {&data_ov063_0211ec58, &data_ov063_0211ebf8,
+                                      &data_ov063_0211ec78, &data_ov063_0211ec18};
 s32 data_ov063_0211e9f8[6] = {0x00002000, 0x000d4000, 0x00055000,
                               0x00043000, 0xfff83000, 0x0008e000};
 
@@ -146,7 +163,6 @@ extern void hold_d_a_trs_trap(void *self, void *f, const Matrix4x3 *m, int fx, s
 extern const signed char data_ov063_0211e26c[4] = {-8, 8, -4, 4};
 /* Staircase rise limits, indexed by mStepIndex. */
 extern const int data_ov063_0211e270[3] = {200, 400, 600};
-
 }
 u8 IsAreaShowing(int idx);
 
@@ -159,9 +175,7 @@ static inline int IsActorType(u16 actorType, int id) {
  * 0x0211c600 / 0x0211c638, the two lowest addresses in the unit, and makes
  * this TU the one that emits the vtable. mwcc also emits D2, which the ROM
  * does not have; the manifest licenses it as deadstrip. */
-daTrsTrap_c::~daTrsTrap_c()
-{
-}
+daTrsTrap_c::~daTrsTrap_c() {}
 
 /* The model matrix: position (>> 3) and the three angles, into
    mModel.mat4x3 at 0xf0. Called from Behavior. */
@@ -259,21 +273,23 @@ void daTrsTrap_c::UpdateBookshelf() {
                 mState = 1;
                 return;
             }
-            if (m == 1) return;
-            if (m == 3) return;
+            if (m == 1)
+                return;
+            if (m == 3)
+                return;
             mBookFlags &= 8;
         }
         return;
-    case 1:
-        {
-            u16 t = mStateTimer;
-            if (t > 0x64) {
-                mState = 2;
-                return;
-            }
-            if (t < 0x1e) return;
-            Sound::PlaySecretSound(this, &mSoundTimer);
+    case 1: {
+        u16 t = mStateTimer;
+        if (t > 0x64) {
+            mState = 2;
+            return;
         }
+        if (t < 0x1e)
+            return;
+        Sound::PlaySecretSound(this, &mSoundTimer);
+    }
         return;
     case 2:
         mPos.x += 0x5000;
@@ -311,7 +327,8 @@ void daTrsTrap_c::UpdateTiltingTrap() {
         mAngle.x += mAngVelX;
     } else {
         int a = mAngle.x;
-        if (a < 0) a = -a;
+        if (a < 0)
+            a = -a;
         if (a < 0xbb8 || mStateTimer > 15) {
             int v;
             mAngVelX = 0;
@@ -319,11 +336,13 @@ void daTrsTrap_c::UpdateTiltingTrap() {
             if (v > 0) {
                 if (v < 0xc8)
                     mAngle.x = 0;
-                else mAngVelX = -0xc8;
+                else
+                    mAngVelX = -0xc8;
             } else {
                 if (v > -0xc8)
                     mAngle.x = 0;
-                else mAngVelX = 0xc8;
+                else
+                    mAngVelX = 0xc8;
             }
         }
     }
@@ -387,22 +406,18 @@ void daTrsTrap_c::UpdateStaircase() {
 
 /* Vtable slot 3. Unhooks the moving mesh and releases this trap's model and
  * collision rows. */
-int daTrsTrap_c::CleanupResources()
-{
+int daTrsTrap_c::CleanupResources() {
     mMovingMeshCollider.Disable();
     data_ov063_0211e27c[mIndex]->Release();
     data_ov063_0211e28c[mIndex]->Release();
     return 1;
 }
 
-void daTrsTrap_c::OnPendingDestroy()
-{
-}
+void daTrsTrap_c::OnPendingDestroy() {}
 
 /* Vtable slot 9. Draws the model unless this trap is parked invisible (an
  * untriggered step, or the bookshelf while the player is past the wall). */
-int daTrsTrap_c::Render()
-{
+int daTrsTrap_c::Render() {
     if (mVisible == 0)
         return 1;
     mModel.Render(0);
@@ -412,8 +427,7 @@ int daTrsTrap_c::Render()
 /* Vtable slot 6. One call through this trap's state body every frame, then
  * the model/collision refresh and the standing-actor clear. mStateTimer
  * counts frames in the state and restarts whenever the body moves on. */
-int daTrsTrap_c::Behavior()
-{
+int daTrsTrap_c::Behavior() {
     unsigned char before = mState;
     int idx = mIndex;
     (this->*data_ov063_0211ef38[idx])();
@@ -442,8 +456,7 @@ int daTrsTrap_c::Behavior()
  *     lands it where the ROM has it.
  *   - v16's three fields are written x, y, z in that order; any other order
  *     swaps the two strh at +0x2a0/+0x2a4. */
-int daTrsTrap_c::InitResources()
-{
+int daTrsTrap_c::InitResources() {
     u16 actorType;
     u32 param;
     s32 dx;
@@ -518,7 +531,8 @@ int daTrsTrap_c::InitResources()
     mMovingMeshCollider.Enable(this);
 
     if (mIndex == 2) {
-        Vector3 base; Vector3_16 v16;
+        Vector3 base;
+        Vector3_16 v16;
         int j, even, odd, actorId, neg1;
         base.x = mHomePos.x;
         base.y = mHomePos.y;
@@ -537,7 +551,8 @@ int daTrsTrap_c::InitResources()
             base.z = mHomePos.z - 0xb4000;
             sp = dActor_c::Spawn(actorId, j, base, &v16, mAreaId, neg1);
             ((daBook_c *)sp)->mLinkedActorID = uniqueID;
-            even += 2; odd += 2;
+            even += 2;
+            odd += 2;
         }
         mSavedAreaId = mAreaId;
     }

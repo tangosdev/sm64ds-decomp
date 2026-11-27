@@ -22,13 +22,6 @@ typedef struct {
     u16 pad;
 } ViewEntriesPad;
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[3];
-} Clps_021113cc;
-
 extern ScalarEntryU16 data_ov044_02111360;
 extern ObjSubTable data_ov044_02111364[1];
 extern ObjTable data_ov044_0211136c;
@@ -37,7 +30,7 @@ extern Area data_ov044_0211137c[1];
 extern ViewEntriesPad data_ov044_02111388;
 extern ObjSubTable data_ov044_02111398[3];
 extern LevelRec data_ov044_021113b0;
-extern Clps_021113cc data_ov044_021113cc;
+extern CLPS_Block data_ov044_021113cc;
 extern StandardEntry data_ov044_021113ec[4];
 extern StandardEntry data_ov044_0211142c[25];
 
@@ -83,14 +76,12 @@ LevelRec data_ov044_021113b0 = {(struct CLPS_Block *)&data_ov044_021113cc,
                                 0x0320,
                                 0x000000af};
 
-Clps_021113cc data_ov044_021113cc = {0x53504c43,
-                                     0x0008,
-                                     0x0003,
-                                     {
-                                         {0x00038fc4, 0x000000ff},
-                                         {0x00238fc0, 0x000000ff},
-                                         {0x01038fc0, 0x000000ff},
-                                     }};
+CLPS_Block data_ov044_021113cc = {
+    0x53504c43,
+    0x0008,
+    0x0003,
+    {{0x00038fc4, 0x000000ff}, {0x00238fc0, 0x000000ff}, {0x01038fc0, 0x000000ff}},
+};
 
 StandardEntry data_ov044_021113ec[4] = {
     {0x0000, 0x0000, 0x044c, 0x0000, 0x0000, (s16)0x8000, 0x0000, 0x0278},

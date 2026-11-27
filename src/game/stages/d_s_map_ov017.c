@@ -10,13 +10,6 @@
  * dBgW_Kc::SetFile: the 'CLPS' header (entry stride 8 at +4, live-entry count
  * at +6), two entry slots and all-ones filler to the end of the record. A
  * count-1 block carries the filler in its second slot as well. */
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
 
 /* The 0xe-byte view record is followed by two zero bytes before the next
  * label. */
@@ -108,16 +101,14 @@ CLPS_Block data_ov017_02111ab4 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00030fc0, 0x000000ff}, {0x00030fc5, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00030fc0, 0x000000ff}, {0x00030fc5, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
 CLPS_Block data_ov017_02111a94 = {
     0x53504c43,
     0x0008,
     0x0001,
-    {{0x00000fe0, 0x000000ff}, {0xffffffff, 0xffffffff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00000fe0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
 ObjSubTable data_ov017_02111ad4[5] = {

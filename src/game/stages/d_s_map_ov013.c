@@ -8,14 +8,6 @@
  */
 
 typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[21];
-    u32 tail[4];
-} Clps_02111b94;
-
-typedef struct {
     ViewEntry entries[15];
     u16 pad;
 } Pad_02111c54;
@@ -49,7 +41,7 @@ extern DoorEntry data_ov013_0211196c[8];
 extern StandardEntry data_ov013_021119cc[7];
 extern ExitEntry data_ov013_02111a3c[12];
 extern StandardEntry data_ov013_02111ae4[11];
-extern Clps_02111b94 data_ov013_02111b94;
+extern CLPS_Block192 data_ov013_02111b94;
 extern Pad_02111c54 data_ov013_02111c54;
 extern StandardEntry data_ov013_02111d28[15];
 extern StandardEntry data_ov013_02111e18[16];
@@ -100,7 +92,7 @@ LevelRec data_ov013_02111844 = {(struct CLPS_Block *)&data_ov013_02111b94,
                                 0x0640,
                                 0x0000000f};
 
-Clps_02111b94 data_ov013_02111b94 = {
+CLPS_Block192 data_ov013_02111b94 = {
     0x53504c43,
     0x0008,
     0x0015,
@@ -110,8 +102,8 @@ Clps_02111b94 data_ov013_02111b94 = {
      {0x01040fc5, 0x000000ff}, {0x01043fc5, 0x000000ff}, {0x00040fc5, 0x000000ff},
      {0x01040304, 0x000000ff}, {0x00040301, 0x000000ff}, {0x00040304, 0x000000ff},
      {0x00042301, 0x000000ff}, {0x008c0fc4, 0x000000ff}, {0x01040fc4, 0x000000ff},
-     {0x00030fc1, 0x000000ff}, {0x00000fc1, 0x000000ff}, {0x000401c1, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+     {0x00030fc1, 0x000000ff}, {0x00000fc1, 0x000000ff}, {0x000401c1, 0x000000ff},
+     {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
 StandardEntry data_ov013_02111e18[16] = {

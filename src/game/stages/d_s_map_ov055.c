@@ -6,13 +6,6 @@
 
 /* Definition order is what makes the compiler's size sort match address order. */
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[3];
-} Clps_021119b0;
-
 /* The 6-byte table is followed by two zero bytes before the
  * next object, so the padding is written as part of the object. */
 typedef struct {
@@ -38,7 +31,7 @@ extern ObjSubTable data_ov055_02111958[2];
 extern StandardEntry data_ov055_02111968[1];
 extern ViewEntry data_ov055_02111978[2];
 extern LevelRec data_ov055_02111994;
-extern Clps_021119b0 data_ov055_021119b0;
+extern CLPS_Block data_ov055_021119b0;
 extern StandardEntry data_ov055_021119d0[3];
 extern ObjSubTable data_ov055_02111a00[6];
 extern SimpleEntry data_ov055_02111a30[12];
@@ -91,11 +84,12 @@ LevelRec data_ov055_02111994 = {(struct CLPS_Block *)&data_ov055_021119b0,
                                 0x0226,
                                 0x0000000f};
 
-Clps_021119b0 data_ov055_021119b0 = {
+CLPS_Block data_ov055_021119b0 = {
     0x53504c43,
     0x0008,
     0x0003,
-    {{0x00030fc4, 0x000000ff}, {0x00038044, 0x000000ff}, {0x00000fc0, 0x000000ff}}};
+    {{0x00030fc4, 0x000000ff}, {0x00038044, 0x000000ff}, {0x00000fc0, 0x000000ff}},
+};
 
 StandardEntry data_ov055_021119d0[3] = {
     {0x0044, 0x0190, 0x0000, 0x0384, 0x0000, (s16)0xc000, 0x0000, 0xff03},
