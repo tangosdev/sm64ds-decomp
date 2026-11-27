@@ -499,7 +499,7 @@ void daSanbo_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
 
     clsn->func_02038414();
     if (clsn->IsOnGround()) {
-        static_cast<dBgPi *>(clsn->GetFloorResult())->surface.CopyNormalTo(n0);
+        clsn->GetFloorResult()->surface.CopyNormalTo(n0);
         if (n0.y != 0) {
             int x = FX_MUL(n0.x, mSpeed.x);
             int z = FX_MUL(n0.z, mSpeed.z);
@@ -509,7 +509,7 @@ void daSanbo_c::UpdateFloorAndWalls(dBgCh_Actr *clsn) {
         }
     }
     if (clsn->IsOnWall()) {
-        static_cast<dBgPi *>(clsn->GetWallResult())->surface.CopyNormalTo(n1);
+        clsn->GetWallResult()->surface.CopyNormalTo(n1);
     }
 }
 
