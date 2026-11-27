@@ -255,7 +255,7 @@ def _measurement_object(raw, rel, names):
                     and int(str(rows[0].get("size", "-1")), 0) == symbol["st_size"]):
                 contextual[symbol.name] = (module, home[0])
     # An import alias can intentionally disagree with symbols.txt: daMky parks
-    # its leftover ~Vector3 import on func_02017a9c so the carry offsets can
+    # its leftover ~Vector3 import on _ZN9ModelFileD2Ev so the carry offsets can
     # use the real destructor name. That refusal must not throw away the
     # defined-temp renames already applied above, or the @NNN data records are
     # compared under the wrong cartridge addresses.
