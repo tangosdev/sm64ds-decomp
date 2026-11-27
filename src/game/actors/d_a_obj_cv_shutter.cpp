@@ -16,8 +16,7 @@
  *   The setup helper loads data_ov021_021148d0 slot 0 with dExtSimpleModel_c::LoadFile,
  *   slot 1 with dBgW_Kc::LoadFile, slot 2 as CLPS into SetFile, and writes
  *   daObjSwdoor_c's four byte fields from param1.
- * - data_ov021_021148d0 is overlay data; this TU is text-only so
- *   the table stays an extern. g_profile_CV_SHUTTER is the same.
+ * - g_profile_CV_SHUTTER is overlay data this TU does not define.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -29,20 +28,6 @@ enum d_a_obj_cv_shutter_AssetId { ASSET_CV_SHUTTER_BMD = 0x05d9, ASSET_CV_SHUTTE
 #include "ResourceDescriptor.h"
 
 extern ResourceDescriptor data_ov021_021148d0;
-
-/* File 1497 / 1498 resource handles. The static initializer registers
- * their destructors; the spellings are this TU's, mapped onto
- * ModelFile::ModelFile / ModelFile::~ModelFile and ClsnFile::ClsnFile /
- * ClsnFile::~ClsnFile. */
-struct CvShutterModelFilePtr : SharedFilePtr {
-    CvShutterModelFilePtr(u32 fileID);
-    ~CvShutterModelFilePtr();
-};
-
-struct CvShutterCollisionFilePtr : SharedFilePtr {
-    CvShutterCollisionFilePtr(u32 fileID);
-    ~CvShutterCollisionFilePtr();
-};
 
 daObjCvShutter_c *daObjCvShutter_c_classInit() {
     return new daObjCvShutter_c();
@@ -79,8 +64,8 @@ s32 daObjCvShutter_c::CleanupResources() {
 /* Definitions stay after the last .text function so they do not insert
  * a function into the ROM-ascending run. Construction order is the model
  * handle, then the collision handle. */
-CvShutterModelFilePtr gCvShutterModelFile(ASSET_CV_SHUTTER_BMD);
-CvShutterCollisionFilePtr gCvShutterCollisionFile(ASSET_CV_SHUTTER_KCL);
+ModelFile gCvShutterModelFile(ASSET_CV_SHUTTER_BMD);
+ClsnFile gCvShutterCollisionFile(ASSET_CV_SHUTTER_KCL);
 /* Collision properties: the 'CLPS' tag, the 8-byte stride header with one
  * entry, then the default entries. */
 extern struct CLPS_Block data_ov021_02113a00;

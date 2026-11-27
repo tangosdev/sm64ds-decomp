@@ -50,24 +50,10 @@ s32 daObjFl_Gura_c::CleanupResources() {
     return CleanupResourcesFrom((ResourceDescriptor *)&data_ov064_0211adb0);
 }
 
-/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the model, ClsnFile::ClsnFile /
- * ClsnFile::~ClsnFile for the collision), spelled through
- * declared-only subclasses so the static initializer names the real entry
- * points. */
-struct FlGuraModelFilePtr : SharedFilePtr {
-    FlGuraModelFilePtr(u32 fileID);
-    ~FlGuraModelFilePtr();
-};
-struct FlGuraCollisionFilePtr : SharedFilePtr {
-    FlGuraCollisionFilePtr(u32 fileID);
-    ~FlGuraCollisionFilePtr();
-};
-
 /* The retail initializer constructs the model first, then the collision
  * file. */
-FlGuraModelFilePtr gFlGuraModelFile(ASSET_FL_GURA_BMD);         /* model */
-FlGuraCollisionFilePtr gFlGuraCollisionFile(ASSET_FL_GURA_KCL); /* collision */
+ModelFile gFlGuraModelFile(ASSET_FL_GURA_BMD);    /* model */
+ClsnFile gFlGuraCollisionFile(ASSET_FL_GURA_KCL); /* collision */
 
 CLPS_Block data_ov064_0211bb8c = {
     0x53504c43,

@@ -12,11 +12,6 @@
  * __cxa_vec_ctor over mColliders.
  */
 
-// What stays, and why:
-// - This TU emits its own __sinit for the file handles below, which the
-//   manifest does not license. The handles stay: nothing else defines
-//   their BSS or .init range.
-
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjFl_KomaU_c_AssetId { ASSET_FL_KOMA_U_BMD = 0x05f7, ASSET_FL_KOMA_U_KCL = 0x05f8 };
 
@@ -29,21 +24,6 @@ enum daObjFl_KomaU_c_AssetId { ASSET_FL_KOMA_U_BMD = 0x05f7, ASSET_FL_KOMA_U_KCL
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
-
-/* The ctor/dtor pairs are the ROM's SharedFilePtr veneers (ModelFile::ModelFile /
- * ModelFile::~ModelFile for the model, ClsnFile::ClsnFile / ClsnFile::~ClsnFile
- * for the collision); the subclasses exist to spell those entry points.
- * data_ov064_0211adbc stays the file table. */
-struct KomaUModelFilePtr : SharedFilePtr {
-    KomaUModelFilePtr(unsigned int fileId);
-    ~KomaUModelFilePtr();
-};
-struct KomaUClsnFileHandle : SharedFilePtr {
-    KomaUClsnFileHandle(unsigned int fileId);
-    ~KomaUClsnFileHandle();
-};
-typedef char KomaUModelFilePtr_size_must_be_8[sizeof(KomaUModelFilePtr) == 8 ? 1 : -1];
-typedef char KomaUClsnFileHandle_size_must_be_8[sizeof(KomaUClsnFileHandle) == 8 ? 1 : -1];
 
 #pragma defer_codegen off
 
@@ -160,8 +140,8 @@ daObjFl_KomaU_c *daObjFl_KomaU_c_classInit() {
 }
 
 /* Retail construction order: model 1527, then collision 1528. */
-KomaUModelFilePtr gFlKomaUModelFile(ASSET_FL_KOMA_U_BMD);
-KomaUClsnFileHandle gFlKomaUCollisionFile(ASSET_FL_KOMA_U_KCL);
+ModelFile gFlKomaUModelFile(ASSET_FL_KOMA_U_BMD);
+ClsnFile gFlKomaUCollisionFile(ASSET_FL_KOMA_U_KCL);
 
 CLPS_Block data_ov064_0211bdac = {
     0x53504c43,

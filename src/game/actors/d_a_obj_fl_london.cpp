@@ -34,21 +34,9 @@ struct CLPS_Block;
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x5fd, collision file 0x5fe). mwcc emits
- * __sinit_d_a_obj_fl_london.cpp from those definitions. The wrapper names
- * are local; the handle constructors and destructors are the ROM
- * resource-family functions, aliased in the manifest. */
-struct LondonModelFile : SharedFilePtr {
-    LondonModelFile(u32 fileID);
-    ~LondonModelFile();
-};
-
-struct LondonCollisionFilePtr : SharedFilePtr {
-    LondonCollisionFilePtr(u32 fileID);
-    ~LondonCollisionFilePtr();
-};
-
-extern LondonModelFile data_ov022_02114580;
-extern LondonCollisionFilePtr data_ov022_02114578;
+ * __sinit_d_a_obj_fl_london.cpp from those definitions. */
+extern ModelFile data_ov022_02114580;
+extern ClsnFile data_ov022_02114578;
 extern CLPS_Block data_ov064_0211bb2c;
 
 daObjFl_London_c *daObjFl_London_c_classInit() {
@@ -151,5 +139,5 @@ void daObjFl_London_c::UpdateModelMatrix() {
 /* Static-init globals (was the handwritten __sinit_ov022_02112dec shard).
  * Definition order is the retail initializer's construction order: the
  * model handle (file 0x5fd), then the collision handle (file 0x5fe). */
-LondonModelFile data_ov022_02114580(0x5fd);
-LondonCollisionFilePtr data_ov022_02114578(0x5fe);
+ModelFile data_ov022_02114580(0x5fd);
+ClsnFile data_ov022_02114578(0x5fe);

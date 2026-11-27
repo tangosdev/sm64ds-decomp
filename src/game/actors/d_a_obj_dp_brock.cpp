@@ -40,23 +40,10 @@ enum daObjDpBrock_c_AssetId { ASSET_DP_BROCK_BMD = 0x05df, ASSET_DP_BROCK_KCL = 
 #include "SharedFilePtr.h"
 #include "math/MtxStack.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct BrockModelFilePtr : SharedFilePtr {
-    BrockModelFilePtr(u32 fileID);
-    ~BrockModelFilePtr();
-};
-
-struct BrockCollisionFilePtr : SharedFilePtr {
-    BrockCollisionFilePtr(u32 fileID);
-    ~BrockCollisionFilePtr();
-};
-
 /* The block's model file and collision file (ov025 .bss), and the CLPS
    block handed to dBgW_KcMbg::SetFile. */
-extern BrockModelFilePtr data_ov025_02113ab8;
-extern BrockCollisionFilePtr data_ov025_02113ab0;
+extern ModelFile data_ov025_02113ab8;
+extern ClsnFile data_ov025_02113ab0;
 
 extern CLPS_Block data_ov025_02112ce8;
 
@@ -181,5 +168,5 @@ void daObjDpBrock_c::UpdateStepClsnPosAndRot() {
 /* Source order is construction order: model file 1503, collision file 1504.
  * __sinit_d_a_obj_dp_brock.cpp emits both constructions and registers the
  * destructors; the registration nodes are compiler temporaries. */
-BrockModelFilePtr data_ov025_02113ab8(ASSET_DP_BROCK_BMD);
-BrockCollisionFilePtr data_ov025_02113ab0(ASSET_DP_BROCK_KCL);
+ModelFile data_ov025_02113ab8(ASSET_DP_BROCK_BMD);
+ClsnFile data_ov025_02113ab0(ASSET_DP_BROCK_KCL);

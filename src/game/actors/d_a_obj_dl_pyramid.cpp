@@ -53,24 +53,9 @@ extern CLPS_Block data_ov024_021129f0;
  * in source order (model 1501, then collision 1502) and lets the C++ runtime
  * register their destructors. InitResources loads the model through the first
  * (dExtSimpleModel_c::LoadFile) and the collision through the second (dBgW_Kc::LoadFile);
- * CleanupResources releases both (S19/S31: typed from this TU's callees).
- * The family spellings are reconstructed; the constructor/destructor
- * addresses, file IDs, object widths, BSS order, and registration topology
- * are direct ROM evidence. The intact-TU manifest maps their
- * compiler-generated undefined member imports onto the existing
- * evidence-bounded ROM symbols. */
-struct DlPyramidModelFilePtr : SharedFilePtr {
-    DlPyramidModelFilePtr(u32 fileID);
-    ~DlPyramidModelFilePtr();
-};
-
-struct DlPyramidCollisionFilePtr : SharedFilePtr {
-    DlPyramidCollisionFilePtr(u32 fileID);
-    ~DlPyramidCollisionFilePtr();
-};
-
-extern DlPyramidModelFilePtr gDlPyramidModelFile;
-extern DlPyramidCollisionFilePtr gDlPyramidCollisionFile;
+ * CleanupResources releases both (S19/S31: typed from this TU's callees). */
+extern ModelFile gDlPyramidModelFile;
+extern ClsnFile gDlPyramidCollisionFile;
 
 #pragma defer_codegen off
 
@@ -263,5 +248,5 @@ daObjDlPyramid_c *daObjDlPyramid_c_classInit() {
 
 /* Retail construction order: model 1501, then collision 1502. mwcc emits
  * __sinit_d_a_obj_dl_pyramid.cpp from these two definitions. */
-DlPyramidModelFilePtr gDlPyramidModelFile(ASSET_DL_PYRAMID_BMD);
-DlPyramidCollisionFilePtr gDlPyramidCollisionFile(ASSET_DL_PYRAMID_KCL);
+ModelFile gDlPyramidModelFile(ASSET_DL_PYRAMID_BMD);
+ClsnFile gDlPyramidCollisionFile(ASSET_DL_PYRAMID_KCL);

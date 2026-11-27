@@ -10,9 +10,9 @@
  * first and emits no leaf D2 body.
  *
  * Notes:
- * - data_ov031_02111424 is the extern four-variant SharedFilePtr table
- *   InitResources indexes by mVariant (this TU's manifest is text-only);
- *   the individual BMD link names stay data_ov031_*.
+ * - data_ov031_02111424 is the four-variant SharedFilePtr table
+ *   InitResources indexes by mVariant. This TU defines it after the four
+ *   gHs*ModelFile handles; the static initializer constructs those.
  * - The actorID switch stays defaultless in matched form; the registry
  *   only spawns the four HS_* profiles (0x12e-0x131).
  */
@@ -30,14 +30,7 @@ enum d_a_obj_hs_billboard_AssetId {
 #include "BMD_File.h"
 #include "math/MtxStack.h"
 
-/* Four model handles. Each constructs through ModelFile::ModelFile and destroys
- * through ModelFile::~ModelFile. The four-pointer table stays ROM rodata. */
-struct HsBillboardModelFilePtr : SharedFilePtr {
-    HsBillboardModelFilePtr(unsigned int fileId);
-    ~HsBillboardModelFilePtr();
-};
-typedef char HsBillboardModelFilePtr_size_must_be_8[sizeof(HsBillboardModelFilePtr) == 8 ? 1 : -1];
-
+/* The four model handles by mVariant; defined after the handles below. */
 extern SharedFilePtr *const data_ov031_02111424[4];
 
 /* Four C-linkage factories: one `new`, four names. The EAD classInit spelling
@@ -109,10 +102,10 @@ void daObjHsBillboard_c::UpdateModelTransform() {
    inline `operator delete`, which is why nothing here names a heap. */
 
 /* Retail construction order. mwcc emits __sinit_d_a_obj_hs_billboard.cpp. */
-HsBillboardModelFilePtr gHsMoonModelFile(ASSET_HS_MOON_BMD);
-HsBillboardModelFilePtr gHsStarModelFile(ASSET_HS_STAR_BMD);
-HsBillboardModelFilePtr gHsYStarModelFile(ASSET_HS_Y_STAR_BMD);
-HsBillboardModelFilePtr gHsBStarModelFile(ASSET_HS_B_STAR_BMD);
+ModelFile gHsMoonModelFile(ASSET_HS_MOON_BMD);
+ModelFile gHsStarModelFile(ASSET_HS_STAR_BMD);
+ModelFile gHsYStarModelFile(ASSET_HS_Y_STAR_BMD);
+ModelFile gHsBStarModelFile(ASSET_HS_B_STAR_BMD);
 
 extern SharedFilePtr *const data_ov031_02111424[4] = {
     &gHsMoonModelFile,

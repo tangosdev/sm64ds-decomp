@@ -118,7 +118,7 @@
    "src/game/actors/d_a_star.cpp": ["return:StarModelFilePtr"]
   },
   "data_ov002_02110964": {
-   "src/game/actors/d_a_obj_key.cpp": ["return:ObjKeyFile"]
+   "src/game/actors/d_a_obj_key.cpp": ["return:AnimFile"]
   },
   "data_ov026_02113f4c": {
    "src/game/actors/d_a_water_suikomi.cpp": ["return:Vector3"]
@@ -140,9 +140,6 @@
   },
   "func_ov079_02123d4c": {
    "src/game/actors/d_a_btn.cpp": ["arity:1", "return:Vector3"]
-  },
-  "gKoopaKeyModelFile": {
-   "src/game/actors/d_a_obj_key.cpp": ["return:ObjKeyModelFile"]
   },
   "gMessageBankBase": {
    "src/ui/messages/_ZN7Message8LoadTextEv.cpp": ["return:void *"]

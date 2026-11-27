@@ -276,36 +276,6 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer at 0x02113050"
     }
   ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN14FlLogModelFileC1Ej",
-      "canonical_symbol": "_ZN9ModelFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN14FlLogModelFileD1Ev",
-      "canonical_symbol": "_ZN9ModelFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
-    },
-    {
-      "symbol": "_ZN18FlLogCollisionFileC1Ej",
-      "canonical_symbol": "_ZN8ClsnFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b4c",
-      "evidence": "retail initializer call destination and the collision wrapper constructor exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN18FlLogCollisionFileD1Ev",
-      "canonical_symbol": "_ZN8ClsnFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b34",
-      "evidence": "retail destructor registration destination and the collision wrapper destructor exact ABS32 relocation"
-    }
-  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_d_a_obj_fl_maruta.cpp",
@@ -1102,14 +1072,14 @@
   },
   "defined_symbol_renames": [
     {
-      "from": "@409",
+      "from": "@407",
       "to": "@415",
-      "evidence": "the compiler emitted @415 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @393, so the pin keeps @415 (measured from the compiled object). Re-keyed from @393 to @404 when the base class daObjMaruta_c's rest and hit positions became Vector3 members (measured from the compiled object). Re-keyed from @407 to @409 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "the compiler emitted @415 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @393, so the pin keeps @415 (measured from the compiled object). Re-keyed from @393 to @404 when the base class daObjMaruta_c's rest and hit positions became Vector3 members (measured from the compiled object). Re-keyed from @407 to @409 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @409 to @407 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@410",
+      "from": "@408",
       "to": "@416",
-      "evidence": "the compiler emitted @416 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @394, so the pin keeps @416 (measured from the compiled object). Re-keyed from @394 to @405 when the base class daObjMaruta_c's rest and hit positions became Vector3 members (measured from the compiled object). Re-keyed from @408 to @410 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "the compiler emitted @416 itself, the name the cartridge symbol carries, until when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies); it now emits @394, so the pin keeps @416 (measured from the compiled object). Re-keyed from @394 to @405 when the base class daObjMaruta_c's rest and hit positions became Vector3 members (measured from the compiled object). Re-keyed from @408 to @410 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @410 to @408 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     }
   ]
 }

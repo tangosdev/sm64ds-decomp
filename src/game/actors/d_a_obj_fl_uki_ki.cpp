@@ -52,23 +52,10 @@ struct CLPS_Block;
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daObjFl_UkiKi_c_AssetId { ASSET_FL_UKI_KI_BMD = 0x0612, ASSET_FL_UKI_KI_KCL = 0x0613 };
 
-/* The handles reach their files through these wrappers' constructor and
- * destructor veneers; the manifest maps each to the retail destination.
- * Descriptive local types, not recovered spellings. */
-struct FlUkiKiModelFile : SharedFilePtr {
-    FlUkiKiModelFile(u32 fileID);
-    ~FlUkiKiModelFile();
-};
-
-struct FlUkiKiCollisionFile : SharedFilePtr {
-    FlUkiKiCollisionFile(u32 fileID);
-    ~FlUkiKiCollisionFile();
-};
-
 /* This TU's two file handles, in the order the retail initializer
  * (0x02112f78) builds them. */
-FlUkiKiModelFile FloatingFloorLllBig_ModelFile(ASSET_FL_UKI_KI_BMD);
-FlUkiKiCollisionFile FloatingFloorLllBig_ClsnFile(ASSET_FL_UKI_KI_KCL);
+ModelFile FloatingFloorLllBig_ModelFile(ASSET_FL_UKI_KI_BMD);
+ClsnFile FloatingFloorLllBig_ClsnFile(ASSET_FL_UKI_KI_KCL);
 
 extern CLPS_Block data_ov064_0211ba6c; /* the CLPS block SetFile is handed */
 

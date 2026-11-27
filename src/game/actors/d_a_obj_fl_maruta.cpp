@@ -57,24 +57,9 @@ daObjFlMaruta_c *daObjFlMaruta_c_classInit(void) {
     return new daObjFlMaruta_c;
 }
 
-/* File-scope objects at the end of this file construct the two resource
- * handles (model file 0x05fb, collision file 0x05fc). Those definitions
- * are this file's static initializer. The wrapper names are local; the
- * handle constructors and destructors are the ROM resource-family
- * functions, aliased in the manifest. */
-struct FlLogModelFile : SharedFilePtr {
-    FlLogModelFile(u32 fileID);
-    ~FlLogModelFile();
-};
-
-struct FlLogCollisionFile : SharedFilePtr {
-    FlLogCollisionFile(u32 fileID);
-    ~FlLogCollisionFile();
-};
-
 /* Definition order is the retail initializer's construction order. */
-FlLogModelFile gFlLogModelFile(0x05fb);
-FlLogCollisionFile gFlLogCollisionFile(0x05fc);
+ModelFile gFlLogModelFile(0x05fb);
+ClsnFile gFlLogCollisionFile(0x05fc);
 extern "C" {
 extern const int data_ov022_02112c98[1] = {0x7d0000};
 extern const ResourceDescriptor data_ov022_02112c9c = {&gFlLogModelFile, &gFlLogCollisionFile,

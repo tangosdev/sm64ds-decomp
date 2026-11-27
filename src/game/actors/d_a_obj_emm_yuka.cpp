@@ -8,11 +8,6 @@
  * only). #pragma defer_codegen off lays .text down in source order.
  */
 
-// leftovers:
-// - This TU emits its own __sinit for the file handles below, which the
-//   manifest does not license. The handles stay: nothing else defines
-//   their BSS or .init range.
-
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjEmmYuka_c_AssetId {
     ASSET_EMM_YUKA_BMD = 0x05e5,
@@ -32,18 +27,6 @@ struct EmmYukaFiles {
     SharedFilePtr *model;
     SharedFilePtr *collision;
     CLPS_Block *clps;
-};
-
-/* The ctor/dtor pairs are the ROM's SharedFilePtr veneers (ModelFile::ModelFile /
- * ModelFile::~ModelFile for the model, ClsnFile::ClsnFile / ClsnFile::~ClsnFile
- * for the collision); the subclasses exist to spell those entry points. */
-struct EmmYukaModelFilePtr : SharedFilePtr {
-    EmmYukaModelFilePtr(u32 fileID);
-    ~EmmYukaModelFilePtr();
-};
-struct EmmYukaCollisionFilePtr : SharedFilePtr {
-    EmmYukaCollisionFilePtr(u32 fileID);
-    ~EmmYukaCollisionFilePtr();
 };
 
 extern "C" {
@@ -156,8 +139,8 @@ daObjEmmYuka_c *daObjEmmYuka_c_classInit() {
 
 /* The lift's model and collision file handles; data_ov052_021125a0.model
  * and .collision point at them. */
-EmmYukaModelFilePtr gEmmYukaModelFile(ASSET_EMM_YUKA_BMD);
-EmmYukaCollisionFilePtr gEmmYukaCollisionFile(ASSET_EMM_YUKA_KCL);
+ModelFile gEmmYukaModelFile(ASSET_EMM_YUKA_BMD);
+ClsnFile gEmmYukaCollisionFile(ASSET_EMM_YUKA_KCL);
 
 extern CLPS_Block data_ov064_0211ba0c;
 

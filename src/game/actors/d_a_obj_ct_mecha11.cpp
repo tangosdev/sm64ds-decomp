@@ -44,20 +44,9 @@ enum daObjCtMecha11_c_AssetId {
 #include "LevelRng.h"
 #include "nitro/fx/fx_trig.h"
 
-/* Resource handles constructed by this TU's static initializer. The
- * constructor and destructor bodies stay out of line; mwcc registers them. */
-struct Mecha11ModelFilePtr : SharedFilePtr {
-    Mecha11ModelFilePtr(u32 fileID);
-    ~Mecha11ModelFilePtr();
-};
-
-struct Mecha11ClsnFilePtr : SharedFilePtr {
-    Mecha11ClsnFilePtr(u32 fileID);
-    ~Mecha11ClsnFilePtr();
-};
-
-extern Mecha11ClsnFilePtr RotatingClockHand_ClsnFile;
-extern Mecha11ModelFilePtr RotatingClockHand_ModelFile;
+/* Resource handles constructed by this TU's static initializer. */
+extern ClsnFile RotatingClockHand_ClsnFile;
+extern ModelFile RotatingClockHand_ModelFile;
 extern unsigned char data_0209f2c0;
 extern CLPS_Block data_ov035_02112238;
 
@@ -173,5 +162,5 @@ daObjCtMecha11_c *daObjCtMecha11_c_classInit() {
     return new daObjCtMecha11_c();
 }
 
-Mecha11ModelFilePtr RotatingClockHand_ModelFile(ASSET_CT_MECHA_OBJ11_BMD);
-Mecha11ClsnFilePtr RotatingClockHand_ClsnFile(ASSET_CT_MECHA_OBJ11_KCL);
+ModelFile RotatingClockHand_ModelFile(ASSET_CT_MECHA_OBJ11_BMD);
+ClsnFile RotatingClockHand_ClsnFile(ASSET_CT_MECHA_OBJ11_KCL);

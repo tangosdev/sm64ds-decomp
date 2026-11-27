@@ -26,9 +26,7 @@
 // - g_profile_FL_BLOCK lives outside this TU.
 // - data_ov064_0211bb0c is an unnamed row in its own module.
 // - The two file handles live at the bottom of this file; the compiler's
-//   __sinit_d_a_obj_fl_block.cpp constructs them at overlay load. Their
-//   wrapper names are local -- the constructors are the ROM
-//   resource-family functions, recorded as aliases in the manifest.
+//   __sinit_d_a_obj_fl_block.cpp constructs them at overlay load.
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjFl_Block_c_AssetId { ASSET_FL_BLOCK_BMD = 0x05f1, ASSET_FL_BLOCK_KCL = 0x05f2 };
@@ -38,24 +36,11 @@ enum daObjFl_Block_c_AssetId { ASSET_FL_BLOCK_BMD = 0x05f1, ASSET_FL_BLOCK_KCL =
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct FlBlockModelFilePtr : SharedFilePtr {
-    FlBlockModelFilePtr(u32 fileID);
-    ~FlBlockModelFilePtr();
-};
-
-struct FlBlockCollisionFilePtr : SharedFilePtr {
-    FlBlockCollisionFilePtr(u32 fileID);
-    ~FlBlockCollisionFilePtr();
-};
-
 /* This TU's two file handles: the block model and its collision file.
  * InitResources loads both, CleanupResources releases them. Defined at the
  * end of this file so the constructors do not enter .text. */
-extern FlBlockModelFilePtr data_ov022_02114558;
-extern FlBlockCollisionFilePtr data_ov022_02114550;
+extern ModelFile data_ov022_02114558;
+extern ClsnFile data_ov022_02114550;
 extern CLPS_Block data_ov064_0211bb0c;
 
 extern "C" {
@@ -147,8 +132,8 @@ s32 daObjFl_Block_c::CleanupResources() {
 /* Source order is construction order: model file 1521, collision file 1522.
  * __sinit_d_a_obj_fl_block.cpp emits both constructions and registers the
  * destructors; the registration nodes are compiler temporaries. */
-FlBlockModelFilePtr data_ov022_02114558(ASSET_FL_BLOCK_BMD);
-FlBlockCollisionFilePtr data_ov022_02114550(ASSET_FL_BLOCK_KCL);
+ModelFile data_ov022_02114558(ASSET_FL_BLOCK_BMD);
+ClsnFile data_ov022_02114550(ASSET_FL_BLOCK_KCL);
 
 extern "C" SpawnInfo<daObjFl_Block_c> g_profile_FL_BLOCK = {
     daObjFl_Block_c_classInit, 74, 282, 0x00000002, 0x00080000, 0x00150000, 0x02000000, 0x02000000};

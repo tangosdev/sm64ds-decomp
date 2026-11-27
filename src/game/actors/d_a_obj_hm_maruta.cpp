@@ -45,20 +45,6 @@ enum daObjHmMaruta_c_AssetId { ASSET_HM_MARUTA_BMD = 0x061a, ASSET_HM_MARUTA_KCL
 #include "daObjHmMaruta_c.h"
 #include "SharedFilePtr.h"
 
-/* The model handle constructs through ModelFile::ModelFile and destroys through
- * ModelFile::~ModelFile. The collision handle constructs through ClsnFile::ClsnFile and
- * destroys through ClsnFile::~ClsnFile. The descriptor stays ROM data. */
-struct MarutaModelFilePtr : SharedFilePtr {
-    MarutaModelFilePtr(unsigned int fileId);
-    ~MarutaModelFilePtr();
-};
-struct MarutaClsnFileHandle : SharedFilePtr {
-    MarutaClsnFileHandle(unsigned int fileId);
-    ~MarutaClsnFileHandle();
-};
-typedef char MarutaModelFilePtr_size_must_be_8[sizeof(MarutaModelFilePtr) == 8 ? 1 : -1];
-typedef char MarutaClsnFileHandle_size_must_be_8[sizeof(MarutaClsnFileHandle) == 8 ? 1 : -1];
-
 #include "ResourceDescriptor.h"
 
 /* The model/collision/CLPS triple InitResourcesFrom and CleanupResourcesFrom take.
@@ -109,8 +95,8 @@ int daObjHmMaruta_c::CleanupResources() {
 
 /* Retail construction order: model 1562, then collision 1563.
  * mwcc emits __sinit_d_a_obj_hm_maruta.cpp. */
-MarutaModelFilePtr gHmMarutaModelFile(ASSET_HM_MARUTA_BMD);
-MarutaClsnFileHandle gHmMarutaCollisionFile(ASSET_HM_MARUTA_KCL);
+ModelFile gHmMarutaModelFile(ASSET_HM_MARUTA_BMD);
+ClsnFile gHmMarutaCollisionFile(ASSET_HM_MARUTA_KCL);
 
 ResourceDescriptor data_ov030_02115a04 = {
     &gHmMarutaModelFile,

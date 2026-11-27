@@ -60,24 +60,11 @@ daObjFl_Koma_D_c *daObjFl_Koma_D_c_classInit(void) {
     return new daObjFl_Koma_D_c;
 }
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct KomaDModelFilePtr : SharedFilePtr {
-    KomaDModelFilePtr(u32 fileID);
-    ~KomaDModelFilePtr();
-};
-
-struct KomaDCollisionFilePtr : SharedFilePtr {
-    KomaDCollisionFilePtr(u32 fileID);
-    ~KomaDCollisionFilePtr();
-};
-
 /* Source order is construction order: model file 1525, collision file 1526.
  * __sinit_d_a_obj_fl_koma_d.cpp emits both constructions and registers the
  * destructors; the registration nodes are compiler temporaries. */
-KomaDModelFilePtr gFlKomaDModelFile(ASSET_FL_KOMA_D_BMD);
-KomaDCollisionFilePtr gFlKomaDCollisionFile(ASSET_FL_KOMA_D_KCL);
+ModelFile gFlKomaDModelFile(ASSET_FL_KOMA_D_BMD);
+ClsnFile gFlKomaDCollisionFile(ASSET_FL_KOMA_D_KCL);
 
 /* 0x02113da4..0x02113db0. Words at 0x02113da8 and 0x02113dac are the
  * collision handle and the ov064 CLPS block; both are kind:load pointers. */

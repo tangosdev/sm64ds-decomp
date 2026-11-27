@@ -11,9 +11,6 @@
  */
 
 // leftovers:
-// - This TU emits its own __sinit for the file handles below, which the
-//   manifest does not license. The handles stay: nothing else defines
-//   their BSS or .init range.
 // - q stays branch-scoped: hoisting it renumbers the static-init
 //   temporaries (@490/@491), which the manifest pins.
 
@@ -147,20 +144,8 @@ daObjEwmIceBlock_c *daObjEwmIceBlock_c_classInit() {
     return new daObjEwmIceBlock_c();
 }
 
-/* The ctor/dtor pairs are the ROM's SharedFilePtr veneers (ModelFile::ModelFile /
- * ModelFile::~ModelFile for the model, ClsnFile::ClsnFile / ClsnFile::~ClsnFile
- * for the collision); the subclasses exist to spell those entry points. */
-struct EwmIceBlockModelFilePtr : SharedFilePtr {
-    EwmIceBlockModelFilePtr(u32 fileID);
-    ~EwmIceBlockModelFilePtr();
-};
-struct EwmIceBlockCollisionFilePtr : SharedFilePtr {
-    EwmIceBlockCollisionFilePtr(u32 fileID);
-    ~EwmIceBlockCollisionFilePtr();
-};
-
-EwmIceBlockModelFilePtr gEwmIceBrockModelFile(ASSET_EWM_ICE_BROCK_BMD);         /* model */
-EwmIceBlockCollisionFilePtr gEwmIceBrockCollisionFile(ASSET_EWM_ICE_BROCK_KCL); /* collision */
+ModelFile gEwmIceBrockModelFile(ASSET_EWM_ICE_BROCK_BMD);    /* model */
+ClsnFile gEwmIceBrockCollisionFile(ASSET_EWM_ICE_BROCK_KCL); /* collision */
 
 extern CLPS_Block data_ov064_0211bbec;
 

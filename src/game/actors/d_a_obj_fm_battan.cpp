@@ -47,24 +47,9 @@ enum d_a_obj_fm_battan_AssetId { ASSET_FM_BATTAN_BMD = 0x0616, ASSET_FM_BATTAN_K
 extern CLPS_Block data_ov064_0211ba4c;
 
 /* The retail static initializer constructs these two 8-byte resource handles
- * in source order and lets the C++ runtime register their destructors.  The
- * family spellings are reconstructed; the constructor/destructor addresses,
- * file IDs, object widths, BSS order, and registration topology are direct ROM
- * evidence.  The intact-TU manifest maps their compiler-generated undefined
- * member imports to the existing evidence-bounded ROM symbols without claiming
- * that those project names were the original source spellings. */
-struct BattanModelFilePtr : SharedFilePtr {
-    BattanModelFilePtr(u32 fileID);
-    ~BattanModelFilePtr();
-};
-
-struct BattanCollisionFilePtr : SharedFilePtr {
-    BattanCollisionFilePtr(u32 fileID);
-    ~BattanCollisionFilePtr();
-};
-
-BattanModelFilePtr data_ov023_02112088(ASSET_FM_BATTAN_BMD);
-BattanCollisionFilePtr data_ov023_02112080(ASSET_FM_BATTAN_KCL);
+ * in source order and lets the C++ runtime register their destructors. */
+ModelFile data_ov023_02112088(ASSET_FM_BATTAN_BMD);
+ClsnFile data_ov023_02112080(ASSET_FM_BATTAN_KCL);
 
 /* Every instruction the cartridge has here falls out of the one `new`.
  * sizeof(daObjFm_Battan_c) is 0x37c, passed to the inherited

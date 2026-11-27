@@ -42,21 +42,6 @@ enum daObjFl_Amilift_c_AssetId { ASSET_FL_AMILIFT_BMD = 0x05ef, ASSET_FL_AMILIFT
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 
-/* The resource handles as the ROM lays them out: {id, loaded file}. The
- * model handle constructs through ModelFile::ModelFile and destroys through
- * ModelFile::~ModelFile; the collision handle constructs through ClsnFile::ClsnFile and
- * destroys through ClsnFile::~ClsnFile. The manifest aliases each
- * undefined member onto its ROM symbol. */
-struct AmiliftModelFilePtr : SharedFilePtr {
-    AmiliftModelFilePtr(u32 fileID);
-    ~AmiliftModelFilePtr();
-};
-
-struct AmiliftClsnFilePtr : SharedFilePtr {
-    AmiliftClsnFilePtr(u32 fileID);
-    ~AmiliftClsnFilePtr();
-};
-
 /* Lets Behavior call the state table's entries as members of the lift. */
 typedef void (daObjFl_Amilift_c::*LiftStateFn)();
 struct LiftState {
@@ -78,8 +63,8 @@ extern "C" {
 }
 
 extern LiftState data_ov064_0211c750[];
-extern AmiliftModelFilePtr data_ov064_0211c730;
-extern AmiliftClsnFilePtr data_ov064_0211c728;
+extern ModelFile data_ov064_0211c730;
+extern ClsnFile data_ov064_0211c728;
 
 /* Emission order is ROM order. Do not reorder. */
 #pragma defer_codegen off
@@ -289,8 +274,8 @@ s32 daObjFl_Amilift_c::InitResources() {
 
 /* The two file-scope resource handles, in retail initializer order: the
  * model file, then the collision file. */
-AmiliftModelFilePtr data_ov064_0211c730(ASSET_FL_AMILIFT_BMD);
-AmiliftClsnFilePtr data_ov064_0211c728(ASSET_FL_AMILIFT_KCL);
+ModelFile data_ov064_0211c730(ASSET_FL_AMILIFT_BMD);
+ClsnFile data_ov064_0211c728(ASSET_FL_AMILIFT_KCL);
 
 /* The three-entry state dispatch table: wait, forward, backward. mwcc cannot
  * link-time-initialize pointer-to-member records, so the initializer copies

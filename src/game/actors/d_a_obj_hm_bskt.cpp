@@ -37,20 +37,8 @@ struct KCL_File;
 /* This TU hands the stage map's two-entry collision-property block to
    SetFile. */
 
-/* The cartridge's ctor/dtor imports are the functions the wrappers' aliases
- * name. */
-struct HmBsktModelFilePtr : SharedFilePtr {
-    HmBsktModelFilePtr(u32 fileID);
-    ~HmBsktModelFilePtr();
-};
-
-struct HmBsktCollisionFilePtr : SharedFilePtr {
-    HmBsktCollisionFilePtr(u32 fileID);
-    ~HmBsktCollisionFilePtr();
-};
-
-extern HmBsktCollisionFilePtr data_ov030_02115c80; /* the KCL */
-extern HmBsktModelFilePtr data_ov030_02115c88;     /* the BMD */
+extern ClsnFile data_ov030_02115c80;  /* the KCL */
+extern ModelFile data_ov030_02115c88; /* the BMD */
 extern CLPS_Block data_ov030_02114ee4;
 
 daObjHmBskt_c *daObjHmBskt_c_classInit() {
@@ -148,5 +136,5 @@ void daObjHmBskt_c::CheckLanding(dBgCh_Actr *clsn) {
 /* The ROM's initializer constructs the model handle with file ID 1560 and
  * the collision handle with file ID 1561, registering a destructor node for
  * each. mwcc emits __sinit_d_a_obj_hm_bskt.cpp from these definitions. */
-HmBsktModelFilePtr data_ov030_02115c88(ASSET_HM_BASKET_BMD);
-HmBsktCollisionFilePtr data_ov030_02115c80(ASSET_HM_BASKET_KCL);
+ModelFile data_ov030_02115c88(ASSET_HM_BASKET_BMD);
+ClsnFile data_ov030_02115c80(ASSET_HM_BASKET_KCL);

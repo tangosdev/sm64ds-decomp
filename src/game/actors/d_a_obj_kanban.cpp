@@ -27,17 +27,9 @@ enum daObjKanban_c_AssetId { ASSET_OBJ_KANBAN_BMD = 0x0474 };
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 
-/* 8-byte file handle. The model uses ModelFile::ModelFile / ModelFile::~ModelFile. The
- * spelling is local; the manifest aliases the generated names to those ROM
- * symbols. */
-struct KanbanModelFilePtr : SharedFilePtr {
-    KanbanModelFilePtr(u32 fileID);
-    ~KanbanModelFilePtr();
-};
-
 /* The sign model's shared file; Cleanup releases it, Init loads it. Defined
  * at the end of this file so the constructor does not enter .text. */
-extern KanbanModelFilePtr data_ov085_02130858;
+extern ModelFile data_ov085_02130858;
 
 /* the collider's offset, in .rodata */
 extern Vector3 data_ov085_0212f29c;
@@ -164,4 +156,4 @@ daObjKanban_c *daObjKanban_c_classInit(void) {
     return new daObjKanban_c();
 }
 
-KanbanModelFilePtr data_ov085_02130858(ASSET_OBJ_KANBAN_BMD);
+ModelFile data_ov085_02130858(ASSET_OBJ_KANBAN_BMD);

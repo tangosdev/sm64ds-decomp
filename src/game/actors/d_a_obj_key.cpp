@@ -74,23 +74,6 @@ namespace Sound {
 void LoadAndSetMusic_Layer3(unsigned int musicId);
 }
 
-/* This TU's file handle type. The star's idle animation
- * data_ov002_02110964 is declared through it as well. */
-struct ObjKeyFile : SharedFilePtr {};
-
-/* File-scope objects at the end of this file construct the eight resource
- * handles and fill the eight-entry state table. mwcc emits
- * __sinit_d_a_obj_key.cpp from those definitions. */
-struct ObjKeyModelFile : ObjKeyFile {
-    ObjKeyModelFile(u32 fileID);
-    ~ObjKeyModelFile();
-};
-
-struct ObjKeyAnimationFilePtr : ObjKeyFile {
-    ObjKeyAnimationFilePtr(u32 fileID);
-    ~ObjKeyAnimationFilePtr();
-};
-
 /* data_ov089_02132ca4 is a plain VecFx32 offset. A Vector3 static would
  * register a destructor and grow __sinit, which the retail initializer
  * does not do; the zero-init here emits plain BSS. */
@@ -181,22 +164,23 @@ extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
 extern void func_ov002_020c3dbc(void *player);
 extern SharedFilePtr *const data_ov089_021328b4[];
-extern ObjKeyFile data_ov002_02110964;
-extern ObjKeyAnimationFilePtr gKoopaKeyGetAnimationFile;
-extern ObjKeyAnimationFilePtr gKoopaKeyGetDemoAnimationFile;
-extern ObjKeyAnimationFilePtr gKoopaKeyOpenAnimationFile;
-extern ObjKeyAnimationFilePtr gKoopaKeyWGetAnimationFile;
-extern ObjKeyModelFile gKoopaKeyModelFile;
-extern ObjKeyModelFile gLuigiKeyModelFile;
-extern ObjKeyModelFile gMarioKeyModelFile;
-extern ObjKeyModelFile gWarioKeyModelFile;
+/* The star's idle animation. d_a_star.cpp defines it. */
+extern AnimFile data_ov002_02110964;
+extern AnimFile gKoopaKeyGetAnimationFile;
+extern AnimFile gKoopaKeyGetDemoAnimationFile;
+extern AnimFile gKoopaKeyOpenAnimationFile;
+extern AnimFile gKoopaKeyWGetAnimationFile;
+extern ModelFile gKoopaKeyModelFile;
+extern ModelFile gLuigiKeyModelFile;
+extern ModelFile gMarioKeyModelFile;
+extern ModelFile gWarioKeyModelFile;
 extern Vector3 data_ov089_02132b40;
 extern VecFx32 data_ov089_02132ca4;
 /* The power-star model file (0x8015). d_a_star.cpp defines it. */
 extern SharedFilePtr gPowerStarModelFile;
 extern int data_0209cef0;
 /* The collect animations, by mAnimID. */
-extern ObjKeyFile *const data_ov089_02132880[];
+extern AnimFile *const data_ov089_02132880[];
 /* Level-overlay BSS: ov089 relocs record the store as claimed by fourteen
    overlays, and ov055 is the one that names 0x02111b68 unambiguous kind:bss
    (the func_ov002_020e3e00 precedent for its neighbours 0x02111b64/6c). */
@@ -853,7 +837,7 @@ int daObjKey_c::InitResources()
         dExtFrameCtrl_c::LoadFile(*&gKoopaKeyGetDemoAnimationFile);
         dExtFrameCtrl_c::LoadFile(*&gKoopaKeyOpenAnimationFile);
         dExtFrameCtrl_c::LoadFile(*&gKoopaKeyWGetAnimationFile);
-        if (mAnmModel.SetFile((BMD_File *)((ObjKeyFile *)gKeyModelFiles[mState])->filePtr, 1, 1) ==
+        if (mAnmModel.SetFile((BMD_File *)((ModelFile *)gKeyModelFiles[mState])->filePtr, 1, 1) ==
             0)
             return 0;
         {
@@ -911,14 +895,14 @@ daObjKey_c *daObjKey_c_classInit_OBJ_KEY() {
  * model handles, then the four animation handles, then the state table the
  * descriptors are copied into. The offset vector between the nodes carries
  * no initializer and emits plain BSS. */
-ObjKeyModelFile gKoopaKeyModelFile(ASSET_KOOPA_KEY_BMD);
-ObjKeyModelFile gLuigiKeyModelFile(ASSET_LUIGI_KEY_BMD);
-ObjKeyModelFile gMarioKeyModelFile(ASSET_MARIO_KEY_BMD);
-ObjKeyModelFile gWarioKeyModelFile(ASSET_WARIO_KEY_BMD);
-ObjKeyAnimationFilePtr gKoopaKeyGetAnimationFile(ASSET_KOOPA_KEY_GET_BCA);
-ObjKeyAnimationFilePtr gKoopaKeyGetDemoAnimationFile(ASSET_KOOPA_KEY_GET_DEMO_BCA);
-ObjKeyAnimationFilePtr gKoopaKeyOpenAnimationFile(ASSET_KOOPA_KEY_OPEN_BCA);
-ObjKeyAnimationFilePtr gKoopaKeyWGetAnimationFile(ASSET_KOOPA_KEY_W_GET_BCA);
+ModelFile gKoopaKeyModelFile(ASSET_KOOPA_KEY_BMD);
+ModelFile gLuigiKeyModelFile(ASSET_LUIGI_KEY_BMD);
+ModelFile gMarioKeyModelFile(ASSET_MARIO_KEY_BMD);
+ModelFile gWarioKeyModelFile(ASSET_WARIO_KEY_BMD);
+AnimFile gKoopaKeyGetAnimationFile(ASSET_KOOPA_KEY_GET_BCA);
+AnimFile gKoopaKeyGetDemoAnimationFile(ASSET_KOOPA_KEY_GET_DEMO_BCA);
+AnimFile gKoopaKeyOpenAnimationFile(ASSET_KOOPA_KEY_OPEN_BCA);
+AnimFile gKoopaKeyWGetAnimationFile(ASSET_KOOPA_KEY_W_GET_BCA);
 
 VecFx32 data_ov089_02132ca4;
 
@@ -930,7 +914,7 @@ extern "C" SharedFilePtr data_ov002_0210da40;
 extern "C" SharedFilePtr data_ov002_0210d9a0;
 extern "C" SharedFilePtr data_ov002_0210d9c0;
 extern "C" ModelFile data_ov085_021305d8;
-extern ObjKeyFile *const data_ov089_02132880[5] = {
+extern AnimFile *const data_ov089_02132880[5] = {
     0,
     &gKoopaKeyGetAnimationFile,
     &gKoopaKeyOpenAnimationFile,

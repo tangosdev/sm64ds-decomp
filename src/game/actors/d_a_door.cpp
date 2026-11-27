@@ -251,7 +251,7 @@ extern int gMusicVolume;
 extern int gSubVolume;
 extern Vector3 data_020a0ebc;
 extern SharedFilePtr gPowerStarModelFile;
-extern SharedFilePtr gKoopaKeyModelFile;
+extern ModelFile gKoopaKeyModelFile;
 /* ov089's key-model file table, not a function: eight SharedFilePtr*
    entries in that overlay's .rodata, the table LoadKeyModels loads into
    (bounds-checked `idx >= 8`). src/game/actors/d_a_obj_key.cpp, home of

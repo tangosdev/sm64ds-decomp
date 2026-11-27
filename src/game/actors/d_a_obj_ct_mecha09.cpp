@@ -37,20 +37,9 @@ enum daObjCtMecha09_c_AssetId {
 #include "LevelRng.h"
 #include "math/CalcLib.h"
 
-/* Resource handles constructed by this TU's static initializer. The
- * constructor and destructor bodies stay out of line; mwcc registers them. */
-struct Mecha09ModelFilePtr : SharedFilePtr {
-    Mecha09ModelFilePtr(u32 fileID);
-    ~Mecha09ModelFilePtr();
-};
-
-struct Mecha09ClsnFilePtr : SharedFilePtr {
-    Mecha09ClsnFilePtr(u32 fileID);
-    ~Mecha09ClsnFilePtr();
-};
-
-extern Mecha09ClsnFilePtr data_ov065_0211d9cc;
-extern Mecha09ModelFilePtr data_ov065_0211d9d4;
+/* Resource handles constructed by this TU's static initializer. */
+extern ClsnFile data_ov065_0211d9cc;
+extern ModelFile data_ov065_0211d9d4;
 extern u8 data_0209f2c0;
 s32 sTTCElevatorSpeeds[4] = {
     0x6000,
@@ -184,8 +173,8 @@ daObjCtMecha09_c *daObjCtMecha09_c_classInit() {
     return new daObjCtMecha09_c();
 }
 
-Mecha09ModelFilePtr data_ov065_0211d9d4(ASSET_CT_MECHA_OBJ09_BMD);
-Mecha09ClsnFilePtr data_ov065_0211d9cc(ASSET_CT_MECHA_OBJ09_KCL);
+ModelFile data_ov065_0211d9d4(ASSET_CT_MECHA_OBJ09_BMD);
+ClsnFile data_ov065_0211d9cc(ASSET_CT_MECHA_OBJ09_KCL);
 
 /* Bound tail of this TU's .bss. One object; interior labels stay in symbols.txt. */
 u8 data_ov065_0211d9f4[0xc];
