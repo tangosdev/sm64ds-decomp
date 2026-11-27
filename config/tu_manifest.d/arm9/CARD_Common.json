@@ -1,118 +1,172 @@
 {
-  "id": "arm9/CARD_Common",
-  "module": "arm9",
-  "source": "src/engine/card/CARD_Common.cpp",
-  "promoted_source": "src/engine/card/CARD_Common.cpp",
-  "status": "promoted",
-  "boundary_confidence": "high",
-  "boundary_evidence": [
-    "One contiguous run of the Nitro SDK's card_common.c, 0x0205ff70..0x020602bc: 9 functions, gapless in config/arm9/delinks.txt. pret/pokediamond's arm9/lib/NitroSDK/src/CARD_common.c defines, in source order, CARDi_SetTask, CARDi_LockResource, CARDi_UnlockResource, CARDi_InitCommon, CARD_IsEnabled, CARD_CheckEnabled, CARD_Enable, CARDi_WaitAsync, CARDi_TryWaitAsync, CARD_GetResultCode, CARD_LockRom, CARD_UnlockRom, CARD_LockBackup, CARD_UnlockBackup. Nine of them are here, each identified by body: CARD_UnlockBackup 0x10, CARD_LockBackup 0x10, CARD_UnlockRom 0x20, CARD_LockRom 0x20 and CARDi_WaitAsync 0x5c at pret's sizes; CARDi_InitCommon 0xb4 (0x100 in pret: no multiboot-child checks, no CARD_Enable), CARDi_UnlockResource 0xa8 (0xa4), CARDi_LockResource 0xa0 (0x9c) and CARDi_SetTask 0x94 (0x48: relative-priority resolution first).",
-    "Order: all nine are C, and mwccarm emits deferred C bodies in reverse. The ROM run is exactly pret's source order reversed (CARD_UnlockBackup lowest, CARDi_SetTask highest), with the five functions nothing in this game calls (CARD_IsEnabled, CARD_CheckEnabled, CARD_Enable, CARDi_TryWaitAsync, CARD_GetResultCode) dropped by the linker.",
-    "BOTTOM EDGE: PMi_Lock (0x0205ff20..0x0205ff70) and the rest of pm.c (arm9/PM) end at 0x0205ff70; pret's card_common.c has no such function and never touches pm.c's PMi_Work (0x020a8114).",
-    "TOP EDGE: CARDi_TaskThread (0x020602bc..0x02060310) is CARDi_TaskThread, the card thread body CARDi_InitCommon creates; in pret it is CARD_request.c, a separate file, with CARDi_OnFifoRecv (CARDi_OnFifoRecv)."
-  ],
-  "sections": [
-    {
-      "name": ".text",
-      "start": "0x0205ff70",
-      "end": "0x020602bc"
-    }
-  ],
-  "functions": [
-    {
-      "symbol": "CARD_UnlockBackup",
-      "address": "0x0205ff70",
-      "size": "0x00000010",
-      "legacy_source": "src/unnamed/arm9/0205/func_0205ff70.c",
-      "ordinal": 0
-    },
-    {
-      "symbol": "CARD_LockBackup",
-      "address": "0x0205ff80",
-      "size": "0x00000010",
-      "legacy_source": "src/unnamed/arm9/0205/func_0205ff80.c",
-      "ordinal": 1
-    },
-    {
-      "symbol": "CARD_UnlockRom",
-      "address": "0x0205ff90",
-      "size": "0x00000020",
-      "legacy_source": "src/unnamed/arm9/0205/func_0205ff90.c",
-      "ordinal": 2
-    },
-    {
-      "symbol": "CARD_LockRom",
-      "address": "0x0205ffb0",
-      "size": "0x00000020",
-      "legacy_source": "src/unnamed/arm9/0205/func_0205ffb0.c",
-      "ordinal": 3
-    },
-    {
-      "symbol": "CARDi_WaitAsync",
-      "address": "0x0205ffd0",
-      "size": "0x0000005c",
-      "legacy_source": "src/unnamed/arm9/0205/func_0205ffd0.cpp",
-      "ordinal": 4
-    },
-    {
-      "symbol": "CARDi_InitCommon",
-      "address": "0x0206002c",
-      "size": "0x000000b4",
-      "legacy_source": "src/unnamed/arm9/0206/func_0206002c.cpp",
-      "ordinal": 5
-    },
-    {
-      "symbol": "CARDi_UnlockResource",
-      "address": "0x020600e0",
-      "size": "0x000000a8",
-      "legacy_source": "src/unnamed/arm9/0206/func_020600e0.cpp",
-      "ordinal": 6
-    },
-    {
-      "symbol": "CARDi_LockResource",
-      "address": "0x02060188",
-      "size": "0x000000a0",
-      "legacy_source": "src/unnamed/arm9/0206/func_02060188.cpp",
-      "ordinal": 7
-    },
-    {
-      "symbol": "CARDi_SetTask",
-      "address": "0x02060228",
-      "size": "0x00000094",
-      "legacy_source": "src/unnamed/arm9/0206/func_02060228.c",
-      "ordinal": 8
-    }
-  ],
-  "data": [],
-  "bss": [],
-  "relocations": [],
-  "compiler_only_output": [],
-  "notes": [
-    "Hand-assembled, following arm9/MI_Memory, arm9/OS_SpinLock and arm9/CTRDG_Common: tu_map cannot segment arm9/main.",
-    "Every symbol was renamed from its func_ name to the SDK name in this change (symbols/actor_renames.tsv records the evidence).",
-    "Text-only: cardi_common (cardi_common), cardi_arg (cardi_arg) and cardi_thread_stack (ends at data_020a8760) stay externs. The file claims no data.",
-    "CARDi_LockResource / CARDi_UnlockResource are static in pret; here they keep external linkage like every other arm9 symbol, and they stay out of line either way."
-  ],
-  "verification": {
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
-    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/arm9-CARD_Common/CARD_Common.o (gitignored)",
-    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 9,
-    "functions_declared": 9,
-    "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
-      "data": [],
-      "dataExternalized": []
-    },
-    "criteria": {
-      "every_declared_function_defined": "PASS",
-      "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
-      "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
-    }
+ "id": "arm9/CARD_Common",
+ "module": "arm9",
+ "source": "src/engine/card/CARD_Common.cpp",
+ "promoted_source": "src/engine/card/CARD_Common.cpp",
+ "status": "promoted",
+ "boundary_confidence": "high",
+ "boundary_evidence": [
+  "One contiguous run of the Nitro SDK's card_common.c, 0x0205ff70..0x020602bc: 9 functions, gapless in config/arm9/delinks.txt. pret/pokediamond's arm9/lib/NitroSDK/src/CARD_common.c defines, in source order, CARDi_SetTask, CARDi_LockResource, CARDi_UnlockResource, CARDi_InitCommon, CARD_IsEnabled, CARD_CheckEnabled, CARD_Enable, CARDi_WaitAsync, CARDi_TryWaitAsync, CARD_GetResultCode, CARD_LockRom, CARD_UnlockRom, CARD_LockBackup, CARD_UnlockBackup. Nine of them are here, each identified by body: CARD_UnlockBackup 0x10, CARD_LockBackup 0x10, CARD_UnlockRom 0x20, CARD_LockRom 0x20 and CARDi_WaitAsync 0x5c at pret's sizes; CARDi_InitCommon 0xb4 (0x100 in pret: no multiboot-child checks, no CARD_Enable), CARDi_UnlockResource 0xa8 (0xa4), CARDi_LockResource 0xa0 (0x9c) and CARDi_SetTask 0x94 (0x48: relative-priority resolution first).",
+  "Order: all nine are C, and mwccarm emits deferred C bodies in reverse. The ROM run is exactly pret's source order reversed (CARD_UnlockBackup lowest, CARDi_SetTask highest), with the five functions nothing in this game calls (CARD_IsEnabled, CARD_CheckEnabled, CARD_Enable, CARDi_TryWaitAsync, CARD_GetResultCode) dropped by the linker.",
+  "BOTTOM EDGE: PMi_Lock (0x0205ff20..0x0205ff70) and the rest of pm.c (arm9/PM) end at 0x0205ff70; pret's card_common.c has no such function and never touches pm.c's PMi_Work (0x020a8114).",
+  "TOP EDGE: CARDi_TaskThread (0x020602bc..0x02060310) is CARDi_TaskThread, the card thread body CARDi_InitCommon creates; in pret it is CARD_request.c, a separate file, with CARDi_OnFifoRecv (CARDi_OnFifoRecv)."
+ ],
+ "sections": [
+  {
+   "name": ".text",
+   "start": "0x0205ff70",
+   "end": "0x020602bc"
+  },
+  {
+   "name": ".bss",
+   "start": "0x020a8160",
+   "end": "0x020a8760"
   }
+ ],
+ "functions": [
+  {
+   "symbol": "CARD_UnlockBackup",
+   "address": "0x0205ff70",
+   "size": "0x00000010",
+   "legacy_source": "src/unnamed/arm9/0205/func_0205ff70.c",
+   "ordinal": 0
+  },
+  {
+   "symbol": "CARD_LockBackup",
+   "address": "0x0205ff80",
+   "size": "0x00000010",
+   "legacy_source": "src/unnamed/arm9/0205/func_0205ff80.c",
+   "ordinal": 1
+  },
+  {
+   "symbol": "CARD_UnlockRom",
+   "address": "0x0205ff90",
+   "size": "0x00000020",
+   "legacy_source": "src/unnamed/arm9/0205/func_0205ff90.c",
+   "ordinal": 2
+  },
+  {
+   "symbol": "CARD_LockRom",
+   "address": "0x0205ffb0",
+   "size": "0x00000020",
+   "legacy_source": "src/unnamed/arm9/0205/func_0205ffb0.c",
+   "ordinal": 3
+  },
+  {
+   "symbol": "CARDi_WaitAsync",
+   "address": "0x0205ffd0",
+   "size": "0x0000005c",
+   "legacy_source": "src/unnamed/arm9/0205/func_0205ffd0.cpp",
+   "ordinal": 4
+  },
+  {
+   "symbol": "CARDi_InitCommon",
+   "address": "0x0206002c",
+   "size": "0x000000b4",
+   "legacy_source": "src/unnamed/arm9/0206/func_0206002c.cpp",
+   "ordinal": 5
+  },
+  {
+   "symbol": "CARDi_UnlockResource",
+   "address": "0x020600e0",
+   "size": "0x000000a8",
+   "legacy_source": "src/unnamed/arm9/0206/func_020600e0.cpp",
+   "ordinal": 6
+  },
+  {
+   "symbol": "CARDi_LockResource",
+   "address": "0x02060188",
+   "size": "0x000000a0",
+   "legacy_source": "src/unnamed/arm9/0206/func_02060188.cpp",
+   "ordinal": 7
+  },
+  {
+   "symbol": "CARDi_SetTask",
+   "address": "0x02060228",
+   "size": "0x00000094",
+   "legacy_source": "src/unnamed/arm9/0206/func_02060228.c",
+   "ordinal": 8
+  }
+ ],
+ "data": [],
+ "bss": [
+  {
+   "symbol": "cardi_arg",
+   "address": "0x020a8160",
+   "size": "0x20",
+   "binding": "STB_GLOBAL",
+   "evidence": "NitroSDK CARDiCommandArg (card_common.c): the request block ARM7 reads and answers in; CARDi_InitCommon zero-fills and flushes 0x20 bytes of it."
+  },
+  {
+   "symbol": "cardi_common",
+   "address": "0x020a8180",
+   "size": "0x1e0",
+   "binding": "STB_GLOBAL",
+   "evidence": "NitroSDK CARDiCommon (card_common.c), this SDK's 0x1e0 layout ending in backup_cache_page_buf; data_020a81bc is an interior label. Every function in the run reads it through cardi_common."
+  },
+  {
+   "symbol": "cardi_thread_stack",
+   "address": "0x020a8360",
+   "size": "0x400",
+   "binding": "STB_GLOBAL",
+   "evidence": "the card thread's 0x400-byte stack (card_common.c); CARDi_InitCommon creates the thread with the word just past it (0x020a8760) as the stack top."
+  }
+ ],
+ "relocations": [],
+ "compiler_only_output": [],
+ "notes": [
+  "Hand-assembled, following arm9/MI_Memory, arm9/OS_SpinLock and arm9/CTRDG_Common: tu_map cannot segment arm9/main.",
+  "Every symbol was renamed from its func_ name to the SDK name in this change (symbols/actor_renames.tsv records the evidence).",
+  "Text-only: cardi_common (cardi_common), cardi_arg (cardi_arg) and cardi_thread_stack (ends at data_020a8760) stay externs. The file claims no data.",
+  "CARDi_LockResource / CARDi_UnlockResource are static in pret; here they keep external linkage like every other arm9 symbol, and they stay out of line either way."
+ ],
+ "verification": {
+  "linkcheck": {
+   "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+   "result": "scratch-data-verified",
+   "scratch": "build/tu/arm9-PM/link (gitignored)",
+   "phases": {
+    "delink": true,
+    "lcf": true,
+    "compile": true,
+    "link": true,
+    "checkModules": true,
+    "checkSymbols": true,
+    "rom": true
+   },
+   "tuRange": {
+    "section": ".text",
+    "start": "0x0205ff70",
+    "end": "0x020602bc",
+    "differingBytes": 0,
+    "firstDiff": null
+   },
+   "tuRanges": [
+    {
+     "section": ".text",
+     "start": "0x0205ff70",
+     "end": "0x020602bc",
+     "differingBytes": 0,
+     "firstDiff": null
+    },
+    {
+     "section": ".bss",
+     "start": "0x020a8160",
+     "end": "0x020a8760",
+     "comparison": "NOBITS -- symbol/module gates"
+    }
+   ],
+   "objectAudit": {},
+   "symbolCheckNewVsBaseline": [],
+   "symbolCheckErrors": [],
+   "symbolCheckBaselineErrors": [],
+   "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+   "rom": {
+    "bytes": 16777216,
+    "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+    "matchesStockRom": true
+   }
+  }
+ },
+ "production_mode": "intact-object"
 }

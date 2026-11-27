@@ -38,9 +38,13 @@ extern "C" {
 #define CARD_THREAD_PRIORITY_HIGHER 0x20
 #define CARD_THREAD_PRIORITY_LOWER 0x21
 
-extern CARDiCommandArg cardi_arg;
-/* The word just past cardi_thread_stack (0x400 bytes): its address is the
- * stack's top. */
+/* The file's bss, in the SDK's own layout: the request block ARM7 reads
+ * and answers in, the card common state, then the card thread's 0x400-byte
+ * stack, whose top is the first word past it (data_020a8760's address). */
+CARDiCommandArg cardi_arg;
+CARDiCommon cardi_common;
+u32 cardi_thread_stack[0x100];
+/* The word just past cardi_thread_stack: its address is the stack's top. */
 extern int *data_020a8760;
 
 void CARDi_SetTask(void (*task)(CARDiCommon *)) {

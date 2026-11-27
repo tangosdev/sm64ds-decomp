@@ -2081,11 +2081,12 @@ src/engine/spi/TP.c:
 src/engine/spi/PM.c:
     complete
     .text start:0x0205f5c0 end:0x0205ff70
-    .bss start:0x020a8104 end:0x020a8780
+    .bss start:0x020a8104 end:0x020a8160
 
 src/engine/card/CARD_Common.cpp:
     complete
     .text start:0x0205ff70 end:0x020602bc
+    .bss start:0x020a8160 end:0x020a8760
 
 src/CARDi_TaskThread.cpp:
     complete
@@ -2098,6 +2099,7 @@ src/CARDi_OnFifoRecv.c:
 src/unnamed/arm9/0206/func_02060364.c:
     complete
     .text start:0x02060364 end:0x02060398
+    .bss start:0x020a8760 end:0x020a8780
 
 src/unnamed/arm9/0206/func_02060398.c:
     complete

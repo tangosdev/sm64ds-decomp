@@ -526,7 +526,8 @@ u32 PMi_SendLEDPatternCommand(PMLEDPattern pattern) {
     return sendResult;
 }
 
-/* The PM/SPI state: PMi_IsInit, the sync/sleep flags, the mutex, the card
-   interface work and its thread stack. One object so the interior labels
-   keep their symbols.txt addresses. */
-u8 PMi_IsInit[0x67c];
+/* The PM/SPI state: PMi_IsInit, the sync/sleep flags, the LCD count,
+   PMi_Work, the mutex and the register buffer through 0x020a8160. One object
+   so the interior labels keep their symbols.txt addresses; the card
+   interface's own bss (cardi_arg on) belongs to card_common.c. */
+u8 PMi_IsInit[0x5c];
