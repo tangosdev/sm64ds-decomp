@@ -1,6 +1,6 @@
-extern unsigned char GetPlayerFlagByte(int player, int byte);
+extern unsigned char GetLinkByte(int slot, int byte);
 /* Bit 4 of player's link settings byte 2: the rematch ready bit
    func_020201c0 sets. */
 unsigned char IsPlayerReadyForRematch(int player) {
-    return GetPlayerFlagByte(player, 2) & 0x10;
+    return GetLinkByte(player, 2) & 0x10;
 }

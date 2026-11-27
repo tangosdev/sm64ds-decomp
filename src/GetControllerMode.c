@@ -1,5 +1,5 @@
-extern unsigned char GetPlayerFlagByte(int a0, int a1);
+extern unsigned char GetLinkByte(int slot, int byte);
 unsigned char GetControllerMode(int a0)
 {
-    return GetPlayerFlagByte(a0, 4) & 3;
+    return GetLinkByte(a0, 4) & 3;
 }
