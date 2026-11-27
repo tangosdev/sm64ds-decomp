@@ -1176,7 +1176,7 @@ src/fListNode.cpp:
 src/engine/model/ModelComponents.cpp:
     complete
     .text start:0x020443c8 end:0x0204547c
-    .bss start:0x020a4bb8 end:0x020a7fc4
+    .bss start:0x020a4bb8 end:0x020a4c48
     .rodata start:0x02082190 end:0x020821c0
 
 src/func_0204547c.cpp:
@@ -1251,42 +1251,11 @@ src/engine/sound/Sound2.cpp:
     .text start:0x02048528 end:0x020490b0
     .rodata start:0x020821c0 end:0x02082200
 
-src/unnamed/arm9/0204/func_020490b0.cpp:
+src/engine/sound/CaptureEffect.cpp:
     complete
-    .text start:0x020490b0 end:0x0204921c
-
-src/unnamed/arm9/0204/func_0204921c.c:
-    complete
-    .text start:0x0204921c end:0x020494cc
-
-src/unnamed/arm9/0204/func_020494cc.c:
-    complete
-    .text start:0x020494cc end:0x02049764
-    .rodata start:0x02082200 end:0x02086214
-
-src/unnamed/arm9/0204/func_02049764.c:
-    complete
-    .text start:0x02049764 end:0x020497a0
-
-src/unnamed/arm9/0204/func_020497a0.cpp:
-    complete
-    .text start:0x020497a0 end:0x020499bc
-
-src/unnamed/arm9/0204/func_020499bc.cpp:
-    complete
-    .text start:0x020499bc end:0x02049ba8
-
-src/unnamed/arm9/0204/func_02049ba8.c:
-    complete
-    .text start:0x02049ba8 end:0x02049c48
-
-src/unnamed/arm9/0204/func_02049c48.cpp:
-    complete
-    .text start:0x02049c48 end:0x02049cd8
-
-src/unnamed/arm9/0204/func_02049cd8.c:
-    complete
-    .text start:0x02049cd8 end:0x02049d60
+    .text start:0x020490b0 end:0x02049d60
+    .bss start:0x020a4c48 end:0x020a4d30
+    .rodata start:0x02082200 end:0x02082214
 
 src/engine/particle/Particle_Manager.cpp:
     complete
