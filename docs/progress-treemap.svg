@@ -2561,11 +2561,11 @@ matched: yes</title></rect><rect x="142.62" y="180.87" width="5.34" height="7.04
 module: arm9
 addr: 0x0201787c
 size: 56 bytes
-matched: yes</title></rect><rect x="147.96" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13SharedFilePtr13func_020178b4Ev
+matched: yes</title></rect><rect x="147.96" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10ModelFileBD1Ev
 module: arm9
 addr: 0x020178b4
 size: 24 bytes
-matched: yes</title></rect><rect x="150.25" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13SharedFilePtr13func_020178ccEj
+matched: yes</title></rect><rect x="150.25" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10ModelFileBC1Ej
 module: arm9
 addr: 0x020178cc
 size: 24 bytes
@@ -2573,11 +2573,11 @@ matched: yes</title></rect><rect x="152.54" y="180.87" width="5.34" height="7.04
 module: arm9
 addr: 0x020178e4
 size: 56 bytes
-matched: yes</title></rect><rect x="157.87" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SharedFilePtr_Destruct_TexSeq
+matched: yes</title></rect><rect x="157.87" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10TexSeqFileD1Ev
 module: arm9
 addr: 0x0201791c
 size: 24 bytes
-matched: yes</title></rect><rect x="160.16" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SharedFilePtr_Construct_TexSeq
+matched: yes</title></rect><rect x="160.16" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10TexSeqFileC1Ej
 module: arm9
 addr: 0x02017934
 size: 24 bytes
@@ -2585,11 +2585,11 @@ matched: yes</title></rect><rect x="162.45" y="180.87" width="5.34" height="7.04
 module: arm9
 addr: 0x0201794c
 size: 56 bytes
-matched: yes</title></rect><rect x="167.78" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>SharedFilePtr_Destruct_Anim
+matched: yes</title></rect><rect x="167.78" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8AnimFileD1Ev
 module: arm9
 addr: 0x02017984
 size: 24 bytes
-matched: yes</title></rect><rect x="170.07" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13SharedFilePtr9ConstructEj
+matched: yes</title></rect><rect x="170.07" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8AnimFileC1Ej
 module: arm9
 addr: 0x0201799c
 size: 24 bytes
@@ -2597,11 +2597,11 @@ matched: yes</title></rect><rect x="172.36" y="180.87" width="8.39" height="7.04
 module: arm9
 addr: 0x020179b4
 size: 88 bytes
-matched: yes</title></rect><rect x="180.75" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13SharedFilePtr13func_02017a0cEv
+matched: yes</title></rect><rect x="180.75" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10ModelFileAD1Ev
 module: arm9
 addr: 0x02017a0c
 size: 24 bytes
-matched: yes</title></rect><rect x="183.03" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13SharedFilePtr13func_02017a24Ej
+matched: yes</title></rect><rect x="183.03" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10ModelFileAC1Ej
 module: arm9
 addr: 0x02017a24
 size: 24 bytes
@@ -2613,19 +2613,19 @@ matched: yes</title></rect><rect x="192.95" y="180.87" width="1.52" height="7.04
 module: arm9
 addr: 0x02017a8c
 size: 16 bytes
-matched: yes</title></rect><rect x="194.47" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13SharedFilePtr13func_02017a9cEv
+matched: yes</title></rect><rect x="194.47" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9ModelFileD2Ev
 module: arm9
 addr: 0x02017a9c
 size: 24 bytes
-matched: yes</title></rect><rect x="196.76" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z13func_02017ab4i
+matched: yes</title></rect><rect x="196.76" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9ModelFileD1Ev
 module: arm9
 addr: 0x02017ab4
 size: 24 bytes
-matched: yes</title></rect><rect x="199.04" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13SharedFilePtr13func_02017accEj
+matched: yes</title></rect><rect x="199.04" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9ModelFileC1Ej
 module: arm9
 addr: 0x02017acc
 size: 24 bytes
-matched: yes</title></rect><rect x="201.33" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13SharedFilePtr13func_02017ae4Ej
+matched: yes</title></rect><rect x="201.33" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9ModelFileC2Ej
 module: arm9
 addr: 0x02017ae4
 size: 24 bytes
@@ -2633,11 +2633,11 @@ matched: yes</title></rect><rect x="203.62" y="180.87" width="5.34" height="7.04
 module: arm9
 addr: 0x02017afc
 size: 56 bytes
-matched: yes</title></rect><rect x="208.96" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_Z27SharedFilePtr_Destruct_Clsni
+matched: yes</title></rect><rect x="208.96" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8ClsnFileD1Ev
 module: arm9
 addr: 0x02017b34
 size: 24 bytes
-matched: yes</title></rect><rect x="211.24" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13SharedFilePtr13func_02017b4cEj
+matched: yes</title></rect><rect x="211.24" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8ClsnFileC1Ej
 module: arm9
 addr: 0x02017b4c
 size: 24 bytes
@@ -2661,11 +2661,11 @@ matched: yes</title></rect><rect x="278.34" y="180.87" width="3.81" height="7.04
 module: arm9
 addr: 0x02017e0c
 size: 40 bytes
-matched: yes</title></rect><rect x="282.15" y="180.87" width="1.91" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13SharedFilePtr13func_02017e34Ev
+matched: yes</title></rect><rect x="282.15" y="180.87" width="1.91" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13SharedFilePtrD2Ev
 module: arm9
 addr: 0x02017e34
 size: 20 bytes
-matched: yes</title></rect><rect x="284.06" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13SharedFilePtr13func_02017e48Ej
+matched: yes</title></rect><rect x="284.06" y="180.87" width="2.29" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13SharedFilePtrC2Ej
 module: arm9
 addr: 0x02017e48
 size: 24 bytes
