@@ -1880,7 +1880,7 @@
       "requested": [],
       "deadstripped": [],
       "droppedSections": [
-        5
+        16
       ],
       "data": [
         "sEmptyInit"
