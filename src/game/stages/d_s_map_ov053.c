@@ -8,22 +8,6 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[6];
-    u32 tail[2];
-    u32 pad[3];
-} Clps_02112514;
-
-/* The ROM image carries a zero halfword of alignment padding after this record,
- * so it is written as part of the object. */
-typedef struct {
-    u16 minimapTile;
-    u16 pad;
-} MinimapTile;
-
 extern const u16 data_ov053_021111a0[2];
 extern const u16 data_ov053_021111a4[2];
 extern const u16 data_ov053_021111a8[2];
@@ -58,7 +42,7 @@ extern const u8 data_ov053_0211194c[540];
 extern const fx32 data_ov053_02111b68[151];
 extern const fx32 data_ov053_02111dc4[181];
 extern const fx32 data_ov053_02112098[181];
-extern MinimapTile data_ov053_02112380;
+extern u16 data_ov053_02112380[1];
 extern ObjTable data_ov053_02112384;
 extern ObjSubTable data_ov053_0211238c[1];
 extern char data_ov053_02112394[8];
@@ -81,41 +65,41 @@ extern BTA_File data_ov053_021124ac;
 extern BTA_File data_ov053_021124c4;
 extern ViewEntry data_ov053_021124dc[2];
 extern LevelRec data_ov053_021124f8;
-extern Clps_02112514 data_ov053_02112514;
-
-const fx32 data_ov053_021111d4[1] = {0x00001000};
-
-const u16 data_ov053_021111bc[2] = {0x0000, 0x0000};
-
-const u16 data_ov053_021111a8[2] = {0x0000, 0x0000};
-
-const u16 data_ov053_021111a4[2] = {0x0000, 0x0000};
-
-const u16 data_ov053_021111b8[2] = {0x0000, 0x0000};
-
-const u16 data_ov053_021111b0[2] = {0x0000, 0x0000};
-
-MinimapTile data_ov053_02112380 = {0x072d, 0x0000};
-
-const fx32 data_ov053_021111c0[1] = {0x00001000};
-
-const fx32 data_ov053_021111c4[1] = {0x00001000};
+extern CLPS_Block64 data_ov053_02112514;
 
 const fx32 data_ov053_021111d0[1] = {0x00001000};
 
-const u16 data_ov053_021111ac[2] = {0x0000, 0x0000};
+const u16 data_ov053_021111b8[2] = {0x0000, 0x0000};
 
-const fx32 data_ov053_021111cc[1] = {0x00001000};
-
-const fx32 data_ov053_021111d8[1] = {0x00001000};
+const fx32 data_ov053_021111d4[1] = {0x00001000};
 
 const u16 data_ov053_021111a0[2] = {0x0000, 0x0000};
 
 const u16 data_ov053_021111b4[2] = {0x0000, 0x0000};
 
-const fx32 data_ov053_021111dc[1] = {0x00001000};
+const u16 data_ov053_021111bc[2] = {0x0000, 0x0000};
+
+u16 data_ov053_02112380[1] = {0x072d};
+
+const u16 data_ov053_021111ac[2] = {0x0000, 0x0000};
+
+const fx32 data_ov053_021111c0[1] = {0x00001000};
+
+const fx32 data_ov053_021111cc[1] = {0x00001000};
+
+const u16 data_ov053_021111a8[2] = {0x0000, 0x0000};
 
 const fx32 data_ov053_021111c8[1] = {0x00001000};
+
+const u16 data_ov053_021111a4[2] = {0x0000, 0x0000};
+
+const fx32 data_ov053_021111dc[1] = {0x00001000};
+
+const u16 data_ov053_021111b0[2] = {0x0000, 0x0000};
+
+const fx32 data_ov053_021111d8[1] = {0x00001000};
+
+const fx32 data_ov053_021111c4[1] = {0x00001000};
 
 char data_ov053_02112394[8] = "gas_mat";
 
@@ -193,7 +177,7 @@ BTA_File data_ov053_02112464 = {30,
 
 ObjSubTable data_ov053_0211247c[3] = {
     {0x04, 0x02, {0x00, 0x00}, &data_ov053_021124dc[0]},
-    {0x0b, 0x01, {0x00, 0x00}, &data_ov053_02112380},
+    {0x0b, 0x01, {0x00, 0x00}, &data_ov053_02112380[0]},
     {0x01, 0x01, {0x00, 0x00}, &data_ov053_021123e4[0]},
 };
 
@@ -410,20 +394,17 @@ const fx32 data_ov053_021113c0[17] = {
     0x00000079, 0x0000036b, 0x00000079, 0xfffffd86, 0x00000079,
 };
 
-Clps_02112514 data_ov053_02112514 = {
+CLPS_Block64 data_ov053_02112514 = {
     0x53504c43,
-    8,
-    6,
-    {
-        {0x00030fc5, 0x000000ff},
-        {0x01030fc0, 0x000000ff},
-        {0x00038005, 0x000000ff},
-        {0x0003b005, 0x000000ff},
-        {0x00230fc0, 0x000000ff},
-        {0x02030fc0, 0x000000ff},
-    },
-    {0xffffffff, 0xffffffff},
-    {0x00000000, 0x00000000, 0x00000000},
+    0x0008,
+    0x0006,
+    {{0x00030fc5, 0x000000ff},
+     {0x01030fc0, 0x000000ff},
+     {0x00038005, 0x000000ff},
+     {0x0003b005, 0x000000ff},
+     {0x00230fc0, 0x000000ff},
+     {0x02030fc0, 0x000000ff},
+     {0xffffffff, 0xffffffff}},
 };
 
 const fx32 data_ov053_021114f8[61] = {

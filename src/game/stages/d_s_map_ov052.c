@@ -7,32 +7,17 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    u16 entries[1];
-    u16 pad;
-} KeyRotations1;
-
-typedef struct {
-    u16 value;
-    u16 pad;
-} ScalarEntryU16;
-
-typedef struct {
-    ExitEntry entries[1];
-    u16 pad;
-} ExitEntries1;
-
-extern const KeyRotations1 data_ov052_02111868;
+extern const u16 data_ov052_02111868[1];
 extern const fx32 data_ov052_0211186c[1];
 extern const BTAMaterialRecord data_ov052_02111870[1];
 extern const fx32 data_ov052_0211188c[182];
-extern ScalarEntryU16 data_ov052_02111c60;
+extern u16 data_ov052_02111c60[1];
 extern FogEntry data_ov052_02111c64[1];
 extern ObjTable data_ov052_02111c6c;
 extern ObjTable data_ov052_02111c74;
 extern char data_ov052_02111c7c[8];
 extern Area data_ov052_02111c84[1];
-extern ExitEntries1 data_ov052_02111c90;
+extern ExitEntry data_ov052_02111c90[1];
 extern ObjSubTable data_ov052_02111ca0[2];
 extern BTA_File data_ov052_02111cb0;
 extern LevelRec data_ov052_02111cc8;
@@ -45,8 +30,8 @@ extern SimpleEntry data_ov052_02111e04[16];
 extern CLPS_Block192 data_ov052_02111e84;
 extern StandardEntry data_ov052_02111f44[89];
 
-ScalarEntryU16 data_ov052_02111c60 = {0x0732, 0x0000};
-const KeyRotations1 data_ov052_02111868 = {{0x0000}, 0x0000};
+u16 data_ov052_02111c60[1] = {0x0732};
+const u16 data_ov052_02111868[1] = {0x0000};
 const fx32 data_ov052_0211186c[1] = {0x00001000};
 char data_ov052_02111c7c[8] = "gas_mat";
 FogEntry data_ov052_02111c64[1] = {{0x01, {0xaf, 0xaf, 0xaf}, 0x9470, 0xc350}};
@@ -54,8 +39,8 @@ ObjTable data_ov052_02111c6c = {0x0007, {0x00, 0x00}, &data_ov052_02111d34[0]};
 ObjTable data_ov052_02111c74 = {0x0002, {0x00, 0x00}, &data_ov052_02111ca0[0]};
 Area data_ov052_02111c84[1] = {
     {(struct ObjTable *)&data_ov052_02111c74, &data_ov052_02111cb0, 0x00, {0x00, 0x10, 0x27}}};
-ExitEntries1 data_ov052_02111c90 = {
-    {{0x0f6e, 0x1acd, (s16)0xebe2, (s16)0xc000, 0x0000, {0x2d, 0x00, 0x01, 0x55}}}, 0x0000};
+ExitEntry data_ov052_02111c90[1] = {
+    {0x0f6e, 0x1acd, (s16)0xebe2, (s16)0xc000, 0x0000, {0x2d, 0x00, 0x01, 0x55}}};
 ObjSubTable data_ov052_02111ca0[2] = {
     {0x00, 0x59, {0x00, 0x00}, &data_ov052_02111f44[0]},
     {0x05, 0x10, {0x00, 0x00}, &data_ov052_02111e04[0]},
@@ -101,10 +86,10 @@ ObjSubTable data_ov052_02111d34[7] = {
     {0x02, 0x10, {0x00, 0x00}, &data_ov052_02111da4[0]},
     {0x03, 0x08, {0x00, 0x00}, &data_ov052_02111d04[0]},
     {0x04, 0x04, {0x00, 0x00}, &data_ov052_02111d6c[0]},
-    {0x0b, 0x01, {0x00, 0x00}, &data_ov052_02111c60},
+    {0x0b, 0x01, {0x00, 0x00}, &data_ov052_02111c60[0]},
     {0x01, 0x02, {0x00, 0x00}, &data_ov052_02111ce4[0]},
     {0x08, 0x01, {0x00, 0x00}, &data_ov052_02111c64[0]},
-    {0x0a, 0x01, {0x00, 0x00}, &data_ov052_02111c90},
+    {0x0a, 0x01, {0x00, 0x00}, &data_ov052_02111c90[0]},
 };
 ViewEntry data_ov052_02111d6c[4] = {
     {0x02, 0xff, (s16)0xf128, 0x1674, 0x203a, {0x00, 0x00}, (s16)0x8000, 0x0000},

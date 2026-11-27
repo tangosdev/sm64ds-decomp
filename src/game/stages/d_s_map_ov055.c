@@ -6,23 +6,9 @@
 
 /* Definition order is what makes the compiler's size sort match address order. */
 
-/* The 6-byte table is followed by two zero bytes before the
- * next object, so the padding is written as part of the object. */
-typedef struct {
-    struct PathDef entries[1];
-    u16 pad;
-} PathDefs1;
-
-/* The ROM image carries a zero halfword of alignment padding after these
- * records, so it is written as part of the object. */
-typedef struct {
-    u16 value;
-    u16 pad;
-} ScalarEntryU16;
-
-extern ScalarEntryU16 data_ov055_02111920;
-extern ScalarEntryU16 data_ov055_02111924;
-extern PathDefs1 data_ov055_02111928;
+extern u16 data_ov055_02111920[1];
+extern u16 data_ov055_02111924[1];
+extern struct PathDef data_ov055_02111928[1];
 extern ObjTable data_ov055_02111930;
 extern ObjTable data_ov055_02111938;
 extern Area data_ov055_02111940[1];
@@ -36,16 +22,13 @@ extern StandardEntry data_ov055_021119d0[3];
 extern ObjSubTable data_ov055_02111a00[6];
 extern SimpleEntry data_ov055_02111a30[12];
 
-ScalarEntryU16 data_ov055_02111920 = {0x071f, 0x0000};
+u16 data_ov055_02111924[1] = {0x0a28};
 
-ScalarEntryU16 data_ov055_02111924 = {0x0a28, 0x0000};
+u16 data_ov055_02111920[1] = {0x071f};
 
 ObjTable data_ov055_02111930 = {0x0002, {0x00, 0x00}, &data_ov055_02111958[0]};
 
-PathDefs1 data_ov055_02111928 = {
-    {{0x0000, 0x02, 0xff, 0x00, 0x00}},
-    0x0000,
-};
+struct PathDef data_ov055_02111928[1] = {{0x0000, 0x02, 0xff, 0x00, 0x00}};
 
 ObjTable data_ov055_02111938 = {0x0006, {0x00, 0x00}, &data_ov055_02111a00[0]};
 
@@ -99,11 +82,11 @@ StandardEntry data_ov055_021119d0[3] = {
 
 ObjSubTable data_ov055_02111a00[6] = {
     {0x02, 0x02, {0x00, 0x00}, &data_ov055_0211194c[0]},
-    {0x03, 0x01, {0x00, 0x00}, &data_ov055_02111928.entries[0]},
+    {0x03, 0x01, {0x00, 0x00}, &data_ov055_02111928[0]},
     {0x04, 0x02, {0x00, 0x00}, &data_ov055_02111978[0]},
-    {0x0b, 0x01, {0x00, 0x00}, &data_ov055_02111920},
+    {0x0b, 0x01, {0x00, 0x00}, &data_ov055_02111920[0]},
     {0x01, 0x01, {0x00, 0x00}, &data_ov055_02111968[0]},
-    {0x0c, 0x01, {0x00, 0x00}, &data_ov055_02111924},
+    {0x0c, 0x01, {0x00, 0x00}, &data_ov055_02111924[0]},
 };
 
 SimpleEntry data_ov055_02111a30[12] = {
