@@ -725,7 +725,7 @@
       "address": "0x02140850",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "ring model handle, file 0x21a; the static initializer constructs it through func_02017acc and registers func_02017ab4"
+      "evidence": "ring model handle, file 0x21a; the static initializer constructs it through _ZN9ModelFileC1Ej and registers _ZN9ModelFileD1Ev"
     },
     {
       "symbol": "sTrmpItemRingBModelFile",
@@ -923,7 +923,7 @@
     "Re-keyed 2026-11-13: moving Vector2Math.h to the top (its C declarations now live there) and including Trmp2Spinner.h/dScMgD3DBase_c.h shift the compiler-temp rows +268 before the old include point and +267 after it; object measured, every non-strtab section byte-identical.",
     "Fold of the whole 0x020cd744..0x020d1018 linker unit with its static initializer, ctor word and .bss; rodata and data stay in the ROM image.",
     "include/types.h gives Vector3 an empty inline destructor, so this TU emits _ZN7Vector3D1Ev; it is licensed as a deadstrip duplicate of the arm9 copy. TrmpLine_Build's frame needs a second four-byte type with a declared destructor (Spare4, file-local to this TU), whose empty destructor is emitted with vague linkage and deadstripped.",
-    "2026-10-27 static-initializer fold: the nine hand-built function-local unit vectors (guard test, three stores, __register_global_object with ~Vector3, guard set) in TrmpItem_MotionSpinHover, _MotionSpinDrift, _MotionSpinSway, _MotionSpin and TrmpItem_Init are now `static Vector3 sUnitY(0, 0x1000, 0)` / `sUnitZ(0, 0, 0x1000)`. The file defines its globals, `TrmpLine sTrmpLines[4]` (mwcc emits the __arraydtor that was TrmpLine_CleanupAll) and the three ring handles as `TrmpItemRingModelFile`, a local SharedFilePtr wrapper whose constructor and destructor alias func_02017acc and func_02017ab4 (the daObj1UpLogo_c shape). mwcc emits __sinit_unit020cd744.cpp byte- and relocation-identical to the retired src/unnamed/ov006/__sinit_ov006_0212fc7c.c. TrmpLine's constructor and destructor are defined inline in this file: mwcc emits used inline bodies at the end of the object, after the initializer and __arraydtor, which is the ROM order (__arraydtor 0x020d0fe4, D1 0x020d1008, C1 0x020d100c). Out-of-line bodies came first and also emitted C2/D2, which no longer need deadstrip rows. Every compiled guard, storage and node name was paired with its ROM address through the object's relocation at the same offset as the retail reference. symbols.txt carries the compiled names; the twelve nodes whose @N is already taken elsewhere are renamed to free same-length numbers (defined_symbol_renames).",
+    "2026-10-27 static-initializer fold: the nine hand-built function-local unit vectors (guard test, three stores, __register_global_object with ~Vector3, guard set) in TrmpItem_MotionSpinHover, _MotionSpinDrift, _MotionSpinSway, _MotionSpin and TrmpItem_Init are now `static Vector3 sUnitY(0, 0x1000, 0)` / `sUnitZ(0, 0, 0x1000)`. The file defines its globals, `TrmpLine sTrmpLines[4]` (mwcc emits the __arraydtor that was TrmpLine_CleanupAll) and the three ring handles as `TrmpItemRingModelFile`, a local SharedFilePtr wrapper whose constructor and destructor alias _ZN9ModelFileC1Ej and _ZN9ModelFileD1Ev (the daObj1UpLogo_c shape). mwcc emits __sinit_unit020cd744.cpp byte- and relocation-identical to the retired src/unnamed/ov006/__sinit_ov006_0212fc7c.c. TrmpLine's constructor and destructor are defined inline in this file: mwcc emits used inline bodies at the end of the object, after the initializer and __arraydtor, which is the ROM order (__arraydtor 0x020d0fe4, D1 0x020d1008, C1 0x020d100c). Out-of-line bodies came first and also emitted C2/D2, which no longer need deadstrip rows. Every compiled guard, storage and node name was paired with its ROM address through the object's relocation at the same offset as the retail reference. symbols.txt carries the compiled names; the twelve nodes whose @N is already taken elsewhere are renamed to free same-length numbers (defined_symbol_renames).",
     "PMF LITERAL CLAIM (2026-11-17): TrmpItem::mState and TrmpLine::mState are real void (Class::*)() members (include/TrmpItem.h, include/TrmpLine.h). The setters assign &Class::X, the updates call (this->*mState)(), and ReflectOffLine/HitTest2D compare with plain == (mwcc expands each to the fn/adjustment/null test the source used to spell out). The old note that a real member pointer breaks TrmpItem::Update is falsified: 59/59 MATCH. Each &Class::X is its own {fn, 0} .data constant: 17 at .data 0x0213b31c..0x0213b3a4, paired by consumer and handler. All 32 compiler-numbered pins were re-paired by consumer relocation (numbers moved both ways, so present names were re-paired too)."
   ],
   "verification": {
@@ -1454,14 +1454,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN21TrmpItemRingModelFileC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the ring-model wrapper constructor exact PC24 relocation (the daObj1UpLogo_c OneUpLogoModelFile shape)"
     },
     {
       "symbol": "_ZN21TrmpItemRingModelFileD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the ring-model wrapper destructor exact ABS32 relocation"
@@ -2056,7 +2056,7 @@
       "source": "0x0212fcb8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -2076,7 +2076,7 @@
       "source": "0x0212fcd4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -2096,7 +2096,7 @@
       "source": "0x0212fcf0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -2176,7 +2176,7 @@
       "source": "0x0212fd2c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"

@@ -139,7 +139,7 @@
     }
   ],
   "notes": [
-    "FOLDED 2026-11-29: __sinit_ov064_0211b698 folded in from src/unnamed/ov064. Three 8-byte file-scope resource handles -- one ShellModelFilePtr (ctor func_02017acc, dtor func_02017ab4) and two ShellAnimationFilePtr (ctor SharedFilePtr::Construct, dtor SharedFilePtr_Destruct_Anim) -- defined at the end of the TU in construction order (model 1164, lunge anim 1166, idle anim 1165). Wrapper ctor/dtor symbols are aliased to the retail functions through undefined_symbol_aliases. The three destructor-registration nodes emit as @360/@361/@362 and are renamed to @88/@89/@90 (ov023 owns @360 and ov036 owns @361/@362 on main). Claims: .init 0x0211b698..0x0211b72c, .ctor 0x0211b754..0x0211b758, .bss 0x0211c9bc..0x0211c9f8 (3 handles + 3 dtor nodes).",
+    "FOLDED 2026-11-29: __sinit_ov064_0211b698 folded in from src/unnamed/ov064. Three 8-byte file-scope resource handles -- one ShellModelFilePtr (ctor _ZN9ModelFileC1Ej, dtor _ZN9ModelFileD1Ev) and two ShellAnimationFilePtr (ctor _ZN8AnimFileC1Ej, dtor _ZN8AnimFileD1Ev) -- defined at the end of the TU in construction order (model 1164, lunge anim 1166, idle anim 1165). Wrapper ctor/dtor symbols are aliased to the retail functions through undefined_symbol_aliases. The three destructor-registration nodes emit as @360/@361/@362 and are renamed to @88/@89/@90 (ov023 owns @360 and ov036 owns @361/@362 on main). Claims: .init 0x0211b698..0x0211b72c, .ctor 0x0211b754..0x0211b758, .bss 0x0211c9bc..0x0211c9f8 (3 handles + 3 dtor nodes).",
     "Consolidates the seven daObjShell_c one-function sources plus the class factory into one translation unit. The destructor is inline in include/daObjShell_c.h so mwccarm emits D1 before D0, the cartridge's own order, and no leaf D2.",
     "daObjShell_c::UpdateModelTransform at 0x0211a9b4 is this TU's own helper. The cartridge records no name for it; it is named after its structural twin daObjTbox_c::UpdateModelTransform in the same overlay.",
     "Class identity is the ROM's own, not coined: _ZTS12daObjShell_c at 0x0211c594 holds the literal \"12daObjShell_c\", _ZTI12daObjShell_c at 0x0211c588 is an __si_class_type_info record naming _ZTI8dActor_c (arm9:0x0208e390) as its single direct base at offset zero, and _ZTV12daObjShell_c at 0x0211c5c8 is a 31-slot table overriding slots 0, 3, 6, 9, 16 and 17.",
@@ -408,28 +408,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN17ShellModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail model-handle construction destination and the SharedFilePtr model family identity"
     },
     {
       "symbol": "_ZN17ShellModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the SharedFilePtr model family identity"
     },
     {
       "symbol": "_ZN21ShellAnimationFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x0201799c",
       "evidence": "retail animation-handle construction destination and the SharedFilePtr animation family identity"
     },
     {
       "symbol": "_ZN21ShellAnimationFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
       "evidence": "retail destructor registration destination and the SharedFilePtr animation family identity"
@@ -500,7 +500,7 @@
       "source": "0x0211b6a8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -520,7 +520,7 @@
       "source": "0x0211b6c4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -540,7 +540,7 @@
       "source": "0x0211b6e0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -570,7 +570,7 @@
       "source": "0x0211b708",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -600,7 +600,7 @@
       "source": "0x0211b718",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017984"

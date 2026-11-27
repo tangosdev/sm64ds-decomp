@@ -1055,28 +1055,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN14PgBbyModelFileC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "Native local wrapper lifecycle or compiler runtime call; exact retail initializer PC24/ABS32 destination and existing SharedFilePtr implementation"
     },
     {
       "symbol": "_ZN14PgBbyModelFileD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "Native local wrapper lifecycle or compiler runtime call; exact retail initializer PC24/ABS32 destination and existing SharedFilePtr implementation"
     },
     {
       "symbol": "_ZN18PgBbyAnimationFileC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x0201799c",
       "evidence": "Native local wrapper lifecycle or compiler runtime call; exact retail initializer PC24/ABS32 destination and existing SharedFilePtr implementation"
     },
     {
       "symbol": "_ZN18PgBbyAnimationFileD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
       "evidence": "Native local wrapper lifecycle or compiler runtime call; exact retail initializer PC24/ABS32 destination and existing SharedFilePtr implementation"
@@ -1376,7 +1376,7 @@
       "source": "0x02122424",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1396,7 +1396,7 @@
       "source": "0x02122440",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1416,7 +1416,7 @@
       "source": "0x0212245c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1436,7 +1436,7 @@
       "source": "0x02122478",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1456,7 +1456,7 @@
       "source": "0x02122494",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1476,7 +1476,7 @@
       "source": "0x021224b0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1546,7 +1546,7 @@
       "source": "0x0212266c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1576,7 +1576,7 @@
       "source": "0x0212267c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017984"

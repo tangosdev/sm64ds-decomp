@@ -1030,21 +1030,12 @@
         "_ZN12MascotWalkerD2Ev",
         "_ZN6DealerC2Ev",
         "_ZN6DealerD2Ev",
-        "_ZN18DealerModelFilePtrD1Ev",
-        "_ZN25DealerAnimationFileHandleD1Ev",
-        "_ZN24MascotWalkerModelFilePtrD1Ev",
-        "_ZN31MascotWalkerAnimationFileHandleD1Ev",
         "_ZN12FallingPetalC2Ev",
         "_ZN12FallingPetalD2Ev",
         "_ZN10FlowerFaceC2Ev",
         "_ZN10FlowerFaceD2Ev",
-        "_ZN22FlowerFaceModelFilePtrD1Ev",
-        "_ZN29FlowerFaceAnimationFileHandleD1Ev",
         "_ZN9PresenterC2Ev",
         "_ZN9PresenterD2Ev",
-        "_ZN21PresenterModelFilePtrD1Ev",
-        "_ZN28PresenterAnimationFileHandleD1Ev",
-        "_ZN25PresenterTexSeqFileHandleD1Ev",
         "_ZN6MascotC2Ev",
         "_ZN6MascotD2Ev"
       ],
@@ -1055,15 +1046,6 @@
         "_ZN12FallingPetalD2Ev",
         "_ZN12MascotWalkerC2Ev",
         "_ZN12MascotWalkerD2Ev",
-        "_ZN18DealerModelFilePtrD1Ev",
-        "_ZN21PresenterModelFilePtrD1Ev",
-        "_ZN22FlowerFaceModelFilePtrD1Ev",
-        "_ZN24MascotWalkerModelFilePtrD1Ev",
-        "_ZN25DealerAnimationFileHandleD1Ev",
-        "_ZN25PresenterTexSeqFileHandleD1Ev",
-        "_ZN28PresenterAnimationFileHandleD1Ev",
-        "_ZN29FlowerFaceAnimationFileHandleD1Ev",
-        "_ZN31MascotWalkerAnimationFileHandleD1Ev",
         "_ZN6DealerC2Ev",
         "_ZN6DealerD2Ev",
         "_ZN6MascotC2Ev",
@@ -1073,49 +1055,31 @@
         "_ZN9PresenterD2Ev"
       ],
       "droppedSections": [
-        22,
-        39,
-        40,
-        45,
-        46,
-        47,
-        48,
-        49,
-        50,
-        96,
-        97,
-        102,
-        103,
-        104,
-        105,
-        106,
-        107,
-        120,
-        121,
-        126,
-        127,
-        170,
-        171,
-        176,
-        177,
-        178,
-        179,
-        180,
-        181,
-        182,
-        183,
-        219,
-        220,
+        76,
+        93,
+        94,
+        99,
+        100,
+        146,
+        147,
+        152,
+        153,
+        166,
+        167,
+        172,
+        173,
+        216,
+        217,
+        222,
         223,
-        224,
-        229,
-        230,
-        231,
-        232,
-        233,
-        234,
-        237,
-        238
+        259,
+        260,
+        263,
+        264,
+        269,
+        270,
+        273,
+        274
       ],
       "data": [],
       "dataExternalized": [],
@@ -1907,26 +1871,6 @@
       "reason": "Base-object destructor emitted beside D1 by the out-of-line Dealer::~Dealer(). The cartridge carries only D1 at 0x020c1c64 (size 0x11c), followed directly by C1 at 0x020c1d80, so the image has no room for a D2. Homeless and unreferenced, so a plain deadstrip."
     },
     {
-      "symbol": "_ZN18DealerModelFilePtrD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Out-of-line vague-linkage copy of the inline DealerModelFilePtr destructor this source defines over func_02017ab4. mwccarm emits it once a member of the type is destroyed, but Dealer's D1 inlines the call (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
-    },
-    {
-      "symbol": "_ZN25DealerAnimationFileHandleD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Out-of-line vague-linkage copy of the inline DealerAnimationFileHandle destructor this source defines over SharedFilePtr_Destruct_Anim. mwccarm emits it once a member of the type is destroyed, but Dealer's D1 inlines all thirteen calls (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
-    },
-    {
-      "symbol": "_ZN24MascotWalkerModelFilePtrD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Out-of-line vague-linkage copy of the inline MascotWalkerModelFilePtr destructor this source defines over func_02017ab4. mwccarm emits it once a member of the type is destroyed, but MascotWalker's D1 inlines the call (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
-    },
-    {
-      "symbol": "_ZN31MascotWalkerAnimationFileHandleD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Out-of-line vague-linkage copy of the inline MascotWalkerAnimationFileHandle destructor this source defines over SharedFilePtr_Destruct_Anim. mwccarm emits it once a member of the type is destroyed, but MascotWalker's D1 inlines both calls (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
-    },
-    {
       "symbol": "_ZN12FallingPetalC2Ev",
       "disposition": "deadstrip",
       "reason": "Base-object constructor emitted beside C1 by the out-of-line FallingPetal::FallingPetal(). The cartridge carries only C1 at 0x020c402c (size 0x1c), the last function of the unit, and FallingPetal is only ever constructed as an element of FlowerFace::mPetals (through __cxa_vec_ctor, which takes C1), so C2 has no ROM home. Homeless and unreferenced, so a plain deadstrip."
@@ -1947,16 +1891,6 @@
       "reason": "Base-object destructor emitted beside D1 by the out-of-line FlowerFace::~FlowerFace(). The cartridge carries only D1 at 0x020c3e70 (size 0xe4), followed directly by C1 at 0x020c3f54, so the image has no room for a D2. Homeless and unreferenced, so a plain deadstrip."
     },
     {
-      "symbol": "_ZN22FlowerFaceModelFilePtrD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Out-of-line vague-linkage copy of the inline FlowerFaceModelFilePtr destructor this source defines over func_02017ab4. mwccarm emits it once a member of the type is destroyed, but FlowerFace's D1 inlines both calls (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
-    },
-    {
-      "symbol": "_ZN29FlowerFaceAnimationFileHandleD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Out-of-line vague-linkage copy of the inline FlowerFaceAnimationFileHandle destructor this source defines over SharedFilePtr_Destruct_Anim. mwccarm emits it once a member of the type is destroyed, but FlowerFace's D1 inlines all four calls (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
-    },
-    {
       "symbol": "_ZN9PresenterC2Ev",
       "disposition": "deadstrip",
       "reason": "Base-object constructor emitted beside C1 by the out-of-line Presenter::Presenter(). The cartridge carries only C1 at 0x020c33dc (size 0x14c), followed directly by FallingPetal_UpdateMatrix at 0x020c3528, and the cup and sound scenes construct Presenter only as a complete member, so C2 has no ROM home. Homeless and unreferenced, so a plain deadstrip."
@@ -1965,21 +1899,6 @@
       "symbol": "_ZN9PresenterD2Ev",
       "disposition": "deadstrip",
       "reason": "Base-object destructor emitted beside D1 by the out-of-line Presenter::~Presenter(). The cartridge carries only D1 at 0x020c3288 (size 0x154), followed directly by C1 at 0x020c33dc, so the image has no room for a D2. Homeless and unreferenced, so a plain deadstrip."
-    },
-    {
-      "symbol": "_ZN21PresenterModelFilePtrD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Out-of-line vague-linkage copy of the inline PresenterModelFilePtr destructor this source defines over func_02017ab4. mwccarm emits it once a member of the type is destroyed, but Presenter's D1 inlines both calls (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
-    },
-    {
-      "symbol": "_ZN28PresenterAnimationFileHandleD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Out-of-line vague-linkage copy of the inline PresenterAnimationFileHandle destructor this source defines over SharedFilePtr_Destruct_Anim. mwccarm emits it once a member of the type is destroyed, but Presenter's D1 inlines all eight calls (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
-    },
-    {
-      "symbol": "_ZN25PresenterTexSeqFileHandleD1Ev",
-      "disposition": "deadstrip",
-      "reason": "Out-of-line vague-linkage copy of the inline PresenterTexSeqFileHandle destructor this source defines over SharedFilePtr_Destruct_TexSeq. mwccarm emits it once a member of the type is destroyed, but Presenter's D1 inlines all eight calls (relocation destinations clean) and no relocation in the object names it. The coined class has no ROM home, so a plain deadstrip."
     },
     {
       "symbol": "_ZN6MascotC2Ev",
@@ -2177,154 +2096,154 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "sAxis$698",
+      "from": "sAxis$590",
       "to": "sAxis$543",
-      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from sAxis$658 to sAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from sAxis$657 to sAxis$649 (same symtab index 194, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from sAxis$649 to sAxis$657 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from sAxis$657 to sAxis$653 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 194, whose section, offset, size, type and binding agree with the base object. Re-keyed from sAxis$653 to sAxis$656 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from sAxis$653 to sAxis$648 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from sAxis$653 to sAxis$621 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sAxis$619 to sAxis$622 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from sAxis$622 to sAxis$635 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering. Re-keyed from sAxis$629 to sAxis$666 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sAxis$666 to sAxis$678 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sAxis$678 to sAxis$691 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sAxis$691 to sAxis$687 when the four records' mState became real member pointers, the StateSlot/VolatileStateSlot views and the launders around them were retired, and the three IsIdle tests returned their comparison directly (paired by consumer relocation). Re-keyed from sAxis$687 to sAxis$696 when the 27 state constants became &Class::State member-pointer literals of this unit (measured from the compiled object). Re-keyed to sAxis$698 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from sAxis$658 to sAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from sAxis$657 to sAxis$649 (same symtab index 194, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from sAxis$649 to sAxis$657 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from sAxis$657 to sAxis$653 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 194, whose section, offset, size, type and binding agree with the base object. Re-keyed from sAxis$653 to sAxis$656 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from sAxis$653 to sAxis$648 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from sAxis$653 to sAxis$621 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from sAxis$619 to sAxis$622 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from sAxis$622 to sAxis$635 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering. Re-keyed from sAxis$629 to sAxis$666 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sAxis$666 to sAxis$678 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sAxis$678 to sAxis$691 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from sAxis$691 to sAxis$687 when the four records' mState became real member pointers, the StateSlot/VolatileStateSlot views and the launders around them were retired, and the three IsIdle tests returned their comparison directly (paired by consumer relocation). Re-keyed from sAxis$687 to sAxis$696 when the 27 state constants became &Class::State member-pointer literals of this unit (measured from the compiled object). Re-keyed to sAxis$698 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from sAxis$698 to sAxis$590 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "_ZGVsAxis$698",
+      "from": "_ZGVsAxis$590",
       "to": "_ZGVsAxis$543",
-      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from _ZGVsAxis$658 to _ZGVsAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from _ZGVsAxis$657 to _ZGVsAxis$649 (same symtab index 192, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from _ZGVsAxis$649 to _ZGVsAxis$657 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from _ZGVsAxis$657 to _ZGVsAxis$653 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 192, whose section, offset, size, type and binding agree with the base object. Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$656 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$648 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$621 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsAxis$619 to _ZGVsAxis$622 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from _ZGVsAxis$622 to _ZGVsAxis$635 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering. Re-keyed from _ZGVsAxis$629 to _ZGVsAxis$666 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsAxis$666 to _ZGVsAxis$678 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsAxis$678 to _ZGVsAxis$691 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsAxis$691 to _ZGVsAxis$687 when the four records' mState became real member pointers, the StateSlot/VolatileStateSlot views and the launders around them were retired, and the three IsIdle tests returned their comparison directly (paired by consumer relocation). Re-keyed from _ZGVsAxis$687 to _ZGVsAxis$696 when the 27 state constants became &Class::State member-pointer literals of this unit (measured from the compiled object). Re-keyed to _ZGVsAxis$698 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from _ZGVsAxis$658 to _ZGVsAxis$657 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from _ZGVsAxis$657 to _ZGVsAxis$649 (same symtab index 192, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from _ZGVsAxis$649 to _ZGVsAxis$657 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from _ZGVsAxis$657 to _ZGVsAxis$653 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 192, whose section, offset, size, type and binding agree with the base object. Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$656 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$648 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from _ZGVsAxis$653 to _ZGVsAxis$621 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from _ZGVsAxis$619 to _ZGVsAxis$622 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from _ZGVsAxis$622 to _ZGVsAxis$635 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering. Re-keyed from _ZGVsAxis$629 to _ZGVsAxis$666 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsAxis$666 to _ZGVsAxis$678 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsAxis$678 to _ZGVsAxis$691 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from _ZGVsAxis$691 to _ZGVsAxis$687 when the four records' mState became real member pointers, the StateSlot/VolatileStateSlot views and the launders around them were retired, and the three IsIdle tests returned their comparison directly (paired by consumer relocation). Re-keyed from _ZGVsAxis$687 to _ZGVsAxis$696 when the 27 state constants became &Class::State member-pointer literals of this unit (measured from the compiled object). Re-keyed to _ZGVsAxis$698 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from _ZGVsAxis$698 to _ZGVsAxis$590 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@701",
+      "from": "@593",
       "to": "@546",
-      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from @661 to @660 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from @660 to @652 (same symtab index 193, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @652 to @660 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from @660 to @656 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 193, whose section, offset, size, type and binding agree with the base object. Re-keyed from @656 to @659 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @656 to @651 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from @656 to @624 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @622 to @625 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from @625 to @638 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering. Re-keyed from @632 to @669 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @669 to @681 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @681 to @694 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @694 to @690 when the four records' mState became real member pointers, the StateSlot/VolatileStateSlot views and the launders around them were retired, and the three IsIdle tests returned their comparison directly (paired by consumer relocation). Re-keyed from @690 to @699 when the 27 state constants became &Class::State member-pointer literals of this unit (measured from the compiled object). Re-keyed to @701 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "compiler-local numbering; including dScMgBase_c.h (for gMgScene's real type, replacing the TU-local vtable-slot view V) advances this TU's per-TU uniquifier by 115; same section, size and FallingPetal_Spawn relocation, licensed under the existing pin. Re-keyed from @661 to @660 when two namespace-local anonymous POD vector typedefs were retired for VecFx32 (#4570). Re-keyed from @660 to @652 (same symtab index 193, every non-strtab section identical) after include/MgCamera.h typed the minigame camera. Re-keyed from @652 to @660 when the camera and petal code read the angle table through nitro/fx/fx_trig.h (#821). Re-keyed from @660 to @656 when FlowerFace_Update's hand-decoded member-pointer call became a real ->* call, MascotWalker_Update's padded offset view gave way to MascotWalker and its walk-path byte offsets to a WalkPath view, and unused local typedefs were dropped (#821 batch 52); paired by symtab index 193, whose section, offset, size, type and binding agree with the base object. Re-keyed from @656 to @659 when the TU included nitro/gx/gx_bgcnt.h for the NitroSDK BG getters (measured from the compiled object). Re-keyed from @656 to @651 when the TU's coined G3X/G3i/G2x declarations gave way to the NitroSDK prototypes in nitro/gx/g3x.h, g3_util.h and g2.h (measured from the compiled object). Re-keyed from @656 to @624 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @622 to @625 when G2_GetOBJCharPtr moved into nitro/gx/gx_bgcnt.h beside G2S_GetOBJCharPtr (measured from the compiled object). Re-keyed from @625 to @638 when the TU took NitroSDK's G3_LightVector/G3_LightColor from nitro/gx/g3imm_light.h (measured from the compiled object). Re-keyed onto the batch-4 cleanup after the merge with main: the per-function namespaces are gone, the state records are typed, the record parameters are retyped, and the TU takes NitroSDK G3_LightVector/G3_LightColor and math/CalcLib.h + math/MtxStack.h (measured from the compiled object). Re-keyed from sAxis$701 / _ZGVsAxis$701 / @704 to sAxis$629 / _ZGVsAxis$629 / @632 when the six record classes stopped being free functions and became real methods: the method declarations in the class headers move this TU's file-local type numbering. Re-keyed from @632 to @669 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @669 to @681 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @681 to @694 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @694 to @690 when the four records' mState became real member pointers, the StateSlot/VolatileStateSlot views and the launders around them were retired, and the three IsIdle tests returned their comparison directly (paired by consumer relocation). Re-keyed from @690 to @699 when the 27 state constants became &Class::State member-pointer literals of this unit (measured from the compiled object). Re-keyed to @701 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @701 to @593 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@1139",
+      "from": "@1031",
       "to": "pmf_Dealer_StateDeal",
-      "evidence": "Compiler PMF literal: Dealer::StartDeal uses &Dealer::StateDeal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartDeal+0x98 loads 0x0213ac48 in the ROM) and by its own relocation target (Dealer::StateDeal at 0x020c11c0). Re-keyed from @1139 to @1137 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1139 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Dealer::StartDeal uses &Dealer::StateDeal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartDeal+0x98 loads 0x0213ac48 in the ROM) and by its own relocation target (Dealer::StateDeal at 0x020c11c0). Re-keyed from @1139 to @1137 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1139 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1139 to @1031 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@1066",
+      "from": "@958",
       "to": "pmf_Dealer_StateIdle",
-      "evidence": "Compiler PMF literal: Dealer::PlayIdle uses &Dealer::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::PlayIdle+0x9c loads 0x0213ac50 in the ROM) and by its own relocation target (Dealer::StateIdle at 0x020c1760). Re-keyed from @1066 to @1064 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1066 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Dealer::PlayIdle uses &Dealer::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::PlayIdle+0x9c loads 0x0213ac50 in the ROM) and by its own relocation target (Dealer::StateIdle at 0x020c1760). Re-keyed from @1066 to @1064 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1066 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1066 to @958 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@1075",
+      "from": "@967",
       "to": "pmf_Dealer_StateIdle_2",
-      "evidence": "Compiler PMF literal: Dealer::IsIdle uses &Dealer::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsIdle+0x44 loads 0x0213ac58 in the ROM) and by its own relocation target (Dealer::StateIdle at 0x020c1760). Re-keyed from @1075 to @1073 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1075 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Dealer::IsIdle uses &Dealer::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsIdle+0x44 loads 0x0213ac58 in the ROM) and by its own relocation target (Dealer::StateIdle at 0x020c1760). Re-keyed from @1075 to @1073 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1075 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1075 to @967 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@1106",
+      "from": "@998",
       "to": "pmf_Dealer_StateShuffle",
-      "evidence": "Compiler PMF literal: Dealer::StartShuffle uses &Dealer::StateShuffle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartShuffle+0xac loads 0x0213ac60 in the ROM) and by its own relocation target (Dealer::StateShuffle at 0x020c14bc). Re-keyed from @1106 to @1104 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1106 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
-    },
-    {
-      "from": "@1371",
-      "to": "pmf_MascotWalker_StateWalk",
-      "evidence": "Compiler PMF literal: MascotWalker::StartNextPath uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StartNextPath+0x15c loads 0x0213ac68 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364). Re-keyed from @1373 to @1371 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1373 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1373 to @1371 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
-    },
-    {
-      "from": "@1405",
-      "to": "pmf_MascotWalker_StatePause",
-      "evidence": "Compiler PMF literal: MascotWalker::StartPause uses &MascotWalker::StatePause, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StartPause+0x5c loads 0x0213ac70 in the ROM) and by its own relocation target (MascotWalker::StatePause at 0x020c0264). Re-keyed from @1407 to @1405 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1407 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1407 to @1405 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
-    },
-    {
-      "from": "@1333",
-      "to": "pmf_MascotWalker_StateWalk_2",
-      "evidence": "Compiler PMF literal: MascotWalker::Update uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::Update+0x140 loads 0x0213ac78 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364). Re-keyed from @1335 to @1333 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1335 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1335 to @1333 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
-    },
-    {
-      "from": "@1277",
-      "to": "pmf_Dealer_StateWin",
-      "evidence": "Compiler PMF literal: Dealer::PlayWin uses &Dealer::StateWin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::PlayWin+0x64 loads 0x0213ac80 in the ROM) and by its own relocation target (Dealer::StateWin at 0x020c0b74). Re-keyed from @1279 to @1277 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1279 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1279 to @1277 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
-    },
-    {
-      "from": "@1413",
-      "to": "pmf_MascotWalker_StateWalk_3",
-      "evidence": "Compiler PMF literal: MascotWalker::StatePause uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StatePause+0x9c loads 0x0213ac88 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364). Re-keyed from @1415 to @1413 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1415 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1415 to @1413 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
-    },
-    {
-      "from": "@1086",
-      "to": "pmf_Dealer_StateIdle_3",
-      "evidence": "Compiler PMF literal: Dealer::IsIdleAtRest uses &Dealer::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsIdleAtRest+0x60 loads 0x0213ac90 in the ROM) and by its own relocation target (Dealer::StateIdle at 0x020c1760). Re-keyed from @1086 to @1084 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1086 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Dealer::StartShuffle uses &Dealer::StateShuffle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartShuffle+0xac loads 0x0213ac60 in the ROM) and by its own relocation target (Dealer::StateShuffle at 0x020c14bc). Re-keyed from @1106 to @1104 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1106 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1106 to @998 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@1263",
+      "to": "pmf_MascotWalker_StateWalk",
+      "evidence": "Compiler PMF literal: MascotWalker::StartNextPath uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StartNextPath+0x15c loads 0x0213ac68 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364). Re-keyed from @1373 to @1371 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1373 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1373 to @1371 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object). Re-keyed from @1371 to @1263 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
+    },
+    {
+      "from": "@1297",
+      "to": "pmf_MascotWalker_StatePause",
+      "evidence": "Compiler PMF literal: MascotWalker::StartPause uses &MascotWalker::StatePause, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StartPause+0x5c loads 0x0213ac70 in the ROM) and by its own relocation target (MascotWalker::StatePause at 0x020c0264). Re-keyed from @1407 to @1405 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1407 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1407 to @1405 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object). Re-keyed from @1405 to @1297 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
+    },
+    {
+      "from": "@1225",
+      "to": "pmf_MascotWalker_StateWalk_2",
+      "evidence": "Compiler PMF literal: MascotWalker::Update uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::Update+0x140 loads 0x0213ac78 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364). Re-keyed from @1335 to @1333 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1335 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1335 to @1333 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object). Re-keyed from @1333 to @1225 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
+    },
+    {
+      "from": "@1169",
+      "to": "pmf_Dealer_StateWin",
+      "evidence": "Compiler PMF literal: Dealer::PlayWin uses &Dealer::StateWin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::PlayWin+0x64 loads 0x0213ac80 in the ROM) and by its own relocation target (Dealer::StateWin at 0x020c0b74). Re-keyed from @1279 to @1277 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1279 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1279 to @1277 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object). Re-keyed from @1277 to @1169 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
+    },
+    {
+      "from": "@1305",
+      "to": "pmf_MascotWalker_StateWalk_3",
+      "evidence": "Compiler PMF literal: MascotWalker::StatePause uses &MascotWalker::StateWalk, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (MascotWalker::StatePause+0x9c loads 0x0213ac88 in the ROM) and by its own relocation target (MascotWalker::StateWalk at 0x020c0364). Re-keyed from @1415 to @1413 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1415 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1415 to @1413 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object). Re-keyed from @1413 to @1305 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
+    },
+    {
+      "from": "@978",
+      "to": "pmf_Dealer_StateIdle_3",
+      "evidence": "Compiler PMF literal: Dealer::IsIdleAtRest uses &Dealer::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsIdleAtRest+0x60 loads 0x0213ac90 in the ROM) and by its own relocation target (Dealer::StateIdle at 0x020c1760). Re-keyed from @1086 to @1084 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1086 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1086 to @978 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
+    },
+    {
+      "from": "@1155",
       "to": "pmf_Dealer_StateLose",
-      "evidence": "Compiler PMF literal: Dealer::PlayLose uses &Dealer::StateLose, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::PlayLose+0x84 loads 0x0213ac98 in the ROM) and by its own relocation target (Dealer::StateLose at 0x020c0ce8). Re-keyed from @1265 to @1263 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1265 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1265 to @1263 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
+      "evidence": "Compiler PMF literal: Dealer::PlayLose uses &Dealer::StateLose, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::PlayLose+0x84 loads 0x0213ac98 in the ROM) and by its own relocation target (Dealer::StateLose at 0x020c0ce8). Re-keyed from @1265 to @1263 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1265 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1265 to @1263 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object). Re-keyed from @1263 to @1155 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@1243",
+      "from": "@1135",
       "to": "pmf_Dealer_StateSwap",
-      "evidence": "Compiler PMF literal: Dealer::StartSwap uses &Dealer::StateSwap, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartSwap+0x6c loads 0x0213aca0 in the ROM) and by its own relocation target (Dealer::StateSwap at 0x020c0df0). Re-keyed from @1245 to @1243 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1245 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1245 to @1243 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
+      "evidence": "Compiler PMF literal: Dealer::StartSwap uses &Dealer::StateSwap, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartSwap+0x6c loads 0x0213aca0 in the ROM) and by its own relocation target (Dealer::StateSwap at 0x020c0df0). Re-keyed from @1245 to @1243 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1245 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1245 to @1243 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object). Re-keyed from @1243 to @1135 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@1223",
+      "from": "@1115",
       "to": "pmf_Dealer_StateReveal",
-      "evidence": "Compiler PMF literal: Dealer::IsBusy uses &Dealer::StateReveal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsBusy+0x8c loads 0x0213aca8 in the ROM) and by its own relocation target (Dealer::StateReveal at 0x020c0f9c). Re-keyed from @1225 to @1223 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1225 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1225 to @1223 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
+      "evidence": "Compiler PMF literal: Dealer::IsBusy uses &Dealer::StateReveal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsBusy+0x8c loads 0x0213aca8 in the ROM) and by its own relocation target (Dealer::StateReveal at 0x020c0f9c). Re-keyed from @1225 to @1223 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1225 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1225 to @1223 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object). Re-keyed from @1223 to @1115 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@1220",
+      "from": "@1112",
       "to": "pmf_Dealer_StateDeal_2",
-      "evidence": "Compiler PMF literal: Dealer::IsBusy uses &Dealer::StateDeal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsBusy+0x88 loads 0x0213acb0 in the ROM) and by its own relocation target (Dealer::StateDeal at 0x020c11c0). Re-keyed from @1222 to @1220 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1222 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1222 to @1220 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object)."
+      "evidence": "Compiler PMF literal: Dealer::IsBusy uses &Dealer::StateDeal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::IsBusy+0x88 loads 0x0213acb0 in the ROM) and by its own relocation target (Dealer::StateDeal at 0x020c11c0). Re-keyed from @1222 to @1220 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1222 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1222 to @1220 after #821 r94 (Dealer::StateReveal's goto other became an if around the deal-animation branch) (measured from the compiled object). Re-keyed from @1220 to @1112 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@1186",
+      "from": "@1078",
       "to": "pmf_Dealer_StateReveal_2",
-      "evidence": "Compiler PMF literal: Dealer::StartReveal uses &Dealer::StateReveal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartReveal+0x58 loads 0x0213acb8 in the ROM) and by its own relocation target (Dealer::StateReveal at 0x020c0f9c). Re-keyed from @1186 to @1184 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1186 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Dealer::StartReveal uses &Dealer::StateReveal, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Dealer::StartReveal+0x58 loads 0x0213acb8 in the ROM) and by its own relocation target (Dealer::StateReveal at 0x020c0f9c). Re-keyed from @1186 to @1184 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @1186 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @1186 to @1078 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@818",
+      "from": "@710",
       "to": "pmf_Presenter_StateIdle",
-      "evidence": "Compiler PMF literal: Presenter::IsIdle uses &Presenter::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::IsIdle+0x44 loads 0x0213adb8 in the ROM) and by its own relocation target (Presenter::StateIdle at 0x020c27c4). Re-keyed from @818 to @816 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @818 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Presenter::IsIdle uses &Presenter::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::IsIdle+0x44 loads 0x0213adb8 in the ROM) and by its own relocation target (Presenter::StateIdle at 0x020c27c4). Re-keyed from @818 to @816 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @818 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @818 to @710 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@890",
+      "from": "@782",
       "to": "pmf_Presenter_StateSurprisedThenSmile",
-      "evidence": "Compiler PMF literal: Presenter::PlayCheer uses &Presenter::StateSurprisedThenSmile, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayCheer+0xa4 loads 0x0213adc0 in the ROM) and by its own relocation target (Presenter::StateSurprisedThenSmile at 0x020c24e4). Re-keyed from @890 to @888 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @890 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Presenter::PlayCheer uses &Presenter::StateSurprisedThenSmile, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayCheer+0xa4 loads 0x0213adc0 in the ROM) and by its own relocation target (Presenter::StateSurprisedThenSmile at 0x020c24e4). Re-keyed from @890 to @888 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @890 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @890 to @782 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@848",
+      "from": "@740",
       "to": "pmf_Presenter_StateIdle_2",
-      "evidence": "Compiler PMF literal: Presenter::PlayIdle uses &Presenter::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayIdle+0xd8 loads 0x0213adc8 in the ROM) and by its own relocation target (Presenter::StateIdle at 0x020c27c4). Re-keyed from @848 to @846 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @848 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Presenter::PlayIdle uses &Presenter::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayIdle+0xd8 loads 0x0213adc8 in the ROM) and by its own relocation target (Presenter::StateIdle at 0x020c27c4). Re-keyed from @848 to @846 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @848 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @848 to @740 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@924",
+      "from": "@816",
       "to": "pmf_Presenter_StateSurprisedThenIdle",
-      "evidence": "Compiler PMF literal: Presenter::PlayCheerLoop uses &Presenter::StateSurprisedThenIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayCheerLoop+0xa4 loads 0x0213add0 in the ROM) and by its own relocation target (Presenter::StateSurprisedThenIdle at 0x020c22d8). Re-keyed from @924 to @922 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @924 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Presenter::PlayCheerLoop uses &Presenter::StateSurprisedThenIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayCheerLoop+0xa4 loads 0x0213add0 in the ROM) and by its own relocation target (Presenter::StateSurprisedThenIdle at 0x020c22d8). Re-keyed from @924 to @922 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @924 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @924 to @816 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@862",
+      "from": "@754",
       "to": "pmf_Presenter_StateWin",
-      "evidence": "Compiler PMF literal: Presenter::PlayMatch uses &Presenter::StateWin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayMatch+0xa4 loads 0x0213ade0 in the ROM) and by its own relocation target (Presenter::StateWin at 0x020c26f4). Re-keyed from @862 to @860 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @862 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Presenter::PlayMatch uses &Presenter::StateWin, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayMatch+0xa4 loads 0x0213ade0 in the ROM) and by its own relocation target (Presenter::StateWin at 0x020c26f4). Re-keyed from @862 to @860 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @862 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @862 to @754 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@875",
+      "from": "@767",
       "to": "pmf_Presenter_StateMistake",
-      "evidence": "Compiler PMF literal: Presenter::PlayMiss uses &Presenter::StateMistake, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayMiss+0x8c loads 0x0213adf0 in the ROM) and by its own relocation target (Presenter::StateMistake at 0x020c263c). Re-keyed from @875 to @873 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @875 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Presenter::PlayMiss uses &Presenter::StateMistake, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayMiss+0x8c loads 0x0213adf0 in the ROM) and by its own relocation target (Presenter::StateMistake at 0x020c263c). Re-keyed from @875 to @873 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @875 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @875 to @767 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@908",
+      "from": "@800",
       "to": "pmf_Presenter_StateLoseStart",
-      "evidence": "Compiler PMF literal: Presenter::PlayLose uses &Presenter::StateLoseStart, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayLose+0xa0 loads 0x0213adf8 in the ROM) and by its own relocation target (Presenter::StateLoseStart at 0x020c23a8). Re-keyed from @908 to @906 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @908 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: Presenter::PlayLose uses &Presenter::StateLoseStart, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (Presenter::PlayLose+0xa0 loads 0x0213adf8 in the ROM) and by its own relocation target (Presenter::StateLoseStart at 0x020c23a8). Re-keyed from @908 to @906 after the r72 QuaternionBlock to Quaternion retype (measured from the compiled object). Re-keyed to @908 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @908 to @800 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@640",
+      "from": "@532",
       "to": "pmf_FlowerFace_StateIdle",
-      "evidence": "Compiler PMF literal: FlowerFace::PlayIdle uses &FlowerFace::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::PlayIdle+0x4c loads 0x0213aec0 in the ROM) and by its own relocation target (FlowerFace::StateIdle at 0x020c3ad8). Re-keyed to @640 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: FlowerFace::PlayIdle uses &FlowerFace::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::PlayIdle+0x4c loads 0x0213aec0 in the ROM) and by its own relocation target (FlowerFace::StateIdle at 0x020c3ad8). Re-keyed to @640 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @640 to @532 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@660",
+      "from": "@552",
       "to": "pmf_FlowerFace_StatePick",
-      "evidence": "Compiler PMF literal: FlowerFace::PlayPetalPulled uses &FlowerFace::StatePick, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::PlayPetalPulled+0x144 loads 0x0213aec8 in the ROM) and by its own relocation target (FlowerFace::StatePick at 0x020c395c). Re-keyed to @660 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: FlowerFace::PlayPetalPulled uses &FlowerFace::StatePick, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::PlayPetalPulled+0x144 loads 0x0213aec8 in the ROM) and by its own relocation target (FlowerFace::StatePick at 0x020c395c). Re-keyed to @660 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @660 to @552 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@682",
+      "from": "@574",
       "to": "pmf_FlowerFace_StateHate",
-      "evidence": "Compiler PMF literal: FlowerFace::PlayHate uses &FlowerFace::StateHate, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::PlayHate+0x50 loads 0x0213aed0 in the ROM) and by its own relocation target (FlowerFace::StateHate at 0x020c38ac). Re-keyed to @682 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: FlowerFace::PlayHate uses &FlowerFace::StateHate, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::PlayHate+0x50 loads 0x0213aed0 in the ROM) and by its own relocation target (FlowerFace::StateHate at 0x020c38ac). Re-keyed to @682 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @682 to @574 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@672",
+      "from": "@564",
       "to": "pmf_FlowerFace_StateLike",
-      "evidence": "Compiler PMF literal: FlowerFace::PlayLike uses &FlowerFace::StateLike, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::PlayLike+0x50 loads 0x0213aed8 in the ROM) and by its own relocation target (FlowerFace::StateLike at 0x020c3904). Re-keyed to @672 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: FlowerFace::PlayLike uses &FlowerFace::StateLike, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::PlayLike+0x50 loads 0x0213aed8 in the ROM) and by its own relocation target (FlowerFace::StateLike at 0x020c3904). Re-keyed to @672 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @672 to @564 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@624",
+      "from": "@516",
       "to": "pmf_FlowerFace_StateIdle_2",
-      "evidence": "Compiler PMF literal: FlowerFace::IsIdle uses &FlowerFace::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::IsIdle+0x44 loads 0x0213aee0 in the ROM) and by its own relocation target (FlowerFace::StateIdle at 0x020c3ad8). Re-keyed to @624 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify)."
+      "evidence": "Compiler PMF literal: FlowerFace::IsIdle uses &FlowerFace::StateIdle, and mwcc emits that pointer-to-member constant as an 8-byte {fn, 0} .data temporary. Paired by the consumer relocation (FlowerFace::IsIdle+0x44 loads 0x0213aee0 in the ROM) and by its own relocation target (FlowerFace::StateIdle at 0x020c3ad8). Re-keyed to @624 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @624 to @516 when the minigame file handles became the shared ModelFile/AnimFile/TexSeqFile classes and their nine inline wrapper constructor/destructor definitions were retired (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     }
   ]
 }

@@ -11,7 +11,7 @@
     "module sinit corroboration: 2 sinit(s) / 2 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
     "WIDENED to the whole tu_map unit 0x0211f000..0x02121ec8 (46 functions): Behavior (0x021218a0, 0x42c), InitResources (0x02121ccc, 0x1f4) and OnAimedAtWithEgg (0x02121ec0, 0x8) folded in above Render, in ROM-ascending order under the file's existing `#pragma defer_codegen off`. The right edge was then the unit's own; the abutting factory daKing_Donketu_c_classInit was folded in by the 0930c classInit fold (below).",
     "classInit fold (0930c): the KING_DONKETU registry factory daKing_Donketu_c_classInit (0x02121ec8, 0xc8) abuts the tu_map unit's end 0x02121ec8 with no gap and no other symbol between; tu_map left it in its own unlabelled unit because it cuts on symbol name. The widened range 0x0211f000..0x02121f90 (47 functions) ends where the daObjEwbIce_c TU (src/game/actors/d_a_obj_ewb_ice.cpp) begins.",
-    "sinit fold: __sinit_ov073_02122874 (0x4d4) constructs eight file handles (model 0x359 via func_02017acc + func_02017ab4 dtor; animations 0x354..0x35b via SharedFilePtr::Construct + SharedFilePtr_Destruct_Anim) and copies the sixteen state records from the thirty-two PMF literals at 0x02122f40..0x02123040 into bss 0x02123320..0x02123410. Emitted .init is byte-identical to retail modulo relocations (0 diffs over 0x4d4)."
+    "sinit fold: __sinit_ov073_02122874 (0x4d4) constructs eight file handles (model 0x359 via _ZN9ModelFileC1Ej + _ZN9ModelFileD1Ev dtor; animations 0x354..0x35b via _ZN8AnimFileC1Ej + _ZN8AnimFileD1Ev) and copies the sixteen state records from the thirty-two PMF literals at 0x02122f40..0x02123040 into bss 0x02123320..0x02123410. Emitted .init is byte-identical to retail modulo relocations (0 diffs over 0x4d4)."
   ],
   "sections": [
     {
@@ -1932,7 +1932,7 @@
       "source": "0x02122884",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1952,7 +1952,7 @@
       "source": "0x021228a0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1972,7 +1972,7 @@
       "source": "0x021228bc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1992,7 +1992,7 @@
       "source": "0x021228d8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2012,7 +2012,7 @@
       "source": "0x021228f4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2032,7 +2032,7 @@
       "source": "0x02122910",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2052,7 +2052,7 @@
       "source": "0x0212292c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2072,7 +2072,7 @@
       "source": "0x02122948",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2102,7 +2102,7 @@
       "source": "0x02122c30",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -2132,7 +2132,7 @@
       "source": "0x02122c40",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017984"
@@ -2751,28 +2751,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN26KingDonketuModelFileHandleC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model file-handle wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN26KingDonketuModelFileHandleD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model file-handle wrapper destructor's exact ABS32 relocation"
     },
     {
       "symbol": "_ZN28KingDonketuAnimResFileHandleC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x0201799c",
       "evidence": "retail initializer call destination and the animation file-handle wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN28KingDonketuAnimResFileHandleD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
       "evidence": "retail destructor registration destination and the animation file-handle wrapper destructor's exact ABS32 relocation"

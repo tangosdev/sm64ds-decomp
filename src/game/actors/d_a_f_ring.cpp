@@ -34,10 +34,10 @@ enum daFRing_c_AssetId {
 int data_ov060_0211ab20[] = {0x787, 0x800, 0x0f0f, 0x1000};
 
 /* The static-init file handles: the model file constructs through
- * func_02017acc and destroys through func_02017ab4, the animation handle
- * through SharedFilePtr::Construct/SharedFilePtr_Destruct_Anim, and the
- * texture-sequence handle through SharedFilePtr_Construct_TexSeq/
- * SharedFilePtr_Destruct_TexSeq. Each wrapper's ctor and dtor stay
+ * ModelFile::ModelFile and destroys through ModelFile::~ModelFile, the animation handle
+ * through AnimFile::AnimFile/AnimFile::~AnimFile, and the
+ * texture-sequence handle through TexSeqFile::TexSeqFile/
+ * TexSeqFile::~TexSeqFile. Each wrapper's ctor and dtor stay
  * undefined here; the manifest aliases them onto those ROM veneers. */
 struct FRingModelFilePtr : SharedFilePtr {
     FRingModelFilePtr(u32 fileID);

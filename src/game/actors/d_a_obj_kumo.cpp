@@ -23,8 +23,8 @@
  *   plain definition below; gOV039ObjKumoModelFile is the model handle the
  *   compiler constructs at load (file ID 1141), so it is a
  *   SharedFilePtr-derived object, not an extern array. Its constructor and
- *   destructor are the ROM's SharedFilePtr pair (func_02017acc /
- *   func_02017ab4); this TU declares but never defines them, and the
+ *   destructor are the ROM's SharedFilePtr pair (ModelFile::ModelFile /
+ *   ModelFile::~ModelFile); this TU declares but never defines them, and the
  *   manifest aliases those two undefined members onto the ROM symbols.
  *   data_ov039_021118f8 pads the .bss claim to the section end; see the
  *   definition below for the measurement.
@@ -39,7 +39,7 @@ enum d_a_obj_kumo_AssetId { ASSET_OBJ_KUMO_BMD = 0x0475 };
 #include "math/MtxStack.h"
 
 /* dExtSimpleModel_c-file handle. The derived constructor and destructor are the retail
- * SharedFilePtr pair (func_02017acc / func_02017ab4); this TU declares but
+ * SharedFilePtr pair (ModelFile::ModelFile / ModelFile::~ModelFile); this TU declares but
  * never defines them. The cartridge keeps its 8 bytes between 0x021118e4 and
  * 0x021118ec. */
 struct KumoModelFilePtr : SharedFilePtr {

@@ -10,7 +10,7 @@
     "contiguous linker run: 0x2111728..0x2111ac4, 10 function(s), from build/tu_map.json (tools/tu_map.py)",
     "class label(s): daObjWc_Obj03_c",
     "module sinit corroboration: 8 sinit(s) / 8 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
-    "the compiler-generated __sinit_d_a_obj_wc_obj03.cpp is byte-identical to retail __sinit_ov029_02112c10 (0x3c, five relocations). It calls the model-handle constructor func_02017acc with file ID 0x6d0 and registers func_02017ab4 through __register_global_object. The ctor word at 0x02112e70 points at that initializer."
+    "the compiler-generated __sinit_d_a_obj_wc_obj03.cpp is byte-identical to retail __sinit_ov029_02112c10 (0x3c, five relocations). It calls the model-handle constructor _ZN9ModelFileC1Ej with file ID 0x6d0 and registers _ZN9ModelFileD1Ev through __register_global_object. The ctor word at 0x02112e70 points at that initializer."
   ],
   "sections": [
     {
@@ -176,14 +176,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN19WcObj03ModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN19WcObj03ModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor's exact ABS32 relocation"
@@ -215,7 +215,7 @@
       "source": "0x02112c20",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -245,7 +245,7 @@
       "source": "0x02112c44",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"

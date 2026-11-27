@@ -84,9 +84,9 @@ enum { kFlightSpeed = 0x32000 };
  * partner's low three book bits must have when that book is pushed. {0, 1, 3}
  * is book 0, then book 1, then book 2. */
 u8 data_ov020_02114828[4] = {0, 1, 3, 0};
-/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
- * func_02017ab4. Animation handles construct through SharedFilePtr::Construct
- * and destroy through SharedFilePtr_Destruct_Anim. The manifest aliases those
+/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
+ * ModelFile::~ModelFile. Animation handles construct through AnimFile::AnimFile
+ * and destroy through AnimFile::~AnimFile. The manifest aliases those
  * undefined members onto the ROM symbols. */
 struct BookModelFilePtr : SharedFilePtr {
     BookModelFilePtr(u32 fileID);

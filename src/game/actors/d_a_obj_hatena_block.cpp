@@ -204,10 +204,10 @@ static inline int IsActorID(dActor_c *actor, int id) {
 /* The block's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
    the cartridge already carries, so the wrappers get no bodies of their own.
-   The constructors alias func_02017acc (model), SharedFilePtr::Construct
-   (animation) and func_02017b4c (collision) in this unit's manifest, and the
-   destructors func_02017ab4, SharedFilePtr_Destruct_Anim and
-   SharedFilePtr_Destruct_Clsn. */
+   The constructors alias ModelFile::ModelFile (model), AnimFile::AnimFile
+   (animation) and ClsnFile::ClsnFile (collision) in this unit's manifest, and the
+   destructors ModelFile::~ModelFile, AnimFile::~AnimFile and
+   ClsnFile::~ClsnFile. */
 struct HatenaBlockModelFilePtr : SharedFilePtr {
     HatenaBlockModelFilePtr(unsigned int id);
     ~HatenaBlockModelFilePtr();

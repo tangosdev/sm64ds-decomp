@@ -89,7 +89,7 @@ int func_ov002_020df300(daPly_c *player);
 /* The cannon's file-scope SharedFilePtr object, spelled through the same
    wrapper idiom the landed folds use: the handle's code is the veneer pair
    the cartridge already carries, so the wrapper gets no bodies of its own.
-   The constructor aliases func_02017acc and the destructor func_02017ab4 in
+   The constructor aliases ModelFile::ModelFile and the destructor ModelFile::~ModelFile in
    this unit's manifest. */
 struct CnnModelFilePtr : SharedFilePtr {
     CnnModelFilePtr(unsigned int id);

@@ -41,9 +41,9 @@ struct BigBrickBlockAssets {
 /* POD spelling of Vector3's 0x0c bytes: with a user-declared constructor on
    Vector3, copy-init lowers memberwise; the ROM copy is the block move, so the
    local copy in Render is a VecFx32. */
-/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
- * func_02017ab4. Collision handles construct through func_02017b4c and
- * destroy through SharedFilePtr_Destruct_Clsn. The manifest aliases those
+/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
+ * ModelFile::~ModelFile. Collision handles construct through ClsnFile::ClsnFile and
+ * destroy through ClsnFile::~ClsnFile. The manifest aliases those
  * undefined members onto the ROM symbols. */
 struct BlockModelFile : SharedFilePtr {
     BlockModelFile(u32 fileID);

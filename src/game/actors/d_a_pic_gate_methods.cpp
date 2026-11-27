@@ -113,7 +113,7 @@ extern daPicGate_c::State sStates[];
 /* A picture's texture/collision handle. The nineteen instances below are
    constructed by __sinit_d_a_pic_gate_methods.cpp and reached through the rodata
    pointer table data_ov080_0212775c, indexed by picture id. The declared
-   ctor/dtor stand for the cartridge's func_020178cc/func_020178b4 pair;
+   ctor/dtor stand for the cartridge's ModelFileB::ModelFileB/ModelFileB::~ModelFileB pair;
    words[] is the two words the ROM object carries. */
 struct PicGateFilePtr : SharedFilePtr {
     PicGateFilePtr(u32 fileID);

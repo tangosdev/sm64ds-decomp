@@ -15,8 +15,8 @@
  * reconstruction of the tree walk, not a literal string in the image.
  *
  * The three BSS objects are eight bytes apart and are initialized by the
- * SharedFilePtr constructor veneers (func_02017acc, func_02017b4c,
- * _ZN13SharedFilePtr9ConstructEj, all tailing into func_02017e0c), then
+ * SharedFilePtr constructor veneers (ModelFile::ModelFile, ClsnFile::ClsnFile,
+ * AnimFile::AnimFile, all tailing into func_02017e0c), then
  * consumed by the model, mesh-collision and animation loaders respectively.
  * Their layout is SharedFilePtr's own (include/SharedFilePtr.h).
  */

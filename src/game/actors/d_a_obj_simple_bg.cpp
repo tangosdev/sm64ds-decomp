@@ -56,9 +56,9 @@ enum daObjSimpleBg_c_AssetId {
 #include "daObjSimpleBg_c.h"
 #include "SharedFilePtr.h"
 
-/* Six model handles construct through func_02017acc and destroy through
- * func_02017ab4. Six collision handles construct through func_02017b4c and
- * destroy through SharedFilePtr_Destruct_Clsn. The file tables above these
+/* Six model handles construct through ModelFile::ModelFile and destroy through
+ * ModelFile::~ModelFile. Six collision handles construct through ClsnFile::ClsnFile and
+ * destroy through ClsnFile::~ClsnFile. The file tables above these
  * objects stay ROM data. */
 struct SimpleBgModelFilePtr : SharedFilePtr {
     SimpleBgModelFilePtr(unsigned int fileId);

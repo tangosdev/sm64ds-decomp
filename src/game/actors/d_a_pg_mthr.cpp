@@ -70,10 +70,9 @@ enum {
      02113be8  file 0x407  BTP   stand/talk
      02112c04 = { &02113bf8, &02113be8 }
      02112c0c = { &02113bf0, &02113c08 }
-   SharedFilePtr declares no constructor of its own, so the
-   model handle gets the func_02017acc/func_02017ab4 pair, the animation
-   handles get SharedFilePtr::Construct/Destruct_Anim and the texture
-   sequences get SharedFilePtr_Construct_TexSeq/Destruct_TexSeq through
+   The model handle gets the ModelFile::ModelFile/~ModelFile pair, the
+   animation handles get AnimFile::AnimFile/~AnimFile and the texture
+   sequences get TexSeqFile::TexSeqFile/~TexSeqFile through
    thin declaration-only wrappers; the manifest aliases those mangled
    spellings to the arm9 destinations the retail initializer calls. */
 struct PgMthrModelFileHandle : SharedFilePtr {

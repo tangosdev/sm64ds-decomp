@@ -1034,7 +1034,7 @@ _ZN7daPly_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x020e69b8
 func_ov002_020e69c0 kind:function(arm,size=0x48) addr:0x020e69c0
 Color_Interp kind:function(arm,size=0x70) addr:0x020e6a08
 func_ov002_020e6a78 kind:function(arm,size=0x5c) addr:0x020e6a78
-func_ov002_020e6ad4 kind:function(arm,size=0x68) addr:0x020e6ad4
+_ZN9ColorRampC1Ev kind:function(arm,size=0x68) addr:0x020e6ad4
 func_ov002_020e6b3c kind:function(arm,size=0x38) addr:0x020e6b3c
 func_ov002_020e6b74 kind:function(arm,size=0x3c) addr:0x020e6b74
 func_ov002_020e6bb0 kind:function(arm,size=0x5c) addr:0x020e6bb0
@@ -1612,7 +1612,7 @@ __sinit_d_a_obj_tatefuda.cpp kind:function(arm,size=0x15c) addr:0x02101738
 __sinit_d_a_obj_wakame.cpp kind:function(arm,size=0x6c) addr:0x02101894
 __sinit_d_a_obj_heart.cpp kind:function(arm,size=0x68) addr:0x02101900
 __sinit_d_a_obj_cannon_shutter.cpp kind:function(arm,size=0x68) addr:0x02101968
-__sinit_ov002_021019d0 kind:function(arm,size=0x5470) addr:0x021019d0
+__sinit_d_a_ply_methods.cpp kind:function(arm,size=0x5470) addr:0x021019d0
 __sinit_d_a_star.cpp kind:function(arm,size=0x2d8) addr:0x02106e40
 __sinit_d_a_yegg.cpp kind:function(arm,size=0xdc) addr:0x02107118
 __sinit_d_path_lift_actor.cpp kind:function(arm,size=0xa4) addr:0x021071f4
@@ -1638,7 +1638,7 @@ __sinit_d_a_propeller_heyho_fire.cpp kind:function(arm,size=0x3c) addr:0x0210809
 .p__sinit_d_a_obj_wakame.cpp kind:data(word) addr:0x02108104
 .p__sinit_d_a_obj_heart.cpp kind:data(word) addr:0x02108108
 .p__sinit_d_a_obj_cannon_shutter.cpp kind:data(word) addr:0x0210810c
-.p__sinit_ov002_021019d0 kind:data(word) addr:0x02108110
+.p__sinit_d_a_ply_methods.cpp kind:data(word) addr:0x02108110
 .p__sinit_d_a_star.cpp kind:data(word) addr:0x02108114
 .p__sinit_d_a_yegg.cpp kind:data(word) addr:0x02108118
 .p__sinit_d_path_lift_actor.cpp kind:data(word) addr:0x0210811c

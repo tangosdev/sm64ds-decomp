@@ -165,15 +165,15 @@ enum Bool { FALSE, TRUE };
 
 
 /* The eight file handles __sinit_d_a_king_donketu.cpp constructs below.
- * Construct writes the u16 file ID at +0, the u8 reference count at +2,
+ * The constructor writes the u16 file ID at +0, the u8 reference count at +2,
  * and the loaded-file pointer at +4. Byte +3 is alignment padding.
  * The model payload is BMD_File; animation payloads are BCA_File.
  * CleanupResources releases the actor's references; the registered
- * handle destructors only publish the file ID through func_02017e34. The
- * model handle's ctor/dtor are the cartridge's func_02017acc / func_02017ab4
+ * handle destructors only publish the file ID through SharedFilePtr::~SharedFilePtr (D2). The
+ * model handle's ctor/dtor are the cartridge's ModelFile::ModelFile / ModelFile::~ModelFile
  * pair and the seven animation handles construct through
- * SharedFilePtr::Construct and register
- * SharedFilePtr_Destruct_Anim; the manifest aliases these. */
+ * AnimFile::AnimFile and register
+ * AnimFile::~AnimFile; the manifest aliases these. */
 struct KingDonketuModelFileHandle : SharedFilePtr {
     KingDonketuModelFileHandle(u32 fileID);
     ~KingDonketuModelFileHandle();

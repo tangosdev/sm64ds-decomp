@@ -25,9 +25,9 @@ enum d_a_obj_km2_fall_block_AssetId {
 #include "daObjKm2_Fall_Block_c.h"
 #include "SharedFilePtr.h"
 
-/* The model handle constructs through func_02017acc and destroys through
- * func_02017ab4. The collision handle constructs through func_02017b4c and
- * destroys through SharedFilePtr_Destruct_Clsn. The descriptor stays ROM data. */
+/* The model handle constructs through ModelFile::ModelFile and destroys through
+ * ModelFile::~ModelFile. The collision handle constructs through ClsnFile::ClsnFile and
+ * destroys through ClsnFile::~ClsnFile. The descriptor stays ROM data. */
 struct Km2FallModelFilePtr : SharedFilePtr {
     Km2FallModelFilePtr(unsigned int fileId);
     ~Km2FallModelFilePtr();

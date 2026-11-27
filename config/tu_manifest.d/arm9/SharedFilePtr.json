@@ -7,10 +7,10 @@
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "Contiguous linker run arm9:0x0201787c..0x02017e60, 28 functions, gapless in config/arm9/delinks.txt, each a one-function file.",
-    "BOTTOM EDGE: the dFader_c TU (src/runtime/graphics/fader/d_fader.cpp) ends at 0x0201787c with dFader_c's D1; func_0201787c begins there. func_0201787c calls SharedFilePtr::LoadFile and dExtSimpleModel_c::UpdateFileOffsets, and func_020178b4/func_020178cc chain into func_02017a9c/func_02017ae4, so the run's first three functions are this family, not the fader's.",
-    "TOP EDGE: func_02017e0c, func_02017e34 and func_02017e48 belong. They stamp, publish and construct the handle's own fields (+0 fileID, +2 numRefs, +4 filePtr), and inside this run they are reached only from this run's construct/destroy helpers. func_02017e60 is the first function that does not belong: it clears the 12-entry table at data_0209d3c4 that func_02017e94 (the overlay unloader) walks, and func_02018aa4 calls it. That is the overlay/FS loader run (UnloadOverlay, LoadOverlay, LoadFile, Deallocate ...), which is a different subsystem.",
+    "BOTTOM EDGE: the dFader_c TU (src/runtime/graphics/fader/d_fader.cpp) ends at 0x0201787c with dFader_c's D1; func_0201787c begins there. func_0201787c calls SharedFilePtr::LoadFile and dExtSimpleModel_c::UpdateFileOffsets, and _ZN10ModelFileBD1Ev/_ZN10ModelFileBC1Ej chain into _ZN9ModelFileD2Ev/_ZN9ModelFileC2Ej, so the run's first three functions are this family, not the fader's.",
+    "TOP EDGE: func_02017e0c, _ZN13SharedFilePtrD2Ev and _ZN13SharedFilePtrC2Ej belong. They stamp, publish and construct the handle's own fields (+0 fileID, +2 numRefs, +4 filePtr), and inside this run they are reached only from this run's construct/destroy helpers. func_02017e60 is the first function that does not belong: it clears the 12-entry table at data_0209d3c4 that func_02017e94 (the overlay unloader) walks, and func_02018aa4 calls it. That is the overlay/FS loader run (UnloadOverlay, LoadOverlay, LoadFile, Deallocate ...), which is a different subsystem.",
     "The four X::LoadFile(SharedFilePtr&) members of dExtSimpleModel_c, dExtAnmTexPat_c, dExtFrameCtrl_c and dBgW_Kc sit inside the run between SharedFilePtr's own members and helpers, so they are this file's, not their classes' TUs.",
-    "No ROM RTTI names this unit. The file is named after the tree class SharedFilePtr (include/SharedFilePtr.h), and confidence stays medium because the original file name and the upper edge's ownership of func_02017e0c..func_02017e48 come from call-graph evidence, not from a symbol."
+    "No ROM RTTI names this unit. The file is named after the tree class SharedFilePtr (include/SharedFilePtr.h), and confidence stays medium because the original file name and the upper edge's ownership of func_02017e0c.._ZN13SharedFilePtrC2Ej come from call-graph evidence, not from a symbol."
   ],
   "sections": [
     {
@@ -28,14 +28,14 @@
       "ordinal": 0
     },
     {
-      "symbol": "_ZN13SharedFilePtr13func_020178b4Ev",
+      "symbol": "_ZN10ModelFileBD1Ev",
       "address": "0x020178b4",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0201/func_020178b4.c",
       "ordinal": 1
     },
     {
-      "symbol": "_ZN13SharedFilePtr13func_020178ccEj",
+      "symbol": "_ZN10ModelFileBC1Ej",
       "address": "0x020178cc",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0201/func_020178cc.c",
@@ -49,14 +49,14 @@
       "ordinal": 3
     },
     {
-      "symbol": "SharedFilePtr_Destruct_TexSeq",
+      "symbol": "_ZN10TexSeqFileD1Ev",
       "address": "0x0201791c",
       "size": "0x00000018",
       "legacy_source": "src/SharedFilePtr_Destruct_TexSeq.c",
       "ordinal": 4
     },
     {
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "address": "0x02017934",
       "size": "0x00000018",
       "legacy_source": "src/SharedFilePtr_Construct_TexSeq.c",
@@ -70,14 +70,14 @@
       "ordinal": 6
     },
     {
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "address": "0x02017984",
       "size": "0x00000018",
       "legacy_source": "src/SharedFilePtr_Destruct_Anim.c",
       "ordinal": 7
     },
     {
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "address": "0x0201799c",
       "size": "0x00000018",
       "legacy_source": "src/_ZN13SharedFilePtr9ConstructEj.cpp",
@@ -91,14 +91,14 @@
       "ordinal": 9
     },
     {
-      "symbol": "_ZN13SharedFilePtr13func_02017a0cEv",
+      "symbol": "_ZN10ModelFileAD1Ev",
       "address": "0x02017a0c",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0201/func_02017a0c.c",
       "ordinal": 10
     },
     {
-      "symbol": "_ZN13SharedFilePtr13func_02017a24Ej",
+      "symbol": "_ZN10ModelFileAC1Ej",
       "address": "0x02017a24",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0201/func_02017a24.c",
@@ -119,28 +119,28 @@
       "ordinal": 13
     },
     {
-      "symbol": "_ZN13SharedFilePtr13func_02017a9cEv",
+      "symbol": "_ZN9ModelFileD2Ev",
       "address": "0x02017a9c",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0201/func_02017a9c.c",
       "ordinal": 14
     },
     {
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "address": "0x02017ab4",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0201/func_02017ab4.c",
       "ordinal": 15
     },
     {
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "address": "0x02017acc",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0201/func_02017acc.c",
       "ordinal": 16
     },
     {
-      "symbol": "_ZN13SharedFilePtr13func_02017ae4Ej",
+      "symbol": "_ZN9ModelFileC2Ej",
       "address": "0x02017ae4",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0201/func_02017ae4.c",
@@ -154,14 +154,14 @@
       "ordinal": 18
     },
     {
-      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
+      "symbol": "_ZN8ClsnFileD1Ev",
       "address": "0x02017b34",
       "size": "0x00000018",
       "legacy_source": "src/SharedFilePtr_Destruct_Clsn.c",
       "ordinal": 19
     },
     {
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "address": "0x02017b4c",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0201/func_02017b4c.c",
@@ -203,14 +203,14 @@
       "ordinal": 25
     },
     {
-      "symbol": "_ZN13SharedFilePtr13func_02017e34Ev",
+      "symbol": "_ZN13SharedFilePtrD2Ev",
       "address": "0x02017e34",
       "size": "0x00000014",
       "legacy_source": "src/unnamed/arm9/0201/func_02017e34.c",
       "ordinal": 26
     },
     {
-      "symbol": "_ZN13SharedFilePtr13func_02017e48Ej",
+      "symbol": "_ZN13SharedFilePtrC2Ej",
       "address": "0x02017e48",
       "size": "0x00000018",
       "legacy_source": "src/unnamed/arm9/0201/func_02017e48.c",
@@ -219,10 +219,71 @@
   ],
   "data": [],
   "bss": [],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN10ModelFileBD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant mwcc emits alongside ModelFileB::~ModelFileB (D1 _ZN10ModelFileBD1Ev) from the one out-of-line destructor src/SharedFilePtr.cpp defines; the retail link kept only ModelFileB::~ModelFileB (D1 _ZN10ModelFileBD1Ev) and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN10ModelFileBC2Ej",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant mwcc emits alongside ModelFileB::ModelFileB (C1 _ZN10ModelFileBC1Ej) from the one out-of-line constructor src/SharedFilePtr.cpp defines; the retail link kept only ModelFileB::ModelFileB (C1 _ZN10ModelFileBC1Ej) and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN10TexSeqFileD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant mwcc emits alongside TexSeqFile::~TexSeqFile (D1 _ZN10TexSeqFileD1Ev) from the one out-of-line destructor src/SharedFilePtr.cpp defines; the retail link kept only TexSeqFile::~TexSeqFile (D1 _ZN10TexSeqFileD1Ev) and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN10TexSeqFileC2Ej",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant mwcc emits alongside TexSeqFile::TexSeqFile (C1 _ZN10TexSeqFileC1Ej) from the one out-of-line constructor src/SharedFilePtr.cpp defines; the retail link kept only TexSeqFile::TexSeqFile (C1 _ZN10TexSeqFileC1Ej) and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN8AnimFileD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant mwcc emits alongside AnimFile::~AnimFile (D1 _ZN8AnimFileD1Ev) from the one out-of-line destructor src/SharedFilePtr.cpp defines; the retail link kept only AnimFile::~AnimFile (D1 _ZN8AnimFileD1Ev) and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN8AnimFileC2Ej",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant mwcc emits alongside AnimFile::AnimFile (C1 _ZN8AnimFileC1Ej) from the one out-of-line constructor src/SharedFilePtr.cpp defines; the retail link kept only AnimFile::AnimFile (C1 _ZN8AnimFileC1Ej) and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN10ModelFileAD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant mwcc emits alongside ModelFileA::~ModelFileA (D1 _ZN10ModelFileAD1Ev) from the one out-of-line destructor src/SharedFilePtr.cpp defines; the retail link kept only ModelFileA::~ModelFileA (D1 _ZN10ModelFileAD1Ev) and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN10ModelFileAC2Ej",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant mwcc emits alongside ModelFileA::ModelFileA (C1 _ZN10ModelFileAC1Ej) from the one out-of-line constructor src/SharedFilePtr.cpp defines; the retail link kept only ModelFileA::ModelFileA (C1 _ZN10ModelFileAC1Ej) and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN8ClsnFileD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant mwcc emits alongside ClsnFile::~ClsnFile (D1 _ZN8ClsnFileD1Ev) from the one out-of-line destructor src/SharedFilePtr.cpp defines; the retail link kept only ClsnFile::~ClsnFile (D1 _ZN8ClsnFileD1Ev) and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN8ClsnFileC2Ej",
+      "disposition": "deadstrip",
+      "reason": "Base-object variant mwcc emits alongside ClsnFile::ClsnFile (C1 _ZN8ClsnFileC1Ej) from the one out-of-line constructor src/SharedFilePtr.cpp defines; the retail link kept only ClsnFile::ClsnFile (C1 _ZN8ClsnFileC1Ej) and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN13SharedFilePtrD1Ev",
+      "disposition": "deadstrip",
+      "reason": "Complete-object variant mwcc emits alongside SharedFilePtr::~SharedFilePtr (D2 _ZN13SharedFilePtrD2Ev, the base chain every handle destructor enters) from the one out-of-line destructor src/SharedFilePtr.cpp defines; the retail link kept only SharedFilePtr::~SharedFilePtr (D2 _ZN13SharedFilePtrD2Ev, the base chain every handle destructor enters) and no configured symbol names this copy."
+    },
+    {
+      "symbol": "_ZN13SharedFilePtrC1Ej",
+      "disposition": "deadstrip",
+      "reason": "Complete-object variant mwcc emits alongside SharedFilePtr::SharedFilePtr (C2 _ZN13SharedFilePtrC2Ej, the base chain every handle constructor enters) from the one out-of-line constructor src/SharedFilePtr.cpp defines; the retail link kept only SharedFilePtr::SharedFilePtr (C2 _ZN13SharedFilePtrC2Ej, the base chain every handle constructor enters) and no configured symbol names this copy."
+    }
+  ],
   "notes": [
     "Definitions are written ROM-descending. Default mwccarm deferred codegen emits .text in reverse source order, so emission is ROM-ascending. No file-wide pragma.",
-    "The unnamed helpers keep their address names and C linkage, with the signatures their one-function files defined, so no caller's declaration agreement changes. SharedFilePtr_Construct_TexSeq / _Destruct_TexSeq / _Destruct_Anim / _Destruct_Clsn keep their existing linker names."
+    "SharedFilePtr and its five handle kinds (ClsnFile, ModelFile, ModelFileA, ModelFileB, AnimFile, TexSeqFile; class names coined, no RTTI because none is polymorphic) are real classes: each defines its constructor and destructor out of line, and the derived ones are empty bodies whose base-chain call is the whole function. mwcc emits all four variants of each; ModelFile keeps all four (ModelFileA/ModelFileB enter its C2/D2), SharedFilePtr keeps C2/D2 and every other kind keeps C1/D1, so the twelve variants the cartridge does not carry are compiler_only_output deadstrip rows. The remaining unnamed helpers keep their address names."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -233,10 +294,63 @@
     "functions_matched": 28,
     "functions_declared": 28,
     "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
+      "requested": [
+        "_ZN10ModelFileBD2Ev",
+        "_ZN10ModelFileBC2Ej",
+        "_ZN10TexSeqFileD2Ev",
+        "_ZN10TexSeqFileC2Ej",
+        "_ZN8AnimFileD2Ev",
+        "_ZN8AnimFileC2Ej",
+        "_ZN10ModelFileAD2Ev",
+        "_ZN10ModelFileAC2Ej",
+        "_ZN8ClsnFileD2Ev",
+        "_ZN8ClsnFileC2Ej",
+        "_ZN13SharedFilePtrD1Ev",
+        "_ZN13SharedFilePtrC1Ej"
+      ],
+      "deadstripped": [
+        "_ZN10ModelFileAC2Ej",
+        "_ZN10ModelFileAD2Ev",
+        "_ZN10ModelFileBC2Ej",
+        "_ZN10ModelFileBD2Ev",
+        "_ZN10TexSeqFileC2Ej",
+        "_ZN10TexSeqFileD2Ev",
+        "_ZN13SharedFilePtrC1Ej",
+        "_ZN13SharedFilePtrD1Ev",
+        "_ZN8AnimFileC2Ej",
+        "_ZN8AnimFileD2Ev",
+        "_ZN8ClsnFileC2Ej",
+        "_ZN8ClsnFileD2Ev"
+      ],
+      "droppedSections": [
+        7,
+        8,
+        13,
+        14,
+        17,
+        18,
+        23,
+        24,
+        27,
+        28,
+        33,
+        34,
+        37,
+        38,
+        43,
+        44,
+        59,
+        60,
+        65,
+        66,
+        79,
+        80,
+        81,
+        82
+      ],
       "data": [],
-      "dataExternalized": []
+      "dataExternalized": [],
+      "canonicalDuplicates": []
     },
     "criteria": {
       "every_declared_function_defined": "PASS",

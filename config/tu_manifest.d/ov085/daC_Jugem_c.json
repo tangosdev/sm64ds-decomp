@@ -436,42 +436,42 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN14JugemModelFileC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
     },
     {
       "symbol": "_ZN14JugemModelFileD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
     },
     {
       "symbol": "_ZN21JugemAnimationFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x0201799c",
       "evidence": "retail initializer call destination and the animation wrapper constructor exact PC24 relocation"
     },
     {
       "symbol": "_ZN21JugemAnimationFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
       "evidence": "retail destructor registration destination and the animation wrapper destructor exact ABS32 relocation"
     },
     {
       "symbol": "_ZN23JugemTexSequenceFilePtrC1Ej",
-      "canonical_symbol": "SharedFilePtr_Construct_TexSeq",
+      "canonical_symbol": "_ZN10TexSeqFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017934",
       "evidence": "retail initializer call destination and the texture-sequence wrapper constructor exact PC24 relocation"
     },
     {
       "symbol": "_ZN23JugemTexSequenceFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_TexSeq",
+      "canonical_symbol": "_ZN10TexSeqFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x0201791c",
       "evidence": "retail destructor registration destination and the texture-sequence wrapper destructor exact ABS32 relocation"
@@ -571,7 +571,7 @@
       "source": "0x0212fa50",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -591,7 +591,7 @@
       "source": "0x0212fa6c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -611,7 +611,7 @@
       "source": "0x0212fa88",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017934"
@@ -661,7 +661,7 @@
       "source": "0x0212fcec",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -691,7 +691,7 @@
       "source": "0x0212fcf8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017984"
@@ -721,7 +721,7 @@
       "source": "0x0212fd08",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_TexSeq",
+      "symbol": "_ZN10TexSeqFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0201791c"

@@ -24,9 +24,9 @@ enum d_a_obj_bk_fall_block_AssetId { ASSET_BK_DOWN_B_BMD = 0x058f, ASSET_BK_DOWN
 #include "daObjBk_Fall_Block_c.h"
 #include "SharedFilePtr.h"
 
-/* The model handle constructs through func_02017acc and destroys through
- * func_02017ab4. The collision handle constructs through func_02017b4c and
- * destroys through SharedFilePtr_Destruct_Clsn. */
+/* The model handle constructs through ModelFile::ModelFile and destroys through
+ * ModelFile::~ModelFile. The collision handle constructs through ClsnFile::ClsnFile and
+ * destroys through ClsnFile::~ClsnFile. */
 struct FallBlockModelFilePtr : SharedFilePtr {
     FallBlockModelFilePtr(unsigned int fileId);
     ~FallBlockModelFilePtr();

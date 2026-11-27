@@ -39,8 +39,8 @@ enum daDonketu_c_AssetId {
 extern BullyResourceConfig data_ov064_0211b834;
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (func_02017acc / func_02017ab4 for the model,
- * SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim for the four
+ * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the model,
+ * AnimFile::AnimFile / AnimFile::~AnimFile for the four
  * animation handles), spelled through declared-only subclasses so the
  * static initializer names the real entry points. */
 struct DonketuModelFilePtr : SharedFilePtr {

@@ -262,9 +262,9 @@ extern void *gKeyModelFiles[];
 /* The door's file-scope SharedFilePtr objects, spelled through the same
    wrapper idiom the landed folds use: the handles' code is the veneer pair
    the cartridge already carries, so the wrappers get no bodies of their
-   own. The constructors alias func_02017acc (model) and
-   SharedFilePtr::Construct (animation) in this unit's manifest, and the
-   destructors func_02017ab4 and SharedFilePtr_Destruct_Anim. */
+   own. The constructors alias ModelFile::ModelFile (model) and
+   AnimFile::AnimFile (animation) in this unit's manifest, and the
+   destructors ModelFile::~ModelFile and AnimFile::~AnimFile. */
 struct DoorModelFilePtr : SharedFilePtr {
     DoorModelFilePtr(unsigned int id);
     ~DoorModelFilePtr();
