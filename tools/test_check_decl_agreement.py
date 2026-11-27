@@ -821,6 +821,31 @@ class ParserTests(unittest.TestCase):
                           if d.file == "src/darg_caller.cpp"], ["darg"])
         self.assertEqual(kinds(findings, "darg"), [])
 
+    def test_a_direct_initialised_object_is_data_not_a_function(self):
+        """`T x(0x49b);` constructs an object: a literal cannot be a parameter."""
+        def tree(t):
+            t.write("src/demo.cpp",
+                    '//cpp\nstruct ModelFile { ModelFile(unsigned int id); };\n'
+                    'extern "C" {\nextern ModelFile data_x;\n'
+                    'ModelFile data_x(0x49b);\nModelFile data_y(-1);\n}\n')
+            t.write("src/user.cpp", "//cpp\nstruct ModelFile;\n"
+                                    "extern ModelFile data_y;\n")
+        findings, _d, defs, _files = build(tree)
+        self.assertEqual(sorted((d.symbol, d.spelling()) for d in defs),
+                         [("data_x", "ModelFile"), ("data_y", "ModelFile")])
+        self.assertEqual(kinds(findings), [])
+
+    def test_an_identifier_argument_still_reads_as_a_parameter(self):
+        """`T f(Thing)` is a function when `Thing` is a type; only a literal decides."""
+        def tree(t):
+            t.write("src/f.cpp", "//cpp\nstruct Thing {};\nint f(Thing)\n{\n"
+                                 "    return 0;\n}\n")
+            t.write("src/caller.cpp", "//cpp\nstruct Thing;\nextern int f(Thing);\n")
+        findings, _d, defs, _files = build(tree)
+        self.assertEqual([d.spelling() for d in defs if d.symbol == "f"],
+                         ["int (Thing)"])
+        self.assertEqual(kinds(findings, "f"), [])
+
     def test_a_static_assertion_is_not_a_declaration(self):
         """It carries a `==`, and this tree writes hundreds of them."""
         with tempfile.TemporaryDirectory() as tmp:

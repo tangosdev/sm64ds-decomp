@@ -639,6 +639,22 @@ def parse_params(text, aliases, cxx):
     return tuple(types), True
 
 
+# An argument no parameter declaration can begin with: a number, possibly signed
+# or negated, or a literal keyword.
+INITIALISER_ARGUMENT = re.compile(
+    r"^[-+~!(\s]*(?:\d|\.\d|(?:true|false|nullptr|NULL))")
+
+
+def is_direct_initialiser(params_text):
+    """True when a parenthesised list after a name is constructor arguments.
+
+    Only a literal settles it: `T x(a)` is a function taking an `a` when `a` names
+    a type, so an identifier argument is left to the function reading.
+    """
+    return any(INITIALISER_ARGUMENT.match(piece.strip())
+               for piece in split_top(params_text))
+
+
 def parse_declarator(text, aliases, cxx=True):
     """(name, return_type, params, is_function, is_member, owner) or None.
 
@@ -714,6 +730,11 @@ def parse_declarator(text, aliases, cxx=True):
         # than guessed at.
         if head.endswith(")") or "(" in head:
             return None
+        if cxx and is_direct_initialiser(params_text):
+            # `ModelFile data_ov002_02110b50(0x49b);` -- an object constructed with
+            # an argument, not a function: a literal cannot be a parameter. Read
+            # the head as data.
+            return parse_declarator(head, aliases, cxx)
         m = re.search(r"([A-Za-z_][A-Za-z0-9_]*)\s*$", head)
         if not m:
             return None

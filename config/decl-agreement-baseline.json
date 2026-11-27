@@ -10,12 +10,6 @@
   "MTX_Scale43_": {
    "src/engine/model/ModelComponents.cpp": ["param:#1 Mtx43 *"]
   },
-  "PATH_DEFS": {
-   "src/engine/path/PathPtr.cpp": ["return:PathDef *"]
-  },
-  "PMi_IsInit": {
-   "src/engine/spi/PM.c": ["return:unsigned short"]
-  },
   "SPLEmitter_Init": {
    "src/engine/particle/Particle_Manager.cpp": ["param:#1 Particle::System *"]
   },
@@ -33,29 +27,15 @@
    "src/__register_global_object.c": ["return:DestructorChain *"]
   },
   "__ptmf_null": {
-   "src/game/actors/d_a_door.cpp": ["return:daDoor_StatePmf"],
    "src/minigames/unit020b2c84.cpp": ["return:ElemFn"]
   },
-  "arc_list": {
-   "src/engine/fs/FS_Archive.cpp": ["return:FSArchive *"]
-  },
-  "data_02075358": {
-   "src/unnamed/arm9/0201/func_0201fec8.cpp": ["return:char []"]
-  },
-  "data_02075f14": {
-   "include/decl_common.h": ["return:char []"]
-  },
   "data_02092114": {
-   "include/decl_common.h": ["return:unsigned char"],
    "src/game/player/d_a_ply_methods.cpp": ["return:signed char"],
    "src/ui/hud/CapIconMgr.cpp": ["return:signed char"]
   },
   "data_0209b2e4": {
    "src/game/stages/d_s_entry.cpp": ["return:unsigned char"],
    "src/game/stages/d_s_entry_methods.cpp": ["return:unsigned char"]
-  },
-  "data_0209d4d4": {
-   "src/unnamed/arm9/0201/func_02019dfc.c": ["return:unsigned char"]
   },
   "data_0209d5b8": {
    "src/unnamed/arm9/0201/func_0201a1bc.cpp": ["return:OSThread"],
@@ -64,14 +44,7 @@
   "data_0209d6f4": {
    "src/Message2.cpp": ["return:unsigned char *"]
   },
-  "data_0209e64c": {
-   "src/unnamed/arm9/0201/func_020197b8.cpp": ["return:unsigned char"],
-   "src/unnamed/arm9/0201/func_0201fec8.cpp": ["return:unsigned char"],
-   "src/unnamed/arm9/0201/func_0201ffcc.c": ["return:unsigned char"],
-   "src/unnamed/arm9/0203/func_02030790.cpp": ["return:unsigned char"]
-  },
   "data_0209e660": {
-   "src/engine/oam/OAM.cpp": ["return:unsigned char"],
    "src/minigames/d_s_mg_d3d_base.cpp": ["return:unsigned char"]
   },
   "data_0209ee90": {
@@ -83,25 +56,30 @@
   },
   "data_0209f5f8": {
    "src/minigames/d_s_mg_d3d_base.cpp": ["return:unsigned char"],
-   "src/minigames/d_s_mini_gm.cpp": ["return:unsigned char"],
-   "src/runtime/graphics/fader/d_wipe.cpp": ["return:unsigned char"]
+   "src/minigames/d_s_mini_gm.cpp": ["return:unsigned char"]
   },
   "data_020a0c78": {
    "src/engine/collision/d_bg_ch_sph_crr_query.cpp": ["return:CLPS"]
   },
+  "data_020a0dbc": {
+   "src/minigames/d_s_mg_trampoline.cpp": ["return:Vec2s"],
+   "src/minigames/d_s_mg_trampoline2.cpp": ["return:Vec2s"]
+  },
   "data_020a0dd8": {
    "src/unnamed/arm9/0203/func_0203b9bc.c": ["return:TPData"]
   },
-  "data_020a0df8": {
-   "src/unnamed/arm9/0203/func_0203b9bc.c": ["return:volatile TPData []"],
-   "src/unnamed/arm9/0203/func_0203bbc0.c": ["return:volatile TPData []"]
+  "data_020a0ebc": {
+   "src/game/actors/d_a_ch_room.cpp": ["return:Vector3"],
+   "src/game/actors/d_a_door.cpp": ["return:Vector3"],
+   "src/game/actors/d_a_mugen_bgm.cpp": ["return:Vector3"],
+   "src/game/actors/d_a_star_gate.cpp": ["return:Vector3"],
+   "src/minigames/d_mg_trmpln2_mario.cpp": ["return:Vector3"],
+   "src/minigames/unit020bfec0.cpp": ["return:Vector3"],
+   "src/minigames/unit020cd744.cpp": ["return:Vector3"]
   },
   "data_020a0edc": {
    "src/game/actors/d_a_obj_hatena_block.cpp": ["return:char []"],
    "src/minigames/unit020bfec0.cpp": ["return:Vector3_16"]
-  },
-  "data_020a0ef0": {
-   "src/engine/link/unit0203d7b8.cpp": ["return:unsigned char"]
   },
   "data_020a4bb8": {
    "src/runtime/actor/ActorBase.cpp": ["return:fBaseActorInfo * *"],
@@ -109,19 +87,83 @@
    "src/unnamed/arm9/0201/func_0201a054.cpp": ["return:void *"]
   },
   "data_020a94c0": {
-   "src/WBT_End.cpp": ["return:int"],
    "src/WBT_InitChild.cpp": ["return:int"],
    "src/WBT_InitParent.cpp": ["return:int"],
    "src/unnamed/arm9/0206/func_02065af0.cpp": ["return:int"]
   },
-  "data_ov026_02113f4c": {
-   "src/game/actors/d_a_water_suikomi.cpp": ["return:Vector3"]
+  "data_ov002_0210d9a0": {
+   "src/game/actors/d_a_hyuhyu.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_jango.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_kinopio.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_mky.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_key.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_mario_cap.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_snm_bth.cpp": ["return:SharedFilePtr"],
+   "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"],
+   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov002_0210d9a8": {
+   "src/game/actors/d_a_manta.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_number.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_tbox.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_s_coin.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_star.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_water_hakidasi.cpp": ["return:SharedFilePtr"],
+   "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"],
+   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov002_0210d9c0": {
+   "src/game/actors/d_a_dossy.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_hyuhyu.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_jango.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_kinopio.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_mky.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_key.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_mario_cap.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_snm_bth.cpp": ["return:SharedFilePtr"],
+   "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"],
+   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov002_0210d9f0": {
+   "src/game/actors/d_a_dp_lift.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_path_lift.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_rc_carpet.cpp": ["return:SharedFilePtr"],
+   "src/runtime/actor/d_path_lift_actor.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov002_0210da38": {
+   "src/game/actors/d_a_cnn.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_eykn.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_f_pkn.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_tbox.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_pkn.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_wbm.cpp": ["return:SharedFilePtr"],
+   "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov002_0210da40": {
+   "src/game/actors/d_a_hyuhyu.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_jango.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_kinopio.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_mky.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_key.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_mario_cap.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_snm_bth.cpp": ["return:SharedFilePtr"],
+   "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"],
+   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov002_0210e3a0": {
+   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov002_0210e7d8": {
+   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
+  },
+  "data_ov070_0212360c": {
+   "include/decl_common.h": ["return:int []"]
   },
   "data_ov081_02128d90": {
    "src/game/actors/d_a_snowball.cpp": ["return:SharedFilePtr"]
-  },
-  "fsi_card_lock_id": {
-   "include/private/fs_rom.h": ["return:int"]
   },
   "func_02018568": {
    "src/unnamed/arm9/0201/func_0201834c.cpp": ["param:#1 void *"]
@@ -134,6 +176,42 @@
   },
   "func_ov079_02123d4c": {
    "src/game/actors/d_a_btn.cpp": ["arity:1", "return:Vector3"]
+  },
+  "gBombheiModelFile": {
+   "src/game/actors/d_a_bmb.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_e_switch.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"]
+  },
+  "gCoinBluePoly32ModelFile": {
+   "src/game/actors/d_a_coin.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_trs.cpp": ["return:SharedFilePtr"],
+   "src/runtime/actor/d_actor.cpp": ["return:SharedFilePtr"]
+  },
+  "gCoinBluePoly4ModelFile": {
+   "src/game/actors/d_a_coin.cpp": ["return:SharedFilePtr"],
+   "src/runtime/actor/d_actor.cpp": ["return:SharedFilePtr"]
+  },
+  "gCoinRedPoly32ModelFile": {
+   "src/game/actors/d_a_coin.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_trs.cpp": ["return:SharedFilePtr"],
+   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
+  },
+  "gCoinRedPoly4ModelFile": {
+   "src/game/actors/d_a_coin.cpp": ["return:SharedFilePtr"],
+   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
+  },
+  "gCoinYellowPoly32ModelFile": {
+   "src/game/actors/d_a_coin.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_trs.cpp": ["return:SharedFilePtr"],
+   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
+  },
+  "gCoinYellowPoly4ModelFile": {
+   "src/game/actors/d_a_coin.cpp": ["return:SharedFilePtr"],
+   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
+  },
+  "gFeatherModelFile": {
+   "src/game/actors/d_a_feather.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"]
   },
   "gMessageBankBase": {
    "src/ui/messages/_ZN7Message8LoadTextEv.cpp": ["return:void *"]
@@ -148,11 +226,54 @@
    "src/minigames/d_s_mg_m_carlo.cpp": ["return:unsigned short"],
    "src/minigames/d_s_mg_roulette_methods.cpp": ["return:unsigned short"]
   },
-  "gNextSceneParam": {
-   "src/game/stages/d_scene.cpp": ["return:unsigned int"]
+  "gNumberTextureSequenceFile": {
+   "src/game/actors/d_a_obj_number.cpp": ["return:SharedFilePtr"]
+  },
+  "gOneUpMushroomModelFile": {
+   "src/game/actors/d_a_btfly.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_choropu.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_block_item_tag.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"]
+  },
+  "gPFlowerCloseModelFile": {
+   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_power_up_item.cpp": ["return:SharedFilePtr"]
+  },
+  "gPFlowerOpenModelFile": {
+   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_power_up_item.cpp": ["return:SharedFilePtr"]
   },
   "gRunningKuppaScript": {
    "src/KuppaScript.cpp": ["return:unsigned char *"]
+  },
+  "gSNumberTextureSequenceFile": {
+   "src/game/actors/d_a_obj_number.cpp": ["return:SharedFilePtr"]
+  },
+  "gScaleUpKinokoModelFile": {
+   "src/game/actors/d_a_king_donketu.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_kuri_king.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_block_item_tag.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_kinoko_tag.cpp": ["return:SharedFilePtr"]
+  },
+  "gShellGreenModelFile": {
+   "src/game/actors/d_a_nknk.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_block_item_tag.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_obj_hatena_block.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_shl.cpp": ["return:SharedFilePtr"]
+  },
+  "gShellRedModelFile": {
+   "src/game/actors/d_a_nknk.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_shl.cpp": ["return:SharedFilePtr"]
+  },
+  "gSilverNumberModelFile": {
+   "src/game/actors/d_a_obj_number.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_star.cpp": ["return:SharedFilePtr"]
+  },
+  "gWRingModelFile": {
+   "src/game/actors/d_a_manta.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_water_hakidasi.cpp": ["return:SharedFilePtr"],
+   "src/game/actors/d_a_water_ring.cpp": ["return:SharedFilePtr"]
   },
   "sBootJobDone": {
    "src/game/stages/d_s_boot_methods.cpp": ["return:unsigned char"]
