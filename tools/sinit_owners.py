@@ -58,11 +58,22 @@ HANDLE_CONSTRUCTOR_CALLS = "(?:" + "|".join(AC.HANDLE_CONSTRUCTOR_CALLS) + ")"
 ASSET_CALL_RE = re.compile(
     HANDLE_CONSTRUCTOR_CALLS + r"\s*\([^,]+,\s*(0x[0-9a-fA-F]+|\d+)"
 )
+# The assigned global and an optional member/index tail, all on one line: a
+# comment ending in `.` must not run on into the next definition and claim
+# its `=` for the comment's last word.
 ASSIGN_LHS_RE = re.compile(
-    r"\b([A-Za-z_]\w*)(?:\s*(?:\.|->|\[)[^=;]*)?\s*=(?!=)"
+    r"\b([A-Za-z_]\w*)(?:\s*(?:\.|->|\[)[^=;\n]*)?\s*=(?!=)"
 )
 KNOWN_INIT_FIRST_ARG_RE = re.compile(
     HANDLE_CONSTRUCTOR_CALLS + r"\s*\(\s*&?([A-Za-z_]\w*)"
+)
+# A file-scope object defined with constructor arguments, `T name(args);`,
+# which the compiler's initializer constructs.  Function prototypes have the
+# same shape; the caller keeps only names the initializer's relocations touch.
+CONSTRUCTED_DEFINITION_RE = re.compile(
+    r"^(?:static[ \t]+)?[A-Za-z_][\w:]*(?:<[^<>;\n]*>)?[ \t]+"
+    r"([A-Za-z_]\w*)[ \t]*\([^;{}]*\)[ \t]*;",
+    re.M,
 )
 
 
@@ -259,6 +270,7 @@ def infer_ownership_globals(text: str, globals_: list[str],
     owners.update(KNOWN_INIT_FIRST_ARG_RE.findall(text))
     owners.update(name for _cls, name, _offset, _arg in AC.handle_definitions(text))
     owners.update(ASSIGN_LHS_RE.findall(text))
+    owners.update(CONSTRUCTED_DEFINITION_RE.findall(text))
     for constructor in constructors:
         pattern = re.compile(
             re.escape(constructor) + r"\s*\(\s*&?([A-Za-z_]\w*)"

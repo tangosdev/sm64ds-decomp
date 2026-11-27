@@ -490,7 +490,7 @@ jobs:
 #                                      installed it is one of four.
 #   test_rombuild_profile        (6)   rombuild_profile.py -- isolated stock and
 #                                      intentional-mod build configs.
-#   test_sinit_owners           (10)   sinit_owners.py -- ranks the likely original TU
+#   test_sinit_owners           (12)   sinit_owners.py -- ranks the likely original TU
 #                                      owner of each __sinit_*.
 #   test_srcpath                (47)   srcpath.py -- the one place that answers "where
 #                                      does symbol X live in src/". Everything downstream
