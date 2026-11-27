@@ -140,11 +140,11 @@ ClsnFile gBattanCollisionFile(ASSET_BATTAN_KCL);          /* the plain Whomp's K
 ClsnFile gBattanKingCollisionFile(ASSET_BATTAN_KING_KCL); /* the king's KCL */
 
 /* Plain Whomp animation handles, then the king's six. */
-extern SharedFilePtr *const data_ov079_021275ec[5] = {
+extern AnimFile *const data_ov079_021275ec[5] = {
     &gBattanAttack01AnimationFile, &gBattanAttack02AnimationFile,  &gBattanRecoverAnimationFile,
     &gBattanWalkAnimationFile,     &gBattanWalkstartAnimationFile,
 };
-extern SharedFilePtr *const data_ov079_02127600[6] = {
+extern AnimFile *const data_ov079_02127600[6] = {
     &gBattanKingAttack01AnimationFile,  &gBattanKingAttack02AnimationFile,
     &gBattanKingRecoverAnimationFile,   &gBattanKingWalkAnimationFile,
     &gBattanKingWalkstartAnimationFile, &data_ov079_021281b0,
@@ -157,7 +157,7 @@ CLPS_Block data_ov079_02127ba0 = {
     0x0001,
     {{0x01000fc4, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
-SharedFilePtr *data_ov079_02127bf0[2] = {
+ClsnFile *data_ov079_02127bf0[2] = {
     &gBattanCollisionFile,
     &gBattanKingCollisionFile,
 };
@@ -541,7 +541,7 @@ void daBtn_c::UpdateWalking() {
     int king; /* an int copy of idx: indexing data_ov079_021275dc by the u8 changes the code */
     u8 idx;
     unsigned int q;
-    void *walk;
+    AnimFile *walk;
     BCA_File *cur;
     void *want;
     int lim;
@@ -550,7 +550,7 @@ void daBtn_c::UpdateWalking() {
     q = mAnmModel.currFrame;
     walk = data_ov079_021275ec[((int)idx * 5) + 3];
     cur = mAnmModel.file;
-    want = ((SharedFilePtr *)walk)->filePtr;
+    want = walk->filePtr;
     frame = (unsigned short)(q >> 12);
 
     if (cur != want) {
@@ -657,7 +657,7 @@ void daBtn_c::UpdateKingWalking() {
         s16 t;
         void *anim;
         int five;
-        SharedFilePtr *const *tab;
+        AnimFile *const *tab;
         dExtAnmModel_c *ma;
 
         Sound::StopLoadedMusic_Layer3();
@@ -701,7 +701,7 @@ void daBtn_c::func_ov079_02125504() {
     {
         unsigned int q;
         u8 i;
-        SharedFilePtr *e;
+        AnimFile *e;
         BCA_File *cur;
         void *want;
         i = mIsKing;

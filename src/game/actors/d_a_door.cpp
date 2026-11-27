@@ -137,8 +137,8 @@ enum daDoor_c_AssetId {
 /* The vector temps below are VecFx32: a stack Vector3 would run its destructor. */
 /* One entry of data_ov100_02148204, indexed by param1 (the variant). */
 struct DoorVariantInfo {
-    SharedFilePtr *file;    /* 0x0: the door model */
-    SharedFilePtr *keyFile; /* 0x4: a decoration model hung on the door, or
+    ModelFile *file;        /* 0x0: the door model */
+    ModelFile *keyFile;     /* 0x4: a decoration model hung on the door, or
                                 null (see mKeyModel) */
     s8 starsNeeded;         /* 0x8: >= 0: a star door, the star count it needs */
     s8 keyIndex;            /* 0x9: >= 0: a key door, the key's index */
@@ -252,12 +252,11 @@ extern int gSubVolume;
 extern Vector3 data_020a0ebc;
 extern ModelFile gPowerStarModelFile;
 extern ModelFile gKoopaKeyModelFile;
-/* ov089's key-model file table, not a function: eight SharedFilePtr*
-   entries in that overlay's .rodata, the table LoadKeyModels loads into
-   (bounds-checked `idx >= 8`). src/game/actors/d_a_obj_key.cpp, home of
-   LoadKeyModels and UnloadKeyModels, declares it under this name with this
-   element type. */
-extern void *gKeyModelFiles[];
+/* ov089's key-model file table: eight ModelFile pointers in that overlay's
+   .data, the table LoadKeyModels loads from (bounds-checked `idx >= 8`).
+   src/game/actors/d_a_obj_key.cpp, home of LoadKeyModels and
+   UnloadKeyModels, defines it. */
+extern ModelFile *gKeyModelFiles[];
 
 /* -------------------------------------------------------------------------- */
 /* The eleven model handles and the animation handle, in static-initializer
@@ -929,7 +928,7 @@ s32 daDoor_c::CleanupResources() {
         unsigned int v = param1;
         if (v >= DOOR_FIRST_KEY_MODEL && v <= DOOR_LAST_KEY_MODEL)
             UnloadKeyModels(v - 7);
-        ((SharedFilePtr *)(mKeyFile))->Release();
+        mKeyFile->Release();
     }
     return 1;
 }
@@ -1059,8 +1058,7 @@ s32 daDoor_c::InitResources() {
             }
         }
         if (mKeyFile != 0) {
-            SharedFilePtr *keyFile = (SharedFilePtr *)mKeyFile;
-            dExtSimpleModel_c::LoadFile(*keyFile);
+            dExtSimpleModel_c::LoadFile(*mKeyFile);
         }
     }
 

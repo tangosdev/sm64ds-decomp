@@ -28,6 +28,7 @@ struct fLiNdBa_c;
 struct dFdBrightness_c;
 struct FileSaveData;
 struct SharedFilePtr;
+struct ModelFile;
 struct BTA_File;
 struct CylinderOffset;
 struct MantaCylinderOffset;
@@ -277,7 +278,7 @@ extern int data_ov075_0211d650[];
 /* data_ov084_02130cc0, data_ov084_02130cc8 and data_ov084_02130d74 are defined
    by d_a_krb.cpp as typed handles and its pointer-to-member state table; the
    TU's own declarations carry the real types. */
-extern void *gKeyModelFiles[];
+extern struct ModelFile *gKeyModelFiles[];
 extern int data_ov091_021344e8[];
 extern int data_ov094_02136a1c[];
 extern const struct WbmCarryOffset data_ov098_0213bf60[];
@@ -754,7 +755,6 @@ extern void *sParticleHeapCursor;
 extern void *sParticleHeapEnd;
 extern void *sParticleHeapBase;
 extern void*data_020a4bd0;
-extern void*data_ov002_020ff790[];
 extern void*data_ov002_0210f350;
 extern void *sMgMenuScreenByLanguage[];
 extern struct OamAttr *sTrmpDoorSignSprites[];
@@ -779,7 +779,7 @@ extern void *sRouletteLandedRacer;
 extern struct CLPS_Block data_ov010_021122f8;
 extern void *data_ov016_021149d4[];
 extern void *data_ov023_02112088;
-extern void *data_ov065_0211c0a8[];
+extern struct ModelFile *const data_ov065_0211c0a8[];
 extern struct CLPS_Block *data_ov065_0211cd68[];
 extern void *data_ov065_0211cfd8[];
 extern float data_ov074_02122e4c[];
