@@ -43,7 +43,6 @@ void ClearPlayerWarp(int player) {
     SetLinkByte(LINK_BYTE_PLAYER, (u8)(v & ~LINK_PLAYER_WARP_MASK));
 }
 
-/* Player's ready bit. */
 u8 IsPlayerReady(int player) {
     return GetLinkByte(player, LINK_BYTE_PLAYER) & LINK_PLAYER_READY;
 }
