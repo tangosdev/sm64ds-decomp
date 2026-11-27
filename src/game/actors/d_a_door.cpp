@@ -137,8 +137,8 @@ enum daDoor_c_AssetId {
 /* The vector temps below are VecFx32: a stack Vector3 would run its destructor. */
 /* One entry of data_ov100_02148204, indexed by param1 (the variant). */
 struct DoorVariantInfo {
-    SharedFilePtr *file;    /* 0x0: the door model */
-    SharedFilePtr *keyFile; /* 0x4: a decoration model hung on the door, or
+    ModelFile *file;        /* 0x0: the door model */
+    ModelFile *keyFile;     /* 0x4: a decoration model hung on the door, or
                                 null (see mKeyModel) */
     s8 starsNeeded;         /* 0x8: >= 0: a star door, the star count it needs */
     s8 keyIndex;            /* 0x9: >= 0: a key door, the key's index */

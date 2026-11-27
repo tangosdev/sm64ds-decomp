@@ -77,7 +77,8 @@ struct ModelFile;
  * below, and the shadow structs both consumers carried for it are gone.
  * 0x13c is a ModelFile *: all three of its sources (gPowerStarModelFile,
  * a gKeyModelFiles entry, gKoopaKeyModelFile) are ModelFile objects.
- * 0x140 stays void*.
+ * 0x140 stays void*: mState below holds a state record's address, which
+ * func_ov100_021453d8 installs (see the note in d_a_door.cpp).
  *
  * Field NAMES elsewhere are placeholders and cannot change codegen. Offsets
  * and widths are observed.

@@ -163,7 +163,7 @@ extern "C" {
 extern dCamera_c *gCamera;
 extern u32 gNextActorUpdateMask;
 extern void func_ov002_020c3dbc(void *player);
-extern SharedFilePtr *const data_ov089_021328b4[];
+extern ModelFile *const data_ov089_021328b4[];
 /* The star's idle animation. d_a_star.cpp defines it. */
 extern AnimFile data_ov002_02110964;
 extern AnimFile gKoopaKeyGetAnimationFile;
@@ -243,7 +243,7 @@ void UnloadKeyModels(int kind) {
 
 /* LoadKeyModels, 0x02131114 */
 void LoadKeyModels(int kind) {
-    SharedFilePtr *extra;
+    ModelFile *extra;
     if (kind >= 8)
         return;
     dExtSimpleModel_c::LoadFile(*gKeyModelFiles[kind]);
@@ -840,7 +840,7 @@ int daObjKey_c::InitResources()
         if (mAnmModel.SetFile((BMD_File *)gKeyModelFiles[mState]->filePtr, 1, 1) == 0)
             return 0;
         {
-            SharedFilePtr *extra = data_ov089_021328b4[mState];
+            ModelFile *extra = data_ov089_021328b4[mState];
             if (extra != 0) {
                 if (mModel.SetFile((BMD_File *)extra->filePtr, 1, -1) == 0)
                     return 0;
@@ -924,6 +924,6 @@ ModelFile *gKeyModelFiles[8] = {
     &gKoopaKeyModelFile, &gKoopaKeyModelFile,  &gMarioKeyModelFile,  &gLuigiKeyModelFile,
     &gWarioKeyModelFile, &data_ov085_021305d8, &data_ov085_021305d8, &gPowerStarModelFile,
 };
-extern SharedFilePtr *const data_ov089_021328b4[8] = {
+extern ModelFile *const data_ov089_021328b4[8] = {
     0, 0, &data_ov002_0210da40, &data_ov002_0210d9a0, &data_ov002_0210d9c0, 0, 0, 0,
 };
