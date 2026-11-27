@@ -642,7 +642,7 @@ def parse_params(text, aliases, cxx):
 # An argument no parameter declaration can begin with: a number, possibly signed
 # or negated, or a literal keyword.
 INITIALISER_ARGUMENT = re.compile(
-    r"^[-+~!(\s]*(?:\d|\.\d|(?:true|false|nullptr|NULL))")
+    r"^[-+~!(\s]*(?:\d|\.\d|(?:true|false|nullptr|NULL)\b)")
 
 
 def is_direct_initialiser(params_text):
