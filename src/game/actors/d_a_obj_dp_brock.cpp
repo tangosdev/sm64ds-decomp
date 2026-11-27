@@ -58,14 +58,6 @@ struct BrockCollisionFilePtr : SharedFilePtr {
 extern BrockModelFilePtr data_ov025_02113ab8;
 extern BrockCollisionFilePtr data_ov025_02113ab0;
 
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
-
 extern CLPS_Block data_ov025_02112ce8;
 
 /* mState values, how long each lasts, and the 20.12 step.

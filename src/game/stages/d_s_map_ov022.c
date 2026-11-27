@@ -7,13 +7,6 @@
 /* Definition order is what makes the compiler size sort match address order. */
 
 typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[7];
-} Clps_02113298;
-
-typedef struct {
     ExitEntry entries[1];
     u16 pad;
 } ExitEntries1;
@@ -48,7 +41,7 @@ extern PathNode data_ov022_02113210[4];
 extern LevelRec data_ov022_02113228;
 extern ViewEntry data_ov022_02113244[2];
 extern SimpleEntry data_ov022_02113260[7];
-extern Clps_02113298 data_ov022_02113298;
+extern CLPS_Block64 data_ov022_02113298;
 extern StandardEntry data_ov022_021132d8[4];
 extern ObjSubTable data_ov022_02113318[9];
 extern ObjSubTable data_ov022_02113360[9];
@@ -181,16 +174,18 @@ SimpleEntry data_ov022_02113260[7] = {
     {0x0e3e, (s16)0xe69c, 0x00fa, 0x1162}, {0x0e3e, 0x1964, 0x00af, (s16)0xf66e},
     {0xee3c, (s16)0xe82c, 0x01c2, 0x1d4c}};
 
-Clps_02113298 data_ov022_02113298 = {0x53504c43,
-                                     0x0008,
-                                     0x0007,
-                                     {{0x00048fc0, 0x000000ff},
-                                      {0x0004afc0, 0x000000ff},
-                                      {0x00048fc4, 0x000000ff},
-                                      {0x00048fc5, 0x000000ff},
-                                      {0x000c8fc0, 0x000000ff},
-                                      {0x01048fc0, 0x000000ff},
-                                      {0x018c8fcc, 0x000000ff}}};
+CLPS_Block64 data_ov022_02113298 = {
+    0x53504c43,
+    0x0008,
+    0x0007,
+    {{0x00048fc0, 0x000000ff},
+     {0x0004afc0, 0x000000ff},
+     {0x00048fc4, 0x000000ff},
+     {0x00048fc5, 0x000000ff},
+     {0x000c8fc0, 0x000000ff},
+     {0x01048fc0, 0x000000ff},
+     {0x018c8fcc, 0x000000ff}},
+};
 
 StandardEntry data_ov022_021132d8[4] = {
     {0x0000, (s16)0xf15a, 0x073a, 0x1806, 0x0000, 0x4000, 0x0000, 0x0500},

@@ -1,12 +1,12 @@
-extern int func_0203da9c(void);
-extern unsigned char GetLinkByte(int slot, int byte);
-extern void SetLinkByte(int byte, int value);
+#include "LinkSettings.h"
 
-void WarpPlayer(int i, int val)
-{
+/* If player is this console's, post its warp destination (daWarpkun_c);
+   the other consoles see it through IsPlayerWarping. */
+void WarpPlayer(int player, int destination) {
     int v;
-    if (i != func_0203da9c())
+    if (player != GetLocalPlayerId())
         return;
-    v = GetLinkByte(i, 0);
-    SetLinkByte(0, (unsigned char)((v & ~0x70) | (val << 4)));
+    v = GetLinkByte(player, LINK_BYTE_PLAYER);
+    SetLinkByte(LINK_BYTE_PLAYER,
+                (u8)((v & ~LINK_PLAYER_WARP_MASK) | (destination << LINK_PLAYER_WARP_SHIFT)));
 }

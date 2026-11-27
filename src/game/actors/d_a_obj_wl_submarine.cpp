@@ -23,6 +23,7 @@ enum daObjWlSubmarine_c_AssetId {
     ASSET_WL_SUBMARINE_KCL = 0x06dd
 };
 
+#include "CLPS.h"
 #include "SpawnInfo.h"
 #include "daObjWlSubmarine_c.h"
 #include "SharedFilePtr.h"
@@ -46,8 +47,7 @@ extern SubmarineCollisionFilePtr Submarine_ClsnFile;
 
 /* The platform's own collision block in the stage-map TU, fed to the mesh
  * collider by InitResources. Its entries are sized there. */
-struct Clps_02112fd4;
-extern Clps_02112fd4 data_ov026_02112fd4;
+extern CLPS_Block64 data_ov026_02112fd4;
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */

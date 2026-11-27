@@ -3,6 +3,7 @@
 #include "private/mb_views.h"
 #include "nitro/mi/memory.h"
 #include "private/player_input_record.h"
+#include "LinkSettings.h"
 #include "nitro/mb/mb.h"
 #include "private/wm_views.h"
 #include "private/arm9_a0f90_channel_measure.h"
@@ -2707,12 +2708,14 @@ void func_0203ea5c(void) {
         own = &data_020a1154[data_020a0f10];
         for (verIdx = 0, verRec = data_020a1154; verIdx < 4; verIdx++, verRec++) {
             if (verRec->flags & 0x8000) {
-                if (verRec->settings[LINK_SYNC_POSITION] != own->settings[LINK_SYNC_POSITION]) {
+                if (verRec->settings[LINK_BYTE_SYNC_POSITION] !=
+                    own->settings[LINK_BYTE_SYNC_POSITION]) {
                     gLinkStatusFlags |= 8;
                     break;
-                } else if (verRec->settings[LINK_SYNC_WINGS] != own->settings[LINK_SYNC_WINGS]) {
-                    /* LINK_SYNC_WINGS is LINK_SYNC_POSITION on the cartridge
-                       (player_input_record.h), so this never fires. */
+                } else if (verRec->settings[LINK_BYTE_SYNC_WINGS] !=
+                           own->settings[LINK_BYTE_SYNC_WINGS]) {
+                    /* LINK_BYTE_SYNC_WINGS is LINK_BYTE_SYNC_POSITION on the cartridge
+                       (LinkSettings.h), so this never fires. */
                     gLinkStatusFlags |= 0x10;
                     break;
                 }
@@ -2723,8 +2726,8 @@ void func_0203ea5c(void) {
         }
         if (data_020a0efc != 0) {
             gLinkStatusFlags &= 0xFF60;
-            data_020a1040.settings[LINK_SYNC_POSITION] = 0;
-            data_020a1040.settings[LINK_SYNC_WINGS] = 0;
+            data_020a1040.settings[LINK_BYTE_SYNC_POSITION] = 0;
+            data_020a1040.settings[LINK_BYTE_SYNC_WINGS] = 0;
             data_020a0f30 = 0;
             data_020a1040.flags &= 0xEFFF;
             data_020a0efc--;
@@ -3244,16 +3247,18 @@ void func_0203db64(void *parentParam, const void *gameRegistry) {
     data_020a0ef0 = 1;
 }
 
-/* Settings byte `byte` of link slot `slot` (data_020a1154[slot].settings;
-   a slot is one console, 0 the parent). SetLinkByte writes the same bytes
-   in this console's own record, data_020a1040. The accessors func_02020028..func_02020388 give the bits
-   their roles (ready, go, course, slot mask, controller mode). */
-unsigned char GetLinkByte(int slot, int byte) {
-    return data_020a1154[slot].settings[byte];
+/* Settings byte `byte` of link player `player` (data_020a1154[player].
+   settings; a link player is one console, 0 the parent). SetLinkByte writes the same bytes in
+   this console's own record, data_020a1040. LinkSettings.h maps the bytes
+   and declares the accessors that give the bits their roles (ready, warp,
+   go, course, session mask, controller mode). */
+unsigned char GetLinkByte(int player, int byte) {
+    return data_020a1154[player].settings[byte];
 }
 
 /* Set link settings byte `byte` in this console's own input record
-   data_020a1040: the writer the 0202 accessors pair with GetLinkByte. */
+   data_020a1040: the writer the LinkSettings.h accessors pair with
+   GetLinkByte. */
 void SetLinkByte(int byte, int value) {
     data_020a1040.settings[byte] = value;
 }
@@ -3301,28 +3306,30 @@ int func_0203daac(void) {
 }
 
 /* This console's player index on the link, data_020a0f10 (0 for the
-   parent): the AID func_0203ea5c takes from func_02040704. */
-int func_0203da9c(void) {
+   parent): the AID func_0203ea5c takes from func_02040704. dScStage_c::
+   InitResources keeps it as gLocalPlayerId; the LinkSettings.h setters
+   read this player's byte back before rewriting it. */
+int GetLocalPlayerId(void) {
     return data_020a0f10;
 }
 
-/* The link status bits of gLinkStatusFlags that mask x selects.
+/* The link status bits of gLinkStatusFlags that mask selects.
    func_02030e4c and func_020197b8 test the error bits 0x9d with it, and
    func_0201a8b4 the busy bit 0x2000, held while a link step waits for the
    other consoles. */
-unsigned short GetLinkStatus(unsigned short x) {
-    return gLinkStatusFlags & x;
+unsigned short GetLinkStatus(unsigned short mask) {
+    return gLinkStatusFlags & mask;
 }
 
 /* Clear the link error bits 0x9f of gLinkStatusFlags and the two sync bytes of
    the local input record data_020a1040 (one byte on the cartridge, cleared
-   twice: see LINK_SYNC_WINGS). func_02030aa4 calls it when a session starts,
+   twice: see LINK_BYTE_SYNC_WINGS). func_02030aa4 calls it when a session starts,
    and dMeter_c when it sets up. func_0203ea5c runs the same three statements
    inline in its error countdown, so the two shared a translation unit. */
 void ClearLinkErrors(void) {
     gLinkStatusFlags &= 0xff60;
-    data_020a1040.settings[LINK_SYNC_POSITION] = 0;
-    data_020a1040.settings[LINK_SYNC_WINGS] = 0;
+    data_020a1040.settings[LINK_BYTE_SYNC_POSITION] = 0;
+    data_020a1040.settings[LINK_BYTE_SYNC_WINGS] = 0;
 }
 
 /* The link mode data_020a0f04 that func_0203da2c sets (0 local only, 1 and 2

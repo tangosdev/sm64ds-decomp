@@ -7,13 +7,6 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[7];
-} Clps_02111450;
-
 extern const u16 data_ov011_021111a0[2];
 extern const fx32 data_ov011_021111a4[1];
 extern const BTAMaterialRecord data_ov011_021111a8[1];
@@ -32,7 +25,7 @@ extern LevelRec data_ov011_021113ac;
 extern ExitEntry data_ov011_021113c8[2];
 extern ViewEntry data_ov011_021113e4[3];
 extern ObjSubTable data_ov011_02111410[8];
-extern Clps_02111450 data_ov011_02111450;
+extern CLPS_Block64 data_ov011_02111450;
 extern PathNode data_ov011_02111490[12];
 extern StandardEntry data_ov011_021114d8[7];
 extern SimpleEntry data_ov011_02111548[27];
@@ -122,7 +115,7 @@ ObjSubTable data_ov011_02111410[8] = {
     {0x0a, 0x02, {0x00, 0x00}, &data_ov011_021113c8[0]},
 };
 
-Clps_02111450 data_ov011_02111450 = {
+CLPS_Block64 data_ov011_02111450 = {
     0x53504c43,
     0x0008,
     0x0007,

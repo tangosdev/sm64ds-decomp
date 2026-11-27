@@ -46,13 +46,6 @@ enum daObjDlPyramid_c_AssetId { ASSET_DL_PYRAMID_BMD = 0x05dd, ASSET_DL_PYRAMID_
 
 struct BMD_File;
 struct KCL_File;
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
 
 extern CLPS_Block data_ov024_021129f0;
 

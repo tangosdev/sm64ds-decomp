@@ -6,21 +6,6 @@
 
 /* Definition order is what makes the compiler size sort match address order. */
 
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[3];
-} CLPS_Block;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[24];
-    u32 tail[6];
-} Clps_02113264;
-
 typedef struct {
     ExitEntry entries[1];
     u16 pad;
@@ -71,7 +56,7 @@ extern SimpleEntry data_ov027_02113154[6];
 extern ObjSubTable data_ov027_02113184[9];
 extern ObjSubTable data_ov027_021131cc[9];
 extern StandardEntry data_ov027_02113214[5];
-extern Clps_02113264 data_ov027_02113264;
+extern CLPS_Block224 data_ov027_02113264;
 extern SimpleEntry data_ov027_02113344[30];
 extern StandardEntry data_ov027_02113434[57];
 
@@ -182,13 +167,15 @@ CLPS_Block data_ov027_021130e8 = {
     0x53504c43,
     0x0008,
     0x0003,
-    {{0x01002fc0, 0x000000ff}, {0x01000fc0, 0x000000ff}, {0x01001fc0, 0x000000ff}}};
+    {{0x01002fc0, 0x000000ff}, {0x01000fc0, 0x000000ff}, {0x01001fc0, 0x000000ff}},
+};
 
 CLPS_Block data_ov027_02113108 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00004fc7, 0x000000ff}, {0x04004fc7, 0x000000ff}, {0xffffffff, 0xffffffff}}};
+    {{0x00004fc7, 0x000000ff}, {0x04004fc7, 0x000000ff}, {0xffffffff, 0xffffffff}},
+};
 
 ViewEntries3 data_ov027_02113128 = {
     {{0x0002, 0x00ff, 0x1806, 0x0514, 0x0258, {0x0000, 0x0000}, (s16)0xc16d, 0x0000},
@@ -230,7 +217,7 @@ StandardEntry data_ov027_02113214[5] = {
     {0x0000, 0x1518, 0x03e8, (s16)0xfc7c, 0x0000, (s16)0xc000, 0x0000, 0x0000},
     {0x0000, 0x00c8, 0x0834, 0x0578, 0x0000, (s16)0xcaab, 0x0000, 0x0008}};
 
-Clps_02113264 data_ov027_02113264 = {
+CLPS_Block224 data_ov027_02113264 = {
     0x53504c43,
     0x0008,
     0x0018,
@@ -241,8 +228,9 @@ Clps_02113264 data_ov027_02113264 = {
      {0x00744fc7, 0x000000ff}, {0x00744fc1, 0x000000ff}, {0x00744fc4, 0x000000ff},
      {0x00742fc8, 0x000000ff}, {0x00742fc5, 0x000000ff}, {0x00742fc4, 0x000000ff},
      {0x0003cfc1, 0x000000ff}, {0x0003cfc4, 0x000000ff}, {0x0003cfc5, 0x000000ff},
-     {0x0003cfc7, 0x000000ff}, {0x00a43fc6, 0x000000ff}, {0x00043fc6, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff}};
+     {0x0003cfc7, 0x000000ff}, {0x00a43fc6, 0x000000ff}, {0x00043fc6, 0x000000ff},
+     {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 SimpleEntry data_ov027_02113344[30] = {
     {0xe225, 0x09c4, 0x03e8, 0x11f8},           {0xe225, 0x0b54, 0x03e8, 0x0e74},

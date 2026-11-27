@@ -66,14 +66,6 @@ enum {
 
 extern DgrModelFilePtr data_ov025_02113a68;
 extern DgrCollisionFilePtr data_ov025_02113a60;
-/* Stage collision-property blocks are defined by d_s_map_ov025.c. */
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
 
 extern CLPS_Block data_ov025_02112c28;
 

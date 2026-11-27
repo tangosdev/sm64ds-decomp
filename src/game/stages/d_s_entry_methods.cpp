@@ -48,6 +48,7 @@
 #include "private/controller_input.h"
 #include "Sound.h"
 #include "decl_common.h"
+#include "LinkSettings.h"
 #include "dScEntry_c.h"
 #include "dFdBrightness_c.h"
 #include "AsyncJob.h"
@@ -77,8 +78,6 @@ void LoadFont3D(void);
 extern "C" int func_0203da3c(void);
 extern "C" void UnloadArchive(int i);
 extern "C" void func_02030aa4(int arg);
-extern "C" int func_0203da9c(void);
-extern "C" void func_02020028(int player, unsigned char mode);
 
 /* The scene's graph callback: the scene registers its own object here and
    clears it on the way out. The frame calls its four slots: GraphCallback0 at
@@ -106,11 +105,6 @@ extern dFdBrightness_c *gSceneFader;
 #include "nitro/fx/fx_trig.h"
 
 extern "C" int func_0203d974(void);
-extern "C" u8 func_02020168(void);
-extern "C" void func_02020304(void);
-extern "C" void func_020200e0(void);
-extern "C" void func_02020334(void);
-extern "C" void func_02020124(void);
 extern "C" int func_0203d890(void);
 extern "C" u32 LoadCompressedFileAt(int, void *);
 int Sound_PlayIfNotActive(int, int, int, short);
@@ -147,10 +141,6 @@ extern unsigned char EntryCourseLoadStarted;
 void PreloadLevelOverlays(int level);
 extern "C" void func_0203d918();
 extern u8 data_0208a0e0;
-extern "C" u8 GetParentCourseIndex(void);
-extern "C" u8 func_020200b8(void);
-extern "C" void func_02020078(u32 flags);
-extern "C" void func_0202029c(u32 idx);
 extern s8 data_ov075_0211c6ec[4];
 extern u8 gGameMode;
 extern u8 data_0209b2e4;
@@ -212,17 +202,13 @@ extern "C" void TurnBacklightOff(void);
 void SetControllerMode(unsigned char mode);
 void func_02033bb8(int a);
 extern "C" void UnloadOverlay(int id);
-extern "C" void func_02020190(void);
 extern "C" void func_02030994(void);
-extern "C" void func_020201c0(void);
 void func_0202048c(OamAnimation *dst, int a, int b);
 extern "C" void func_02020768(OamAnimation *anim);
 void func_020331fc(int a, int b, int c);
 void PrepareVsMode(void);
 extern "C" void LoadLevelNoReturn(int levelID, u32 entranceID, u32 starID, u32 loadMode);
 extern u8 data_02092778;
-extern "C" u8 IsPlayerReady(int player);
-extern "C" u8 IsPlayerReadyForRematch(int);
 
 extern dScEntry_c::StepSet data_ov075_0211d7e0;
 extern dScEntry_c::StepSet data_ov075_0211d810;
@@ -413,8 +399,8 @@ s32 dScEntry_c::InitResultResources() {
     TallyRoundWinners();
 
     found = -1;
-    if (data_0209b2f0[func_0203da9c()] != 0) {
-        found = func_0203da9c();
+    if (data_0209b2f0[GetLocalPlayerId()] != 0) {
+        found = GetLocalPlayerId();
     } else {
         j = 0;
         do {
@@ -513,7 +499,7 @@ void dScEntry_c::StartMatch() {
 
 /* ArePlayersReady's twin for the rematch handshake (coined name): every
  * joined player must show the rematch ready bit (link settings byte 2,
- * bit 4) that EnterRematchSync raises through func_020201c0. */
+ * bit 4) that EnterRematchSync raises through SetLocalPlayerReadyForRematch. */
 int dScEntry_c::ArePlayersReadyForRematch() {
     int i;
     for (i = 0; i < 4; i++) {
@@ -548,7 +534,7 @@ int dScEntry_c::CheckMenuConfirm(int player) {
     if (player >= 0)
         pressed = data_020a0e58[player].pressed;
     else
-        pressed = data_020a0e58[func_0203da9c()].pressed;
+        pressed = data_020a0e58[GetLocalPlayerId()].pressed;
     if (pressed != 0) {
         if (pressed & 0xc)
             return 1;
@@ -567,9 +553,9 @@ void dScEntry_c::ResetMatchRecords() {
 }
 
 void dScEntry_c::UpdateSettingsSync() {
-    if (func_02020168()) {
-        func_02020304();
-        func_020200e0();
+    if (IsGoSignalRaised()) {
+        ClearLocalPlayerReady();
+        ClearGoSignal();
         G2_BlendNone();
         ChangeStepsAfterDelay(&EntryCourseSelectSteps, 5);
         return;
@@ -580,7 +566,7 @@ void dScEntry_c::UpdateSettingsSync() {
     int b = ArePlayersReady();
     if (b == 0)
         return;
-    func_02020124();
+    RaiseGoSignal();
 }
 
 void dScEntry_c::EnterSettingsSync() {
@@ -590,7 +576,7 @@ void dScEntry_c::EnterSettingsSync() {
     Message::func_020338b0(0x145, 0xb0, 0x1d, -1);
     gSubScreenLayers |= 5;
     mIconCount = 0;
-    func_02020334();
+    SetLocalPlayerReady();
     func_02012790(0x120);
 }
 
@@ -616,7 +602,7 @@ void dScEntry_c::RenderSoundSettings() {
 }
 
 void dScEntry_c::UpdateSoundSettings() {
-    int w = func_0203da9c();
+    int w = GetLocalPlayerId();
     int dir;
     u16 flags;
 
@@ -737,7 +723,7 @@ void dScEntry_c::EnterSoundSettings() {
 
     mIconCount = 9;
 
-    func_02020304();
+    ClearLocalPlayerReady();
 }
 
 #undef SH
@@ -761,7 +747,7 @@ void dScEntry_c::RenderControlSettings() {
 }
 
 void dScEntry_c::UpdateControlSettings() {
-    int w = func_0203da9c();
+    int w = GetLocalPlayerId();
 
     if (mIcons[3].TouchArea_Update(-1) != 0 || mIcons[4].TouchArea_Update(-1) != 0 ||
         (data_020a0e58[w].pressed & 8) != 0 || (data_020a0e58[w].pressed & 4) != 0 ||
@@ -770,7 +756,7 @@ void dScEntry_c::UpdateControlSettings() {
         for (i = 0; i <= 2; i++) {
             if (mIcons[i].mOn != 0) {
                 SetControllerMode(i);
-                func_02020028(w, i);
+                PostControllerMode(w, i);
             }
         }
         mIcons[3].Select();
@@ -784,7 +770,7 @@ void dScEntry_c::UpdateControlSettings() {
         mSelectedIcon = 0;
         if (mIcons[0].mOn != 0) {
             SetControllerMode(0);
-            func_02020028(w, 0);
+            PostControllerMode(w, 0);
             LeaveSettings();
             func_02012790(0x11a);
         } else {
@@ -802,7 +788,7 @@ void dScEntry_c::UpdateControlSettings() {
         mSelectedIcon = 1;
         if (mIcons[1].mOn != 0) {
             SetControllerMode(1);
-            func_02020028(w, 1);
+            PostControllerMode(w, 1);
             LeaveSettings();
             func_02012790(0x11a);
         } else {
@@ -820,7 +806,7 @@ void dScEntry_c::UpdateControlSettings() {
         mSelectedIcon = 2;
         if (mIcons[2].mOn != 0) {
             SetControllerMode(2);
-            func_02020028(w, 2);
+            PostControllerMode(w, 2);
             LeaveSettings();
             func_02012790(0x11a);
         } else {
@@ -878,7 +864,7 @@ void dScEntry_c::EnterControlSettings() {
     G2_SetBlendBrightness(0xb, ~5);
 
     mStepWork[0] = mSelectedIcon;
-    func_02020304();
+    ClearLocalPlayerReady();
 }
 
 void dScEntry_c::EnterQuitMessage() {
@@ -918,7 +904,7 @@ static inline unsigned IsMode6(dScEntry_c *scene) {
 void dScEntry_c::UpdateQuitConfirm() {
     int id;
 
-    id = func_0203da9c();
+    id = GetLocalPlayerId();
     if (mIcons[0].TouchArea_Update(id) != 0 || (CheckMenuConfirm(id) != 0 && mSelectedIcon == 0)) {
         mIcons[1].mOn = 0;
         mIcons[0].Select();
@@ -985,13 +971,13 @@ void dScEntry_c::EnterQuitConfirm() {
 
 void dScEntry_c::UpdateRematchSync() {
     if (data_0209fc58 != 0) {
-        func_02020190();
+        ClearLocalPlayerReadyForRematch();
         HandlePlayerDisconnect(&data_ov075_0211d870);
         return;
     }
-    if (func_02020168()) {
-        func_02020190();
-        func_020200e0();
+    if (IsGoSignalRaised()) {
+        ClearLocalPlayerReadyForRematch();
+        ClearGoSignal();
         func_02030994();
         gMainScreenLayers =
             gMainScreenLayers & ~(DISPLAY_LAYER_BG1 | DISPLAY_LAYER_BG2 | DISPLAY_LAYER_BG3);
@@ -1005,7 +991,7 @@ void dScEntry_c::UpdateRematchSync() {
         return;
     if (ArePlayersReadyForRematch() == 0)
         return;
-    func_02020124();
+    RaiseGoSignal();
 }
 
 void dScEntry_c::EnterRematchSync() {
@@ -1015,9 +1001,9 @@ void dScEntry_c::EnterRematchSync() {
     gSubScreenLayers |= 5;
     mIconCount = 0;
     if (data_0209fc58 == 0) {
-        func_020201c0();
+        SetLocalPlayerReadyForRematch();
     }
-    func_02020304();
+    ClearLocalPlayerReady();
     func_02012790(0x120);
 }
 
@@ -1087,7 +1073,7 @@ void dScEntry_c::UpdateRematchPrompt() {
         HandlePlayerDisconnect(&data_ov075_0211d810);
         return;
     }
-    id = func_0203da9c();
+    id = GetLocalPlayerId();
     if (mIcons[0].TouchArea_Update(id) != 0 || (CheckMenuConfirm(id) != 0 && mSelectedIcon == 0)) {
         mIcons[1].mOn = 0;
         mIcons[0].Select();
@@ -1127,7 +1113,7 @@ void dScEntry_c::EnterRematchPrompt() {
     mDisconnectHideMask = 0xe;
     if (data_0209fc68 != 0)
         data_0209fc68 = 5;
-    func_02020190();
+    ClearLocalPlayerReadyForRematch();
     mStepWork[0] = 0;
     mStepWork[1] = 0;
     func_02012790(0x125);
@@ -1135,7 +1121,7 @@ void dScEntry_c::EnterRematchPrompt() {
 }
 
 void dScEntry_c::RenderResults() {
-    int id = func_0203da9c();
+    int id = GetLocalPlayerId();
     OAM::Render(false, &data_ov075_0211cb84, 128, 32, -1, -1, 0x1000, 0x1000, 0, -1);
     RenderPlayerScores();
 
@@ -1185,16 +1171,16 @@ void dScEntry_c::UpdateResults() {
     int i;
     u8 *p;
 
-    id = func_0203da9c();
-    if (func_02020168() != 0) {
-        func_02020304();
-        func_020200e0();
+    id = GetLocalPlayerId();
+    if (IsGoSignalRaised() != 0) {
+        ClearLocalPlayerReady();
+        ClearGoSignal();
         ChangeStepsAfterDelay(&data_ov075_0211d810, 5);
         func_02012790(0x124);
     } else {
         if (func_0203d9b4() != 0) {
             /* mStepWork[3]: set once the mStepDelay countdown has run out
-               and func_02020334 has been sent; this step reads it back. */
+               and SetLocalPlayerReady has been sent; this step reads it back. */
             if (mStepWork[3] == 0) {
                 acc = 0;
                 for (i = 0; i < 4; i++) {
@@ -1205,21 +1191,21 @@ void dScEntry_c::UpdateResults() {
                 }
                 mStepDelay -= gFrameStep;
                 if (mStepDelay <= 0 || (mStepDelay < 540 && acc != 0)) {
-                    func_02020334();
+                    SetLocalPlayerReady();
                     mStepWork[3] = 1;
                 }
             } else {
                 if (ArePlayersReady() != 0)
-                    func_02020124();
+                    RaiseGoSignal();
             }
         } else if (mStepWork[3] == 0) {
             mStepDelay -= gFrameStep;
             if (mStepDelay < 480) {
-                func_02020334();
+                SetLocalPlayerReady();
                 mStepWork[3] = 1;
             }
         }
-        if ((data_020a0e58[func_0203da9c()].pressed & ~0xc) != 0)
+        if ((data_020a0e58[GetLocalPlayerId()].pressed & ~0xc) != 0)
             func_02012790(0xe);
     }
 
@@ -1247,7 +1233,7 @@ void dScEntry_c::UpdateResults() {
 void dScEntry_c::EnterResults() {
     int id;
 
-    id = func_0203da9c();
+    id = GetLocalPlayerId();
     mStepDelay = 600;
     mStepWork[0] = 0;
     mStepWork[1] = 0;
@@ -1276,11 +1262,11 @@ void dScEntry_c::EnterResults() {
 
     Message::func_02033390(0);
 
-    Message::func_020331fc(0x40, 0x20, func_0203da9c() << 24 >> 24);
+    Message::func_020331fc(0x40, 0x20, GetLocalPlayerId() << 24 >> 24);
 
     gSubScreenLayers |= 1;
 
-    func_02020304();
+    ClearLocalPlayerReady();
 
     mStepWork[3] = 0;
 }
@@ -1362,11 +1348,11 @@ void dScEntry_c::UpdateCourseSelect() {
     if (func_0203d974() && GetParentCourseIndex() != data_0209b2e4) {
         data_0209b2e4 = GetParentCourseIndex();
     }
-    if (func_02020168()) {
+    if (IsGoSignalRaised()) {
         u8 action;
-        func_02020304();
-        func_020200e0();
-        action = func_020200b8();
+        ClearLocalPlayerReady();
+        ClearGoSignal();
+        action = GetCourseSelectAction();
         if (action == 0) {
             int index;
             mIcons[data_0209b2e4].Press();
@@ -1406,22 +1392,22 @@ void dScEntry_c::UpdateCourseSelect() {
                 ++icon;
             }
             if (touched) {
-                func_02020078(0);
-                func_02020124();
+                SetCourseSelectAction(0);
+                RaiseGoSignal();
             } else {
                 if (data_020a0e58[gActivePlayerSlot].pressed & 4) {
-                    func_02020078(1);
-                    func_02020124();
+                    SetCourseSelectAction(1);
+                    RaiseGoSignal();
                 } else if (data_020a0e58[gActivePlayerSlot].pressed & 8) {
-                    func_02020078(2);
-                    func_02020124();
+                    SetCourseSelectAction(2);
+                    RaiseGoSignal();
                 }
             }
-            func_0202029c(data_0209b2e4);
+            SetParentCourseIndex(data_0209b2e4);
         }
     }
     G2_BlendNone();
-    if (data_020a0e58[func_0203da9c()].pressed & ~0xc) {
+    if (data_020a0e58[GetLocalPlayerId()].pressed & ~0xc) {
         func_02012790(0xe);
     }
 }
@@ -1458,24 +1444,24 @@ void dScEntry_c::EnterCourseSelect() {
     data_0209b2e4 = 4;
     mIcons[4].Place(0xd, 4, 128, -20);
     mIconCount = 5;
-    func_02020334();
-    func_020200e0();
+    SetLocalPlayerReady();
+    ClearGoSignal();
 }
 
 void dScEntry_c::UpdatePlayerSelectIntro() {
     if (func_0203d974()) {
         if (!mPlayerSelectReady) {
             mEntObj->func_ov075_02115134();
-            if (mEntObj->func_ov075_02115098(func_0203da9c()))
+            if (mEntObj->func_ov075_02115098(GetLocalPlayerId()))
                 mPlayerSelectReady = 1;
         }
         if (mPlayerSelectReady)
             mStepPhase = 1;
     }
 
-    if (func_02020168()) {
-        func_02020304();
-        func_020200e0();
+    if (IsGoSignalRaised()) {
+        ClearLocalPlayerReady();
+        ClearGoSignal();
         ChangeStepsAfterDelay(&EntryCourseSelectSteps, 5);
         return;
     }
@@ -1486,12 +1472,12 @@ void dScEntry_c::UpdatePlayerSelectIntro() {
     }
     if (!mStepPhase)
         return;
-    func_02020334();
+    SetLocalPlayerReady();
     if (!func_0203d9b4())
         return;
     if (!ArePlayersReady())
         return;
-    func_02020124();
+    RaiseGoSignal();
 }
 
 void dScEntry_c::EnterPlayerSelectIntro() {
@@ -1508,7 +1494,7 @@ void dScEntry_c::EnterPlayerSelectIntro() {
 
     // Color the 9-by-10 tile panel for this player's wireless station.
     tiles = static_cast<u16 *>(G2S_GetBG2ScrPtr()) + 11 * 32 + 11;
-    palette = (static_cast<u32>(func_0203da9c() + 10) << 28) >> 16;
+    palette = (static_cast<u32>(GetLocalPlayerId() + 10) << 28) >> 16;
     for (row = 0; row < 10; ++row) {
         for (col = 0; col < 9; ++col)
             tiles[col] = palette | (tiles[col] & 0xfff);
@@ -1642,7 +1628,7 @@ void dScEntry_c::UpdateSessionStart() {
     mSoundHandle = Sound_PlayIfNotActive(mSoundHandle, 2, 0x11d, 0);
     if (mStepPhase == 0) {
         mEntObj->func_ov075_02115134();
-        mStepPhase = mEntObj->func_ov075_02115098(func_0203da9c());
+        mStepPhase = mEntObj->func_ov075_02115098(GetLocalPlayerId());
     }
     if (func_0203da3c() != 0)
         return;
@@ -1666,7 +1652,7 @@ void dScEntry_c::EnterSessionStart() {
     mWaiting.wavePhase = 0;
     mWaiting.waveDelay = 120;
     func_02012790(0x11e);
-    mStepPhase = mEntObj->func_ov075_02115098(func_0203da9c());
+    mStepPhase = mEntObj->func_ov075_02115098(GetLocalPlayerId());
 }
 
 /* Behavior of the solo start steps. */
@@ -1691,7 +1677,7 @@ void dScEntry_c::EnterSoloStart() {
    quit (data_ov075_0211d8b8). */
 void dScEntry_c::UpdateSoloConfirm() {
     if (mStepPhase == 0)
-        mStepPhase = mEntObj->func_ov075_02115098(func_0203da9c()) != 0;
+        mStepPhase = mEntObj->func_ov075_02115098(GetLocalPlayerId()) != 0;
     if (mStepPhase == 0)
         return;
     if (mIcons[0].TouchArea_Update(-1) != 0 || (CheckMenuConfirm(-1) != 0 && mSelectedIcon == 0)) {
@@ -1730,7 +1716,7 @@ void dScEntry_c::EnterSoloConfirm() {
     mIconCount = 2;
     func_02030a38();
     {
-        int localPlayer = func_0203da9c();
+        int localPlayer = GetLocalPlayerId();
         mStepPhase = mEntObj->func_ov075_02115098(localPlayer) != 0;
     }
 }
@@ -1782,7 +1768,7 @@ void dScEntry_c::RenderRecruitText() {
 /* Behavior of the recruit steps. The host's start button (icon 0) ends
    recruiting; with four players it ends without waiting for it. */
 void dScEntry_c::UpdateRecruit() {
-    int localPlayer = func_0203da9c();
+    int localPlayer = GetLocalPlayerId();
     int playerCount = data_0209fc50;
     for (int i = 1; i < 4; i++) {
         Message::func_02033464((unsigned char)i, (signed char)i, 0);
@@ -2074,8 +2060,8 @@ s32 dScEntry_c::InitResources() {
                     func_02030aa4(3);
                 }
                 {
-                    int localPlayer = func_0203da9c();
-                    func_02020028(localPlayer, data_0209f498[gActivePlayerSlot].mode);
+                    int localPlayer = GetLocalPlayerId();
+                    PostControllerMode(localPlayer, data_0209f498[gActivePlayerSlot].mode);
                 }
             }
         } else {
@@ -2093,7 +2079,7 @@ s32 dScEntry_c::InitResources() {
                 Sound::LoadAndSetMusic_Layer1(0x4c);
             }
         } else {
-            if (data_0209b2f0[func_0203da9c()] != 0) {
+            if (data_0209b2f0[GetLocalPlayerId()] != 0) {
                 Sound::LoadAndSetMusic_Layer1(0x51);
             } else {
                 Sound::LoadAndSetMusic_Layer1(0x52);

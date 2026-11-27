@@ -22,14 +22,6 @@ typedef struct {
     u16 pad;
 } ExitEntries1;
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[20];
-    u32 tail[6];
-} Clps_02111e84;
-
 extern const KeyRotations1 data_ov052_02111868;
 extern const fx32 data_ov052_0211186c[1];
 extern const BTAMaterialRecord data_ov052_02111870[1];
@@ -50,7 +42,7 @@ extern ObjSubTable data_ov052_02111d34[7];
 extern ViewEntry data_ov052_02111d6c[4];
 extern PathNode data_ov052_02111da4[16];
 extern SimpleEntry data_ov052_02111e04[16];
-extern Clps_02111e84 data_ov052_02111e84;
+extern CLPS_Block192 data_ov052_02111e84;
 extern StandardEntry data_ov052_02111f44[89];
 
 ScalarEntryU16 data_ov052_02111c60 = {0x0732, 0x0000};
@@ -140,20 +132,19 @@ SimpleEntry data_ov052_02111e04[16] = {
     {0xe225, (s16)0xf380, 0x1068, (s16)0xf8f8}, {0xe225, (s16)0xf380, 0x1068, (s16)0xfaec},
     {0xe225, (s16)0xf380, 0x1068, (s16)0xfbe6}, {0xe43c, 0x0d48, 0x1db0, 0x17d4},
 };
-Clps_02111e84 data_ov052_02111e84 = {
+CLPS_Block192 data_ov052_02111e84 = {
     0x53504c43,
     0x0008,
     0x0014,
-    {
-        {0x00210fc0, 0x000000ff}, {0x01010fc0, 0x000000ff}, {0x00030fc2, 0x000000ff},
-        {0x00030fc1, 0x000000ff}, {0x00030fc4, 0x000000ff}, {0x00010fc5, 0x000000ff},
-        {0x00012fc5, 0x000000ff}, {0x03010fc0, 0x000000ff}, {0x01890fcc, 0x000000ff},
-        {0x01190fcc, 0x000000ff}, {0x018b0fcc, 0x000000ff}, {0x00033fc5, 0x000000ff},
-        {0x00030fc5, 0x000000ff}, {0x01032fc5, 0x000000ff}, {0x01030fc5, 0x000000ff},
-        {0x01000fc0, 0x000000ff}, {0x01002fc0, 0x000000ff}, {0x00031fc5, 0x000000ff},
-        {0x01880fc0, 0x000000ff}, {0x01030fc0, 0x000000ff},
-    },
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff}};
+    {{0x00210fc0, 0x000000ff}, {0x01010fc0, 0x000000ff}, {0x00030fc2, 0x000000ff},
+     {0x00030fc1, 0x000000ff}, {0x00030fc4, 0x000000ff}, {0x00010fc5, 0x000000ff},
+     {0x00012fc5, 0x000000ff}, {0x03010fc0, 0x000000ff}, {0x01890fcc, 0x000000ff},
+     {0x01190fcc, 0x000000ff}, {0x018b0fcc, 0x000000ff}, {0x00033fc5, 0x000000ff},
+     {0x00030fc5, 0x000000ff}, {0x01032fc5, 0x000000ff}, {0x01030fc5, 0x000000ff},
+     {0x01000fc0, 0x000000ff}, {0x01002fc0, 0x000000ff}, {0x00031fc5, 0x000000ff},
+     {0x01880fc0, 0x000000ff}, {0x01030fc0, 0x000000ff}, {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 const fx32 data_ov052_0211188c[182] = {
     0x00000000, 0x00000000, 0x00000017, 0x0000002e, 0x00000044, 0x0000005b, 0x00000072, 0x00000089,
     0x0000009f, 0x000000b6, 0x000000cd, 0x000000e4, 0x000000fa, 0x00000111, 0x00000128, 0x0000013f,

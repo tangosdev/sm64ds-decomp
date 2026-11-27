@@ -9,7 +9,7 @@
  * limit is used up it enters the fatal-error spin (func_02013f28), unless
  * the link is busy (GetLinkStatus bit 0x2000, held while a link step waits
  * for the other consoles). */
-extern "C" unsigned short GetLinkStatus(unsigned short x);
+extern "C" unsigned short GetLinkStatus(unsigned short mask);
 
 extern "C" void func_0201a8b4(void *arg) {
     WatchdogAlarm *w = (WatchdogAlarm *)arg;
