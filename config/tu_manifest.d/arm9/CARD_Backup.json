@@ -1,212 +1,240 @@
 {
- "id": "arm9/CARD_Backup",
- "module": "arm9",
- "source": "src/engine/card/CARD_Backup.c",
- "promoted_source": "src/engine/card/CARD_Backup.c",
- "status": "promoted",
- "boundary_confidence": "high",
- "boundary_evidence": [
-  "One contiguous card_backup.c run, 0x02060364..0x02060890: eleven functions, gapless in config/arm9/delinks.txt between CARD_OnFifoRecv (the end of card_common.c) and CARD_InitRom (the start of card_rom.c). ntrtwl/NitroSDK libraries/card/src/card_backup.c carries this spec selection/accessor and backup request-task group, with CARDi_EndTask out of line at the end of this older SDK revision.",
-  "mwccarm emits deferred bodies in reverse source order; CARDi_EndTask is first in source and highest in the ROM, func_02060364 last in source and lowest in the ROM.",
-  "The TU owns the backup-spec table (.rodata 0x020867bc..0x0208685c) and the selected-spec state (.bss 0x020a8760..0x020a8780), ending exactly where CARD_Rom.c rom_stat begins."
- ],
- "sections": [
-  {
-   "name": ".text",
-   "start": "0x02060364",
-   "end": "0x02060890"
-  },
-  {
-   "name": ".rodata",
-   "start": "0x020867bc",
-   "end": "0x0208685c"
-  },
-  {
-   "name": ".bss",
-   "start": "0x020a8760",
-   "end": "0x020a8780"
-  }
- ],
- "functions": [
-  {
-   "symbol": "func_02060364",
-   "address": "0x02060364",
-   "size": "0x00000034",
-   "legacy_source": "src/unnamed/arm9/0206/func_02060364.c",
-   "ordinal": 0
-  },
-  {
-   "symbol": "func_02060398",
-   "address": "0x02060398",
-   "size": "0x00000030",
-   "legacy_source": "src/unnamed/arm9/0206/func_02060398.c",
-   "ordinal": 1
-  },
-  {
-   "symbol": "CARD_IdentifyBackup",
-   "address": "0x020603c8",
-   "size": "0x00000094",
-   "legacy_source": "src/CARD_IdentifyBackup.cpp",
-   "ordinal": 2
-  },
-  {
-   "symbol": "CARD_GetBackupTotalSize",
-   "address": "0x0206045c",
-   "size": "0x00000014",
-   "legacy_source": "src/CARD_GetBackupTotalSize.c",
-   "ordinal": 3
-  },
-  {
-   "symbol": "CARD_GetCurrentBackupType",
-   "address": "0x02060470",
-   "size": "0x00000014",
-   "legacy_source": "src/CARD_GetCurrentBackupType.c",
-   "ordinal": 4
-  },
-  {
-   "symbol": "func_02060484",
-   "address": "0x02060484",
-   "size": "0x000000d4",
-   "legacy_source": "src/unnamed/arm9/0206/func_02060484.cpp",
-   "ordinal": 5
-  },
-  {
-   "symbol": "func_02060558",
-   "address": "0x02060558",
-   "size": "0x000000d4",
-   "legacy_source": "src/unnamed/arm9/0206/func_02060558.cpp",
-   "ordinal": 6
-  },
-  {
-   "symbol": "func_0206062c",
-   "address": "0x0206062c",
-   "size": "0x000000f0",
-   "legacy_source": "src/unnamed/arm9/0206/func_0206062c.cpp",
-   "ordinal": 7
-  },
-  {
-   "symbol": "func_0206071c",
-   "address": "0x0206071c",
-   "size": "0x000000cc",
-   "legacy_source": "src/unnamed/arm9/0206/func_0206071c.cpp",
-   "ordinal": 8
-  },
-  {
-   "symbol": "func_020607e8",
-   "address": "0x020607e8",
-   "size": "0x0000003c",
-   "legacy_source": "src/unnamed/arm9/0206/func_020607e8.c",
-   "ordinal": 9
-  },
-  {
-   "symbol": "CARDi_EndTask",
-   "address": "0x0206081c",
-   "size": "0x00000074",
-   "legacy_source": "src/CARDi_EndTask.cpp",
-   "ordinal": 10
-  }
- ],
- "data": [],
- "rodata": [
-  {
-   "symbol": "data_020867bc",
-   "address": "0x020867bc",
-   "size": "0xa0",
-   "binding": "STB_GLOBAL",
-   "evidence": "The CARDBackupType table CARD_IdentifyBackup spec lookup walks: four struct CardBackupSpec rows (0x28 bytes each), the last one a zero-type terminator. The table is referenced from this TU."
-  }
- ],
- "bss": [
-  {
-   "symbol": "data_020a8760",
-   "address": "0x020a8760",
-   "size": "0x4",
-   "binding": "STB_GLOBAL",
-   "evidence": "card_backup.c's selected backup spec pointer; func_02060364 writes it, CARD_GetBackupTotalSize/CARD_GetCurrentBackupType read it."
-  },
-  {
-   "symbol": "data_020a8764",
-   "address": "0x020a8764",
-   "size": "0x4",
-   "binding": "STB_GLOBAL",
-   "evidence": "the selected spec's sector-size word; func_02060364 copies it out of the spec."
-  },
-  {
-   "symbol": "data_020a8768",
-   "address": "0x020a8768",
-   "size": "0x18",
-   "binding": "STB_GLOBAL",
-   "evidence": "unreferenced tail of the card-backup bss run through 0x020a8780, where CARD_Rom.c's rom_stat starts; no symbol in the ROM references it."
-  }
- ],
- "compiler_only_output": [],
- "notes": [
-  "Folded production TU: the eleven former per-function objects are consolidated into the NitroSDK card_backup.c-shaped source they came from.",
-  "intact-object because the TU owns both the backup-spec .rodata it reads and the selected-spec .bss state."
- ],
- "production_mode": "intact-object",
- "verification": {
-  "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-  "linkcheck": {
-   "round": "tools/rombuild.py stock build: strict control from tools/tubuild.py linkcheck --baseline --module arm9 (whole-tree mwccarm, mwldarm, 106/106 modules exact, ROM built) plus this TU's enrolled functions and non-text claims re-verified against the cartridge by tools/tu_production.prepare_intact_object",
-   "result": "scratch-data-verified",
-   "scratch": "build/tu/arm9-CARD_Backup/link (gitignored)",
-   "phases": {
-    "delink": true,
-    "lcf": true,
-    "compile": true,
-    "link": true,
-    "checkModules": true,
-    "checkSymbols": true,
-    "rom": true
-   },
-   "tuRange": {
-    "section": ".text",
-    "start": "0x02060364",
-    "end": "0x02060890",
-    "differingBytes": 0,
-    "firstDiff": null
-   },
-   "tuRanges": [
+  "id": "arm9/CARD_Backup",
+  "module": "arm9",
+  "source": "src/engine/card/CARD_Backup.c",
+  "promoted_source": "src/engine/card/CARD_Backup.c",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "One contiguous card_backup.c run, 0x02060364..0x02060890: eleven functions, gapless in config/arm9/delinks.txt between CARD_OnFifoRecv (the end of card_common.c) and CARD_InitRom (the start of card_rom.c). ntrtwl/NitroSDK libraries/card/src/card_backup.c carries this spec selection/accessor and backup request-task group, with CARDi_EndTask out of line at the end of this older SDK revision.",
+    "mwccarm emits deferred bodies in reverse source order; CARDi_EndTask is first in source and highest in the ROM, func_02060364 last in source and lowest in the ROM.",
+    "The TU owns the backup-spec table (.rodata 0x020867bc..0x0208685c) and the selected-spec state (.bss 0x020a8760..0x020a8780), ending exactly where CARD_Rom.c rom_stat begins."
+  ],
+  "sections": [
     {
-     "section": ".text",
-     "start": "0x02060364",
-     "end": "0x02060890",
-     "differingBytes": 0,
-     "firstDiff": null
+      "name": ".text",
+      "start": "0x02060364",
+      "end": "0x02060890"
     },
     {
-     "section": ".rodata",
-     "start": "0x020867bc",
-     "end": "0x0208685c",
-     "differingBytes": 0,
-     "firstDiff": null
+      "name": ".rodata",
+      "start": "0x020867bc",
+      "end": "0x0208685c"
     },
     {
-     "section": ".bss",
-     "start": "0x020a8760",
-     "end": "0x020a8780",
-     "comparison": "NOBITS -- symbol/module gates"
+      "name": ".bss",
+      "start": "0x020a8760",
+      "end": "0x020a8780"
     }
-   ],
-   "objectAudit": {
-    "counts": {
-     "LICENSED": 2
+  ],
+  "functions": [
+    {
+      "symbol": "func_02060364",
+      "address": "0x02060364",
+      "size": "0x00000034",
+      "legacy_source": "src/unnamed/arm9/0206/func_02060364.c",
+      "ordinal": 0
     },
-    "emittedTextOrderIsRomAscending": true,
-    "nonLicensedSymbols": [],
-    "unlicensedSections": []
-   },
-   "symbolCheckNewVsBaseline": [],
-   "symbolCheckErrors": [],
-   "symbolCheckBaselineErrors": [],
-   "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
-   "rom": {
-    "bytes": 16777216,
-    "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
-    "matchesStockRom": true
-   },
-   "linkerOutput": null
+    {
+      "symbol": "func_02060398",
+      "address": "0x02060398",
+      "size": "0x00000030",
+      "legacy_source": "src/unnamed/arm9/0206/func_02060398.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "CARD_IdentifyBackup",
+      "address": "0x020603c8",
+      "size": "0x00000094",
+      "legacy_source": "src/CARD_IdentifyBackup.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "CARD_GetBackupTotalSize",
+      "address": "0x0206045c",
+      "size": "0x00000014",
+      "legacy_source": "src/CARD_GetBackupTotalSize.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "CARD_GetCurrentBackupType",
+      "address": "0x02060470",
+      "size": "0x00000014",
+      "legacy_source": "src/CARD_GetCurrentBackupType.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_02060484",
+      "address": "0x02060484",
+      "size": "0x000000d4",
+      "legacy_source": "src/unnamed/arm9/0206/func_02060484.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_02060558",
+      "address": "0x02060558",
+      "size": "0x000000d4",
+      "legacy_source": "src/unnamed/arm9/0206/func_02060558.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_0206062c",
+      "address": "0x0206062c",
+      "size": "0x000000f0",
+      "legacy_source": "src/unnamed/arm9/0206/func_0206062c.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_0206071c",
+      "address": "0x0206071c",
+      "size": "0x000000cc",
+      "legacy_source": "src/unnamed/arm9/0206/func_0206071c.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_020607e8",
+      "address": "0x020607e8",
+      "size": "0x0000003c",
+      "legacy_source": "src/unnamed/arm9/0206/func_020607e8.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "CARDi_EndTask",
+      "address": "0x0206081c",
+      "size": "0x00000074",
+      "legacy_source": "src/CARDi_EndTask.cpp",
+      "ordinal": 10
+    }
+  ],
+  "data": [],
+  "rodata": [
+    {
+      "symbol": "data_020867bc",
+      "address": "0x020867bc",
+      "size": "0xa0",
+      "binding": "STB_GLOBAL",
+      "evidence": "The CARDBackupType table CARD_IdentifyBackup spec lookup walks: four struct CardBackupSpec rows (0x28 bytes each), the last one a zero-type terminator. The table is referenced from this TU."
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "data_020a8760",
+      "address": "0x020a8760",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "card_backup.c's selected backup spec pointer; func_02060364 writes it, CARD_GetBackupTotalSize/CARD_GetCurrentBackupType read it."
+    },
+    {
+      "symbol": "data_020a8764",
+      "address": "0x020a8764",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "the selected spec's sector-size word; func_02060364 copies it out of the spec."
+    },
+    {
+      "symbol": "data_020a8768",
+      "address": "0x020a8768",
+      "size": "0x18",
+      "binding": "STB_GLOBAL",
+      "evidence": "unreferenced tail of the card-backup bss run through 0x020a8780, where CARD_Rom.c's rom_stat starts; no symbol in the ROM references it."
+    }
+  ],
+  "compiler_only_output": [],
+  "notes": [
+    "Folded production TU: the eleven former per-function objects are consolidated into the NitroSDK card_backup.c-shaped source they came from.",
+    "intact-object because the TU owns both the backup-spec .rodata it reads and the selected-spec .bss state."
+  ],
+  "production_mode": "intact-object",
+  "verification": {
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "data-verified",
+      "scratch": "build/tu/arm9-CARD_Backup/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02060364",
+        "end": "0x02060890",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02060364",
+          "end": "0x02060890",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".rodata",
+          "start": "0x020867bc",
+          "end": "0x0208685c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x020a8760",
+          "end": "0x020a8780",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 15
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".rodata",
+            "original": [
+              8
+            ],
+            "desired": [
+              8
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              7
+            ],
+            "desired": [
+              5,
+              6,
+              7
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
   }
- }
 }
