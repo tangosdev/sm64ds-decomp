@@ -1658,65 +1658,13 @@ src/MTX_Rot22_.c:
     complete
     .text start:0x020524e4 end:0x020524f0
 
-src/MTX_Identity33_.c:
+src/engine/fx/FX_mtx33.c:
     complete
-    .text start:0x020524f0 end:0x02052514
+    .text start:0x020524f0 end:0x020527c0
 
-src/MTX_Copy33To44_.c:
+src/engine/fx/FX_mtx43.c:
     complete
-    .text start:0x02052514 end:0x02052550
-
-src/MTX_RotX33_.c:
-    complete
-    .text start:0x02052550 end:0x0205256c
-
-src/MTX_RotY33_.c:
-    complete
-    .text start:0x0205256c end:0x02052588
-
-src/MTX_RotZ33_.c:
-    complete
-    .text start:0x02052588 end:0x020525a0
-
-src/MTX_MultVec33.c:
-    complete
-    .text start:0x020525a0 end:0x02052624
-
-src/MTX_Concat33.c:
-    complete
-    .text start:0x02052624 end:0x020527c0
-
-src/MTX_Identity43_.c:
-    complete
-    .text start:0x020527c0 end:0x020527e8
-
-src/MTX_Scale43_.c:
-    complete
-    .text start:0x020527e8 end:0x020527fe
-
-src/MTX_RotX43_.c:
-    complete
-    .text start:0x02052800 end:0x0205281e
-
-src/MTX_RotY43_.c:
-    complete
-    .text start:0x02052820 end:0x0205283a
-
-src/MTX_RotZ43_.c:
-    complete
-    .text start:0x0205283c end:0x02052856
-
-src/MTX_MultVec43.c:
-    complete
-    .text start:0x02052858 end:0x02052914
-
-src/MTX_Concat43.c:
-    complete
-    .text start:0x02052914 end:0x02052b34
-
-src/MTX_Inverse43.cpp:
-    complete
-    .text start:0x02052b34 end:0x02052ec8
+    .text start:0x020527c0 end:0x02052ec8
 
 src/MTX_Identity44_.c:
     complete
