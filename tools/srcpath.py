@@ -312,6 +312,24 @@ def source_ownership_index():
     return {path: list(symbols) for path, symbols in _enrolment()[1].items()}
 
 
+def enrolled_data_only_source(path):
+    """True for an enrolled ``src/`` translation unit that owns no function rows.
+
+    The enrolment index is function-keyed because linkcheck's unit of work is a
+    function slot. A stage-map TU has a real delinks range but no such row, so it
+    is absent from that index without being unenrolled. Its bytes and data
+    relocations belong to rombuild/romdata_check, not to the function linker
+    gate.
+    """
+    _enrolment()
+    rel = _repo_relative(path)
+    if rel is None or rel in (_enrolment_cache or ({}, {}))[1]:
+        return False
+    return any(entry == rel
+               for rows in (_range_cache or {}).values()
+               for _start, _end, entry in rows)
+
+
 def source_definition_index():
     """Repo-relative source path -> function definitions expected from its object."""
     _enrolment()

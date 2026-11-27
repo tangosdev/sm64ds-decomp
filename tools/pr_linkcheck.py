@@ -153,7 +153,8 @@ def changed_src_files(args):
             headers.append(p)
     if not keep and not headers:
         return []
-    expanded = A.affected_sources(keep + headers)
+    expanded = [path for path in A.affected_sources(keep + headers)
+                if not SP.enrolled_data_only_source(path)]
     if headers:
         extra = len(expanded) - len(set(keep) & set(expanded))
         print(f"{len(headers)} changed header(s) fan out to {extra} additional "

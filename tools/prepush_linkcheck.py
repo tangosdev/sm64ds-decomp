@@ -142,7 +142,8 @@ def changed_src_files(rev_range):
     if out.returncode != 0:
         return []
     changed = [f.strip() for f in out.stdout.splitlines() if f.strip()]
-    expanded = A.affected_sources(changed)
+    expanded = [path for path in A.affected_sources(changed)
+                if not srcpath.enrolled_data_only_source(path)]
     named = set(changed)
     direct = [f for f in expanded if f in named]
     # Largest TUs first within the fan-out, so the pool does not finish on one 150-function
