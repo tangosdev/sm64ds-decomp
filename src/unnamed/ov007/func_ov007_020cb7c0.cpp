@@ -1,104 +1,104 @@
 //cpp
 #include "common.h"
+#include "nitro/fx/fx.h"
 
 extern "C" {
 extern void func_ov007_020c368c(Vector3_16 *vectors, int count, int clamp);
 
-static inline s16 f12(int x) {
+/* Fixed-point rounding after the cross-product multiplies. */
+static inline s16 Fx12Round(int x) {
     return (s16)((x + 0x800) >> 12);
 }
 
-static inline int subz(int a, int b) {
+/* Kept as an inline helper: spelling the same z differences as plain subtraction
+ * is size-exact but moves 13 words. */
+static inline int ZDiff(int a, int b) {
     return a - b;
 }
 
-/* Kept: indexed-for rewrites over int* or Vector3* points, with or without
- * these, are 0x278..0x2ac against the cartridge's 0x2b8. Re-measured
- * (#821 r17): dropping both is 0x2d4, only strength reduction 0x2dc, only
- * loop invariants 0x288. With loop invariants still off, rowIndex taken as
- * `row * w1` each pass is 0x2b8 but 28 words off (the row base gets its
- * own stack slot, shifting six spills by 4), and the rows indexed as
- * `pts + rowIndex * 3` are 0x2e0. */
+/* Computes the two triangular face normals of each heightfield cell. The
+ * strength-reduction and loop-invariant brackets are byte-load-bearing:
+ * with the typed vectors above, the respective bodies are 0x2d8, 0x288 and
+ * 0x2d0 against the cartridge's 0x2b8. */
 #pragma opt_strength_reduction off
-/* Kept (#821 r79): with only loop invariants dropped, an inline RowPoints(pts, index) for both
-   row pointers is 0x288 and nxt = curr + w1 * 3 is 0x294, against 0x2b8. */
 #pragma opt_loop_invariants off
 
-void func_ov007_020cb7c0(Vector3_16 *out, int w, int h, int *pts, s16 a5, s16 a6) {
-    s16 *dst;
-    int i;
+void func_ov007_020cb7c0(Vector3_16 *out, int w, int h, const VecFx32 *points, s16 cellWidth,
+                         s16 cellHeight) {
+    Vector3_16 *normal;
+    int column;
     int row;
-    int flip;
-    int w1;
-    int rowIndex;
-    int ndx;
-    int ndy;
-    int ndxndy;
-    int dx;
-    int dy;
-    int dxdy;
-    int *curr;
-    int *nxt;
-    int *curr1;
-    int *nxt1;
+    int orientation;
+    int pointStride;
+    int rowStart;
+    int negWidth;
+    int negHeight;
+    int negWidthHeight;
+    int width;
+    int height;
+    int widthHeight;
+    const VecFx32 *curRow;
+    const VecFx32 *nextRow;
+    const VecFx32 *currRight;
+    const VecFx32 *nextRight;
 
-    w1 = w + 1;
-    flip = 1;
-    dst = (s16 *)out;
+    pointStride = w + 1;
+    orientation = 1;
+    normal = out;
     row = 0;
     if (h > 0) {
-        dx = a5;
-        dy = a6;
-        rowIndex = 0;
-        ndx = -dx;
-        ndy = -dy;
-        ndxndy = ndx * ndy;
-        int halfNdx = ndx / 2;
-        int halfDx = dx / 2;
-        dxdy = dx * dy;
+        width = cellWidth;
+        height = cellHeight;
+        rowStart = 0;
+        negWidth = -width;
+        negHeight = -height;
+        negWidthHeight = negWidth * negHeight;
+        int halfNegWidth = negWidth / 2;
+        int halfWidth = width / 2;
+        widthHeight = width * height;
         do {
-            curr = (int *)((char *)pts + rowIndex * 0xc);
-            nxt = (int *)((char *)pts + (rowIndex + w1) * 0xc);
-            i = 0;
+            curRow = points + rowStart;
+            nextRow = points + (rowStart + pointStride);
+            column = 0;
             if (w > 0) {
                 do {
-                    curr1 = curr + 3;
-                    nxt1 = nxt + 3;
-                    if (flip == 1) {
-                        int ze = curr1[2];
-                        int t = ndx * subz(nxt[2], ze);
-                        int d0 = subz(curr[2], ze);
-                        dst[0] = f12(-d0 * ndy);
-                        dst[1] = f12((d0 * halfNdx) - t);
-                        dst[2] = f12(ndxndy - halfNdx);
-                        int zs = nxt[2];
-                        int t2 = dx * subz(curr1[2], zs);
-                        int d1 = subz(nxt1[2], zs);
-                        dst[3] = f12(-d1 * dy);
-                        dst[4] = f12((d1 * halfDx) - t2);
-                        dst[5] = f12(dxdy - halfDx);
+                    currRight = curRow + 1;
+                    nextRight = nextRow + 1;
+                    if (orientation == 1) {
+                        int zEast = currRight->z;
+                        int t = negWidth * ZDiff(nextRow->z, zEast);
+                        int d0 = ZDiff(curRow->z, zEast);
+                        normal[0].x = Fx12Round(-d0 * negHeight);
+                        normal[0].y = Fx12Round((d0 * halfNegWidth) - t);
+                        normal[0].z = Fx12Round(negWidthHeight - halfNegWidth);
+                        int zSouth = nextRow->z;
+                        int t2 = width * ZDiff(currRight->z, zSouth);
+                        int d1 = ZDiff(nextRight->z, zSouth);
+                        normal[1].x = Fx12Round(-d1 * height);
+                        normal[1].y = Fx12Round((d1 * halfWidth) - t2);
+                        normal[1].z = Fx12Round(widthHeight - halfWidth);
                     } else {
-                        int zs = nxt[2];
-                        int t = dx * subz(curr[2], zs);
-                        int d0 = subz(nxt1[2], zs);
-                        dst[0] = f12(-d0 * dy);
-                        dst[1] = f12((d0 * halfDx) - t);
-                        dst[2] = f12(dxdy - halfDx);
-                        int ze = curr1[2];
-                        int t2 = ndx * subz(nxt1[2], ze);
-                        int d1 = subz(curr[2], ze);
-                        dst[3] = f12(-d1 * ndy);
-                        dst[4] = f12((d1 * halfNdx) - t2);
-                        dst[5] = f12(ndxndy - halfNdx);
+                        int zSouth = nextRow->z;
+                        int t = width * ZDiff(curRow->z, zSouth);
+                        int d0 = ZDiff(nextRight->z, zSouth);
+                        normal[0].x = Fx12Round(-d0 * height);
+                        normal[0].y = Fx12Round((d0 * halfWidth) - t);
+                        normal[0].z = Fx12Round(widthHeight - halfWidth);
+                        int zEast = currRight->z;
+                        int t2 = negWidth * ZDiff(nextRight->z, zEast);
+                        int d1 = ZDiff(curRow->z, zEast);
+                        normal[1].x = Fx12Round(-d1 * negHeight);
+                        normal[1].y = Fx12Round((d1 * halfNegWidth) - t2);
+                        normal[1].z = Fx12Round(negWidthHeight - halfNegWidth);
                     }
-                    nxt = nxt1;
-                    curr = curr1;
-                    dst = dst + 6;
-                    i = i + 1;
-                } while (i < w);
+                    nextRow = nextRight;
+                    curRow = currRight;
+                    normal += 2;
+                    column = column + 1;
+                } while (column < w);
             }
-            flip = -flip;
-            rowIndex = rowIndex + w1;
+            orientation = -orientation;
+            rowStart = rowStart + pointStride;
             row = row + 1;
         } while (row < h);
     }
