@@ -12,11 +12,6 @@
  * __cxa_vec_ctor over mColliders.
  */
 
-// What stays, and why:
-// - This TU emits its own __sinit for the file handles below, which the
-//   manifest does not license. The handles stay: nothing else defines
-//   their BSS or .init range.
-
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjFl_KomaU_c_AssetId { ASSET_FL_KOMA_U_BMD = 0x05f7, ASSET_FL_KOMA_U_KCL = 0x05f8 };
 

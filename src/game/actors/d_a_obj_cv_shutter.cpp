@@ -16,8 +16,7 @@
  *   The setup helper loads data_ov021_021148d0 slot 0 with dExtSimpleModel_c::LoadFile,
  *   slot 1 with dBgW_Kc::LoadFile, slot 2 as CLPS into SetFile, and writes
  *   daObjSwdoor_c's four byte fields from param1.
- * - data_ov021_021148d0 is overlay data; this TU is text-only so
- *   the table stays an extern. g_profile_CV_SHUTTER is the same.
+ * - g_profile_CV_SHUTTER is overlay data this TU does not define.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

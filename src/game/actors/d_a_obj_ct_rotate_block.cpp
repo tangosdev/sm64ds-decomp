@@ -281,8 +281,9 @@ daObjCtRotateBlock_c *daObjCtRotateBlock_c_classInit_CT_MECHA01() {
 
 /* The six resource handles (model files 0x5b6/0x5b9/0x5b8/0x5bb, collision
  * files 0x5b7/0x5ba), in the retail initializer's construction order: mwcc
- * emits __sinit_d_a_obj_ct_rotate_block.cpp from these definitions. Nothing
- * in this TU names them directly; the variant records point at them. */
+ * emits __sinit_d_a_obj_ct_rotate_block.cpp from these definitions. No
+ * function names them directly; the variant records and the table below
+ * point at them. */
 ModelFile gCtMechaObj01ModelFile(ASSET_CT_MECHA_OBJ01_BMD);
 ModelFile gCtMechaObj02ModelFile(ASSET_CT_MECHA_OBJ02_BMD);
 ModelFile gCtMechaObj01aModelFile(ASSET_CT_MECHA_OBJ01A_BMD);

@@ -8,11 +8,6 @@
  * only). #pragma defer_codegen off lays .text down in source order.
  */
 
-// leftovers:
-// - This TU emits its own __sinit for the file handles below, which the
-//   manifest does not license. The handles stay: nothing else defines
-//   their BSS or .init range.
-
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum daObjEmmYuka_c_AssetId {
     ASSET_EMM_YUKA_BMD = 0x05e5,
