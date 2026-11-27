@@ -1,0 +1,201 @@
+{
+  "id": "arm9/LinkSettings",
+  "module": "arm9",
+  "source": "src/engine/link/LinkSettings.c",
+  "promoted_source": "src/engine/link/LinkSettings.c",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "Contiguous run 0x02020028..0x0202043c: 21 functions, each starting where the previous one ends (no padding word anywhere in the run), gapless in config/arm9/delinks.txt. All 21 are accessors of the link settings bytes: each reads through GetLinkByte and/or writes through SetLinkByte (IsPlayerInSession through GetSessionPlayerMask), and the only relocations in the whole compiled object are bl calls to GetLinkByte, SetLinkByte, GetLocalPlayerId and GetSessionPlayerMask. There is no .rodata, .data, .bss, .init or literal pool.",
+    "Order: mwcc emits C bodies in reverse source order (tubuild verify: all 21 in ROM-ascending section order; swapping two definitions flips that pair), so the source order is the descending address order. Read that way the run walks the settings bytes in ascending order, 0 (warp, ready), 1 (course), 2 (player mask, rematch ready, go signal), 3 (course-select action), 4 (controller mode), and every field puts its getter first and its writers after it: one file laid out by field.",
+    "LEFT EDGE: func_0201ffcc (0x0201ffcc..0x02020028) is not an accessor. It is the per-frame link step, the twin of the link start func_0201fec8 (0x0201fec8..0x0201ffcc): both hold gWatchdog around one link call and store func_0203daac() into data_0208f274, and func_0201ffcc tests data_0209e64c, the flag func_0201fec8 owns in its .bss (0x0209e64c..0x0209e660) and alone writes. No accessor touches the watchdog or that flag. This binds func_0201ffcc to func_0201fec8; it does not by itself exclude one link-glue TU holding both and the accessors, so the left edge, like the right, rests on the change of subject.",
+    "RIGHT EDGE: func_0202043c (0x0202043c..0x0202044c) restarts an OamAnimation and opens the OamAnimation run (func_0202044c, _Z13func_0202048cP12OamAnimationii, func_02020768) that leads into OAM.cpp; none of it touches the link. In .init, __sinit_func_0201fec8.cpp (0x02074e44) is followed directly by the empty initializer at 0x02074e80, which the tree files with func_0202043c.cpp, so nothing between them carries a static initializer, as a C file would not. Which TU owns that empty initializer is the tree's assignment, not a cartridge fact; the right edge rests on the subject change."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02020028",
+      "end": "0x0202043c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "PostControllerMode",
+      "address": "0x02020028",
+      "size": "0x2c",
+      "legacy_source": "src/PostControllerMode.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "GetControllerMode",
+      "address": "0x02020054",
+      "size": "0x24",
+      "legacy_source": "src/GetControllerMode.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "SetCourseSelectAction",
+      "address": "0x02020078",
+      "size": "0x40",
+      "legacy_source": "src/SetCourseSelectAction.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "GetCourseSelectAction",
+      "address": "0x020200b8",
+      "size": "0x28",
+      "legacy_source": "src/GetCourseSelectAction.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "ClearGoSignal",
+      "address": "0x020200e0",
+      "size": "0x44",
+      "legacy_source": "src/ClearGoSignal.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "RaiseGoSignal",
+      "address": "0x02020124",
+      "size": "0x44",
+      "legacy_source": "src/RaiseGoSignal.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "IsGoSignalRaised",
+      "address": "0x02020168",
+      "size": "0x28",
+      "legacy_source": "src/IsGoSignalRaised.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "ClearLocalPlayerReadyForRematch",
+      "address": "0x02020190",
+      "size": "0x30",
+      "legacy_source": "src/ClearLocalPlayerReadyForRematch.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "SetLocalPlayerReadyForRematch",
+      "address": "0x020201c0",
+      "size": "0x30",
+      "legacy_source": "src/SetLocalPlayerReadyForRematch.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "IsPlayerReadyForRematch",
+      "address": "0x020201f0",
+      "size": "0x24",
+      "legacy_source": "src/IsPlayerReadyForRematch.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "SetSessionPlayerMask",
+      "address": "0x02020214",
+      "size": "0x40",
+      "legacy_source": "src/SetSessionPlayerMask.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "GetSessionPlayerMask",
+      "address": "0x02020254",
+      "size": "0x28",
+      "legacy_source": "src/GetSessionPlayerMask.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "IsPlayerInSession",
+      "address": "0x0202027c",
+      "size": "0x20",
+      "legacy_source": "src/IsPlayerInSession.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "SetParentCourseIndex",
+      "address": "0x0202029c",
+      "size": "0x40",
+      "legacy_source": "src/SetParentCourseIndex.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "GetParentCourseIndex",
+      "address": "0x020202dc",
+      "size": "0x28",
+      "legacy_source": "src/GetParentCourseIndex.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "ClearLocalPlayerReady",
+      "address": "0x02020304",
+      "size": "0x30",
+      "legacy_source": "src/ClearLocalPlayerReady.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "SetLocalPlayerReady",
+      "address": "0x02020334",
+      "size": "0x30",
+      "legacy_source": "src/SetLocalPlayerReady.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "IsPlayerReady",
+      "address": "0x02020364",
+      "size": "0x24",
+      "legacy_source": "src/IsPlayerReady.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "ClearPlayerWarp",
+      "address": "0x02020388",
+      "size": "0x3c",
+      "legacy_source": "src/ClearPlayerWarp.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "WarpPlayer",
+      "address": "0x020203c4",
+      "size": "0x50",
+      "legacy_source": "src/WarpPlayer.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "IsPlayerWarping",
+      "address": "0x02020414",
+      "size": "0x28",
+      "legacy_source": "src/IsPlayerWarping.c",
+      "ordinal": 20
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "relocations": [],
+  "compiler_only_output": [],
+  "notes": [
+    "HAND-BUILT manifest entry, not tools/tubuild.py create output: tu_map does not segment arm9.",
+    "Built as C: the cartridge cannot tell C from C++ linkage, and the tree has always named these unmangled, with LinkSettings.h's extern \"C\" block for the C++ callers. The file is named for that header, which declares the whole family; the TU name is coined like every name in it.",
+    "Folded from the 21 one-function sources src/<symbol>.c. The four bodies that declared their local after the early return (C99 style) now declare it first (C89 style), the locals are all named v, and PostControllerMode's `x & 0xff` is a (u8) cast like its siblings'; all 21 still match."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-LinkSettings/LinkSettings.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 21,
+    "functions_declared": 21,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

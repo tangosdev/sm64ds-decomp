@@ -5,6 +5,7 @@
 #include "dScene_c.h"
 #include "nitro/hw/registers.h"
 #include "private/controller_input.h"
+#include "Link.h"
 
 extern int data_0209d50c;
 extern unsigned char data_0209d4e8;
@@ -44,7 +45,6 @@ void func_0201ffcc(void);
 }
 
 extern "C" void func_020132d8(void);
-extern "C" unsigned short GetLinkStatus(unsigned short);
 extern "C" {
 
 int func_02030e4c(void);

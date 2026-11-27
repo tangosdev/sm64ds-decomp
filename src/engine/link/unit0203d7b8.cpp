@@ -4,6 +4,7 @@
 #include "nitro/mi/memory.h"
 #include "private/player_input_record.h"
 #include "LinkSettings.h"
+#include "Link.h"
 #include "nitro/mb/mb.h"
 #include "private/wm_views.h"
 #include "private/arm9_a0f90_channel_measure.h"

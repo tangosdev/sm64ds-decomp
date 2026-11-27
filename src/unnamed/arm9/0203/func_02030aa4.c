@@ -1,6 +1,6 @@
 #include "types.h"
+#include "Link.h"
 extern void func_0203da2c(int v);
-extern void ClearLinkErrors(void);
 extern u8 gSoftResetDisabled;
 
 /* The link session's state block at 0x0209fc50: present slots (fc5c, fc5d
