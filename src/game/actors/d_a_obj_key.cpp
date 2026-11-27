@@ -235,7 +235,7 @@ void daObjKey_c::AimArcTo(Vector3 *target, int height) {
 void UnloadKeyModels(int kind) {
     if (kind >= 8)
         return;
-    ((SharedFilePtr *)gKeyModelFiles[kind])->Release();
+    gKeyModelFiles[kind]->Release();
     if (data_ov089_021328b4[kind] == 0)
         return;
     data_ov089_021328b4[kind]->Release();
@@ -246,7 +246,7 @@ void LoadKeyModels(int kind) {
     SharedFilePtr *extra;
     if (kind >= 8)
         return;
-    dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)gKeyModelFiles[kind]);
+    dExtSimpleModel_c::LoadFile(*gKeyModelFiles[kind]);
     extra = data_ov089_021328b4[kind];
     if (extra == 0)
         return;
@@ -837,8 +837,7 @@ int daObjKey_c::InitResources()
         dExtFrameCtrl_c::LoadFile(*&gKoopaKeyGetDemoAnimationFile);
         dExtFrameCtrl_c::LoadFile(*&gKoopaKeyOpenAnimationFile);
         dExtFrameCtrl_c::LoadFile(*&gKoopaKeyWGetAnimationFile);
-        if (mAnmModel.SetFile((BMD_File *)((ModelFile *)gKeyModelFiles[mState])->filePtr, 1, 1) ==
-            0)
+        if (mAnmModel.SetFile((BMD_File *)gKeyModelFiles[mState]->filePtr, 1, 1) == 0)
             return 0;
         {
             SharedFilePtr *extra = data_ov089_021328b4[mState];
@@ -921,7 +920,7 @@ extern AnimFile *const data_ov089_02132880[5] = {
     &gKoopaKeyGetDemoAnimationFile,
     &gKoopaKeyWGetAnimationFile,
 };
-void *gKeyModelFiles[8] = {
+ModelFile *gKeyModelFiles[8] = {
     &gKoopaKeyModelFile, &gKoopaKeyModelFile,  &gMarioKeyModelFile,  &gLuigiKeyModelFile,
     &gWarioKeyModelFile, &data_ov085_021305d8, &data_ov085_021305d8, &gPowerStarModelFile,
 };

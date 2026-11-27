@@ -28,6 +28,7 @@ struct fLiNdBa_c;
 struct dFdBrightness_c;
 struct FileSaveData;
 struct SharedFilePtr;
+struct ModelFile;
 struct BTA_File;
 struct CylinderOffset;
 struct MantaCylinderOffset;
@@ -277,7 +278,7 @@ extern int data_ov075_0211d650[];
 /* data_ov084_02130cc0, data_ov084_02130cc8 and data_ov084_02130d74 are defined
    by d_a_krb.cpp as typed handles and its pointer-to-member state table; the
    TU's own declarations carry the real types. */
-extern void *gKeyModelFiles[];
+extern struct ModelFile *gKeyModelFiles[];
 extern int data_ov091_021344e8[];
 extern int data_ov094_02136a1c[];
 extern const struct WbmCarryOffset data_ov098_0213bf60[];

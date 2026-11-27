@@ -6,6 +6,7 @@
 #include "dExtAnmModel_c.h"
 
 class daPly_c;
+struct ModelFile;
 
 /* The plain warp door -- the leaf dActor_c child whose code is the ov100
  * linker unit 0x021443f4..0x021458d4, src/game/actors/d_a_door.cpp (its registry
@@ -74,8 +75,9 @@ class daPly_c;
  * _ZN17dExtSimpleModel_cC1Ev on the result; it stores a matrix at +0x1c, which is
  * dExtSimpleModel_c::mat4x3; and Render hands it this door's own bone transforms. Typed
  * below, and the shadow structs both consumers carried for it are gone.
- * 0x13c and 0x140 stay void* -- 0x13c is written from both a SharedFilePtr
- * and an int global, so typing it is a separate question.
+ * 0x13c is a ModelFile *: all three of its sources (gPowerStarModelFile,
+ * a gKeyModelFiles entry, gKoopaKeyModelFile) are ModelFile objects.
+ * 0x140 stays void*.
  *
  * Field NAMES elsewhere are placeholders and cannot change codegen. Offsets
  * and widths are observed.
@@ -116,7 +118,7 @@ struct daDoor_c : dActor_c {
                        param1 - 7) indexes LoadKeyModels/gKeyModelFiles.
        [src/game/actors/d_a_door.cpp] */
     dExtSimpleModel_c *mKeyModel; /* 0x138 -- owned, see SIZE above */
-    void *mKeyFile;           /* 0x13c -- released through SharedFilePtr */
+    ModelFile *mKeyFile;          /* 0x13c */
     /* The current state: a 16-byte {enter, execute} pair of
        pointers-to-member, one of the nine tables data_ov100_021488a4 ..
        data_ov100_02148924. SetState stores it and calls the enter
