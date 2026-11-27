@@ -405,76 +405,10 @@ src/engine/graph/d_graph_c_callback.cpp:
 src/unnamed/arm9/0201/func_02018ec0.cpp:
     complete
     .text start:0x02018ec0 end:0x02018f38
-src/SetSubBg3Offset.c:
+src/Display.cpp:
     complete
-    .text start:0x02018f38 end:0x02018f54
-
-src/SetSubBg2Offset.c:
-    complete
-    .text start:0x02018f54 end:0x02018f70
-
-src/SetSubBg1Offset.c:
-    complete
-    .text start:0x02018f70 end:0x02018f8c
-
-src/SetSubBg0Offset.c:
-    complete
-    .text start:0x02018f8c end:0x02018fa8
-
-src/SetBg3Offset.c:
-    complete
-    .text start:0x02018fa8 end:0x02018fc4
-
-src/SetBg2Offset.c:
-    complete
-    .text start:0x02018fc4 end:0x02018fe0
-
-src/SetBg1Offset.c:
-    complete
-    .text start:0x02018fe0 end:0x02018ffc
-
-src/SetBg0Offset.c:
-    complete
-    .text start:0x02018ffc end:0x02019018
-
-src/unnamed/arm9/0201/func_02019018.c:
-    complete
-    .text start:0x02019018 end:0x02019070
-src/Enable3dEngines.c:
-    complete
-    .text start:0x02019070 end:0x020190b8
-
-src/unnamed/arm9/0201/func_020190b8.c:
-    complete
-    .text start:0x020190b8 end:0x02019100
-
-src/unnamed/arm9/0201/func_02019100.c:
-    complete
-    .text start:0x02019100 end:0x02019144
-
-src/unnamed/arm9/0201/func_02019144.cpp:
-    complete
-    .text start:0x02019144 end:0x02019390
-
-src/unnamed/arm9/0201/func_02019390.cpp:
-    complete
-    .text start:0x02019390 end:0x02019404
-
-src/unnamed/arm9/0201/func_02019404.cpp:
-    complete
-    .text start:0x02019404 end:0x02019440
-
-src/unnamed/arm9/0201/func_02019440.cpp:
-    complete
-    .text start:0x02019440 end:0x02019510
-
-src/SetSoundMode.c:
-    complete
-    .text start:0x02019510 end:0x02019574
-
-src/GetSoundMode.c:
-    complete
-    .text start:0x02019574 end:0x02019584
+    .text start:0x02018f38 end:0x02019584
+    .bss start:0x0209d454 end:0x0209d4b8
 
 src/Timer.cpp:
     complete
