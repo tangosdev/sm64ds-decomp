@@ -60,9 +60,8 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 
-/* The model and animation handles, declared here ahead of the members that
- * read them; defined at the bottom in retail __sinit order. */
-
+/* The animation handles, declared here ahead of the members that read
+ * them; defined at the bottom in retail __sinit order. */
 extern AnimFile gMonkeyHoldAnimationFile;
 extern AnimFile gMonkeyJumpStAnimationFile;
 extern AnimFile gMonkeyJumpEdAnimationFile;

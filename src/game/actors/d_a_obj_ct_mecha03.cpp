@@ -50,9 +50,6 @@ enum daObjCtMecha03_c_AssetId {
 
 struct CLPS_Block;
 
-/* Resource handles constructed by this TU's static initializer. The
- * constructor and destructor bodies stay out of line; mwcc registers them. */
-
 extern u8 data_0209f2c0;
 extern const s16 sTTCPendulumInitialAccels[4] = {
     13,
@@ -201,5 +198,6 @@ void daObjCtMecha03_c::UpdateShadow() {
  * included class header makes mwccarm emit retail's D1 then D0 order without
  * the otherwise homeless D2 variant. */
 
+/* Resource handles constructed by this TU's static initializer. */
 ModelFile data_ov065_0211d88c(ASSET_CT_MECHA_OBJ03_BMD);
 ClsnFile data_ov065_0211d894(ASSET_CT_MECHA_OBJ03_KCL);

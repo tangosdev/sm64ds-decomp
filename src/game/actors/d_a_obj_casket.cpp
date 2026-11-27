@@ -44,9 +44,6 @@ struct CasketState {
     const char *name;
 };
 
-/* Resource handles this TU's static initializer constructs. File IDs and
- * widths are the ROM's. */
-
 /* Pointer-to-member descriptors the initializer copies into the state
  * table, and the state names (all ROM .data, owned by no TU). */
 extern StateFunc data_ov071_02122e74;

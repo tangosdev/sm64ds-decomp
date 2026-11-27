@@ -91,8 +91,6 @@ typedef struct {
     unsigned char flag : 1;
 } Flags;
 
-/* Resource handles: the files the Goombas load are read through filePtr. */
-
 /* A state handler: data_ov084_02130d74 holds one pointer-to-member per
    daKrb_c::State. */
 typedef void (daKrb_c::*StateHandler)();

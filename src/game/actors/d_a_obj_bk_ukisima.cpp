@@ -26,12 +26,11 @@ enum d_a_obj_bk_ukisima_AssetId { ASSET_BK_UKISIMA_BMD = 0x05a1, ASSET_BK_UKISIM
 #include "daObjBk_Ukisima_c.h"
 #include "SharedFilePtr.h"
 
-/* The descriptor stays ROM data. */
-
 #include "ResourceDescriptor.h"
 
 /* Starting angle the disc is placed at. */
 s16 data_ov015_02114794 = 0x80;
+/* The descriptor stays ROM data. */
 extern ResourceDescriptor data_ov015_021147a4;
 extern struct CLPS_Block data_ov015_02113614;
 

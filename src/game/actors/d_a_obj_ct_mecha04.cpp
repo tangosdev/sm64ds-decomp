@@ -48,9 +48,6 @@ enum {
     CLOCK_SETTING_STOPPED = 3 /* Behavior skips the belt texture, sound and callback */
 };
 
-/* Resource handles constructed by this TU's static initializer. The
- * constructor and destructor bodies stay out of line; mwcc registers them. */
-
 /* One 2-row {model, collision, clps} table indexed by mVariant; the three
  * data_ov065_* symbols name row 0's fields, so each column's decl strides by
  * the row size. */

@@ -109,7 +109,6 @@ enum d_a_obj_bc_switch_AssetId {
 
 /* File 1084 / 1085 resource handles. The static initializer registers
  * their destructors. */
-
 extern ClsnFile daObjBC_Switch_c_ClsnFile;
 extern ModelFile daObjBC_Switch_c_ModelFile;
 extern CLPS_Block data_ov002_0210d6f4;

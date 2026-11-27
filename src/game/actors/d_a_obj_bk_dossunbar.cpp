@@ -35,9 +35,6 @@
 #include "Particle__System.h"
 #include "ParticleIds.h"
 
-/* Local names for the existing eight-byte model/collision resource families.
- * Their constructors and destructors remain ordinary cross-TU C++ imports. */
-
 #include "ResourceDescriptor.h"
 
 typedef void (daObjBk_Dossunbar_c::*PMF)();

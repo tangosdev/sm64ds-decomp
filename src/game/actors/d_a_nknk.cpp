@@ -55,10 +55,10 @@ enum d_a_nknk_AssetId {
 #include "LevelRng.h"
 
 /* File-scope resource handles: the two models and the nine animation
- * handles. The code reaches them
- * through the data_ov062_0211ced8/cee0/cee8 pointer tables. The model and
- * animation initialization paths both store a u16 file ID at +0, a byte
- * reference count at +2, and a loaded-file pointer at +4. */
+ * handles. The code reaches them through the data_ov062_0211ced8/cee0/cee8
+ * pointer tables. The model and animation initialization paths both store
+ * a u16 file ID at +0, a byte reference count at +2, and a loaded-file
+ * pointer at +4. */
 
 extern AnimFile *const data_ov062_0211cee8[9];
 extern const int data_ov062_0211cf0c[9];

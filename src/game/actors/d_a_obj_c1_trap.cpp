@@ -43,9 +43,6 @@ struct TrapStateRec {
     TrapState state4;
 };
 
-/* 8-byte resource handles. The ctor/dtor bodies are the ROM functions the
- * initializer calls; this TU only names them. */
-
 /* The block the door's mesh collider takes. CLPS.h keeps CLPS_Block opaque:
    an eight-byte header whose halfword at +4 is the entry stride, then one
    eight-byte CLPS per collider class. */

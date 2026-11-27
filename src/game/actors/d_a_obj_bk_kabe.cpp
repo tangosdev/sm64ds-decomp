@@ -63,7 +63,6 @@ struct KabeFiles {
  * handles (model files 0x593/0x595, collision files 0x594/0x596). mwcc
  * emits __sinit_d_a_obj_bk_kabe.cpp from those definitions. Nothing in this
  * TU names the handles directly; the KabeFiles rows above point at them. */
-
 extern ModelFile gBkKabe00ModelFile;
 extern ClsnFile gBkKabe00CollisionFile;
 extern ModelFile gBkKabe01ModelFile;

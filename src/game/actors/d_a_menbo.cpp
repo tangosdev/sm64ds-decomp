@@ -46,8 +46,6 @@
 struct BMD_File;
 struct BCA_File;
 
-/* 8-byte file handles: filePtr is the loaded file. */
-
 extern "C" void Vec3_Lsl(Vector3 *out, const Vector3 *in, int n);
 extern "C" void Vec3_Asr(void *dst, void *src, int n);
 /* local extern: CalcLib.h clashes with this TU's C Vec3_Asr (void *) and Vec3_Lsl (non-const source) */
@@ -76,6 +74,7 @@ struct MenboCylinderOffset {
     fx32 x, y, z;
 };
 extern MenboCylinderOffset data_ov090_0213412c;
+/* 8-byte file handles: filePtr is the loaded file. */
 extern AnimFile data_ov090_02134480;  /* patrol anim, file 0x3a1 */
 extern AnimFile data_ov090_02134488;  /* water-chase anim, file 0x3a0 */
 extern AnimFile data_ov090_02134490;  /* water-rest anim, file 0x3a2 */

@@ -44,7 +44,6 @@ enum {
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x436, texture-sequence file 0x437). mwcc emits
  * __sinit_d_a_obj1up_logo.cpp from those definitions. */
-
 extern ModelFile data_ov002_02110aa4;  /* BMD */
 extern TexSeqFile data_ov002_02110a9c; /* BTP */
 

@@ -42,10 +42,6 @@ struct MantaState {
     int (daManta_c::*execute)();
 };
 
-/* Local 8-byte resource handles: the constructor stores the file ID and clears
- * numRefs/filePtr; the loaders populate the BMD/BCA payload at +4.
- * The registered destructors record file IDs; actor cleanup releases files. */
-
 enum {
     /* Runtime asset handles: data/enemy/manta/manta.bmd and manta_swim.bca. */
     MANTA_MODEL_FILE = 0x39d,
