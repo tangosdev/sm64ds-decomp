@@ -4,11 +4,11 @@
  * and passed nothing. */
 extern unsigned int func_02018a24(unsigned int handle);
 extern int func_020185c0(void *buf, unsigned int x);
-extern int func_020184e0(void *buf, unsigned int a, unsigned int b);
-/* Read up to b bytes of the asset handle's file into a (func_020184e0). */
-int func_02018270(unsigned int handle, int a, int b) {
+extern int func_020184e0(void *buf, void *dest, unsigned int size);
+/* Read up to size bytes of the asset handle's file into dest (func_020184e0). */
+int func_02018270(unsigned int handle, void *dest, int size) {
     char buf[0x44];
     unsigned int r = func_02018a24(handle);
     func_020185c0(buf, r);
-    return func_020184e0(buf, a, b);
+    return func_020184e0(buf, dest, size);
 }

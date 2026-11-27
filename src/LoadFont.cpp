@@ -9,14 +9,14 @@ enum LoadFont_AssetId {
 };
 
 extern "C" void *LoadFile(int handle);
-extern "C" int Mg_GetWorkBuffer(void);
-extern "C" int LoadFileAt(int handle, int dest);
+extern "C" void *Mg_GetWorkBuffer(void);
+extern "C" int LoadFileAt(int handle, void *dest);
 extern "C" void Deallocate(void *ptr);
 
 extern "C" void DecompressLZ16(void *src, void *dst);
 
 extern unsigned char data_0209d698;
-extern int data_0209d6f8;
+extern void *data_0209d6f8;
 extern unsigned char data_0209d660;
 extern short gCurrentMsgId;
 
