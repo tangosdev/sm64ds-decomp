@@ -37,23 +37,11 @@ struct CLPS_Block;
 
 /* File-scope objects at the end of this file construct the four resource
  * handles (model files 0x5c8/0x5ca, collision files 0x5c9/0x5cb). mwcc
- * emits __sinit_d_a_obj_ct_mecha08.cpp from those definitions. The wrapper
- * names are local; the handle constructors and destructors are the ROM
- * resource-family functions, aliased in the manifest. The CT_MECHA08A
- * handles are named like the 08B pair: this class is a lift block, not a
- * gear. */
-struct Mecha08ModelFile : SharedFilePtr {
-    Mecha08ModelFile(u32 fileID);
-    ~Mecha08ModelFile();
-};
-
-struct Mecha08CollisionFilePtr : SharedFilePtr {
-    Mecha08CollisionFilePtr(u32 fileID);
-    ~Mecha08CollisionFilePtr();
-};
-
-extern Mecha08ModelFile gCtMechaObj08aModelFile;
-extern Mecha08CollisionFilePtr gCtMechaObj08aCollisionFile;
+ * emits __sinit_d_a_obj_ct_mecha08.cpp from those definitions. The
+ * CT_MECHA08A handles are named like the 08B pair: this class is a lift
+ * block, not a gear. */
+extern ModelFile gCtMechaObj08aModelFile;
+extern ClsnFile gCtMechaObj08aCollisionFile;
 
 enum {
     CLOCK_SETTING_RANDOM = 2,  /* Behavior re-rolls the timer at random */
@@ -173,7 +161,7 @@ int daObjCtMecha08_c::CleanupResources() {
 
 /* Static-init globals (was the handwritten __sinit_ov065_0211c9b8 shard).
  * Definition order is the retail initializer's construction order. */
-Mecha08ModelFile gCtMechaObj08aModelFile(ASSET_CT_MECHA_OBJ08A_BMD);
-Mecha08ModelFile gCtMechaObj08bModelFile(ASSET_CT_MECHA_OBJ08B_BMD);
-Mecha08CollisionFilePtr gCtMechaObj08aCollisionFile(ASSET_CT_MECHA_OBJ08A_KCL);
-Mecha08CollisionFilePtr gCtMechaObj08bCollisionFile(ASSET_CT_MECHA_OBJ08B_KCL);
+ModelFile gCtMechaObj08aModelFile(ASSET_CT_MECHA_OBJ08A_BMD);
+ModelFile gCtMechaObj08bModelFile(ASSET_CT_MECHA_OBJ08B_BMD);
+ClsnFile gCtMechaObj08aCollisionFile(ASSET_CT_MECHA_OBJ08A_KCL);
+ClsnFile gCtMechaObj08bCollisionFile(ASSET_CT_MECHA_OBJ08B_KCL);

@@ -77,20 +77,6 @@ enum { kMegaPoundScale = 0x2000 };
 enum { kTiltSound = 0x8b };
 
 
-/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the model, ClsnFile::ClsnFile /
- * ClsnFile::~ClsnFile for the collision), spelled through
- * declared-only subclasses so the static initializer names the real entry
- * points. */
-struct SeesawModelFilePtr : SharedFilePtr {
-    SeesawModelFilePtr(u32 fileID);
-    ~SeesawModelFilePtr();
-};
-struct SeesawCollisionFilePtr : SharedFilePtr {
-    SeesawCollisionFilePtr(u32 fileID);
-    ~SeesawCollisionFilePtr();
-};
-
 extern const int data_ov095_02136f58[4] = {0x1000, 0x800, 0x1800, 0x1000};
 
 /* Per-variant asset row: the model file, the collision file and the CLPS block,
@@ -339,17 +325,17 @@ daObjSeesaw_c *daObjSeesaw_c_classInit_SEESAW() {
 
 /* Seven variants, each a model/collision handle pair, reached through the
  * SeesawAssets rows at data_ov095_021374a0. */
-SeesawModelFilePtr gObjSeesawModelFile(ASSET_OBJ_SEESAW_BMD);
-SeesawModelFilePtr gBSiSoModelFile(ASSET_B_SI_SO_BMD);
-SeesawModelFilePtr gKm1ShisoModelFile(ASSET_KM1_SHISO_BMD);
-SeesawModelFilePtr gKm2YokoshisoModelFile(ASSET_KM2_YOKOSHISO_BMD);
-SeesawModelFilePtr gKm3ShisoModelFile(ASSET_KM3_SHISO_BMD);
-SeesawModelFilePtr gKm3YokoshisoModelFile(ASSET_KM3_YOKOSHISO_BMD);
-SeesawModelFilePtr gRcShisoModelFile(ASSET_RC_SHISO_BMD);
-SeesawCollisionFilePtr gObjSeesawCollisionFile(ASSET_OBJ_SEESAW_KCL);
-SeesawCollisionFilePtr gBSiSoCollisionFile(ASSET_B_SI_SO_KCL);
-SeesawCollisionFilePtr gKm1ShisoCollisionFile(ASSET_KM1_SHISO_KCL);
-SeesawCollisionFilePtr gKm2YokoshisoCollisionFile(ASSET_KM2_YOKOSHISO_KCL);
-SeesawCollisionFilePtr gKm3ShisoCollisionFile(ASSET_KM3_SHISO_KCL);
-SeesawCollisionFilePtr gKm3YokoshisoCollisionFile(ASSET_KM3_YOKOSHISO_KCL);
-SeesawCollisionFilePtr gRcShisoCollisionFile(ASSET_RC_SHISO_KCL);
+ModelFile gObjSeesawModelFile(ASSET_OBJ_SEESAW_BMD);
+ModelFile gBSiSoModelFile(ASSET_B_SI_SO_BMD);
+ModelFile gKm1ShisoModelFile(ASSET_KM1_SHISO_BMD);
+ModelFile gKm2YokoshisoModelFile(ASSET_KM2_YOKOSHISO_BMD);
+ModelFile gKm3ShisoModelFile(ASSET_KM3_SHISO_BMD);
+ModelFile gKm3YokoshisoModelFile(ASSET_KM3_YOKOSHISO_BMD);
+ModelFile gRcShisoModelFile(ASSET_RC_SHISO_BMD);
+ClsnFile gObjSeesawCollisionFile(ASSET_OBJ_SEESAW_KCL);
+ClsnFile gBSiSoCollisionFile(ASSET_B_SI_SO_KCL);
+ClsnFile gKm1ShisoCollisionFile(ASSET_KM1_SHISO_KCL);
+ClsnFile gKm2YokoshisoCollisionFile(ASSET_KM2_YOKOSHISO_KCL);
+ClsnFile gKm3ShisoCollisionFile(ASSET_KM3_SHISO_KCL);
+ClsnFile gKm3YokoshisoCollisionFile(ASSET_KM3_YOKOSHISO_KCL);
+ClsnFile gRcShisoCollisionFile(ASSET_RC_SHISO_KCL);

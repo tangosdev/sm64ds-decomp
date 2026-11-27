@@ -29,21 +29,9 @@ enum daObjFl_Seesaw_c_AssetId { ASSET_FL_SHISO_BMD = 0x0610, ASSET_FL_SHISO_KCL 
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x610, collision file 0x611). mwcc emits
- * __sinit_d_a_obj_fl_seesaw.cpp from those definitions. The wrapper names
- * are local; the handle constructors and destructors are the ROM
- * resource-family functions, aliased in the manifest. */
-struct SeesawModelFile : SharedFilePtr {
-    SeesawModelFile(u32 fileID);
-    ~SeesawModelFile();
-};
-
-struct SeesawCollisionFilePtr : SharedFilePtr {
-    SeesawCollisionFilePtr(u32 fileID);
-    ~SeesawCollisionFilePtr();
-};
-
-extern SeesawModelFile data_ov022_021145a8;
-extern SeesawCollisionFilePtr data_ov022_021145a0;
+ * __sinit_d_a_obj_fl_seesaw.cpp from those definitions. */
+extern ModelFile data_ov022_021145a8;
+extern ClsnFile data_ov022_021145a0;
 extern CLPS_Block data_ov064_0211bacc;
 
 #pragma defer_codegen off
@@ -110,8 +98,8 @@ daObjFl_Seesaw_c *daObjFl_Seesaw_c_classInit() {
 /* Static-init globals (was the handwritten __sinit_ov022_02112e58 shard).
  * Definition order is the retail initializer's construction order: the
  * model handle (file 0x610), then the collision handle (file 0x611). */
-SeesawModelFile data_ov022_021145a8(ASSET_FL_SHISO_BMD);
-SeesawCollisionFilePtr data_ov022_021145a0(ASSET_FL_SHISO_KCL);
+ModelFile data_ov022_021145a8(ASSET_FL_SHISO_BMD);
+ClsnFile data_ov022_021145a0(ASSET_FL_SHISO_KCL);
 
 extern "C" SpawnInfo<daObjFl_Seesaw_c> g_profile_FL_SEESAW = {daObjFl_Seesaw_c_classInit,
                                                               77,

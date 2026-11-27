@@ -19,16 +19,8 @@ enum d_a_obj_kb1_billboard_AssetId { ASSET_KB1_BALL_BMD = 0x0622 };
 #include "math/MtxStack.h"
 
 /* The retail static initializer constructs this 8-byte model resource handle
- * and registers its destructor. The wrapper spelling is reconstructed; the
- * constructor/destructor destinations, file ID, size, and BSS order are ROM
- * evidence. The manifest maps these undefined members to the recovered engine
- * symbols without claiming that the wrapper name was original. */
-struct Kb1BillboardModelFilePtr : SharedFilePtr {
-    Kb1BillboardModelFilePtr(u32 fileID);
-    ~Kb1BillboardModelFilePtr();
-};
-
-Kb1BillboardModelFilePtr gKb1BallModelFile(ASSET_KB1_BALL_BMD);
+ * and registers its destructor. */
+ModelFile gKb1BallModelFile(ASSET_KB1_BALL_BMD);
 
 /* Every instruction the cartridge has here falls out of the one `new`.
  * The header's inline operator new keeps the allocation on fBase_c::operator

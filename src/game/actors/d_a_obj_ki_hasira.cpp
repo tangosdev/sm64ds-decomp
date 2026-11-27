@@ -62,23 +62,10 @@ enum daObjKi_Hasira_c_AssetId { ASSET_KI_HASIRA_BMD = 0x063d, ASSET_KI_HASIRA_KC
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct HasiraModelFile : SharedFilePtr {
-    HasiraModelFile(u32 fileID);
-    ~HasiraModelFile();
-};
-
-struct HasiraCollisionFile : SharedFilePtr {
-    HasiraCollisionFile(u32 fileID);
-    ~HasiraCollisionFile();
-};
-
 /* This class's model and collision files (ov016 .bss) and the CLPS block
  * dBgW_KcMbg::SetFile is handed (ov016 .data). */
-extern HasiraModelFile RockPillar_ModelFile;
-extern HasiraCollisionFile RockPillar_ClsnFile;
+extern ModelFile RockPillar_ModelFile;
+extern ClsnFile RockPillar_ClsnFile;
 /* CLPS.h leaves the block incomplete. This one is a header plus one entry. */
 
 extern struct CLPS_Block data_ov016_02113cac;
@@ -210,5 +197,5 @@ void daObjKi_Hasira_c::UpdateModelMatrix() {
 /* Static-init globals (was the handwritten __sinit_ov016_02113978 shard).
  * Definition order is the retail initializer's construction order: the
  * 1597 model handle, then the 1598 collision handle. */
-HasiraModelFile RockPillar_ModelFile(ASSET_KI_HASIRA_BMD);
-HasiraCollisionFile RockPillar_ClsnFile(ASSET_KI_HASIRA_KCL);
+ModelFile RockPillar_ModelFile(ASSET_KI_HASIRA_BMD);
+ClsnFile RockPillar_ClsnFile(ASSET_KI_HASIRA_KCL);

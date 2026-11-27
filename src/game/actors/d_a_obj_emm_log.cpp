@@ -36,20 +36,6 @@ struct daObjEmmLog_c_Resources {
     CLPS_Block *clps;
 };
 
-/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the model, ClsnFile::ClsnFile /
- * ClsnFile::~ClsnFile for the collision), spelled through
- * declared-only subclasses so the static initializer names the real entry
- * points. */
-struct EmmLogModelFilePtr : SharedFilePtr {
-    EmmLogModelFilePtr(u32 fileID);
-    ~EmmLogModelFilePtr();
-};
-struct EmmLogCollisionFilePtr : SharedFilePtr {
-    EmmLogCollisionFilePtr(u32 fileID);
-    ~EmmLogCollisionFilePtr();
-};
-
 extern daObjEmmLog_c_Resources data_ov052_021124d4; /* defined with the file handles */
 
 daObjEmmLog_c *daObjEmmLog_c_classInit() {
@@ -108,8 +94,8 @@ s32 daObjEmmLog_c::CleanupResources() {
 
 /* The log's model and collision file handles; data_ov052_021124d4.model
  * and .collision point at them. */
-EmmLogModelFilePtr gEmmLogModelFile(ASSET_EMM_LOG_BMD);
-EmmLogCollisionFilePtr gEmmLogCollisionFile(ASSET_EMM_LOG_KCL);
+ModelFile gEmmLogModelFile(ASSET_EMM_LOG_BMD);
+ClsnFile gEmmLogCollisionFile(ASSET_EMM_LOG_KCL);
 
 extern CLPS_Block data_ov064_0211ba2c;
 

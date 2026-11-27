@@ -19,20 +19,6 @@
 
 extern "C" daObjFloatBoard_c_Resources data_ov016_02114b8c;
 
-/* File 1601 / 1602 resource handles. The static initializer registers
- * their destructors; the spellings are this TU's, mapped onto
- * ModelFile::ModelFile / ModelFile::~ModelFile and ClsnFile::ClsnFile /
- * ClsnFile::~ClsnFile. */
-struct KiItaModelFilePtr : SharedFilePtr {
-    KiItaModelFilePtr(u32 fileID);
-    ~KiItaModelFilePtr();
-};
-
-struct KiItaCollisionFilePtr : SharedFilePtr {
-    KiItaCollisionFilePtr(u32 fileID);
-    ~KiItaCollisionFilePtr();
-};
-
 daObjKi_Ita_c *daObjKi_Ita_c_classInit() {
     return new daObjKi_Ita_c();
 }
@@ -55,8 +41,8 @@ int daObjKi_Ita_c::InitResources() {
 /* Definitions stay after the last .text function so they do not insert
  * a function into the ROM-ascending run. Construction order is the model
  * handle, then the collision handle. */
-KiItaModelFilePtr data_ov016_02114e44(1601);
-KiItaCollisionFilePtr data_ov016_02114e4c(1602);
+ModelFile data_ov016_02114e44(1601);
+ClsnFile data_ov016_02114e4c(1602);
 
 extern struct CLPS_Block data_ov016_02113bec;
 daObjFloatBoard_c_Resources data_ov016_02114b8c = {

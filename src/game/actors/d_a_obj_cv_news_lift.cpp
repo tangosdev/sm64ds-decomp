@@ -58,25 +58,12 @@ enum daObjCvNewsLift_c_AssetId {
     ASSET_CV_NEWS_LIFT_KCL = 0x05d8
 };
 
-/* The handles reach their files through these wrappers' constructor and
-   destructor veneers; the manifest maps each to the retail destination.
-   Descriptive local types, not recovered spellings. */
-struct CvNewsLiftModelFile : SharedFilePtr {
-    CvNewsLiftModelFile(u32 fileID);
-    ~CvNewsLiftModelFile();
-};
-
-struct CvNewsLiftCollisionFile : SharedFilePtr {
-    CvNewsLiftCollisionFile(u32 fileID);
-    ~CvNewsLiftCollisionFile();
-};
-
 /* This TU's file handles and platform offsets, in the order the retail
    initializer (0x02113500) builds them. */
-CvNewsLiftModelFile gCvNewsLiftModelFile(ASSET_CV_NEWS_LIFT_BMD);
-CvNewsLiftCollisionFile gCvNewsLiftCollisionFile(ASSET_CV_NEWS_LIFT_KCL);
-CvNewsLiftModelFile gCvLiftButtonModelFile(ASSET_CV_LIFT_BTN_BMD);
-CvNewsLiftCollisionFile gCvLiftButtonCollisionFile(ASSET_CV_LIFT_BTN_KCL);
+ModelFile gCvNewsLiftModelFile(ASSET_CV_NEWS_LIFT_BMD);
+ClsnFile gCvNewsLiftCollisionFile(ASSET_CV_NEWS_LIFT_KCL);
+ModelFile gCvLiftButtonModelFile(ASSET_CV_LIFT_BTN_BMD);
+ClsnFile gCvLiftButtonCollisionFile(ASSET_CV_LIFT_BTN_KCL);
 
 /* Where each platform hangs from the main mesh: +Z, -Z, +X and -X. */
 Vector3 gNewsLiftPlatformOffsets[4] = {

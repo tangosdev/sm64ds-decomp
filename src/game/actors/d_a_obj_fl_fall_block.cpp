@@ -32,18 +32,7 @@ struct CLPS_Block;
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x5f9, collision file 0x5fa). Those definitions
- * are this file's static initializer. The wrapper names are local; the
- * handle constructors and destructors are the ROM resource-family
- * functions, aliased in the manifest. */
-struct FallBlockModelFile : SharedFilePtr {
-    FallBlockModelFile(u32 fileID);
-    ~FallBlockModelFile();
-};
-
-struct FallBlockCollisionFilePtr : SharedFilePtr {
-    FallBlockCollisionFilePtr(u32 fileID);
-    ~FallBlockCollisionFilePtr();
-};
+ * are this file's static initializer. */
 
 #include "ResourceDescriptor.h"
 
@@ -65,8 +54,8 @@ int daObjFl_Fall_Block_c::CleanupResources() {
 /* Static-init globals (was the handwritten __sinit_ov022_02112fe4 shard).
  * Definition order is the retail initializer's construction order: the
  * model handle (file 0x5f9), then the collision handle (file 0x5fa). */
-FallBlockModelFile data_ov022_02114648(0x5f9);
-FallBlockCollisionFilePtr data_ov022_02114640(0x5fa);
+ModelFile data_ov022_02114648(0x5f9);
+ClsnFile data_ov022_02114640(0x5fa);
 ResourceDescriptor data_ov022_0211427c = {
     &data_ov022_02114648,
     &data_ov022_02114640,

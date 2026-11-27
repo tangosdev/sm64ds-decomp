@@ -27,22 +27,8 @@ enum daObjHeart_c_AssetId { ASSET_OBJ_HEART_BMD = 0x0470, ASSET_OBJ_HEART_WAIT_B
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
-/* The model handle constructs through ModelFile::ModelFile and destroys through
- * ModelFile::~ModelFile; the animation handle constructs through
- * AnimFile::AnimFile and destroys through AnimFile::~AnimFile.
- * The manifest aliases those undefined members onto the ROM symbols. */
-struct HeartModelFilePtr : SharedFilePtr {
-    HeartModelFilePtr(u32 fileID);
-    ~HeartModelFilePtr();
-};
-
-struct HeartAnimationFilePtr : SharedFilePtr {
-    HeartAnimationFilePtr(u32 fileID);
-    ~HeartAnimationFilePtr();
-};
-
-extern HeartModelFilePtr data_ov002_0210e104;
-extern HeartAnimationFilePtr data_ov002_0210e0fc;
+extern ModelFile data_ov002_0210e104;
+extern AnimFile data_ov002_0210e0fc;
 
 /* local extern: no shared header declares it. */
 extern "C" int Math_Function_0203b14c(int *ptr, int target, int rate, int limit, int step);
@@ -126,5 +112,5 @@ daObjHeart_c *daObjHeart_c_classInit(void) {
 
 /* Retail initializer order: model 0x470, then animation 0x471. mwcc emits
  * __sinit_d_a_obj_heart.cpp from these two definitions. */
-HeartModelFilePtr data_ov002_0210e104(ASSET_OBJ_HEART_BMD);
-HeartAnimationFilePtr data_ov002_0210e0fc(ASSET_OBJ_HEART_WAIT_BCA);
+ModelFile data_ov002_0210e104(ASSET_OBJ_HEART_BMD);
+AnimFile data_ov002_0210e0fc(ASSET_OBJ_HEART_WAIT_BCA);

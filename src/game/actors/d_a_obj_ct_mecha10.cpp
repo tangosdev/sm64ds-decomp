@@ -70,23 +70,11 @@ enum {
     CLOCK_SETTING_STOPPED = 3
 };
 
-/* Resource handles constructed by this TU's static initializer. The
- * constructor and destructor bodies stay out of line; mwcc registers them. */
-struct Mecha10ModelFilePtr : SharedFilePtr {
-    Mecha10ModelFilePtr(u32 fileID);
-    ~Mecha10ModelFilePtr();
-};
-
-struct Mecha10ClsnFilePtr : SharedFilePtr {
-    Mecha10ClsnFilePtr(u32 fileID);
-    ~Mecha10ClsnFilePtr();
-};
-
-extern Mecha10ModelFilePtr
-    gCtMechaObj12sModelFile; /* model of the fall-through profile (CT_MECHA12S) */
-extern Mecha10ClsnFilePtr gCtMechaObj10CollisionFile; /* collision KCL of the id 0x77 cog */
-extern Mecha10ModelFilePtr gCtMechaObj12lModelFile;   /* model of id 0x79 (CT_MECHA12L) */
-extern Mecha10ModelFilePtr gCtMechaObj10ModelFile;    /* model of id 0x77 (CT_MECHA10) */
+/* Resource handles constructed by this TU's static initializer. */
+extern ModelFile gCtMechaObj12sModelFile;   /* model of the fall-through profile (CT_MECHA12S) */
+extern ClsnFile gCtMechaObj10CollisionFile; /* collision KCL of the id 0x77 cog */
+extern ModelFile gCtMechaObj12lModelFile;   /* model of id 0x79 (CT_MECHA12L) */
+extern ModelFile gCtMechaObj10ModelFile;    /* model of id 0x77 (CT_MECHA10) */
 extern CLPS_Block data_ov035_021121d8;
 
 extern const s16 sTTC2DRotatorSpeeds[2] = {0xfbbc, 0xf334};
@@ -205,7 +193,7 @@ int daObjCtMecha10_c::CleanupResources() {
 }
 
 /* Construction order. The three model handles share one destructor literal. */
-Mecha10ModelFilePtr gCtMechaObj10ModelFile(ASSET_CT_MECHA_OBJ10_BMD);
-Mecha10ClsnFilePtr gCtMechaObj10CollisionFile(ASSET_CT_MECHA_OBJ10_KCL);
-Mecha10ModelFilePtr gCtMechaObj12sModelFile(ASSET_CT_MECHA_OBJ12S_BMD);
-Mecha10ModelFilePtr gCtMechaObj12lModelFile(ASSET_CT_MECHA_OBJ12L_BMD);
+ModelFile gCtMechaObj10ModelFile(ASSET_CT_MECHA_OBJ10_BMD);
+ClsnFile gCtMechaObj10CollisionFile(ASSET_CT_MECHA_OBJ10_KCL);
+ModelFile gCtMechaObj12sModelFile(ASSET_CT_MECHA_OBJ12S_BMD);
+ModelFile gCtMechaObj12lModelFile(ASSET_CT_MECHA_OBJ12L_BMD);

@@ -284,7 +284,7 @@ extern void func_02011cfc(void);
  *   sKoopaModelFile             Bowser's model handle (ModelFile) */
 extern SharedFilePtr *const sKoopaAnimationFiles[];
 extern SharedFilePtr *const sKoopaTextureSequenceFiles[];
-extern SharedFilePtr gKoopaKeyModelFile;
+extern ModelFile gKoopaKeyModelFile;
 /* daFRing_c defines this handle. decl_common.h no longer declares it. */
 extern ModelFile data_ov060_0211b208;
 extern ModelFile sKoopaModelFile;

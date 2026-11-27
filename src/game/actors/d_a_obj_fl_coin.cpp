@@ -84,21 +84,9 @@ enum {
     ACTOR_ID_COIN = 0x120    /* daCoin_c */
 };
 
-/* The ctor/dtor pairs are the ROM's SharedFilePtr veneers (ModelFile::ModelFile /
- * ModelFile::~ModelFile for the models, ClsnFile::ClsnFile / ClsnFile::~ClsnFile
- * for the collision); the subclasses exist to spell those entry points. */
-struct FlCoinModelFilePtr : SharedFilePtr {
-    FlCoinModelFilePtr(u32 fileID);
-    ~FlCoinModelFilePtr();
-};
-struct FlCoinCollisionFilePtr : SharedFilePtr {
-    FlCoinCollisionFilePtr(u32 fileID);
-    ~FlCoinCollisionFilePtr();
-};
-
 extern Entry data_ov064_0211c904[];
 extern SharedFilePtr *const data_ov064_0211adc8[];
-extern FlCoinCollisionFilePtr data_ov064_0211c800;
+extern ClsnFile data_ov064_0211c800;
 extern CLPS_Block data_ov064_0211baac;
 /* Per-type step scripts, indexed by mType (ov064 .data). */
 extern const s8 *data_ov064_0211c198[];
@@ -409,21 +397,21 @@ void daObjFl_Coin_c_EmitDestructor(daObjFl_Coin_c *coin) {
 
 /* The retail initializer constructs the fourteen model handles in file ID
  * order, then the collision handle, then fills the six-entry state table. */
-FlCoinModelFilePtr gFl1400ModelFile(ASSET_FL_14_00_BMD);
-FlCoinModelFilePtr gFl1401ModelFile(ASSET_FL_14_01_BMD);
-FlCoinModelFilePtr gFl1402ModelFile(ASSET_FL_14_02_BMD);
-FlCoinModelFilePtr gFl1403ModelFile(ASSET_FL_14_03_BMD);
-FlCoinModelFilePtr gFl1404ModelFile(ASSET_FL_14_04_BMD);
-FlCoinModelFilePtr gFl1405ModelFile(ASSET_FL_14_05_BMD);
-FlCoinModelFilePtr gFl1406ModelFile(ASSET_FL_14_06_BMD);
-FlCoinModelFilePtr gFl1407ModelFile(ASSET_FL_14_07_BMD);
-FlCoinModelFilePtr gFl1408ModelFile(ASSET_FL_14_08_BMD);
-FlCoinModelFilePtr gFl1409ModelFile(ASSET_FL_14_09_BMD);
-FlCoinModelFilePtr gFl1410ModelFile(ASSET_FL_14_10_BMD);
-FlCoinModelFilePtr gFl1411ModelFile(ASSET_FL_14_11_BMD);
-FlCoinModelFilePtr gFl1412ModelFile(ASSET_FL_14_12_BMD);
-FlCoinModelFilePtr gFl1413ModelFile(ASSET_FL_14_13_BMD);
-FlCoinCollisionFilePtr data_ov064_0211c800(ASSET_FL_14_00_KCL);
+ModelFile gFl1400ModelFile(ASSET_FL_14_00_BMD);
+ModelFile gFl1401ModelFile(ASSET_FL_14_01_BMD);
+ModelFile gFl1402ModelFile(ASSET_FL_14_02_BMD);
+ModelFile gFl1403ModelFile(ASSET_FL_14_03_BMD);
+ModelFile gFl1404ModelFile(ASSET_FL_14_04_BMD);
+ModelFile gFl1405ModelFile(ASSET_FL_14_05_BMD);
+ModelFile gFl1406ModelFile(ASSET_FL_14_06_BMD);
+ModelFile gFl1407ModelFile(ASSET_FL_14_07_BMD);
+ModelFile gFl1408ModelFile(ASSET_FL_14_08_BMD);
+ModelFile gFl1409ModelFile(ASSET_FL_14_09_BMD);
+ModelFile gFl1410ModelFile(ASSET_FL_14_10_BMD);
+ModelFile gFl1411ModelFile(ASSET_FL_14_11_BMD);
+ModelFile gFl1412ModelFile(ASSET_FL_14_12_BMD);
+ModelFile gFl1413ModelFile(ASSET_FL_14_13_BMD);
+ClsnFile data_ov064_0211c800(ASSET_FL_14_00_KCL);
 
 extern "C" {
 extern Entry data_ov064_0211bf68;

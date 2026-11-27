@@ -30,14 +30,7 @@ enum d_a_obj_hs_billboard_AssetId {
 #include "BMD_File.h"
 #include "math/MtxStack.h"
 
-/* Four model handles. Each constructs through ModelFile::ModelFile and destroys
- * through ModelFile::~ModelFile. The four-pointer table stays ROM rodata. */
-struct HsBillboardModelFilePtr : SharedFilePtr {
-    HsBillboardModelFilePtr(unsigned int fileId);
-    ~HsBillboardModelFilePtr();
-};
-typedef char HsBillboardModelFilePtr_size_must_be_8[sizeof(HsBillboardModelFilePtr) == 8 ? 1 : -1];
-
+/* Four model handles. The four-pointer table stays ROM rodata. */
 extern SharedFilePtr *const data_ov031_02111424[4];
 
 /* Four C-linkage factories: one `new`, four names. The EAD classInit spelling
@@ -109,10 +102,10 @@ void daObjHsBillboard_c::UpdateModelTransform() {
    inline `operator delete`, which is why nothing here names a heap. */
 
 /* Retail construction order. mwcc emits __sinit_d_a_obj_hs_billboard.cpp. */
-HsBillboardModelFilePtr gHsMoonModelFile(ASSET_HS_MOON_BMD);
-HsBillboardModelFilePtr gHsStarModelFile(ASSET_HS_STAR_BMD);
-HsBillboardModelFilePtr gHsYStarModelFile(ASSET_HS_Y_STAR_BMD);
-HsBillboardModelFilePtr gHsBStarModelFile(ASSET_HS_B_STAR_BMD);
+ModelFile gHsMoonModelFile(ASSET_HS_MOON_BMD);
+ModelFile gHsStarModelFile(ASSET_HS_STAR_BMD);
+ModelFile gHsYStarModelFile(ASSET_HS_Y_STAR_BMD);
+ModelFile gHsBStarModelFile(ASSET_HS_B_STAR_BMD);
 
 extern SharedFilePtr *const data_ov031_02111424[4] = {
     &gHsMoonModelFile,

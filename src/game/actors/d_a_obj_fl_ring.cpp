@@ -58,22 +58,9 @@ struct daObjFl_Ring_c_Files {
     CLPS_Block *mClps;
 };
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct RingModelFilePtr : SharedFilePtr {
-    RingModelFilePtr(u32 fileID);
-    ~RingModelFilePtr();
-};
-
-struct RingCollisionFilePtr : SharedFilePtr {
-    RingCollisionFilePtr(u32 fileID);
-    ~RingCollisionFilePtr();
-};
-
 extern daObjFl_Ring_c_Files data_ov022_02113cc8;
-extern RingModelFilePtr gFlRingModelFile;
-extern RingCollisionFilePtr gFlRingCollisionFile;
+extern ModelFile gFlRingModelFile;
+extern ClsnFile gFlRingCollisionFile;
 
 extern "C" {
 /* local extern: d_bg_w.cpp defines these and no header declares them. */
@@ -210,8 +197,8 @@ s32 daObjFl_Ring_c::CleanupResources() {
 /* Source order is construction order: model file 1550, collision file 1551.
  * __sinit_d_a_obj_fl_ring.cpp emits both constructions and registers the
  * destructors; the registration nodes are compiler temporaries. */
-RingModelFilePtr gFlRingModelFile(ASSET_FL_RING_BMD);
-RingCollisionFilePtr gFlRingCollisionFile(ASSET_FL_RING_KCL);
+ModelFile gFlRingModelFile(ASSET_FL_RING_BMD);
+ClsnFile gFlRingCollisionFile(ASSET_FL_RING_KCL);
 
 extern "C" SpawnInfo<daObjFl_Ring_c> g_profile_FL_RING = {
     daObjFl_Ring_c_classInit, 71, 279, 0x00000002, 0x00000000, 0x00780000, 0x02000000, 0x00000000};

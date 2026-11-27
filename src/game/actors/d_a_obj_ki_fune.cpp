@@ -26,19 +26,7 @@ enum d_a_obj_ki_fune_AssetId {
 #include "dBgW.h"
 #include "nitro/fx/fx_trig.h"
 
-/* Two model handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile. Two collision handles construct through ClsnFile::ClsnFile and
- * destroy through ClsnFile::~ClsnFile. The file tables stay ROM data. */
-struct KiFuneModelFilePtr : SharedFilePtr {
-    KiFuneModelFilePtr(unsigned int fileId);
-    ~KiFuneModelFilePtr();
-};
-struct KiFuneClsnFileHandle : SharedFilePtr {
-    KiFuneClsnFileHandle(unsigned int fileId);
-    ~KiFuneClsnFileHandle();
-};
-typedef char KiFuneModelFilePtr_size_must_be_8[sizeof(KiFuneModelFilePtr) == 8 ? 1 : -1];
-typedef char KiFuneClsnFileHandle_size_must_be_8[sizeof(KiFuneClsnFileHandle) == 8 ? 1 : -1];
+/* The two file tables below stay ROM data. */
 
 /* local extern: no shared header declares these. */
 extern "C" {
@@ -135,10 +123,10 @@ void daObjKi_Fune_c::UpdateModelMatrix() {
 }
 
 /* Retail construction order. mwcc emits __sinit_d_a_obj_ki_fune.cpp. */
-KiFuneModelFilePtr gKiFuneUpModelFile(ASSET_KI_FUNE_UP_BMD);
-KiFuneModelFilePtr gKiFuneDownAModelFile(ASSET_KI_FUNE_DOWN_A_BMD);
-KiFuneClsnFileHandle gKiFuneUpCollisionFile(ASSET_KI_FUNE_UP_KCL);
-KiFuneClsnFileHandle gKiFuneDownACollisionFile(ASSET_KI_FUNE_DOWN_A_KCL);
+ModelFile gKiFuneUpModelFile(ASSET_KI_FUNE_UP_BMD);
+ModelFile gKiFuneDownAModelFile(ASSET_KI_FUNE_DOWN_A_BMD);
+ClsnFile gKiFuneUpCollisionFile(ASSET_KI_FUNE_UP_KCL);
+ClsnFile gKiFuneDownACollisionFile(ASSET_KI_FUNE_DOWN_A_KCL);
 
 /* Collision-property blocks, one per hull: the 'CLPS' tag, the 8-byte
  * stride header with one entry, then the default entries. */

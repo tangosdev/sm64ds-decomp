@@ -60,27 +60,11 @@ static inline int IsOffScreen(dActor_c *actor) {
 }
 
 /* Retail static init constructs these 8-byte handles and registers their
- * destructors. Wrapper spellings are reconstructed; ctor/dtor addresses,
- * file IDs, widths, and BSS order are ROM evidence. */
-struct HatenaModelFilePtr : SharedFilePtr {
-    HatenaModelFilePtr(u32 fileID);
-    ~HatenaModelFilePtr();
-};
-
-struct HatenaAnimationFilePtr : SharedFilePtr {
-    HatenaAnimationFilePtr(u32 fileID);
-    ~HatenaAnimationFilePtr();
-};
-
-struct HatenaCollisionFilePtr : SharedFilePtr {
-    HatenaCollisionFilePtr(u32 fileID);
-    ~HatenaCollisionFilePtr();
-};
-
-extern HatenaModelFilePtr data_ov002_0210dd60;
-extern HatenaAnimationFilePtr data_ov002_0210dd68;
-extern HatenaCollisionFilePtr data_ov002_0210dd58;
-extern HatenaCollisionFilePtr data_ov002_0210dd50;
+ * destructors. */
+extern ModelFile data_ov002_0210dd60;
+extern AnimFile data_ov002_0210dd68;
+extern ClsnFile data_ov002_0210dd58;
+extern ClsnFile data_ov002_0210dd50;
 extern CLPS_Block data_ov002_0210d8b4;
 extern CLPS_Block data_ov002_0210d774;
 extern u8 data_0209d684;
@@ -295,7 +279,7 @@ void daObjHatenaSwitch_c::OnGroundPounded(dActor_c &other) {
 /* ROM ordinals 0/1 -- D1 at 0x020b4ed8 and D0 at 0x020b4f44 are emitted
  * naturally by the inline destructor and InitResources vtable instantiation. */
 
-HatenaModelFilePtr data_ov002_0210dd60(ASSET_HATENA_SWITCH_BMD);
-HatenaAnimationFilePtr data_ov002_0210dd68(ASSET_HATENA_SWITCH_BCA);
-HatenaCollisionFilePtr data_ov002_0210dd58(ASSET_HATENA_SWITCH_START_KCL);
-HatenaCollisionFilePtr data_ov002_0210dd50(ASSET_HATENA_SWITCH_END_KCL);
+ModelFile data_ov002_0210dd60(ASSET_HATENA_SWITCH_BMD);
+AnimFile data_ov002_0210dd68(ASSET_HATENA_SWITCH_BCA);
+ClsnFile data_ov002_0210dd58(ASSET_HATENA_SWITCH_START_KCL);
+ClsnFile data_ov002_0210dd50(ASSET_HATENA_SWITCH_END_KCL);

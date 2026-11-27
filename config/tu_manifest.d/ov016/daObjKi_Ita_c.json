@@ -109,14 +109,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@341",
+      "from": "@339",
       "to": "@612",
-      "evidence": "batch-5 atdup: @357 collides cross-module (temps are fleet-global); renumber to unused same-length @612 Re-keyed from @361 to @339 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @339 to @341 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "batch-5 atdup: @357 collides cross-module (temps are fleet-global); renumber to unused same-length @612 Re-keyed from @361 to @339 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @339 to @341 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @341 to @339 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@340",
+      "from": "@338",
       "to": "@356",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @370 now; licensed under the existing pin @356 Re-keyed from @360 to @338 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @338 to @340 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @370 now; licensed under the existing pin @356 Re-keyed from @360 to @338 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @338 to @340 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @340 to @338 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     }
   ],
   "notes": [
@@ -498,36 +498,6 @@
       "size": "0x4",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
-    }
-  ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN17KiItaModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN9ModelFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN17KiItaModelFilePtrD1Ev",
-      "canonical_symbol": "_ZN9ModelFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail destructor registration destination and the model wrapper destructor's exact ABS32 relocation"
-    },
-    {
-      "symbol": "_ZN21KiItaCollisionFilePtrC1Ej",
-      "canonical_symbol": "_ZN8ClsnFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b4c",
-      "evidence": "retail initializer call destination and the collision wrapper constructor's exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN21KiItaCollisionFilePtrD1Ev",
-      "canonical_symbol": "_ZN8ClsnFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b34",
-      "evidence": "retail destructor registration destination and the collision wrapper destructor's exact ABS32 relocation"
     }
   ],
   "symbol_binding_rewrites": [

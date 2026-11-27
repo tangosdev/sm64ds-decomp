@@ -31,25 +31,13 @@ enum d_a_obj_ice_board_AssetId {
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x472, collision file 0x473). mwcc emits
- * __sinit_d_a_obj_ice_board.cpp from those definitions. The wrapper names
- * are local; the handle constructors and destructors are the ROM
- * resource-family functions, aliased in the manifest. The definitions
+ * __sinit_d_a_obj_ice_board.cpp from those definitions. The definitions
  * carry the TU's daObjIceBoard_c_* names the code already uses (mecha05 /
  * wcmizu precedent); the retired shard's data_ov018_* labels for the same
  * addresses are dropped from symbols.txt, and their stale decl_common.h
  * lines with them (S42). */
-struct IceBoardModelFile : SharedFilePtr {
-    IceBoardModelFile(u32 fileID);
-    ~IceBoardModelFile();
-};
-
-struct IceBoardCollisionFilePtr : SharedFilePtr {
-    IceBoardCollisionFilePtr(u32 fileID);
-    ~IceBoardCollisionFilePtr();
-};
-
-extern IceBoardModelFile daObjIceBoard_c_ModelFile;
-extern IceBoardCollisionFilePtr daObjIceBoard_c_ClsnFile;
+extern ModelFile daObjIceBoard_c_ModelFile;
+extern ClsnFile daObjIceBoard_c_ClsnFile;
 
 extern CLPS_Block data_ov002_0210d754;
 
@@ -161,5 +149,5 @@ void daObjIceBoard_c::OnHitByMegaChar(daPly_c &player) {
 
 /* Static-init globals (was the handwritten __sinit_ov018_02112e00 shard).
  * Definition order is the retail initializer construction order. */
-IceBoardModelFile daObjIceBoard_c_ModelFile(ASSET_OBJ_ICE_BOARD_BMD);
-IceBoardCollisionFilePtr daObjIceBoard_c_ClsnFile(ASSET_OBJ_ICE_BOARD_KCL);
+ModelFile daObjIceBoard_c_ModelFile(ASSET_OBJ_ICE_BOARD_BMD);
+ClsnFile daObjIceBoard_c_ClsnFile(ASSET_OBJ_ICE_BOARD_KCL);

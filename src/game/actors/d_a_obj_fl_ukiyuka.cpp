@@ -73,27 +73,13 @@ int daObjFl_Ukiyuka_c::InitResources() {
     return InitResourcesFrom(&data_ov022_021140d4[mVariant], kBobAmplitude);
 }
 
-/* 8-byte file handles. Both models use ModelFile::ModelFile / ModelFile::~ModelFile and
- * both collision files ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The
- * spellings are local; the manifest aliases the generated names to those
- * ROM symbols. */
-struct UkiyukaModelFilePtr : SharedFilePtr {
-    UkiyukaModelFilePtr(u32 fileID);
-    ~UkiyukaModelFilePtr();
-};
-
-struct UkiyukaCollisionFilePtr : SharedFilePtr {
-    UkiyukaCollisionFilePtr(u32 fileID);
-    ~UkiyukaCollisionFilePtr();
-};
-
 /* Source order is construction order. __sinit_d_a_obj_fl_ukiyuka.cpp emits
  * all four constructions and registers the destructors; the registration
  * nodes are compiler temporaries. */
-UkiyukaModelFilePtr gFlUkiYukaModelFile(ASSET_FL_UKI_YUKA_BMD);
-UkiyukaCollisionFilePtr gFlUkiYukaCollisionFile(ASSET_FL_UKI_YUKA_KCL);
-UkiyukaModelFilePtr gdaObjFl_UkiyukaFlShisoModelFile(ASSET_FL_SHISO_BMD);
-UkiyukaCollisionFilePtr gdaObjFl_UkiyukaFlShisoCollisionFile(ASSET_FL_SHISO_KCL);
+ModelFile gFlUkiYukaModelFile(ASSET_FL_UKI_YUKA_BMD);
+ClsnFile gFlUkiYukaCollisionFile(ASSET_FL_UKI_YUKA_KCL);
+ModelFile gdaObjFl_UkiyukaFlShisoModelFile(ASSET_FL_SHISO_BMD);
+ClsnFile gdaObjFl_UkiyukaFlShisoCollisionFile(ASSET_FL_SHISO_KCL);
 
 daObjUkiyuka_c::Resources data_ov022_021140d4[2] = {
     {&gFlUkiYukaModelFile, &gFlUkiYukaCollisionFile, &data_ov064_0211baec},

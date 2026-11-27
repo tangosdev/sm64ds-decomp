@@ -201,28 +201,6 @@ static inline int IsActorID(dActor_c *actor, int id) {
     return actor->actorID == id;
 }
 
-/* The block's file-scope SharedFilePtr objects, spelled through the same
-   wrapper idiom the landed folds use: the handles' code is the veneer pair
-   the cartridge already carries, so the wrappers get no bodies of their own.
-   The constructors alias ModelFile::ModelFile (model), AnimFile::AnimFile
-   (animation) and ClsnFile::ClsnFile (collision) in this unit's manifest, and the
-   destructors ModelFile::~ModelFile, AnimFile::~AnimFile and
-   ClsnFile::~ClsnFile. */
-struct HatenaBlockModelFilePtr : SharedFilePtr {
-    HatenaBlockModelFilePtr(unsigned int id);
-    ~HatenaBlockModelFilePtr();
-};
-
-struct HatenaBlockAnimFileHandle : SharedFilePtr {
-    HatenaBlockAnimFileHandle(unsigned int id);
-    ~HatenaBlockAnimFileHandle();
-};
-
-struct HatenaBlockClsnFileHandle : SharedFilePtr {
-    HatenaBlockClsnFileHandle(unsigned int id);
-    ~HatenaBlockClsnFileHandle();
-};
-
 /* -------------------------------------------------------------------------- */
 /* The six model handles, the animation handle and the collision handle, in
    static-initializer order: the initializer constructs each and registers
@@ -230,14 +208,14 @@ struct HatenaBlockClsnFileHandle : SharedFilePtr {
    animation to dExtFrameCtrl_c::LoadFile and the collision one to
    dBgW_Kc::LoadFile. */
 /* -------------------------------------------------------------------------- */
-HatenaBlockModelFilePtr   data_ov102_0214e800(0x800e); /* ITEM/VS BMD */
-HatenaBlockModelFilePtr   data_ov102_0214e7e8(ASSET_HATENA_BOX_BMD);  /* HATENA_BLOCK BMD */
-HatenaBlockModelFilePtr   data_ov102_0214e808(ASSET_HATENA_KARABOX_BMD);  /* HATENA anim BMD */
-HatenaBlockModelFilePtr   data_ov102_0214e7f0(ASSET_OBJ_CAP_BOX_M_BMD);  /* CAP_BLOCK_M BMD */
-HatenaBlockModelFilePtr   data_ov102_0214e7d8(ASSET_OBJ_CAP_BOX_L_BMD);  /* CAP_BLOCK_L BMD */
-HatenaBlockModelFilePtr   data_ov102_0214e7e0(ASSET_OBJ_CAP_BOX_W_BMD);  /* CAP_BLOCK_W BMD */
-HatenaBlockAnimFileHandle data_ov102_0214e7f8(ASSET_HATENA_KARABOX_BCA);  /* HATENA BCA */
-HatenaBlockClsnFileHandle data_ov102_0214e7d0(0x800d); /* KCL */
+ModelFile data_ov102_0214e800(0x800e);                   /* ITEM/VS BMD */
+ModelFile data_ov102_0214e7e8(ASSET_HATENA_BOX_BMD);     /* HATENA_BLOCK BMD */
+ModelFile data_ov102_0214e808(ASSET_HATENA_KARABOX_BMD); /* HATENA anim BMD */
+ModelFile data_ov102_0214e7f0(ASSET_OBJ_CAP_BOX_M_BMD);  /* CAP_BLOCK_M BMD */
+ModelFile data_ov102_0214e7d8(ASSET_OBJ_CAP_BOX_L_BMD);  /* CAP_BLOCK_L BMD */
+ModelFile data_ov102_0214e7e0(ASSET_OBJ_CAP_BOX_W_BMD);  /* CAP_BLOCK_W BMD */
+AnimFile data_ov102_0214e7f8(ASSET_HATENA_KARABOX_BCA);  /* HATENA BCA */
+ClsnFile data_ov102_0214e7d0(0x800d);                    /* KCL */
 
 /* The initializer copies native member-pointer constants into the tables
    below. Their complete .data contribution is 0x0214e258..0x0214e3a8. */
