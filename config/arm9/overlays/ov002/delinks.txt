@@ -215,27 +215,11 @@ src/game/player/d_a_ply_methods.cpp:
 
 src/game/actors/d_a_star.cpp:
     complete
-    .text start:0x020e6c40 end:0x020ebe5c
+    .text start:0x020e6c40 end:0x020ebf8c
     .init start:0x02106e40 end:0x02107118
     .ctor start:0x02108114 end:0x02108118
     .data start:0x0210a990 end:0x0210aa00
     .bss start:0x02110924 end:0x02110a48
-
-src/game/actors/StarCamera_Spawn.cpp:
-    complete
-    .text start:0x020ebe5c end:0x020ebe8c
-
-src/game/actors/d_a_star_base.cpp:
-    complete
-    .text start:0x020ebe8c end:0x020ebed4
-
-src/game/actors/d_a_star_silver_star.cpp:
-    complete
-    .text start:0x020ebed4 end:0x020ebf30
-
-src/game/actors/d_a_star_star.cpp:
-    complete
-    .text start:0x020ebf30 end:0x020ebf8c
 
 src/game/actors/d_a_tree.cpp:
     complete
