@@ -16,8 +16,7 @@ void func_ov007_020cb3dc(Ov007Mesh *mesh) {
     int h1 = grid->rows - 1;
     Vector3_16 *p;
 
-    func_ov007_020cb7c0(mesh->faceNormals, w1, h1, mesh->verts, mesh->cellWidth,
-                        mesh->cellHeight);
+    func_ov007_020cb7c0(mesh->faceNormals, w1, h1, mesh->verts, mesh->cellWidth, mesh->cellHeight);
 
     p = mesh->vertexNormals;
     for (y = 0; y < mesh->grid->rows; y++) {
