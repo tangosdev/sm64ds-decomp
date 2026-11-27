@@ -20,9 +20,6 @@
  *   emits them in cartridge order with no homeless D2. Behavior, the
  *   first declared virtual, keeps this TU the key-function TU, so it
  *   still owns the _ZTV/_ZTI/_ZTS group.
- * - The SharedFilePtr subclasses stay declared-only wrappers: they let
- *   the sinit name the ROM's SharedFilePtr veneer entry points without
- *   inventing a layout.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -36,21 +33,6 @@ enum d_a_i_donketu_AssetId {
 
 #include "daIDonketu_c.h"
 #include "SharedFilePtr.h"
-
-/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the model,
- * AnimFile::AnimFile / AnimFile::~AnimFile for the four
- * animation handles), spelled through declared-only subclasses so the
- * static initializer names the real entry points. The code reaches them
- * through the data_ov027_021138f4 resource block. */
-struct IDonketuModelFilePtr : SharedFilePtr {
-    IDonketuModelFilePtr(u32 fileID);
-    ~IDonketuModelFilePtr();
-};
-struct IDonketuAnimationFileHandle : SharedFilePtr {
-    IDonketuAnimationFileHandle(u32 fileID);
-    ~IDonketuAnimationFileHandle();
-};
 
 /* The Chill Bully's resource block (daOts_c.h); overlay .data owns the bytes. */
 extern BullyResourceConfig data_ov027_021138f4;
@@ -151,11 +133,11 @@ void daIDonketu_c::UpdateRunState() {
 
 /* The Chill Bully's model and animation handles, in the sinit call order the
  * data_ov027_021138f4 file table repeats. */
-IDonketuModelFilePtr gIceDonketuModelFile(ASSET_ICE_DONKETU_BMD);
-IDonketuAnimationFileHandle gIceDonketuDeadAnimationFile(ASSET_ICE_DONKETU_DEAD_BCA);
-IDonketuAnimationFileHandle gIceDonketuHitAnimationFile(ASSET_ICE_DONKETU_HIT_BCA);
-IDonketuAnimationFileHandle gIceDonketuTurnAnimationFile(ASSET_ICE_DONKETU_TURN_BCA);
-IDonketuAnimationFileHandle gIceDonketuWalkAnimationFile(ASSET_ICE_DONKETU_WALK_BCA);
+ModelFile gIceDonketuModelFile(ASSET_ICE_DONKETU_BMD);
+AnimFile gIceDonketuDeadAnimationFile(ASSET_ICE_DONKETU_DEAD_BCA);
+AnimFile gIceDonketuHitAnimationFile(ASSET_ICE_DONKETU_HIT_BCA);
+AnimFile gIceDonketuTurnAnimationFile(ASSET_ICE_DONKETU_TURN_BCA);
+AnimFile gIceDonketuWalkAnimationFile(ASSET_ICE_DONKETU_WALK_BCA);
 
 /* The Chill Bully's resource block mFileTable points at. */
 BullyResourceConfig data_ov027_021138f4 = {

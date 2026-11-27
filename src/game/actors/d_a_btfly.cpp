@@ -64,23 +64,14 @@ typedef void (daBtfly_c::*ButterflyState)();
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x43a, animation file 0x43b) and fill the eight-entry
  * state table. mwcc emits __sinit_d_a_btfly.cpp from those definitions. */
-struct BtflyModelFilePtr : SharedFilePtr {
-    BtflyModelFilePtr(u32 fileID);
-    ~BtflyModelFilePtr();
-};
-
-struct BtflyAnimationFilePtr : SharedFilePtr {
-    BtflyAnimationFilePtr(u32 fileID);
-    ~BtflyAnimationFilePtr();
-};
 
 extern "C" {
 /* Init LoadFile: ov002 BMD shared with the other small fauna, this overlay's
  * BCA, the still-model BMD, and the animated-model BMD. Cleanup Release. */
 extern SharedFilePtr gOneUpMushroomModelFile;
-extern BtflyAnimationFilePtr gButterflyFlyAnimationFile;
+extern AnimFile gButterflyFlyAnimationFile;
 extern SharedFilePtr data_ov100_02148668;
-extern BtflyModelFilePtr gButterflyModelFile;
+extern ModelFile gButterflyModelFile;
 extern ButterflyState data_ov100_02148628[];
 
 }
@@ -339,7 +330,6 @@ void daBtfly_c::State2()
     mPos.z = mPrevPos.z;
 }
 
-
 void daBtfly_c::State1()
 {
     if (IsPlayerInRange(0x3e8) == 0)
@@ -501,8 +491,8 @@ daBtfly_c *daBtfly_c_classInit() {
 /* Static-init globals (was the handwritten __sinit_ov100_021473bc shard).
  * Definition order is the retail initializer's construction order: the model
  * handle, then the animation handle, then the state table. */
-BtflyModelFilePtr gButterflyModelFile(ASSET_BUTTERFLY_BMD);
-BtflyAnimationFilePtr gButterflyFlyAnimationFile(ASSET_BUTTERFLY_FLY_BCA);
+ModelFile gButterflyModelFile(ASSET_BUTTERFLY_BMD);
+AnimFile gButterflyFlyAnimationFile(ASSET_BUTTERFLY_FLY_BCA);
 
 ButterflyState data_ov100_02148628[8] = {
     &daBtfly_c::State0,

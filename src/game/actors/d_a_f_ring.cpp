@@ -33,32 +33,12 @@ enum daFRing_c_AssetId {
 
 int data_ov060_0211ab20[] = {0x787, 0x800, 0x0f0f, 0x1000};
 
-/* The static-init file handles: the model file constructs through
- * ModelFile::ModelFile and destroys through ModelFile::~ModelFile, the animation handle
- * through AnimFile::AnimFile/AnimFile::~AnimFile, and the
- * texture-sequence handle through TexSeqFile::TexSeqFile/
- * TexSeqFile::~TexSeqFile. Each wrapper's ctor and dtor stay
- * undefined here; the manifest aliases them onto those ROM veneers. */
-struct FRingModelFilePtr : SharedFilePtr {
-    FRingModelFilePtr(u32 fileID);
-    ~FRingModelFilePtr();
-};
-struct FRingAnimationFileHandle : SharedFilePtr {
-    FRingAnimationFileHandle(u32 fileID);
-    ~FRingAnimationFileHandle();
-};
-struct FRingTexSequenceFilePtr : SharedFilePtr {
-    FRingTexSequenceFilePtr(u32 fileID);
-    ~FRingTexSequenceFilePtr();
-};
-
-extern FRingAnimationFileHandle data_ov060_0211b1f8;
-extern FRingTexSequenceFilePtr data_ov060_0211b200;
-extern FRingModelFilePtr data_ov060_0211b208;
+extern AnimFile data_ov060_0211b1f8;
+extern TexSeqFile data_ov060_0211b200;
+extern ModelFile data_ov060_0211b208;
 
 extern BMA_File data_ov048_021115e4;
 extern BTA_File data_ov048_021115f4;
-
 
 daFRing_c::~daFRing_c() {}
 
@@ -150,9 +130,9 @@ s32 daFRing_c::InitResources() {
 
 /* Definition order is the retail initializer's construction order: the model
  * handle, then the animation handle, then the texture-sequence handle. */
-FRingModelFilePtr data_ov060_0211b208(ASSET_KPA_SHWAVE_BMD);
-FRingAnimationFileHandle data_ov060_0211b1f8(ASSET_KPA_SHWAVE_BCA);
-FRingTexSequenceFilePtr data_ov060_0211b200(ASSET_KPA_SHWAVE_BTP);
+ModelFile data_ov060_0211b208(ASSET_KPA_SHWAVE_BMD);
+AnimFile data_ov060_0211b1f8(ASSET_KPA_SHWAVE_BCA);
+TexSeqFile data_ov060_0211b200(ASSET_KPA_SHWAVE_BTP);
 
 /* Bound tail of this TU's .bss. One object; interior labels stay in symbols.txt. */
 u8 data_ov060_0211b234[0xc];

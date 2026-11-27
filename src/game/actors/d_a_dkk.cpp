@@ -35,21 +35,6 @@ enum daDkk_c_AssetId { ASSET_DONKAKU_BMD = 0x02dc, ASSET_DONKAKU_KCL = 0x02dd };
 #include "Particle__System.h"
 #include "ParticleIds.h"
 
-/* The model handle constructs through ModelFile::ModelFile and destroys through
- * ModelFile::~ModelFile. The collision handle constructs through ClsnFile::ClsnFile and
- * destroys through ClsnFile::~ClsnFile. data_ov025_02113814 is
- * the file table (DsnBaseFileTable, daDsnBase_c.h). */
-struct DkkModelFilePtr : SharedFilePtr {
-    DkkModelFilePtr(unsigned int fileId);
-    ~DkkModelFilePtr();
-};
-struct DkkClsnFileHandler : SharedFilePtr {
-    DkkClsnFileHandler(unsigned int fileId);
-    ~DkkClsnFileHandler();
-};
-typedef char DkkModelFilePtr_size_must_be_8[sizeof(DkkModelFilePtr) == 8 ? 1 : -1];
-typedef char DkkClsnFileHandler_size_must_be_8[sizeof(DkkClsnFileHandler) == 8 ? 1 : -1];
-
 /* Grindel's resource table; overlay .data owns the bytes. Sound.h declares
  * func_0201267c. */
 extern DsnBaseFileTable data_ov025_02113814;
@@ -197,8 +182,8 @@ int daDkk_c::OnAimedAtWithEgg() {
 
 /* Retail construction order: model 0x2dc, then collision 0x2dd.
  * mwcc emits __sinit_d_a_dkk.cpp. */
-DkkModelFilePtr gDonkakuModelFile(ASSET_DONKAKU_BMD);
-DkkClsnFileHandler gDonkakuCollisionFile(ASSET_DONKAKU_KCL);
+ModelFile gDonkakuModelFile(ASSET_DONKAKU_BMD);
+ClsnFile gDonkakuCollisionFile(ASSET_DONKAKU_KCL);
 
 /* Grindel's collision-property block and the resource table that names it. */
 

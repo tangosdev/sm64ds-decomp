@@ -471,36 +471,6 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
     }
   ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN18DpLiftModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN9ModelFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN18DpLiftModelFilePtrD1Ev",
-      "canonical_symbol": "_ZN9ModelFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail destructor registration destination and the model wrapper destructor's exact ABS32 relocation"
-    },
-    {
-      "symbol": "_ZN22DpLiftCollisionFilePtrC1Ej",
-      "canonical_symbol": "_ZN8ClsnFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b4c",
-      "evidence": "retail initializer call destination and the collision wrapper constructor's exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN22DpLiftCollisionFilePtrD1Ev",
-      "canonical_symbol": "_ZN8ClsnFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b34",
-      "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
-    }
-  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_d_a_dp_lift.cpp",
@@ -641,14 +611,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@518",
+      "from": "@516",
       "to": "@432",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @446 now; licensed under the existing pin @432 | compiler temp; retiring this TU's named-parameter extern \"C\" block (the callback pair are members now) lowers the per-TU @NNN uniquifier and including math/MtxStack.h raises it, so mwcc emits it under this name now Re-keyed from @496 to @474 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @474 to @496 when the TU took a long marker spacing in place of the opt_strength_reduction bracket around InitResources, and NitroSDK's FX_SinIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @496 to @508 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @508 to @513 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @513 to @516 when daDpLift_c's base position became a Vector3 member (measured from the compiled object). Re-keyed from @516 to @518 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @446 now; licensed under the existing pin @432 | compiler temp; retiring this TU's named-parameter extern \"C\" block (the callback pair are members now) lowers the per-TU @NNN uniquifier and including math/MtxStack.h raises it, so mwcc emits it under this name now Re-keyed from @496 to @474 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @474 to @496 when the TU took a long marker spacing in place of the opt_strength_reduction bracket around InitResources, and NitroSDK's FX_SinIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @496 to @508 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @508 to @513 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @513 to @516 when daDpLift_c's base position became a Vector3 member (measured from the compiled object). Re-keyed from @516 to @518 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @518 to @516 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@517",
+      "from": "@515",
       "to": "@431",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @445 now; licensed under the existing pin @431 | compiler temp; retiring this TU's named-parameter extern \"C\" block (the callback pair are members now) lowers the per-TU @NNN uniquifier and including math/MtxStack.h raises it, so mwcc emits it under this name now Re-keyed from @495 to @473 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @473 to @495 when the TU took a long marker spacing in place of the opt_strength_reduction bracket around InitResources, and NitroSDK's FX_SinIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @495 to @507 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @507 to @512 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @512 to @515 when daDpLift_c's base position became a Vector3 member (measured from the compiled object). Re-keyed from @515 to @517 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @445 now; licensed under the existing pin @431 | compiler temp; retiring this TU's named-parameter extern \"C\" block (the callback pair are members now) lowers the per-TU @NNN uniquifier and including math/MtxStack.h raises it, so mwcc emits it under this name now Re-keyed from @495 to @473 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @473 to @495 when the TU took a long marker spacing in place of the opt_strength_reduction bracket around InitResources, and NitroSDK's FX_SinIdx from nitro/fx/fx_trig.h (measured from the compiled object). Re-keyed from @495 to @507 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @507 to @512 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @512 to @515 when daDpLift_c's base position became a Vector3 member (measured from the compiled object). Re-keyed from @515 to @517 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @517 to @515 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     }
   ]
 }

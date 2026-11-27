@@ -259,40 +259,24 @@ extern SharedFilePtr gKoopaKeyModelFile;
    element type. */
 extern void *gKeyModelFiles[];
 
-/* The door's file-scope SharedFilePtr objects, spelled through the same
-   wrapper idiom the landed folds use: the handles' code is the veneer pair
-   the cartridge already carries, so the wrappers get no bodies of their
-   own. The constructors alias ModelFile::ModelFile (model) and
-   AnimFile::AnimFile (animation) in this unit's manifest, and the
-   destructors ModelFile::~ModelFile and AnimFile::~AnimFile. */
-struct DoorModelFilePtr : SharedFilePtr {
-    DoorModelFilePtr(unsigned int id);
-    ~DoorModelFilePtr();
-};
-
-struct DoorAnimationFileHandle : SharedFilePtr {
-    DoorAnimationFileHandle(unsigned int id);
-    ~DoorAnimationFileHandle();
-};
-
 /* -------------------------------------------------------------------------- */
 /* The eleven model handles and the animation handle, in static-initializer
    order: the initializer constructs each and registers its destructor.
    gDoorOpenAnimationFile is the one the helpers release and hand to
    dExtFrameCtrl_c::LoadFile. */
 /* -------------------------------------------------------------------------- */
-DoorModelFilePtr gRegularDoorModelFile(0x9c09);
-DoorModelFilePtr gDoorKeyHoleModelFile(0x9c0a);
-DoorModelFilePtr gObjDoor0StarModelFile(ASSET_OBJ_DOOR0_STAR_BMD);
-DoorModelFilePtr gObjDoor0Star1ModelFile(ASSET_OBJ_DOOR0_STAR1_BMD);
-DoorModelFilePtr gObjDoor0Star3ModelFile(ASSET_OBJ_DOOR0_STAR3_BMD);
-DoorModelFilePtr gObjDoor0Star10ModelFile(ASSET_OBJ_DOOR0_STAR10_BMD);
-DoorModelFilePtr gObjDoor1ModelFile(ASSET_OBJ_DOOR1_BMD);
-DoorModelFilePtr gObjDoor2BoroModelFile(ASSET_OBJ_DOOR2_BORO_BMD);
-DoorModelFilePtr gRustedMetalDoorModelFile(0x9c0b);
-DoorModelFilePtr gObjDoor4YamiModelFile(ASSET_OBJ_DOOR4_YAMI_BMD);
-DoorModelFilePtr gObjDoor5HorrorModelFile(ASSET_OBJ_DOOR5_HORROR_BMD);
-DoorAnimationFileHandle gDoorOpenAnimationFile(0x9c08);
+ModelFile gRegularDoorModelFile(0x9c09);
+ModelFile gDoorKeyHoleModelFile(0x9c0a);
+ModelFile gObjDoor0StarModelFile(ASSET_OBJ_DOOR0_STAR_BMD);
+ModelFile gObjDoor0Star1ModelFile(ASSET_OBJ_DOOR0_STAR1_BMD);
+ModelFile gObjDoor0Star3ModelFile(ASSET_OBJ_DOOR0_STAR3_BMD);
+ModelFile gObjDoor0Star10ModelFile(ASSET_OBJ_DOOR0_STAR10_BMD);
+ModelFile gObjDoor1ModelFile(ASSET_OBJ_DOOR1_BMD);
+ModelFile gObjDoor2BoroModelFile(ASSET_OBJ_DOOR2_BORO_BMD);
+ModelFile gRustedMetalDoorModelFile(0x9c0b);
+ModelFile gObjDoor4YamiModelFile(ASSET_OBJ_DOOR4_YAMI_BMD);
+ModelFile gObjDoor5HorrorModelFile(ASSET_OBJ_DOOR5_HORROR_BMD);
+AnimFile gDoorOpenAnimationFile(0x9c08);
 
 DoorVariantInfo data_ov100_02148204[19] = {
     {&gRegularDoorModelFile, 0, -1, -1, -1, 0, -1, 0},

@@ -31,29 +31,15 @@ enum daBasabasa_c_AssetId {
 #include "math/MtxStack.h"
 #include "LevelRng.h"
 
-/* The model handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile; the animation handles go through AnimFile::AnimFile
- * and AnimFile::~AnimFile. The wrappers are declared, never defined:
- * the manifest aliases their undefined members onto the ROM veneers. */
-struct BasabasaModelFilePtr : SharedFilePtr {
-    BasabasaModelFilePtr(u32 fileID);
-    ~BasabasaModelFilePtr();
-};
-
-struct BasabasaAnimationFileHandle : SharedFilePtr {
-    BasabasaAnimationFileHandle(u32 fileID);
-    ~BasabasaAnimationFileHandle();
-};
-
 /* arm9 C helpers with no shared header. Vec3_Asr's definition takes a
  * file-local struct, so no shared spelling agrees with it yet. */
 
 void func_02012694(unsigned int id, const Vector3 *pos);
 
-extern BasabasaAnimationFileHandle data_ov065_0211d690; /* flying animation */
-extern BasabasaModelFilePtr data_ov065_0211d698;        /* flying model */
-extern BasabasaAnimationFileHandle data_ov065_0211d6a0; /* hanging animation */
-extern BasabasaModelFilePtr data_ov065_0211d6a8;        /* hanging model */
+extern AnimFile data_ov065_0211d690;  /* flying animation */
+extern ModelFile data_ov065_0211d698; /* flying model */
+extern AnimFile data_ov065_0211d6a0;  /* hanging animation */
+extern ModelFile data_ov065_0211d6a8; /* hanging model */
 
 /* The four states, by the address of their .bss record. */
 extern daBasabasa_c::State data_ov065_0211d6e0; /* chase */
@@ -457,10 +443,10 @@ daBasabasa_c *daBasabasa_c_classInit() {
  * State records. mwcc emits __sinit_d_a_basabasa.cpp from these definitions,
  * including the destructor registrations and the PMF descriptor constants
  * at 0x0211cc20..0x0211cc60. */
-BasabasaModelFilePtr data_ov065_0211d698(ASSET_BASABASA_BMD);
-BasabasaModelFilePtr data_ov065_0211d6a8(ASSET_BASABASA_WAIT_BMD);
-BasabasaAnimationFileHandle data_ov065_0211d690(ASSET_BASABASA_FLY_BCA);
-BasabasaAnimationFileHandle data_ov065_0211d6a0(ASSET_BASABASA_WAIT_BCA);
+ModelFile data_ov065_0211d698(ASSET_BASABASA_BMD);
+ModelFile data_ov065_0211d6a8(ASSET_BASABASA_WAIT_BMD);
+AnimFile data_ov065_0211d690(ASSET_BASABASA_FLY_BCA);
+AnimFile data_ov065_0211d6a0(ASSET_BASABASA_WAIT_BCA);
 daBasabasa_c::State data_ov065_0211d700 = {&daBasabasa_c::EnterPerch, &daBasabasa_c::ExecutePerch};
 daBasabasa_c::State data_ov065_0211d710 = {&daBasabasa_c::EnterDrop, &daBasabasa_c::ExecuteDrop};
 daBasabasa_c::State data_ov065_0211d6e0 = {&daBasabasa_c::EnterChase, &daBasabasa_c::ExecuteChase};

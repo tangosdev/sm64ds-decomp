@@ -21,9 +21,7 @@
  * - Render: one Vector3 local then one Matrix4x3_FromTranslation
  *   size-DIFF 0x8c->0xa4.
  * - The two file handles live after InitResources; the compiler's
- *   __sinit_d_a_dp_lift.cpp constructs them at overlay load. Their wrapper
- *   names are local -- the constructors are the ROM resource-family
- *   functions, recorded as aliases in the manifest.
+ *   __sinit_d_a_dp_lift.cpp constructs them at overlay load.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -38,25 +36,12 @@ enum daDpLift_c_AssetId { ASSET_DP_LIFT_BMD = 0x05e1, ASSET_DP_LIFT_KCL = 0x05e2
 
 #pragma defer_codegen off
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct DpLiftModelFilePtr : SharedFilePtr {
-    DpLiftModelFilePtr(u32 fileID);
-    ~DpLiftModelFilePtr();
-};
-
-struct DpLiftCollisionFilePtr : SharedFilePtr {
-    DpLiftCollisionFilePtr(u32 fileID);
-    ~DpLiftCollisionFilePtr();
-};
-
 /* Lift model, collision file (ov025 .bss) and marker model (ov002 .bss).
  * This TU's two handles are defined at the end of this file so the
  * constructors do not enter .text. */
-extern DpLiftModelFilePtr data_ov025_02113ae0;
+extern ModelFile data_ov025_02113ae0;
 extern SharedFilePtr data_ov002_0210d9f0;
-extern DpLiftCollisionFilePtr data_ov025_02113ad8;
+extern ClsnFile data_ov025_02113ad8;
 
 extern CLPS_Block data_ov025_02112d08;
 
@@ -163,8 +148,8 @@ s32 daDpLift_c::InitResources() {
 /* Source order is construction order: model file 1505, collision file 1506.
  * __sinit_d_a_dp_lift.cpp emits both constructions and registers the
  * destructors; the registration nodes are compiler temporaries. */
-DpLiftModelFilePtr data_ov025_02113ae0(ASSET_DP_LIFT_BMD);
-DpLiftCollisionFilePtr data_ov025_02113ad8(ASSET_DP_LIFT_KCL);
+ModelFile data_ov025_02113ae0(ASSET_DP_LIFT_BMD);
+ClsnFile data_ov025_02113ad8(ASSET_DP_LIFT_KCL);
 
 /* Remembers that the player (actor 0xbf) stood on the lift, for Behavior's
    idle state. */

@@ -72,22 +72,9 @@ extern daHyuhyu_c_State data_ov091_021356d0; /* cloud: waiting */
 
 void func_02012694(u32 id, const Vector3 *pos);
 
-/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * handle classes (ModelFile::ModelFile / ModelFile::~ModelFile for the BMD,
- * AnimFile::AnimFile / AnimFile::~AnimFile for the two BCAs), spelled through
- * declared-only subclasses so the static initializer names the real entry
- * points. */
-struct HyuhyuModelFilePtr : SharedFilePtr {
-    HyuhyuModelFilePtr(u32 fileID);
-    ~HyuhyuModelFilePtr();
-};
-struct HyuhyuAnimationFileHandle : SharedFilePtr {
-    HyuhyuAnimationFileHandle(u32 fileID);
-    ~HyuhyuAnimationFileHandle();
-};
-extern HyuhyuModelFilePtr data_ov091_02135674;        /* BMD */
-extern HyuhyuAnimationFileHandle data_ov091_0213567c; /* BCA: blow */
-extern HyuhyuAnimationFileHandle data_ov091_02135684; /* BCA: wait */
+extern ModelFile data_ov091_02135674; /* BMD */
+extern AnimFile data_ov091_0213567c;  /* BCA: blow */
+extern AnimFile data_ov091_02135684;  /* BCA: wait */
 
 /* Actor ID 0xbf is PLAYER; dActor_c::mFlags bit 0x40000 is set while the
  * actor is in Yoshi's mouth. int-returning, so the ROM materializes the 0/1
@@ -100,9 +87,9 @@ static inline int IsInYoshiMouth(dActor_c *actor) {
     return (actor->mFlags & 0x40000) != 0;
 }
 
-HyuhyuModelFilePtr data_ov091_02135674(ASSET_HYUHYU_BMD);               /* BMD */
-HyuhyuAnimationFileHandle data_ov091_0213567c(ASSET_HYUHYU_ATTACK_BCA); /* BCA: blow */
-HyuhyuAnimationFileHandle data_ov091_02135684(ASSET_HYUHYU_WAIT_BCA);   /* BCA: wait */
+ModelFile data_ov091_02135674(ASSET_HYUHYU_BMD);       /* BMD */
+AnimFile data_ov091_0213567c(ASSET_HYUHYU_ATTACK_BCA); /* BCA: blow */
+AnimFile data_ov091_02135684(ASSET_HYUHYU_WAIT_BCA);   /* BCA: wait */
 
 typedef int (daHyuhyu_c::*HyuhyuStateFn)();
 

@@ -53,18 +53,10 @@ extern SharedFilePtr gBombheiModelFile;
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daBmb_c_AssetId { ASSET_BOMBHEI_CARRY_BCA = 0x02b7, ASSET_BOMBHEI_WALK_BCA = 0x02b8 };
 
-/* The two animation handles reach their files through this wrapper's
-   constructor and destructor veneers; the manifest maps each to the retail
-   destination.  Descriptive local type, not a recovered spelling. */
-struct BmbAnimFile : SharedFilePtr {
-    BmbAnimFile(u32 fileID);
-    ~BmbAnimFile();
-};
-
 /* This TU's own handles, in the order the retail initializer (0x0214de70)
    builds them. */
-BmbAnimFile gBmbWalkAnimFile(ASSET_BOMBHEI_WALK_BCA);
-BmbAnimFile gBmbCarryAnimFile(ASSET_BOMBHEI_CARRY_BCA);
+AnimFile gBmbWalkAnimFile(ASSET_BOMBHEI_WALK_BCA);
+AnimFile gBmbCarryAnimFile(ASSET_BOMBHEI_CARRY_BCA);
 
 /* Carry offsets, indexed by the carrier's pose (bit 0: front-sliding or
    just lost the grab; bit 1: carrier param1 == 2).  The retail initializer

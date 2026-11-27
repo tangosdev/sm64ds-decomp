@@ -68,7 +68,6 @@ enum d_a_cnn_AssetId { ASSET_HOUDAI_BMD = 0x045e };
 
 typedef void (daCnn_c::*State)();
 
-
 /* The cannon's model, and the water bomb's two (bomb and fragment), which
    InitResources preloads for the bombs it fires. */
 extern SharedFilePtr data_ov098_0213c91c;
@@ -86,23 +85,13 @@ short GetAngleToCamera(int playerNo);
 int func_ov002_020df300(daPly_c *player);
 }
 
-/* The cannon's file-scope SharedFilePtr object, spelled through the same
-   wrapper idiom the landed folds use: the handle's code is the veneer pair
-   the cartridge already carries, so the wrapper gets no bodies of its own.
-   The constructor aliases ModelFile::ModelFile and the destructor ModelFile::~ModelFile in
-   this unit's manifest. */
-struct CnnModelFilePtr : SharedFilePtr {
-    CnnModelFilePtr(unsigned int id);
-    ~CnnModelFilePtr();
-};
-
 /* ------------------------------------------------------------------------
  * The model handle and the state table's four member pointers, in
  * static-initializer order: the initializer constructs the handle, registers
  * its destructor, then copies the pointers from .data. InitResources feeds
  * the model to dExtSimpleModel_c::LoadFile.
  * ------------------------------------------------------------------------ */
-CnnModelFilePtr data_ov098_0213c8e8(ASSET_HOUDAI_BMD);
+ModelFile data_ov098_0213c8e8(ASSET_HOUDAI_BMD);
 
 /* The member pointers the initializer copies into the table
    (0x0213c644..0x0213c664 in .data, an unclaimed run). Each record is one

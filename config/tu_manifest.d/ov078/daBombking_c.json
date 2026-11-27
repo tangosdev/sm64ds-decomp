@@ -697,91 +697,91 @@
       "address": "0x02126ee0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c1 (data/enemy/bombking/bombking_struggle.bca)."
+      "evidence": "AnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c1 (data/enemy/bombking/bombking_struggle.bca)."
     },
     {
       "symbol": "gBombkingWalk1AnimationFile",
       "address": "0x02126ee8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c5 (data/enemy/bombking/bombking_walk1.bca)."
+      "evidence": "AnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c5 (data/enemy/bombking/bombking_walk1.bca)."
     },
     {
       "symbol": "gBombkingThrowAnimationFile",
       "address": "0x02126ef0",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c2 (data/enemy/bombking/bombking_throw.bca)."
+      "evidence": "AnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c2 (data/enemy/bombking/bombking_throw.bca)."
     },
     {
       "symbol": "gBombkingStartAnimationFile",
       "address": "0x02126ef8",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c0 (data/enemy/bombking/bombking_start.bca)."
+      "evidence": "AnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c0 (data/enemy/bombking/bombking_start.bca)."
     },
     {
       "symbol": "gBombkingGetupAnimationFile",
       "address": "0x02126f00",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2bc (data/enemy/bombking/bombking_getup.bca)."
+      "evidence": "AnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2bc (data/enemy/bombking/bombking_getup.bca)."
     },
     {
       "symbol": "gBombkingJumpedAnimationFile",
       "address": "0x02126f08",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2be (data/enemy/bombking/bombking_jumped.bca)."
+      "evidence": "AnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2be (data/enemy/bombking/bombking_jumped.bca)."
     },
     {
       "symbol": "gBombkingJumpAnimationFile",
       "address": "0x02126f10",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2bd (data/enemy/bombking/bombking_jump.bca)."
+      "evidence": "AnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2bd (data/enemy/bombking/bombking_jump.bca)."
     },
     {
       "symbol": "gBombkingLiftAnimationFile",
       "address": "0x02126f18",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2bf (data/enemy/bombking/bombking_lift.bca)."
+      "evidence": "AnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2bf (data/enemy/bombking/bombking_lift.bca)."
     },
     {
       "symbol": "gBombkingDamageAnimationFile",
       "address": "0x02126f20",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2bb (data/enemy/bombking/bombking_damage.bca)."
+      "evidence": "AnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2bb (data/enemy/bombking/bombking_damage.bca)."
     },
     {
       "symbol": "gBombkingWalk2AnimationFile",
       "address": "0x02126f28",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c6 (data/enemy/bombking/bombking_walk2.bca)."
+      "evidence": "AnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c6 (data/enemy/bombking/bombking_walk2.bca)."
     },
     {
       "symbol": "gBombkingWait2AnimationFile",
       "address": "0x02126f30",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c4 (data/enemy/bombking/bombking_wait2.bca)."
+      "evidence": "AnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c4 (data/enemy/bombking/bombking_wait2.bca)."
     },
     {
       "symbol": "gBombkingModelFile",
       "address": "0x02126f38",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingModelFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c7 (data/enemy/bombking/bomb_king.bmd)."
+      "evidence": "ModelFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c7 (data/enemy/bombking/bomb_king.bmd)."
     },
     {
       "symbol": "gBombkingWait1AnimationFile",
       "address": "0x02126f40",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "BombkingAnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c3 (data/enemy/bombking/bombking_wait1.bca)."
+      "evidence": "AnimFile; this TU's initializer (__sinit_d_a_bombking.cpp) constructs runtime handle 0x2c3 (data/enemy/bombking/bombking_wait1.bca)."
     },
     {
       "symbol": "data_ov078_02126f48",
@@ -4351,36 +4351,6 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
-    }
-  ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN17BombkingModelFileC1Ej",
-      "canonical_symbol": "_ZN9ModelFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call/load destination at this exact relocation site"
-    },
-    {
-      "symbol": "_ZN16BombkingAnimFileC1Ej",
-      "canonical_symbol": "_ZN8AnimFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0201799c",
-      "evidence": "retail initializer call/load destination at this exact relocation site"
-    },
-    {
-      "symbol": "_ZN17BombkingModelFileD1Ev",
-      "canonical_symbol": "_ZN9ModelFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail initializer call/load destination at this exact relocation site"
-    },
-    {
-      "symbol": "_ZN16BombkingAnimFileD1Ev",
-      "canonical_symbol": "_ZN8AnimFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017984",
-      "evidence": "retail initializer call/load destination at this exact relocation site"
     }
   ],
   "rodata": null

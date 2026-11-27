@@ -126,9 +126,6 @@
   "data_ov026_02113f4c": {
    "src/game/actors/d_a_water_suikomi.cpp": ["return:Vector3"]
   },
-  "data_ov060_0211b208": {
-   "src/game/actors/d_a_f_ring.cpp": ["return:FRingModelFilePtr"]
-  },
   "data_ov081_02128d90": {
    "src/game/actors/d_a_snowball.cpp": ["return:SharedFilePtr"]
   },

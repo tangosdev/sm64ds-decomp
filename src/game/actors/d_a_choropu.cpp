@@ -69,22 +69,13 @@ struct ChoropuStateRow { ChoropuStateFn fn[1]; };
  * resource handles (model files 0x2d1, 0x2d6, animation files 0x2d2, 0x2d3,
  * 0x2d4, 0x2d5) and fill the six one-entry state rows. mwcc emits
  * __sinit_d_a_choropu.cpp from those definitions. */
-struct ChoropuModelFile : SharedFilePtr {
-    ChoropuModelFile(u32 fileID);
-    ~ChoropuModelFile();
-};
 
-struct ChoropuAnimationFilePtr : SharedFilePtr {
-    ChoropuAnimationFilePtr(u32 fileID);
-    ~ChoropuAnimationFilePtr();
-};
-
-extern ChoropuModelFile data_ov080_021283c0;
-extern ChoropuModelFile data_ov080_021283c8;
-extern ChoropuAnimationFilePtr data_ov080_021283e8;
-extern ChoropuAnimationFilePtr data_ov080_021283d0;
-extern ChoropuAnimationFilePtr data_ov080_021283d8;
-extern ChoropuAnimationFilePtr data_ov080_021283e0;
+extern ModelFile data_ov080_021283c0;
+extern ModelFile data_ov080_021283c8;
+extern AnimFile data_ov080_021283e8;
+extern AnimFile data_ov080_021283d0;
+extern AnimFile data_ov080_021283d8;
+extern AnimFile data_ov080_021283e0;
 extern ChoropuStateRow data_ov080_02128438[6];
 
 #define LAUND(p) ((void*)(p))
@@ -813,12 +804,12 @@ daChoropu_c *daChoropu_c_classInit() {
  * Definition order is the retail initializer's construction order: the two
  * model handles, then the four animation handles, then the six state rows in
  * Setup, Hidden, Emerge, ThrowRock, Wait, Leap order. */
-ChoropuModelFile data_ov080_021283c0(ASSET_CHOROPU_BMD);
-ChoropuModelFile data_ov080_021283c8(ASSET_ROCK_BMD);
-ChoropuAnimationFilePtr data_ov080_021283e8(ASSET_CHOROPU_END_BCA);
-ChoropuAnimationFilePtr data_ov080_021283d0(ASSET_CHOROPU_SEARCH_BCA);
-ChoropuAnimationFilePtr data_ov080_021283d8(ASSET_CHOROPU_START_BCA);
-ChoropuAnimationFilePtr data_ov080_021283e0(ASSET_CHOROPU_THROW_BCA);
+ModelFile data_ov080_021283c0(ASSET_CHOROPU_BMD);
+ModelFile data_ov080_021283c8(ASSET_ROCK_BMD);
+AnimFile data_ov080_021283e8(ASSET_CHOROPU_END_BCA);
+AnimFile data_ov080_021283d0(ASSET_CHOROPU_SEARCH_BCA);
+AnimFile data_ov080_021283d8(ASSET_CHOROPU_START_BCA);
+AnimFile data_ov080_021283e0(ASSET_CHOROPU_THROW_BCA);
 
 ChoropuStateRow data_ov080_02128438[6] = {
     {{&daChoropu_c::UpdateSetup}},     /* 0 daChoropu_ST_SETUP,      data_ov080_02127fa0 */

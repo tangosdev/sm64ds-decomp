@@ -56,9 +56,7 @@ enum daC_Jugem_c_AssetId {
 /* File-scope objects at the end of this file construct the three resource
  * handles (model file 0x2d7, animation file 0x2d8, texture-sequence file
  * 0x2d9), fill the eleven state pairs and build the two carry-offset
- * vectors. mwcc emits __sinit_d_a_c_jugem.cpp from those definitions. The
- * wrapper names are local; the handle constructors and destructors are the
- * ROM resource-family functions, aliased in the manifest. JugemVec3's plain
+ * vectors. mwcc emits __sinit_d_a_c_jugem.cpp from those definitions. JugemVec3's plain
  * overload builds the first vector with ordinary stores; the (int, int,
  * long) overload builds the second through a volatile lvalue, exactly as
  * retail. Both share the one declared-not-defined destructor, aliased to
@@ -70,20 +68,6 @@ enum daC_Jugem_c_AssetId {
  * const/static, every literal spelling of the arguments, by-reference, short
  * and long long ctor parameters, a member Set() from the ctor body, and
  * scheduling/peephole/optimisation-level pragmas at end of file. */
-struct JugemModelFile : SharedFilePtr {
-    JugemModelFile(u32 fileID);
-    ~JugemModelFile();
-};
-
-struct JugemAnimationFilePtr : SharedFilePtr {
-    JugemAnimationFilePtr(u32 fileID);
-    ~JugemAnimationFilePtr();
-};
-
-struct JugemTexSequenceFilePtr : SharedFilePtr {
-    JugemTexSequenceFilePtr(u32 fileID);
-    ~JugemTexSequenceFilePtr();
-};
 
 struct JugemVec3 {
     int x, y, z;
@@ -122,9 +106,9 @@ extern u8             data_0209d6bc;
 extern u8 gShowTouchScreenArrows;
 extern s8 gCurrentSublevel;
 
-extern JugemModelFile  data_ov085_0213074c;  /* model file */
-extern JugemAnimationFilePtr  data_ov085_02130744;  /* animation file */
-extern JugemTexSequenceFilePtr  data_ov085_0213073c;  /* texture sequence file */
+extern ModelFile data_ov085_0213074c;         /* model file */
+extern AnimFile data_ov085_02130744;          /* animation file */
+extern TexSeqFile data_ov085_0213073c;        /* texture sequence file */
 extern JugemVec3        data_ov085_02130840;  /* home position */
 extern JugemVec3        data_ov085_0213084c;  /* approach target */
 
@@ -905,9 +889,9 @@ daC_Jugem_c *daC_Jugem_c_classInit(void) {
  * texture-sequence handle (file 0x2d9), the eleven state pairs copied from
  * the ROM PMF constants, then the two carry-offset vectors (first plain,
  * the second volatile). */
-JugemModelFile data_ov085_0213074c(ASSET_C_JUGEM_BMD);
-JugemAnimationFilePtr data_ov085_02130744(ASSET_C_JUGEM_WAIT_BCA);
-JugemTexSequenceFilePtr data_ov085_0213073c(ASSET_C_JUGEM_WAIT_C_BTP);
+ModelFile data_ov085_0213074c(ASSET_C_JUGEM_BMD);
+AnimFile data_ov085_02130744(ASSET_C_JUGEM_WAIT_BCA);
+TexSeqFile data_ov085_0213073c(ASSET_C_JUGEM_WAIT_C_BTP);
 daC_Jugem_c::StateFn data_ov085_021307d0[2] = {data_ov085_0213025c, data_ov085_021302d4};
 daC_Jugem_c::StateFn data_ov085_021307e0[2] = {data_ov085_021302bc, data_ov085_0213026c};
 daC_Jugem_c::StateFn data_ov085_02130800[2] = {data_ov085_02130254, data_ov085_021302dc};

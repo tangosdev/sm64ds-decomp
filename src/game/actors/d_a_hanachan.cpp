@@ -76,23 +76,6 @@ enum daHanachan_c_AssetId {
 #include "SpawnInfo.h"
 #include "CLPS.h"
 
-/* The file-scope resource handles. The model five use the plain SharedFilePtr
- * pair (ModelFile::ModelFile / ModelFile::~ModelFile), the animation twenty-five use
- * AnimFile::AnimFile / AnimFile::~AnimFile, and the texture
- * sequence five use TexSeqFile::TexSeqFile /
- * TexSeqFile::~TexSeqFile. */
-struct HanachanModelFilePtr : SharedFilePtr {
-    HanachanModelFilePtr(u32 fileID);
-    ~HanachanModelFilePtr();
-};
-struct HanachanAnimationFileHandle : SharedFilePtr {
-    HanachanAnimationFileHandle(u32 fileID);
-    ~HanachanAnimationFileHandle();
-};
-struct HanachanTextureSeqFileHandle : SharedFilePtr {
-    HanachanTextureSeqFileHandle(u32 fileID);
-    ~HanachanTextureSeqFileHandle();
-};
 extern daHanachan_c::State data_ov034_02114538[];
 
 extern "C" {
@@ -1100,45 +1083,41 @@ SpawnInfo<daHanachan_c> g_profile_HANACHAN = {daHanachan_c_classInit,
                                               0x01000000,
                                               0x01000000};
 
-HanachanModelFilePtr gHanachanHeadModelFile(ASSET_HANACHAN_HEAD_BMD);
-HanachanModelFilePtr gHanachanBody01ModelFile(ASSET_HANACHAN_BODY01_BMD);
-HanachanModelFilePtr gHanachanBody02ModelFile(ASSET_HANACHAN_BODY02_BMD);
-HanachanModelFilePtr gHanachanBody03ModelFile(ASSET_HANACHAN_BODY03_BMD);
-HanachanModelFilePtr gHanachanBody04ModelFile(ASSET_HANACHAN_BODY04_BMD);
-HanachanAnimationFileHandle gHanachanHeadWalkAnimationFile(ASSET_HANACHAN_HEAD_WALK_BCA);
-HanachanAnimationFileHandle gHanachanBody01WalkAnimationFile(ASSET_HANACHAN_BODY01_WALK_BCA);
-HanachanAnimationFileHandle gHanachanBody02WalkAnimationFile(ASSET_HANACHAN_BODY02_WALK_BCA);
-HanachanAnimationFileHandle gHanachanBody03WalkAnimationFile(ASSET_HANACHAN_BODY03_WALK_BCA);
-HanachanAnimationFileHandle gHanachanBody04WalkAnimationFile(ASSET_HANACHAN_BODY04_WALK_BCA);
-HanachanAnimationFileHandle gHanachanHeadWalkStartAnimationFile(ASSET_HANACHAN_HEAD_WALK_START_BCA);
-HanachanAnimationFileHandle
-    gHanachanBody01WalkStartAnimationFile(ASSET_HANACHAN_BODY01_WALK_START_BCA);
-HanachanAnimationFileHandle
-    gHanachanBody02WalkStartAnimationFile(ASSET_HANACHAN_BODY02_WALK_START_BCA);
-HanachanAnimationFileHandle
-    gHanachanBody03WalkStartAnimationFile(ASSET_HANACHAN_BODY03_WALK_START_BCA);
-HanachanAnimationFileHandle
-    gHanachanBody04WalkStartAnimationFile(ASSET_HANACHAN_BODY04_WALK_START_BCA);
-HanachanAnimationFileHandle gHanachanHeadWalkEndAnimationFile(ASSET_HANACHAN_HEAD_WALK_END_BCA);
-HanachanAnimationFileHandle gHanachanBody01WalkEndAnimationFile(ASSET_HANACHAN_BODY01_WALK_END_BCA);
-HanachanAnimationFileHandle gHanachanBody02WalkEndAnimationFile(ASSET_HANACHAN_BODY02_WALK_END_BCA);
-HanachanAnimationFileHandle gHanachanBody03WalkEndAnimationFile(ASSET_HANACHAN_BODY03_WALK_END_BCA);
-HanachanAnimationFileHandle gHanachanBody04WalkEndAnimationFile(ASSET_HANACHAN_BODY04_WALK_END_BCA);
-HanachanAnimationFileHandle gHanachanHeadWaitAnimationFile(ASSET_HANACHAN_HEAD_WAIT_BCA);
-HanachanAnimationFileHandle gHanachanBody01WaitAnimationFile(ASSET_HANACHAN_BODY01_WAIT_BCA);
-HanachanAnimationFileHandle gHanachanBody02WaitAnimationFile(ASSET_HANACHAN_BODY02_WAIT_BCA);
-HanachanAnimationFileHandle gHanachanBody03WaitAnimationFile(ASSET_HANACHAN_BODY03_WAIT_BCA);
-HanachanAnimationFileHandle gHanachanBody04WaitAnimationFile(ASSET_HANACHAN_BODY04_WAIT_BCA);
-HanachanAnimationFileHandle gHanachanHeadDamageAnimationFile(ASSET_HANACHAN_HEAD_DAMAGE_BCA);
-HanachanAnimationFileHandle gHanachanBody01DamageAnimationFile(ASSET_HANACHAN_BODY01_DAMAGE_BCA);
-HanachanAnimationFileHandle gHanachanBody02DamageAnimationFile(ASSET_HANACHAN_BODY02_DAMAGE_BCA);
-HanachanAnimationFileHandle gHanachanBody03DamageAnimationFile(ASSET_HANACHAN_BODY03_DAMAGE_BCA);
-HanachanAnimationFileHandle gHanachanBody04DamageAnimationFile(ASSET_HANACHAN_BODY04_DAMAGE_BCA);
-HanachanTextureSeqFileHandle gHanachanHeadTextureSequenceFile(ASSET_HANACHAN_HEAD_BTP);
-HanachanTextureSeqFileHandle gHanachanBody01TextureSequenceFile(ASSET_HANACHAN_BODY01_BTP);
-HanachanTextureSeqFileHandle gHanachanBody02TextureSequenceFile(ASSET_HANACHAN_BODY02_BTP);
-HanachanTextureSeqFileHandle gHanachanBody03TextureSequenceFile(ASSET_HANACHAN_BODY03_BTP);
-HanachanTextureSeqFileHandle gHanachanBody04TextureSequenceFile(ASSET_HANACHAN_BODY04_BTP);
+ModelFile gHanachanHeadModelFile(ASSET_HANACHAN_HEAD_BMD);
+ModelFile gHanachanBody01ModelFile(ASSET_HANACHAN_BODY01_BMD);
+ModelFile gHanachanBody02ModelFile(ASSET_HANACHAN_BODY02_BMD);
+ModelFile gHanachanBody03ModelFile(ASSET_HANACHAN_BODY03_BMD);
+ModelFile gHanachanBody04ModelFile(ASSET_HANACHAN_BODY04_BMD);
+AnimFile gHanachanHeadWalkAnimationFile(ASSET_HANACHAN_HEAD_WALK_BCA);
+AnimFile gHanachanBody01WalkAnimationFile(ASSET_HANACHAN_BODY01_WALK_BCA);
+AnimFile gHanachanBody02WalkAnimationFile(ASSET_HANACHAN_BODY02_WALK_BCA);
+AnimFile gHanachanBody03WalkAnimationFile(ASSET_HANACHAN_BODY03_WALK_BCA);
+AnimFile gHanachanBody04WalkAnimationFile(ASSET_HANACHAN_BODY04_WALK_BCA);
+AnimFile gHanachanHeadWalkStartAnimationFile(ASSET_HANACHAN_HEAD_WALK_START_BCA);
+AnimFile gHanachanBody01WalkStartAnimationFile(ASSET_HANACHAN_BODY01_WALK_START_BCA);
+AnimFile gHanachanBody02WalkStartAnimationFile(ASSET_HANACHAN_BODY02_WALK_START_BCA);
+AnimFile gHanachanBody03WalkStartAnimationFile(ASSET_HANACHAN_BODY03_WALK_START_BCA);
+AnimFile gHanachanBody04WalkStartAnimationFile(ASSET_HANACHAN_BODY04_WALK_START_BCA);
+AnimFile gHanachanHeadWalkEndAnimationFile(ASSET_HANACHAN_HEAD_WALK_END_BCA);
+AnimFile gHanachanBody01WalkEndAnimationFile(ASSET_HANACHAN_BODY01_WALK_END_BCA);
+AnimFile gHanachanBody02WalkEndAnimationFile(ASSET_HANACHAN_BODY02_WALK_END_BCA);
+AnimFile gHanachanBody03WalkEndAnimationFile(ASSET_HANACHAN_BODY03_WALK_END_BCA);
+AnimFile gHanachanBody04WalkEndAnimationFile(ASSET_HANACHAN_BODY04_WALK_END_BCA);
+AnimFile gHanachanHeadWaitAnimationFile(ASSET_HANACHAN_HEAD_WAIT_BCA);
+AnimFile gHanachanBody01WaitAnimationFile(ASSET_HANACHAN_BODY01_WAIT_BCA);
+AnimFile gHanachanBody02WaitAnimationFile(ASSET_HANACHAN_BODY02_WAIT_BCA);
+AnimFile gHanachanBody03WaitAnimationFile(ASSET_HANACHAN_BODY03_WAIT_BCA);
+AnimFile gHanachanBody04WaitAnimationFile(ASSET_HANACHAN_BODY04_WAIT_BCA);
+AnimFile gHanachanHeadDamageAnimationFile(ASSET_HANACHAN_HEAD_DAMAGE_BCA);
+AnimFile gHanachanBody01DamageAnimationFile(ASSET_HANACHAN_BODY01_DAMAGE_BCA);
+AnimFile gHanachanBody02DamageAnimationFile(ASSET_HANACHAN_BODY02_DAMAGE_BCA);
+AnimFile gHanachanBody03DamageAnimationFile(ASSET_HANACHAN_BODY03_DAMAGE_BCA);
+AnimFile gHanachanBody04DamageAnimationFile(ASSET_HANACHAN_BODY04_DAMAGE_BCA);
+TexSeqFile gHanachanHeadTextureSequenceFile(ASSET_HANACHAN_HEAD_BTP);
+TexSeqFile gHanachanBody01TextureSequenceFile(ASSET_HANACHAN_BODY01_BTP);
+TexSeqFile gHanachanBody02TextureSequenceFile(ASSET_HANACHAN_BODY02_BTP);
+TexSeqFile gHanachanBody03TextureSequenceFile(ASSET_HANACHAN_BODY03_BTP);
+TexSeqFile gHanachanBody04TextureSequenceFile(ASSET_HANACHAN_BODY04_BTP);
 
 /* Tables the body-segment code indexes by part: talk message ids, particle
  * ids, the model/texture-sequence/animation handles, segment spacing and clip

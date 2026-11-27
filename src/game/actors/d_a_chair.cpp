@@ -43,17 +43,9 @@ enum daChair_c_AssetId { ASSET_CHAIR_BMD = 0x02d0 };
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
-/* 8-byte file handle. The model uses ModelFile::ModelFile / ModelFile::~ModelFile. The
- * spelling is local; the manifest aliases the generated names to those ROM
- * symbols. */
-struct ChairModelFilePtr : SharedFilePtr {
-    ChairModelFilePtr(u32 fileID);
-    ~ChairModelFilePtr();
-};
-
 /* The chair model's shared file, defined at the end of this file so the
  * constructor does not enter .text. Init loads it, Cleanup releases it. */
-extern ChairModelFilePtr data_ov020_02114af0;
+extern ModelFile data_ov020_02114af0;
 
 /* Actor IDs from the ROM's actor table. */
 enum ChairActorId {
@@ -380,7 +372,7 @@ void daChair_c::State3() {
     }
 }
 
-ChairModelFilePtr data_ov020_02114af0(ASSET_CHAIR_BMD);
+ModelFile data_ov020_02114af0(ASSET_CHAIR_BMD);
 
 extern "C" SpawnInfo<daChair_c> g_profile_CHAIR = {
     daChair_c_classInit, 326, 326, 0x00000002, 0x00064000, 0x00064000, 0x01000000, 0x01000000};

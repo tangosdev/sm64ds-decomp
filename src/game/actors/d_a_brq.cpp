@@ -44,28 +44,11 @@
 
 extern signed char gCurrentSublevel;
 
-/* Inferred eight-byte resource-family ABI views, not recovered original
- * type names. Exact manifest aliases bind each C1/D1 to its retail helper. */
-struct BrqModelResource : SharedFilePtr {
-    BrqModelResource(u32 fileID);
-    ~BrqModelResource();
-};
-
-struct BrqAnimationFileResource : SharedFilePtr {
-    BrqAnimationFileResource(u32 fileID);
-    ~BrqAnimationFileResource();
-};
-
-struct BrqTextureSequenceResource : SharedFilePtr {
-    BrqTextureSequenceResource(u32 fileID);
-    ~BrqTextureSequenceResource();
-};
-
-BrqModelResource data_ov070_021235fc(0x02b1);           // BIRIKYU_BMD
-BrqModelResource data_ov070_02123604(0x02b3);           // BIRIKYU_ELEC_BMD
-BrqAnimationFileResource data_ov070_021235f4(0x02b2);   // BIRIKYU_ELEC_BCA
-BrqAnimationFileResource data_ov070_0212360c(0x02b5);   // BIRIKYU_ELEC_STOP_BCA
-BrqTextureSequenceResource data_ov070_021235ec(0x02b4); // BIRIKYU_ELEC_BTP
+ModelFile data_ov070_021235fc(0x02b1);  // BIRIKYU_BMD
+ModelFile data_ov070_02123604(0x02b3);  // BIRIKYU_ELEC_BMD
+AnimFile data_ov070_021235f4(0x02b2);   // BIRIKYU_ELEC_BCA
+AnimFile data_ov070_0212360c(0x02b5);   // BIRIKYU_ELEC_STOP_BCA
+TexSeqFile data_ov070_021235ec(0x02b4); // BIRIKYU_ELEC_BTP
 
 /* The six ROM PMF descriptors stay ROM-owned; their native copies initialize
  * the cooldown, active and defeated rows in BSS. */

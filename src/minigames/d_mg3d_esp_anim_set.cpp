@@ -68,46 +68,26 @@ struct BTP_File;
 struct BTA_File;
 struct ModelComponents;
 
-/* Retail constructs these 8-byte handles in this order and registers
- * their destructors. The wrapper names are local; the ctor/dtor
- * addresses are the ROM resource-family functions. The wrappers are
- * declared, never defined: the manifest aliases their undefined members
- * onto the ROM veneers. */
-struct EspAnimSetModelFilePtr : SharedFilePtr {
-    EspAnimSetModelFilePtr(u32 fileID);
-    ~EspAnimSetModelFilePtr();
-};
-
-struct EspAnimSetAnimationFileHandle : SharedFilePtr {
-    EspAnimSetAnimationFileHandle(u32 fileID);
-    ~EspAnimSetAnimationFileHandle();
-};
-
-struct EspAnimSetTexSequenceFilePtr : SharedFilePtr {
-    EspAnimSetTexSequenceFilePtr(u32 fileID);
-    ~EspAnimSetTexSequenceFilePtr();
-};
-
 /* The file handles: word 1 of a SharedFilePtr is its loaded file. */
-extern EspAnimSetModelFilePtr gEspCardModelFile;
+extern ModelFileA gEspCardModelFile;
 
-extern EspAnimSetAnimationFileHandle gEspCardStartAnimFile;
+extern AnimFile gEspCardStartAnimFile;
 
-extern EspAnimSetTexSequenceFilePtr gEspCardTexSeqFile;
+extern TexSeqFile gEspCardTexSeqFile;
 
-extern EspAnimSetAnimationFileHandle gEspHamonAnimFile;
+extern AnimFile gEspHamonAnimFile;
 
-extern EspAnimSetModelFilePtr gIrieBackModelFile;
+extern ModelFileA gIrieBackModelFile;
 
-extern EspAnimSetAnimationFileHandle gEspCardWaitAnimFile;
+extern AnimFile gEspCardWaitAnimFile;
 
-extern EspAnimSetAnimationFileHandle gEspCardOpenWaitAnimFile;
+extern AnimFile gEspCardOpenWaitAnimFile;
 
-extern EspAnimSetAnimationFileHandle gEspCardOpenAnimFile;
+extern AnimFile gEspCardOpenAnimFile;
 
-extern EspAnimSetModelFilePtr gEspHamonModelFile;
+extern ModelFileA gEspHamonModelFile;
 
-extern EspAnimSetModelFilePtr gEspIrieModelFile;
+extern ModelFileA gEspIrieModelFile;
 
 int func_020179b4(SharedFilePtr *r0, dExtModel_c *r1, int r2);
 extern "C" {
@@ -1345,16 +1325,16 @@ dScMg3DEsp_c *dScMg3DEsp_c_classInit(void) {
  * Retail order: the four model handles, the five animation handles, the
  * texture sequence, then the seven state tables, which the initializer
  * fills from mwcc's {fn, 0} literal for each &dScMg3DEsp_c member. */
-EspAnimSetModelFilePtr gEspIrieModelFile(0x1ef);
-EspAnimSetModelFilePtr gIrieBackModelFile(0x202);
-EspAnimSetModelFilePtr gEspCardModelFile(0x1e7);
-EspAnimSetModelFilePtr gEspHamonModelFile(0x1ee);
-EspAnimSetAnimationFileHandle gEspCardStartAnimFile(0x1eb);
-EspAnimSetAnimationFileHandle gEspCardWaitAnimFile(0x1ec);
-EspAnimSetAnimationFileHandle gEspCardOpenAnimFile(0x1e9);
-EspAnimSetAnimationFileHandle gEspCardOpenWaitAnimFile(0x1ea);
-EspAnimSetAnimationFileHandle gEspHamonAnimFile(0x1ed);
-EspAnimSetTexSequenceFilePtr gEspCardTexSeqFile(0x1e8);
+ModelFileA gEspIrieModelFile(0x1ef);
+ModelFileA gIrieBackModelFile(0x202);
+ModelFileA gEspCardModelFile(0x1e7);
+ModelFileA gEspHamonModelFile(0x1ee);
+AnimFile gEspCardStartAnimFile(0x1eb);
+AnimFile gEspCardWaitAnimFile(0x1ec);
+AnimFile gEspCardOpenAnimFile(0x1e9);
+AnimFile gEspCardOpenWaitAnimFile(0x1ea);
+AnimFile gEspHamonAnimFile(0x1ed);
+TexSeqFile gEspCardTexSeqFile(0x1e8);
 
 dScMg3DEsp_cState s3DEspRoundTable[3] = {
     &dScMg3DEsp_c::Wait,

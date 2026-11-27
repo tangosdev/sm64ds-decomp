@@ -43,30 +43,9 @@ enum daDsn_c_AssetId {
 #include "Particle__System.h"
 #include "ParticleIds.h"
 
-/* The three resource handles as the ROM lays them out: {id, loaded file}.
- * The model handle constructs through ModelFile::ModelFile and destroys through
- * ModelFile::~ModelFile; the collision handle through ClsnFile::ClsnFile /
- * ClsnFile::~ClsnFile; the texture-sequence (BTP) handle through
- * TexSeqFile::TexSeqFile / TexSeqFile::~TexSeqFile. The
- * manifest aliases each undefined member onto its ROM symbol. */
-struct DsnModelFilePtr : SharedFilePtr {
-    DsnModelFilePtr(u32 fileID);
-    ~DsnModelFilePtr();
-};
-
-struct DsnCollisionFileHandle : SharedFilePtr {
-    DsnCollisionFileHandle(u32 fileID);
-    ~DsnCollisionFileHandle();
-};
-
-struct DsnTextureSeqFileHandle : SharedFilePtr {
-    DsnTextureSeqFileHandle(u32 fileID);
-    ~DsnTextureSeqFileHandle();
-};
-
-extern DsnModelFilePtr gDosuneModelFile;
-extern DsnCollisionFileHandle gDosuneCollisionFile;
-extern DsnTextureSeqFileHandle gDosuneTextureSequenceFile;
+extern ModelFile gDosuneModelFile;
+extern ClsnFile gDosuneCollisionFile;
+extern TexSeqFile gDosuneTextureSequenceFile;
 
 /* data_ov091_02135138 is the six-word table daDsnBase_c::Init reads out of
    the pointer this leaf stores:
@@ -227,6 +206,6 @@ int daDsn_c::OnAimedAtWithEgg() {
  * texture-sequence file 0x2f5. __sinit_d_a_dsn.cpp emits the three
  * constructions and registers the destructors; the registration nodes are
  * compiler temporaries. */
-DsnModelFilePtr gDosuneModelFile(ASSET_DOSUNE_BMD);
-DsnCollisionFileHandle gDosuneCollisionFile(ASSET_DOSUNE_KCL);
-DsnTextureSeqFileHandle gDosuneTextureSequenceFile(ASSET_DOSUNE_BTP);
+ModelFile gDosuneModelFile(ASSET_DOSUNE_BMD);
+ClsnFile gDosuneCollisionFile(ASSET_DOSUNE_KCL);
+TexSeqFile gDosuneTextureSequenceFile(ASSET_DOSUNE_BTP);

@@ -29,21 +29,6 @@ enum daBDonketu_c_AssetId {
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx_trig.h"
 
-/* One model handle constructs through ModelFile::ModelFile and destroys through
- * ModelFile::~ModelFile. Four animation handles construct through
- * AnimFile::AnimFile and destroy through AnimFile::~AnimFile.
- * The file table stays ROM data. */
-struct DonketuModelFilePtr : SharedFilePtr {
-    DonketuModelFilePtr(unsigned int fileId);
-    ~DonketuModelFilePtr();
-};
-struct DonketuAnimFileHandle : SharedFilePtr {
-    DonketuAnimFileHandle(unsigned int fileId);
-    ~DonketuAnimFileHandle();
-};
-typedef char DonketuModelFilePtr_size_must_be_8[sizeof(DonketuModelFilePtr) == 8 ? 1 : -1];
-typedef char DonketuAnimFileHandle_size_must_be_8[sizeof(DonketuAnimFileHandle) == 8 ? 1 : -1];
-
 /* The Big Bully's resource block (daOts_c.h); overlay .data owns the bytes. */
 extern BullyResourceConfig data_ov064_0211b93c;
 
@@ -187,8 +172,8 @@ void daBDonketu_c::UpdateRunState() {
 }
 
 /* Retail construction order. mwcc emits __sinit_d_a_b_donketu.cpp. */
-DonketuModelFilePtr gBossDonketuModelFile(ASSET_BOSS_DONKETU_BMD);
-DonketuAnimFileHandle gdaBDonketuDonketuDeadAnimationFile(ASSET_DONKETU_DEAD_BCA);
-DonketuAnimFileHandle gdaBDonketuDonketuHitAnimationFile(ASSET_DONKETU_HIT_BCA);
-DonketuAnimFileHandle gdaBDonketuDonketuTurnAnimationFile(ASSET_DONKETU_TURN_BCA);
-DonketuAnimFileHandle gdaBDonketuDonketuWalkAnimationFile(ASSET_DONKETU_WALK_BCA);
+ModelFile gBossDonketuModelFile(ASSET_BOSS_DONKETU_BMD);
+AnimFile gdaBDonketuDonketuDeadAnimationFile(ASSET_DONKETU_DEAD_BCA);
+AnimFile gdaBDonketuDonketuHitAnimationFile(ASSET_DONKETU_HIT_BCA);
+AnimFile gdaBDonketuDonketuTurnAnimationFile(ASSET_DONKETU_TURN_BCA);
+AnimFile gdaBDonketuDonketuWalkAnimationFile(ASSET_DONKETU_WALK_BCA);

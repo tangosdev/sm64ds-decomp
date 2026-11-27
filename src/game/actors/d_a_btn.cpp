@@ -121,48 +121,23 @@ extern CLPS_Block data_ov015_021135d4;
 extern const int data_ov079_021275dc[2] = {0x00003000, 0x00002000};
 extern const int data_ov079_021275e4[2] = {0x00028000, 0x00046000};
 
-/* File-scope resource handles: each ctor/dtor pair is a ROM SharedFilePtr
-   handle class (ModelFile::ModelFile/~ModelFile for the two BMDs,
-   TexSeqFile::TexSeqFile/~TexSeqFile for the king's face BTP,
-   AnimFile::AnimFile/~AnimFile for the eleven BCAs, ClsnFile::ClsnFile/
-   ClsnFile::~ClsnFile for the two KCLs), spelled through
-   declared-only subclasses so the static initializer names the real
-   entry points. */
-struct BtnModelFilePtr : SharedFilePtr {
-    BtnModelFilePtr(u32 fileID);
-    ~BtnModelFilePtr();
-};
-struct BtnTextureSeqFileHandle : SharedFilePtr {
-    BtnTextureSeqFileHandle(u32 fileID);
-    ~BtnTextureSeqFileHandle();
-};
-struct BtnAnimationFileHandle : SharedFilePtr {
-    BtnAnimationFileHandle(u32 fileID);
-    ~BtnAnimationFileHandle();
-};
-struct BtnCollisionFilePtr : SharedFilePtr {
-    BtnCollisionFilePtr(u32 fileID);
-    ~BtnCollisionFilePtr();
-};
-
-BtnModelFilePtr data_ov079_02128170(ASSET_BATTAN_BMD);              /* the plain Whomp's BMD */
-BtnModelFilePtr data_ov079_02128168(ASSET_BATTAN_KING_BMD);         /* the king's BMD */
-BtnTextureSeqFileHandle data_ov079_02128178(ASSET_BATTAN_KING_BTP); /* the king's face BTP */
-BtnAnimationFileHandle
-    gBattanAttack01AnimationFile(ASSET_BATTAN_ATTACK01_BCA); /* the plain Whomp's BCAs */
-BtnAnimationFileHandle gBattanAttack02AnimationFile(ASSET_BATTAN_ATTACK02_BCA);
-BtnAnimationFileHandle gBattanRecoverAnimationFile(ASSET_BATTAN_RECOVER_BCA);
-BtnAnimationFileHandle gBattanWalkAnimationFile(ASSET_BATTAN_WALK_BCA);
-BtnAnimationFileHandle gBattanWalkstartAnimationFile(ASSET_BATTAN_WALKSTART_BCA);
-BtnAnimationFileHandle
-    gBattanKingAttack01AnimationFile(ASSET_BATTAN_KING_ATTACK01_BCA); /* the king's BCAs */
-BtnAnimationFileHandle gBattanKingAttack02AnimationFile(ASSET_BATTAN_KING_ATTACK02_BCA);
-BtnAnimationFileHandle gBattanKingRecoverAnimationFile(ASSET_BATTAN_KING_RECOVER_BCA);
-BtnAnimationFileHandle gBattanKingWalkAnimationFile(ASSET_BATTAN_KING_WALK_BCA);
-BtnAnimationFileHandle gBattanKingWalkstartAnimationFile(ASSET_BATTAN_KING_WALKSTART_BCA);
-BtnAnimationFileHandle data_ov079_021281b0(ASSET_BATTAN_KING_DAMAGE_BCA);
-BtnCollisionFilePtr gBattanCollisionFile(ASSET_BATTAN_KCL);          /* the plain Whomp's KCL */
-BtnCollisionFilePtr gBattanKingCollisionFile(ASSET_BATTAN_KING_KCL); /* the king's KCL */
+/* File-scope resource handles, constructed by the static initializer. */
+ModelFile data_ov079_02128170(ASSET_BATTAN_BMD);                  /* the plain Whomp's BMD */
+ModelFile data_ov079_02128168(ASSET_BATTAN_KING_BMD);             /* the king's BMD */
+TexSeqFile data_ov079_02128178(ASSET_BATTAN_KING_BTP);            /* the king's face BTP */
+AnimFile gBattanAttack01AnimationFile(ASSET_BATTAN_ATTACK01_BCA); /* the plain Whomp's BCAs */
+AnimFile gBattanAttack02AnimationFile(ASSET_BATTAN_ATTACK02_BCA);
+AnimFile gBattanRecoverAnimationFile(ASSET_BATTAN_RECOVER_BCA);
+AnimFile gBattanWalkAnimationFile(ASSET_BATTAN_WALK_BCA);
+AnimFile gBattanWalkstartAnimationFile(ASSET_BATTAN_WALKSTART_BCA);
+AnimFile gBattanKingAttack01AnimationFile(ASSET_BATTAN_KING_ATTACK01_BCA); /* the king's BCAs */
+AnimFile gBattanKingAttack02AnimationFile(ASSET_BATTAN_KING_ATTACK02_BCA);
+AnimFile gBattanKingRecoverAnimationFile(ASSET_BATTAN_KING_RECOVER_BCA);
+AnimFile gBattanKingWalkAnimationFile(ASSET_BATTAN_KING_WALK_BCA);
+AnimFile gBattanKingWalkstartAnimationFile(ASSET_BATTAN_KING_WALKSTART_BCA);
+AnimFile data_ov079_021281b0(ASSET_BATTAN_KING_DAMAGE_BCA);
+ClsnFile gBattanCollisionFile(ASSET_BATTAN_KCL);          /* the plain Whomp's KCL */
+ClsnFile gBattanKingCollisionFile(ASSET_BATTAN_KING_KCL); /* the king's KCL */
 
 /* Plain Whomp animation handles, then the king's six. */
 extern SharedFilePtr *const data_ov079_021275ec[5] = {

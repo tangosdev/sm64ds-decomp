@@ -69,20 +69,6 @@ enum {
    pointer-to-member call through mStatePmfPair still matches. */
 typedef void (daGmch_c::*StateFn)();
 
-/* The model handle's ctor/dtor are the cartridge's ModelFile::ModelFile /
- * ModelFile::~ModelFile pair; the manifest aliases these. */
-struct GmchModelFileHandle : SharedFilePtr {
-    GmchModelFileHandle(u32 fileID);
-    ~GmchModelFileHandle();
-};
-
-/* The four animation handles construct through AnimFile::AnimFile
- * and register AnimFile::~AnimFile; the manifest aliases these. */
-struct GmchAnimationFileHandle : SharedFilePtr {
-    GmchAnimationFileHandle(u32 fileID);
-    ~GmchAnimationFileHandle();
-};
-
 /* The state table's PMF type.  Sixteen of the eighteen halves return int;
    EnterState1 is the lone void (its header decl stands), so it is cast in
    below.  The invokers keep reading the pair through StateFn. */
@@ -139,14 +125,9 @@ struct GmchDrawReg { GmchDrawReg(Vector3 &v) { v.x = 0; v.y = 0x2000; v.z = 0; }
  * Data is different -- mwccarm leaves a file-scope variable's name unmangled in
  * C++ -- so every `data_*` declaration stays at block scope in the member that
  * recovered it.  The sinit's own five handles and the PMF state table moved
- * here wholesale as file-scope definitions: GmchModelFileHandle /
- * GmchAnimationFileHandle spell the model/animation ctors and dtors, and
- * GmchDrawReg supplies the draw offset's .init stores so the plain Vector3
- * earns its registered destructor instead of constant initialization. */
-extern "C" {
-
-
-}
+ * here wholesale as file-scope definitions, and GmchDrawReg supplies the draw
+ * offset's .init stores so the plain Vector3 earns its registered destructor
+ * instead of constant initialization. */
 
 /* One definition, two ROM variants (the D2 mwccarm also emits is
    deadstripped), and this is the key function: it is the first virtual
@@ -377,7 +358,7 @@ int daGmch_c::UpdateState8()
 
 int daGmch_c::EnterState8()
 {
-    extern GmchAnimationFileHandle data_ov081_02128edc;
+    extern AnimFile data_ov081_02128edc;
 
     Sound::PlayBank0(9, mCamSpacePos);
     mFlags &= ~1;
@@ -535,7 +516,7 @@ int daGmch_c::UpdateState5()
 
 int daGmch_c::EnterState5()
 {
-    extern GmchAnimationFileHandle data_ov081_02128edc;
+    extern AnimFile data_ov081_02128edc;
 
     mHorzSpeed = 0xa000;
     mAnmModel.SetAnim((BCA_File *)data_ov081_02128edc.filePtr, 0, 0x1000, 0);
@@ -559,7 +540,7 @@ int daGmch_c::UpdateState4()
 
 int daGmch_c::EnterState4()
 {
-    extern GmchAnimationFileHandle gGamaguchiJumpEndAnimationFile;
+    extern AnimFile gGamaguchiJumpEndAnimationFile;
 
     mAnmModel.SetAnim((BCA_File *)gGamaguchiJumpEndAnimationFile.filePtr, 0x40000000, 0x1000, 0);
     mAnmModel.speed = 0x1000;
@@ -597,7 +578,7 @@ int daGmch_c::UpdateState3()
 
 int daGmch_c::EnterState3()
 {
-    extern GmchAnimationFileHandle gGamaguchiJumpAnimationFile;
+    extern AnimFile gGamaguchiJumpAnimationFile;
     extern int data_0209e650[];
 
     mFlags &= ~1;
@@ -625,7 +606,7 @@ int daGmch_c::UpdateState2()
 
 int daGmch_c::EnterState2()
 {
-    extern GmchAnimationFileHandle gGamaguchiWalkEndAnimationFile;
+    extern AnimFile gGamaguchiWalkEndAnimationFile;
 
     mAnmModel.SetAnim((BCA_File *)gGamaguchiWalkEndAnimationFile.filePtr, 0x40000000, 0x1000, 0);
     mAnmModel.speed = 0x1000;
@@ -652,7 +633,7 @@ int daGmch_c::UpdateState1()
 
 void daGmch_c::EnterState1()
 {
-    extern GmchAnimationFileHandle data_ov081_02128edc;
+    extern AnimFile data_ov081_02128edc;
     extern int data_0209e650[];
 
     mAnmModel.SetAnim((BCA_File *)data_ov081_02128edc.filePtr, 0, 0x1000, 0);
@@ -702,7 +683,7 @@ int daGmch_c::UpdateState0()
 
 int daGmch_c::EnterState0()
 {
-    extern GmchAnimationFileHandle gGamaguchiJumpEndAnimationFile;
+    extern AnimFile gGamaguchiJumpEndAnimationFile;
 
     mAnmModel.SetAnim((BCA_File *)gGamaguchiJumpEndAnimationFile.filePtr, 0, 0x1000, 0);
     mAnmModel.speed = 0x1000;
@@ -742,7 +723,7 @@ void daGmch_c::SetState(int n)
    touches `this`. */
 int daGmch_c::CleanupResources()
 {
-    extern GmchModelFileHandle data_ov081_02128ed4;
+    extern ModelFile data_ov081_02128ed4;
 
     data_ov081_02128ed4.Release();
     for (int i = 0; i < 4; i++) {
@@ -792,7 +773,7 @@ int daGmch_c::Behavior()
 /* Vtable slot 0. */
 int daGmch_c::InitResources()
 {
-    extern GmchModelFileHandle data_ov081_02128ed4;
+    extern ModelFile data_ov081_02128ed4;
     extern SharedFilePtr gCoinYellowPoly32ModelFile;
 
     Vector3 pos;
@@ -864,11 +845,11 @@ daGmch_c *daGmch_c_classInit(void) {
  * then the four animations), then the nine {enter, update} state pairs,
  * then the draw offset, whose destructor registers last. The
  * registration nodes and the PMF literals are compiler temporaries. */
-GmchModelFileHandle data_ov081_02128ed4(ASSET_GAMAGUCHI_BMD);
-GmchAnimationFileHandle data_ov081_02128edc(ASSET_GAMAGUCHI_WALK_BCA);
-GmchAnimationFileHandle gGamaguchiWalkEndAnimationFile(ASSET_GAMAGUCHI_WALK_END_BCA);
-GmchAnimationFileHandle gGamaguchiJumpAnimationFile(ASSET_GAMAGUCHI_JUMP_BCA);
-GmchAnimationFileHandle gGamaguchiJumpEndAnimationFile(ASSET_GAMAGUCHI_JUMP_END_BCA);
+ModelFile data_ov081_02128ed4(ASSET_GAMAGUCHI_BMD);
+AnimFile data_ov081_02128edc(ASSET_GAMAGUCHI_WALK_BCA);
+AnimFile gGamaguchiWalkEndAnimationFile(ASSET_GAMAGUCHI_WALK_END_BCA);
+AnimFile gGamaguchiJumpAnimationFile(ASSET_GAMAGUCHI_JUMP_BCA);
+AnimFile gGamaguchiJumpEndAnimationFile(ASSET_GAMAGUCHI_JUMP_END_BCA);
 
 SharedFilePtr *const data_ov081_021280d8[4] = {
     &data_ov081_02128edc,
