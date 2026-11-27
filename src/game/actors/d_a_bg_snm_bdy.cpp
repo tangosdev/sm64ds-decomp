@@ -480,7 +480,7 @@ void daBgSnmBdy_c::UpdateGroundCollision(dBgCh_Actr *mc)
     dBgPi *floorResult;
     dBgCh_Actr_UpdateContinuous_Veneer(mc);
     if (mc->IsOnGround() == 0) return;
-    floorResult = static_cast<dBgPi *>(mc->GetFloorResult());
+    floorResult = mc->GetFloorResult();
     floorResult->surface.CopyNormalTo(normal);
     if (normal.y == 0) return;
     {
