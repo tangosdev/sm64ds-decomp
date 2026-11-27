@@ -29,17 +29,11 @@ void *dScEntry_c_classInit_ENTRY(void) {
  * InitGrid, UpdateRipple and DrawGrid. */
 
 extern "C" {
-/* local extern: no header declares these arm9 vector helpers.
-   They take Vector3. TouchAt's locals are Vector3; the grid data is the
-   SDK's POD VecFx32 (private/ov075_entry_mesh.h), so CalcDistances hands
-   it over through pointer views. */
-/* local extern: the BMD texture and palette VRAM loaders. */
-/* local extern: the geometry-engine matrix load and the
-   BMD load through a file handle, declared only in decl_common.h, which
-   clashes with dScEntry_c.h's vtable spellings. */
+/* local extern: the geometry-engine matrix load, declared only in
+   decl_common.h, which clashes with dScEntry_c.h's vtable spellings. */
 void G3_LoadMtx43(void *);
-void *func_0201787c(SharedFilePtr *);
 }
+/* local extern: the BMD texture and palette VRAM loaders. */
 unsigned int func_02045ad8(const void *, unsigned int);
 unsigned int func_02045a50(const void *, unsigned int);
 /* local extern: the camera matrix, declared per consumer (d_ext_model.cpp,

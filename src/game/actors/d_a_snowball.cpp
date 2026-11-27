@@ -53,7 +53,7 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
-extern SharedFilePtr data_ov081_02128d90;
+extern ModelFile data_ov081_02128d90;
 extern daSnowball_StateRec data_ov081_02128eb4;
 
 /* local extern: no shared header declares these. */

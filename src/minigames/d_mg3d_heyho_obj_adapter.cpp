@@ -37,21 +37,9 @@
 #include "LevelRng.h"
 
 /* File 0x217 / 0x218 resource handles. The static initializer registers
- * their destructors; the spellings are this TU's, mapped onto
- * ModelFile::ModelFile / ModelFile::~ModelFile and AnimFile::AnimFile /
- * AnimFile::~AnimFile. */
-struct HeyhoAdapterModelFilePtr : SharedFilePtr {
-    HeyhoAdapterModelFilePtr(u32 fileID);
-    ~HeyhoAdapterModelFilePtr();
-};
-
-struct HeyhoAdapterAnimationFileHandle : SharedFilePtr {
-    HeyhoAdapterAnimationFileHandle(u32 fileID);
-    ~HeyhoAdapterAnimationFileHandle();
-};
-
-extern HeyhoAdapterModelFilePtr gMgPHeyhoMiniModelFile;
-extern HeyhoAdapterAnimationFileHandle gMgPHeyhoWaitAnimFile;
+ * their destructors. */
+extern ModelFile gMgPHeyhoMiniModelFile;
+extern AnimFile gMgPHeyhoWaitAnimFile;
 
 struct BMD_File;
 struct BCA_File;
@@ -1371,5 +1359,5 @@ int data_ov006_021403b8[3];
 char *sJumpAdapters[3];
 }
 
-HeyhoAdapterModelFilePtr gMgPHeyhoMiniModelFile(0x217);
-HeyhoAdapterAnimationFileHandle gMgPHeyhoWaitAnimFile(0x218);
+ModelFile gMgPHeyhoMiniModelFile(0x217);
+AnimFile gMgPHeyhoWaitAnimFile(0x218);

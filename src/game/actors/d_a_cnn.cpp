@@ -42,10 +42,10 @@
  *   grows 4 bytes. The load state keeps an unused Vector3 that holds the
  *   ROM's 0x1c frame. The smoke rotation is read as three u16 words: copied
  *   as a Vector3_16 the compiler loads it with ldrsh, the ROM with ldrh.
- * Leftover: the model file handles (data_ov098_0213c8e8, data_ov098_0213c91c,
- *   data_ov002_0210da38), the state table (data_ov098_0213c8fc, .bss) and the
- *   particle rotation (data_ov098_0213c63c) are unnamed rows this TU does not
- *   own; func_ov002_020df300 / daPly_c::TryEnterCannonState and func_ov102_0214ae1c
+ * Leftover: the water bomb's model file handles (data_ov098_0213c91c,
+ *   d_a_wbm.cpp's; data_ov002_0210da38, ov002's) and the particle rotation
+ *   (data_ov098_0213c63c) are unnamed rows this TU does not own;
+ *   func_ov002_020df300 / daPly_c::TryEnterCannonState and func_ov102_0214ae1c
  *   are unnamed daPly_c / Bob-omb helpers.
  */
 
@@ -68,9 +68,9 @@ enum d_a_cnn_AssetId { ASSET_HOUDAI_BMD = 0x045e };
 
 typedef void (daCnn_c::*State)();
 
-/* The cannon's model, and the water bomb's two (bomb and fragment), which
-   InitResources preloads for the bombs it fires. */
-extern SharedFilePtr data_ov098_0213c91c;
+/* The two models the water bomb loads (d_a_wbm.cpp defines
+   data_ov098_0213c91c), which InitResources preloads for the bombs it fires. */
+extern ModelFile data_ov098_0213c91c;
 extern SharedFilePtr data_ov002_0210da38;
 /* The smoke particles' base rotation, x/y/z. */
 extern u16 data_ov098_0213c63c[3];

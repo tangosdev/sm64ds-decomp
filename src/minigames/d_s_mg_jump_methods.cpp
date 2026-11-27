@@ -67,14 +67,9 @@ struct MaterialState {
 typedef char MaterialState_size_must_be_0x30[sizeof(MaterialState) == 0x30 ? 1 : -1];
 
 /* The two model file handles InitResources swaps between through
- * sJumpBackFile; a declared-only subclass so the static initializer
- * names the real entry points. */
-struct MgJumpModelFilePtr : SharedFilePtr {
-    MgJumpModelFilePtr(u32 fileID);
-    ~MgJumpModelFilePtr();
-};
-extern MgJumpModelFilePtr gJumpBack02ModelFile;
-extern MgJumpModelFilePtr gJumpBack01ModelFile;
+ * sJumpBackFile. */
+extern ModelFile gJumpBack02ModelFile;
+extern ModelFile gJumpBack01ModelFile;
 extern SharedFilePtr *sJumpBackFile;
 
 /* Everything below that decl_common.h does not declare. Keep it above the
@@ -489,8 +484,8 @@ s32 dScMgJump_c::CleanupResources()
 
 /* The scene's model file handles, registered in file-ID order; file 0x203
  * sits at 0x02142190, file 0x204 at 0x02142188. */
-MgJumpModelFilePtr gJumpBack01ModelFile(0x203);
-MgJumpModelFilePtr gJumpBack02ModelFile(0x204);
+ModelFile gJumpBack01ModelFile(0x203);
+ModelFile gJumpBack02ModelFile(0x204);
 
 /* Sixteen HanaPopup records, then sJumpBackFile. sJump2Popups heads the next gap. */
 unsigned char sHanaPopups[0x144];

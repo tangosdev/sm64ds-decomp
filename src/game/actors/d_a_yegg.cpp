@@ -119,8 +119,8 @@ extern "C" {
 
 /* Data. 0x0210e6b0 and 0x0210eb78 are the two shared animation file
    handles; d_a_ply_methods.cpp's static initializer constructs both. */
-extern SharedFilePtr gYEggRunAnimationFile;
-extern SharedFilePtr gYEggWaitAnimationFile;
+extern AnimFile gYEggRunAnimationFile;
+extern AnimFile gYEggWaitAnimationFile;
 extern const s16 data_ov002_021000a8[];
 /* local extern: math/MtxStack.h's spellings of the Matrix4x3_ calls below
    clash with these. */

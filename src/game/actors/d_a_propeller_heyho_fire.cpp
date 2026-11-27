@@ -40,7 +40,7 @@ struct BMD_File;
    record both loads (0x020fee10, 0x020fefc0) as `overlays(65,75)`; ov065's
    row there is the one unambiguous `kind:bss`, and CleanupResources already
    named it. It is the fireball's shared model file. */
-extern SharedFilePtr data_ov065_0211d610;
+extern ModelFile data_ov065_0211d610;
 /* The one state. InitState0 then State0. The initializer copies the two
    member pointers into data_ov002_02111190, which InitResources installs. */
 extern daPropeller_Heyho_Fire_c::State data_ov002_02111190;
