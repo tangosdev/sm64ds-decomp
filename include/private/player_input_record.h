@@ -16,36 +16,13 @@ typedef struct PlayerInputRecord {
     u16 flags;
     u16 keys;          /* 0x0e -- pressed buttons */
     u16 inputYaw;      /* 0x10 -- the camera's input yaw (func_0203dafc) */
-    /* 0x12 -- the link settings bytes (GetLinkByte, SetLinkByte);
-     * the last is the desync check (LINK_SYNC_POSITION, LINK_SYNC_WINGS) */
+    /* 0x12 -- the link settings bytes (LinkSettings.h: GetLinkByte,
+     * SetLinkByte); the last is the desync check (LINK_BYTE_SYNC_*) */
     u8 settings[0x11];
     u8 unk23; /* 0x23 -- never read or written */
 } PlayerInputRecord;
 
 typedef char PlayerInputRecord_size_must_be_0x24[sizeof(PlayerInputRecord) == 0x24 ? 1 : -1];
-
-/* The settings bytes the link checks for desync. dScStage_c::Render stores
- * two values through SetLinkByte every frame, an XOR of the players'
- * positions and a bit per player with wings, and func_0203ea5c compares each
- * across the four records: a position mismatch raises link error bit 0x08,
- * a wing mismatch 0x10. ClearLinkErrors and func_0203ea5c's error countdown
- * clear both.
- *
- * The names are coined. On the cartridge both indices are 0x10: Render's
- * second store overwrites its first, the two compares test the same byte,
- * and the two clears clear it twice. One wrong constant explains all three
- * doublings, so this is most likely an EAD bug, the second index meant to be
- * 0x11. What the cartridge does is a wing check only: the position check
- * never runs, and since a wing mismatch already fails the first compare,
- * error bit 0x10 can never be raised (callers test it through
- * GetLinkStatus(0x9d)).
- *
- * 0x11 would not have worked either. The link exchanges only the first 0x11
- * settings bytes (0x12..0x22): they fill the last 0x11 bytes of the 0x20-byte
- * packet data_020a1020, and 0x20 bytes per console is what func_0203fa50
- * shares, so record byte 0x23 had no room to travel. */
-#define LINK_SYNC_POSITION 0x10
-#define LINK_SYNC_WINGS    0x10 /* meant to be 0x11 (see above) */
 
 extern PlayerInputRecord data_020a1040;    /* this console's */
 extern PlayerInputRecord data_020a1154[4]; /* the four players' */

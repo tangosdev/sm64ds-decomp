@@ -41,7 +41,7 @@ enum dScStage_c_AssetId { ASSET_D_2D_UPR_COURSE_CLEAR_MESSAGE_NCL_BIN = 0x025a }
 #include "types.h"
 #include "nitro/gx/gx_bgcnt.h"
 #include "private/controller_input.h"
-#include "private/player_input_record.h"
+#include "LinkSettings.h"
 #include "dFdBrightness_c.h"
 #include "dFdColor_c.h"
 #include "dScStage_c.h"
@@ -328,7 +328,7 @@ static u8 sMenuHighlightDelay;
 /* The pause page shown, the switch PS_Update runs. */
 static u8 sPauseState;
 static u8 sCheckpointEntranceId;
-/* This console's player: InitResources stores func_0203da9c(), the local
+/* This console's player: InitResources stores GetLocalPlayerId(), the local
    player number, so the HUD, the pause screen and the camera index the
    per-player arrays (gPlayers, gPlayerHealth, gNumStageStars) by it. */
 u8 gLocalPlayerId;
@@ -3941,7 +3941,6 @@ void dScStage_c::OnPendingDestroy() {
 void func_020391f0(void);
 extern "C" void func_0203083c(void);
 void func_ov001_020aaf40(void);
-extern "C" void SetLinkByte(int byte, int value);
 int dScStage_c::Render() {
     if (((gVsExitScreenActive | (gGamePaused | data_0209f20c)) & 0xff) == 0) {
         StageArea *area = mAreas;
@@ -3995,11 +3994,11 @@ int dScStage_c::Render() {
                 wingBits |= (u8)((hasWings & 1) << playerIndex);
             }
         }
-        /* The link's desync check (player_input_record.h). Both indices are
+        /* The link's desync check (LinkSettings.h). Both indices are
            the same byte on the cartridge, so the wing bits overwrite the
            position XOR before it is ever sent. */
-        SetLinkByte(LINK_SYNC_POSITION, positionXor);
-        SetLinkByte(LINK_SYNC_WINGS, wingBits);
+        SetLinkByte(LINK_BYTE_SYNC_POSITION, positionXor);
+        SetLinkByte(LINK_BYTE_SYNC_WINGS, wingBits);
     }
     if (gGamePaused != 0) {
         PS_Render();
@@ -4373,8 +4372,6 @@ void SetTouchScreenDelay(void) {
     }
 }
 
-extern "C" u8 GetControllerMode(int a0);
-
 void ResetInput(void) {
     ControllerInput *p = data_0209f498;
     int i;
@@ -4516,7 +4513,6 @@ int GetSoundGroupID(int level, int mode);
 extern "C" void LoadDebugFont(void);
 int IsLevelInsideCastle(int level);
 int IsLevelTinyHugeIslandOutside(int level);
-extern "C" int func_0203da9c(void);
 extern "C" int func_0203da3c(void);
 extern "C" u32 func_0203dad4(void);
 extern "C" {
@@ -4541,7 +4537,7 @@ int dScStage_c::InitResources() {
         dScene_c::Initialise3dGraphics();
         Enable3dEngines();
         gNumPlayers = data_0208a0e0;
-        gLocalPlayerId = func_0203da9c();
+        gLocalPlayerId = GetLocalPlayerId();
         ResetInput();
         gGamePaused = 0;
 
