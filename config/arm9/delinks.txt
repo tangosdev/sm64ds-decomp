@@ -650,22 +650,10 @@ src/Message2.cpp:
     .text start:0x0201ab04 end:0x0201cb2c
     .data start:0x0208ee64 end:0x0208ee80
 
-src/ui/messages/_ZN7Message14SetTextGlobalsEv.cpp:
-    complete
-    .text start:0x0201cb2c end:0x0201cb7c
-
 src/Message.cpp:
     complete
-    .text start:0x0201cb7c end:0x0201fcd4
+    .text start:0x0201cb2c end:0x0201fec8
     .bss start:0x0209d64c end:0x0209e64c
-
-src/LoadFont.cpp:
-    complete
-    .text start:0x0201fcd4 end:0x0201fe08
-
-src/ui/messages/_ZN7Message8LoadTextEv.cpp:
-    complete
-    .text start:0x0201fe08 end:0x0201fec8
 
 src/unnamed/arm9/0201/func_0201fec8.cpp:
     complete
