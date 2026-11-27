@@ -2,8 +2,10 @@
 
 /* If player is this console's, clear its warp destination (WarpPlayer,
    IsPlayerWarping). daPly_c::func_ov002_020c2e78 calls it when the
-   destination is set but the player is not in state daPly_c::ST_WAIT;
-   otherwise it copies the destination into mTeleportId. */
+   destination is set but the player is not in state daPly_c::ST_WAIT
+   (otherwise it copies the destination into mTeleportId), and
+   daPly_c::St_Teleport_Main calls it every frame once the player has
+   arrived. */
 void ClearPlayerWarp(int player) {
     if (player != GetLocalPlayerId())
         return;
