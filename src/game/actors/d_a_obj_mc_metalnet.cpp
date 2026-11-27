@@ -22,21 +22,11 @@ enum d_a_obj_mc_metalnet_AssetId { ASSET_MC_METALNET_BMD = 0x0691, ASSET_MC_META
 #include "SaveBlock.h"
 #include "SpawnInfo.h"
 
-struct McMetalnetModelFilePtr : SharedFilePtr {
-    McMetalnetModelFilePtr(u32 fileID);
-    ~McMetalnetModelFilePtr();
-};
-
-struct McMetalnetClsnFileHandle : SharedFilePtr {
-    McMetalnetClsnFileHandle(u32 fileID);
-    ~McMetalnetClsnFileHandle();
-};
-
 /* The net's collision properties. */
 extern CLPS_Block data_ov009_02112bf8;
 
-extern McMetalnetModelFilePtr data_ov009_02113e90;   /* the net's BMD        */
-extern McMetalnetClsnFileHandle data_ov009_02113e88; /* its collision KCL    */
+extern ModelFile data_ov009_02113e90; /* the net's BMD        */
+extern ClsnFile data_ov009_02113e88;  /* its collision KCL    */
 
 /* The global mode byte. Unnamed in config; compared against 1 in fifty-odd
    places across the tree, always to mean "not the ordinary single-player run". */
@@ -138,8 +128,8 @@ s32 daObjMc_Metalnet_c::CleanupResources() {
    body -- then dBgActor_c's dExtSimpleModel_c and dBgW_KcMbg, then dActor_c. This class
    adds no member with a destructor of its own. */
 
-McMetalnetModelFilePtr data_ov009_02113e90(ASSET_MC_METALNET_BMD);
-McMetalnetClsnFileHandle data_ov009_02113e88(ASSET_MC_METALNET_KCL);
+ModelFile data_ov009_02113e90(ASSET_MC_METALNET_BMD);
+ClsnFile data_ov009_02113e88(ASSET_MC_METALNET_KCL);
 
 extern "C" SpawnInfo<daObjMc_Metalnet_c> g_profile_MC_METALNET = {daObjMc_Metalnet_c_classInit,
                                                                   339,

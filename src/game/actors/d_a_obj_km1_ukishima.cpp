@@ -17,7 +17,6 @@
  * What stays: data_ov043_021125e0 / 021125e8 are this overlay's KCL/BMD
  *   handles. data_ov043_02111c00 is the CLPS block in overlay .data this
  *   TU does not own.
- * What stays: g_profile_KM1_UKISHIMA lives outside this TU (S14).
  * What stays: inline destructor (out-of-line emits D0 before D1).
  */
 
@@ -33,27 +32,11 @@ enum d_a_obj_km1_ukishima_AssetId {
 #include "math/CalcLib.h"
 #include "SpawnInfo.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct Km1UkishimaModelFilePtr : SharedFilePtr {
-    Km1UkishimaModelFilePtr(unsigned int fileID);
-    ~Km1UkishimaModelFilePtr();
-};
-
-struct Km1UkishimaClsnFilePtr : SharedFilePtr {
-    Km1UkishimaClsnFilePtr(unsigned int fileID);
-    ~Km1UkishimaClsnFilePtr();
-};
-
-typedef char Km1UkishimaModelFilePtr_size_must_be_8[sizeof(Km1UkishimaModelFilePtr) == 8 ? 1 : -1];
-typedef char Km1UkishimaClsnFilePtr_size_must_be_8[sizeof(Km1UkishimaClsnFilePtr) == 8 ? 1 : -1];
-
 struct KCL_File;
 struct CLPS_Block;
 
-extern Km1UkishimaClsnFilePtr data_ov043_021125e0;  /* the KCL  */
-extern Km1UkishimaModelFilePtr data_ov043_021125e8; /* the BMD  */
+extern ClsnFile data_ov043_021125e0;  /* the KCL  */
+extern ModelFile data_ov043_021125e8; /* the BMD  */
 
 /* The island's floor and wall pair. */
 extern CLPS_Block data_ov043_02111c00;
@@ -142,8 +125,8 @@ s32 daObjKm1_Ukishima_c::CleanupResources() {
 
 /* Source order is construction order: model file 1625, then the collision
  * file 1626. The compiler registers each destructor beside the object. */
-Km1UkishimaModelFilePtr data_ov043_021125e8(ASSET_KM1_UKISHIMA_BMD);
-Km1UkishimaClsnFilePtr data_ov043_021125e0(ASSET_KM1_UKISHIMA_KCL);
+ModelFile data_ov043_021125e8(ASSET_KM1_UKISHIMA_BMD);
+ClsnFile data_ov043_021125e0(ASSET_KM1_UKISHIMA_KCL);
 
 extern "C" SpawnInfo<daObjKm1_Ukishima_c> g_profile_KM1_UKISHIMA = {daObjKm1_Ukishima_c_classInit,
                                                                     135,

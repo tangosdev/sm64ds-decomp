@@ -19,7 +19,6 @@
  *   KCL 0x021140b4, CLPS 0x02112ac8). Naming the three targets directly
  *   builds a different literal pool and moves every call site. The CLPS
  *   words at 0x02112aa8..0x02112ae8 are defined in this TU.
- * - g_profile_RC_GURUGURU lives outside this TU.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -132,24 +131,10 @@ s32 daObjRc_Guruguru_c::CleanupResources() {
    and the set the ROM carries. Written out of line here instead, mwcc emits D0
    ahead of D1 and rombuild refuses the object outright. */
 
-/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the model, ClsnFile::ClsnFile /
- * ClsnFile::~ClsnFile for the collision), spelled through
- * declared-only subclasses so the static initializer names the real entry
- * points. */
-struct RcGuruguruModelFilePtr : SharedFilePtr {
-    RcGuruguruModelFilePtr(u32 fileID);
-    ~RcGuruguruModelFilePtr();
-};
-struct RcGuruguruCollisionFilePtr : SharedFilePtr {
-    RcGuruguruCollisionFilePtr(u32 fileID);
-    ~RcGuruguruCollisionFilePtr();
-};
-
 /* The retail initializer constructs the model first, then the collision
  * file. */
-RcGuruguruModelFilePtr gRcGuruguruModelFile(ASSET_RC_GURUGURU_BMD);         /* model */
-RcGuruguruCollisionFilePtr gRcGuruguruCollisionFile(ASSET_RC_GURUGURU_KCL); /* collision */
+ModelFile gRcGuruguruModelFile(ASSET_RC_GURUGURU_BMD);    /* model */
+ClsnFile gRcGuruguruCollisionFile(ASSET_RC_GURUGURU_KCL); /* collision */
 
 /* The guruguru's CLPS block lives in the stage-map TU. */
 extern CLPS_Block data_ov036_02112ac8;

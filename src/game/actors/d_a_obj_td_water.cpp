@@ -42,22 +42,8 @@ enum d_a_obj_td_water_AssetId { ASSET_TD_OBJ_WATER_BMD = 0x06b7, ASSET_TD_OBJ_WA
 
 struct KCL_File;
 
-/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile; collision handles construct through ClsnFile::ClsnFile and
- * destroy through ClsnFile::~ClsnFile. The manifest aliases those
- * undefined members onto the ROM symbols. */
-struct TdWaterModelFilePtr : SharedFilePtr {
-    TdWaterModelFilePtr(u32 fileID);
-    ~TdWaterModelFilePtr();
-};
-
-struct TdWaterClsnFileHandle : SharedFilePtr {
-    TdWaterClsnFileHandle(u32 fileID);
-    ~TdWaterClsnFileHandle();
-};
-
-extern TdWaterModelFilePtr data_ov032_02113afc;   /* the water model's BMD */
-extern TdWaterClsnFileHandle data_ov032_02113af4; /* the collision KCL */
+extern ModelFile data_ov032_02113afc; /* the water model's BMD */
+extern ClsnFile data_ov032_02113af4;  /* the collision KCL */
 
 /* Stage data owned by d_s_map_ov032.c: the water's texture animation and
    its collision properties. */
@@ -129,9 +115,9 @@ s32 daObjTdWater_c::CleanupResources() {
  */
 
 /* File-scope objects, in __sinit_d_a_obj_td_water.cpp construction order:
- * the model's SharedFilePtr, then the collision file's. */
-TdWaterModelFilePtr data_ov032_02113afc(ASSET_TD_OBJ_WATER_BMD);
-TdWaterClsnFileHandle data_ov032_02113af4(ASSET_TD_OBJ_WATER_KCL);
+ * the ModelFile, then the ClsnFile. */
+ModelFile data_ov032_02113afc(ASSET_TD_OBJ_WATER_BMD);
+ClsnFile data_ov032_02113af4(ASSET_TD_OBJ_WATER_KCL);
 
 extern "C" {
 u32 data_ov032_02113b1c[1];

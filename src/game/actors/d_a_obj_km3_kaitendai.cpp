@@ -33,27 +33,10 @@ enum d_a_obj_km3_kaitendai_AssetId {
 #include "SharedFilePtr.h"
 #include "CLPS.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct Km3KaitendaiModelFilePtr : SharedFilePtr {
-    Km3KaitendaiModelFilePtr(unsigned int fileID);
-    ~Km3KaitendaiModelFilePtr();
-};
-
-struct Km3KaitendaiClsnFilePtr : SharedFilePtr {
-    Km3KaitendaiClsnFilePtr(unsigned int fileID);
-    ~Km3KaitendaiClsnFilePtr();
-};
-
-typedef char
-    Km3KaitendaiModelFilePtr_size_must_be_8[sizeof(Km3KaitendaiModelFilePtr) == 8 ? 1 : -1];
-typedef char Km3KaitendaiClsnFilePtr_size_must_be_8[sizeof(Km3KaitendaiClsnFilePtr) == 8 ? 1 : -1];
-
 #include "ResourceDescriptor.h"
 
-extern Km3KaitendaiModelFilePtr data_ov047_02112610;
-extern Km3KaitendaiClsnFilePtr data_ov047_02112608;
+extern ModelFile data_ov047_02112610;
+extern ClsnFile data_ov047_02112608;
 
 extern CLPS_Block gKm3KaitendaiClps;
 
@@ -94,5 +77,5 @@ s32 daObjKm3_Kaitendai_c::CleanupResources() {
 
 /* Source order is construction order: model file 1661, then the collision
  * file 1662. The compiler registers each destructor beside the object. */
-Km3KaitendaiModelFilePtr data_ov047_02112610(ASSET_KM3_KAITENDAI_BMD);
-Km3KaitendaiClsnFilePtr data_ov047_02112608(ASSET_KM3_KAITENDAI_KCL);
+ModelFile data_ov047_02112610(ASSET_KM3_KAITENDAI_BMD);
+ClsnFile data_ov047_02112608(ASSET_KM3_KAITENDAI_KCL);

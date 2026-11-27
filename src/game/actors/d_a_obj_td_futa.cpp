@@ -19,22 +19,8 @@ enum d_a_obj_td_futa_AssetId { ASSET_TD_OBJ_FUTA_BMD = 0x06b5, ASSET_TD_OBJ_FUTA
 
 struct KCL_File;
 
-/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile; collision handles construct through ClsnFile::ClsnFile and
- * destroy through ClsnFile::~ClsnFile. The manifest aliases those
- * undefined members onto the ROM symbols. */
-struct TdFutaModelFilePtr : SharedFilePtr {
-    TdFutaModelFilePtr(u32 fileID);
-    ~TdFutaModelFilePtr();
-};
-
-struct TdFutaClsnFileHandle : SharedFilePtr {
-    TdFutaClsnFileHandle(u32 fileID);
-    ~TdFutaClsnFileHandle();
-};
-
-extern TdFutaClsnFileHandle data_ov032_02113acc;
-extern TdFutaModelFilePtr data_ov032_02113ad4;
+extern ClsnFile data_ov032_02113acc;
+extern ModelFile data_ov032_02113ad4;
 extern CLPS_Block data_ov032_02112f98;
 
 /* Every instruction the cartridge has here falls out of the one `new`.
@@ -94,9 +80,9 @@ s32 daObjTdFuta_c::CleanupResources() {
  * dActor_c. */
 
 /* File-scope objects, in __sinit_d_a_obj_td_futa.cpp construction order:
- * the model's SharedFilePtr, then the collision file's. */
-TdFutaModelFilePtr data_ov032_02113ad4(ASSET_TD_OBJ_FUTA_BMD);
-TdFutaClsnFileHandle data_ov032_02113acc(ASSET_TD_OBJ_FUTA_KCL);
+ * the ModelFile, then the ClsnFile. */
+ModelFile data_ov032_02113ad4(ASSET_TD_OBJ_FUTA_BMD);
+ClsnFile data_ov032_02113acc(ASSET_TD_OBJ_FUTA_KCL);
 
 extern "C" SpawnInfo<daObjTdFuta_c> g_profile_TD_FUTA = {
     daObjTdFuta_c_classInit, 106, 268, 0x00000006, 0x00064000, 0x000fa000, 0x00c80000, 0x00640000};

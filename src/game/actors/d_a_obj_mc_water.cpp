@@ -43,23 +43,10 @@ extern CLPS_Block data_ov009_02112c38;
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daObjMcWater_c_AssetId { ASSET_MC_WATER_BMD = 0x0693, ASSET_MC_WATER_KCL = 0x0694 };
 
-/* The handles reach their files through these wrappers' constructor and
-   destructor veneers; the manifest maps each to the retail destination.
-   Descriptive local types, not recovered spellings. */
-struct McWaterModelFile : SharedFilePtr {
-    McWaterModelFile(u32 fileID);
-    ~McWaterModelFile();
-};
-
-struct McWaterCollisionFile : SharedFilePtr {
-    McWaterCollisionFile(u32 fileID);
-    ~McWaterCollisionFile();
-};
-
 /* This TU's file handles and spawn tables, in the order the retail
    initializer (0x02112524) builds them. */
-McWaterModelFile gMcWaterModelFile(ASSET_MC_WATER_BMD);
-McWaterCollisionFile gMcWaterCollisionFile(ASSET_MC_WATER_KCL);
+ModelFile gMcWaterModelFile(ASSET_MC_WATER_BMD);
+ClsnFile gMcWaterCollisionFile(ASSET_MC_WATER_KCL);
 
 /* SpawnWaterfalls spawns actor 0xc5 at each of the seven positions in one
    of these tables. Its default table: */

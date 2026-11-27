@@ -137,17 +137,6 @@ enum daObjMarioCap_c_AssetId {
  * Local shapes the merged members need.
  * ------------------------------------------------------------------------ */
 
-/* The static initializer's own types. __sinit_ov002_02101064 constructs the 13
- * file handles with SharedFilePtr's constructor and registers each for
- * destruction through __register_global_object, then copies 18 pointer-to-member records
- * into the nine {enter, per-frame} state records. A handle is a SharedFilePtr
- * subclass whose constructor/destructor are the ROM's SharedFilePtr entry
- * points (the manifest aliases those symbols). */
-struct daObjMarioCapFileHandle : SharedFilePtr {
-    daObjMarioCapFileHandle(u32 fileID);
-    ~daObjMarioCapFileHandle();
-};
-
 /* A state record: the enter pointer-to-member at +0 (run by EnterState on
  * install) and the per-frame one at +8 (run by Behavior). The 18 source
  * records the initializer copies from are ov002 .data (0x0210951c..95a4);
@@ -220,13 +209,13 @@ extern "C" {
 extern int gLevelMinY;
 extern u8 gGameMode;
 
-extern daObjMarioCapFileHandle data_ov002_0210de00, data_ov002_0210de08;
-extern daObjMarioCapFileHandle data_ov002_0210de10, data_ov002_0210de18;
-extern daObjMarioCapFileHandle data_ov002_0210de20, data_ov002_0210de28;
-extern daObjMarioCapFileHandle data_ov002_0210de30, data_ov002_0210de38;
-extern daObjMarioCapFileHandle data_ov002_0210de40, data_ov002_0210de48;
-extern daObjMarioCapFileHandle data_ov002_0210de50, data_ov002_0210de58;
-extern daObjMarioCapFileHandle data_ov002_0210de60;
+extern AnimFile data_ov002_0210de00, data_ov002_0210de08;
+extern AnimFile data_ov002_0210de10, data_ov002_0210de18;
+extern AnimFile data_ov002_0210de20, data_ov002_0210de28;
+extern AnimFile data_ov002_0210de30, data_ov002_0210de38;
+extern AnimFile data_ov002_0210de40, data_ov002_0210de48;
+extern AnimFile data_ov002_0210de50, data_ov002_0210de58;
+extern AnimFile data_ov002_0210de60;
 
 /* The nine {enter, per-frame} state records EnterState is handed (their
    .bss is filled by this unit's own static initializer below). */
@@ -1338,25 +1327,22 @@ void daObjMarioCap_c::CheckTouch()
  * from these definitions at the bottom of the file, constructs the 13 file
  * handles and registers each with its destructor through __register_global_object, then
  * copies the 18 pointer-to-member records into the nine {enter, per-frame}
- * state records. The records and handles are in the initializer's own order.
- * The constructor and destructor of a handle are the ROM's SharedFilePtr entry
- * points (aliased in this unit's manifest), and the register call is the
- * runtime's own __register_global_object. */
+ * state records. The records and handles are in the initializer's own order. */
 
 /* The 13 file handles, in construct order. */
-daObjMarioCapFileHandle data_ov002_0210de30(0x8012);
-daObjMarioCapFileHandle data_ov002_0210de38(0x8013);
-daObjMarioCapFileHandle data_ov002_0210de50(ASSET_MARIO_CAP_W_FIRST_CHANGE_BCA);
-daObjMarioCapFileHandle data_ov002_0210de60(ASSET_MARIO_CAP_L_FIRST_CHANGE_BCA);
-daObjMarioCapFileHandle data_ov002_0210de48(ASSET_MARIO_CAP_M_FIRST_CHANGE_BCA);
-daObjMarioCapFileHandle data_ov002_0210de28(ASSET_MARIO_CAP_ED_M_CAP_OFF_BCA);
-daObjMarioCapFileHandle data_ov002_0210de08(ASSET_MARIO_CAP_ED_L_CAP_OFF_BCA);
-daObjMarioCapFileHandle data_ov002_0210de20(ASSET_MARIO_CAP_ED_W_CAP_OFF_BCA);
-daObjMarioCapFileHandle data_ov002_0210de40(ASSET_MARIO_CAP_ED_M_CAP_OFF_WAIT_BCA);
-daObjMarioCapFileHandle data_ov002_0210de10(ASSET_MARIO_CAP_ED_L_CAP_OFF_WAIT_BCA);
-daObjMarioCapFileHandle data_ov002_0210de00(ASSET_MARIO_CAP_ED_W_CAP_OFF_WAIT_BCA);
-daObjMarioCapFileHandle data_ov002_0210de58(ASSET_MARIO_CAP_ED_M_KISS_WAIT_BCA);
-daObjMarioCapFileHandle data_ov002_0210de18(ASSET_MARIO_CAP_ED_M_KISS_TO_POSE_BCA);
+AnimFile data_ov002_0210de30(0x8012);
+AnimFile data_ov002_0210de38(0x8013);
+AnimFile data_ov002_0210de50(ASSET_MARIO_CAP_W_FIRST_CHANGE_BCA);
+AnimFile data_ov002_0210de60(ASSET_MARIO_CAP_L_FIRST_CHANGE_BCA);
+AnimFile data_ov002_0210de48(ASSET_MARIO_CAP_M_FIRST_CHANGE_BCA);
+AnimFile data_ov002_0210de28(ASSET_MARIO_CAP_ED_M_CAP_OFF_BCA);
+AnimFile data_ov002_0210de08(ASSET_MARIO_CAP_ED_L_CAP_OFF_BCA);
+AnimFile data_ov002_0210de20(ASSET_MARIO_CAP_ED_W_CAP_OFF_BCA);
+AnimFile data_ov002_0210de40(ASSET_MARIO_CAP_ED_M_CAP_OFF_WAIT_BCA);
+AnimFile data_ov002_0210de10(ASSET_MARIO_CAP_ED_L_CAP_OFF_WAIT_BCA);
+AnimFile data_ov002_0210de00(ASSET_MARIO_CAP_ED_W_CAP_OFF_WAIT_BCA);
+AnimFile data_ov002_0210de58(ASSET_MARIO_CAP_ED_M_KISS_WAIT_BCA);
+AnimFile data_ov002_0210de18(ASSET_MARIO_CAP_ED_M_KISS_TO_POSE_BCA);
 
 /* The nine state records, in copy order: { enter, per-frame }. */
 McapStateRec data_ov002_0210df64 = { data_ov002_02109534, data_ov002_0210952c };

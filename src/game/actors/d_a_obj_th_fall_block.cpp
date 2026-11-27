@@ -13,7 +13,7 @@
  * daObjTh_Fall_Block_c, TH_DOWN_B registry). Retail does not store
  * that spelling.
  *
- * data_ov063_0211eb10 is overlay .data this TU does not own; the
+ * This TU defines the resource descriptor data_ov063_0211eb10; the
  * CLPS_Block it points at is still data_ov063_*. g_profile_TH_DOWN_B
  * lives outside this TU (S14).
  */
@@ -44,24 +44,10 @@ s32 daObjTh_Fall_Block_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov063_0211eb10);
 }
 
-/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the model, ClsnFile::ClsnFile /
- * ClsnFile::~ClsnFile for the collision), spelled through
- * declared-only subclasses so the static initializer names the real entry
- * points. */
-struct ThFallBlockModelFilePtr : SharedFilePtr {
-    ThFallBlockModelFilePtr(u32 fileID);
-    ~ThFallBlockModelFilePtr();
-};
-struct ThFallBlockCollisionFilePtr : SharedFilePtr {
-    ThFallBlockCollisionFilePtr(u32 fileID);
-    ~ThFallBlockCollisionFilePtr();
-};
-
 /* The retail initializer constructs the model first, then the collision
  * file. */
-ThFallBlockModelFilePtr gThDownBModelFile(ASSET_TH_DOWN_B_BMD);         /* model */
-ThFallBlockCollisionFilePtr gThDownBCollisionFile(ASSET_TH_DOWN_B_KCL); /* collision */
+ModelFile gThDownBModelFile(ASSET_TH_DOWN_B_BMD);    /* model */
+ClsnFile gThDownBCollisionFile(ASSET_TH_DOWN_B_KCL); /* collision */
 CLPS_Block data_ov063_0211ec98 = {
     0x53504c43,
     0x0008,

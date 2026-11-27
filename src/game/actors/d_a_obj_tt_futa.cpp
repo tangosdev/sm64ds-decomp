@@ -15,23 +15,10 @@ enum daObjTtFuta_c_AssetId { ASSET_TT_OBJ_FUTA_BMD = 0x06c5, ASSET_TT_OBJ_FUTA_K
 #include "Particle__System.h"
 #include "ParticleIds.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct TtFutaModelFilePtr : SharedFilePtr {
-    TtFutaModelFilePtr(u32 fileID);
-    ~TtFutaModelFilePtr();
-};
-
-struct TtFutaCollisionFilePtr : SharedFilePtr {
-    TtFutaCollisionFilePtr(u32 fileID);
-    ~TtFutaCollisionFilePtr();
-};
-
 /* BSS file homes; Init loads them, Cleanup releases them. Defined at the
    end of this file so the constructors do not enter .text. */
-extern TtFutaModelFilePtr data_ov033_021124c8;
-extern TtFutaCollisionFilePtr data_ov033_021124c0;
+extern ModelFile data_ov033_021124c8;
+extern ClsnFile data_ov033_021124c0;
 
 extern CLPS_Block data_ov033_02111bfc;
 
@@ -91,5 +78,5 @@ daObjTtFuta_c *daObjTtFuta_c_classInit() {
 /* Source order is construction order: model file 1733, collision file 1734.
  * __sinit_d_a_obj_tt_futa.cpp emits both constructions and registers the
  * destructors; the registration nodes are compiler temporaries. */
-TtFutaModelFilePtr data_ov033_021124c8(ASSET_TT_OBJ_FUTA_BMD);
-TtFutaCollisionFilePtr data_ov033_021124c0(ASSET_TT_OBJ_FUTA_KCL);
+ModelFile data_ov033_021124c8(ASSET_TT_OBJ_FUTA_BMD);
+ClsnFile data_ov033_021124c0(ASSET_TT_OBJ_FUTA_KCL);

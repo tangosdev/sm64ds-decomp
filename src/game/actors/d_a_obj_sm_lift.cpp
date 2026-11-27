@@ -45,23 +45,8 @@ int AngleDiff(int, int);
 int Math_Function_0203b14c(void *p, int a, int b, int c, int d);
 }
 
-/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile; collision handles construct through ClsnFile::ClsnFile and destroy
- * through ClsnFile::~ClsnFile. The manifest aliases those undefined
- * member spellings onto the real ROM functions; each handle is the base plus
- * the two words that family actually stores. */
-struct SmLiftModelFilePtr : SharedFilePtr {
-    SmLiftModelFilePtr(u32 fileID);
-    ~SmLiftModelFilePtr();
-};
-
-struct SmLiftClsnFileHandle : SharedFilePtr {
-    SmLiftClsnFileHandle(u32 fileID);
-    ~SmLiftClsnFileHandle();
-};
-
-extern SmLiftModelFilePtr gSmLiftModelFile;
-extern SmLiftClsnFileHandle gSmLiftCollisionFile;
+extern ModelFile gSmLiftModelFile;
+extern ClsnFile gSmLiftCollisionFile;
 
 /* Emission order is ROM order. The destructor pair must stay first. */
 #pragma defer_codegen off
@@ -263,5 +248,5 @@ daObjSm_Lift_c *daObjSm_Lift_c_classInit(void) {
 /* The ski lift's shared file handles: the model, then the collision map. Their
  * constructors and the destructor registrations make mwcc emit this TU's
  * __sinit. */
-SmLiftModelFilePtr gSmLiftModelFile(ASSET_SM_LIFT_BMD);
-SmLiftClsnFileHandle gSmLiftCollisionFile(ASSET_SM_LIFT_KCL);
+ModelFile gSmLiftModelFile(ASSET_SM_LIFT_BMD);
+ClsnFile gSmLiftCollisionFile(ASSET_SM_LIFT_KCL);

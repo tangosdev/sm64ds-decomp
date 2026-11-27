@@ -24,24 +24,8 @@ enum d_a_obj_km3_kuruma_AssetId { ASSET_KM3_KURUMA_BMD = 0x067f, ASSET_KM3_KURUM
 #include "CLPS.h"
 #include "daObjKuruma_c.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct Km3KurumaModelFilePtr : SharedFilePtr {
-    Km3KurumaModelFilePtr(unsigned int fileID);
-    ~Km3KurumaModelFilePtr();
-};
-
-struct Km3KurumaClsnFilePtr : SharedFilePtr {
-    Km3KurumaClsnFilePtr(unsigned int fileID);
-    ~Km3KurumaClsnFilePtr();
-};
-
-typedef char Km3KurumaModelFilePtr_size_must_be_8[sizeof(Km3KurumaModelFilePtr) == 8 ? 1 : -1];
-typedef char Km3KurumaClsnFilePtr_size_must_be_8[sizeof(Km3KurumaClsnFilePtr) == 8 ? 1 : -1];
-
-extern Km3KurumaModelFilePtr gKm3KurumaModelFile;
-extern Km3KurumaClsnFilePtr gKm3KurumaCollisionFile;
+extern ModelFile gKm3KurumaModelFile;
+extern ClsnFile gKm3KurumaCollisionFile;
 
 extern CLPS_Block gKm3KurumaClps;
 
@@ -78,5 +62,5 @@ s32 daObjKm3_Kuruma_c::CleanupResources() {
 
 /* Source order is construction order: model file 1663, then the collision
  * file 1664. The compiler registers each destructor beside the object. */
-Km3KurumaModelFilePtr gKm3KurumaModelFile(ASSET_KM3_KURUMA_BMD);
-Km3KurumaClsnFilePtr gKm3KurumaCollisionFile(ASSET_KM3_KURUMA_KCL);
+ModelFile gKm3KurumaModelFile(ASSET_KM3_KURUMA_BMD);
+ClsnFile gKm3KurumaCollisionFile(ASSET_KM3_KURUMA_KCL);

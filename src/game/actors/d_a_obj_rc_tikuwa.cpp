@@ -35,24 +35,8 @@ enum daObjRc_Tikuwa_c_AssetId { ASSET_RC_TIKUWA_BMD = 0x06af, ASSET_RC_TIKUWA_KC
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct TikuwaModelFilePtr : SharedFilePtr {
-    TikuwaModelFilePtr(u32 fileID);
-    ~TikuwaModelFilePtr();
-};
-
-struct TikuwaCollisionFilePtr : SharedFilePtr {
-    TikuwaCollisionFilePtr(u32 fileID);
-    ~TikuwaCollisionFilePtr();
-};
-
-typedef char TikuwaModelFilePtr_size_must_be_8[sizeof(TikuwaModelFilePtr) == 8 ? 1 : -1];
-typedef char TikuwaCollisionFilePtr_size_must_be_8[sizeof(TikuwaCollisionFilePtr) == 8 ? 1 : -1];
-
-extern TikuwaModelFilePtr gRcTikuwaModelFile;
-extern TikuwaCollisionFilePtr gRcTikuwaCollisionFile;
+extern ModelFile gRcTikuwaModelFile;
+extern ClsnFile gRcTikuwaCollisionFile;
 
 /* The donut's floor and wall pair. */
 extern CLPS_Block data_ov036_02112b48;
@@ -171,8 +155,8 @@ daObjRc_Tikuwa_c *daObjRc_Tikuwa_c_classInit() {
 
 /* Source order is construction order: model file 0x6af, then the collision
  * file 0x6b0. The compiler registers each destructor beside the object. */
-TikuwaModelFilePtr gRcTikuwaModelFile(ASSET_RC_TIKUWA_BMD);
-TikuwaCollisionFilePtr gRcTikuwaCollisionFile(ASSET_RC_TIKUWA_KCL);
+ModelFile gRcTikuwaModelFile(ASSET_RC_TIKUWA_BMD);
+ClsnFile gRcTikuwaCollisionFile(ASSET_RC_TIKUWA_KCL);
 
 extern "C" SpawnInfo<daObjRc_Tikuwa_c> g_profile_RC_TIKUWA = {daObjRc_Tikuwa_c_classInit,
                                                               126,

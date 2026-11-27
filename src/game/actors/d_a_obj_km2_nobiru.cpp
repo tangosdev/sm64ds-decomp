@@ -28,22 +28,8 @@ enum daObjKm2_Nobiru_c_AssetId { ASSET_KM2_NOBIRU_BMD = 0x0663, ASSET_KM2_NOBIRU
 
 #pragma defer_codegen off
 
-/* The model handle constructs through ModelFile::ModelFile and registers
-   ModelFile::~ModelFile; the collision handle constructs through
-   ClsnFile::ClsnFile and registers ClsnFile::~ClsnFile.
-   The manifest aliases these. */
-struct NobiruModelFileHandle : SharedFilePtr {
-    NobiruModelFileHandle(u32 fileID);
-    ~NobiruModelFileHandle();
-};
-
-struct NobiruClsnFileHandle : SharedFilePtr {
-    NobiruClsnFileHandle(u32 fileID);
-    ~NobiruClsnFileHandle();
-};
-
-extern NobiruClsnFileHandle PoleLift_ClsnFile;
-extern NobiruModelFileHandle PoleLift_ModelFile;
+extern ClsnFile PoleLift_ClsnFile;
+extern ModelFile PoleLift_ModelFile;
 extern CLPS_Block data_ov045_021125b0;
 
 daObjKm2_Nobiru_c::~daObjKm2_Nobiru_c() {}
@@ -122,5 +108,5 @@ daObjKm2_Nobiru_c *daObjKm2_Nobiru_c_classInit() {
     return new daObjKm2_Nobiru_c();
 }
 
-NobiruModelFileHandle PoleLift_ModelFile(ASSET_KM2_NOBIRU_BMD);
-NobiruClsnFileHandle PoleLift_ClsnFile(ASSET_KM2_NOBIRU_KCL);
+ModelFile PoleLift_ModelFile(ASSET_KM2_NOBIRU_BMD);
+ClsnFile PoleLift_ClsnFile(ASSET_KM2_NOBIRU_KCL);

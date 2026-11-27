@@ -31,23 +31,8 @@ enum daObjSlIceBlock_c_AssetId { ASSET_SL_ICE_BROCK_BMD = 0x06b1, ASSET_SL_ICE_B
 
 extern CLPS_Block data_ov027_02113108;
 
-/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile; collision handles construct through ClsnFile::ClsnFile and destroy
- * through ClsnFile::~ClsnFile. The manifest aliases those undefined
- * member spellings onto the real ROM functions; each handle is the base plus
- * the two words that family actually stores. */
-struct SlIceBlockModelFilePtr : SharedFilePtr {
-    SlIceBlockModelFilePtr(u32 fileID);
-    ~SlIceBlockModelFilePtr();
-};
-
-struct SlIceBlockClsnFileHandle : SharedFilePtr {
-    SlIceBlockClsnFileHandle(u32 fileID);
-    ~SlIceBlockClsnFileHandle();
-};
-
-extern SlIceBlockModelFilePtr data_ov027_02113be8;
-extern SlIceBlockClsnFileHandle data_ov027_02113be0;
+extern ModelFile data_ov027_02113be8;
+extern ClsnFile data_ov027_02113be0;
 
 /* Emission order is ROM order: the destructor pair must stay first.
  * Do not reorder. */
@@ -165,5 +150,5 @@ daObjSlIceBlock_c *daObjSlIceBlock_c_classInit_SL_ICEBLOCK() {
 /* The ice block's shared file handles: the model, then the collision map.
  * Their constructors and the destructor registrations make mwcc emit this
  * TU's __sinit. */
-SlIceBlockModelFilePtr data_ov027_02113be8(ASSET_SL_ICE_BROCK_BMD);
-SlIceBlockClsnFileHandle data_ov027_02113be0(ASSET_SL_ICE_BROCK_KCL);
+ModelFile data_ov027_02113be8(ASSET_SL_ICE_BROCK_BMD);
+ClsnFile data_ov027_02113be0(ASSET_SL_ICE_BROCK_KCL);

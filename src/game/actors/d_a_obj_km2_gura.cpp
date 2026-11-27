@@ -26,26 +26,10 @@ enum d_a_obj_km2_gura_AssetId { ASSET_KM2_GURA_BMD = 0x065f, ASSET_KM2_GURA_KCL 
 #include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct Km2GuraModelFilePtr : SharedFilePtr {
-    Km2GuraModelFilePtr(unsigned int fileID);
-    ~Km2GuraModelFilePtr();
-};
-
-struct Km2GuraClsnFilePtr : SharedFilePtr {
-    Km2GuraClsnFilePtr(unsigned int fileID);
-    ~Km2GuraClsnFilePtr();
-};
-
-typedef char Km2GuraModelFilePtr_size_must_be_8[sizeof(Km2GuraModelFilePtr) == 8 ? 1 : -1];
-typedef char Km2GuraClsnFilePtr_size_must_be_8[sizeof(Km2GuraClsnFilePtr) == 8 ? 1 : -1];
-
 #include "ResourceDescriptor.h"
 
-extern Km2GuraModelFilePtr data_ov045_02113220;
-extern Km2GuraClsnFilePtr data_ov045_02113228;
+extern ModelFile data_ov045_02113220;
+extern ClsnFile data_ov045_02113228;
 extern CLPS_Block data_ov045_021124f0;
 
 extern "C" ResourceDescriptor data_ov045_02112fdc = {&data_ov045_02113220, &data_ov045_02113228,
@@ -76,5 +60,5 @@ s32 daObjKm2_Gura_c::CleanupResources() {
 
 /* Source order is construction order: model file 1631, then the collision
  * file 1632. The compiler registers each destructor beside the object. */
-Km2GuraModelFilePtr data_ov045_02113220(ASSET_KM2_GURA_BMD);
-Km2GuraClsnFilePtr data_ov045_02113228(ASSET_KM2_GURA_KCL);
+ModelFile data_ov045_02113220(ASSET_KM2_GURA_BMD);
+ClsnFile data_ov045_02113228(ASSET_KM2_GURA_KCL);

@@ -56,21 +56,6 @@ enum daObjSimpleBg_c_AssetId {
 #include "daObjSimpleBg_c.h"
 #include "SharedFilePtr.h"
 
-/* Six model handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile. Six collision handles construct through ClsnFile::ClsnFile and
- * destroy through ClsnFile::~ClsnFile. The file tables above these
- * objects stay ROM data. */
-struct SimpleBgModelFilePtr : SharedFilePtr {
-    SimpleBgModelFilePtr(unsigned int fileId);
-    ~SimpleBgModelFilePtr();
-};
-struct SimpleBgClsnFilePtr : SharedFilePtr {
-    SimpleBgClsnFilePtr(unsigned int fileId);
-    ~SimpleBgClsnFilePtr();
-};
-typedef char SimpleBgModelFilePtr_size_must_be_8[sizeof(SimpleBgModelFilePtr) == 8 ? 1 : -1];
-typedef char SimpleBgClsnFilePtr_size_must_be_8[sizeof(SimpleBgClsnFilePtr) == 8 ? 1 : -1];
-
 /* One row of the table at 0x0214e188, indexed by mVariant. */
 struct SimpleBgAssets {
     SharedFilePtr *modelFile;
@@ -233,18 +218,18 @@ daObjSimpleBg_c *daObjSimpleBg_c_classInit_KI_IWA() {
 }
 
 /* Retail construction order. mwcc emits __sinit_d_a_obj_simple_bg.cpp from these. */
-SimpleBgModelFilePtr gKiIwaModelFile(ASSET_KI_IWA_BMD);
-SimpleBgModelFilePtr gKiHasiraDaiModelFile(ASSET_KI_HASIRA_DAI_BMD);
-SimpleBgModelFilePtr gBkTowerModelFile(ASSET_BK_TOWER_BMD);
-SimpleBgModelFilePtr gdaObjSimpleBgObjDokanModelFile(ASSET_OBJ_DOKAN_BMD);
-SimpleBgModelFilePtr gMcDodaiModelFile(ASSET_MC_DODAI_BMD);
-SimpleBgModelFilePtr gMcHazadModelFile(ASSET_MC_HAZAD_BMD);
-SimpleBgClsnFilePtr gKiIwaCollisionFile(ASSET_KI_IWA_KCL);
-SimpleBgClsnFilePtr gKiHasiraDaiCollisionFile(ASSET_KI_HASIRA_DAI_KCL);
-SimpleBgClsnFilePtr gBkTowerCollisionFile(ASSET_BK_TOWER_KCL);
-SimpleBgClsnFilePtr gObjDokanCollisionFile(ASSET_OBJ_DOKAN_KCL);
-SimpleBgClsnFilePtr gMcDodaiCollisionFile(ASSET_MC_DODAI_KCL);
-SimpleBgClsnFilePtr gMcHazadCollisionFile(ASSET_MC_HAZAD_KCL);
+ModelFile gKiIwaModelFile(ASSET_KI_IWA_BMD);
+ModelFile gKiHasiraDaiModelFile(ASSET_KI_HASIRA_DAI_BMD);
+ModelFile gBkTowerModelFile(ASSET_BK_TOWER_BMD);
+ModelFile gdaObjSimpleBgObjDokanModelFile(ASSET_OBJ_DOKAN_BMD);
+ModelFile gMcDodaiModelFile(ASSET_MC_DODAI_BMD);
+ModelFile gMcHazadModelFile(ASSET_MC_HAZAD_BMD);
+ClsnFile gKiIwaCollisionFile(ASSET_KI_IWA_KCL);
+ClsnFile gKiHasiraDaiCollisionFile(ASSET_KI_HASIRA_DAI_KCL);
+ClsnFile gBkTowerCollisionFile(ASSET_BK_TOWER_KCL);
+ClsnFile gObjDokanCollisionFile(ASSET_OBJ_DOKAN_KCL);
+ClsnFile gMcDodaiCollisionFile(ASSET_MC_DODAI_KCL);
+ClsnFile gMcHazadCollisionFile(ASSET_MC_HAZAD_KCL);
 
 /* Per-variant asset rows, in registry order. The interior labels
    data_ov102_0214e18c/0214e190 name the first row's collision and CLPS

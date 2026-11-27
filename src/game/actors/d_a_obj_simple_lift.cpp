@@ -71,19 +71,7 @@ extern const u16 data_ov091_02134514[8] = {
 
 /* Per-variant asset row: the model file, the collision file and the CLPS block,
  * indexed by mVariant. Heading offsets and travel times are data_ov091_02134514 /
- * 02134504.
- * dBgW::SetBeforeClsnCallback stores the beforeClsn callback; an inlined store is four
- * bytes short. */
-struct SimpleLiftModelFilePtr : SharedFilePtr {
-    SimpleLiftModelFilePtr(u32 fileID);
-    ~SimpleLiftModelFilePtr();
-};
-
-struct SimpleLiftClsnFileHandle : SharedFilePtr {
-    SimpleLiftClsnFileHandle(u32 fileID);
-    ~SimpleLiftClsnFileHandle();
-};
-
+ * 02134504. */
 struct SimpleLiftAssets {
     SharedFilePtr *modelFile;
     SharedFilePtr *clsnFile;
@@ -92,20 +80,20 @@ struct SimpleLiftAssets {
 
 extern SimpleLiftAssets data_ov091_02135024[7];
 
-extern SimpleLiftModelFilePtr gKm1DeruModelFile;
-extern SimpleLiftClsnFileHandle gKm1DeruCollisionFile;
-extern SimpleLiftModelFilePtr gKm3Deru01ModelFile;
-extern SimpleLiftClsnFileHandle gKm3Deru01CollisionFile;
-extern SimpleLiftModelFilePtr gKm3Deru02ModelFile;
-extern SimpleLiftClsnFileHandle gKm3Deru02CollisionFile;
-extern SimpleLiftModelFilePtr gRcRift01ModelFile;
-extern SimpleLiftClsnFileHandle gRcRift01CollisionFile;
-extern SimpleLiftModelFilePtr gKm2Rift01ModelFile;
-extern SimpleLiftClsnFileHandle gKm2Rift01CollisionFile;
-extern SimpleLiftModelFilePtr gKm2Rift02ModelFile;
-extern SimpleLiftClsnFileHandle gKm2Rift02CollisionFile;
-extern SimpleLiftModelFilePtr gBkTransbarModelFile;
-extern SimpleLiftClsnFileHandle gBkTransbarCollisionFile;
+extern ModelFile gKm1DeruModelFile;
+extern ClsnFile gKm1DeruCollisionFile;
+extern ModelFile gKm3Deru01ModelFile;
+extern ClsnFile gKm3Deru01CollisionFile;
+extern ModelFile gKm3Deru02ModelFile;
+extern ClsnFile gKm3Deru02CollisionFile;
+extern ModelFile gRcRift01ModelFile;
+extern ClsnFile gRcRift01CollisionFile;
+extern ModelFile gKm2Rift01ModelFile;
+extern ClsnFile gKm2Rift01CollisionFile;
+extern ModelFile gKm2Rift02ModelFile;
+extern ClsnFile gKm2Rift02CollisionFile;
+extern ModelFile gBkTransbarModelFile;
+extern ClsnFile gBkTransbarCollisionFile;
 
 /* The seven asset rows. The CLPS blocks live in the course overlays that
  * spawn these lifts; the model and collision handles are this TU's own. */
@@ -248,17 +236,17 @@ daObjSimpleLift_c *daObjSimpleLift_c_classInit_KM1_DERU() {
 
 /* One model+KCL SharedFilePtr pair per variant, constructed in the retail
  * sinit's interleaved order (variant's model first, then its collision). */
-SimpleLiftModelFilePtr gKm1DeruModelFile(ASSET_KM1_DERU_BMD);
-SimpleLiftClsnFileHandle gKm1DeruCollisionFile(ASSET_KM1_DERU_KCL);
-SimpleLiftModelFilePtr gKm3Deru01ModelFile(ASSET_KM3_DERU01_BMD);
-SimpleLiftClsnFileHandle gKm3Deru01CollisionFile(ASSET_KM3_DERU01_KCL);
-SimpleLiftModelFilePtr gKm3Deru02ModelFile(ASSET_KM3_DERU02_BMD);
-SimpleLiftClsnFileHandle gKm3Deru02CollisionFile(ASSET_KM3_DERU02_KCL);
-SimpleLiftModelFilePtr gRcRift01ModelFile(ASSET_RC_RIFT01_BMD);
-SimpleLiftClsnFileHandle gRcRift01CollisionFile(ASSET_RC_RIFT01_KCL);
-SimpleLiftModelFilePtr gKm2Rift01ModelFile(ASSET_KM2_RIFT01_BMD);
-SimpleLiftClsnFileHandle gKm2Rift01CollisionFile(ASSET_KM2_RIFT01_KCL);
-SimpleLiftModelFilePtr gKm2Rift02ModelFile(ASSET_KM2_RIFT02_BMD);
-SimpleLiftClsnFileHandle gKm2Rift02CollisionFile(ASSET_KM2_RIFT02_KCL);
-SimpleLiftModelFilePtr gBkTransbarModelFile(ASSET_BK_TRANSBAR_BMD);
-SimpleLiftClsnFileHandle gBkTransbarCollisionFile(ASSET_BK_TRANSBAR_KCL);
+ModelFile gKm1DeruModelFile(ASSET_KM1_DERU_BMD);
+ClsnFile gKm1DeruCollisionFile(ASSET_KM1_DERU_KCL);
+ModelFile gKm3Deru01ModelFile(ASSET_KM3_DERU01_BMD);
+ClsnFile gKm3Deru01CollisionFile(ASSET_KM3_DERU01_KCL);
+ModelFile gKm3Deru02ModelFile(ASSET_KM3_DERU02_BMD);
+ClsnFile gKm3Deru02CollisionFile(ASSET_KM3_DERU02_KCL);
+ModelFile gRcRift01ModelFile(ASSET_RC_RIFT01_BMD);
+ClsnFile gRcRift01CollisionFile(ASSET_RC_RIFT01_KCL);
+ModelFile gKm2Rift01ModelFile(ASSET_KM2_RIFT01_BMD);
+ClsnFile gKm2Rift01CollisionFile(ASSET_KM2_RIFT01_KCL);
+ModelFile gKm2Rift02ModelFile(ASSET_KM2_RIFT02_BMD);
+ClsnFile gKm2Rift02CollisionFile(ASSET_KM2_RIFT02_KCL);
+ModelFile gBkTransbarModelFile(ASSET_BK_TRANSBAR_BMD);
+ClsnFile gBkTransbarCollisionFile(ASSET_BK_TRANSBAR_KCL);

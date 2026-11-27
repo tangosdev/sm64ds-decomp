@@ -33,22 +33,8 @@ enum d_a_obj_ks_water_AssetId { ASSET_KS_MIZU_BMD = 0x0689, ASSET_KS_MIZU_KCL = 
 struct BMD_File;
 struct KCL_File;
 
-/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile; collision handles construct through ClsnFile::ClsnFile and
- * destroy through ClsnFile::~ClsnFile. The manifest aliases those
- * undefined members onto the ROM symbols. */
-struct KsWaterModelFilePtr : SharedFilePtr {
-    KsWaterModelFilePtr(u32 fileID);
-    ~KsWaterModelFilePtr();
-};
-
-struct KsWaterClsnFileHandle : SharedFilePtr {
-    KsWaterClsnFileHandle(u32 fileID);
-    ~KsWaterClsnFileHandle();
-};
-
-extern KsWaterClsnFileHandle data_ov017_02111c80;
-extern KsWaterModelFilePtr data_ov017_02111c88;
+extern ClsnFile data_ov017_02111c80;
+extern ModelFile data_ov017_02111c88;
 
 /* The stage-map TU owns the water's texture animation and collision-property
  * block; this TU consumes them. */
@@ -150,6 +136,6 @@ int daObjKsWater_c::CleanupResources() {
  */
 
 /* File-scope objects, in __sinit_d_a_obj_ks_water.cpp construction order:
- * the model's SharedFilePtr, then the collision file's. */
-KsWaterModelFilePtr data_ov017_02111c88(ASSET_KS_MIZU_BMD);
-KsWaterClsnFileHandle data_ov017_02111c80(ASSET_KS_MIZU_KCL);
+ * the ModelFile, then the ClsnFile. */
+ModelFile data_ov017_02111c88(ASSET_KS_MIZU_BMD);
+ClsnFile data_ov017_02111c80(ASSET_KS_MIZU_KCL);

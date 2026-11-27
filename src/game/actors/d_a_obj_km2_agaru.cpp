@@ -17,21 +17,8 @@ enum d_a_obj_km2_agaru_AssetId { ASSET_KM2_AGARU_BMD = 0x065b, ASSET_KM2_AGARU_K
 
 struct KCL_File;
 
-/* Retail constructs these 8-byte handles in this order and registers
- * their destructors. The wrapper names are local; the ctor/dtor
- * addresses are the ROM resource-family functions. */
-struct AgaruModelFilePtr : SharedFilePtr {
-    AgaruModelFilePtr(u32 fileID);
-    ~AgaruModelFilePtr();
-};
-
-struct AgaruCollisionFilePtr : SharedFilePtr {
-    AgaruCollisionFilePtr(u32 fileID);
-    ~AgaruCollisionFilePtr();
-};
-
-extern AgaruCollisionFilePtr data_ov045_02113180; /* the KCL */
-extern AgaruModelFilePtr data_ov045_02113188;     /* the BMD */
+extern ClsnFile data_ov045_02113180;  /* the KCL */
+extern ModelFile data_ov045_02113188; /* the BMD */
 extern CLPS_Block data_ov045_021125d0;
 
 enum {
@@ -129,5 +116,5 @@ s32 daObjKm2_Agaru_c::CleanupResources() {
 
 /* The static-init globals -- mwcc emits __sinit_d_a_obj_km2_agaru.cpp
    from these: one ctor veneer plus destructor registration per handle. */
-AgaruModelFilePtr data_ov045_02113188(ASSET_KM2_AGARU_BMD);
-AgaruCollisionFilePtr data_ov045_02113180(ASSET_KM2_AGARU_KCL);
+ModelFile data_ov045_02113188(ASSET_KM2_AGARU_BMD);
+ClsnFile data_ov045_02113180(ASSET_KM2_AGARU_KCL);

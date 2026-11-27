@@ -35,30 +35,16 @@ enum daObjSwitch_c_AssetId {
 
 namespace Event { int ClearBit(unsigned int bit); void SetBit(unsigned int bit); }
 
-/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile; collision handles construct through ClsnFile::ClsnFile and destroy
- * through ClsnFile::~ClsnFile. The manifest aliases those undefined
- * members onto the ROM symbols. */
-struct SwitchModelFilePtr : SharedFilePtr {
-    SwitchModelFilePtr(u32 fileID);
-    ~SwitchModelFilePtr();
-};
-
-struct SwitchClsnFileHandle : SharedFilePtr {
-    SwitchClsnFileHandle(u32 fileID);
-    ~SwitchClsnFileHandle();
-};
-
 extern "C" {
 extern u32 gNextActorUpdateMask;
 extern signed char gCurrentSublevel;
 extern SharedFilePtr data_ov002_0211092c;
 extern daObjSwitch_c::Resources data_ov002_021098e8[];
 extern daObjSwitch_c::StateEntry data_ov002_0210e00c[];
-extern SwitchModelFilePtr data_ov002_0210dfd4;
-extern SwitchClsnFileHandle data_ov002_0210dfc4;
-extern SwitchModelFilePtr data_ov002_0210dfcc;
-extern SwitchClsnFileHandle data_ov002_0210dfbc;
+extern ModelFile data_ov002_0210dfd4;
+extern ClsnFile data_ov002_0210dfc4;
+extern ModelFile data_ov002_0210dfcc;
+extern ClsnFile data_ov002_0210dfbc;
 // local extern: the actual free definition accepts a scalar scale. The
 // genuine member call changes InitResources under 2004/b56; see the
 // committed experiment.
@@ -447,10 +433,10 @@ int daObjSwitch_c::FindTargetStar() {
  * Their constructors and the destructor registrations make mwcc emit this TU's
  * static initializer; the five-entry state table adds the ten
  * pointer-to-member copies it performs afterwards. */
-SwitchModelFilePtr data_ov002_0210dfd4(ASSET_OBJ_BOX_SWITCH_BMD);
-SwitchClsnFileHandle  data_ov002_0210dfc4(ASSET_OBJ_BOX_SWITCH_KCL);
-SwitchModelFilePtr data_ov002_0210dfcc(ASSET_OBJ_STAR_SWITCH_BMD);
-SwitchClsnFileHandle  data_ov002_0210dfbc(ASSET_OBJ_STAR_SWITCH_KCL);
+ModelFile data_ov002_0210dfd4(ASSET_OBJ_BOX_SWITCH_BMD);
+ClsnFile data_ov002_0210dfc4(ASSET_OBJ_BOX_SWITCH_KCL);
+ModelFile data_ov002_0210dfcc(ASSET_OBJ_STAR_SWITCH_BMD);
+ClsnFile data_ov002_0210dfbc(ASSET_OBJ_STAR_SWITCH_KCL);
 
 daObjSwitch_c::StateEntry data_ov002_0210e00c[5] = {
     {&daObjSwitch_c::StateIdleInit, &daObjSwitch_c::StateIdleMain},

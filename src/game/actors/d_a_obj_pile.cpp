@@ -35,9 +35,7 @@
  *   local `daObjPile_c *self = this` is not used: NotifyTagPileGone is a
  *   leaf, and saving this in another register would add a push.
  * - The two file handles live at the bottom of this file; the compiler's
- *   __sinit_d_a_obj_pile.cpp constructs them at overlay load. Their wrapper
- *   names are local -- the constructors are the ROM resource-family
- *   functions, recorded as aliases in the manifest.
+ *   __sinit_d_a_obj_pile.cpp constructs them at overlay load.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -51,19 +49,6 @@ enum daObjPile_c_AssetId { ASSET_PILE_BMD = 0x0481, ASSET_PILE_KCL = 0x0482 };
 #include "daObjKinokoTag_c.h"
 #include "math/CalcLib.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct PileModelFilePtr : SharedFilePtr {
-    PileModelFilePtr(u32 fileID);
-    ~PileModelFilePtr();
-};
-
-struct PileCollisionFilePtr : SharedFilePtr {
-    PileCollisionFilePtr(u32 fileID);
-    ~PileCollisionFilePtr();
-};
-
 /* local extern: no shared header declares these. */
 
 void func_02012694(unsigned int a, const Vector3 *b);
@@ -71,8 +56,8 @@ void func_02012694(unsigned int a, const Vector3 *b);
 /* This TU's two file handles: the pile model and its collision file.
  * InitResources loads both, CleanupResources releases them. Defined at the
  * end of this file so the constructors do not enter .text. */
-extern PileModelFilePtr gPileModelFile;
-extern PileCollisionFilePtr gPileCollisionFile;
+extern ModelFile gPileModelFile;
+extern ClsnFile gPileCollisionFile;
 
 /* ROM order. The out-of-line destructor is the key function, so it stays
  * first: D1, then D0, and the unused D2 is deadstripped. */
@@ -224,5 +209,5 @@ daObjPile_c *daObjPile_c_classInit() {
 /* Source order is construction order: model file 1153, collision file 1154.
  * __sinit_d_a_obj_pile.cpp emits both constructions and registers the
  * destructors; the registration nodes are compiler temporaries. */
-PileModelFilePtr gPileModelFile(ASSET_PILE_BMD);
-PileCollisionFilePtr gPileCollisionFile(ASSET_PILE_KCL);
+ModelFile gPileModelFile(ASSET_PILE_BMD);
+ClsnFile gPileCollisionFile(ASSET_PILE_KCL);

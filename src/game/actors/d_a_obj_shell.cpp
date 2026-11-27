@@ -54,19 +54,6 @@ enum daObjShell_c_AssetId {
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile; both
- * animations use AnimFile::AnimFile / AnimFile::~AnimFile.
- * The spellings are local. The manifest aliases them to those ROM symbols. */
-struct ShellModelFilePtr : SharedFilePtr {
-    ShellModelFilePtr(u32 fileID);
-    ~ShellModelFilePtr();
-};
-
-struct ShellAnimationFilePtr : SharedFilePtr {
-    ShellAnimationFilePtr(u32 fileID);
-    ~ShellAnimationFilePtr();
-};
-
 /* Actor ids are from symbols/actor_debug_names.tsv. */
 enum { ACTOR_PLAYER = 191 };
 
@@ -76,9 +63,9 @@ enum { STATE_SHUT = 0, STATE_LUNGE = 1 };
  * idle animation. InitResources loads all three, CleanupResources releases
  * them, and Behavior swaps between the two animations. Defined at the end
  * of this file so the constructors do not enter .text. */
-extern ShellAnimationFilePtr data_ov064_0211c9bc;
-extern ShellModelFilePtr data_ov064_0211c9c4;
-extern ShellAnimationFilePtr data_ov064_0211c9cc;
+extern AnimFile data_ov064_0211c9bc;
+extern ModelFile data_ov064_0211c9c4;
+extern AnimFile data_ov064_0211c9cc;
 
 /* Reconstructed source-style name: the cartridge proves daObjShell_c through
  * RTTI, allocation size and vtable identity, and the OBJ_SHELL profile at
@@ -242,6 +229,6 @@ void daObjShell_c::UpdateModelTransform() {
 
 /* Source order is construction order: model 1164, lunge anim 1166, idle anim
  * 1165. Registration nodes are compiler temps. */
-ShellModelFilePtr data_ov064_0211c9c4(ASSET_OBJ_SHELL_BMD);
-ShellAnimationFilePtr data_ov064_0211c9cc(ASSET_OBJ_SHELL_OPEN_BCA);
-ShellAnimationFilePtr data_ov064_0211c9bc(ASSET_OBJ_SHELL_CLOSE_BCA);
+ModelFile data_ov064_0211c9c4(ASSET_OBJ_SHELL_BMD);
+AnimFile data_ov064_0211c9cc(ASSET_OBJ_SHELL_OPEN_BCA);
+AnimFile data_ov064_0211c9bc(ASSET_OBJ_SHELL_CLOSE_BCA);

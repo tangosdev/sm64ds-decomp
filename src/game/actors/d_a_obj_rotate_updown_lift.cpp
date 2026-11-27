@@ -95,23 +95,6 @@ struct UpdownClpsSlot {
     u32 pad8;
 };
 
-/* File-scope objects at the end of this file construct the four resource
- * handles (model files 0x493/0x61f, collision files 0x494/0x620). mwcc
- * emits __sinit_d_a_obj_rotate_updown_lift.cpp from those definitions. The
- * wrapper names are local; the handle constructors and destructors are
- * the ROM resource-family functions, aliased in the manifest. Nothing in
- * this TU names the handles directly; the UpdownFileSlot rows above
- * point at them. */
-struct RotateUpdownLiftModelFile : SharedFilePtr {
-    RotateUpdownLiftModelFile(u32 fileID);
-    ~RotateUpdownLiftModelFile();
-};
-
-struct RotateUpdownLiftCollisionFilePtr : SharedFilePtr {
-    RotateUpdownLiftCollisionFilePtr(u32 fileID);
-    ~RotateUpdownLiftCollisionFilePtr();
-};
-
 extern UpdownPath data_ov091_02134cdc[3];
 extern UpdownTopY data_ov091_02134d1c[3];
 extern const s32 data_ov091_021344e8[3] = {
@@ -138,10 +121,10 @@ struct UpdownFileRow {
     CLPS_Block *clps;
 };
 
-extern RotateUpdownLiftModelFile gObjUpdnliftModelFile;
-extern RotateUpdownLiftCollisionFilePtr gObjUpdnliftCollisionFile;
-extern RotateUpdownLiftModelFile gHsUpdownLiftModelFile;
-extern RotateUpdownLiftCollisionFilePtr gHsUpdownLiftCollisionFile;
+extern ModelFile gObjUpdnliftModelFile;
+extern ClsnFile gObjUpdnliftCollisionFile;
+extern ModelFile gHsUpdownLiftModelFile;
+extern ClsnFile gHsUpdownLiftCollisionFile;
 extern CLPS_Block data_ov002_0210d834;
 extern CLPS_Block data_ov008_02111244;
 
@@ -577,9 +560,12 @@ daObjRotateUpdownLift_c *daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT() {
     return new daObjRotateUpdownLift_c();
 }
 
-/* Static-init globals (was the handwritten __sinit_ov091_02134524 shard).
- * Definition order is the retail initializer's construction order. */
-RotateUpdownLiftModelFile gObjUpdnliftModelFile(ASSET_OBJ_UPDNLIFT_BMD);
-RotateUpdownLiftCollisionFilePtr gObjUpdnliftCollisionFile(ASSET_OBJ_UPDNLIFT_KCL);
-RotateUpdownLiftModelFile gHsUpdownLiftModelFile(ASSET_HS_UPDOWN_LIFT_BMD);
-RotateUpdownLiftCollisionFilePtr gHsUpdownLiftCollisionFile(ASSET_HS_UPDOWN_LIFT_KCL);
+/* The four resource handles (model files 0x493/0x61f, collision files
+ * 0x494/0x620), in the retail initializer's construction order: mwcc emits
+ * __sinit_d_a_obj_rotate_updown_lift.cpp from these definitions. No
+ * function uses them directly; the UpdownFileRow table data_ov091_02134c30
+ * points at them. */
+ModelFile gObjUpdnliftModelFile(ASSET_OBJ_UPDNLIFT_BMD);
+ClsnFile gObjUpdnliftCollisionFile(ASSET_OBJ_UPDNLIFT_KCL);
+ModelFile gHsUpdownLiftModelFile(ASSET_HS_UPDOWN_LIFT_BMD);
+ClsnFile gHsUpdownLiftCollisionFile(ASSET_HS_UPDOWN_LIFT_KCL);

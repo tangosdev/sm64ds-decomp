@@ -16,8 +16,9 @@
  *
  * Notes:
  * - The file table is still data_ov045_02112f08.
- * - g_profile_KM2_UKISHIMA is overlay data; this TU is text-only so the
- *   definition here is a deadstripped duplicate.
+ * - g_profile_KM2_UKISHIMA is overlay data this TU's manifest does not
+ *   claim (deadstrip-data), so the definition here is a deadstripped
+ *   duplicate.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -30,21 +31,8 @@ enum d_a_obj_km2_ukishima_AssetId {
 #include "SpawnInfo.h"
 #include "SharedFilePtr.h"
 
-/* Retail constructs these 8-byte handles in this order and registers
- * their destructors. The wrapper names are local; the ctor/dtor
- * addresses are the ROM resource-family functions. */
-struct UkishimaModelFilePtr : SharedFilePtr {
-    UkishimaModelFilePtr(u32 fileID);
-    ~UkishimaModelFilePtr();
-};
-
-struct UkishimaCollisionFilePtr : SharedFilePtr {
-    UkishimaCollisionFilePtr(u32 fileID);
-    ~UkishimaCollisionFilePtr();
-};
-
-extern UkishimaModelFilePtr gKm2UkishimaModelFile; /* BMD, file 1643 */
-extern UkishimaCollisionFilePtr gKm2UkishimaCollisionFile;
+extern ModelFile gKm2UkishimaModelFile; /* BMD, file 1643 */
+extern ClsnFile gKm2UkishimaCollisionFile;
 extern CLPS_Block data_ov045_02112550;
 
 daObjUkiyuka_c::Resources data_ov045_02112f08 = {
@@ -78,5 +66,7 @@ s32 daObjKm2_Ukishima_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov045_02112f08);
 }
 
-UkishimaModelFilePtr gKm2UkishimaModelFile(ASSET_KM2_UKISHIMA_BMD);
-UkishimaCollisionFilePtr gKm2UkishimaCollisionFile(ASSET_KM2_UKISHIMA_KCL);
+/* Retail construction order; the compiler registers each destructor
+ * beside its object. */
+ModelFile gKm2UkishimaModelFile(ASSET_KM2_UKISHIMA_BMD);
+ClsnFile gKm2UkishimaCollisionFile(ASSET_KM2_UKISHIMA_KCL);

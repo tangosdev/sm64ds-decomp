@@ -25,23 +25,6 @@ enum d_a_obj_rc_kaitendai_AssetId { ASSET_RC_KAITEN_BMD = 0x06a7, ASSET_RC_KAITE
 
 #include "ResourceDescriptor.h"
 
-/* File-scope objects at the end of this file construct the two resource
- * handles (model file 0x6a7, collision file 0x6a8). mwcc emits
- * __sinit_d_a_obj_rc_kaitendai.cpp from those definitions. The wrapper
- * names are local; the handle constructors and destructors are the ROM
- * resource-family functions, aliased in the manifest. Nothing in this TU
- * names the handles directly; the ResourceDescriptor row above points at
- * them. */
-struct RcKaitendaiModelFile : SharedFilePtr {
-    RcKaitendaiModelFile(u32 fileID);
-    ~RcKaitendaiModelFile();
-};
-
-struct RcKaitendaiCollisionFilePtr : SharedFilePtr {
-    RcKaitendaiCollisionFilePtr(u32 fileID);
-    ~RcKaitendaiCollisionFilePtr();
-};
-
 /* The spinning disc's floor and wall pair. */
 extern CLPS_Block data_ov036_02112bc8;
 
@@ -67,10 +50,12 @@ s32 daObjRc_Kaitendai_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov036_02113b2c);
 }
 
-/* Static-init globals (was the handwritten __sinit_ov036_0211261c shard).
- * Definition order is the retail initializer's construction order. */
-RcKaitendaiModelFile gRcKaitenModelFile(ASSET_RC_KAITEN_BMD);
-RcKaitendaiCollisionFilePtr gRcKaitenCollisionFile(ASSET_RC_KAITEN_KCL);
+/* The two resource handles (model file 0x6a7, collision file 0x6a8), in the
+ * retail initializer's construction order: mwcc emits
+ * __sinit_d_a_obj_rc_kaitendai.cpp from these definitions. No function
+ * uses them directly; the descriptor data_ov036_02113b2c points at them. */
+ModelFile gRcKaitenModelFile(ASSET_RC_KAITEN_BMD);
+ClsnFile gRcKaitenCollisionFile(ASSET_RC_KAITEN_KCL);
 
 ResourceDescriptor data_ov036_02113b2c = {
     &gRcKaitenModelFile,
