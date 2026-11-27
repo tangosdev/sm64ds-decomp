@@ -60,17 +60,8 @@ extern "C" int AngleDiff(int a, int b);
 
 /* Resource handles owned by this TU. The static initializer constructs the
    model (id 0x327) and five animations (ids 0x328..0x32c) and registers each
-   destructor. The wrappers' constructor and destructor resolve to the retail
-   veneers through the manifest. Names follow the runtime asset paths; they
-   are reconstructed identifiers. */
-struct HolheiModelFile : SharedFilePtr {
-    HolheiModelFile(u32);
-    ~HolheiModelFile();
-};
-struct HolheiAnimFile : SharedFilePtr {
-    HolheiAnimFile(u32);
-    ~HolheiAnimFile();
-};
+   destructor. Names follow the runtime asset paths; they are reconstructed
+   identifiers. */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum HolheiAssetId {
@@ -84,12 +75,12 @@ enum HolheiAssetId {
 
 /* This TU's statics, in the order the retail initializer (0x0211cf30)
    builds them. */
-HolheiModelFile gHoruheiModelFile(ASSET_HORUHEI_BMD);
-HolheiAnimFile gHoruheiLiftAnimationFile(ASSET_HORUHEI_LIFT_BCA);
-HolheiAnimFile gHoruheiLiftLoopAnimationFile(ASSET_HORUHEI_LIFT_LOOP_BCA);
-HolheiAnimFile gHoruheiStruggleAnimationFile(ASSET_HORUHEI_STRUGGLE_BCA);
-HolheiAnimFile gHoruheiThrowAnimationFile(ASSET_HORUHEI_THROW_BCA);
-HolheiAnimFile gHoruheiWalkAnimationFile(ASSET_HORUHEI_WALK_BCA);
+ModelFile gHoruheiModelFile(ASSET_HORUHEI_BMD);
+AnimFile gHoruheiLiftAnimationFile(ASSET_HORUHEI_LIFT_BCA);
+AnimFile gHoruheiLiftLoopAnimationFile(ASSET_HORUHEI_LIFT_LOOP_BCA);
+AnimFile gHoruheiStruggleAnimationFile(ASSET_HORUHEI_STRUGGLE_BCA);
+AnimFile gHoruheiThrowAnimationFile(ASSET_HORUHEI_THROW_BCA);
+AnimFile gHoruheiWalkAnimationFile(ASSET_HORUHEI_WALK_BCA);
 
 /* Where a carried actor sits, indexed by its param1 == 2 in
    HomeCarryOffset. */

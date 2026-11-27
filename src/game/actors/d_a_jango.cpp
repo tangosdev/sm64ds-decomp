@@ -31,9 +31,8 @@
  *     state handlers take the Enter<X>State / Update<X>State spelling, and
  *     ChangeTarget is N64's klepto_change_target. The N64 klepto.inc.c
  *     counterpart is noted at each one that has one.
- *   - Local resource wrappers retain their existing lifecycle aliases.
- *     The four handles use file ID/reference bytes and typed loaded-file
- *     pointers; animation reads use those pointer members directly.
+ *   - The four resource handles are a ModelFile and three AnimFiles;
+ *     animation reads use their loaded-file pointers directly.
  *   - The held-cap byte uses daObjMarioCap_c::mTaken after the star branch.
  *   - the two matrix members are 12-word arrays, not Matrix4x3; see the
  *     header.
@@ -85,19 +84,6 @@ extern "C" int AngleDiff(int a, int b);
  * __sinit_d_a_jango.cpp from those definitions. */
 typedef int (daJango_c::*JangoPMF)();
 
-/* Local handle payloads: construction writes fileID at +0, numRefs at +2
- * and the loaded-file pointer at +4. CleanupResources releases references;
- * the registered wrapper destructors only publish the file ID. */
-struct JangoModelFile : SharedFilePtr {
-    JangoModelFile(u32 fileID);
-    ~JangoModelFile();
-};
-
-struct JangoAnimationFilePtr : SharedFilePtr {
-    JangoAnimationFilePtr(u32 fileID);
-    ~JangoAnimationFilePtr();
-};
-
 struct JangoSwoopRec {
     JangoPMF enter;
     JangoPMF update;
@@ -112,10 +98,10 @@ struct JangoSwoopRec {
     }
 };
 
-extern JangoModelFile data_ov062_0211e0fc;
-extern JangoAnimationFilePtr data_ov062_0211e114;
-extern JangoAnimationFilePtr data_ov062_0211e10c;
-extern JangoAnimationFilePtr data_ov062_0211e104;
+extern ModelFile data_ov062_0211e0fc;
+extern AnimFile data_ov062_0211e114;
+extern AnimFile data_ov062_0211e10c;
+extern AnimFile data_ov062_0211e104;
 extern JangoPMF sFlyPathState[2];
 extern JangoPMF sCircleState[2];
 extern JangoPMF sHurtState[2];
@@ -209,7 +195,7 @@ s32 daJango_c::OnAimedAtWithEgg() {
    path (sFlyPathState). Without one it circles (sCircleState), and
    if the player has already lost the cap it starts out holding it.
 
-   The four handle wrappers are SharedFilePtrs; the loaders take them by
+   The four handles are SharedFilePtrs; the loaders take them by
    reference and the payloads come back through filePtr. */
 int daJango_c::InitResources()
 {
@@ -1202,10 +1188,10 @@ void daJango_c::UpdateCircleVelocity() {
  * Definition order is the retail initializer's construction order: the model
  * handle, then the three animation handles, then the five state records in
  * FLY_PATH, CIRCLE, SWOOP, HURT, RISE order. */
-JangoModelFile data_ov062_0211e0fc(ASSET_JANGO_BMD);
-JangoAnimationFilePtr data_ov062_0211e114(ASSET_JANGO_ATTACK_BCA);
-JangoAnimationFilePtr data_ov062_0211e10c(ASSET_JANGO_DAMAGE_BCA);
-JangoAnimationFilePtr data_ov062_0211e104(ASSET_JANGO_FLY_BCA);
+ModelFile data_ov062_0211e0fc(ASSET_JANGO_BMD);
+AnimFile data_ov062_0211e114(ASSET_JANGO_ATTACK_BCA);
+AnimFile data_ov062_0211e10c(ASSET_JANGO_DAMAGE_BCA);
+AnimFile data_ov062_0211e104(ASSET_JANGO_FLY_BCA);
 
 JangoPMF sFlyPathState[2] = {
     &daJango_c::EnterFlyPathState,

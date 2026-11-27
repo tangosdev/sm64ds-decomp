@@ -38,20 +38,6 @@ enum daDonketu_c_AssetId {
 /* The Bully's resource block (daOts_c.h); overlay .data owns the bytes. */
 extern BullyResourceConfig data_ov064_0211b834;
 
-/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the model,
- * AnimFile::AnimFile / AnimFile::~AnimFile for the four
- * animation handles), spelled through declared-only subclasses so the
- * static initializer names the real entry points. */
-struct DonketuModelFilePtr : SharedFilePtr {
-    DonketuModelFilePtr(u32 fileID);
-    ~DonketuModelFilePtr();
-};
-struct DonketuAnimationFileHandle : SharedFilePtr {
-    DonketuAnimationFileHandle(u32 fileID);
-    ~DonketuAnimationFileHandle();
-};
-
 /* DONKETU factory. Written first so it emits last. */
 daDonketu_c *daDonketu_c_classInit() {
     return new daDonketu_c();
@@ -172,8 +158,8 @@ void daDonketu_c::PlayDeathSound() {
 
 /* The small Bully's model and animation handles, in the sinit call order the
  * data_ov064_0211b834 file table repeats. */
-DonketuModelFilePtr gDonketuModelFile(ASSET_DONKETU_BMD);
-DonketuAnimationFileHandle gDonketuDeadAnimationFile(ASSET_DONKETU_DEAD_BCA);
-DonketuAnimationFileHandle gDonketuHitAnimationFile(ASSET_DONKETU_HIT_BCA);
-DonketuAnimationFileHandle gDonketuTurnAnimationFile(ASSET_DONKETU_TURN_BCA);
-DonketuAnimationFileHandle gDonketuWalkAnimationFile(ASSET_DONKETU_WALK_BCA);
+ModelFile gDonketuModelFile(ASSET_DONKETU_BMD);
+AnimFile gDonketuDeadAnimationFile(ASSET_DONKETU_DEAD_BCA);
+AnimFile gDonketuHitAnimationFile(ASSET_DONKETU_HIT_BCA);
+AnimFile gDonketuTurnAnimationFile(ASSET_DONKETU_TURN_BCA);
+AnimFile gDonketuWalkAnimationFile(ASSET_DONKETU_WALK_BCA);

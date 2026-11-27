@@ -45,14 +45,9 @@ unsigned int func_02045a50(const void *, unsigned int);
 /* local extern: the camera matrix, declared per consumer (d_ext_model.cpp,
    d_ent_obj.cpp). */
 extern Matrix4x3 gViewMtx;
-/* File 0x8418. The ctor and dtor are ModelFileB::ModelFileB / ModelFileB::~ModelFileB; this
-   TU does not define them. The handler row is filled by the static
-   initializer those two objects emit. */
-struct EntryMeshTexture : SharedFilePtr {
-    EntryMeshTexture(unsigned int fileID);
-    ~EntryMeshTexture();
-};
-extern EntryMeshTexture EntryMeshTextureFile;
+/* The mesh texture handle (file 0x8418) and the handler row: the static
+   initializer constructs the one and fills the other. */
+extern ModelFileB EntryMeshTextureFile;
 extern EntryMeshHandler EntryMeshHandlers[3];
 
 /* Push the cached material to the geometry engine: diffuse/ambient,
@@ -388,7 +383,7 @@ int EntryMesh::Init(const Vector3 *pos, int angleY) {
     return 1;
 }
 
-EntryMeshTexture EntryMeshTextureFile(0x8418);
+ModelFileB EntryMeshTextureFile(0x8418);
 
 extern "C" EntryMeshHandler EntryMeshHandlers[3] = {
     &EntryMesh::InitGrid,

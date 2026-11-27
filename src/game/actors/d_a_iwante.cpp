@@ -175,36 +175,14 @@ typedef int (daIwante_c::*EyerokPMF)();
 struct EyerokState { EyerokPMF enter; EyerokPMF run; };
 struct CLPS_Block;
 
-/* The static initializer's own types. __sinit_ov066_0211a418 constructs 22
- * resource handles with per-kind constructors and destructors, and copies
- * 38 pointer-to-member pairs into 19 state descriptors. Each handle kind is a
- * subclass of SharedFilePtr that declares its own constructor/destructor; the
- * manifest aliases those symbols onto the ROM's per-kind constructor/destructor
- * entry points.
+/* __sinit_ov066_0211a418 constructs 22 resource handles, each the
+ * SharedFilePtr subclass for its file kind, and copies 38 pointer-to-member
+ * pairs into 19 state descriptors.
  *
  * A state descriptor is an EyerokState: two of the 8-byte pointer-to-member
  * records the ROM keeps in .data, the enter handler at +0 and the run handler
  * at +8, laid out the way SetState reads them (see EyerokState
  * above). */
-struct EyerokModelFilePtr : SharedFilePtr {
-    EyerokModelFilePtr(unsigned int fileID);
-    ~EyerokModelFilePtr();
-};
-
-struct EyerokAnimationFilePtr : SharedFilePtr {
-    EyerokAnimationFilePtr(unsigned int fileID);
-    ~EyerokAnimationFilePtr();
-};
-
-struct EyerokTextureSequencePtr : SharedFilePtr {
-    EyerokTextureSequencePtr(unsigned int fileID);
-    ~EyerokTextureSequencePtr();
-};
-
-struct EyerokCollisionFilePtr : SharedFilePtr {
-    EyerokCollisionFilePtr(unsigned int fileID);
-    ~EyerokCollisionFilePtr();
-};
 
 /* ---- ov066 .bss: 8-byte SharedFilePtr slots (0x0211ae14..0x0211aebc) ----
  * Each one's filePtr is the loaded file, which the states pass to SetAnim /
@@ -218,28 +196,28 @@ struct EyerokCollisionFilePtr : SharedFilePtr {
  *   collision files:  ae24 [0x332] body, aeac [0x33b], ae14 [0x33c],
  *                     ae1c [0x343], ae34 [0x345]
  * Which animation is which is described where it is started. */
-extern EyerokCollisionFilePtr data_ov066_0211ae14;
-extern EyerokCollisionFilePtr data_ov066_0211ae1c;
-extern EyerokCollisionFilePtr data_ov066_0211ae24;
-extern EyerokTextureSequencePtr data_ov066_0211ae2c;
-extern EyerokCollisionFilePtr data_ov066_0211ae34;
-extern EyerokTextureSequencePtr data_ov066_0211ae3c;
-extern EyerokAnimationFilePtr data_ov066_0211ae44;
-extern EyerokModelFilePtr data_ov066_0211ae4c;
-extern EyerokAnimationFilePtr data_ov066_0211ae54;
-extern EyerokAnimationFilePtr data_ov066_0211ae5c;
-extern EyerokAnimationFilePtr data_ov066_0211ae64;
-extern EyerokModelFilePtr data_ov066_0211ae6c;
-extern EyerokAnimationFilePtr data_ov066_0211ae74;
-extern EyerokAnimationFilePtr data_ov066_0211ae7c;
-extern EyerokAnimationFilePtr data_ov066_0211ae84;
-extern EyerokAnimationFilePtr data_ov066_0211ae8c;
-extern EyerokAnimationFilePtr data_ov066_0211ae94;
-extern EyerokTextureSequencePtr data_ov066_0211ae9c;
-extern EyerokAnimationFilePtr data_ov066_0211aea4;
-extern EyerokCollisionFilePtr data_ov066_0211aeac;
-extern EyerokModelFilePtr data_ov066_0211aeb4;
-extern EyerokTextureSequencePtr data_ov066_0211aebc;
+extern ClsnFile data_ov066_0211ae14;
+extern ClsnFile data_ov066_0211ae1c;
+extern ClsnFile data_ov066_0211ae24;
+extern TexSeqFile data_ov066_0211ae2c;
+extern ClsnFile data_ov066_0211ae34;
+extern TexSeqFile data_ov066_0211ae3c;
+extern AnimFile data_ov066_0211ae44;
+extern ModelFile data_ov066_0211ae4c;
+extern AnimFile data_ov066_0211ae54;
+extern AnimFile data_ov066_0211ae5c;
+extern AnimFile data_ov066_0211ae64;
+extern ModelFile data_ov066_0211ae6c;
+extern AnimFile data_ov066_0211ae74;
+extern AnimFile data_ov066_0211ae7c;
+extern AnimFile data_ov066_0211ae84;
+extern AnimFile data_ov066_0211ae8c;
+extern AnimFile data_ov066_0211ae94;
+extern TexSeqFile data_ov066_0211ae9c;
+extern AnimFile data_ov066_0211aea4;
+extern ClsnFile data_ov066_0211aeac;
+extern ModelFile data_ov066_0211aeb4;
+extern TexSeqFile data_ov066_0211aebc;
 
 /* ---- ov066 .bss / .data byte flags and counters, shared by all three parts ---- */
 /* Hands that have reached their spot in pattern 8, one bit per hand. */
@@ -343,7 +321,6 @@ void func_02012694(unsigned int a, const Vector3 *p);
 
 /* Unreferenced. */
 extern "C" void hold_d_a_iwante(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
-
 
 /* dActor_c::mFlags bit 0x08 is written by the framework while the actor is
  * off screen. These int-returning predicates are what make the ROM
@@ -2596,10 +2573,9 @@ daIwante_c *daIwante_c_classInit(void) {
  * registers each with its destructor through __register_global_object, then copies the
  * 38 pointer-to-member records into the 19 state descriptors. The record
  * and descriptor definitions are in the initializer's own order; the 22
- * handles are in the order it constructs them. The constructor and
- * destructor of each handle kind are the ROM's per-kind entry points
- * (aliased in this unit's manifest), and the register call is the
- * runtime's own __register_global_object. */
+ * handles are in the order it constructs them. Each handle's constructor and
+ * destructor are its class's (ModelFile, AnimFile, TexSeqFile or ClsnFile),
+ * and the register call is the runtime's own __register_global_object. */
 
 /* The 38 pointer-to-member records (ov066 .data 0x0211abe8..0x0211ad18) are ROM
  * data this unit only names. A member-pointer initializer is not static here:
@@ -2647,28 +2623,28 @@ extern EyerokPMF data_ov066_0211ad08;
 extern EyerokPMF data_ov066_0211ad10;
 
 /* The 22 resource handles, in construct order. */
-EyerokModelFilePtr data_ov066_0211aeb4(ASSET_IWANTE_LHAND_BMD);
-EyerokModelFilePtr data_ov066_0211ae4c(ASSET_IWANTE_RHAND_BMD);
-EyerokModelFilePtr data_ov066_0211ae6c(ASSET_IWANTE_DUMMY_BMD);
-EyerokAnimationFilePtr data_ov066_0211ae5c(ASSET_IWANTE_DAMAGE_L_BCA);
-EyerokAnimationFilePtr data_ov066_0211ae84(ASSET_IWANTE_DAMAGE_R_BCA);
-EyerokAnimationFilePtr data_ov066_0211aea4(ASSET_IWANTE_DEAD_L_BCA);
-EyerokAnimationFilePtr data_ov066_0211ae8c(ASSET_IWANTE_DEAD_R_BCA);
-EyerokAnimationFilePtr data_ov066_0211ae54(ASSET_IWANTE_WAIT_END_L_BCA);
-EyerokAnimationFilePtr data_ov066_0211ae94(ASSET_IWANTE_WAIT_END_R_BCA);
-EyerokAnimationFilePtr data_ov066_0211ae64(ASSET_IWANTE_WAIT_L_BCA);
-EyerokAnimationFilePtr data_ov066_0211ae44(ASSET_IWANTE_WAIT_R_BCA);
-EyerokAnimationFilePtr data_ov066_0211ae74(ASSET_IWANTE_WAKE_UP_L_BCA);
-EyerokAnimationFilePtr data_ov066_0211ae7c(ASSET_IWANTE_WAKE_UP_R_BCA);
-EyerokTextureSequencePtr data_ov066_0211ae3c(ASSET_IWANTE_CLOSE_L_BTP);
-EyerokTextureSequencePtr data_ov066_0211aebc(ASSET_IWANTE_CLOSE_R_BTP);
-EyerokTextureSequencePtr data_ov066_0211ae2c(ASSET_IWANTE_OPEN_L_BTP);
-EyerokTextureSequencePtr data_ov066_0211ae9c(ASSET_IWANTE_OPEN_R_BTP);
-EyerokCollisionFilePtr data_ov066_0211ae24(ASSET_IWANTE_KCL);
-EyerokCollisionFilePtr data_ov066_0211aeac(ASSET_IWANTE_MOVE_L_KCL);
-EyerokCollisionFilePtr data_ov066_0211ae14(ASSET_IWANTE_MOVE_R_KCL);
-EyerokCollisionFilePtr data_ov066_0211ae1c(ASSET_IWANTE_WAIT_L_KCL);
-EyerokCollisionFilePtr data_ov066_0211ae34(ASSET_IWANTE_WAIT_R_KCL);
+ModelFile data_ov066_0211aeb4(ASSET_IWANTE_LHAND_BMD);
+ModelFile data_ov066_0211ae4c(ASSET_IWANTE_RHAND_BMD);
+ModelFile data_ov066_0211ae6c(ASSET_IWANTE_DUMMY_BMD);
+AnimFile data_ov066_0211ae5c(ASSET_IWANTE_DAMAGE_L_BCA);
+AnimFile data_ov066_0211ae84(ASSET_IWANTE_DAMAGE_R_BCA);
+AnimFile data_ov066_0211aea4(ASSET_IWANTE_DEAD_L_BCA);
+AnimFile data_ov066_0211ae8c(ASSET_IWANTE_DEAD_R_BCA);
+AnimFile data_ov066_0211ae54(ASSET_IWANTE_WAIT_END_L_BCA);
+AnimFile data_ov066_0211ae94(ASSET_IWANTE_WAIT_END_R_BCA);
+AnimFile data_ov066_0211ae64(ASSET_IWANTE_WAIT_L_BCA);
+AnimFile data_ov066_0211ae44(ASSET_IWANTE_WAIT_R_BCA);
+AnimFile data_ov066_0211ae74(ASSET_IWANTE_WAKE_UP_L_BCA);
+AnimFile data_ov066_0211ae7c(ASSET_IWANTE_WAKE_UP_R_BCA);
+TexSeqFile data_ov066_0211ae3c(ASSET_IWANTE_CLOSE_L_BTP);
+TexSeqFile data_ov066_0211aebc(ASSET_IWANTE_CLOSE_R_BTP);
+TexSeqFile data_ov066_0211ae2c(ASSET_IWANTE_OPEN_L_BTP);
+TexSeqFile data_ov066_0211ae9c(ASSET_IWANTE_OPEN_R_BTP);
+ClsnFile data_ov066_0211ae24(ASSET_IWANTE_KCL);
+ClsnFile data_ov066_0211aeac(ASSET_IWANTE_MOVE_L_KCL);
+ClsnFile data_ov066_0211ae14(ASSET_IWANTE_MOVE_R_KCL);
+ClsnFile data_ov066_0211ae1c(ASSET_IWANTE_WAIT_L_KCL);
+ClsnFile data_ov066_0211ae34(ASSET_IWANTE_WAIT_R_KCL);
 
 /* The 19 state descriptors, in copy order: { enter, run }. */
 EyerokState data_ov066_0211b09c = { data_ov066_0211ac50, data_ov066_0211ac48 };

@@ -74,34 +74,18 @@ enum d_a_jgm_AssetId {
  * handles (model files 0x34c/0x429/0x42a, animation files 0x34f/0x34d,
  * texture-sequence files 0x350/0x34e), fill the five-pair state table and
  * set the collision-offset vector (0, -0x1e000, 0). mwcc emits
- * __sinit_d_a_jgm.cpp from those definitions. The wrapper names are local;
- * the handle constructors and destructors are the ROM resource-family
- * functions, aliased in the manifest. */
-struct DaJgmModelFile : SharedFilePtr {
-    DaJgmModelFile(u32 fileID);
-    ~DaJgmModelFile();
-};
-
-struct DaJgmAnimationFilePtr : SharedFilePtr {
-    DaJgmAnimationFilePtr(u32 fileID);
-    ~DaJgmAnimationFilePtr();
-};
-
-struct DaJgmTexSequenceFilePtr : SharedFilePtr {
-    DaJgmTexSequenceFilePtr(u32 fileID);
-    ~DaJgmTexSequenceFilePtr();
-};
+ * __sinit_d_a_jgm.cpp from those definitions. */
 
 extern "C" {
-extern DaJgmModelFile data_ov077_02127b50;
-extern DaJgmModelFile data_ov077_02127b48;
-extern DaJgmModelFile data_ov077_02127b38;
-extern DaJgmAnimationFilePtr data_ov077_02127b28;
-extern DaJgmAnimationFilePtr data_ov077_02127b40;
-extern DaJgmTexSequenceFilePtr data_ov077_02127b20;
-extern DaJgmTexSequenceFilePtr data_ov077_02127b30;
+extern ModelFile data_ov077_02127b50;
+extern ModelFile data_ov077_02127b48;
+extern ModelFile data_ov077_02127b38;
+extern AnimFile data_ov077_02127b28;
+extern AnimFile data_ov077_02127b40;
+extern TexSeqFile data_ov077_02127b20;
+extern TexSeqFile data_ov077_02127b30;
 extern SharedFilePtr *const data_ov077_02127238[];
-extern DaJgmTexSequenceFilePtr *const data_ov077_02127230[];
+extern TexSeqFile *const data_ov077_02127230[];
 extern DaJgmStateHandlers data_ov077_02127bc4[];
 extern Vector3 data_ov077_02127b88;
 extern DaJgmStateHandler data_ov077_021277e0;
@@ -114,7 +98,6 @@ extern DaJgmStateHandler data_ov077_021277f0;
 extern DaJgmStateHandler data_ov077_02127808;
 extern DaJgmStateHandler data_ov077_02127810;
 extern DaJgmStateHandler data_ov077_021277f8;
-
 
 }
 
@@ -143,7 +126,7 @@ s32 daJgm_c::InitResources()
     for (int i = 0; i < 2; i++)
         dExtFrameCtrl_c::LoadFile(*data_ov077_02127238[i]);
     for (int i = 0; i < 2; i++) {
-        DaJgmTexSequenceFilePtr *t = data_ov077_02127230[i];
+        TexSeqFile *t = data_ov077_02127230[i];
         dExtAnmTexPat_c::LoadFile(*t);
         dExtAnmTexPat_c::Prepare(*(BMD_File *)data_ov077_02127b50.filePtr, *(BTP_File *)t->filePtr);
     }
@@ -644,13 +627,13 @@ int daJgm_c::OnAimedAtWithEgg()
  * 0x34f/0x34d), the two texture-sequence handles (files 0x350/0x34e), then
  * the five-pair state table copied from the ROM PMF constants, then the
  * collision-offset vector. */
-DaJgmModelFile data_ov077_02127b50(ASSET_JUGEM_BMD);
-DaJgmModelFile data_ov077_02127b48(ASSET_PAIPO_BMD);
-DaJgmModelFile data_ov077_02127b38(ASSET_TOGEZO_BMD);
-DaJgmAnimationFilePtr data_ov077_02127b28(ASSET_JUGEM_WAIT_BCA);
-DaJgmAnimationFilePtr data_ov077_02127b40(ASSET_JUGEM_THROW_BCA);
-DaJgmTexSequenceFilePtr data_ov077_02127b20(ASSET_JUGEM_WAIT_BTP);
-DaJgmTexSequenceFilePtr data_ov077_02127b30(ASSET_JUGEM_THROW_BTP);
+ModelFile data_ov077_02127b50(ASSET_JUGEM_BMD);
+ModelFile data_ov077_02127b48(ASSET_PAIPO_BMD);
+ModelFile data_ov077_02127b38(ASSET_TOGEZO_BMD);
+AnimFile data_ov077_02127b28(ASSET_JUGEM_WAIT_BCA);
+AnimFile data_ov077_02127b40(ASSET_JUGEM_THROW_BCA);
+TexSeqFile data_ov077_02127b20(ASSET_JUGEM_WAIT_BTP);
+TexSeqFile data_ov077_02127b30(ASSET_JUGEM_THROW_BTP);
 DaJgmStateHandlers data_ov077_02127bc4[5] = {
     {data_ov077_021277e0, data_ov077_02127828},
     {data_ov077_02127820, data_ov077_021277e8},
@@ -662,7 +645,7 @@ Vector3 data_ov077_02127b88(0, -0x1e000, 0);
 
 /* Texture-sequence handles, then animation handles. The file indexes each
  * pair; together they are the rodata run at 0x02127230. */
-extern DaJgmTexSequenceFilePtr *const data_ov077_02127230[2] = {
+extern TexSeqFile *const data_ov077_02127230[2] = {
     &data_ov077_02127b20,
     &data_ov077_02127b30,
 };

@@ -64,17 +64,8 @@ typedef daBombking_c::StateFunction PMF;
 /* Resource handles owned by this TU. The static initializer constructs the
  * model (id 0x2c7) and twelve animations (ids 0x2bb..0x2c6) and registers
  * each destructor. The constructors, Load and Release use a u16 fileID at +0, a u8
- * reference count at +2 and the loaded file at +4. The wrappers' constructor
- * and destructor resolve to the retail veneers through the manifest. Names
- * follow the runtime asset paths; they are reconstructed identifiers. */
-struct BombkingModelFile : SharedFilePtr {
-    BombkingModelFile(u32);
-    ~BombkingModelFile();
-};
-struct BombkingAnimFile : SharedFilePtr {
-    BombkingAnimFile(u32);
-    ~BombkingAnimFile();
-};
+ * reference count at +2 and the loaded file at +4. Names follow the runtime
+ * asset paths; they are reconstructed identifiers. */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum BombkingAssetId {
@@ -95,19 +86,19 @@ enum BombkingAssetId {
 
 /* This TU's statics, in the order the retail initializer (0x02126660)
  * builds them. */
-BombkingModelFile gBombkingModelFile(ASSET_BOMB_KING_BMD);
-BombkingAnimFile gBombkingGetupAnimationFile(ASSET_BOMBKING_GETUP_BCA);
-BombkingAnimFile gBombkingDamageAnimationFile(ASSET_BOMBKING_DAMAGE_BCA);
-BombkingAnimFile gBombkingJumpAnimationFile(ASSET_BOMBKING_JUMP_BCA);
-BombkingAnimFile gBombkingJumpedAnimationFile(ASSET_BOMBKING_JUMPED_BCA);
-BombkingAnimFile gBombkingLiftAnimationFile(ASSET_BOMBKING_LIFT_BCA);
-BombkingAnimFile gBombkingStruggleAnimationFile(ASSET_BOMBKING_STRUGGLE_BCA);
-BombkingAnimFile gBombkingThrowAnimationFile(ASSET_BOMBKING_THROW_BCA);
-BombkingAnimFile gBombkingWait1AnimationFile(ASSET_BOMBKING_WAIT1_BCA);
-BombkingAnimFile gBombkingWait2AnimationFile(ASSET_BOMBKING_WAIT2_BCA);
-BombkingAnimFile gBombkingWalk1AnimationFile(ASSET_BOMBKING_WALK1_BCA);
-BombkingAnimFile gBombkingWalk2AnimationFile(ASSET_BOMBKING_WALK2_BCA);
-BombkingAnimFile gBombkingStartAnimationFile(ASSET_BOMBKING_START_BCA);
+ModelFile gBombkingModelFile(ASSET_BOMB_KING_BMD);
+AnimFile gBombkingGetupAnimationFile(ASSET_BOMBKING_GETUP_BCA);
+AnimFile gBombkingDamageAnimationFile(ASSET_BOMBKING_DAMAGE_BCA);
+AnimFile gBombkingJumpAnimationFile(ASSET_BOMBKING_JUMP_BCA);
+AnimFile gBombkingJumpedAnimationFile(ASSET_BOMBKING_JUMPED_BCA);
+AnimFile gBombkingLiftAnimationFile(ASSET_BOMBKING_LIFT_BCA);
+AnimFile gBombkingStruggleAnimationFile(ASSET_BOMBKING_STRUGGLE_BCA);
+AnimFile gBombkingThrowAnimationFile(ASSET_BOMBKING_THROW_BCA);
+AnimFile gBombkingWait1AnimationFile(ASSET_BOMBKING_WAIT1_BCA);
+AnimFile gBombkingWait2AnimationFile(ASSET_BOMBKING_WAIT2_BCA);
+AnimFile gBombkingWalk1AnimationFile(ASSET_BOMBKING_WALK1_BCA);
+AnimFile gBombkingWalk2AnimationFile(ASSET_BOMBKING_WALK2_BCA);
+AnimFile gBombkingStartAnimationFile(ASSET_BOMBKING_START_BCA);
 
 /* Carry offsets for the held player: AttachHeldPlayer uses the second
  * when daPly_c::param1 is 2. */
@@ -1521,7 +1512,6 @@ int daBombking_c::InitResources()
     KingBobOmb_SetState(&data_ov078_0212710c);
     return 1;
 }
-
 
 /* -------------------------------------------------------------------------- */
 /* Egg-aim query. Returns the fixed distance the slot stores. */

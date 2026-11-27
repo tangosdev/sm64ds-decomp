@@ -72,28 +72,10 @@
 #include "nitro/fx/fx_trig.h"
 #include "math/CalcLib.h"
 
-/* Inferred local resource-family ABI views; these type names are not ROM
- * names. The manifest binds each constructor/destructor to its existing
- * model, texture-sequence or animation helper at the original address. */
-struct EyknModelFile : SharedFilePtr {
-    EyknModelFile(u32 fileID);
-    ~EyknModelFile();
-};
-
-struct EyknTextureSequenceFile : SharedFilePtr {
-    EyknTextureSequenceFile(u32 fileID);
-    ~EyknTextureSequenceFile();
-};
-
-struct EyknAnimationFileHandle : SharedFilePtr {
-    EyknAnimationFileHandle(u32 fileID);
-    ~EyknAnimationFileHandle();
-};
-
-EyknModelFile gEyknModelFile(0x02f7);                          // EYEKUN_BMD
-EyknTextureSequenceFile gEyknCloseTextureSequenceFile(0x02f8); // EYEKUN_CLOSE_BTP
-EyknTextureSequenceFile gEyknOpenTextureSequenceFile(0x02fb);  // EYEKUN_OPEN_BTP
-EyknAnimationFileHandle gEyknDeathAnimationFile(0x02f9);       // EYEKUN_DEAD_BCA
+ModelFile gEyknModelFile(0x02f7);                 // EYEKUN_BMD
+TexSeqFile gEyknCloseTextureSequenceFile(0x02f8); // EYEKUN_CLOSE_BTP
+TexSeqFile gEyknOpenTextureSequenceFile(0x02fb);  // EYEKUN_OPEN_BTP
+AnimFile gEyknDeathAnimationFile(0x02f9);         // EYEKUN_DEAD_BCA
 
 /* Native member pointers produce the six constant descriptors and initialize
  * the wait/attack/die rows in BSS. Names describe their consumers; the ROM
@@ -189,7 +171,6 @@ int daEykn_c::UpdateCircling()
     return 0;
 }
 
-
 /* Steps the eye's texture animation through two identical blinks: steps 1-3
  * and steps 4-6 each play the gEyknCloseTextureSequenceFile sequence, then the
  * gEyknOpenTextureSequenceFile sequence. Step 7 resets to 0 and returns 1, one call
@@ -233,7 +214,6 @@ int daEykn_c::UpdateEyeAnim()
     }
 }
 
-
 void daEykn_c::ResetEyeAnim()
 {
     mTextureSequence.SetFile(*(BTP_File *)gEyknCloseTextureSequenceFile.filePtr, 0, 0x1000, 0);
@@ -242,7 +222,6 @@ void daEykn_c::ResetEyeAnim()
     mTextureSequence.currFrame = 0;
     mSubState = 0;
 }
-
 
 /* Starts the blink that ends in a shot. Returns 0 if one is already running. */
 int daEykn_c::StartEyeAnim()
@@ -254,7 +233,6 @@ int daEykn_c::StartEyeAnim()
 
     return 0;
 }
-
 
 /* Watches for the closest visible player within range, inside the eye's
  * field of view and with a clear line of sight, and starts the attack. */
@@ -321,7 +299,6 @@ void daEykn_c::CheckAttacks()
     f->Hurt(hv, 2, 0xc000, 1, 0, 1);
 }
 
-
 void daEykn_c::UpdateModelTransform()
 {
     Matrix4x3_FromRotationXYZExt(&mAnmModel.mat4x3, mAngle.x, mAngle.y, mAngle.z);
@@ -333,7 +310,6 @@ void daEykn_c::UpdateModelTransform()
     mShadowMat.t.z = mPos.z >> 3;
     DropShadowRadHeight(mShadowModel, mShadowMat, mScale * 0xb4, mShadowHeight, 0xf);
 }
-
 
 /* State 2 exec: spin with a wobble, play the death animation, shrink to scale
  * 0xa4, then despawn, spawning actor 0x122 (small one) or releasing the star
@@ -439,7 +415,6 @@ int daEykn_c::St_Die_Main()
     return 1;
 }
 
-
 /* State 2 init: spin on in the direction of the last turn. */
 int daEykn_c::St_Die_Init()
 {
@@ -462,7 +437,6 @@ int daEykn_c::St_Die_Init()
     mWobbleAmp = 0x500;
     return 1;
 }
-
 
 /* State 1 exec: turn toward the target, blink and fire a bullet (actor 0x108)
  * each time the blink reaches step 7, and fall back to waiting when the target
@@ -598,7 +572,6 @@ int daEykn_c::St_Attack_Main()
     return 1;
 }
 
-
 int daEykn_c::St_Attack_Init()
 {
     unk_212 = 0xf0;
@@ -609,7 +582,6 @@ int daEykn_c::St_Attack_Init()
     return 1;
 }
 
-
 /* State 0 exec: level out, keep turning, and look for a player. */
 int daEykn_c::St_Wait_Main()
 {
@@ -619,7 +591,6 @@ int daEykn_c::St_Wait_Main()
     CheckAttacks();
     return 1;
 }
-
 
 /* State 0 init: drift on in the direction of the last turn. */
 int daEykn_c::St_Wait_Init()
@@ -633,25 +604,21 @@ int daEykn_c::St_Wait_Init()
     return 1;
 }
 
-
 void daEykn_c::RunState()
 {
     (this->*mState->exec)();
 }
-
 
 void daEykn_c::RunStateInit()
 {
     (this->*mState->init)();
 }
 
-
 void daEykn_c::SetState(int state)
 {
     mState = &gEyknStates[state];
     RunStateInit();
 }
-
 
 s32 daEykn_c::CleanupResources()
 {
@@ -665,13 +632,11 @@ s32 daEykn_c::CleanupResources()
     return 1;
 }
 
-
 /* daEykn_c::OnPendingDestroy -- vtable slot 12. The ROM body is empty: the
  * override exists only to occupy the slot. */
 void daEykn_c::OnPendingDestroy()
 {
 }
-
 
 int daEykn_c::Render()
 {
@@ -680,7 +645,6 @@ int daEykn_c::Render()
     mAnmModel.Render(&this->dActor_c::mScale);
     return 1;
 }
-
 
 int daEykn_c::Behavior()
 {

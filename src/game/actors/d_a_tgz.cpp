@@ -50,25 +50,10 @@
 /* The BCA gTgzWalkAnimFile has loaded. */
 #define TGZ_BCA (gTgzWalkAnimFile.filePtr)
 
-/* Lakitu's model-file handles, owned and constructed by d_a_jgm.cpp's static
- * init. Same TU-local wrapper spelling as the owning TU. */
-struct DaJgmModelFile : SharedFilePtr {
-    DaJgmModelFile(u32 fileID);
-    ~DaJgmModelFile();
-};
-
 /* Runtime asset handle, distinct from the NitroFS file ID. */
 enum daTgz_c_AssetId { ASSET_TOGEZO_WALK_BCA = 0x042b };
 
-/* The handle reaches its file through this wrapper's constructor and
- * destructor veneers; the manifest maps each to the retail destination.
- * Descriptive local type, not a recovered spelling. */
-struct TgzAnimFile : SharedFilePtr {
-    TgzAnimFile(u32 fileID);
-    ~TgzAnimFile();
-};
-
-TgzAnimFile gTgzWalkAnimFile(ASSET_TOGEZO_WALK_BCA);
+AnimFile gTgzWalkAnimFile(ASSET_TOGEZO_WALK_BCA);
 
 /* One {enter, update} record per state; SetState selects one and
  * CallStateEnter and CallStateUpdate call through it. State 1's entry returns
@@ -86,8 +71,9 @@ TgzStateRecord gTgzStates[6] = {
 };
 
 extern "C" {
-extern DaJgmModelFile data_ov077_02127b48;
-extern DaJgmModelFile data_ov077_02127b38;
+/* Lakitu's model handles, owned and constructed by d_a_jgm.cpp's static init. */
+extern ModelFile data_ov077_02127b48;
+extern ModelFile data_ov077_02127b38;
 
 extern int gWaterHeight;
 extern signed char gCurrentSublevel;

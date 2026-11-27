@@ -163,34 +163,21 @@ struct C { char pad[0x37c]; PMF *pp; };
 
 enum Bool { FALSE, TRUE };
 
-
 /* The eight file handles __sinit_d_a_king_donketu.cpp constructs below.
  * The constructor writes the u16 file ID at +0, the u8 reference count at +2,
  * and the loaded-file pointer at +4. Byte +3 is alignment padding.
  * The model payload is BMD_File; animation payloads are BCA_File.
  * CleanupResources releases the actor's references; the registered
- * handle destructors only publish the file ID through SharedFilePtr::~SharedFilePtr (D2). The
- * model handle's ctor/dtor are the cartridge's ModelFile::ModelFile / ModelFile::~ModelFile
- * pair and the seven animation handles construct through
- * AnimFile::AnimFile and register
- * AnimFile::~AnimFile; the manifest aliases these. */
-struct KingDonketuModelFileHandle : SharedFilePtr {
-    KingDonketuModelFileHandle(u32 fileID);
-    ~KingDonketuModelFileHandle();
-};
-struct KingDonketuAnimResFileHandle : SharedFilePtr {
-    KingDonketuAnimResFileHandle(u32 fileID);
-    ~KingDonketuAnimResFileHandle();
-};
+ * handle destructors only publish the file ID through SharedFilePtr::~SharedFilePtr (D2). */
 
-extern KingDonketuAnimResFileHandle gKingIceDonketuDeadAnimationFile; /* anim, file 0x355 */
-extern KingDonketuAnimResFileHandle gKingIceDonketuWalkAnimationFile; /* anim, file 0x35b */
-extern KingDonketuAnimResFileHandle gKingIceDonketuJumpEdAnimationFile; /* anim, file 0x357 */
-extern KingDonketuModelFileHandle gKingIceDonketuModelModelFile;   /* model, file 0x359 */
-extern KingDonketuAnimResFileHandle gKingIceDonketuHitAnimationFile; /* anim, file 0x356 */
-extern KingDonketuAnimResFileHandle gKingIceDonketuDamageAnimationFile; /* anim, file 0x354 */
-extern KingDonketuAnimResFileHandle gKingIceDonketuJumpStAnimationFile; /* anim, file 0x358 */
-extern KingDonketuAnimResFileHandle gKingIceDonketuWaitAnimationFile; /* anim, file 0x35a */
+extern AnimFile gKingIceDonketuDeadAnimationFile;   /* anim, file 0x355 */
+extern AnimFile gKingIceDonketuWalkAnimationFile;   /* anim, file 0x35b */
+extern AnimFile gKingIceDonketuJumpEdAnimationFile; /* anim, file 0x357 */
+extern ModelFile gKingIceDonketuModelModelFile;     /* model, file 0x359 */
+extern AnimFile gKingIceDonketuHitAnimationFile;    /* anim, file 0x356 */
+extern AnimFile gKingIceDonketuDamageAnimationFile; /* anim, file 0x354 */
+extern AnimFile gKingIceDonketuJumpStAnimationFile; /* anim, file 0x358 */
+extern AnimFile gKingIceDonketuWaitAnimationFile;   /* anim, file 0x35a */
 
 /* The collision cylinder's offset from the boss's origin, used by Init and
  * Behavior. 0x60000 below the position. A POD twin: a Vector3 global would be
@@ -1879,14 +1866,14 @@ daKing_Donketu_c *daKing_Donketu_c_classInit() {
 /* Construction order is source order: the eight file handles first, then the
  * sixteen State records in the order the initializer copies them. The
  * registration nodes and the PMF literals are compiler temporaries. */
-KingDonketuModelFileHandle gKingIceDonketuModelModelFile(ASSET_KING_ICE_DONKETU_MODEL_BMD);
-KingDonketuAnimResFileHandle gKingIceDonketuDeadAnimationFile(ASSET_KING_ICE_DONKETU_DEAD_BCA);
-KingDonketuAnimResFileHandle gKingIceDonketuHitAnimationFile(ASSET_KING_ICE_DONKETU_HIT_BCA);
-KingDonketuAnimResFileHandle gKingIceDonketuWalkAnimationFile(ASSET_KING_ICE_DONKETU_WALK_BCA);
-KingDonketuAnimResFileHandle gKingIceDonketuDamageAnimationFile(ASSET_KING_ICE_DONKETU_DAMAGE_BCA);
-KingDonketuAnimResFileHandle gKingIceDonketuJumpEdAnimationFile(ASSET_KING_ICE_DONKETU_JUMP_ED_BCA);
-KingDonketuAnimResFileHandle gKingIceDonketuJumpStAnimationFile(ASSET_KING_ICE_DONKETU_JUMP_ST_BCA);
-KingDonketuAnimResFileHandle gKingIceDonketuWaitAnimationFile(ASSET_KING_ICE_DONKETU_WAIT_BCA);
+ModelFile gKingIceDonketuModelModelFile(ASSET_KING_ICE_DONKETU_MODEL_BMD);
+AnimFile gKingIceDonketuDeadAnimationFile(ASSET_KING_ICE_DONKETU_DEAD_BCA);
+AnimFile gKingIceDonketuHitAnimationFile(ASSET_KING_ICE_DONKETU_HIT_BCA);
+AnimFile gKingIceDonketuWalkAnimationFile(ASSET_KING_ICE_DONKETU_WALK_BCA);
+AnimFile gKingIceDonketuDamageAnimationFile(ASSET_KING_ICE_DONKETU_DAMAGE_BCA);
+AnimFile gKingIceDonketuJumpEdAnimationFile(ASSET_KING_ICE_DONKETU_JUMP_ED_BCA);
+AnimFile gKingIceDonketuJumpStAnimationFile(ASSET_KING_ICE_DONKETU_JUMP_ST_BCA);
+AnimFile gKingIceDonketuWaitAnimationFile(ASSET_KING_ICE_DONKETU_WAIT_BCA);
 
 /* SetPosRelativeToActor / Init offset: the cylinder center sits 0x60000 below
  * the boss's origin. */

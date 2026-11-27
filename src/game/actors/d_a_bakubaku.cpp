@@ -56,29 +56,13 @@ enum {
 
 enum { kPlayerActorId = 0xbf };
 
-/* The model handle constructs through ModelFile::ModelFile and destroys through
- * ModelFile::~ModelFile; the animation handles go through AnimFile::AnimFile
- * and AnimFile::~AnimFile. The wrappers are declared, never defined:
- * the manifest aliases their undefined members onto the ROM veneers. Both
- * paths store a u16 file ID at +0, a byte reference count at +2 and a loaded
- * file pointer at +4. */
-struct BakubakuModelFilePtr : SharedFilePtr {
-    BakubakuModelFilePtr(u32 fileID);
-    ~BakubakuModelFilePtr();
-};
-
-struct BakubakuAnimationFileHandle : SharedFilePtr {
-    BakubakuAnimationFileHandle(u32 fileID);
-    ~BakubakuAnimationFileHandle();
-};
-
 /* The cylinder offsets are VecFx32: the retail initializer registers no
  * destructor for them, so they were never Vector3 globals (Vector3 carries
  * a declared ~Vector3, which would register at exit). */
 
-extern BakubakuModelFilePtr gBakubakuModelFile;    /* model 0x295 */
-extern BakubakuAnimationFileHandle data_ov032_02113a50; /* swim anim 0x297 */
-extern BakubakuAnimationFileHandle data_ov032_02113a48; /* bite anim 0x296 */
+extern ModelFile gBakubakuModelFile;            /* model 0x295 */
+extern AnimFile data_ov032_02113a50;            /* swim anim 0x297 */
+extern AnimFile data_ov032_02113a48;            /* bite anim 0x296 */
 extern daBakubaku_c::State data_ov032_02113a8c; /* wander */
 extern daBakubaku_c::State data_ov032_02113a9c; /* pause */
 extern daBakubaku_c::State data_ov032_02113aac; /* chase */
@@ -644,9 +628,9 @@ int daBakubaku_c::FindChaseTarget() {
  * emits __sinit_d_a_bakubaku.cpp from these definitions, including the
  * destructor registrations and the PMF descriptor constants at
  * 0x0211377c..0x021137c4. */
-BakubakuModelFilePtr gBakubakuModelFile(ASSET_BAKUBAKU_BMD);
-BakubakuAnimationFileHandle data_ov032_02113a50(ASSET_BAKUBAKU_SWIM_BCA);
-BakubakuAnimationFileHandle data_ov032_02113a48(ASSET_BAKUBAKU_ATTACK_BCA);
+ModelFile gBakubakuModelFile(ASSET_BAKUBAKU_BMD);
+AnimFile data_ov032_02113a50(ASSET_BAKUBAKU_SWIM_BCA);
+AnimFile data_ov032_02113a48(ASSET_BAKUBAKU_ATTACK_BCA);
 daBakubaku_c::State data_ov032_02113a8c = {&daBakubaku_c::EnterWander,
                                            &daBakubaku_c::ExecuteWander};
 daBakubaku_c::State data_ov032_02113a9c = {&daBakubaku_c::EnterPause, &daBakubaku_c::ExecutePause};

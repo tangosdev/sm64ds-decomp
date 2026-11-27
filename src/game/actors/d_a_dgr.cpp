@@ -35,19 +35,6 @@ enum daDgr_c_AssetId { ASSET_DONGURU_BMD = 0x02da, ASSET_DONGURU_KCL = 0x02db };
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct DgrModelFilePtr : SharedFilePtr {
-    DgrModelFilePtr(u32 fileID);
-    ~DgrModelFilePtr();
-};
-
-struct DgrCollisionFilePtr : SharedFilePtr {
-    DgrCollisionFilePtr(u32 fileID);
-    ~DgrCollisionFilePtr();
-};
-
 enum {
     kYoshiEggActorID = 9,
     kHoldFrames = 32,
@@ -64,8 +51,8 @@ enum {
     kGrindWindow = 0x320
 };
 
-extern DgrModelFilePtr data_ov025_02113a68;
-extern DgrCollisionFilePtr data_ov025_02113a60;
+extern ModelFile data_ov025_02113a68;
+extern ClsnFile data_ov025_02113a60;
 
 extern CLPS_Block data_ov025_02112c28;
 
@@ -258,5 +245,5 @@ int daDgr_c::EnableClsnNearEgg() {
 /* Source order is construction order: model file 730, collision file 731.
  * __sinit_d_a_dgr.cpp emits both constructions and registers the
  * destructors; the registration nodes are compiler temporaries. */
-DgrModelFilePtr data_ov025_02113a68(ASSET_DONGURU_BMD);
-DgrCollisionFilePtr data_ov025_02113a60(ASSET_DONGURU_KCL);
+ModelFile data_ov025_02113a68(ASSET_DONGURU_BMD);
+ClsnFile data_ov025_02113a60(ASSET_DONGURU_KCL);

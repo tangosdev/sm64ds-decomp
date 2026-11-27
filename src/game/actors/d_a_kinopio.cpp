@@ -52,25 +52,11 @@ enum daKinopio_c_AssetId {
     ASSET_KINOPIO_WAIT2_BCA = 0x035e
 };
 
-/* The handles reach their files through these wrappers' constructor and
-   destructor veneers; the manifest maps each to the retail destination.
-   Descriptive local types, not recovered spellings. */
-struct KinopioModelFile : SharedFilePtr {
-    KinopioModelFile(u32 fileID);
-    ~KinopioModelFile();
-};
-
-struct KinopioAnimFile : SharedFilePtr {
-    KinopioAnimFile(u32 fileID);
-    ~KinopioAnimFile();
-};
-
 /* This TU's file handles, in the order the retail initializer (0x0212f2a8)
    builds them. */
-KinopioModelFile gKinopioModelFile(ASSET_KINOPIO_BMD);
-KinopioAnimFile gKinopioIdleAnimFile(ASSET_KINOPIO_WAIT1_BCA);
-KinopioAnimFile gKinopioTalkAnimFile(ASSET_KINOPIO_WAIT2_BCA);
-
+ModelFile gKinopioModelFile(ASSET_KINOPIO_BMD);
+AnimFile gKinopioIdleAnimFile(ASSET_KINOPIO_WAIT1_BCA);
+AnimFile gKinopioTalkAnimFile(ASSET_KINOPIO_WAIT2_BCA);
 
 extern "C" {
 

@@ -31,16 +31,9 @@ enum daBttBk_c_AssetId { ASSET_BATTA_BLOCK_BMD = 0x02ac };
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
-/* dExtSimpleModel_c-file handle. The derived constructor and destructor are the retail
- * SharedFilePtr pair; this TU does not define them. */
-struct BttBkModelFilePtr : SharedFilePtr {
-    BttBkModelFilePtr(u32 fileID);
-    ~BttBkModelFilePtr();
-};
-
 typedef daBttBk_c::StateRow daBttBk_StateRow;
 
-extern BttBkModelFilePtr gBattaBlockModelFile;
+extern ModelFile gBattaBlockModelFile;
 extern daBttBk_StateRow data_ov080_0212847c[3];
 
 #pragma defer_codegen off
@@ -368,7 +361,7 @@ daBttBk_c *daBttBk_c_classInit() {
 
 /* __sinit_d_a_btt_bk.cpp constructs the model handle, then copies the six
  * anonymous pointer-to-member descriptors into this table. */
-BttBkModelFilePtr gBattaBlockModelFile(ASSET_BATTA_BLOCK_BMD);
+ModelFile gBattaBlockModelFile(ASSET_BATTA_BLOCK_BMD);
 daBttBk_StateRow data_ov080_0212847c[3] = {
     {&daBttBk_c::StateFallInit, &daBttBk_c::StateFallMain},
     {&daBttBk_c::StateCarriedInit, &daBttBk_c::StateCarriedMain},

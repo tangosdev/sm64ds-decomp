@@ -203,24 +203,6 @@ typedef unsigned short u16;
 
 /* shadow typedef 'Vector3' */
 
-/* Lakitu's model, animation and texture-sequence file handles, owned and
- * constructed by d_a_c_jugem.cpp's static init. Same TU-local wrapper
- * spellings as the owning TU. */
-struct JugemModelFile : SharedFilePtr {
-    JugemModelFile(u32 fileID);
-    ~JugemModelFile();
-};
-
-struct JugemAnimationFilePtr : SharedFilePtr {
-    JugemAnimationFilePtr(u32 fileID);
-    ~JugemAnimationFilePtr();
-};
-
-struct JugemTexSequenceFilePtr : SharedFilePtr {
-    JugemTexSequenceFilePtr(u32 fileID);
-    ~JugemTexSequenceFilePtr();
-};
-
 struct DemoModelFile : SharedFilePtr {
     DemoModelFile(unsigned int fileID);
     ~DemoModelFile();
@@ -338,7 +320,8 @@ extern int data_ov002_0210b964[3];
 extern Matrix4x3 gInvViewMtx;
 extern unsigned char gGameMode;
 extern SharedFilePtr gPowerStarModelFile;
-extern JugemModelFile data_ov085_0213074c;
+/* Lakitu's model handle, owned and constructed by d_a_c_jugem.cpp. */
+extern ModelFile data_ov085_0213074c;
 extern SharedFilePtr *data_ov002_0210b600[1];
 extern SharedFilePtr *data_ov002_0210b604[1];
 extern SharedFilePtr *data_ov002_0210b608[1];
@@ -347,8 +330,9 @@ extern SharedFilePtr *data_ov002_0210b610[1];
 extern SharedFilePtr *data_ov002_0210bcf0[];
 extern SharedFilePtr *data_ov002_0210bd24[];
 extern int data_ov002_0210b614;
-extern JugemTexSequenceFilePtr data_ov085_0213073c;
-extern JugemAnimationFilePtr data_ov085_02130744;
+/* Lakitu's texture-sequence and animation handles, also d_a_c_jugem.cpp's. */
+extern TexSeqFile data_ov085_0213073c;
+extern AnimFile data_ov085_02130744;
 /* The file handles and their registration nodes are defined at the
    bottom of this file; only the 12-byte gap between the two out-of-order
    nodes stays here so the function-local Vector3 statics keep their retail

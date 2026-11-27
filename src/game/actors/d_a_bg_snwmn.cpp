@@ -31,21 +31,12 @@ enum daBgSnwmn_c_AssetId {
 int IsStarCollectedInLevel(s8 levelID, int starID);
 
 /* Four file-scope objects. mwcc emits __sinit_d_a_bg_snwmn.cpp from them.
- * The two model handles share one veneer pair, the BTP handle is the texseq
- * pair, and the cylinder offset's stores are inline. */
-struct SnwmnModelFilePtr : SharedFilePtr {
-    SnwmnModelFilePtr(u32 fileID);
-    ~SnwmnModelFilePtr();
-};
+ * They are two ModelFile handles, a TexSeqFile handle and the cylinder
+ * offset, whose stores are inline. */
 
-struct SnwmnTexSequenceFilePtr : SharedFilePtr {
-    SnwmnTexSequenceFilePtr(u32 fileID);
-    ~SnwmnTexSequenceFilePtr();
-};
-
-extern SnwmnModelFilePtr gdaBgSnwmnBigSnowmanBodyModelFile;
-extern SnwmnModelFilePtr gdaBgSnwmnBigSnowmanHeadModelFile;
-extern SnwmnTexSequenceFilePtr gdaBgSnwmnBigSnowmanSmileTextureSequenceFile;
+extern ModelFile gdaBgSnwmnBigSnowmanBodyModelFile;
+extern ModelFile gdaBgSnwmnBigSnowmanHeadModelFile;
+extern TexSeqFile gdaBgSnwmnBigSnowmanSmileTextureSequenceFile;
 extern Vector3 data_ov072_02122c70;
 
 /* Reconstructed source-style names. SM64DS directly preserves the class RTTI,
@@ -140,7 +131,7 @@ void daBgSnwmn_c::UpdateModelTransform() {
     DropShadowRadHeight(mShadow, mModel2.mat4x3, 0xe6000, 0x12c000, 15);
 }
 
-SnwmnModelFilePtr gdaBgSnwmnBigSnowmanBodyModelFile(ASSET_BIG_SNOWMAN_BODY_BMD);
-SnwmnModelFilePtr gdaBgSnwmnBigSnowmanHeadModelFile(ASSET_BIG_SNOWMAN_HEAD_BMD);
-SnwmnTexSequenceFilePtr gdaBgSnwmnBigSnowmanSmileTextureSequenceFile(ASSET_BIG_SNOWMAN_SMILE_BTP);
+ModelFile gdaBgSnwmnBigSnowmanBodyModelFile(ASSET_BIG_SNOWMAN_BODY_BMD);
+ModelFile gdaBgSnwmnBigSnowmanHeadModelFile(ASSET_BIG_SNOWMAN_HEAD_BMD);
+TexSeqFile gdaBgSnwmnBigSnowmanSmileTextureSequenceFile(ASSET_BIG_SNOWMAN_SMILE_BTP);
 Vector3 data_ov072_02122c70(0, -0x50000, 0);

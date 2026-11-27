@@ -299,13 +299,13 @@ extern void func_02011cfc(void);
  *                               / six texture sequences), indexed by i:
  *                               LoadFile, then ->Release()
  *   gKoopaKeyModelFile          Bowser's key model handle in ov089
- *   data_ov060_0211b208         a model handle (SharedFilePtr)
+ *   data_ov060_0211b208         a model handle (ModelFile)
  *   sKoopaModelFile             Bowser's model handle (KpaModelFilePtr) */
 extern SharedFilePtr *const sKoopaAnimationFiles[];
 extern SharedFilePtr *const sKoopaTextureSequenceFiles[];
 extern SharedFilePtr gKoopaKeyModelFile;
 /* daFRing_c defines this handle. decl_common.h no longer declares it. */
-extern SharedFilePtr data_ov060_0211b208;
+extern ModelFile data_ov060_0211b208;
 extern KpaModelFilePtr sKoopaModelFile;
 extern KpaTexSequenceFilePtr data_ov060_0211ac28;
 /* The other texture-pattern handles InitAnimation picks from. */

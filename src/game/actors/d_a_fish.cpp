@@ -63,25 +63,14 @@ struct daFishState {
 /* File-scope objects at the end of this file construct the six resource
  * handles (model files 0x447/0x448/0x44a, animation files 0x44b/0x44c/0x449)
  * and fill the seven-entry state table. mwcc emits __sinit_d_a_fish.cpp
- * from those definitions. The wrapper names are local; the handle
- * constructors and destructors are the ROM resource-family functions,
- * aliased in the manifest. */
-struct FishModelFilePtr : SharedFilePtr {
-    FishModelFilePtr(u32 fileID);
-    ~FishModelFilePtr();
-};
+ * from those definitions. */
 
-struct FishAnimationFileHandle : SharedFilePtr {
-    FishAnimationFileHandle(u32 fileID);
-    ~FishAnimationFileHandle();
-};
-
-extern FishAnimationFileHandle data_ov100_021489cc; /* the shared fish animation */
-extern FishModelFilePtr gFishModelFile;
-extern FishModelFilePtr gFishAModelFile;
-extern FishModelFilePtr gFishBModelFile;
-extern FishAnimationFileHandle gFishSwimAnimationFile;
-extern FishAnimationFileHandle gFishAbSwimAnimationFile;
+extern AnimFile data_ov100_021489cc; /* the shared fish animation */
+extern ModelFile gFishModelFile;
+extern ModelFile gFishAModelFile;
+extern ModelFile gFishBModelFile;
+extern AnimFile gFishSwimAnimationFile;
+extern AnimFile gFishAbSwimAnimationFile;
 extern SharedFilePtr *const data_ov100_021473a4[3] = {
     &gFishModelFile,
     &gFishAModelFile,
@@ -411,12 +400,12 @@ void daFish_c::OnFishGone() {
  * three model handles (files 0x447/0x448/0x44a), the three animation
  * handles (files 0x44b/0x44c/0x449), then the seven state records copied
  * from the ROM PMF constants. */
-FishModelFilePtr gFishModelFile(ASSET_FISH_BMD);
-FishModelFilePtr gFishAModelFile(ASSET_FISH_A_BMD);
-FishModelFilePtr gFishBModelFile(ASSET_FISH_B_BMD);
-FishAnimationFileHandle gFishSwimAnimationFile(ASSET_FISH_SWIM_BCA);
-FishAnimationFileHandle data_ov100_021489cc(ASSET_FISH_WAIT_BCA);
-FishAnimationFileHandle gFishAbSwimAnimationFile(ASSET_FISH_AB_SWIM_BCA);
+ModelFile gFishModelFile(ASSET_FISH_BMD);
+ModelFile gFishAModelFile(ASSET_FISH_A_BMD);
+ModelFile gFishBModelFile(ASSET_FISH_B_BMD);
+AnimFile gFishSwimAnimationFile(ASSET_FISH_SWIM_BCA);
+AnimFile data_ov100_021489cc(ASSET_FISH_WAIT_BCA);
+AnimFile gFishAbSwimAnimationFile(ASSET_FISH_AB_SWIM_BCA);
 /* StateWaitPlayerAway returns int. The table calls every handler as void. */
 daFishState data_ov100_02148a1c[7] = {
     {&daFish_c::StateWaitForPlayer},  {(void(daFish_c::*)()) & daFish_c::StateWaitPlayerAway},

@@ -84,29 +84,16 @@ enum { kFlightSpeed = 0x32000 };
  * partner's low three book bits must have when that book is pushed. {0, 1, 3}
  * is book 0, then book 1, then book 2. */
 u8 data_ov020_02114828[4] = {0, 1, 3, 0};
-/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile. Animation handles construct through AnimFile::AnimFile
- * and destroy through AnimFile::~AnimFile. The manifest aliases those
- * undefined members onto the ROM symbols. */
-struct BookModelFilePtr : SharedFilePtr {
-    BookModelFilePtr(u32 fileID);
-    ~BookModelFilePtr();
-};
-
-struct BookAnimationFileHandle : SharedFilePtr {
-    BookAnimationFileHandle(u32 fileID);
-    ~BookAnimationFileHandle();
-};
 
 /* The four slots, by how they are used below:
  *   aa0  the animated model that mAnmModel switches to (STATE_TILT_BACK)
  *   ab8  the model mModel starts with
  *   aa8  the animation that plays during STATE_WIND_UP
  *   ab0  the animation that plays in flight */
-extern "C" BookModelFilePtr data_ov020_02114aa0;
-extern "C" BookModelFilePtr data_ov020_02114ab8;
-extern "C" BookAnimationFileHandle data_ov020_02114aa8;
-extern "C" BookAnimationFileHandle data_ov020_02114ab0;
+extern "C" ModelFile data_ov020_02114aa0;
+extern "C" ModelFile data_ov020_02114ab8;
+extern "C" AnimFile data_ov020_02114aa8;
+extern "C" AnimFile data_ov020_02114ab0;
 
 #pragma defer_codegen off
 
@@ -814,10 +801,10 @@ daBook_c *daBook_c_classInit_SHOOT_BOOK() {
 
 /* Order is the retail initializer: model 0x2c8, model 0x2cb, anim 0x2c9,
  * anim 0x2ca. mwcc emits __sinit_d_a_book.cpp from these four definitions. */
-BookModelFilePtr data_ov020_02114aa0(0x2c8);
-BookModelFilePtr data_ov020_02114ab8(0x2cb);
-BookAnimationFileHandle data_ov020_02114aa8(0x2c9);
-BookAnimationFileHandle data_ov020_02114ab0(0x2ca);
+ModelFile data_ov020_02114aa0(0x2c8);
+ModelFile data_ov020_02114ab8(0x2cb);
+AnimFile data_ov020_02114aa8(0x2c9);
+AnimFile data_ov020_02114ab0(0x2ca);
 
 extern "C" SpawnInfo<daBook_c> g_profile_KILLER_BOOK = {daBook_c_classInit_KILLER_BOOK,
                                                         327,

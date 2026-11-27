@@ -94,20 +94,12 @@ void func_02012694(unsigned int a, const Vector3 *p);
 extern signed char gCurrentSublevel;
 extern int gLevelMinY;
 
-/* The model handle reaches its file through this wrapper's constructor and
- * destructor veneers; the manifest maps each to the retail destination.
- * A descriptive local type, not a recovered spelling. */
-struct IblModelFile : SharedFilePtr {
-    IblModelFile(u32 fileID);
-    ~IblModelFile();
-};
-
 typedef void (daIbl_c::*IblKindHandler)();
 
 /* This TU's statics, in the order the retail initializer (0x021474e8)
  * builds them: the ball's model handle (d_a_btfly.cpp also reads it,
  * through an extern), then one handler per kind. */
-IblModelFile data_ov100_02148668(0x9c00);
+ModelFile data_ov100_02148668(0x9c00);
 
 IblKindHandler gIblKindHandlers[5] = {
     &daIbl_c::SpawnerBehavior, &daIbl_c::FreeRollBehavior, &daIbl_c::PathBehavior,

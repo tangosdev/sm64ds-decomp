@@ -66,21 +66,14 @@ enum {
     kGrockStill = 4
 };
 
-/* The GORO_ROCK model handle, constructed with file ID 1492 by the
- * compiler's __sinit_d_a_grock.cpp at overlay load. The wrapper name is
- * local; the constructor and destructor are the ROM resource-family
- * functions ModelFile::ModelFile / ModelFile::~ModelFile, aliased in the manifest. */
-struct GrockModelFilePtr : SharedFilePtr {
-    GrockModelFilePtr(u32 fileID);
-    ~GrockModelFilePtr();
-};
-
 /* arm9 C helper with no shared header. func_02012694 has the same body as
  * Sound::PlayBank3 (0x02012664); the ROM calls this copy. */
 
 extern void func_02012694(unsigned int id, const Vector3 *pos);
 
-extern GrockModelFilePtr data_ov021_02114a50;
+/* The GORO_ROCK model handle, constructed with file ID 1492 by the
+ * compiler's __sinit_d_a_grock.cpp at overlay load. */
+extern ModelFile data_ov021_02114a50;
 
 /* D1 stores this vtable, destroys the members in reverse declaration order,
  * then dEnemyBase_c::~dEnemyBase_c. D0 adds dEnemyBase_c's operator delete. */
@@ -392,7 +385,7 @@ daGrock_c *daGrock_c_classInit() {
 /* File-scope model handle. __sinit_d_a_grock.cpp emits the construction
  * and registers the destructor; the registration node is a compiler
  * temporary. */
-GrockModelFilePtr data_ov021_02114a50(ASSET_CV_GORO_ROCK_BMD);
+ModelFile data_ov021_02114a50(ASSET_CV_GORO_ROCK_BMD);
 
 extern "C" SpawnInfo<daGrock_c> g_profile_GORO_ROCK = {
     daGrock_c_classInit, 221, 70, 0x00000002, 0x00000000, 0x0012c000, 0x017d0000, 0x017d0000};

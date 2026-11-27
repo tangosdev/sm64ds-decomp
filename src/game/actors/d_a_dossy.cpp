@@ -70,39 +70,17 @@ typedef enum { FALSE = 0, TRUE = 1 } BOOL;
 /* The collision-property block InitResources hands to dBgW_Kc::SetFile: the
    0x20-byte record whose header and entries dBgW_Kc reads. */
 
-/* The resource handles as the ROM lays them out: {id, loaded file}. The
-   model handle constructs through ModelFile::ModelFile and destroys through
-   ModelFile::~ModelFile; the animation handles construct through
-   AnimFile::AnimFile and destroy through AnimFile::~AnimFile;
-   the collision handles construct through ClsnFile::ClsnFile and destroy through
-   ClsnFile::~ClsnFile. The manifest aliases each undefined member
-   onto its ROM symbol. */
-struct DossyModelFilePtr : SharedFilePtr {
-    DossyModelFilePtr(u32 fileID);
-    ~DossyModelFilePtr();
-};
-
-struct DossyAnimationFileHandle : SharedFilePtr {
-    DossyAnimationFileHandle(u32 fileID);
-    ~DossyAnimationFileHandle();
-};
-
-struct DossyCollisionFileHandle : SharedFilePtr {
-    DossyCollisionFileHandle(u32 fileID);
-    ~DossyCollisionFileHandle();
-};
-
-extern DossyModelFilePtr data_ov065_0211d720;
-extern DossyAnimationFileHandle data_ov065_0211d768;
-extern DossyAnimationFileHandle data_ov065_0211d748;
-extern DossyAnimationFileHandle data_ov065_0211d770;
-extern DossyCollisionFileHandle gDossyArmLCollisionFile;
-extern DossyCollisionFileHandle gDossyArmRCollisionFile;
-extern DossyCollisionFileHandle gDossyLegLCollisionFile;
-extern DossyCollisionFileHandle gDossyLegRCollisionFile;
-extern DossyCollisionFileHandle gDossyNeckCollisionFile;
-extern DossyCollisionFileHandle gDossyBodyCollisionFile;
-extern DossyCollisionFileHandle gDossyHeadCollisionFile;
+extern ModelFile data_ov065_0211d720;
+extern AnimFile data_ov065_0211d768;
+extern AnimFile data_ov065_0211d748;
+extern AnimFile data_ov065_0211d770;
+extern ClsnFile gDossyArmLCollisionFile;
+extern ClsnFile gDossyArmRCollisionFile;
+extern ClsnFile gDossyLegLCollisionFile;
+extern ClsnFile gDossyLegRCollisionFile;
+extern ClsnFile gDossyNeckCollisionFile;
+extern ClsnFile gDossyBodyCollisionFile;
+extern ClsnFile gDossyHeadCollisionFile;
 
 extern "C" {
 extern const u8 data_ov065_0211c078[8] = {
@@ -619,21 +597,18 @@ int daDossyCap_c::ReleaseCapIfTouched() {
 DorriePlatform::~DorriePlatform() {}
 
 /* The eleven file-scope resource handles, in retail initializer order: the
-   model file (ModelFile::ModelFile / ModelFile::~ModelFile), three animation files
-   (AnimFile::AnimFile / AnimFile::~AnimFile), then seven
-   collision files (ClsnFile::ClsnFile / ClsnFile::~ClsnFile). The
-   manifest aliases each wrapper ctor/dtor onto those ROM symbols. */
-DossyModelFilePtr data_ov065_0211d720(ASSET_DOSSY_BMD);
-DossyAnimationFileHandle data_ov065_0211d768(ASSET_DOSSY_HEAD_DOWN_BCA);
-DossyAnimationFileHandle data_ov065_0211d748(ASSET_DOSSY_HEAD_UP_BCA);
-DossyAnimationFileHandle data_ov065_0211d770(ASSET_DOSSY_SWIM_BCA);
-DossyCollisionFileHandle gDossyArmLCollisionFile(ASSET_DOSSY_ARM_L_KCL);
-DossyCollisionFileHandle gDossyArmRCollisionFile(ASSET_DOSSY_ARM_R_KCL);
-DossyCollisionFileHandle gDossyLegLCollisionFile(ASSET_DOSSY_LEG_L_KCL);
-DossyCollisionFileHandle gDossyLegRCollisionFile(ASSET_DOSSY_LEG_R_KCL);
-DossyCollisionFileHandle gDossyNeckCollisionFile(ASSET_DOSSY_NECK_KCL);
-DossyCollisionFileHandle gDossyBodyCollisionFile(ASSET_DOSSY_BODY_KCL);
-DossyCollisionFileHandle gDossyHeadCollisionFile(ASSET_DOSSY_HEAD_KCL);
+   model file, three animation files, then seven collision files. */
+ModelFile data_ov065_0211d720(ASSET_DOSSY_BMD);
+AnimFile data_ov065_0211d768(ASSET_DOSSY_HEAD_DOWN_BCA);
+AnimFile data_ov065_0211d748(ASSET_DOSSY_HEAD_UP_BCA);
+AnimFile data_ov065_0211d770(ASSET_DOSSY_SWIM_BCA);
+ClsnFile gDossyArmLCollisionFile(ASSET_DOSSY_ARM_L_KCL);
+ClsnFile gDossyArmRCollisionFile(ASSET_DOSSY_ARM_R_KCL);
+ClsnFile gDossyLegLCollisionFile(ASSET_DOSSY_LEG_L_KCL);
+ClsnFile gDossyLegRCollisionFile(ASSET_DOSSY_LEG_R_KCL);
+ClsnFile gDossyNeckCollisionFile(ASSET_DOSSY_NECK_KCL);
+ClsnFile gDossyBodyCollisionFile(ASSET_DOSSY_BODY_KCL);
+ClsnFile gDossyHeadCollisionFile(ASSET_DOSSY_HEAD_KCL);
 
 /* The state table Behavior dispatches through: three pointer-to-member
    records. Retail stores the records as compiler temporaries in .data

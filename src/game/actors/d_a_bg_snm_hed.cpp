@@ -27,19 +27,6 @@
 struct BMD_File;
 struct BTP_File;
 
-/* The model and texture-sequence handles reach their files through these
- * wrappers' constructor and destructor veneers; the manifest maps each to
- * the retail destination. Descriptive local types, not recovered spellings. */
-struct BgSnmHedModelFile : SharedFilePtr {
-    BgSnmHedModelFile(u32);
-    ~BgSnmHedModelFile();
-};
-
-struct BgSnmHedTexSeqFile : SharedFilePtr {
-    BgSnmHedTexSeqFile(u32);
-    ~BgSnmHedTexSeqFile();
-};
-
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum BgSnmHedAssetId {
     ASSET_BIG_SNOWMAN_CRY_BTP = 0x02ae,
@@ -49,9 +36,9 @@ enum BgSnmHedAssetId {
 
 /* This TU's statics, in the order the retail initializer (0x021221f8)
  * builds them. */
-BgSnmHedModelFile gBgSnmHedModelFile(ASSET_BIG_SNOWMAN_HEAD_BMD);
-BgSnmHedTexSeqFile gBigSnowmanCryTextureSequenceFile(ASSET_BIG_SNOWMAN_CRY_BTP);
-BgSnmHedTexSeqFile gBigSnowmanSmileTextureSequenceFile(ASSET_BIG_SNOWMAN_SMILE_BTP);
+ModelFile gBgSnmHedModelFile(ASSET_BIG_SNOWMAN_HEAD_BMD);
+TexSeqFile gBigSnowmanCryTextureSequenceFile(ASSET_BIG_SNOWMAN_CRY_BTP);
+TexSeqFile gBigSnowmanSmileTextureSequenceFile(ASSET_BIG_SNOWMAN_SMILE_BTP);
 
 extern SharedFilePtr *const data_ov072_02121ffc[2] = {
     &gBigSnowmanCryTextureSequenceFile,

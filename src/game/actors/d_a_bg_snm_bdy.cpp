@@ -72,19 +72,11 @@ extern dClipper gClipper;
 extern Matrix4x3 gViewMtx;
 }
 
-/* The model handle. dExtSimpleModel_c reaches its file through this wrapper's
- * constructor and destructor veneers; the manifest maps both to the retail
- * destinations. A descriptive local type, not a recovered spelling. */
-struct BgSnmBdyModelFile : SharedFilePtr {
-    BgSnmBdyModelFile(u32);
-    ~BgSnmBdyModelFile();
-};
-
 /* Runtime asset handle, distinct from the NitroFS file ID. */
 enum BgSnmBdyAssetId { ASSET_BIG_SNOWMAN_BODY_BMD = 0x02ad };
 
 /* This TU's statics, in the order the retail initializer builds them. */
-BgSnmBdyModelFile gBgSnmBdyModelFile(ASSET_BIG_SNOWMAN_BODY_BMD);
+ModelFile gBgSnmBdyModelFile(ASSET_BIG_SNOWMAN_BODY_BMD);
 
 daBgSnmBdy_c::StateEntry gBgSnmBdyStates[6] = {
     {&daBgSnmBdy_c::InitState0, &daBgSnmBdy_c::State0},
