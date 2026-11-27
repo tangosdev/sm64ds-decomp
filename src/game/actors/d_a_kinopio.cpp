@@ -313,10 +313,7 @@ void daKinopio_c::UpdateModelPose()
     DropShadowRadHeight(mShadowModel, mShadowTransform, 0x50000, 0x64000, 15);
 }
 
-/* The three ov002 handles are released only by the variant that took them. The
- * legacy file reached all six through an `int[]` spelling and a cast; they are
- * the real ModelFile objects, which is how InitResources below already
- * spelled them, so the cast is gone and the call is the ordinary member call. */
+/* The three ov002 handles are released only by the variant that took them. */
 int daKinopio_c::CleanupResources()
 {
     if (mVariant == 1) {

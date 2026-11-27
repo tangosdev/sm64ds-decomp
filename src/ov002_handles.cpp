@@ -34,7 +34,7 @@ ModelFile data_ov002_0210d9f0(0x9c0c);
 /* First function in ov002. It lives in this file so the TU has a .text section:
  * the handles' initializer is renamed from .text to .init, and a TU with no
  * ordinary function is refused. Defined after the handles so their @ counter
- * is unchanged. Death-state 8, the free-function sibling of
+ * is unchanged. Death-state 8, the sibling of
  * dEnemyBase_c::UpdateKillByInvincibleChar: the collision and the model are
  * passed in (either may be null), and the wall test is IsOnWall rather than the
  * ground-and-vertical-speed test. */

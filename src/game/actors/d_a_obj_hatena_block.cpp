@@ -177,6 +177,7 @@ extern ModelFile data_ov002_0210da40;
 extern ModelFile gFeatherModelFile;
 extern ModelFile gPFlowerOpenModelFile;
 extern ModelFile gPFlowerCloseModelFile;
+
 extern CLPS_Block data_ov002_0210d954;
 
 extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,
