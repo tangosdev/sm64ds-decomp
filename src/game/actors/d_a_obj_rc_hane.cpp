@@ -46,10 +46,8 @@
  * - g_profile_RC_HANE stays outside the licensed .text
  */
 
-/* decl_common.h is deliberately NOT included: it declares
- * data_ov036_02114070 as a bare char[], which contradicts the SharedFilePtr
- * this TU (and the cartridge) actually uses. Everything this file needs from
- * it is declared explicitly below. */
+/* decl_common.h is not included: everything this file needs from it is
+ * declared explicitly below. */
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_rc_hane_AssetId { ASSET_RC_HANE_BMD = 0x06a6 };
 

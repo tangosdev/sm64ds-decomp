@@ -52,9 +52,8 @@ s32 daObjRc_Kaitendai_c::CleanupResources() {
 
 /* The two resource handles (model file 0x6a7, collision file 0x6a8), in the
  * retail initializer's construction order: mwcc emits
- * __sinit_d_a_obj_rc_kaitendai.cpp from these definitions. Nothing in this
- * TU names them directly; the descriptor data_ov036_02113b2c points at
- * them. */
+ * __sinit_d_a_obj_rc_kaitendai.cpp from these definitions. No function
+ * uses them directly; the descriptor data_ov036_02113b2c points at them. */
 ModelFile gRcKaitenModelFile(ASSET_RC_KAITEN_BMD);
 ClsnFile gRcKaitenCollisionFile(ASSET_RC_KAITEN_KCL);
 

@@ -17,7 +17,6 @@
  * What stays: data_ov043_021125e0 / 021125e8 are this overlay's KCL/BMD
  *   handles. data_ov043_02111c00 is the CLPS block in overlay .data this
  *   TU does not own.
- * What stays: g_profile_KM1_UKISHIMA lives outside this TU (S14).
  * What stays: inline destructor (out-of-line emits D0 before D1).
  */
 

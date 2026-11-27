@@ -115,7 +115,7 @@ s32 daObjTdWater_c::CleanupResources() {
  */
 
 /* File-scope objects, in __sinit_d_a_obj_td_water.cpp construction order:
- * the model's SharedFilePtr, then the collision file's. */
+ * the ModelFile, then the ClsnFile. */
 ModelFile data_ov032_02113afc(ASSET_TD_OBJ_WATER_BMD);
 ClsnFile data_ov032_02113af4(ASSET_TD_OBJ_WATER_KCL);
 

@@ -71,9 +71,7 @@ extern const u16 data_ov091_02134514[8] = {
 
 /* Per-variant asset row: the model file, the collision file and the CLPS block,
  * indexed by mVariant. Heading offsets and travel times are data_ov091_02134514 /
- * 02134504.
- * dBgW::SetBeforeClsnCallback stores the beforeClsn callback; an inlined store is four
- * bytes short. */
+ * 02134504. */
 struct SimpleLiftAssets {
     SharedFilePtr *modelFile;
     SharedFilePtr *clsnFile;

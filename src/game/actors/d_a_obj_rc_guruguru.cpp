@@ -19,7 +19,6 @@
  *   KCL 0x021140b4, CLPS 0x02112ac8). Naming the three targets directly
  *   builds a different literal pool and moves every call site. The CLPS
  *   words at 0x02112aa8..0x02112ae8 are defined in this TU.
- * - g_profile_RC_GURUGURU lives outside this TU.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

@@ -89,8 +89,6 @@ s32 daObjKm2_Ami_Bou_c::CleanupResources() {
     return 1;
 }
 
-/* The inline destructor in the header emits D1 then D0, and no D2. */
-
 /* Retail construction order; the compiler registers each destructor
  * beside its object. */
 ModelFile data_ov045_021131b0(ASSET_KM2_AMI_BOU_BMD);

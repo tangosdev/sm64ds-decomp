@@ -16,8 +16,9 @@
  *
  * Notes:
  * - The file table is still data_ov045_02112f08.
- * - g_profile_KM2_UKISHIMA is overlay data; this TU is text-only so the
- *   definition here is a deadstripped duplicate.
+ * - g_profile_KM2_UKISHIMA is overlay data this TU's manifest does not
+ *   claim (deadstrip-data), so the definition here is a deadstripped
+ *   duplicate.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

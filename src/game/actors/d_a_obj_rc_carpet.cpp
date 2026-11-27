@@ -133,7 +133,6 @@ void daObjRcCarpet_c::UpdateClsnTransform() {
     mClsnMat.t.z = mPos.z;
     mMeshCollider.Transform(mClsnMat, mAngle.y);
 }
-/* ROM ordinals 0/1 are emitted by the inline virtual destructor:*/
 
 /* Retail construction order; the compiler registers each destructor
  * beside its object. */

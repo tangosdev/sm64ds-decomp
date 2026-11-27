@@ -51,9 +51,8 @@ s32 daObjKm1_Kuruma_c::CleanupResources() {
 
 /* The two resource handles (model file 0x653, collision file 0x654), in the
  * retail initializer's construction order: mwcc emits
- * __sinit_d_a_obj_km1_kuruma.cpp from these definitions. Nothing in this TU
- * names them directly; the Resources record data_ov043_02112418 points at
- * them. */
+ * __sinit_d_a_obj_km1_kuruma.cpp from these definitions. No function uses
+ * them directly; the Resources record data_ov043_02112418 points at them. */
 ModelFile gKm1KurumaModelFile(ASSET_KM1_KURUMA_BMD);
 ClsnFile gKm1KurumaCollisionFile(ASSET_KM1_KURUMA_KCL);
 

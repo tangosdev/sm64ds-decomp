@@ -80,7 +80,7 @@ s32 daObjTdFuta_c::CleanupResources() {
  * dActor_c. */
 
 /* File-scope objects, in __sinit_d_a_obj_td_futa.cpp construction order:
- * the model's SharedFilePtr, then the collision file's. */
+ * the ModelFile, then the ClsnFile. */
 ModelFile data_ov032_02113ad4(ASSET_TD_OBJ_FUTA_BMD);
 ClsnFile data_ov032_02113acc(ASSET_TD_OBJ_FUTA_KCL);
 

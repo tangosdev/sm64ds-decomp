@@ -562,8 +562,9 @@ daObjRotateUpdownLift_c *daObjRotateUpdownLift_c_classInit_UPDOWN_LIFT() {
 
 /* The four resource handles (model files 0x493/0x61f, collision files
  * 0x494/0x620), in the retail initializer's construction order: mwcc emits
- * __sinit_d_a_obj_rotate_updown_lift.cpp from these definitions. Nothing in
- * this TU names them directly; the UpdownFileSlot rows point at them. */
+ * __sinit_d_a_obj_rotate_updown_lift.cpp from these definitions. No
+ * function uses them directly; the UpdownFileRow table data_ov091_02134c30
+ * points at them. */
 ModelFile gObjUpdnliftModelFile(ASSET_OBJ_UPDNLIFT_BMD);
 ClsnFile gObjUpdnliftCollisionFile(ASSET_OBJ_UPDNLIFT_KCL);
 ModelFile gHsUpdownLiftModelFile(ASSET_HS_UPDOWN_LIFT_BMD);

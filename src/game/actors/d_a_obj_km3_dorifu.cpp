@@ -14,12 +14,10 @@
  * daObjKm3_Dorifu_c, KM3_DORIFU registry). Retail does not
  * store that spelling.
  *
- * This TU is text-only. Retail overlay data order is typeinfo,
- * type-name, profile, five-entry file table, vtable.
- *
- * Note: data_ov047_02112508 and g_profile_KM3_DORIFU are overlay data
- * this TU does not own; the BMD/KCL SharedFilePtrs and CLPS_Block are
- * still data_ov047_*.
+ * Retail overlay data order is typeinfo, type-name, profile, five-entry
+ * file table, vtable. This TU defines the file table (data_ov047_02112508)
+ * and its ten gKm3Dan* handles; g_profile_KM3_DORIFU and the three CLPS
+ * blocks are overlay data defined outside it.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */

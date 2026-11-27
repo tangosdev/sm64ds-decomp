@@ -136,6 +136,6 @@ int daObjKsWater_c::CleanupResources() {
  */
 
 /* File-scope objects, in __sinit_d_a_obj_ks_water.cpp construction order:
- * the model's SharedFilePtr, then the collision file's. */
+ * the ModelFile, then the ClsnFile. */
 ModelFile data_ov017_02111c88(ASSET_KS_MIZU_BMD);
 ClsnFile data_ov017_02111c80(ASSET_KS_MIZU_KCL);

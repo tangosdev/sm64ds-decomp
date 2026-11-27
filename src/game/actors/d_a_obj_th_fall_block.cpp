@@ -13,7 +13,7 @@
  * daObjTh_Fall_Block_c, TH_DOWN_B registry). Retail does not store
  * that spelling.
  *
- * data_ov063_0211eb10 is overlay .data this TU does not own; the
+ * This TU defines the resource descriptor data_ov063_0211eb10; the
  * CLPS_Block it points at is still data_ov063_*. g_profile_TH_DOWN_B
  * lives outside this TU (S14).
  */
