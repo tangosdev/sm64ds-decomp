@@ -120,7 +120,3 @@ u32 FS_TryLoadTable(void *p_mem, u32 size) {
 }
 
 } /* extern "C" */
-
-extern "C" {
-int data_020a80c4;
-}
