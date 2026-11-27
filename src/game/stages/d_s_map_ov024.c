@@ -6,22 +6,6 @@
 
 /* Definition order is what makes the compiler size sort match address order. */
 
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[168];
-    u32 tail[6];
-} Clps_02113260;
-
 typedef struct {
     struct PathDef entries[47];
     u16 pad;
@@ -83,7 +67,7 @@ extern SimpleEntry data_ov024_02112b14[26];
 extern PathDefs47 data_ov024_02112be4;
 extern PathNode data_ov024_02112d00[96];
 extern StandardEntry data_ov024_02112f40[50];
-extern Clps_02113260 data_ov024_02113260;
+extern CLPS_Block1376 data_ov024_02113260;
 
 const fx32 data_ov024_021118b0[1] = {0x00001000};
 
@@ -358,11 +342,12 @@ StandardEntry data_ov024_021129d0[2] = {
     {0x00fc, (s16)0xeb4c, 0x020d, (s16)0xeed0, 0x0000, 0x0000, 0x0000, 0xf000},
     {0x0014, 0x1676, 0x0258, 0x0e74, 0x0003, 0x0000, 0x0000, 0xffff}};
 
-CLPS_Block data_ov024_021129f0 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {{0x00003fc4, 0x000000ff}, {0xffffffff, 0xffffffff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov024_021129f0 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00003fc4, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 ViewEntries3 data_ov024_02112a10 = {
     {{0x0000, 0x00ff, (s16)0xf830, 0x05cc, (s16)0xfc18, {0x0000, 0x0000}, 0x0000, 0x0000},
@@ -603,7 +588,7 @@ StandardEntry data_ov024_02112f40[50] = {
     {0x00fe, (s16)0xe977, 0x0017, 0x007c, 0x0000, 0x0000, 0x0000, 0x0004},
     {0x001c, (s16)0xe7be, 0x0000, 0x00ec, 0x0000, 0x0000, 0x0000, 0xffff}};
 
-Clps_02113260 data_ov024_02113260 = {
+CLPS_Block1376 data_ov024_02113260 = {
     0x53504c43,
     0x0008,
     0x00a8,
@@ -662,5 +647,6 @@ Clps_02113260 data_ov024_02113260 = {
      {0x00340008, 0x00000017}, {0x00340008, 0x00000015}, {0x00340008, 0x00000014},
      {0x00340008, 0x00000019}, {0x00340008, 0x0000001e}, {0x00340008, 0x0000001c},
      {0x00340008, 0x0000001d}, {0x00340008, 0x0000001b}, {0x00340008, 0x0000001a},
-     {0x00042008, 0x000000ff}, {0x00044008, 0x000000ff}, {0x00040008, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff}};
+     {0x00042008, 0x000000ff}, {0x00044008, 0x000000ff}, {0x00040008, 0x000000ff},
+     {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};

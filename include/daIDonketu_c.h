@@ -77,7 +77,7 @@ struct daIDonketu_c : daOts_c {
        deadstrip-data so romdata_check word-compares them against the cartridge. */
     int Behavior();                  /* slot  6 */
     int InitResources();             /* slot  0 */
-    virtual int UpdateRunState();    /* slot 31 */
+    virtual void UpdateRunState();   /* slot 31 */
     virtual void UpdateDeathState(); /* slot 32 */
 };
 

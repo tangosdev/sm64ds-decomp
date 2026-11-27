@@ -16,6 +16,7 @@
  * - func_0201267c is an enrolled Sound.cpp forwarder to Sound::Play;
  *   this TU retains its existing free-function call.
  */
+#include "CLPS.h"
 #include "daPiano_c.h"
 #include "daPiano_c_resources.h"
 #include "SharedFilePtr.h"
@@ -47,8 +48,12 @@ struct PianoAnimationFilePtr : SharedFilePtr {
 extern PianoModelFilePtr sPianoModelFile;
 extern PianoCollisionFilePtr sPianoCollisionFile;
 extern PianoAnimationFilePtr sPianoAttackAnimationFile;
-int data_ov063_0211ecb8[8] = {0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff,
-                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
+CLPS_Block data_ov063_0211ecb8 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x01000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 /* Reconstructed registry name; the class identity is backed by retail RTTI.
  * Historical alias: daPiano_c_Spawn. The inherited allocator and native
@@ -85,10 +90,7 @@ int daPiano_c::InitResources() {
         cylinder++;
     }
     f = dBgW_Kc::LoadFile(sPianoCollisionFile);
-    mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x199, mAngle.y,
-                          /* Kept (#821 r76): genuine; this TU defines the CLPS block as its words
-                             and CLPS_Block is opaque (CLPS.h). */
-                          *(CLPS_Block *)&data_ov063_0211ecb8);
+    mMeshCollider.SetFile((KCL_File *)f, mClsnMat, 0x199, mAngle.y, data_ov063_0211ecb8);
     UpdateModelMatrix();
     UpdateClsnMatrix();
     UpdateShadows();

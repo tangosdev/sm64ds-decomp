@@ -58,13 +58,6 @@ struct TrapCollisionFilePtr : SharedFilePtr {
 /* The block the door's mesh collider takes. CLPS.h keeps CLPS_Block opaque:
    an eight-byte header whose halfword at +4 is the entry stride, then one
    eight-byte CLPS per collider class. */
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
 
 extern CLPS_Block data_ov010_021122f8;
 extern TrapModelFilePtr data_ov010_02112d08;

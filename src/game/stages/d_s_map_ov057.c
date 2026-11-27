@@ -6,38 +6,6 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[1];
-    u32 tail[4];
-} Clps_0211153c;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[1];
-    u32 tail[4];
-} Clps_0211155c;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_0211157c;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[1];
-    u32 tail[4];
-} Clps_0211159c;
-
 extern const fx32 data_ov057_021111a0[1];
 extern const fx32 data_ov057_021111a4[1];
 extern const BTAMaterialRecord data_ov057_021111a8[1];
@@ -55,10 +23,10 @@ extern char data_ov057_021114e8[14];
 extern StandardEntry data_ov057_021114f8[1];
 extern BTA_File data_ov057_02111508;
 extern LevelRec data_ov057_02111520;
-extern Clps_0211153c data_ov057_0211153c;
-extern Clps_0211155c data_ov057_0211155c;
-extern Clps_0211157c data_ov057_0211157c;
-extern Clps_0211159c data_ov057_0211159c;
+extern CLPS_Block data_ov057_0211153c;
+extern CLPS_Block data_ov057_0211155c;
+extern CLPS_Block data_ov057_0211157c;
+extern CLPS_Block data_ov057_0211159c;
 extern ObjSubTable data_ov057_021115bc[6];
 extern StandardEntry data_ov057_021115ec[18];
 
@@ -123,36 +91,32 @@ LevelRec data_ov057_02111520 = {(struct CLPS_Block *)&data_ov057_0211157c,
                                 0x0708,
                                 0x0000004f};
 
-Clps_0211153c data_ov057_0211153c = {
+CLPS_Block data_ov057_0211153c = {
     0x53504c43,
     0x0008,
     0x0001,
-    {{0x0003cfc7, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+    {{0x0003cfc7, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
-Clps_0211155c data_ov057_0211155c = {
+CLPS_Block data_ov057_0211155c = {
     0x53504c43,
     0x0008,
     0x0001,
-    {{0x0003cfc7, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+    {{0x0003cfc7, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
-Clps_0211157c data_ov057_0211157c = {
+CLPS_Block data_ov057_0211157c = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00080fc0, 0x000000ff}, {0x01000fc0, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00080fc0, 0x000000ff}, {0x01000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
-Clps_0211159c data_ov057_0211159c = {
+CLPS_Block data_ov057_0211159c = {
     0x53504c43,
     0x0008,
     0x0001,
-    {{0x0003cfc7, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+    {{0x0003cfc7, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
 ObjSubTable data_ov057_021115bc[6] = {

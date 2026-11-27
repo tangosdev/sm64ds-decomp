@@ -11,8 +11,6 @@
 // Notes (measured spellings that do not match):
 // - Behavior and UpdateDeathState each build the coin position in separate
 //   locals. `pos.y = mPos.y + 0x136000` costs 9 words of Behavior.
-// - mStateTimer is read and written through a u16 pointer. A plain member
-//   increment does not match UpdateRunState.
 // - The four Play*Sound methods call Sound.h's func_0201267c, the
 //   position-relative sound veneer, with mCamSpacePos.
 // - TurnTowardPlayer and func_ov064_0211616c are daOts_c's shared steppers
@@ -135,27 +133,20 @@ void daDonketu_c::UpdateDeathState() {
 /* Below ten ticks the bully stands still and plays the wind-up through the
  * shared daOts_c stepper; from ten on it charges at 0xf000 and the cycle timer
  * wraps at 0x2c. The Big Bully's override is the same shape with a faster charge
- * and a shorter cycle. The s16 timer is compared unsigned (blo), hence the u16
- * conversions; the wind-up arm's u16* leaves the timer's address in r0, which
- * plain member access does not (5 words differ). */
-int daDonketu_c::UpdateRunState() {
+ * and a shorter cycle. The ROM uses r0 as a scratch register in both arms, which
+ * mwcc only does when nothing is returned, so the slot is void. */
+void daDonketu_c::UpdateRunState() {
     if (mStateTimer < 10) {
         mHorzSpeed = 0;
-        int result = TurnTowardPlayer(0x700);
-        if (result != 0)
-            return result;
-        u16 *timer = &mStateTimer;
-        if (*timer == 9)
-            *timer = 0;
-        return (int)timer;
+        if (TurnTowardPlayer(0x700))
+            return;
+        if (mStateTimer == 9)
+            mStateTimer = 0;
+    } else {
+        mHorzSpeed = 0xf000;
+        if (mStateTimer > 44)
+            mStateTimer = 0;
     }
-    mHorzSpeed = 0xf000;
-    u16 timer = mStateTimer;
-    if (timer > 44) {
-        timer = 0;
-        mStateTimer = 0;
-    }
-    return timer;
 }
 
 /* Frames 4 and 7 of the walk cycle are the two footfalls. */

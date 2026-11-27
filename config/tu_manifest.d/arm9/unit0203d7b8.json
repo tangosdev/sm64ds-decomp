@@ -11,7 +11,7 @@
     "end edge (high): SaveData2 0x02042804..0x02042fe4 is its own unit; its private magic data_020a4b40 is referenced by its three functions and nothing else.",
     "static init: the bare bx lr .init at 0x02075150 and its .ctors word 0x02086bb4 directly follow cstd::sqrt's, the unit before; the next .init (0x02075154) is fListNode's, which comes after SaveData2 and ActorBase in .text, neither of which has one.",
     "data window (relocs.txt): the bss run from 0x020a0ef0 (status words, send packet data_020a1020, input records data_020a1040/data_020a1154, parent parameters data_020a1064, download-play profiles data_020a10a4/10fc) is referenced by the link functions and the wireless functions alike, their words interleaved.",
-    "inlining: func_0203ea5c carries func_0203da4c's body inline; mwccarm inlines only within one file, and with reverse source emission func_0203ea5c precedes func_0203da4c in the source."
+    "inlining: func_0203ea5c carries ClearLinkErrors inline; mwccarm inlines only within one file, and with reverse source emission func_0203ea5c precedes ClearLinkErrors in the source."
   ],
   "sections": [
     {
@@ -180,21 +180,21 @@
       "ordinal": 18
     },
     {
-      "symbol": "func_0203da4c",
+      "symbol": "ClearLinkErrors",
       "address": "0x0203da4c",
       "size": "0x00000034",
       "legacy_source": "src/unnamed/arm9/0203/func_0203da4c.c",
       "ordinal": 19
     },
     {
-      "symbol": "func_0203da80",
+      "symbol": "GetLinkStatus",
       "address": "0x0203da80",
       "size": "0x0000001c",
       "legacy_source": "src/unnamed/arm9/0203/func_0203da80.c",
       "ordinal": 20
     },
     {
-      "symbol": "func_0203da9c",
+      "symbol": "GetLocalPlayerId",
       "address": "0x0203da9c",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0203/func_0203da9c.c",
@@ -250,14 +250,14 @@
       "ordinal": 28
     },
     {
-      "symbol": "func_0203db3c",
+      "symbol": "SetLinkByte",
       "address": "0x0203db3c",
       "size": "0x00000010",
       "legacy_source": "src/unnamed/arm9/0203/func_0203db3c.c",
       "ordinal": 29
     },
     {
-      "symbol": "GetPlayerFlagByte",
+      "symbol": "GetLinkByte",
       "address": "0x0203db4c",
       "size": "0x00000018",
       "legacy_source": "src/GetPlayerFlagByte.c",
@@ -1013,7 +1013,7 @@
       "evidence": "s16 measured channel value returned by the channel-measure callback"
     },
     {
-      "symbol": "data_020a0f1c",
+      "symbol": "gLinkStatusFlags",
       "address": "0x020a0f1c",
       "size": "0x2",
       "binding": "STB_GLOBAL",
@@ -1880,7 +1880,7 @@
       "requested": [],
       "deadstripped": [],
       "droppedSections": [
-        5
+        16
       ],
       "data": [
         "sEmptyInit"

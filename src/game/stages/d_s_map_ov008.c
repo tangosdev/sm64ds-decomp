@@ -6,14 +6,6 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[21];
-    u32 tail[4];
-} Clps_02111508;
-
 /* The ROM image carries zero halfword padding after these records out to the
  * next object's alignment, and the end of .data is zero-filled to the section's
  * 32-byte boundary. Those bytes belong to the record's own extent as far as the
@@ -59,7 +51,7 @@ extern StandardEntry data_ov008_021113c0[4];
 extern StandardEntry data_ov008_02111400[5];
 extern ObjSubTable data_ov008_02111450[11];
 extern SimpleEntry data_ov008_021114a8[12];
-extern Clps_02111508 data_ov008_02111508;
+extern CLPS_Block192 data_ov008_02111508;
 extern StandardEntry data_ov008_021115c8[47];
 extern SimpleEntries107 data_ov008_021118b8;
 
@@ -212,20 +204,18 @@ SimpleEntry data_ov008_021114a8[12] = {
     {0xe225, 0x08ca, 0x0000, 0x0578},      {0xe225, 0x08ca, 0x0000, 0x0514},
 };
 
-Clps_02111508 data_ov008_02111508 = {
+CLPS_Block192 data_ov008_02111508 = {
     0x53504c43,
     8,
     21,
-    {
-        {0x00040fc0, 0x00000002}, {0x00040fc0, 0x000000ff}, {0x00440fc8, 0x00000001},
-        {0x00040fc0, 0x00000000}, {0x00040fc2, 0x000000ff}, {0x00040fc6, 0x000000ff},
-        {0x00040fc9, 0x000000ff}, {0x00040fc7, 0x000000ff}, {0x00040fc5, 0x000000ff},
-        {0x00040fc1, 0x000000ff}, {0x00040fc3, 0x000000ff}, {0x00040fc4, 0x000000ff},
-        {0x00040fc8, 0x000000ff}, {0x00000fc0, 0x000000ff}, {0x00040fcc, 0x000000ff},
-        {0x018c0fcc, 0x000000ff}, {0x011c0fcc, 0x000000ff}, {0x001c0fc0, 0x000000ff},
-        {0x04040fc0, 0x000000ff}, {0x01040fc0, 0x000000ff}, {0x00040fe0, 0x000000ff},
-    },
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+    {{0x00040fc0, 0x00000002}, {0x00040fc0, 0x000000ff}, {0x00440fc8, 0x00000001},
+     {0x00040fc0, 0x00000000}, {0x00040fc2, 0x000000ff}, {0x00040fc6, 0x000000ff},
+     {0x00040fc9, 0x000000ff}, {0x00040fc7, 0x000000ff}, {0x00040fc5, 0x000000ff},
+     {0x00040fc1, 0x000000ff}, {0x00040fc3, 0x000000ff}, {0x00040fc4, 0x000000ff},
+     {0x00040fc8, 0x000000ff}, {0x00000fc0, 0x000000ff}, {0x00040fcc, 0x000000ff},
+     {0x018c0fcc, 0x000000ff}, {0x011c0fcc, 0x000000ff}, {0x001c0fc0, 0x000000ff},
+     {0x04040fc0, 0x000000ff}, {0x01040fc0, 0x000000ff}, {0x00040fe0, 0x000000ff},
+     {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
 StandardEntry data_ov008_021115c8[47] = {

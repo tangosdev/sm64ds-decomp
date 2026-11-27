@@ -30,21 +30,6 @@ typedef struct {
 
 /* The fixed 0x20-byte collision-property block actors hand to
  * dBgW_Kc::SetFile: two entry slots and all-ones filler. */
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[25];
-    u32 tail[4];
-} Clps_0211510c;
 
 extern const u16 data_ov030_02114690[2];
 extern const fx32 data_ov030_02114694[1];
@@ -77,7 +62,7 @@ extern ObjSubTable data_ov030_02114fac[9];
 extern StandardEntry data_ov030_02114ff4[5];
 extern ObjSubTable data_ov030_02115044[10];
 extern PathNode data_ov030_02115094[20];
-extern Clps_0211510c data_ov030_0211510c;
+extern CLPS_Block224 data_ov030_0211510c;
 extern SimpleEntry data_ov030_021151ec[101];
 extern StandardEntry data_ov030_02115514[66];
 
@@ -189,28 +174,24 @@ PathDefsPad data_ov030_02114ec4 = {
     0x0000,
 };
 
-CLPS_Block data_ov030_02114ee4 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {
-                                      {0x01000fc0, 0x000000ff},
-                                      {0xffffffff, 0xffffffff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov030_02114ee4 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x01000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 StandardEntry data_ov030_02114f04[2] = {
     {0x0014, 0x105a, (s16)0xf2ad, 0x0863, 0x0003, 0x0000, 0x0000, 0xffff},
     {0x00ef, (s16)0xfb1e, (s16)0xf1dc, 0x14e6, 0x0000, 0x4000, 0x0000, 0xffff},
 };
 
-CLPS_Block data_ov030_02114f24 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {
-                                      {0x00001fc5, 0x000000ff},
-                                      {0xffffffff, 0xffffffff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov030_02114f24 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00001fc5, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 StandardEntry data_ov030_02114f44[3] = {
     {0x009c, 0x0419, 0x08cc, 0x0120, 0x0000, 0x0000, 0x0000, 0x0001},
@@ -271,22 +252,20 @@ PathNode data_ov030_02115094[20] = {
     {0x076c, (s16)0xee6e, 0x1068},      {0x0258, (s16)0xee6c, 0x10cc},
 };
 
-Clps_0211510c data_ov030_0211510c = {
+CLPS_Block224 data_ov030_0211510c = {
     0x53504c43,
     0x0008,
     0x0019,
-    {
-        {0x01050fc2, 0x000000ff}, {0x011d0fc2, 0x000000ff}, {0x01050fc5, 0x000000ff},
-        {0x00050fc4, 0x000000ff}, {0x00054fc4, 0x000000ff}, {0x0005afc5, 0x000000ff},
-        {0x00058fc4, 0x000000ff}, {0x01000000, 0x000000ff}, {0x04000fc0, 0x000000ff},
-        {0x00000fc0, 0x000000ff}, {0x00040fe0, 0x000000ff}, {0x00200000, 0x000000ff},
-        {0x00980fc0, 0x000000ff}, {0x00340002, 0x000000ff}, {0x00040004, 0x00000002},
-        {0x00040004, 0x00000003}, {0x00040004, 0x00000004}, {0x00040000, 0x000000ff},
-        {0x018c0fcc, 0x000000ff}, {0x01040005, 0x000000ff}, {0x01040004, 0x000000ff},
-        {0x00040004, 0x000000ff}, {0x00042004, 0x000000ff}, {0x00042000, 0x000000ff},
-        {0x00044004, 0x000000ff},
-    },
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff}};
+    {{0x01050fc2, 0x000000ff}, {0x011d0fc2, 0x000000ff}, {0x01050fc5, 0x000000ff},
+     {0x00050fc4, 0x000000ff}, {0x00054fc4, 0x000000ff}, {0x0005afc5, 0x000000ff},
+     {0x00058fc4, 0x000000ff}, {0x01000000, 0x000000ff}, {0x04000fc0, 0x000000ff},
+     {0x00000fc0, 0x000000ff}, {0x00040fe0, 0x000000ff}, {0x00200000, 0x000000ff},
+     {0x00980fc0, 0x000000ff}, {0x00340002, 0x000000ff}, {0x00040004, 0x00000002},
+     {0x00040004, 0x00000003}, {0x00040004, 0x00000004}, {0x00040000, 0x000000ff},
+     {0x018c0fcc, 0x000000ff}, {0x01040005, 0x000000ff}, {0x01040004, 0x000000ff},
+     {0x00040004, 0x000000ff}, {0x00042004, 0x000000ff}, {0x00042000, 0x000000ff},
+     {0x00044004, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 const fx32 data_ov030_021146b4[92] = {
     0x00000000, 0x00000000, 0xffffff77, 0xfffffeef, 0xfffffe66, 0xfffffdde, 0xfffffd55, 0xfffffccd,

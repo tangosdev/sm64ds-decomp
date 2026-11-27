@@ -601,9 +601,7 @@ void daOts_c::Step() {
 
 /* -------------------------------------------------------------------------- */
 /* Slot 31, called from STATE_CHASE. Empty here; every child overrides it. */
-int daOts_c::UpdateRunState()
-{
-}
+void daOts_c::UpdateRunState() {}
 
 /* -------------------------------------------------------------------------- */
 /* STATE_CHASE's body: runs the child's UpdateRunState, then, unless the player is

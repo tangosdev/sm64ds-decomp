@@ -5,14 +5,6 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} Clps_02111254;
-
 extern s16 data_ov038_021111c0[1];
 extern u16 data_ov038_021111c4[1];
 extern u32 data_ov038_021111c8[1];
@@ -24,7 +16,7 @@ extern u8 data_ov038_021111f8[16];
 extern ObjSubTable data_ov038_02111208[2];
 extern LevelRec data_ov038_02111218;
 extern StandardEntry data_ov038_02111234[2];
-extern Clps_02111254 data_ov038_02111254;
+extern CLPS_Block data_ov038_02111254;
 extern ObjSubTable data_ov038_02111274[6];
 extern StandardEntry data_ov038_021112a4[4];
 extern SimpleEntry data_ov038_021112e4[65];
@@ -71,12 +63,11 @@ StandardEntry data_ov038_02111234[2] = {
     {0x0031, 0x0000, (s16)0xf1f0, 0x0000, 0x0000, 0x0000, 0x0000, 0x0017},
 };
 
-Clps_02111254 data_ov038_02111254 = {
+CLPS_Block data_ov038_02111254 = {
     0x53504c43,
     0x0008,
     0x0002,
-    {{0x00040fc0, 0x000000ff}, {0x00040fe0, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00040fc0, 0x000000ff}, {0x00040fe0, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
 ObjSubTable data_ov038_02111274[6] = {

@@ -7,14 +7,6 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[54];
-    u32 tail[2];
-} Clps_02114668;
-
 /* The ROM image carries a zero halfword of alignment padding after these
  * records, so it is written as part of the object. */
 typedef struct {
@@ -105,7 +97,7 @@ extern ViewEntries21 data_ov020_02114184;
 extern DoorEntry data_ov020_021142ac[25];
 extern StandardEntry data_ov020_021143d8[19];
 extern StandardEntry data_ov020_02114508[22];
-extern Clps_02114668 data_ov020_02114668;
+extern CLPS_Block448 data_ov020_02114668;
 
 const u16 data_ov020_021134e4[2] = {0, 0};
 
@@ -560,7 +552,7 @@ const fx32 data_ov020_02113508[91] = {
     0x00000e39, 0x00000e66, 0x00000e94, 0x00000ec1, 0x00000eef, 0x00000f1c, 0x00000f4a, 0x00000f77,
     0x00000fa5, 0x00000fd2, 0x00001000};
 
-Clps_02114668 data_ov020_02114668 = {
+CLPS_Block448 data_ov020_02114668 = {
     0x53504c43,
     8,
     54,
@@ -581,6 +573,6 @@ Clps_02114668 data_ov020_02114668 = {
      {0x00040205, 0x000000ff}, {0x00040445, 0x000000ff}, {0x00040200, 0x000000ff},
      {0x00040440, 0x000000ff}, {0x00042484, 0x000000ff}, {0x00040145, 0x000000ff},
      {0x00040185, 0x000000ff}, {0x00040505, 0x000000ff}, {0x000401c0, 0x000000ff},
-     {0x01040fc4, 0x000000ff}, {0x000401c5, 0x000000ff}, {0x000401c4, 0x000000ff}},
-    {0xffffffff, 0xffffffff},
+     {0x01040fc4, 0x000000ff}, {0x000401c5, 0x000000ff}, {0x000401c4, 0x000000ff},
+     {0xffffffff, 0xffffffff}},
 };

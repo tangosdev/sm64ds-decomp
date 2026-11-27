@@ -79,9 +79,17 @@ import tu_manifest as TUM  # noqa: E402
 
 _SYM_RE = re.compile(r"^(\S+)\s+kind:(\S+?)[\s(].*?addr:0x([0-9a-fA-F]+)")
 
-# VERIFIED  every byte of the ROM's extent for this symbol was compared and equal
+# VERIFIED  every byte of the ROM's extent for this symbol is accounted for: the
+#           emitted object compared equal for its full length, and any remainder
+#           up to the next symbol is all zero in the cartridge -- bytes no source
+#           has to emit, because the toolchain zero-fills every alignment gap
+#           (the compiler inside one input section, mwldarm's ALIGNALL between
+#           them), so the linked image reproduces them with no padding member.
+#           The upgrade never applies to a nonzero remainder: a 0xff-padded CLPS
+#           lump's tail is real object content the source must emit.
 # PARTIAL   everything compared was equal, but the coverage is short -- the object
-#           emitted fewer bytes than the ROM's extent, or some words were blind
+#           emitted fewer bytes than the ROM's extent and the remainder is not all
+#           zero-fill, or some words were blind
 # DIFFERS   at least one compared byte disagreed
 # UNNAMED   no symbols.txt entry gives this symbol an address; nothing to compare to
 VERIFIED, PARTIAL, DIFFERS, UNNAMED = "VERIFIED", "PARTIAL", "DIFFERS", "UNNAMED"
@@ -232,6 +240,13 @@ def _measurement_object(raw, rel, names):
     for field in ("rodata", "init", "ctor", "data", "bss", "exception", "exceptix"):
         for row in entry.get(field, []) or []:
             owned[row["symbol"]].append(row)
+    # A compiler-local function the manifest links STB_GLOBAL is a relocation
+    # target the linker resolves by name: mwcc's own `__sinit_<file>.cpp`, which
+    # its `.p__sinit_<file>.cpp` ctor word points at. Its owned `init` row places it
+    # exactly as an owned object row places a named local string.
+    linked_global = {row.get("symbol") for row in
+                     entry.get("symbol_binding_rewrites", []) or []
+                     if isinstance(row, dict) and row.get("to") == "STB_GLOBAL"}
     table = ELFFile(io.BytesIO(renamed)).get_section_by_name(".symtab")
     for symbol in table.iter_symbols():
         if (symbol.name and symbol["st_info"]["bind"] == "STB_LOCAL"
@@ -239,9 +254,12 @@ def _measurement_object(raw, rel, names):
             contextual[symbol.name] = (None, None)
             rows = owned.get(symbol.name, [])
             home = registry.get((module, symbol.name))
+            kind = symbol["st_info"]["type"]
             # Named local strings need no rename. Admit them only when this
             # object's definition, its sole owned row and the registry agree.
-            if (len(rows) == 1 and home and symbol["st_info"]["type"] == "STT_OBJECT"
+            if (len(rows) == 1 and home
+                    and (kind == "STT_OBJECT"
+                         or (kind == "STT_FUNC" and symbol.name in linked_global))
                     and symbol["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")
                     and int(str(rows[0].get("address", "-1")), 0) == home[0]
                     and int(str(rows[0].get("size", "-1")), 0) == symbol["st_size"]):
@@ -322,8 +340,12 @@ def rom_data_index():
     `extent` is the distance to the next BOUNDARY in the same module, which is the only
     size information available: `symbols.txt` writes data as `kind:data(any)` with no
     size, while functions carry one. It is an upper bound on the object -- a trailing
-    alignment gap belongs to nobody -- so a short compare is reported PARTIAL rather
-    than being silently rounded up into a pass.
+    alignment gap belongs to nobody -- so a short compare is not verified on the
+    emitted bytes alone. It is still verified when the remainder the compare cannot
+    reach is all zero in the cartridge, because the toolchain zero-fills alignment
+    gaps and the linked image reproduces those bytes without any source emitting
+    them; a nonzero remainder stays PARTIAL, since those bytes are real object
+    content only the source can emit.
 
     A boundary is any symbol address, plus the start of each vtable OBJECT whose
     preamble `_vtable_preamble_at` can see in the cartridge. Without that second kind
@@ -491,12 +513,47 @@ def verify_data_symbol(raw, name, shndx, value, size, names=None):
     if differing:
         rec["verdict"] = DIFFERS
         rec["differingBytes"] = differing
-    elif (compared and compared == len(linked) and not blind
-          and extent is not None and compared >= extent):
-        rec["verdict"] = VERIFIED
+    elif compared and compared == len(linked) and not blind and extent is not None:
+        # Every emitted byte compared equal and nothing is blind. What remains is
+        # only a question of coverage against the next-symbol extent.
+        if compared >= extent:
+            rec["verdict"] = VERIFIED
+        else:
+            fill = _zero_fill_tail(module, addr + len(linked), extent - len(linked))
+            if fill:
+                # The object is honestly short of the next symbol -- nothing in the
+                # source spans the gap -- and the cartridge bytes there are all zero.
+                # Those zeros are not object content the source is missing: the
+                # toolchain zero-fills every alignment gap (the compiler padding one
+                # input section, mwldarm's ALIGNALL between them), so the linked
+                # image carries exactly these bytes with no padding member emitted.
+                # The whole extent is proven, and `bytes` says so. A nonzero tail
+                # never reaches here -- it is real object content (the 0xff-padded
+                # CLPS lumps) and stays PARTIAL.
+                rec["verdict"] = VERIFIED
+                rec["bytes"] = extent
+                rec["fillBytes"] = extent - len(linked)
+                rec["note"] = (f"linker zero-fill covers the trailing "
+                               f"{extent - len(linked)} byte(s) to the next symbol")
+            else:
+                rec["verdict"] = PARTIAL
     else:
         rec["verdict"] = PARTIAL
     return rec
+
+
+def _zero_fill_tail(module, addr, size):
+    """True when `size` cartridge bytes at `addr` are present and all zero.
+
+    The evidence for a linker-fill upgrade: the module image really does carry zeros
+    across the whole gap between the end of the emitted object and the next symbol.
+    A module image that cannot be read, or one that ends inside the gap, is not
+    evidence -- the short coverage keeps its PARTIAL.
+    """
+    if size <= 0:
+        return False
+    gap = RV.rom_bytes(module, addr, size)
+    return gap is not None and len(gap) >= size and not any(gap[:size])
 
 
 def check_object(obj_path, rel, names=None):
@@ -614,6 +671,13 @@ def summarize(records):
     differing_symbols = sorted(
         (_identity(r) for r in best.values() if r["verdict"] == DIFFERS),
         key=lambda r: (r["module"] or "", r["symbol"]))
+    # How much of the verified population stands on the linker zero-fill upgrade
+    # rather than on full emitted coverage. Transparent because the grading is a
+    # linker-semantics inference on top of a byte compare: the prefix is measured,
+    # the zero tail is proven reproduced rather than emitted. The count is of
+    # unique symbols at their best verdict, same as `verified` itself.
+    verified_align_fill = sum(1 for r in best.values()
+                              if r["verdict"] == VERIFIED and r.get("fillBytes"))
     return {
         "symbols": len(best),
         "verified": symbol_counts[VERIFIED],
@@ -622,6 +686,7 @@ def summarize(records):
         "unnamed": symbol_counts[UNNAMED],
         "verifiedBytes": verified_bytes,
         "partialBytes": partial_bytes,
+        "verifiedAlignFill": verified_align_fill,
         # Identities, not only a count. A count-only ratchet can lose one known-good
         # vtable while gaining an unrelated one and report no regression at all.
         "verifiedSymbols": verified_symbols,
@@ -690,8 +755,10 @@ def main():
     report["sourcesChecked"] = len(sources)
     print(f"data symbols emitted by {len(sources):,} enrolled source(s): "
           f"{report['symbols']:,}")
+    fill_note = (f"; {report['verifiedAlignFill']:,} closed by linker zero-fill"
+                 if report.get("verifiedAlignFill") else "")
     print(f"  VERIFIED {report['verified']:,}  ({report['verifiedBytes']:,} bytes "
-          f"equal to the cartridge)")
+          f"equal to the cartridge{fill_note})")
     print(f"  PARTIAL  {report['partial']:,}  ({report['partialBytes']:,} bytes equal, "
           f"coverage short of the ROM's extent)")
     print(f"  DIFFERS  {report['differs']:,}")

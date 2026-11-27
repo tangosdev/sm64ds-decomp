@@ -75,9 +75,119 @@ struct CLPS {
 typedef char CLPS_size_must_be_0x8[sizeof(struct CLPS) == 0x8 ? 1 : -1];
 
 /* The block a level or actor hands to dBgW_Kc::SetFile: an 8-byte header
- * whose halfword at +4 is the entry stride, then N entries. Kept opaque because
- * the first four bytes are read by nothing in src/ -- func_020381cc validates
- * +4 and indexes from +8, and no other function touches the header. */
-struct CLPS_Block;
+ * whose halfword at +4 is the entry stride, then a fixed-size entry storage
+ * span. The count halfword says how many leading entries are valid; unused
+ * entries in the retail data are all-ones words, not zero padding.
+ *
+ * The storage span is padded by entries out to a 0x20-byte multiple. Since
+ * the header is 8 bytes, a 0x20-byte block has room for three entries even
+ * when count is only one or two. Larger collision sets use the sized spellings
+ * below; the suffix is the object's byte size. These are separate types rather
+ * than one variable-length type because the stage-map objects have fixed ROM
+ * extents and mwccarm sorts data objects by sizeof. */
+typedef struct CLPS_Block {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[3];
+} CLPS_Block;
+
+typedef struct CLPS_Block64 {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[7];
+} CLPS_Block64;
+
+typedef struct CLPS_Block96 {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[11];
+} CLPS_Block96;
+
+typedef struct CLPS_Block128 {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[15];
+} CLPS_Block128;
+
+typedef struct CLPS_Block160 {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[19];
+} CLPS_Block160;
+
+typedef struct CLPS_Block192 {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[23];
+} CLPS_Block192;
+
+typedef struct CLPS_Block224 {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[27];
+} CLPS_Block224;
+
+typedef struct CLPS_Block256 {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[31];
+} CLPS_Block256;
+
+typedef struct CLPS_Block288 {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[35];
+} CLPS_Block288;
+
+typedef struct CLPS_Block320 {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[39];
+} CLPS_Block320;
+
+typedef struct CLPS_Block448 {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[55];
+} CLPS_Block448;
+
+typedef struct CLPS_Block800 {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[99];
+} CLPS_Block800;
+
+typedef struct CLPS_Block1376 {
+    u32 tag;
+    u16 stride;
+    u16 count;
+    struct CLPS entries[171];
+} CLPS_Block1376;
+
+typedef char CLPS_Block_size_must_be_0x20[sizeof(CLPS_Block) == 0x20 ? 1 : -1];
+typedef char CLPS_Block64_size_must_be_0x40[sizeof(CLPS_Block64) == 0x40 ? 1 : -1];
+typedef char CLPS_Block96_size_must_be_0x60[sizeof(CLPS_Block96) == 0x60 ? 1 : -1];
+typedef char CLPS_Block128_size_must_be_0x80[sizeof(CLPS_Block128) == 0x80 ? 1 : -1];
+typedef char CLPS_Block160_size_must_be_0xa0[sizeof(CLPS_Block160) == 0xa0 ? 1 : -1];
+typedef char CLPS_Block192_size_must_be_0xc0[sizeof(CLPS_Block192) == 0xc0 ? 1 : -1];
+typedef char CLPS_Block224_size_must_be_0xe0[sizeof(CLPS_Block224) == 0xe0 ? 1 : -1];
+typedef char CLPS_Block256_size_must_be_0x100[sizeof(CLPS_Block256) == 0x100 ? 1 : -1];
+typedef char CLPS_Block288_size_must_be_0x120[sizeof(CLPS_Block288) == 0x120 ? 1 : -1];
+typedef char CLPS_Block320_size_must_be_0x140[sizeof(CLPS_Block320) == 0x140 ? 1 : -1];
+typedef char CLPS_Block448_size_must_be_0x1c0[sizeof(CLPS_Block448) == 0x1c0 ? 1 : -1];
+typedef char CLPS_Block800_size_must_be_0x320[sizeof(CLPS_Block800) == 0x320 ? 1 : -1];
+typedef char CLPS_Block1376_size_must_be_0x560[sizeof(CLPS_Block1376) == 0x560 ? 1 : -1];
 
 #endif /* CLPS_H */

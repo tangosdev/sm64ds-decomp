@@ -208,6 +208,147 @@ class DataSymbolByteCoverage(unittest.TestCase):
         self.assertEqual(result["blindWords"], 1)
 
 
+class LinkerZeroFillExtentUpgrade(unittest.TestCase):
+    """A fully-matching object short of its extent is VERIFIED when the rest is zero.
+
+    mwldarm zero-fills every alignment gap (ALIGNALL between input sections, the
+    compiler inside one), so the bytes between the end of an honest unpadded object
+    and the next symbol are reproduced by the link itself. Where the cartridge shows
+    all zeros across that remainder the object needs no padding member, and grading
+    it PARTIAL is what pressed the fake `u16 pad` structs into the stage sources.
+    A nonzero remainder is real object content -- the 0xff-padded CLPS lumps -- and
+    never upgrades.
+    """
+
+    def check(self, emitted, image, *, extent, relocs=(), name="data_table"):
+        # `image` is the module image starting at the symbol address 0x200, so the
+        # gap fetch reads exactly the bytes the extent covers.
+        base = 0x200
+
+        def rom_bytes(module, addr, size):
+            off = addr - base
+            if off < 0:
+                return None
+            return image[off:off + size]
+
+        elf = unittest.mock.Mock()
+        elf.get_section.return_value.data.return_value = b"prefix" + emitted + b"suffix"
+        with (unittest.mock.patch.object(RDC, "ELFFile", return_value=elf),
+              unittest.mock.patch.object(RDC.RA, "resolve_candidate",
+                                         return_value=("arm9", base)),
+              unittest.mock.patch.object(RDC, "rom_data_index",
+                                         return_value={("arm9", name): (base, extent)}),
+              unittest.mock.patch.object(RDC.LC, "func_relocs_typed",
+                                         return_value=[dict(r) for r in relocs]),
+              unittest.mock.patch.object(RDC.RV, "rom_bytes", side_effect=rom_bytes)):
+            return RDC.verify_data_symbol(b"object", name, 1, 6, len(emitted), names={})
+
+    @staticmethod
+    def relocation(offset, address=None, kind=RDC.LC.R_ARM_ABS32):
+        return {"off": offset, "addr": address, "type": kind, "add": 0,
+                "sym": "referenced_data"}
+
+    def test_an_all_zero_remainder_upgrades_to_verified(self):
+        # The 0xe-byte ExitEntry shape: 70 bytes of object, two zeros to the next
+        # symbol -- exactly ALIGNALL(4) linker fill.
+        emitted = bytes(range(0x0e))
+        image = emitted + b"\0\0" + b"next-symbol"
+        result = self.check(emitted, image, extent=0x10)
+        self.assertEqual(result["verdict"], RDC.VERIFIED)
+        self.assertEqual(result["bytes"], 0x10)
+        self.assertEqual(result["fillBytes"], 2)
+        self.assertIn("zero-fill", result["note"])
+
+    def test_the_fill_size_is_the_whole_remaining_extent(self):
+        emitted = bytes(range(4))
+        image = emitted + b"\0" * 0x1c + b"next"
+        result = self.check(emitted, image, extent=0x20)
+        self.assertEqual(result["verdict"], RDC.VERIFIED)
+        self.assertEqual(result["bytes"], 0x20)
+        self.assertEqual(result["fillBytes"], 0x1c)
+
+    def test_a_nonzero_remainder_stays_partial(self):
+        emitted = bytes(range(0x0e))
+        image = emitted + b"\x01\0" + b"next-symbol"
+        result = self.check(emitted, image, extent=0x10)
+        self.assertEqual(result["verdict"], RDC.PARTIAL)
+        self.assertEqual(result["bytes"], 0x0e)
+        self.assertNotIn("fillBytes", result)
+
+    def test_an_ff_padded_remainder_stays_partial(self):
+        # The CLPS lump shape: the 0xff tail is real object content the source
+        # must emit, not linker fill.
+        emitted = bytes(range(0x0e))
+        image = emitted + b"\xff\xff" + b"next-symbol"
+        result = self.check(emitted, image, extent=0x10)
+        self.assertEqual(result["verdict"], RDC.PARTIAL)
+        self.assertNotIn("fillBytes", result)
+
+    def test_a_zero_then_nonzero_gap_stays_partial(self):
+        emitted = bytes(range(0x0e))
+        image = emitted + b"\0\x30" + b"next-symbol"
+        result = self.check(emitted, image, extent=0x10)
+        self.assertEqual(result["verdict"], RDC.PARTIAL)
+
+    def test_a_differing_prefix_never_upgrades(self):
+        emitted = bytearray(range(0x0e))
+        emitted[3] = 0xff
+        image = bytes(range(0x0e)) + b"\0\0" + b"next-symbol"
+        result = self.check(bytes(emitted), image, extent=0x10)
+        self.assertEqual(result["verdict"], RDC.DIFFERS)
+        self.assertNotIn("fillBytes", result)
+
+    def test_a_blind_word_never_upgrades(self):
+        emitted = b"XXXX" + bytes(range(0x0a))
+        image = b"YYYY" + bytes(range(0x0a)) + b"\0\0" + b"next-symbol"
+        result = self.check(emitted, image, extent=0x10, relocs=[self.relocation(0)])
+        self.assertEqual(result["verdict"], RDC.PARTIAL)
+        self.assertNotIn("fillBytes", result)
+
+    def test_full_coverage_verification_carries_no_fill(self):
+        emitted = bytes(range(0x10))
+        result = self.check(emitted, emitted + b"next", extent=0x10)
+        self.assertEqual(result["verdict"], RDC.VERIFIED)
+        self.assertEqual(result["bytes"], 0x10)
+        self.assertNotIn("fillBytes", result)
+        self.assertNotIn("note", result)
+
+    def test_a_gap_the_image_does_not_reach_stays_partial(self):
+        # The module image ends inside the gap: there is no evidence the remainder
+        # is zero, so the short coverage keeps its PARTIAL.
+        emitted = bytes(range(0x0e))
+        result = self.check(emitted, emitted + b"\0", extent=0x10)
+        self.assertEqual(result["verdict"], RDC.PARTIAL)
+        self.assertNotIn("fillBytes", result)
+
+    def test_zero_fill_tail_requires_the_full_length(self):
+        image = bytes(0x20)
+
+        class FakeRV:
+            @staticmethod
+            def rom_bytes(module, addr, size):
+                if module == "missing":
+                    return None
+                return image[addr - 0x200:addr - 0x200 + size]
+
+        with unittest.mock.patch.object(RDC, "RV", FakeRV):
+            self.assertTrue(RDC._zero_fill_tail("arm9", 0x200, 0x20))
+            self.assertFalse(RDC._zero_fill_tail("arm9", 0x200, 0x21))
+            self.assertFalse(RDC._zero_fill_tail("missing", 0x200, 4))
+            self.assertFalse(RDC._zero_fill_tail("arm9", 0x200, 0))
+
+    def test_summarize_counts_the_zero_fill_upgrade_transparently(self):
+        fill = dict(rec("_ZTS4Foo", RDC.VERIFIED, size=8), fillBytes=2)
+        full = rec("_ZTV4Bar", RDC.VERIFIED, size=0x20)
+        s = RDC.summarize([fill, full])
+        self.assertEqual(s["verified"], 2)
+        self.assertEqual(s["verifiedAlignFill"], 1)
+
+    def test_summarize_counts_zero_fillbytes_as_no_upgrade(self):
+        s = RDC.summarize([rec("_ZTV4Bar", RDC.VERIFIED, size=0x20)])
+        self.assertEqual(s["verifiedAlignFill"], 0)
+
+
 class ExtentStopsAtTheVtablePreamble(unittest.TestCase):
     """`symbols.txt` points `_ZTV<C>` at the slot array, so the two words below it are
     the vtable object's own offset-to-top and typeinfo and belong to no symbol at all.
@@ -488,6 +629,72 @@ class ObjectLocalDataRenames(unittest.TestCase):
         self._named_local_policy()
         self.entry['data'].append(dict(self.entry['data'][1]))
         self.assertEqual(self.check()[0]['blindWords'], 1)
+
+
+class LinkedGlobalLocalFunction(unittest.TestCase):
+    """mwcc's `.p__sinit_<file>.cpp` word points at its own local `__sinit_<file>.cpp`."""
+
+    SINIT = '__sinit_t.cpp'
+
+    def setUp(self):
+        from test_reloc_audit_renames import _elf_with_temp
+        from elftools.elf.elffile import ELFFile
+        raw = bytearray(_elf_with_temp(self.SINIT))
+        table = ELFFile(io.BytesIO(raw)).get_section_by_name('.symtab')
+        raw[table['sh_offset'] + 16 + 12] = 0x02  # the initializer: STB_LOCAL STT_FUNC
+        raw[table['sh_offset'] + 32 + 12] = 0x11  # alpha, the ctor word: global object
+        self.raw = bytes(raw)
+        self.entry = dict(
+            module='ov002', source='src/t.cpp', functions=[],
+            data=[dict(symbol='beta')],
+            init=[dict(symbol=self.SINIT, address='0x3000', size='0x4')],
+            defined_symbol_renames=[dict(**{'from': 'alpha', 'to': 'beta'},
+                                         evidence='ctor word')],
+            symbol_binding_rewrites=[dict(symbol=self.SINIT, **{'from': 'STB_LOCAL'},
+                                          to='STB_GLOBAL')])
+        self.names = {'beta': ('ov002', 0x2000)}
+        self.registry = {('ov002', 'beta'): (0x2000, 4),
+                         ('ov002', self.SINIT): (0x3000, 4)}
+        self.saved = RDC._source_manifests
+        RDC._source_manifests = {'src/t.cpp': [self.entry]}
+        self.tmp = tempfile.TemporaryDirectory()
+        self.path = pathlib.Path(self.tmp.name) / 't.o'
+        self.path.write_bytes(self.raw)
+
+    def tearDown(self):
+        RDC._source_manifests = self.saved
+        self.tmp.cleanup()
+
+    def check(self, cartridge_word=0x3000):
+        with mock.patch.object(RDC, 'rom_data_index', return_value=self.registry), \
+                mock.patch.object(RDC.RV, 'rom_bytes',
+                                  return_value=struct.pack('<I', cartridge_word)):
+            row = RDC.check_object(self.path, 'src/t.cpp', self.names)[0]
+        return row['symbol'], row['verdict'], row['blindWords']
+
+    def test_linked_global_initializer_resolves_to_its_init_row(self):
+        self.assertEqual(self.check(), ('beta', RDC.VERIFIED, 0))
+
+    def test_without_the_binding_rewrite_it_stays_blind(self):
+        self.entry['symbol_binding_rewrites'] = []
+        self.assertEqual(self.check(), ('beta', RDC.PARTIAL, 1))
+
+    def test_an_init_row_at_another_address_stays_blind(self):
+        self.entry['init'][0]['address'] = '0x9000'
+        self.assertEqual(self.check(), ('beta', RDC.PARTIAL, 1))
+
+    def test_a_cartridge_word_at_another_target_differs(self):
+        # Admitting the initializer resolves the word; it does not mask it.
+        self.assertEqual(self.check(cartridge_word=0x3100), ('beta', RDC.DIFFERS, 0))
+
+    def test_an_initializer_owned_only_as_a_function_stays_blind(self):
+        self.entry['functions'] = self.entry.pop('init')
+        self.entry['init'] = []
+        self.assertEqual(self.check(), ('beta', RDC.PARTIAL, 1))
+
+    def test_a_size_mismatch_stays_blind(self):
+        self.entry['init'][0]['size'] = '0x8'
+        self.assertEqual(self.check(), ('beta', RDC.PARTIAL, 1))
 
 
 class UndefinedImportAliases(unittest.TestCase):

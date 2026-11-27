@@ -108,7 +108,6 @@ data_ov084_021301b4 kind:data(any) addr:0x021301b4 ambiguous
 data_ov084_021301c8 kind:data(any) addr:0x021301c8
 data_ov084_02130204 kind:data(any) addr:0x02130204
 data_ov084_02130208 kind:data(any) addr:0x02130208
-data_ov084_0213020b kind:data(any) addr:0x0213020b ambiguous
 data_ov084_02130218 kind:data(any) addr:0x02130218
 data_ov084_02130228 kind:data(any) addr:0x02130228
 data_ov084_02130238 kind:data(any) addr:0x02130238

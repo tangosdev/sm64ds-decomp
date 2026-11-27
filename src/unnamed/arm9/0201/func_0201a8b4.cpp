@@ -7,8 +7,9 @@
  * re-arms itself for the rest, provided the rest is at least a millisecond
  * (ticks * 64 / (HW_SYSTEM_CLOCK / 1000), as in func_020427c4). Once the
  * limit is used up it enters the fatal-error spin (func_02013f28), unless
- * input bit 0x2000 is held. */
-extern "C" unsigned short func_0203da80(unsigned short x);
+ * the link is busy (GetLinkStatus bit 0x2000, held while a link step waits
+ * for the other consoles). */
+extern "C" unsigned short GetLinkStatus(unsigned short mask);
 
 extern "C" void func_0201a8b4(void *arg) {
     WatchdogAlarm *w = (WatchdogAlarm *)arg;
@@ -19,7 +20,7 @@ extern "C" void func_0201a8b4(void *arg) {
         if ((unsigned int)((rest << 6) / 33514) != 0)
             func_0201aa50(&w->alarm, rest, func_0201a8b4, w);
     } else {
-        if (func_0203da80(0x2000) == 0)
+        if (GetLinkStatus(0x2000) == 0)
             FatalSpin::func_02013f28();
     }
 }

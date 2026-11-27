@@ -21,6 +21,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_th_fall_block_AssetId { ASSET_TH_DOWN_B_BMD = 0x06b9, ASSET_TH_DOWN_B_KCL = 0x06ba };
 
+#include "CLPS.h"
 #include "daObjTh_Fall_Block_c.h"
 #include "SharedFilePtr.h"
 
@@ -28,9 +29,6 @@ enum d_a_obj_th_fall_block_AssetId { ASSET_TH_DOWN_B_BMD = 0x06b9, ASSET_TH_DOWN
 
 /* CLPS.h forward-declares the block; this overlay's copy is the same plain
    8-word layout. */
-struct CLPS_Block {
-    u32 w[8];
-};
 
 extern ResourceDescriptor data_ov063_0211eb10;
 
@@ -45,7 +43,6 @@ s32 daObjTh_Fall_Block_c::InitResources() {
 s32 daObjTh_Fall_Block_c::CleanupResources() {
     return CleanupResourcesFrom(&data_ov063_0211eb10);
 }
-
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
  * veneer pairs (func_02017acc / func_02017ab4 for the model, func_02017b4c /
@@ -65,12 +62,20 @@ struct ThFallBlockCollisionFilePtr : SharedFilePtr {
  * file. */
 ThFallBlockModelFilePtr gThDownBModelFile(ASSET_TH_DOWN_B_BMD);         /* model */
 ThFallBlockCollisionFilePtr gThDownBCollisionFile(ASSET_TH_DOWN_B_KCL); /* collision */
-int data_ov063_0211ec98[8] = {0x53504c43, 0x00010008, 0x00000fc4, 0x000000ff,
-                              0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
-CLPS_Block data_ov063_0211ebd8 = {{0x53504c43, 0x00010008, 0x01000fc0, 0x000000ff, 0xffffffff,
-                                   0xffffffff, 0xffffffff, 0xffffffff}};
+CLPS_Block data_ov063_0211ec98 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fc4, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
+CLPS_Block data_ov063_0211ebd8 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x01000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 ResourceDescriptor data_ov063_0211eb10 = {
     &gThDownBModelFile,
     &gThDownBCollisionFile,
-    (CLPS_Block *)data_ov063_0211ec98,
+    &data_ov063_0211ec98,
 };

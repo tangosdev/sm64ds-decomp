@@ -65,7 +65,6 @@ data_ov030_021146b4 kind:data(any) addr:0x021146b4
 data_ov030_021146f0 kind:data(any) addr:0x021146f0 ambiguous
 data_ov030_02114750 kind:data(any) addr:0x02114750 ambiguous
 data_ov030_02114768 kind:data(any) addr:0x02114768 ambiguous
-data_ov030_021147c4 kind:data(any) addr:0x021147c4 ambiguous
 data_ov030_02114824 kind:data(any) addr:0x02114824
 __sinit_d_a_obj_hm_bskt.cpp kind:function(arm,size=0x6c) addr:0x0211484c
 __sinit_d_a_obj_hm_maruta.cpp kind:function(arm,size=0x6c) addr:0x021148b8
