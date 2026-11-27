@@ -9,7 +9,7 @@
     "launder_or_forced": 17,
     "launder_sites": 29,
     "pragma_by_name": {
-      "opt_common_subs": 12,
+      "opt_common_subs": 11,
       "opt_lifetimes": 1,
       "opt_loop_invariants": 9,
       "opt_prelinearize": 1,
@@ -17,8 +17,8 @@
       "opt_strength_reduction": 12,
       "optimize_for_size": 12
     },
-    "pragma_files": 35,
-    "pragma_overrides": 56,
+    "pragma_files": 34,
+    "pragma_overrides": 55,
     "pragma_resets": 0,
     "pragma_resets_by_name": {}
   },
@@ -74,8 +74,8 @@
     "pad_layout": 10
   },
   "totals": {
-    "c_extension": 756,
+    "c_extension": 757,
     "cpp_extension": 699,
-    "src_files": 1455
+    "src_files": 1456
   }
 }
