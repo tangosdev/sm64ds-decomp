@@ -2399,13 +2399,9 @@ src/unnamed/arm9/0207/func_02072ed0.cpp:
     complete
     .text start:0x02072ed0 end:0x02072f3c
 
-src/__destroy_global_chain.c:
+src/lib/runtime/StaticInitializers.c:
     complete
-    .text start:0x02072f3c end:0x02072f94
-
-src/__call_static_initializers.c:
-    complete
-    .text start:0x02072f94 end:0x02072fcc
+    .text start:0x02072f3c end:0x02072fcc
 
 src/__throw_catch_compare.c:
     complete
