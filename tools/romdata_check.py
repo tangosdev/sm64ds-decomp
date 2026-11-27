@@ -240,6 +240,13 @@ def _measurement_object(raw, rel, names):
     for field in ("rodata", "init", "ctor", "data", "bss", "exception", "exceptix"):
         for row in entry.get(field, []) or []:
             owned[row["symbol"]].append(row)
+    # A compiler-local function the manifest links STB_GLOBAL is a relocation
+    # target the linker resolves by name: mwcc's own `__sinit_<file>.cpp`, which
+    # its `.p__sinit_<file>.cpp` ctor word points at. Its owned `init` row places it
+    # exactly as an owned object row places a named local string.
+    linked_global = {row.get("symbol") for row in
+                     entry.get("symbol_binding_rewrites", []) or []
+                     if isinstance(row, dict) and row.get("to") == "STB_GLOBAL"}
     table = ELFFile(io.BytesIO(renamed)).get_section_by_name(".symtab")
     for symbol in table.iter_symbols():
         if (symbol.name and symbol["st_info"]["bind"] == "STB_LOCAL"
@@ -247,9 +254,12 @@ def _measurement_object(raw, rel, names):
             contextual[symbol.name] = (None, None)
             rows = owned.get(symbol.name, [])
             home = registry.get((module, symbol.name))
+            kind = symbol["st_info"]["type"]
             # Named local strings need no rename. Admit them only when this
             # object's definition, its sole owned row and the registry agree.
-            if (len(rows) == 1 and home and symbol["st_info"]["type"] == "STT_OBJECT"
+            if (len(rows) == 1 and home
+                    and (kind == "STT_OBJECT"
+                         or (kind == "STT_FUNC" and symbol.name in linked_global))
                     and symbol["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")
                     and int(str(rows[0].get("address", "-1")), 0) == home[0]
                     and int(str(rows[0].get("size", "-1")), 0) == symbol["st_size"]):
