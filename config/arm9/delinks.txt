@@ -189,7 +189,7 @@ src/engine/sound/Sound.cpp:
     .init start:0x02074da8 end:0x02074dbc
     .ctor start:0x02086b6c end:0x02086b70
     .data start:0x0208e420 end:0x0208e4b0
-    .bss start:0x0209b470 end:0x0209d4b8
+    .bss start:0x0209b470 end:0x0209cdcc
     .rodata start:0x02075250 end:0x02075264
 
 src/GetLevelPart.cpp:
@@ -214,37 +214,10 @@ src/runtime/actor/ActorDerived.cpp:
     complete
     .text start:0x02013e80 end:0x02013f4c
 
-src/func_02013f4c.cpp:
+src/CrashScreen.cpp:
     complete
-    .text start:0x02013f4c end:0x02014150
-
-src/InitCrashScreen.cpp:
-    complete
-    .text start:0x02014150 end:0x02014214
-
-src/ResetCrashScreen.cpp:
-    complete
-    .text start:0x02014214 end:0x02014244
-
-src/ShowCrashScreen.cpp:
-    complete
-    .text start:0x02014244 end:0x02014620
-
-src/nds_printt.cpp:
-    complete
-    .text start:0x02014620 end:0x0201470c
-
-src/nds_printf.c:
-    complete
-    .text start:0x0201470c end:0x0201473c
-
-src/nds_vprintf.c:
-    complete
-    .text start:0x0201473c end:0x02014770
-
-src/nds_print.c:
-    complete
-    .text start:0x02014770 end:0x020147bc
+    .text start:0x02013f4c end:0x020147bc
+    .bss start:0x0209cdcc end:0x0209cee8
 
 src/engine/collision/d_cc_pos.cpp:
     complete
