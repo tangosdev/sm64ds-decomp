@@ -897,76 +897,9 @@ src/Quaternion_Normalize.c:
 
 src/unnamed/arm9/0203/func_02030500.cpp:
     complete
-    .text start:0x02030500 end:0x02030790
-
-src/unnamed/arm9/0203/func_02030790.cpp:
-    complete
-    .text start:0x02030790 end:0x02030838
-
-src/unnamed/arm9/0203/func_02030838.c:
-    complete
-    .text start:0x02030838 end:0x0203083c
-
-src/unnamed/arm9/0203/func_0203083c.cpp:
-    complete
-    .text start:0x0203083c end:0x020308a8
-
-src/unnamed/arm9/0203/func_020308a8.c:
-    complete
-    .text start:0x020308a8 end:0x020308b4
-
-src/unnamed/arm9/0203/func_020308b4.c:
-    complete
-    .text start:0x020308b4 end:0x020308d0
-
-src/unnamed/arm9/0203/func_020308d0.c:
-    complete
-    .text start:0x020308d0 end:0x02030958
-
-src/unnamed/arm9/0203/func_02030958.c:
-    complete
-    .text start:0x02030958 end:0x02030994
-
-src/unnamed/arm9/0203/func_02030994.c:
-    complete
-    .text start:0x02030994 end:0x02030a38
-
-src/unnamed/arm9/0203/func_02030a38.c:
-    complete
-    .text start:0x02030a38 end:0x02030a6c
-
-src/unnamed/arm9/0203/func_02030a6c.c:
-    complete
-    .text start:0x02030a6c end:0x02030a78
-
-src/unnamed/arm9/0203/func_02030a78.c:
-    complete
-    .text start:0x02030a78 end:0x02030aa4
-
-src/unnamed/arm9/0203/func_02030aa4.c:
-    complete
-    .text start:0x02030aa4 end:0x02030b58
+    .text start:0x02030500 end:0x02030fa8
     .bss start:0x0209fc50 end:0x0209fc6c
 
-src/unnamed/arm9/0203/func_02030b58.c:
-    complete
-    .text start:0x02030b58 end:0x02030c38
-
-src/unnamed/arm9/0203/func_02030c38.c:
-    complete
-    .text start:0x02030c38 end:0x02030ca0
-
-src/unnamed/arm9/0203/func_02030ca0.c:
-    complete
-    .text start:0x02030ca0 end:0x02030dac
-
-src/unnamed/arm9/0203/func_02030dac.c:
-    complete
-    .text start:0x02030dac end:0x02030e4c
-
-src/unnamed/arm9/0203/func_02030e4c.c:
-    complete
-    .text start:0x02030e4c end:0x02030fa8
 
 src/Message3.cpp:
     complete
