@@ -1,49 +1,94 @@
-/* Debug printf formatter core: a DFA-table % parser with 64-byte chunked
-   output through the stream callback. It supports b c d i s u o x X f e E g G;
-   the floating-point conversions use the cluster's soft-double helpers. Byte
-   accesses use its unaligned-safe u16 read-modify-write pair (READ8/WRITE8). */
+/* IS-NITRO debug printf: the formatter core, its soft-double helpers, and
+ * the small integer/string output helpers. func_0206ccd8 in cstd3.cpp is the
+ * variadic entry point; isdconsole.c provides the byte sink callback. The
+ * defer_codegen pragma is load-bearing: it makes the opt_common_subs brackets
+ * positional and emits the functions in this source order. */
 #include "types.h"
 
+#pragma optimize_for_size on
+#pragma defer_codegen off
+
 #define READ8(a) ((((int)(a)) & 1) ? (((*(u16 *)((a) - 1)) & 0xff00) >> 8) : ((*(u16 *)(a)) & 0xff))
+#define READ8u(a) ((((int)(a)) & ((unsigned int)1)) ? (((*(u16 *)((a) - 1)) & 0xff00) >> 8) : ((*(u16 *)(a)) & 0xff))
 #define WRITE8(a, v) \
     if (((int)(a)) & 1) \
         *(u16 *)((a) - 1) = (*(u16 *)((a) - 1) & 0xff) | (((v) & 0xff) << 8); \
     else \
         *(u16 *)(a) = (*(u16 *)(a) & 0xff00) | ((v) & 0xff)
 
-/* The ISD debug console library was size-optimized. */
-#pragma optimize_for_size on
-#pragma opt_common_subs off
-
 typedef void (*WriteFn)(void *self, const char *buf, int len);
-
-/* IEEE-754 double bits in little-endian byte order. */
+struct Stream {
+    char pad[0x10];
+    WriteFn fn;
+};
 struct Ieee754DoubleBytes {
     u8 fractionLow[6];
     u8 exponentLowAndFractionHigh;
     u8 signAndExponent;
 };
 
-/* The output stream; the callback at +0x10 takes each chunk (func_0206c9f4
-   spells the same record). */
-struct Stream {
-    char pad[0x10];
-    WriteFn fn;
-};
+static inline int ReadByteExp(const void *a) {
+    int p = (int)a;
+    if (p & 1)
+        return (*(unsigned short *)(p - 1) & 0xff00) >> 8;
+    else
+        return *(unsigned short *)p & 0xff;
+}
+static inline int ReadByteStr(const void *a) {
+    unsigned p = (unsigned)a;
+    if (p & 1)
+        return (*(unsigned short *)(p - 1) & 0xff00) >> 8;
+    return *(unsigned short *)p & 0xff;
+}
+static inline char *pad(char *a, int b) {
+    return a + b;
+}
+static inline int imin(int a, int b) {
+    if (a <= b)
+        return a;
+    return b;
+}
+static inline u64 shr_n_mult10(u64 x, int n, int *pj) {
+    for (*pj = 0; *pj < n; (*pj)++)
+        x >>= 1;
+    return x;
+}
+static inline u64 shr_n_add(u64 x, int n, int *pj) {
+    int lim;
+    int k;
+    lim = n;
+    for (k = 0; k < lim; k++)
+        x >>= 1;
+    *pj = k;
+    return x;
+}
 
 extern u16 data_0209a0a0[][9];
 extern u16 data_0209a130[];
+extern const char data_02086880[20];
 extern const char data_02086894[12];
 
-extern int func_0206ca44(const char *s);
-extern void func_0206c9f4(struct Stream *s, unsigned int n);
-extern unsigned int func_0206c93c(unsigned int x, unsigned int base);
-extern int func_0206c8b4(u64 d);
-extern u64 func_0206c244(u64 d);
-extern u64 func_0206bdb4(u64 d, int mode);
-extern u64 func_0206c51c(u64 a, u64 b);
-extern int func_0206bc8c(u64 d);
+void func_0206a928(struct Stream *ctx, const char *fmt, int **ap);
+/* Extract the leading decimal digit from a positive soft-double. */
+int func_0206bc8c(u64 d);
+/* Divide a soft-double by ten; mode 0 is the comparison form. */
+u64 func_0206bdb4(u64 d, int mode);
+u64 func_0206c244(u64 d);
+/* Add two non-negative soft-doubles. */
+u64 func_0206c51c(u64 a, u64 b);
+/* Read the biased exponent from a soft-double bit pattern. */
+int func_0206c8b4(u64 x);
+/* Read the sign bit from a soft-double bit pattern. */
+int func_0206c90c(u64 x);
+/* Divide by the small radixes used by the formatter. */
+unsigned int func_0206c93c(unsigned int x, unsigned int base);
+/* Write field-padding spaces through the output callback. */
+void func_0206c9f4(struct Stream *s, unsigned int n);
+/* strlen for the formatter's byte-oriented string accesses. */
+int func_0206ca44(const char *s);
 
+/* Format one variadic debug message in 64-byte chunks. */
+#pragma opt_common_subs off
 void func_0206a928(struct Stream *ctx, const char *fmt, int **ap) {
     int conv;
     int isg;
@@ -590,6 +635,403 @@ void func_0206a928(struct Stream *ctx, const char *fmt, int **ap) {
     }
     if (nbuf != 0)
         ctx->fn(ctx, buf, nbuf);
+}
+#pragma opt_common_subs on
+
+int func_0206bc8c(u64 d) {
+    unsigned digit;
+    int max;
+    int j;
+    u64 mant;
+    int idx;
+    int i;
+    u64 t;
+    int exp;
+    char *p;
+    int count;
+    char *q;
+
+    exp = func_0206c8b4(d);
+    mant = 0;
+    q = (char *)(&d);
+    q = pad(q, 6);
+    mant |= 0x10;
+    mant |= READ8(q) & ((i = 5), 15);
+    for (; i >= 0; i--) {
+        p = pad((char *)(&d), i);
+        mant <<= 8;
+        mant |= READ8(p);
+    }
+
+    idx = exp - 0x3fe;
+    max = 53;
+    digit = 0;
+    for (i = 0; i < imin(idx, max); i++) {
+        digit <<= 1;
+        t = mant;
+        count = 52 - i;
+        for (j = 0; j < count; j++)
+            t >>= 1;
+        if ((t & 1) != 0)
+            digit++;
+        if (digit >= 10u)
+            digit -= 10u;
+    }
+    return digit;
+}
+
+u64 func_0206bdb4(u64 d, int mode) {
+    int sign;
+    int exp;
+    u64 m;
+    int i;
+    char *q;
+    char *p;
+    u64 acc;
+    int c35;
+    int lim;
+    u64 out;
+    unsigned exp2;
+    int cnt;
+    int fpflag;
+    u64 mm;
+    int k;
+    u64 t;
+    int n;
+    int j;
+    u64 s;
+    int b;
+
+    sign = func_0206c90c(d);
+    exp = func_0206c8b4(d);
+    m = 0;
+    q = (char *)(&d);
+    q = pad(q, 6);
+    m |= 0x10;
+    m |= READ8(q) & ((i = 5), 15);
+    for (; i >= 0; i--) {
+        p = pad((char *)(&d), i);
+        m <<= 8;
+        m |= READ8(p);
+    }
+
+    exp2 = exp - 0x3fd;
+    if (exp >= 3)
+        exp -= 3;
+    else
+        exp = 0;
+    c35 = 53;
+    m |= 0x0010000000000000ULL;
+    acc = 0;
+    cnt = 0;
+    i = 0;
+    if (mode == 0)
+        fpflag = 1;
+    else
+        fpflag = 0;
+
+    while (i < (((int)exp2 <= 53 && fpflag) ? (int)exp2 : c35)) {
+        acc <<= 1;
+        n++;
+        n--;
+        cnt <<= 1;
+        t = m;
+        for (k = 0, lim = 52 - i; k < lim; k++)
+            t >>= 1;
+        if ((t & 1) != 0)
+            cnt += 1;
+        if ((unsigned)cnt >= 5u) {
+            acc += 1;
+            cnt -= 5;
+        }
+        i++;
+    }
+    if (cnt != 0)
+        acc += 1;
+
+    n = 53 - i;
+    for (k = 0; k < n; k++)
+        acc <<= 1;
+
+    if ((int)exp2 >= 3)
+        exp2 -= 3;
+    else
+        exp2 = 0;
+
+    m -= acc;
+
+    if (mode == 0) {
+        n = 53 - (int)exp2;
+        for (k = 0; k < n; k++)
+            m >>= 1;
+        for (k = 0; k < n; k++)
+            m <<= 1;
+    }
+
+    while (((m >> 52) & 1) == 0 && m != 0) {
+        exp -= 1;
+        m <<= 1;
+    }
+
+    mm = m & 0x000fffffffffffffULL;
+    if (mm == 0) {
+        if (exp < 0x3ff) {
+            if (mode == 0) {
+                sign = 0;
+                exp = 0;
+            }
+        }
+    }
+
+    out = 0;
+
+    q = pad((char *)(&out), 7);
+    b = READ8(q) | (sign << 7);
+    q = pad((char *)(&out), 7);
+    WRITE8(q, b);
+
+    q = pad((char *)(&out), 7);
+    b = READ8(q) | (exp >> 4);
+    q = pad((char *)(&out), 7);
+    WRITE8(q, b);
+
+    q = pad((char *)(&out), 6);
+    b = READ8(q) | ((exp & 15) << 4);
+    q = pad((char *)(&out), 6);
+    WRITE8(q, b);
+
+    for (i = 6; i >= 0; i--) {
+        m = mm;
+        c35 = i << 3;
+        for (k = 0; k < c35; k++)
+            m >>= 1;
+        p = pad((char *)(&out), i);
+        b = READ8u(p) | ((int)m & 0xff);
+        p = pad((char *)(&out), i);
+        WRITE8(p, b);
+    }
+    return out;
+}
+
+/* Multiply a soft-double by ten. */
+#pragma opt_common_subs off
+u64 func_0206c244(u64 d) {
+    int sign;
+    int exp;
+    int i;
+    int j;
+    int b;
+    u64 t;
+    u64 mant;
+    u64 out;
+    char *q;
+    char *p;
+
+    sign = func_0206c90c(d);
+    exp = func_0206c8b4(d);
+    {
+        u64 *pm = &mant;
+        *pm = 0;
+    }
+    q = (char *)&d;
+    q = pad(q, 6);
+    mant |= 0x10;
+    mant |= READ8(q) & ((i = 5), 15);
+    for (; i >= 0; i--) {
+        p = pad((char *)&d, i);
+        mant <<= 8;
+        mant |= READ8(p);
+    }
+    mant |= 0x0010000000000000ULL;
+    t = mant >> 2;
+    exp += 3;
+    mant += t;
+    while (((mant >> 53) & 1) != 0) {
+        mant >>= 1;
+        exp++;
+    }
+    out = 0;
+    q = pad((char *)&out, 7);
+    t = READ8(q) | (sign << 7);
+    q = pad((char *)&out, 7);
+    WRITE8(q, t);
+    q = pad((char *)&out, 7);
+    t = READ8(q) | (exp >> 4);
+    q = pad((char *)&out, 7);
+    WRITE8(q, t);
+    q = pad((char *)&out, 6);
+    b = READ8(q);
+    b |= (exp & 15) << 4;
+    q = pad((char *)&out, 6);
+    WRITE8(q, b);
+    mant &= 0x000fffffffffffffULL;
+
+    for (i = 6; i >= 0; i--) {
+        t = shr_n_mult10(mant, i << 3, &j);
+        q = pad((char *)&out, i);
+        b = READ8(q) | (t & 0xff);
+        WRITE8(q, b);
+    }
+
+    return out;
+}
+#pragma opt_common_subs on
+
+u64 func_0206c51c(u64 a, u64 b) {
+    int tmp;
+    int expb;
+    int i;
+    int j;
+    u64 manta;
+    u64 mantb;
+    u64 out;
+    u64 t;
+    char *q;
+    int bb;
+    char *p;
+    int exp;
+
+    {
+        tmp = func_0206c8b4(a);
+        manta = 0;
+        exp = tmp;
+    }
+    expb = func_0206c8b4(b);
+    mantb = 0;
+    q = (char *)(&a);
+    q = pad(q, 6);
+    manta |= 0x10;
+    manta |= READ8(q) & ((i = 5), 15);
+    do {
+        p = pad((char *)(&a), i);
+        manta <<= 8;
+        manta |= READ8(p);
+    } while (--i >= 0);
+    q = (char *)(&b);
+    q = pad(q, 6);
+    mantb |= 0x10;
+    mantb |= READ8(q) & ((i = 5), 15);
+    do {
+        p = pad((char *)(&b), i);
+        mantb <<= 8;
+        mantb |= READ8(p);
+    } while (--i >= 0);
+    if (exp == 0 && manta == 0)
+        return b;
+    if (expb == 0 && mantb == 0)
+        return a;
+    manta |= 0x0010000000000000ULL;
+    mantb |= 0x0010000000000000ULL;
+    i = 0;
+    if (exp >= expb) {
+        for (; i < exp - expb; i++)
+            mantb >>= 1;
+        /* Kept (#821 r63): the ROM reads mantb back through memory for the
+           sum. `mantb = manta + mantb` and `mantb += manta` differ by 44
+           words; only a pointer alias of mantb matches, and a const one is
+           the same launder without the volatile. */
+        {
+            /* Kept (#821 r79): an inline get64(&mantb) read, an inline add64(manta, mantb), and
+               get64 as the left operand are 90, 44 and 90 words off. */
+            volatile u64 *pb = &mantb;
+            mantb = manta + *pb;
+        }
+    } else {
+        exp = expb - exp;
+        for (; i < exp; i++)
+            manta >>= 1;
+        exp = expb;
+        {
+            volatile u64 *pb = &mantb;
+            mantb = manta + *pb;
+        }
+    }
+    while (((mantb >> 53) & 1) != 0) {
+        mantb >>= 1;
+        exp++;
+    }
+    out = 0;
+    q = pad((char *)&out, 7);
+    t = READ8(q) | (exp >> 4);
+    q = pad((char *)&out, 7);
+    WRITE8(q, t);
+    q = pad((char *)&out, 6);
+    bb = READ8(q);
+    bb |= (exp & 15) << 4;
+    q = pad((char *)&out, 6);
+    WRITE8(q, bb);
+    mantb &= 0x000fffffffffffffULL;
+    for (i = 6; i >= 0; i--) {
+        t = shr_n_add(mantb, i << 3, &j);
+        q = pad((char *)&out, i);
+        bb = READ8u(q) | ((int)t & 0xff);
+        WRITE8(q, bb);
+    }
+    return out;
+}
+
+int func_0206c8b4(u64 x) {
+    int hi, lo;
+
+    hi = ReadByteExp((u8 *)&x + 7);
+    lo = ReadByteExp((u8 *)&x + 6);
+
+    return ((hi & 0x7f) << 4) + (lo >> 4);
+}
+
+int func_0206c90c(u64 x) {
+    char *q = (char *)&x + 7;
+    int hi;
+    if ((int)q & 1)
+        hi = (*(u16 *)(q - 1) & 0xff00) >> 8;
+    else
+        hi = *(u16 *)q & 0xff;
+    return hi & 0x80;
+}
+
+unsigned int func_0206c93c(unsigned int x, unsigned int base) {
+    unsigned int q, lo, hi;
+    switch (base) {
+    case 2:
+        return x >> 1;
+    case 8:
+        return x >> 3;
+    case 16:
+        return x >> 4;
+    case 10:
+        lo = x & 0xffff;
+        hi = x >> 16;
+        q = hi * 0x1999 + ((hi * 0x9999 + lo * 0x1999) >> 16);
+        if (x >= 10) {
+            base = x - 9;
+            x = 10;
+            while (q * x < base) {
+                q++;
+            }
+        }
+        return q;
+    }
+    return 0;
+}
+
+void func_0206c9f4(struct Stream *self, unsigned int n) {
+    while (n != 0) {
+        int chunk = 16;
+        if (n < 16)
+            chunk = n;
+        self->fn(self, data_02086880, chunk);
+        n -= chunk;
+    }
+}
+
+int func_0206ca44(const char *s) {
+    unsigned p = (unsigned)s;
+    int count = 0;
+    while (ReadByteStr((const void *)p) != 0) {
+        count++;
+        p++;
+    }
+    return count;
 }
 
 /* Sixteen spaces: func_0206c9f4 writes them through the stream callback up

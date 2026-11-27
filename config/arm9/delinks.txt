@@ -2230,58 +2230,14 @@ src/engine/ctrdg/CTRDG_Proc.cpp:
     complete
     .text start:0x0206a600 end:0x0206a928
 
-src/unnamed/arm9/0206/func_0206a928.c:
+src/engine/isd/isdprintf.c:
     complete
-    .text start:0x0206a928 end:0x0206bc8c
+    .text start:0x0206a928 end:0x0206ca7c
     .rodata start:0x02086880 end:0x020868a0
 
-src/unnamed/arm9/0206/func_0206bc8c.c:
+src/engine/isd/isdconsole.c:
     complete
-    .text start:0x0206bc8c end:0x0206bdb4
-
-src/unnamed/arm9/0206/func_0206bdb4.c:
-    complete
-    .text start:0x0206bdb4 end:0x0206c244
-
-src/unnamed/arm9/0206/func_0206c244.c:
-    complete
-    .text start:0x0206c244 end:0x0206c51c
-
-src/unnamed/arm9/0206/func_0206c51c.c:
-    complete
-    .text start:0x0206c51c end:0x0206c8b4
-
-src/unnamed/arm9/0206/func_0206c8b4.c:
-    complete
-    .text start:0x0206c8b4 end:0x0206c90c
-
-src/unnamed/arm9/0206/func_0206c90c.c:
-    complete
-    .text start:0x0206c90c end:0x0206c93c
-
-src/unnamed/arm9/0206/func_0206c93c.c:
-    complete
-    .text start:0x0206c93c end:0x0206c9f4
-
-src/unnamed/arm9/0206/func_0206c9f4.c:
-    complete
-    .text start:0x0206c9f4 end:0x0206ca44
-
-src/unnamed/arm9/0206/func_0206ca44.c:
-    complete
-    .text start:0x0206ca44 end:0x0206ca7c
-
-src/unnamed/arm9/0206/func_0206ca7c.c:
-    complete
-    .text start:0x0206ca7c end:0x0206cb0c
-
-src/unnamed/arm9/0206/func_0206cb0c.c:
-    complete
-    .text start:0x0206cb0c end:0x0206cbc0
-
-src/unnamed/arm9/0206/func_0206cbc0.c:
-    complete
-    .text start:0x0206cbc0 end:0x0206ccd8
+    .text start:0x0206ca7c end:0x0206ccd8
 
 src/cstd3.cpp:
     complete
