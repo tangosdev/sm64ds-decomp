@@ -631,6 +631,72 @@ class ObjectLocalDataRenames(unittest.TestCase):
         self.assertEqual(self.check()[0]['blindWords'], 1)
 
 
+class LinkedGlobalLocalFunction(unittest.TestCase):
+    """mwcc's `.p__sinit_<file>.cpp` word points at its own local `__sinit_<file>.cpp`."""
+
+    SINIT = '__sinit_t.cpp'
+
+    def setUp(self):
+        from test_reloc_audit_renames import _elf_with_temp
+        from elftools.elf.elffile import ELFFile
+        raw = bytearray(_elf_with_temp(self.SINIT))
+        table = ELFFile(io.BytesIO(raw)).get_section_by_name('.symtab')
+        raw[table['sh_offset'] + 16 + 12] = 0x02  # the initializer: STB_LOCAL STT_FUNC
+        raw[table['sh_offset'] + 32 + 12] = 0x11  # alpha, the ctor word: global object
+        self.raw = bytes(raw)
+        self.entry = dict(
+            module='ov002', source='src/t.cpp', functions=[],
+            data=[dict(symbol='beta')],
+            init=[dict(symbol=self.SINIT, address='0x3000', size='0x4')],
+            defined_symbol_renames=[dict(**{'from': 'alpha', 'to': 'beta'},
+                                         evidence='ctor word')],
+            symbol_binding_rewrites=[dict(symbol=self.SINIT, **{'from': 'STB_LOCAL'},
+                                          to='STB_GLOBAL')])
+        self.names = {'beta': ('ov002', 0x2000)}
+        self.registry = {('ov002', 'beta'): (0x2000, 4),
+                         ('ov002', self.SINIT): (0x3000, 4)}
+        self.saved = RDC._source_manifests
+        RDC._source_manifests = {'src/t.cpp': [self.entry]}
+        self.tmp = tempfile.TemporaryDirectory()
+        self.path = pathlib.Path(self.tmp.name) / 't.o'
+        self.path.write_bytes(self.raw)
+
+    def tearDown(self):
+        RDC._source_manifests = self.saved
+        self.tmp.cleanup()
+
+    def check(self, cartridge_word=0x3000):
+        with mock.patch.object(RDC, 'rom_data_index', return_value=self.registry), \
+                mock.patch.object(RDC.RV, 'rom_bytes',
+                                  return_value=struct.pack('<I', cartridge_word)):
+            row = RDC.check_object(self.path, 'src/t.cpp', self.names)[0]
+        return row['symbol'], row['verdict'], row['blindWords']
+
+    def test_linked_global_initializer_resolves_to_its_init_row(self):
+        self.assertEqual(self.check(), ('beta', RDC.VERIFIED, 0))
+
+    def test_without_the_binding_rewrite_it_stays_blind(self):
+        self.entry['symbol_binding_rewrites'] = []
+        self.assertEqual(self.check(), ('beta', RDC.PARTIAL, 1))
+
+    def test_an_init_row_at_another_address_stays_blind(self):
+        self.entry['init'][0]['address'] = '0x9000'
+        self.assertEqual(self.check(), ('beta', RDC.PARTIAL, 1))
+
+    def test_a_cartridge_word_at_another_target_differs(self):
+        # Admitting the initializer resolves the word; it does not mask it.
+        self.assertEqual(self.check(cartridge_word=0x3100), ('beta', RDC.DIFFERS, 0))
+
+    def test_an_initializer_owned_only_as_a_function_stays_blind(self):
+        self.entry['functions'] = self.entry.pop('init')
+        self.entry['init'] = []
+        self.assertEqual(self.check(), ('beta', RDC.PARTIAL, 1))
+
+    def test_a_size_mismatch_stays_blind(self):
+        self.entry['init'][0]['size'] = '0x8'
+        self.assertEqual(self.check(), ('beta', RDC.PARTIAL, 1))
+
+
 class UndefinedImportAliases(unittest.TestCase):
     """A manifest alias is the address romdata compares, not a second spelling."""
 
