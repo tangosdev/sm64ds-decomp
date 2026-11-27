@@ -1,23 +1,11 @@
     .text       start:0x021111a0 end:0x021116dc kind:code align:32
     .init       start:0x021116dc end:0x021119c4 kind:code align:4
     .ctor       start:0x021119c4 end:0x021119d4 kind:rodata align:4
-    .data.map_pre start:0x021119e0 end:0x02111ab4 kind:data align:32
-    .rodata.km3_kuruma start:0x02111ab4 end:0x02111ad4 kind:rodata align:4
-    .data.map_before_axle start:0x02111ad4 end:0x02111b54 kind:data align:4
-    .rodata.km3_axle_clps start:0x02111b54 end:0x02111b74 kind:rodata align:4
-    .data.map_mid start:0x02111b74 end:0x02111bf4 kind:data align:4
-    .rodata.kaitendai start:0x02111bf4 end:0x02111c14 kind:rodata align:4
-    .data       start:0x02111c14 end:0x021125e0 kind:data align:4
+    .data       start:0x021119e0 end:0x021125e0 kind:data align:32
     .bss        start:0x021125e0 end:0x02112720 kind:bss align:32
 src/game/stages/d_s_map_ov047.c:
     complete
-    .data.map_pre start:0x021119e0 end:0x02111ab4
-    .rodata.km3_kuruma start:0x02111ab4 end:0x02111ad4
-    .data.map_before_axle start:0x02111ad4 end:0x02111b54
-    .rodata.km3_axle_clps start:0x02111b54 end:0x02111b74
-    .data.map_mid start:0x02111b74 end:0x02111bf4
-    .rodata.kaitendai start:0x02111bf4 end:0x02111c14
-    .data start:0x02111c14 end:0x0211224c
+    .data start:0x021119e0 end:0x0211224c
 
 src/game/actors/d_a_obj_km3_kurumajiku.cpp:
     complete

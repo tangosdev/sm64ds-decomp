@@ -11,39 +11,18 @@
  * at +6), two entry slots and all-ones filler to the end of the record. A
  * count-1 block carries the filler in its second slot as well. */
 
-/* The 14-byte table is followed by two zero bytes before the
- * next object, so the padding is written as part of the object. */
-typedef struct {
-    ExitEntry entries[1];
-    u16 pad;
-} ExitEntries1;
-
-/* The 6-byte table is followed by two zero bytes before the
- * next object, so the padding is written as part of the object. */
-typedef struct {
-    struct PathDef entries[1];
-    u16 pad;
-} PathDefs1;
-
-/* The 42-byte table is followed by two zero bytes before the
- * next object, so the padding is written as part of the object. */
-typedef struct {
-    ViewEntry entries[3];
-    u16 pad;
-} ViewEntries3;
-
 extern const u16 data_ov045_02111e60[2];
 extern const fx32 data_ov045_02111e64[1];
 extern const BTAMaterialRecord data_ov045_02111e68[1];
 extern const fx32 data_ov045_02111e84[201];
-extern PathDefs1 data_ov045_02112460;
+extern struct PathDef data_ov045_02112460[1];
 extern u16 data_ov045_02112468[4];
 extern ObjTable data_ov045_02112470;
 extern u16 data_ov045_02112478[4];
 extern ObjTable data_ov045_02112480;
 extern char data_ov045_02112488[8];
 extern Area data_ov045_02112490[1];
-extern ExitEntries1 data_ov045_0211249c;
+extern ExitEntry data_ov045_0211249c[1];
 extern ObjSubTable data_ov045_021124ac[2];
 extern BTA_File data_ov045_021124bc;
 extern LevelRec data_ov045_021124d4;
@@ -57,7 +36,7 @@ extern CLPS_Block data_ov045_021125b0;
 extern CLPS_Block data_ov045_021125d0;
 extern CLPS_Block data_ov045_021125f0;
 extern CLPS_Block data_ov045_02112610;
-extern ViewEntries3 data_ov045_02112630;
+extern ViewEntry data_ov045_02112630[3];
 extern ObjSubTable data_ov045_0211265c[7];
 extern PathNode data_ov045_02112694[10];
 extern StandardEntry data_ov045_021126d0[5];
@@ -65,11 +44,11 @@ extern CLPS_Block96 data_ov045_02112720;
 extern SimpleEntry data_ov045_02112780[56];
 extern StandardEntry data_ov045_02112940[55];
 
-const u16 data_ov045_02111e60[2] = {0x0000, 0x0000};
-
 const fx32 data_ov045_02111e64[1] = {
     0x00001000,
 };
+
+const u16 data_ov045_02111e60[2] = {0x0000, 0x0000};
 
 const BTAMaterialRecord data_ov045_02111e68[1] = {{0xffff,
                                                    0x0000,
@@ -111,18 +90,17 @@ const fx32 data_ov045_02111e84[201] = {
 
 u16 data_ov045_02112478[4] = {0x077b, 0x077c, 0x077d, 0x077e};
 
-PathDefs1 data_ov045_02112460 = {
-    {{0x0000, 0x0a, 0xff, 0xff, 0x7f}},
-    0x0000,
+struct PathDef data_ov045_02112460[1] = {
+    {0x0000, 0x0a, 0xff, 0xff, 0x7f},
 };
 
-u16 data_ov045_02112468[4] = {0x07d0, 0x07d0, 0x07d0, 0x07d0};
+ObjTable data_ov045_02112470 = {0x0002, {0x00, 0x00}, &data_ov045_021124ac[0]};
 
 char data_ov045_02112488[8] = "yogan00";
 
 ObjTable data_ov045_02112480 = {0x0007, {0x00, 0x00}, &data_ov045_0211265c[0]};
 
-ObjTable data_ov045_02112470 = {0x0002, {0x00, 0x00}, &data_ov045_021124ac[0]};
+u16 data_ov045_02112468[4] = {0x07d0, 0x07d0, 0x07d0, 0x07d0};
 
 Area data_ov045_02112490[1] = {
     {&data_ov045_02112470, &data_ov045_021124bc, 0x00, {0x00, 0xe6, 0x14}},
@@ -133,9 +111,8 @@ ObjSubTable data_ov045_021124ac[2] = {
     {0x05, 0x38, {0x00, 0x00}, &data_ov045_02112780[0]},
 };
 
-ExitEntries1 data_ov045_0211249c = {
-    {{0x19af, 0x0f0a, 0x00f5, (s16)0xc000, 0x0000, {0x26, 0x00, 0x04, 0x22}}},
-    0x0000,
+ExitEntry data_ov045_0211249c[1] = {
+    {0x19af, 0x0f0a, 0x00f5, (s16)0xc000, 0x0000, {0x26, 0x00, 0x04, 0x22}},
 };
 
 BTA_File data_ov045_021124bc = {0x00c8,
@@ -229,21 +206,20 @@ CLPS_Block data_ov045_02112610 = {
     {{0x00000fc0, 0x000000ff}, {0x01880fcc, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
-ViewEntries3 data_ov045_02112630 = {
-    {{0x02, 0xff, (s16)0xe1ec, (s16)0xf830, 0x02bc, {0x00, 0x00}, (s16)0x8000, 0x0000},
-     {0x07, 0xff, 0x0000, (s16)0xf074, (s16)0xe318, {0x00, 0x00}, 0x0000, 0x0000},
-     {0x02, 0xff, 0x1518, 0x12c0, 0x0384, {0x00, 0x00}, 0x6000, 0x0000}},
-    0x0000,
+ViewEntry data_ov045_02112630[3] = {
+    {0x02, 0xff, (s16)0xe1ec, (s16)0xf830, 0x02bc, {0x00, 0x00}, (s16)0x8000, 0x0000},
+    {0x07, 0xff, 0x0000, (s16)0xf074, (s16)0xe318, {0x00, 0x00}, 0x0000, 0x0000},
+    {0x02, 0xff, 0x1518, 0x12c0, 0x0384, {0x00, 0x00}, 0x6000, 0x0000},
 };
 
 ObjSubTable data_ov045_0211265c[7] = {
     {0x02, 0x0a, {0x00, 0x00}, &data_ov045_02112694[0]},
-    {0x03, 0x01, {0x00, 0x00}, &data_ov045_02112460.entries[0]},
-    {0x04, 0x03, {0x00, 0x00}, &data_ov045_02112630.entries[0]},
+    {0x03, 0x01, {0x00, 0x00}, &data_ov045_02112460[0]},
+    {0x04, 0x03, {0x00, 0x00}, &data_ov045_02112630[0]},
     {0x0b, 0x04, {0x00, 0x00}, &data_ov045_02112478[0]},
     {0x01, 0x05, {0x00, 0x00}, &data_ov045_021126d0[0]},
     {0x0c, 0x04, {0x00, 0x00}, &data_ov045_02112468[0]},
-    {0x0a, 0x01, {0x00, 0x00}, &data_ov045_0211249c.entries[0]},
+    {0x0a, 0x01, {0x00, 0x00}, &data_ov045_0211249c[0]},
 };
 
 PathNode data_ov045_02112694[10] = {

@@ -55,5 +55,3 @@ data_ov059_02111768 kind:data(any) addr:0x02111768 ambiguous
 data_ov059_02111818 kind:data(any) addr:0x02111818
 data_ov059_02111834 kind:data(any) addr:0x02111834 ambiguous
 data_ov059_02111844 kind:data(any) addr:0x02111844 ambiguous
-// This address is inside data_ov059_02111818.
-data_ov059_0211190c kind:data(any) addr:0x0211190c ambiguous
