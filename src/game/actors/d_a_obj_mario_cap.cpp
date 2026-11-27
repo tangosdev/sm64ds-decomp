@@ -241,9 +241,9 @@ extern SharedFilePtr *const data_ov002_020ff0a0[];
 extern SharedFilePtr *const data_ov002_020ff0ac[];
 extern SharedFilePtr *const data_ov002_020ff0b8[];
 extern SharedFilePtr *const data_ov002_020ff0c4[];
-extern SharedFilePtr data_ov002_0210da40;
-extern SharedFilePtr data_ov002_0210d9a0;
-extern SharedFilePtr data_ov002_0210d9c0;
+extern ModelFile data_ov002_0210da40;
+extern ModelFile data_ov002_0210d9a0;
+extern ModelFile data_ov002_0210d9c0;
 }
 
 /* gGameMode is 1 in VS mode: PrepareVsMode stores it. This int-returning

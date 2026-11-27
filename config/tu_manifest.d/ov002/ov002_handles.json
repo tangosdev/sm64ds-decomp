@@ -408,154 +408,124 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@30",
+      "from": "@28",
       "to": "@288",
-      "evidence": "emitted @30 collides with another module; @288 is unused"
+      "evidence": "emitted @30 collides with another module; @288 is unused. Re-keyed from @30 to @28 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
+    },
+    {
+      "from": "@29",
+      "to": "@289",
+      "evidence": "emitted @31 collides with another module; @289 is unused. Re-keyed from @31 to @29 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
+    },
+    {
+      "from": "@30",
+      "to": "@290",
+      "evidence": "emitted @32 collides with another module; @290 is unused. Re-keyed from @32 to @30 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@31",
-      "to": "@289",
-      "evidence": "emitted @31 collides with another module; @289 is unused"
+      "to": "@291",
+      "evidence": "emitted @33 collides with another module; @291 is unused. Re-keyed from @33 to @31 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@32",
-      "to": "@290",
-      "evidence": "emitted @32 collides with another module; @290 is unused"
+      "to": "@292",
+      "evidence": "emitted @34 collides with another module; @292 is unused. Re-keyed from @34 to @32 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@33",
-      "to": "@291",
-      "evidence": "emitted @33 collides with another module; @291 is unused"
+      "to": "@293",
+      "evidence": "emitted @35 collides with another module; @293 is unused. Re-keyed from @35 to @33 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@34",
-      "to": "@292",
-      "evidence": "emitted @34 collides with another module; @292 is unused"
+      "to": "@294",
+      "evidence": "emitted @36 collides with another module; @294 is unused. Re-keyed from @36 to @34 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@35",
-      "to": "@293",
-      "evidence": "emitted @35 collides with another module; @293 is unused"
+      "to": "@297",
+      "evidence": "emitted @37 collides with another module; @297 is unused. Re-keyed from @37 to @35 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@36",
-      "to": "@294",
-      "evidence": "emitted @36 collides with another module; @294 is unused"
+      "to": "@298",
+      "evidence": "emitted @38 collides with another module; @298 is unused. Re-keyed from @38 to @36 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@37",
-      "to": "@297",
-      "evidence": "emitted @37 collides with another module; @297 is unused"
+      "to": "@299",
+      "evidence": "emitted @39 collides with another module; @299 is unused. Re-keyed from @39 to @37 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@38",
-      "to": "@298",
-      "evidence": "emitted @38 collides with another module; @298 is unused"
+      "to": "@301",
+      "evidence": "emitted @40 collides with another module; @301 is unused. Re-keyed from @40 to @38 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@39",
-      "to": "@299",
-      "evidence": "emitted @39 collides with another module; @299 is unused"
+      "to": "@302",
+      "evidence": "emitted @41 collides with another module; @302 is unused. Re-keyed from @41 to @39 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@40",
-      "to": "@301",
-      "evidence": "emitted @40 collides with another module; @301 is unused"
+      "to": "@303",
+      "evidence": "emitted @42 collides with another module; @303 is unused. Re-keyed from @42 to @40 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@41",
-      "to": "@302",
-      "evidence": "emitted @41 collides with another module; @302 is unused"
+      "to": "@304",
+      "evidence": "emitted @43 collides with another module; @304 is unused. Re-keyed from @43 to @41 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@42",
-      "to": "@303",
-      "evidence": "emitted @42 collides with another module; @303 is unused"
+      "to": "@305",
+      "evidence": "emitted @44 collides with another module; @305 is unused. Re-keyed from @44 to @42 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@43",
-      "to": "@304",
-      "evidence": "emitted @43 collides with another module; @304 is unused"
+      "to": "@306",
+      "evidence": "emitted @45 collides with another module; @306 is unused. Re-keyed from @45 to @43 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@44",
-      "to": "@305",
-      "evidence": "emitted @44 collides with another module; @305 is unused"
+      "to": "@308",
+      "evidence": "emitted @46 collides with another module; @308 is unused. Re-keyed from @46 to @44 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@45",
-      "to": "@306",
-      "evidence": "emitted @45 collides with another module; @306 is unused"
+      "to": "@309",
+      "evidence": "emitted @47 collides with another module; @309 is unused. Re-keyed from @47 to @45 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@46",
-      "to": "@308",
-      "evidence": "emitted @46 collides with another module; @308 is unused"
+      "to": "@310",
+      "evidence": "emitted @48 collides with another module; @310 is unused. Re-keyed from @48 to @46 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@47",
-      "to": "@309",
-      "evidence": "emitted @47 collides with another module; @309 is unused"
+      "to": "@311",
+      "evidence": "emitted @49 collides with another module; @311 is unused. Re-keyed from @49 to @47 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@48",
-      "to": "@310",
-      "evidence": "emitted @48 collides with another module; @310 is unused"
+      "to": "@312",
+      "evidence": "emitted @50 collides with another module; @312 is unused. Re-keyed from @50 to @48 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@49",
-      "to": "@311",
-      "evidence": "emitted @49 collides with another module; @311 is unused"
+      "to": "@313",
+      "evidence": "emitted @51 collides with another module; @313 is unused. Re-keyed from @51 to @49 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@50",
-      "to": "@312",
-      "evidence": "emitted @50 collides with another module; @312 is unused"
+      "to": "@314",
+      "evidence": "emitted @52 collides with another module; @314 is unused. Re-keyed from @52 to @50 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@51",
-      "to": "@313",
-      "evidence": "emitted @51 collides with another module; @313 is unused"
-    },
-    {
-      "from": "@52",
-      "to": "@314",
-      "evidence": "emitted @52 collides with another module; @314 is unused"
-    },
-    {
-      "from": "@53",
       "to": "@318",
-      "evidence": "emitted @53 collides with another module; @318 is unused"
-    }
-  ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN14Ov002ModelFileC1Ej",
-      "canonical_symbol": "_ZN9ModelFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call destination and the model wrapper constructor"
-    },
-    {
-      "symbol": "_ZN14Ov002ModelFileD1Ev",
-      "canonical_symbol": "_ZN9ModelFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail destructor registration destination and the model wrapper destructor"
-    },
-    {
-      "symbol": "_ZN15Ov002TexSeqFileC1Ej",
-      "canonical_symbol": "_ZN10TexSeqFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017934",
-      "evidence": "retail initializer call destination and the texture-sequence wrapper constructor"
-    },
-    {
-      "symbol": "_ZN15Ov002TexSeqFileD1Ev",
-      "canonical_symbol": "_ZN10TexSeqFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0201791c",
-      "evidence": "retail destructor registration destination and the texture-sequence wrapper destructor"
+      "evidence": "emitted @53 collides with another module; @318 is unused. Re-keyed from @53 to @51 when src/ov002_handles.cpp's coined Ov002ModelFile and Ov002TexSeqFile wrappers gave way to ModelFile and TexSeqFile (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -1709,7 +1679,7 @@
     }
   ],
   "notes": [
-    "The 24 file-scope handles are defined here, in retail construction order, so mwcc emits __sinit_ov002_handles.cpp. The wrapper types are local; undefined_symbol_aliases maps their constructors and destructors onto _ZN9ModelFileC1Ej / _ZN9ModelFileD1Ev and the texture-sequence veneers. func_ov002_020ad660 is the module's first function and this TU's .text; the initializer is renamed to .init. The handwritten src/unnamed/ov002/__sinit_ov002_02100560.cpp is retired.",
+    "The 24 file-scope handles are defined here, in retail construction order, so mwcc emits __sinit_ov002_handles.cpp. The handles are ModelFile and TexSeqFile objects, so the initializer calls those classes' constructors and registers their destructors directly. func_ov002_020ad660 is the module's first function and this TU's .text; the initializer is renamed to .init. The handwritten src/unnamed/ov002/__sinit_ov002_02100560.cpp is retired.",
     "The handles keep the names the actor TUs already read. The registration nodes are the compiler's @NNN temps, renamed where another module already owns that number. No new .bss is allocated: this TU claims the existing 0x0210d9a0..0x0210db80.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image, so the scratch link built ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40. The recorded rom.sha256 is the fleet SHA the other intact entries share."
   ],

@@ -166,17 +166,18 @@ extern unsigned char gGameMode;
 extern dCamera_c *gCamera;
 extern char data_020a0edc[];
 
-extern SharedFilePtr data_ov002_0210d9a0;
-extern SharedFilePtr data_ov002_0210d9c0;
-extern SharedFilePtr gOneUpMushroomModelFile;
-extern SharedFilePtr gBombheiModelFile;
 /* The ov002 model-file handles (src/ov002_handles.cpp defines all of them). */
-extern SharedFilePtr gShellGreenModelFile;
-extern SharedFilePtr gScaleUpKinokoModelFile;
-extern SharedFilePtr data_ov002_0210da40;
-extern SharedFilePtr gFeatherModelFile;
-extern SharedFilePtr gPFlowerOpenModelFile;
-extern SharedFilePtr gPFlowerCloseModelFile;
+extern ModelFile data_ov002_0210d9a0;
+extern ModelFile data_ov002_0210d9c0;
+extern ModelFile gOneUpMushroomModelFile;
+extern ModelFile gBombheiModelFile;
+extern ModelFile gShellGreenModelFile;
+extern ModelFile gScaleUpKinokoModelFile;
+extern ModelFile data_ov002_0210da40;
+extern ModelFile gFeatherModelFile;
+extern ModelFile gPFlowerOpenModelFile;
+extern ModelFile gPFlowerCloseModelFile;
+
 extern CLPS_Block data_ov002_0210d954;
 
 extern void hold_d_a_obj_hatena_block(void *thiz, void *kcl, void *mtx, int fix, short s,

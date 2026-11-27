@@ -968,9 +968,9 @@ s32 dActor_c::GetWaterHeightWDW()
     return height;
 }
 
-extern SharedFilePtr gCoinBluePoly4ModelFile;
 /* the blue coin's two model files */
-extern SharedFilePtr gCoinBluePoly32ModelFile;
+extern ModelFile gCoinBluePoly4ModelFile;
+extern ModelFile gCoinBluePoly32ModelFile;
 
 void dActor_c::LoadBlueCoinModel() {
     dExtSimpleModel_c::LoadFile(gCoinBluePoly4ModelFile);

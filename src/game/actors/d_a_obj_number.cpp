@@ -41,10 +41,10 @@ inline void *Particle::System::NewSimple(u32 id, const Vector3 &pos) {
     return NewSimple(id, pos.x, pos.y, pos.z);
 }
 
-extern SharedFilePtr gSNumberTextureSequenceFile;
-extern SharedFilePtr gSilverNumberModelFile;
-extern SharedFilePtr gNumberTextureSequenceFile;
-extern SharedFilePtr data_ov002_0210d9a8;
+extern TexSeqFile gSNumberTextureSequenceFile;
+extern ModelFile gSilverNumberModelFile;
+extern TexSeqFile gNumberTextureSequenceFile;
+extern ModelFile data_ov002_0210d9a8;
 
 extern u32 gNextActorUpdateMask;
 

@@ -119,9 +119,9 @@ struct BCA_File;
 
 extern signed char gCurrentSublevel;
 void func_02012694(unsigned int, const Vector3 *);
-extern SharedFilePtr data_ov002_0210da40;
-extern SharedFilePtr data_ov002_0210d9a0;
-extern SharedFilePtr data_ov002_0210d9c0;
+extern ModelFile data_ov002_0210da40;
+extern ModelFile data_ov002_0210d9a0;
+extern ModelFile data_ov002_0210d9c0;
 extern daPly_c *gPlayers[];
 
 /* Actor ids (symbols/actor_debug_names.tsv). */
@@ -195,7 +195,7 @@ s32 daJango_c::OnAimedAtWithEgg() {
    path (sFlyPathState). Without one it circles (sCircleState), and
    if the player has already lost the cap it starts out holding it.
 
-   The four handles are SharedFilePtrs; the loaders take them by
+   The handles are ModelFile and AnimFile objects; the loaders take them by
    reference and the payloads come back through filePtr. */
 int daJango_c::InitResources()
 {

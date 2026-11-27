@@ -1298,9 +1298,9 @@ extern ModelFile data_ov030_02115d00;
  * above are members of this class and are not redeclared. */
 extern "C" {
 
-extern SharedFilePtr  data_ov002_0210da40;
-extern SharedFilePtr  data_ov002_0210d9a0;
-extern SharedFilePtr  data_ov002_0210d9c0;
+extern ModelFile data_ov002_0210da40;
+extern ModelFile data_ov002_0210d9a0;
+extern ModelFile data_ov002_0210d9c0;
 extern SharedFilePtr *data_ov030_02114824[10];
 }
 

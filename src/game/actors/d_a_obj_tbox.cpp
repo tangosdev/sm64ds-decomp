@@ -35,8 +35,8 @@ void func_02012694(u32 code, const Vector3 *pos);
 extern daObjTbox_c::StateFunc data_ov064_0211c98c[][2];
 extern ModelFile data_ov064_0211c96c;
 extern AnimFile data_ov064_0211c964;
-extern SharedFilePtr data_ov002_0210d9a8;
-extern SharedFilePtr data_ov002_0210da38;
+extern ModelFile data_ov002_0210d9a8;
+extern ModelFile data_ov002_0210da38;
 
 /* TREASURE_BOX factory. */
 daObjTbox_c *daObjTbox_c_classInit() {

@@ -65,8 +65,8 @@ extern const int data_ov062_0211cf0c[9];
 
 extern SharedFilePtr *const data_ov062_0211ced8[2];
 extern SharedFilePtr *const data_ov062_0211cee0[2];
-extern SharedFilePtr gShellGreenModelFile;
-extern SharedFilePtr gShellRedModelFile;
+extern ModelFile gShellGreenModelFile;
+extern ModelFile gShellRedModelFile;
 
 int SurfaceInfo_TestFlag0x20(int *p); /* CLPS bit 0x20: water */
 

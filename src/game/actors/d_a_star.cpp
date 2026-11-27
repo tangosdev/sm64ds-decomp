@@ -113,7 +113,7 @@ extern void UnloadSilverStarAndNumber(void);
 extern "C" {
 extern AnimFile data_ov002_02110934;
 extern unsigned int gNextActorUpdateMask;
-extern SharedFilePtr gSilverNumberModelFile;
+extern ModelFile gSilverNumberModelFile;
 extern signed char gNumStageStars[];
 }
 
@@ -182,7 +182,7 @@ extern ModelFile data_ov002_0211092c;
 extern ModelFile data_ov002_0211093c;
 extern AnimFile data_ov002_02110924;
 extern AnimFile data_ov002_02110964;
-extern SharedFilePtr data_ov002_0210d9a8;
+extern ModelFile data_ov002_0210d9a8;
 extern int data_ov002_0210aa0c[3];
 extern StateHandler data_ov002_021109d8[];
 extern u8 gCurrentStarId;

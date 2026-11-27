@@ -172,7 +172,7 @@ BTA_File *data_ov074_02122e5c[7] = {
 extern "C" int func_02037e20(int *p);
 extern "C" unsigned int func_0201277c(unsigned int a);
 u8 data_ov074_02122d80[4] = {16, 9, 6, 3};
-extern SharedFilePtr gScaleUpKinokoModelFile;
+extern ModelFile gScaleUpKinokoModelFile;
 extern ModelFile data_ov084_02130cf8;
 extern BMA_File data_ov084_0213089c;
 extern AnimFile data_ov084_02130cc8;

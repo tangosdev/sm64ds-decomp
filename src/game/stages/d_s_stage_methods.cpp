@@ -5129,18 +5129,18 @@ extern const u8 data_020755bc[308] = {
     0xa4, 0x01, 0xb3, 0x01,
 };
 /* The twelve overlay model files every stage loads and releases. */
-extern SharedFilePtr gCoinYellowPoly4ModelFile;
-extern SharedFilePtr gCoinYellowPoly32ModelFile;
-extern SharedFilePtr gCoinRedPoly4ModelFile;
-extern SharedFilePtr gCoinRedPoly32ModelFile;
-extern SharedFilePtr data_ov002_0210da40;
-extern SharedFilePtr data_ov002_0210d9a0;
-extern SharedFilePtr data_ov002_0210d9c0;
+extern ModelFile gCoinYellowPoly4ModelFile;
+extern ModelFile gCoinYellowPoly32ModelFile;
+extern ModelFile gCoinRedPoly4ModelFile;
+extern ModelFile gCoinRedPoly32ModelFile;
+extern ModelFile data_ov002_0210da40;
+extern ModelFile data_ov002_0210d9a0;
+extern ModelFile data_ov002_0210d9c0;
 extern ModelFile data_ov002_0210e7d8;
 extern ModelFile data_ov002_0210e3a0;
 extern ModelFile gPowerStarModelFile;
 extern ModelFile gTransparentStarModelFile;
-extern SharedFilePtr data_ov002_0210d9a8;
+extern ModelFile data_ov002_0210d9a8;
 extern SharedFilePtr *const data_020756f0[12] = {
     &gCoinYellowPoly4ModelFile,  // 0x8006
     &gCoinYellowPoly32ModelFile, // 0x8005

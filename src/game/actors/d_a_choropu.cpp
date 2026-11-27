@@ -88,7 +88,7 @@ extern const int data_ov080_0212767c[18] = {
 extern const int data_ov080_021276c4[20] = {
     24, 32, 40, 48, 56, 68, 76, 80, 88, 94, 100, 100, 100, 100, 100, 100, 100, 100, 90, 80,
 };
-extern SharedFilePtr gOneUpMushroomModelFile;
+extern ModelFile gOneUpMushroomModelFile;
 extern SharedFilePtr *const data_ov080_0212766c[4] = {
     &data_ov080_021283e8,
     &data_ov080_021283d0,

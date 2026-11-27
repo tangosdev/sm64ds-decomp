@@ -61,8 +61,8 @@ enum {
 };
 
 extern ModelFile data_ov090_02134524;
-extern SharedFilePtr gWRingModelFile;
-extern SharedFilePtr data_ov002_0210d9a8;
+extern ModelFile gWRingModelFile;
+extern ModelFile data_ov002_0210d9a8;
 extern AnimFile data_ov090_0213452c;
 extern unsigned char gGameMode;
 

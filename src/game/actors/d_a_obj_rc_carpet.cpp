@@ -39,7 +39,7 @@ struct FlyingCarpetResources {
 typedef char
     FlyingCarpetResources_size_must_be_0x0c[sizeof(FlyingCarpetResources) == 0x0c ? 1 : -1];
 
-extern SharedFilePtr data_ov002_0210d9f0;
+extern ModelFile data_ov002_0210d9f0;
 extern ModelFile gRcCarpetModelFile;
 extern AnimFile gRcCarpetWaitAnimationFile;
 extern ClsnFile gRcCarpetCollisionFile;

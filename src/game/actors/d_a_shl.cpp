@@ -28,8 +28,8 @@
  * section per function in the reverse of source order.
  *
  * Known limits:
- * - data_ov102_0214d70c is this TU's .rodata pair of model-file handles
- *   and the state records are .bss; this text-only TU claims neither.
+ * - data_ov102_0214d70c (.rodata) points at the two ov002 shell model
+ *   handles; it and the four state records (.bss) are defined here.
  *
  * deslop leftovers:
  * - func_ov002_020ad660, func_ov002_020cc16c and func_020105cc are other
@@ -66,13 +66,13 @@ struct ShlStateEnd {
 
 extern "C" {
 
-/* -- the four state records (.bss) and the model handles (.rodata) -- */
+/* -- the four state records (.bss, defined below) and the ov002 shell model handles -- */
 extern ShlState data_ov102_0214ea48;
 extern ShlState data_ov102_0214ea58;
 extern ShlState data_ov102_0214ea68;
 extern ShlStateEnd data_ov102_0214ea78;
-extern SharedFilePtr gShellGreenModelFile;
-extern SharedFilePtr gShellRedModelFile;
+extern ModelFile gShellGreenModelFile;
+extern ModelFile gShellRedModelFile;
 extern SharedFilePtr *const data_ov102_0214d70c[2] = {
     &gShellGreenModelFile,
     &gShellRedModelFile,

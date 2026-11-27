@@ -31,7 +31,7 @@
  *
  * Notes:
  * - data_ov091_02135674 / 0213567c / 02135684 are this overlay's BMD and
- *   two BCA SharedFilePtr handles; data_ov002_0210da40 / 0210d9a0 /
+ *   two BCA handles; data_ov002_0210da40 / 0210d9a0 /
  *   0210d9c0 are shared ov002 files the cloud also claims. symbols.txt has
  *   no recovered names for any of them.
  * - KillByAttack (fire hit), func_02012694 (sound at a
@@ -61,9 +61,9 @@ enum d_a_hyuhyu_AssetId {
 struct BCA_File;
 struct BMD_File;
 
-extern SharedFilePtr data_ov002_0210da40;
-extern SharedFilePtr data_ov002_0210d9a0;
-extern SharedFilePtr data_ov002_0210d9c0;
+extern ModelFile data_ov002_0210da40;
+extern ModelFile data_ov002_0210d9a0;
+extern ModelFile data_ov002_0210d9c0;
 extern daHyuhyu_c_State data_ov091_021356b0; /* cloud: blowing */
 extern daHyuhyu_c_State data_ov091_021356c0; /* gust: flying */
 extern daHyuhyu_c_State data_ov091_021356d0; /* cloud: waiting */

@@ -54,7 +54,7 @@ struct PathLiftState {
 struct BMD_File;
 
 /* The shared lift model file. */
-extern SharedFilePtr data_ov002_0210d9f0;
+extern ModelFile data_ov002_0210d9f0;
 
 /* ROM symbols with no header of their own. */
 extern "C" {

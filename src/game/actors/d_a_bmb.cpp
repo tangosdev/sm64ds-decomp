@@ -17,8 +17,7 @@
  *   module stops linking.
  * - func_ov102_0214ad14, 0214ae1c and 0214b384 are called from other overlays
  *   too, as members on a Bob-omb the caller holds or spawned.
- * - data_ov102_* are the file handles; SharedFilePtr has no fields, so the
- *   loaded BCA is still the word at +4.
+ * - The two animation handles are AnimFiles; the loaded BCA is their filePtr.
  * - mWithMeshClsn.SetRadius / SetHeight are out of line. Storing mRadius /
  *   mHeight directly drops the call.
  * - UpdateAttachedPose reads the eating
@@ -48,7 +47,7 @@
    CleanupResources releases them, so both C++-named members need one agreed
    spelling; the members below that read the loaded handle out of the same bytes
    take their own view with a cast rather than a second declaration. */
-extern SharedFilePtr gBombheiModelFile;
+extern ModelFile gBombheiModelFile;
 
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daBmb_c_AssetId { ASSET_BOMBHEI_CARRY_BCA = 0x02b7, ASSET_BOMBHEI_WALK_BCA = 0x02b8 };

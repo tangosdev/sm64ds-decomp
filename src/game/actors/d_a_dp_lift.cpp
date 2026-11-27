@@ -40,7 +40,7 @@ enum daDpLift_c_AssetId { ASSET_DP_LIFT_BMD = 0x05e1, ASSET_DP_LIFT_KCL = 0x05e2
  * This TU's two handles are defined at the end of this file so the
  * constructors do not enter .text. */
 extern ModelFile data_ov025_02113ae0;
-extern SharedFilePtr data_ov002_0210d9f0;
+extern ModelFile data_ov002_0210d9f0;
 extern ClsnFile data_ov025_02113ad8;
 
 extern CLPS_Block data_ov025_02112d08;

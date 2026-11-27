@@ -32,9 +32,9 @@
 
 /* BSS file homes, one per item variant; Init loads them, Cleanup
  * releases them. */
-extern SharedFilePtr gOneUpMushroomModelFile;
-extern SharedFilePtr gScaleUpKinokoModelFile;
-extern SharedFilePtr gShellGreenModelFile;
+extern ModelFile gOneUpMushroomModelFile;
+extern ModelFile gScaleUpKinokoModelFile;
+extern ModelFile gShellGreenModelFile;
 
 /* Spawn heights above the tag, indexed by mActionIndex. */
 extern const s32 data_ov002_020ff090[4] = {0x64000, 0x64000, 0xa000, 0x64000};

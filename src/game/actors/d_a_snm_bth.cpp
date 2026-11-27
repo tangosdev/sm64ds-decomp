@@ -35,9 +35,9 @@ extern Vector3 data_ov027_02113d10;
 
 extern "C" {
 extern u8 gGameMode;
-extern SharedFilePtr data_ov002_0210da40;
-extern SharedFilePtr data_ov002_0210d9a0;
-extern SharedFilePtr data_ov002_0210d9c0;
+extern ModelFile data_ov002_0210da40;
+extern ModelFile data_ov002_0210d9a0;
+extern ModelFile data_ov002_0210d9c0;
 }
 
 
