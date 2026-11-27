@@ -1,4 +1,4 @@
-extern unsigned short GetLinkStatus(unsigned short mask);
+#include "Link.h"
 extern int func_0203d950(int i);
 extern void func_02030790(void);
 extern int data_0209fc68;

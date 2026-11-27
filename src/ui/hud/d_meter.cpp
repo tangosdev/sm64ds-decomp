@@ -80,6 +80,7 @@ enum dMeter_c_AssetId {
 #include "Sound.h"
 #include "Event.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "Link.h"
 
 /* The declarations below are the union of what the nineteen shards declared
  * locally, minus everything a shared header already supplies. What is left is
@@ -134,7 +135,6 @@ extern dFdBrightness_c *gSceneFader;
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void Deallocate(void *handle);
-void ClearLinkErrors(void);
 }
 extern unsigned char NumStars(void);
 

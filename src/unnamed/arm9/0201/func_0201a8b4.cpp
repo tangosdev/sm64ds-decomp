@@ -2,6 +2,7 @@
 #include "private/watchdog_alarm.h"
 #include "FatalSpin.h"
 #include "nitro/os/tick.h"
+#include "Link.h"
 
 /* The watchdog alarm's handler. While the time since base is under limit it
  * re-arms itself for the rest, provided the rest is at least a millisecond
@@ -9,8 +10,6 @@
  * limit is used up it enters the fatal-error spin (func_02013f28), unless
  * the link is busy (GetLinkStatus bit 0x2000, held while a link step waits
  * for the other consoles). */
-extern "C" unsigned short GetLinkStatus(unsigned short mask);
-
 extern "C" void func_0201a8b4(void *arg) {
     WatchdogAlarm *w = (WatchdogAlarm *)arg;
     unsigned long long elapsed = (unsigned long long)OS_GetTick() - w->base;
