@@ -1548,42 +1548,42 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN18EntObjModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail model-handle construction destination and the SharedFilePtr model family identity"
     },
     {
       "symbol": "_ZN18EntObjModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the SharedFilePtr model family identity"
     },
     {
       "symbol": "_ZN25EntObjAnimationFileHandleC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x0201799c",
       "evidence": "retail animation-handle construction destination and the SharedFilePtr animation family identity"
     },
     {
       "symbol": "_ZN25EntObjAnimationFileHandleD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
       "evidence": "retail destructor registration destination and the SharedFilePtr animation family identity"
     },
     {
       "symbol": "_ZN31EntObjTextureSequenceFileHandleC1Ej",
-      "canonical_symbol": "SharedFilePtr_Construct_TexSeq",
+      "canonical_symbol": "_ZN10TexSeqFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017934",
       "evidence": "retail texture-sequence-handle construction destination and the SharedFilePtr texture-sequence family identity"
     },
     {
       "symbol": "_ZN31EntObjTextureSequenceFileHandleD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_TexSeq",
+      "canonical_symbol": "_ZN10TexSeqFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x0201791c",
       "evidence": "retail destructor registration destination and the SharedFilePtr texture-sequence family identity"
@@ -2029,7 +2029,7 @@
       "source": "0x0211b5f0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -2049,7 +2049,7 @@
       "source": "0x0211b60c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -2069,7 +2069,7 @@
       "source": "0x0211b628",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2089,7 +2089,7 @@
       "source": "0x0211b644",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -2109,7 +2109,7 @@
       "source": "0x0211b660",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -2129,7 +2129,7 @@
       "source": "0x0211b67c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2149,7 +2149,7 @@
       "source": "0x0211b698",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2169,7 +2169,7 @@
       "source": "0x0211b6b4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2189,7 +2189,7 @@
       "source": "0x0211b6d0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2209,7 +2209,7 @@
       "source": "0x0211b6ec",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2229,7 +2229,7 @@
       "source": "0x0211b708",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2249,7 +2249,7 @@
       "source": "0x0211b724",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2269,7 +2269,7 @@
       "source": "0x0211b740",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2289,7 +2289,7 @@
       "source": "0x0211b75c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2309,7 +2309,7 @@
       "source": "0x0211b778",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2329,7 +2329,7 @@
       "source": "0x0211b794",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2349,7 +2349,7 @@
       "source": "0x0211b7b0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2369,7 +2369,7 @@
       "source": "0x0211b7cc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2389,7 +2389,7 @@
       "source": "0x0211b7e8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2409,7 +2409,7 @@
       "source": "0x0211b804",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2429,7 +2429,7 @@
       "source": "0x0211b820",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017934"
@@ -2449,7 +2449,7 @@
       "source": "0x0211b83c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017934"
@@ -2479,7 +2479,7 @@
       "source": "0x0211b9ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -2529,7 +2529,7 @@
       "source": "0x0211b9c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017984"
@@ -2899,7 +2899,7 @@
       "source": "0x0211baa4",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_TexSeq",
+      "symbol": "_ZN10TexSeqFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0201791c"

@@ -64,7 +64,7 @@ extern "C" {
 }
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * pair (func_02017acc / func_02017ab4), spelled through a declared-only
+ * pair (ModelFile::ModelFile / ModelFile::~ModelFile), spelled through a declared-only
  * subclass so the static initializer names the real entry points. */
 struct SanboModelFilePtr : SharedFilePtr {
     SanboModelFilePtr(u32 fileID);

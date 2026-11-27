@@ -30,9 +30,9 @@ enum daBDonketu_c_AssetId {
 #include "SharedFilePtr.h"
 #include "nitro/fx/fx_trig.h"
 
-/* One model handle constructs through func_02017acc and destroys through
- * func_02017ab4. Four animation handles construct through
- * SharedFilePtr::Construct and destroy through SharedFilePtr_Destruct_Anim.
+/* One model handle constructs through ModelFile::ModelFile and destroys through
+ * ModelFile::~ModelFile. Four animation handles construct through
+ * AnimFile::AnimFile and destroy through AnimFile::~AnimFile.
  * The file table stays ROM data. */
 struct DonketuModelFilePtr : SharedFilePtr {
     DonketuModelFilePtr(unsigned int fileId);

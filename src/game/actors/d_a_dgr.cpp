@@ -35,8 +35,8 @@ enum daDgr_c_AssetId { ASSET_DONGURU_BMD = 0x02da, ASSET_DONGURU_KCL = 0x02db };
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
-/* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
- * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
+/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
+ * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct DgrModelFilePtr : SharedFilePtr {
     DgrModelFilePtr(u32 fileID);

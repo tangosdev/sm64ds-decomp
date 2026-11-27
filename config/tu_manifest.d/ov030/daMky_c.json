@@ -740,7 +740,7 @@
       "source": "0x02114934",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -760,7 +760,7 @@
       "source": "0x02114950",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -780,7 +780,7 @@
       "source": "0x0211496c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -800,7 +800,7 @@
       "source": "0x02114988",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -820,7 +820,7 @@
       "source": "0x021149a4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -840,7 +840,7 @@
       "source": "0x021149c0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -860,7 +860,7 @@
       "source": "0x021149dc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -880,7 +880,7 @@
       "source": "0x021149f8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -900,7 +900,7 @@
       "source": "0x02114a14",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -920,7 +920,7 @@
       "source": "0x02114a30",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -940,7 +940,7 @@
       "source": "0x02114a4c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -1010,7 +1010,7 @@
       "source": "0x02114cd8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1040,7 +1040,7 @@
       "source": "0x02114ce8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017984"
@@ -1789,38 +1789,38 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN15MkyModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
-      "evidence": "model handle construction in the retail initializer is func_02017acc"
+      "evidence": "model handle construction in the retail initializer is _ZN9ModelFileC1Ej"
     },
     {
       "symbol": "_ZN15MkyModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
-      "evidence": "model handle destruction registered by the retail initializer is func_02017ab4"
+      "evidence": "model handle destruction registered by the retail initializer is _ZN9ModelFileD1Ev"
     },
     {
       "symbol": "_ZN14MkyAnimFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x0201799c",
-      "evidence": "animation handle construction in the retail initializer is SharedFilePtr::Construct"
+      "evidence": "animation handle construction in the retail initializer is _ZN8AnimFileC1Ej"
     },
     {
       "symbol": "_ZN14MkyAnimFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
-      "evidence": "animation handle destruction registered by the retail initializer is SharedFilePtr_Destruct_Anim"
+      "evidence": "animation handle destruction registered by the retail initializer is _ZN8AnimFileD1Ev"
     },
     {
       "symbol": "_ZN7Vector3D1Ev",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017a9cEv",
+      "canonical_symbol": "_ZN9ModelFileD2Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a9c",
-      "evidence": "deadstrip externalises this TU's unreferenced vague ~Vector3, and the leftover import still occupies the name. Nothing references it. Parking that import on func_02017a9c, which this object does not already import, frees _ZN7Vector3D1Ev for the carry-offset registration."
+      "evidence": "deadstrip externalises this TU's unreferenced vague ~Vector3, and the leftover import still occupies the name. Nothing references it. Parking that import on _ZN9ModelFileD2Ev, which this object does not already import, frees _ZN7Vector3D1Ev for the carry-offset registration."
     },
     {
       "symbol": "_ZN6MkyOffD1Ev",
@@ -2385,7 +2385,7 @@
     "STAGE 3b, the cost of converting members that are NOT at the end of the file. A C++-named member cannot carry a linkage specification, so its declarations must sit at file scope above it -- and because this TU is laid out ROM-ascending, the eleven EnterState* members are scattered among the free functions and their region has to go at the TOP. That puts 12 canonical function declarations in view of all 24 free functions below, several of which recovered the same symbol differently at block scope. Measured: mwccarm 2004/b56 accepts that for FUNCTIONS (a block-scope redeclaration inherits the visible C linkage, and with -gccext,on the differing spellings do not collide) and rejects it outright for DATA -- hoisting gMonkeyHoldAnimationFile / _02115d08 / _02115d18 / data_02082214 gave `identifier 'gMonkeyRunAnimationFile' redeclared; was declared as 'int[]', now declared as 'void *[]'`, the same wall that keeps decl_common.h out. Data does not need hoisting: a global-scope variable is not mangled, so an `extern int gMonkeyHoldAnimationFile[];` written at block scope inside a C++-named member still resolves to the plain symbol. Every member kept its own data declarations. Two call sites were retyped to the canonical function spelling (EnterState4's SetAnim second argument, EnterState3's SetAnim receiver and file argument); both pass the same value in the same register and cost nothing.",
     "STAGE 3b, the member rename must land WITH the promotion, and that is measured rather than quoted. The eleven renames were written into config/arm9/overlays/ov030/symbols.txt while the shards were still unpromoted, and the linkcheck BASELINE control -- which builds the tree with no TU substitution -- went from green to `modules NOT byte-exact: ['ov030']` with 11 `Symbol '_ZN7daMky_c11EnterStateNEv' ... not found in linked binary / Possible name: func_ov030_XXXXXXXX` errors. The 22 pointer-to-member records at 0x02115ac8 are unowned .data that dsd resolves by NAME, so a half-landed rename links them as 0x00000000. symbols.txt, the TU and this manifest therefore move in one commit.",
     "Collision property member calls replace local helper declarations. Reconciled 1 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (59 sections, 432 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md.",
-    "Folded __sinit_ov030_02114924 into this TU. mwcc emits __sinit_d_a_mky.cpp. @2061-@2067 and @2069, @2071, @2073 clash with ov074 and are renamed to unused same-length names. The carry offsets are MkyOff, not Vector3(x, y, z): the member ctor stores z ahead of y when the magnitudes match, and the cartridge does not. ~MkyOff is aliased to ~Vector3 after the unreferenced vague ~Vector3 import is parked on func_02017a9c.",
+    "Folded __sinit_ov030_02114924 into this TU. mwcc emits __sinit_d_a_mky.cpp. @2061-@2067 and @2069, @2071, @2073 clash with ov074 and are renamed to unused same-length names. The carry offsets are MkyOff, not Vector3(x, y, z): the member ctor stores z ahead of y when the magnitudes match, and the cartridge does not. ~MkyOff is aliased to ~Vector3 after the unreferenced vague ~Vector3 import is parked on _ZN9ModelFileD2Ev.",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded fleet rom.sha256 stays d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8."
   ],
   "compiler_only_output": [

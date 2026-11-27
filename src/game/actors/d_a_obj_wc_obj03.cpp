@@ -38,7 +38,7 @@ enum d_a_obj_wc_obj03_AssetId {
 #include "math/MtxStack.h"
 #include "SpawnInfo.h"
 
-/* 8-byte file handle. The model uses func_02017acc / func_02017ab4. The
+/* 8-byte file handle. The model uses ModelFile::ModelFile / ModelFile::~ModelFile. The
  * spelling is local; the manifest aliases the generated names to those ROM
  * symbols. */
 struct WcObj03ModelFilePtr : SharedFilePtr {

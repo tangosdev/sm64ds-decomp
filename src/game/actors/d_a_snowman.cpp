@@ -89,7 +89,7 @@ extern daPly_c *gPlayers[];
 extern union Matrix4x3 gScratchMtx;
 
 /* File handles the static initializer constructs. The two models use
- * func_02017acc; the five animations use SharedFilePtr::Construct.
+ * ModelFile::ModelFile; the five animations use AnimFile::AnimFile.
  * The wrapper names are long enough that their mangled constructor
  * symbols can be aliased onto those retail functions. */
 struct daSnowmanModelFilePtr : SharedFilePtr {

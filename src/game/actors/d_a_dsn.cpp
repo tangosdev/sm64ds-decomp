@@ -43,10 +43,10 @@ enum daDsn_c_AssetId {
 #include "ParticleIds.h"
 
 /* The three resource handles as the ROM lays them out: {id, loaded file}.
- * The model handle constructs through func_02017acc and destroys through
- * func_02017ab4; the collision handle through func_02017b4c /
- * SharedFilePtr_Destruct_Clsn; the texture-sequence (BTP) handle through
- * SharedFilePtr_Construct_TexSeq / SharedFilePtr_Destruct_TexSeq. The
+ * The model handle constructs through ModelFile::ModelFile and destroys through
+ * ModelFile::~ModelFile; the collision handle through ClsnFile::ClsnFile /
+ * ClsnFile::~ClsnFile; the texture-sequence (BTP) handle through
+ * TexSeqFile::TexSeqFile / TexSeqFile::~TexSeqFile. The
  * manifest aliases each undefined member onto its ROM symbol. */
 struct DsnModelFilePtr : SharedFilePtr {
     DsnModelFilePtr(u32 fileID);

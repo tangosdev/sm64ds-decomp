@@ -52,11 +52,11 @@ spelling while every instruction and relocation slot agrees:
 
 | Organic object | ROM constructor target | ROM destructor target |
 | --- | --- | --- |
-| model handle `0x2b1` | `func_02017acc` | `func_02017ab4` |
-| model handle `0x2b3` | `func_02017acc` | `func_02017ab4` |
-| animation handle `0x2b2` | `_ZN13SharedFilePtr9ConstructEj` | `SharedFilePtr_Destruct_Anim` |
-| animation handle `0x2b5` | `_ZN13SharedFilePtr9ConstructEj` | `SharedFilePtr_Destruct_Anim` |
-| texture-sequence handle `0x2b4` | `SharedFilePtr_Construct_TexSeq` | `SharedFilePtr_Destruct_TexSeq` |
+| model handle `0x2b1` | `ModelFile::ModelFile` | `ModelFile::~ModelFile` |
+| model handle `0x2b3` | `ModelFile::ModelFile` | `ModelFile::~ModelFile` |
+| animation handle `0x2b2` | `AnimFile::AnimFile` | `AnimFile::~AnimFile` |
+| animation handle `0x2b5` | `AnimFile::AnimFile` | `AnimFile::~AnimFile` |
+| texture-sequence handle `0x2b4` | `TexSeqFile::TexSeqFile` | `TexSeqFile::~TexSeqFile` |
 | cylinder offset | inline three-word construction | `_ZN7Vector3D1Ev` |
 
 The five resource globals are exactly eight bytes apart where applicable. The

@@ -37,9 +37,9 @@ typedef struct CLPS_Block {
 
 extern CLPS_Block data_ov027_02113108;
 
-/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
- * func_02017ab4; collision handles construct through func_02017b4c and destroy
- * through SharedFilePtr_Destruct_Clsn. The manifest aliases those undefined
+/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
+ * ModelFile::~ModelFile; collision handles construct through ClsnFile::ClsnFile and destroy
+ * through ClsnFile::~ClsnFile. The manifest aliases those undefined
  * member spellings onto the real ROM functions; each handle is the base plus
  * the two words that family actually stores. */
 struct SlIceBlockModelFilePtr : SharedFilePtr {

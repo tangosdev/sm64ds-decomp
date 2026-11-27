@@ -52,12 +52,12 @@ void RenderAll();
 void CopyToViewMat(const Matrix4x3 *m);
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
-   model handles construct through func_02017acc and destroy through
-   func_02017ab4; the animation handles construct through
-   SharedFilePtr::Construct and destroy through SharedFilePtr_Destruct_Anim;
+   model handles construct through ModelFile::ModelFile and destroy through
+   ModelFile::~ModelFile; the animation handles construct through
+   AnimFile::AnimFile and destroy through AnimFile::~AnimFile;
    the texture-sequence handles construct through
-   SharedFilePtr_Construct_TexSeq and destroy through
-   SharedFilePtr_Destruct_TexSeq. The manifest aliases each undefined member
+   TexSeqFile::TexSeqFile and destroy through
+   TexSeqFile::~TexSeqFile. The manifest aliases each undefined member
    onto its ROM symbol. */
 struct EntObjModelFilePtr : SharedFilePtr {
     EntObjModelFilePtr(u32 fileID);
@@ -943,10 +943,10 @@ dEntObj_c *dEntObj_c_classInit(void) {
 /* -------------------------------------------------------------------------- */
 UnknownVsPlayer::UnknownVsPlayer() {}
 /* The twenty-two file-scope resource handles, in retail initializer order:
-   four model files (func_02017acc / func_02017ab4), sixteen animation files
-   (SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim), then two
-   texture-sequence files (SharedFilePtr_Construct_TexSeq /
-   SharedFilePtr_Destruct_TexSeq). */
+   four model files (ModelFile::ModelFile / ModelFile::~ModelFile), sixteen animation files
+   (AnimFile::AnimFile / AnimFile::~AnimFile), then two
+   texture-sequence files (TexSeqFile::TexSeqFile /
+   TexSeqFile::~TexSeqFile). */
 EntObjModelFilePtr data_ov075_0211d3fc(0x9c05);
 EntObjModelFilePtr data_ov075_0211d3bc(0x8417);
 EntObjAnimationFileHandle data_ov075_0211d3e4(0x8416);

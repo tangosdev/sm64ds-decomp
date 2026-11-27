@@ -48,8 +48,8 @@ struct Vec3;
 
 typedef void (daLinelift2_c::*StateFunc)();
 
-/* 8-byte file handles. The models use func_02017acc / func_02017ab4 and the
- * collision files func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
+/* 8-byte file handles. The models use ModelFile::ModelFile / ModelFile::~ModelFile and the
+ * collision files ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct Linelift2ModelFilePtr : SharedFilePtr {
     Linelift2ModelFilePtr(u32 fileID);

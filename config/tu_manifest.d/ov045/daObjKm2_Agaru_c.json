@@ -128,7 +128,7 @@
   ],
   "notes": [
     "Hand-assembled: tubuild create generated the six class members; the mesh-collider callback pair and the classInit factory were folded in by hand, following the ov045 siblings d_a_obj_km2_ami_bou.cpp and d_a_obj_km2_ukishima.cpp.",
-    "FOLDED 2026-10-10: __sinit_ov045_021121a8 folded into this TU. The two resource handles are file-scope objects (AgaruModelFilePtr at 0x02113188 file ID 1627, AgaruCollisionFilePtr at 0x02113180 file ID 1628); mwcc emits __sinit_d_a_obj_km2_agaru.cpp, the .ctor word and the two destructor-registration nodes itself. The wrapper ctor/dtor symbols alias onto the ROM veneer pairs func_02017acc/func_02017ab4 and func_02017b4c/SharedFilePtr_Destruct_Clsn. The handwritten src/unnamed/ov045/__sinit_ov045_021121a8.c is retired.",
+    "FOLDED 2026-10-10: __sinit_ov045_021121a8 folded into this TU. The two resource handles are file-scope objects (AgaruModelFilePtr at 0x02113188 file ID 1627, AgaruCollisionFilePtr at 0x02113180 file ID 1628); mwcc emits __sinit_d_a_obj_km2_agaru.cpp, the .ctor word and the two destructor-registration nodes itself. The wrapper ctor/dtor symbols alias onto the ROM veneer pairs _ZN9ModelFileC1Ej/_ZN9ModelFileD1Ev and _ZN8ClsnFileC1Ej/_ZN8ClsnFileD1Ev. The handwritten src/unnamed/ov045/__sinit_ov045_021121a8.c is retired.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock control -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way."
   ],
   "verification": {
@@ -425,28 +425,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN17AgaruModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN17AgaruModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
     },
     {
       "symbol": "_ZN21AgaruCollisionFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "canonical_symbol": "_ZN8ClsnFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN21AgaruCollisionFilePtrD1Ev",
-      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
+      "canonical_symbol": "_ZN8ClsnFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
@@ -484,7 +484,7 @@
       "source": "0x021121b8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -504,7 +504,7 @@
       "source": "0x021121d4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -534,7 +534,7 @@
       "source": "0x021121fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -564,7 +564,7 @@
       "source": "0x0211220c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
+      "symbol": "_ZN8ClsnFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017b34"

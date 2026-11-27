@@ -44,8 +44,8 @@ enum d_a_i_donketu_AssetId {
 #include "SharedFilePtr.h"
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (func_02017acc / func_02017ab4 for the model,
- * SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim for the four
+ * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the model,
+ * AnimFile::AnimFile / AnimFile::~AnimFile for the four
  * animation handles), spelled through declared-only subclasses so the
  * static initializer names the real entry points. The code reaches them
  * through the data_ov027_021138f4 resource block. */

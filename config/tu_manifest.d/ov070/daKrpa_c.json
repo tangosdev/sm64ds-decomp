@@ -463,7 +463,7 @@
     "tubuild create warning: this TU began as a hand-assembled reverse-ROM-order concatenation because tubuild create refused the extern-C-wrapped legacy bodies; it has since been reconstructed around the genuine daKrpa_c class and typed owned subobjects.",
     "25/25 MATCH, objisolate clean, reloc-destinations clean. Factory is `return new daKrpa_c()`; the leaf unsigned-long operator new forwards `_ZN7fBase_cnwEj`. The inline virtual destructor makes mwcc emit retail D1 then D0 with no D2. Real Vector3 locals emit their canonical empty destructor duplicate; `new` also emits Matrix4x3's empty vague-linkage D1 (deadstripped, no ROM symbol). The source emits the exact actor descriptor, RTTI, and complete vtable; every discarded object is fail-closed through a canonical-home policy in this text-only manifest.",
     "daKrpa_c_classInit and g_profile_KERONPA are reconstructed source-style names: SM64DS proves the daKrpa_c RTTI identity, KERONPA registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical aliases were FlameChomp_Spawn, daKrpa_c_Spawn, and daKrpa_c_SpawnInfo.",
-    "FOLD sinit ov070:__sinit_ov070_02122f30 -> __sinit_d_a_krpa.cpp. The TU now defines the model handle as a TU-local SharedFilePtr subclass (KrpaModelFilePtr, file ID 0x351 -> func_02017acc/func_02017ab4) and the four-entry daKrpaState table, so mwcc emits the initializer, its destructor-registration node, the eight PMF descriptor constants at 0x021232f4..0x02123334, and the ctor-table word itself; the handwritten src/unnamed/ov070/__sinit_ov070_02122f30.c is retired. Emitted temps renumbered @692..@700 -> @676..@685 via defined_symbol_renames (fleet collisions on main).",
+    "FOLD sinit ov070:__sinit_ov070_02122f30 -> __sinit_d_a_krpa.cpp. The TU now defines the model handle as a TU-local SharedFilePtr subclass (KrpaModelFilePtr, file ID 0x351 -> _ZN9ModelFileC1Ej/_ZN9ModelFileD1Ev) and the four-entry daKrpaState table, so mwcc emits the initializer, its destructor-registration node, the eight PMF descriptor constants at 0x021232f4..0x02123334, and the ctor-table word itself; the handwritten src/unnamed/ov070/__sinit_ov070_02122f30.c is retired. Emitted temps renumbered @692..@700 -> @676..@685 via defined_symbol_renames (fleet collisions on main).",
     "Collision property member calls replace local helper declarations. Reconciled 9 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (50 sections, 162 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
   ],
   "verification": {
@@ -743,14 +743,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN16KrpaModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's PC24 relocation"
     },
     {
       "symbol": "_ZN16KrpaModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor's ABS32 relocation"
@@ -877,7 +877,7 @@
       "source": "0x02122f3c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -907,7 +907,7 @@
       "source": "0x02123004",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"

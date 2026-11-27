@@ -34,8 +34,8 @@ struct EmmYukaFiles {
     CLPS_Block *clps;
 };
 
-/* The ctor/dtor pairs are the ROM's SharedFilePtr veneers (func_02017acc /
- * func_02017ab4 for the model, func_02017b4c / SharedFilePtr_Destruct_Clsn
+/* The ctor/dtor pairs are the ROM's SharedFilePtr veneers (ModelFile::ModelFile /
+ * ModelFile::~ModelFile for the model, ClsnFile::ClsnFile / ClsnFile::~ClsnFile
  * for the collision); the subclasses exist to spell those entry points. */
 struct EmmYukaModelFilePtr : SharedFilePtr {
     EmmYukaModelFilePtr(u32 fileID);

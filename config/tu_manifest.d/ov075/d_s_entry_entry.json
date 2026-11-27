@@ -8,7 +8,7 @@
   "boundary_confidence": "high",
   "boundary_evidence": [
     "TEXT: dScEntry_c_classInit_ENTRY through EntryMesh::Init is the contiguous run 0x0211a854..0x0211b524. d_s_entry_methods.cpp ends at 0x0211a854 and .rodata begins at 0x0211b524.",
-    "INIT: __sinit_ov075_0211c51c (0x0211c51c..0x0211c5a4) constructs EntryMeshTextureFile with file 0x8418, registers func_020178b4, and copies the three EntryMesh pointer-to-member descriptors into EntryMeshHandlers. mwcc emits that initializer from the file-scope objects in this TU.",
+    "INIT: __sinit_ov075_0211c51c (0x0211c51c..0x0211c5a4) constructs EntryMeshTextureFile with file 0x8418, registers _ZN10ModelFileBD1Ev, and copies the three EntryMesh pointer-to-member descriptors into EntryMeshHandlers. mwcc emits that initializer from the file-scope objects in this TU.",
     "DATA: the three descriptors are 0x0211d34c UpdateRipple, 0x0211d354 InitGrid, 0x0211d35c DrawGrid. The claim stops at 0x0211d364; data_ov075_0211d364 keeps the following zero gap out of this object.",
     "BSS: EntryMeshTextureFile at 0x0211d980 (8), its registration node at 0x0211d988 (0xc), EntryMeshHandlers at 0x0211d994 (0x18), then data_ov075_0211d9ac (0x14) through 0x0211d9c0. data_ov075_0211d9bc is the interior label at +0x10."
   ],
@@ -269,17 +269,17 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN16EntryMeshTextureC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_020178ccEj",
+      "canonical_symbol": "_ZN10ModelFileBC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x020178cc",
-      "evidence": "retail bl at 0x0211c528 constructs the mesh texture handle through func_020178cc."
+      "evidence": "retail bl at 0x0211c528 constructs the mesh texture handle through _ZN10ModelFileBC1Ej."
     },
     {
       "symbol": "_ZN16EntryMeshTextureD1Ev",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_020178b4Ev",
+      "canonical_symbol": "_ZN10ModelFileBD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x020178b4",
-      "evidence": "retail pool word at 0x0211c58c registers func_020178b4 as the handle destructor."
+      "evidence": "retail pool word at 0x0211c58c registers _ZN10ModelFileBD1Ev as the handle destructor."
     }
   ],
   "defined_symbol_renames": [
@@ -348,7 +348,7 @@
       "source": "0x0211c528",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_020178ccEj",
+      "symbol": "_ZN10ModelFileBC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x020178cc"
@@ -378,7 +378,7 @@
       "source": "0x0211c58c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN13SharedFilePtr13func_020178b4Ev",
+      "symbol": "_ZN10ModelFileBD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x020178b4"

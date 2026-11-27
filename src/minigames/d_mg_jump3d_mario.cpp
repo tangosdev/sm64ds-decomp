@@ -82,8 +82,8 @@ BCA_File *sJump3DAnimJump;
 /* Slots the current mAnimIdx (0/1/2) picks the anim file from. */
 BCA_File **sJump3DAnimTable[] = {&sJump3DAnimJump, &sJump3DAnimDoubleJump1, &sJump3DAnimWallJump};
 
-/* Six anim handles call SharedFilePtr::Construct. The model handle calls
-   func_02017a24. */
+/* Six anim handles call AnimFile::AnimFile. The model handle calls
+   ModelFileA::ModelFileA. */
 struct Jump3DMarioAnimFilePtr : SharedFilePtr {
     Jump3DMarioAnimFilePtr(unsigned fileId);
     ~Jump3DMarioAnimFilePtr();

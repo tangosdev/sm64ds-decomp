@@ -42,9 +42,9 @@ extern unsigned char gCurrentStarId;
 
 extern CLPS_Block data_ov002_0210d7f4;
 
-/* The model handle constructs through func_02017acc and destroys through
- * func_02017ab4; the mesh-collision handle constructs through func_02017b4c
- * and destroys through SharedFilePtr_Destruct_Clsn. The manifest aliases
+/* The model handle constructs through ModelFile::ModelFile and destroys through
+ * ModelFile::~ModelFile; the mesh-collision handle constructs through ClsnFile::ClsnFile
+ * and destroys through ClsnFile::~ClsnFile. The manifest aliases
  * those undefined members onto the ROM symbols. */
 struct CannonShutterModelFilePtr : SharedFilePtr {
     CannonShutterModelFilePtr(u32 fileID);

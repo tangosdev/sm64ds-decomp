@@ -21,8 +21,8 @@ extern "C" daObjFloatBoard_c_Resources data_ov016_02114b8c;
 
 /* File 1601 / 1602 resource handles. The static initializer registers
  * their destructors; the spellings are this TU's, mapped onto
- * func_02017acc / func_02017ab4 and func_02017b4c /
- * SharedFilePtr_Destruct_Clsn. */
+ * ModelFile::ModelFile / ModelFile::~ModelFile and ClsnFile::ClsnFile /
+ * ClsnFile::~ClsnFile. */
 struct KiItaModelFilePtr : SharedFilePtr {
     KiItaModelFilePtr(u32 fileID);
     ~KiItaModelFilePtr();

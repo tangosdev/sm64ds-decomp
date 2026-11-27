@@ -24,19 +24,19 @@ struct Mascot {
     void LookAt(int *src);
     void StopLooking();
 
-    MascotWalkerModelFilePtr mModelFile;           /* 0x00 -- kino_d.bmd (0x205) */
-    MascotWalkerAnimationFileHandle mWaitAnimFile; /* 0x08 -- kino_wait.bca (0x206) */
+    ModelFile mModelFile;   /* 0x00 -- kino_d.bmd (0x205) */
+    AnimFile mWaitAnimFile; /* 0x08 -- kino_wait.bca (0x206) */
     /* 0x70 bytes. UpdateMatrix sets its mat4x3 and turns bone 6 of its
        data.transforms, the head. */
     dExtBlendAnmModel_c mModel; /* 0x10 */
     Vector3 mLookTarget;        /* 0x80 -- what LookAt turns the head toward */
-    Vector3 mPos;         /* 0x8c */
-    s16 mRot[3];          /* 0x98 -- [1] is the body's yaw, eased toward the target */
-    u8 pad_9e[0x4];       /* 0x9e */
-    s16 mHeadPitch;       /* 0xa2 -- clamped to +/-0x1000 */
-    s16 mHeadYaw;         /* 0xa4 -- clamped to +/-0x2800 of the body */
-    u8 pad_a6[0x2];       /* 0xa6 */
-    s32 mLooking;         /* 0xa8 -- set by LookAt, cleared by StopLooking */
+    Vector3 mPos;               /* 0x8c */
+    s16 mRot[3];                /* 0x98 -- [1] is the body's yaw, eased toward the target */
+    u8 pad_9e[0x4];             /* 0x9e */
+    s16 mHeadPitch;             /* 0xa2 -- clamped to +/-0x1000 */
+    s16 mHeadYaw;               /* 0xa4 -- clamped to +/-0x2800 of the body */
+    u8 pad_a6[0x2];             /* 0xa6 */
+    s32 mLooking;               /* 0xa8 -- set by LookAt, cleared by StopLooking */
 };
 
 typedef char Mascot_size_must_be_0xac[sizeof(Mascot) == 0xac ? 1 : -1];

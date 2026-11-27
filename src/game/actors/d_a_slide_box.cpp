@@ -53,8 +53,8 @@ enum daSlide_Box_c_AssetId { ASSET_KI_SLIDE_BOX_BMD = 0x0645, ASSET_KI_SLIDE_BOX
 
 /* File 1605 / 1606 resource handles. The static initializer registers
  * their destructors; the spellings are this TU's, mapped onto
- * func_02017acc / func_02017ab4 and func_02017b4c /
- * SharedFilePtr_Destruct_Clsn. 02113bac is the CLPS block SetFile takes. */
+ * ModelFile::ModelFile / ModelFile::~ModelFile and ClsnFile::ClsnFile /
+ * ClsnFile::~ClsnFile. 02113bac is the CLPS block SetFile takes. */
 struct SlideBoxModelFilePtr : SharedFilePtr {
     SlideBoxModelFilePtr(u32 fileID);
     ~SlideBoxModelFilePtr();

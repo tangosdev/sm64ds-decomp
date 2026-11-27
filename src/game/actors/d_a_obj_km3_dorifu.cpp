@@ -39,9 +39,9 @@ enum d_a_obj_km3_dorifu_AssetId {
 #include "daObjKm3_Dorifu_c.h"
 #include "SharedFilePtr.h"
 
-/* Five model handles construct through func_02017acc and destroy through
- * func_02017ab4. Five collision handles construct through func_02017b4c and
- * destroy through SharedFilePtr_Destruct_Clsn. The five-plank table stays
+/* Five model handles construct through ModelFile::ModelFile and destroy through
+ * ModelFile::~ModelFile. Five collision handles construct through ClsnFile::ClsnFile and
+ * destroy through ClsnFile::~ClsnFile. The five-plank table stays
  * ROM data. */
 struct DorifuModelFilePtr : SharedFilePtr {
     DorifuModelFilePtr(unsigned int fileId);

@@ -47,9 +47,9 @@ static inline int IsActorID(dActor_c *actor, int id) {
     return actor->actorID == id;
 }
 
-/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
- * func_02017ab4; animation handles construct through SharedFilePtr::Construct
- * and destroy through SharedFilePtr_Destruct_Anim. The manifest aliases those
+/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
+ * ModelFile::~ModelFile; animation handles construct through AnimFile::AnimFile
+ * and destroy through AnimFile::~AnimFile. The manifest aliases those
  * undefined members onto the ROM symbols. filePtr is the BMD or BCA the load
  * just filled in.
  *   02114968  body BMD   sinit 0x9c02, dExtSimpleModel_c::LoadFile, mAnmModel

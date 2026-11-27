@@ -29,8 +29,8 @@ enum daObjWlSubmarine_c_AssetId {
 #include "SaveBlock.h"
 
 /* BSS file homes (symbols.txt); Init loads them, Cleanup releases them.
- * The ctor/dtor are the ROM's SharedFilePtr veneer pairs (func_02017acc /
- * func_02017ab4 for the model, func_02017b4c / SharedFilePtr_Destruct_Clsn
+ * The ctor/dtor are the ROM's SharedFilePtr veneer pairs (ModelFile::ModelFile /
+ * ModelFile::~ModelFile for the model, ClsnFile::ClsnFile / ClsnFile::~ClsnFile
  * for the collision), spelled through declared-only subclasses so the
  * static initializer names the real entry points. */
 struct SubmarineModelFilePtr : SharedFilePtr {

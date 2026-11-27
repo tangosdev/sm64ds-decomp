@@ -23,9 +23,9 @@ struct BCA_File;
 
 extern Timer gRaceTimer;
 
-/* The model handle constructs through func_02017acc and registers
-   func_02017ab4; the animation handle constructs through
-   SharedFilePtr::Construct and registers SharedFilePtr_Destruct_Anim.
+/* The model handle constructs through ModelFile::ModelFile and registers
+   ModelFile::~ModelFile; the animation handle constructs through
+   AnimFile::AnimFile and registers AnimFile::~AnimFile.
    The manifest aliases these. */
 struct RFlagModelFileHandle : SharedFilePtr {
     RFlagModelFileHandle(u32 fileID);

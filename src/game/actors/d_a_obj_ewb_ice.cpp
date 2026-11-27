@@ -78,8 +78,8 @@ typedef char daObjEwbIce_State_must_be_0x10[sizeof(daObjEwbIce_State) == 0x10 ? 
 
 /* The six file handles __sinit_d_a_obj_ewb_ice.cpp constructs below, one model
  * and one collision per EWB_ICE variant. The models'
- * ctor/dtor are the cartridge's func_02017acc / func_02017ab4 pair and the
- * collisions' func_02017b4c / SharedFilePtr_Destruct_Clsn; the manifest
+ * ctor/dtor are the cartridge's ModelFile::ModelFile / ModelFile::~ModelFile pair and the
+ * collisions' ClsnFile::ClsnFile / ClsnFile::~ClsnFile; the manifest
  * aliases these. */
 struct EwbIceModelFileHandle : SharedFilePtr {
     EwbIceModelFileHandle(u32 fileID);

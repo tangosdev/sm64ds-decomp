@@ -261,7 +261,7 @@
       "source": "0x021280f8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -281,7 +281,7 @@
       "source": "0x02128114",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -311,7 +311,7 @@
       "source": "0x0212813c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -341,7 +341,7 @@
       "source": "0x0212814c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017984"
@@ -370,28 +370,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN16HuwaModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail model-handle construction destination and the SharedFilePtr model family identity"
     },
     {
       "symbol": "_ZN16HuwaModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the SharedFilePtr model family identity"
     },
     {
       "symbol": "_ZN23HuwaAnimationFileHandleC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x0201799c",
       "evidence": "retail animation-handle construction destination and the SharedFilePtr animation family identity"
     },
     {
       "symbol": "_ZN23HuwaAnimationFileHandleD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
       "evidence": "retail destructor registration destination and the SharedFilePtr animation family identity"
@@ -651,7 +651,7 @@
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 -- byte-identical to this tree's stock build -- while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90...c478e8). The divergent bytes are NDS container/packaging fields outside every module range; the content proof is identical either way (moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, symbol inventory and tuRanges all equal the canonical records).",
     "Collision property member calls replace local helper declarations. Reconciled 2 compiler-local source identities after complete before/after objects proved equal allocated payloads/types/flags/sizes/alignments, symbol attributes/order and relocation destinations (32 sections, 154 relocations). Retail destination identities are unchanged; see notes/collision-readability-1027.md."
   ],
-  "note": " Fold of __sinit_ov081_021280e8 (2026-05-10): two file-scope resource handles defined at EOF -- HuwaModelFilePtr gHuwahuwaModelModelFile(813) (ctor func_02017acc, dtor func_02017ab4) then HuwaAnimationFileHandle gHuwahuwaMoveAnimationFile(814) (ctor SharedFilePtr::Construct, dtor SharedFilePtr_Destruct_Anim); wrapper ctors/dtors materialize through undefined_symbol_aliases. .ctor word 0x02128824 -> sinit; dtor-reg nodes @748 -> 0x02128d7c (model), @749 -> 0x02128d70 (anim).",
+  "note": " Fold of __sinit_ov081_021280e8 (2026-05-10): two file-scope resource handles defined at EOF -- HuwaModelFilePtr gHuwahuwaModelModelFile(813) (ctor _ZN9ModelFileC1Ej, dtor _ZN9ModelFileD1Ev) then HuwaAnimationFileHandle gHuwahuwaMoveAnimationFile(814) (ctor _ZN8AnimFileC1Ej, dtor _ZN8AnimFileD1Ev); wrapper ctors/dtors materialize through undefined_symbol_aliases. .ctor word 0x02128824 -> sinit; dtor-reg nodes @748 -> 0x02128d7c (model), @749 -> 0x02128d70 (anim).",
   "defined_symbol_renames": [
     {
       "from": "@856",
