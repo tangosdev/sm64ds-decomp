@@ -173,46 +173,16 @@
       "evidence": "compiler-local collision registration node is a configured initializer relocation destination at 0x021149c8"
     }
   ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN25WanwanShutterModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN9ModelFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN25WanwanShutterModelFilePtrD1Ev",
-      "canonical_symbol": "_ZN9ModelFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail destructor registration destination and the model wrapper destructor's exact ABS32 relocation"
-    },
-    {
-      "symbol": "_ZN24WanwanShutterClsnFilePtrC1Ej",
-      "canonical_symbol": "_ZN8ClsnFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b4c",
-      "evidence": "retail initializer call destination and the collision wrapper constructor's exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN24WanwanShutterClsnFilePtrD1Ev",
-      "canonical_symbol": "_ZN8ClsnFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b34",
-      "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
-    }
-  ],
   "defined_symbol_renames": [
     {
-      "from": "@434",
+      "from": "@432",
       "to": "@137",
-      "evidence": "compiler temporary; mwcc numbers it @403 per TU and ov029 daObjWc_Obj04_c (this batch) also defines a global @403, so the scratch link collides | re-keyed by __sinit relocation-site order after including Particle__System.h and the Break member conversion shifted the TU's @NNN uniquifier Re-keyed from @450 to @428 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @428 to @430 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @430 to @434 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "compiler temporary; mwcc numbers it @403 per TU and ov029 daObjWc_Obj04_c (this batch) also defines a global @403, so the scratch link collides | re-keyed by __sinit relocation-site order after including Particle__System.h and the Break member conversion shifted the TU's @NNN uniquifier Re-keyed from @450 to @428 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @428 to @430 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @430 to @434 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @434 to @432 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@435",
+      "from": "@433",
       "to": "@404",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @418 now; licensed under the existing pin @404 | re-keyed by __sinit relocation-site order after including Particle__System.h and the Break member conversion shifted the TU's @NNN uniquifier Re-keyed from @451 to @429 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @429 to @431 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @431 to @435 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @418 now; licensed under the existing pin @404 | re-keyed by __sinit relocation-site order after including Particle__System.h and the Break member conversion shifted the TU's @NNN uniquifier Re-keyed from @451 to @429 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @429 to @431 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @431 to @435 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @435 to @433 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     }
   ],
   "relocations": [

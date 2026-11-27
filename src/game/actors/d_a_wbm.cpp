@@ -35,8 +35,8 @@
  * leftovers:
  * - The hit check and the placement helper are members but keep their
  *   func_ov098_* address names.
- * - The fragment angle table (data_ov098_0213bf90) is an unnamed ov098 row
- *   this TU does not own; func_0201267c, the sound call, is an unnamed arm9
+ * - The fragment angle table (data_ov098_0213bf90), defined here, keeps its
+ *   address name; func_0201267c, the sound call, is an unnamed arm9
  *   function.
  * - Sound ids, particle ids and timer lengths stay numeric.
  */
@@ -82,23 +82,13 @@ extern SharedFilePtr data_ov002_0210da38;
 extern const u16 data_ov098_0213bf90[6] = {0x0000, 0x3000, 0x6000, 0x9000, 0xc000, 0x0000};
 }
 
-/* The bomb's file-scope SharedFilePtr object, spelled through the same
-   wrapper idiom the landed folds use: the handle's code is the veneer pair
-   the cartridge already carries, so the wrapper gets no bodies of its own.
-   The constructor aliases ModelFile::ModelFile and the destructor ModelFile::~ModelFile in
-   this unit's manifest. */
-struct WbmModelFilePtr : SharedFilePtr {
-    WbmModelFilePtr(unsigned int id);
-    ~WbmModelFilePtr();
-};
-
 /* ------------------------------------------------------------------------
  * The model handle and the state table's three member pointers, in
  * static-initializer order: the initializer constructs the handle, registers
  * its destructor, then copies the pointers from .data. The cannon preloads
  * the same bomb model for the bombs it fires.
  * ------------------------------------------------------------------------ */
-WbmModelFilePtr data_ov098_0213c91c(ASSET_WATER_BOMB_BMD);
+ModelFile data_ov098_0213c91c(ASSET_WATER_BOMB_BMD);
 
 /* The member pointers the initializer copies into the table
    (0x0213c71c..0x0213c734 in .data, an unclaimed run). Each record is one

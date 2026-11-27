@@ -60,40 +60,15 @@ enum {
     kSkipRender = 2
 };
 
-/* File-scope objects at the end of this file construct the six resource
- * handles and fill the four-slot state table. mwcc emits
- * __sinit_d_a_pg_dfdr.cpp from those definitions. The wrapper names are
- * local; the handle constructors and destructors are the ROM resource-family
- * functions, aliased in the manifest. */
-struct PgDfdrModelFile : SharedFilePtr {
-    PgDfdrModelFile(u32 fileID);
-    ~PgDfdrModelFile();
-};
-
-struct PgDfdrAnimationFilePtr : SharedFilePtr {
-    PgDfdrAnimationFilePtr(u32 fileID);
-    ~PgDfdrAnimationFilePtr();
-};
-
-struct PgDfdrTexSequenceFilePtr : SharedFilePtr {
-    PgDfdrTexSequenceFilePtr(u32 fileID);
-    ~PgDfdrTexSequenceFilePtr();
-};
-
-struct PgDfdrCollisionFilePtr : SharedFilePtr {
-    PgDfdrCollisionFilePtr(u32 fileID);
-    ~PgDfdrCollisionFilePtr();
-};
-
 typedef daPgDfdr_c::StateFunc DfdrStateFunc;
 typedef daPgDfdr_c::State DfdrStateTable;
 
-extern PgDfdrCollisionFilePtr data_ov027_02113c6c;
-extern PgDfdrModelFile data_ov027_02113c7c;
-extern PgDfdrTexSequenceFilePtr data_ov027_02113c94;
-extern PgDfdrAnimationFilePtr data_ov027_02113c84;
-extern PgDfdrAnimationFilePtr data_ov027_02113c74;
-extern PgDfdrAnimationFilePtr data_ov027_02113c8c;
+extern ClsnFile data_ov027_02113c6c;
+extern ModelFile data_ov027_02113c7c;
+extern TexSeqFile data_ov027_02113c94;
+extern AnimFile data_ov027_02113c84;
+extern AnimFile data_ov027_02113c74;
+extern AnimFile data_ov027_02113c8c;
 /* The three animation handles InitResources loads, in order; const, so the
    table lands in .rodata as the cartridge has it. */
 extern SharedFilePtr *const data_ov027_02112ca4[3] = {
@@ -327,12 +302,12 @@ void daPgDfdr_c::UpdateModelMatrix() {
  * handle (file 0x3fb), the three animation handles (files 0x406, 0x409,
  * 0x3fe), the texture-sequence handle (file 0x407), the collision handle
  * (file 0x3fc), then the four state words copied into the state table. */
-PgDfdrModelFile data_ov027_02113c7c(ASSET_PENGUIN_BMD);
-PgDfdrAnimationFilePtr data_ov027_02113c84(ASSET_PENGUIN_WAIT1_BCA);
-PgDfdrAnimationFilePtr data_ov027_02113c74(ASSET_PENGUIN_WALK2_BCA);
-PgDfdrAnimationFilePtr data_ov027_02113c8c(ASSET_PENGUIN_BACK_BCA);
-PgDfdrTexSequenceFilePtr data_ov027_02113c94(ASSET_PENGUIN_WAIT1_BTP);
-PgDfdrCollisionFilePtr data_ov027_02113c6c(ASSET_PENGUIN_KCL);
+ModelFile data_ov027_02113c7c(ASSET_PENGUIN_BMD);
+AnimFile data_ov027_02113c84(ASSET_PENGUIN_WAIT1_BCA);
+AnimFile data_ov027_02113c74(ASSET_PENGUIN_WALK2_BCA);
+AnimFile data_ov027_02113c8c(ASSET_PENGUIN_BACK_BCA);
+TexSeqFile data_ov027_02113c94(ASSET_PENGUIN_WAIT1_BTP);
+ClsnFile data_ov027_02113c6c(ASSET_PENGUIN_KCL);
 /* turn-enter, turn, walk-enter, walk; mwcc writes the four member images
    this initializer copies as the .data words at 0x021139c4..0x021139dc. */
 DfdrStateTable data_ov027_02113ce4[2] = {

@@ -88,29 +88,15 @@ extern unsigned char gNumPlayers;
 extern daPly_c *gPlayers[];
 extern union Matrix4x3 gScratchMtx;
 
-/* File handles the static initializer constructs. The two models use
- * ModelFile::ModelFile; the five animations use AnimFile::AnimFile.
- * The wrapper names are long enough that their mangled constructor
- * symbols can be aliased onto those retail functions. */
-struct daSnowmanModelFilePtr : SharedFilePtr {
-    daSnowmanModelFilePtr(u32 fileID);
-    ~daSnowmanModelFilePtr();
-};
-struct daSnowmanAnimationFilePtr : SharedFilePtr {
-    daSnowmanAnimationFilePtr(u32 fileID);
-    ~daSnowmanAnimationFilePtr();
-};
-typedef char daSnowmanModelFilePtr_size_must_be_8[sizeof(daSnowmanModelFilePtr) == 8 ? 1 : -1];
-typedef char daSnowmanAnimationFilePtr_size_must_be_8[sizeof(daSnowmanAnimationFilePtr) == 8 ? 1 : -1];
 typedef char daSnowman_State_size_must_be_0x10[sizeof(daSnowman_c::State) == 0x10 ? 1 : -1];
 
-extern daSnowmanModelFilePtr data_ov081_02128d90; /* snowball model, file 0x424 */
-extern daSnowmanModelFilePtr data_ov081_02128db0; /* body model, file 0x420 */
-extern daSnowmanAnimationFilePtr gSnowmanWaitAnimationFile; /* wait, file 0x423 */
-extern daSnowmanAnimationFilePtr data_ov081_02128db8; /* throw, file 0x422 */
-extern daSnowmanAnimationFilePtr data_ov081_02128da8; /* sink, file 0x421 */
-extern daSnowmanAnimationFilePtr gSnowmanJumpStAnimationFile; /* hop start, file 0x41f */
-extern daSnowmanAnimationFilePtr gSnowmanJumpEdAnimationFile; /* hop land, file 0x41e */
+extern ModelFile data_ov081_02128d90;        /* snowball model, file 0x424 */
+extern ModelFile data_ov081_02128db0;        /* body model, file 0x420 */
+extern AnimFile gSnowmanWaitAnimationFile;   /* wait, file 0x423 */
+extern AnimFile data_ov081_02128db8;         /* throw, file 0x422 */
+extern AnimFile data_ov081_02128da8;         /* sink, file 0x421 */
+extern AnimFile gSnowmanJumpStAnimationFile; /* hop start, file 0x41f */
+extern AnimFile gSnowmanJumpEdAnimationFile; /* hop land, file 0x41e */
 
 /* The ten states, by the address of their .bss record, with the handlers
    the static initializer pairs into each as (enter, execute). */
@@ -1002,13 +988,13 @@ daSnowman_c *daSnowman_c_classInit() {
 
 /* Formerly the handwritten __sinit_ov081_02128154. Definition order is
  * the retail initializer's construction order. */
-daSnowmanModelFilePtr data_ov081_02128d90(ASSET_SNOW_BALL_BMD);
-daSnowmanModelFilePtr data_ov081_02128db0(ASSET_SNOWMAN_MODEL_BMD);
-daSnowmanAnimationFilePtr gSnowmanWaitAnimationFile(ASSET_SNOWMAN_WAIT_BCA);
-daSnowmanAnimationFilePtr data_ov081_02128db8(ASSET_SNOWMAN_THROW_BCA);
-daSnowmanAnimationFilePtr data_ov081_02128da8(ASSET_SNOWMAN_SLEEP_BCA);
-daSnowmanAnimationFilePtr gSnowmanJumpStAnimationFile(ASSET_SNOWMAN_JUMP_ST_BCA);
-daSnowmanAnimationFilePtr gSnowmanJumpEdAnimationFile(ASSET_SNOWMAN_JUMP_ED_BCA);
+ModelFile data_ov081_02128d90(ASSET_SNOW_BALL_BMD);
+ModelFile data_ov081_02128db0(ASSET_SNOWMAN_MODEL_BMD);
+AnimFile gSnowmanWaitAnimationFile(ASSET_SNOWMAN_WAIT_BCA);
+AnimFile data_ov081_02128db8(ASSET_SNOWMAN_THROW_BCA);
+AnimFile data_ov081_02128da8(ASSET_SNOWMAN_SLEEP_BCA);
+AnimFile gSnowmanJumpStAnimationFile(ASSET_SNOWMAN_JUMP_ST_BCA);
+AnimFile gSnowmanJumpEdAnimationFile(ASSET_SNOWMAN_JUMP_ED_BCA);
 
 daSnowman_c::State data_ov081_02128e54(&daSnowman_c::StateWalkEnter,
                                        &daSnowman_c::StateWalkExecute);

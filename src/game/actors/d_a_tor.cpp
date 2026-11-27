@@ -46,31 +46,14 @@ enum daTor_c_AssetId {
  * it to ov024, the only level whose tables load ov096. */
 extern BTA_File data_ov024_02112968;
 
-/* The tornado's file-scope SharedFilePtr objects, spelled through the same
-   wrapper idiom the landed folds use: the handles' code is the veneer pair
-   the cartridge already carries, so the wrappers get no bodies of their own.
-   The constructors alias ModelFile::ModelFile (model) and AnimFile::AnimFile
-   (animation) in this unit's manifest, and the destructors ModelFile::~ModelFile
-   and AnimFile::~AnimFile. */
-struct TorModelFilePtr : SharedFilePtr {
-    TorModelFilePtr(unsigned int id);
-    ~TorModelFilePtr();
-};
-
-struct TorAnimationFileHandle : SharedFilePtr {
-    TorAnimationFileHandle(unsigned int id);
-    ~TorAnimationFileHandle();
-};
-
 /* ------------------------------------------------------------------------
  * The model handle and the animation handle, in static-initializer order:
  * the initializer constructs each handle and registers its destructor.
  * InitResources feeds the model to dExtSimpleModel_c::LoadFile and the animation to
  * dExtFrameCtrl_c::LoadFile.
  * ------------------------------------------------------------------------ */
-TorModelFilePtr   gSandTornadoModelFile(ASSET_SAND_TORNADO_BMD);   /* model */
-TorAnimationFileHandle gSandTornadoAnimationFile(ASSET_SAND_TORNADO_BCA);   /* anim  */
-
+ModelFile gSandTornadoModelFile(ASSET_SAND_TORNADO_BMD);    /* model */
+AnimFile gSandTornadoAnimationFile(ASSET_SAND_TORNADO_BCA); /* anim  */
 
 daTor_c::~daTor_c()
 {

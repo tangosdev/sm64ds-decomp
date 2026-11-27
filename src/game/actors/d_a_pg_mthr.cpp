@@ -61,32 +61,16 @@ enum {
     HIT_TOUCH = 0x8000000
 };
 
-/* __sinit_d_a_pg_mthr.cpp constructs these, and the relocs at 02112c04 /
-   02112c0c point the two tables at them:
+/* __sinit_d_a_pg_mthr.cpp constructs the five file handles defined at the
+   end of this file, and the relocs at 02112c04 / 02112c0c point the two
+   tables at them:
      02113c00  file 0x3fb  BMD   model          (dtor 02017ab4)
      02113bf0  file 0x406  BCA   stand/talk
      02113c08  file 0x408  BCA   walk
      02113bf8  file 0x3fd  BTP   walk
      02113be8  file 0x407  BTP   stand/talk
      02112c04 = { &02113bf8, &02113be8 }
-     02112c0c = { &02113bf0, &02113c08 }
-   The model handle gets the ModelFile::ModelFile/~ModelFile pair, the
-   animation handles get AnimFile::AnimFile/~AnimFile and the texture
-   sequences get TexSeqFile::TexSeqFile/~TexSeqFile through
-   thin declaration-only wrappers; the manifest aliases those mangled
-   spellings to the arm9 destinations the retail initializer calls. */
-struct PgMthrModelFileHandle : SharedFilePtr {
-    PgMthrModelFileHandle(unsigned int fileID);
-    ~PgMthrModelFileHandle();
-};
-struct PgMthrAnimFileResHandle : SharedFilePtr {
-    PgMthrAnimFileResHandle(unsigned int fileID);
-    ~PgMthrAnimFileResHandle();
-};
-struct PgMthrTexSeqFileHandle : SharedFilePtr {
-    PgMthrTexSeqFileHandle(unsigned int fileID);
-    ~PgMthrTexSeqFileHandle();
-};
+     02112c0c = { &02113bf0, &02113c08 } */
 
 /* The three {enter, update} state pairs __sinit_d_a_pg_mthr.cpp copies
    from the PMF literals at 0211394c. */
@@ -95,12 +79,12 @@ extern "C" {
 extern int AngleDiff(int a, int b);
 /* 0x0201267c plays Sound::Play(3, id, pos). Sound::PlayBank3 is the
    previous function (0x02012664); this TU's bl is not that one. */
-extern PgMthrAnimFileResHandle gPenguinWalkAnimationFile;
-extern PgMthrTexSeqFileHandle gPenguinAngryTextureSequenceFile;
-extern PgMthrTexSeqFileHandle gPenguinWait1TextureSequenceFile;
-extern PgMthrAnimFileResHandle gPenguinWait1AnimationFile;
+extern AnimFile gPenguinWalkAnimationFile;
+extern TexSeqFile gPenguinAngryTextureSequenceFile;
+extern TexSeqFile gPenguinWait1TextureSequenceFile;
+extern AnimFile gPenguinWait1AnimationFile;
 extern PgMthrState data_ov018_02113c4c[3];
-extern PgMthrModelFileHandle data_ov018_02113c00;
+extern ModelFile data_ov018_02113c00;
 extern SharedFilePtr *data_ov018_02112c04[2];
 extern SharedFilePtr *data_ov018_02112c0c[2];
 }
@@ -477,11 +461,11 @@ daPly_c *daPgMthr_c::FindNewToucher() {
 /* File-scope objects __sinit_d_a_pg_mthr.cpp initializes: the five resource
    handles in construction order, then the three {enter, update} state pairs
    the dispatch helpers index by state. */
-PgMthrModelFileHandle data_ov018_02113c00(ASSET_PENGUIN_BMD);   /* model */
-PgMthrAnimFileResHandle gPenguinWait1AnimationFile(ASSET_PENGUIN_WAIT1_BCA); /* stand/talk anim */
-PgMthrAnimFileResHandle gPenguinWalkAnimationFile(ASSET_PENGUIN_WALK_BCA); /* walk anim */
-PgMthrTexSeqFileHandle gPenguinAngryTextureSequenceFile(ASSET_PENGUIN_ANGRY_BTP);  /* walk texseq */
-PgMthrTexSeqFileHandle gPenguinWait1TextureSequenceFile(ASSET_PENGUIN_WAIT1_BTP);  /* stand/talk texseq */
+ModelFile data_ov018_02113c00(ASSET_PENGUIN_BMD);                     /* model */
+AnimFile gPenguinWait1AnimationFile(ASSET_PENGUIN_WAIT1_BCA);         /* stand/talk anim */
+AnimFile gPenguinWalkAnimationFile(ASSET_PENGUIN_WALK_BCA);           /* walk anim */
+TexSeqFile gPenguinAngryTextureSequenceFile(ASSET_PENGUIN_ANGRY_BTP); /* walk texseq */
+TexSeqFile gPenguinWait1TextureSequenceFile(ASSET_PENGUIN_WAIT1_BTP); /* stand/talk texseq */
 
 PgMthrState data_ov018_02113c4c[3] = {
     {&daPgMthr_c::StateStandEnter, &daPgMthr_c::StateStandUpdate},   /* stand */

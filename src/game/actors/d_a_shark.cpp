@@ -57,19 +57,6 @@ struct SharkState {
     SharkFn update;
 };
 
-/* File-scope objects at the end of this file construct the two resource
- * handles (model file 0x325, animation file 0x326) and fill the two-entry
- * state table. mwcc emits __sinit_d_a_shark.cpp from those definitions. */
-struct SharkModelFilePtr : SharedFilePtr {
-    SharkModelFilePtr(u32 fileID);
-    ~SharkModelFilePtr();
-};
-
-struct SharkAnimationFilePtr : SharedFilePtr {
-    SharkAnimationFilePtr(u32 fileID);
-    ~SharkAnimationFilePtr();
-};
-
 /* Both state slots target static members, so each descriptor is a
  * function-pointer/PMF pair. The first word carries the code relocation;
  * the second is zero, like every other descriptor. */
@@ -93,8 +80,8 @@ struct SharkStateTable {
     }
 };
 
-extern SharkModelFilePtr data_ov090_021345a4;
-extern SharkAnimationFilePtr data_ov090_021345ac;
+extern ModelFile data_ov090_021345a4;
+extern AnimFile data_ov090_021345ac;
 extern SharkStateTable data_ov090_021345cc;
 
 daShark_c::~daShark_c() {}
@@ -282,8 +269,8 @@ daShark_c *daShark_c_classInit() {
  * Definition order is the retail initializer's construction order: the model
  * handle, then the animation handle, then the two state descriptors and
  * the state table they are copied into. */
-SharkModelFilePtr data_ov090_021345a4(ASSET_HOJIRO_BMD);
-SharkAnimationFilePtr data_ov090_021345ac(ASSET_HOJIRO_SWIM_BCA);
+ModelFile data_ov090_021345a4(ASSET_HOJIRO_BMD);
+AnimFile data_ov090_021345ac(ASSET_HOJIRO_SWIM_BCA);
 
 SharkFreeState data_ov090_021343a0 = {&daShark_c::InitStateSwim};
 SharkFreeState data_ov090_021343a8 = {&daShark_c::StateSwim};

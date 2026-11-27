@@ -26,24 +26,11 @@ enum d_a_obj_wc_obj02_AssetId { ASSET_WC_OBJ02_BMD = 0x06ce, ASSET_WC_OBJ02_KCL 
 #include "SharedFilePtr.h"
 #include "SpawnInfo.h"
 
-/* Retail constructs these 8-byte handles in this order and registers
- * their destructors. The wrapper names are local; the ctor/dtor
- * addresses are the ROM resource-family functions. */
-struct WcObj02ModelFilePtr : SharedFilePtr {
-    WcObj02ModelFilePtr(u32 fileID);
-    ~WcObj02ModelFilePtr();
-};
-
-struct WcObj02CollisionFilePtr : SharedFilePtr {
-    WcObj02CollisionFilePtr(u32 fileID);
-    ~WcObj02CollisionFilePtr();
-};
-
 /* local extern: no shared header declares these. */
 void func_02012694(unsigned int a, const Vector3 *p);
 
-extern WcObj02ModelFilePtr data_ov029_02114250;
-extern WcObj02CollisionFilePtr data_ov029_02114248;
+extern ModelFile data_ov029_02114250;
+extern ClsnFile data_ov029_02114248;
 extern CLPS_Block data_ov029_0211302c;
 
 /* -------------------------------------------------------------------------- */
@@ -169,8 +156,8 @@ int daObjWc_Obj02_c::CleanupResources() {
 
 /* The static-init globals -- mwcc emits __sinit_d_a_obj_wc_obj02.cpp
    from these: one ctor veneer plus destructor registration per handle. */
-WcObj02ModelFilePtr data_ov029_02114250(ASSET_WC_OBJ02_BMD);
-WcObj02CollisionFilePtr data_ov029_02114248(ASSET_WC_OBJ02_KCL);
+ModelFile data_ov029_02114250(ASSET_WC_OBJ02_BMD);
+ClsnFile data_ov029_02114248(ASSET_WC_OBJ02_KCL);
 
 extern "C" SpawnInfo<daObjWc_Obj02_c> g_profile_WC_OBJ02 = {
     daObjWc_Obj02_c_classInit, 96, 272, 0x00000002, 0x00000000, 0x00100000, 0x01000000, 0x01000000};

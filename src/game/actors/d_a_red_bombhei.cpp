@@ -83,23 +83,10 @@ struct RedBombheiState {
 /* Runtime asset handles, distinct from the NitroFS file IDs. */
 enum daRedBombhei_c_AssetId { ASSET_RED_BOMBHEI_BMD = 0x02b9, ASSET_RED_WAIT_BCA = 0x02ba };
 
-/* The handles reach their files through these wrappers' constructor and
-   destructor veneers; the manifest maps each to the retail destination.
-   Descriptive local types, not recovered spellings. */
-struct RedBombheiModelFile : SharedFilePtr {
-    RedBombheiModelFile(u32 fileID);
-    ~RedBombheiModelFile();
-};
-
-struct RedBombheiAnimFile : SharedFilePtr {
-    RedBombheiAnimFile(u32 fileID);
-    ~RedBombheiAnimFile();
-};
-
 /* This TU's file handles and state table, in the order the retail
    initializer (0x02130558) builds them. */
-RedBombheiModelFile gRedBombheiModelFile(ASSET_RED_BOMBHEI_BMD);
-RedBombheiAnimFile gRedBombheiWaitAnimFile(ASSET_RED_WAIT_BCA);
+ModelFile gRedBombheiModelFile(ASSET_RED_BOMBHEI_BMD);
+AnimFile gRedBombheiWaitAnimFile(ASSET_RED_WAIT_BCA);
 
 RedBombheiState data_ov084_02130dc4[3] = {
     {&daRedBombhei_c::EnterIdle, &daRedBombhei_c::UpdateIdle},

@@ -51,22 +51,11 @@ enum daSlide_Box_c_AssetId { ASSET_KI_SLIDE_BOX_BMD = 0x0645, ASSET_KI_SLIDE_BOX
 #include "nitro/fx/fx_cp.h"
 #include "math/MtxStack.h"
 
-/* File 1605 / 1606 resource handles. The static initializer registers
- * their destructors; the spellings are this TU's, mapped onto
- * ModelFile::ModelFile / ModelFile::~ModelFile and ClsnFile::ClsnFile /
- * ClsnFile::~ClsnFile. 02113bac is the CLPS block SetFile takes. */
-struct SlideBoxModelFilePtr : SharedFilePtr {
-    SlideBoxModelFilePtr(u32 fileID);
-    ~SlideBoxModelFilePtr();
-};
+/* File 1605 / 1606 resource handles. 02113bac is the CLPS block SetFile
+ * takes. */
 
-struct SlideBoxClsnFilePtr : SharedFilePtr {
-    SlideBoxClsnFilePtr(u32 fileID);
-    ~SlideBoxClsnFilePtr();
-};
-
-extern "C" SlideBoxModelFilePtr gKiSlideBoxModelFile;
-extern "C" SlideBoxClsnFilePtr gKiSlideBoxCollisionFile;
+extern "C" ModelFile gKiSlideBoxModelFile;
+extern "C" ClsnFile gKiSlideBoxCollisionFile;
 
 extern struct CLPS_Block data_ov016_02113bac;
 
@@ -102,9 +91,6 @@ enum { kStateSeekShip = 0, kStateFall = 1, kStateRide = 2 };
 
 #define FixMul(a, b) ((int)(((long long)(a) * (b) + kFixRound) >> 12))
 
-#define ModelFile gKiSlideBoxModelFile
-#define ClsnFile gKiSlideBoxCollisionFile
-
 #pragma defer_codegen off
 
 /* Empty on purpose. mwccarm destroys mWithMeshClsn, then the inlined
@@ -123,8 +109,8 @@ int daSlide_Box_c::CleanupResources() {
     if (mMeshCollider.IsEnabled()) {
         mMeshCollider.Disable();
     }
-    ModelFile.Release();
-    ClsnFile.Release();
+    gKiSlideBoxModelFile.Release();
+    gKiSlideBoxCollisionFile.Release();
     return 1;
 }
 
@@ -205,11 +191,11 @@ int daSlide_Box_c::Behavior() {
 }
 
 int daSlide_Box_c::InitResources() {
-    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(ModelFile);
+    BMD_File *modelFile = dExtSimpleModel_c::LoadFile(gKiSlideBoxModelFile);
     mModel.SetFile(modelFile, 1, -1);
     UpdateModel();
     UpdateClsnPosAndRot();
-    KCL_File *clsnFile = dBgW_Kc::LoadFile(ClsnFile);
+    KCL_File *clsnFile = dBgW_Kc::LoadFile(gKiSlideBoxCollisionFile);
     mMeshCollider.SetFile((clsnFile), mClsnMat, kMeshScale, mAngle.y, data_ov016_02113bac);
     mMeshCollider.SetBeforeClsnCallback(&dBgW::UpdatePosWithTransform);
     mWithMeshClsn.Init(this, kClsnRadius, kClsnRadius, 0, 0);
@@ -232,8 +218,8 @@ daSlide_Box_c *daSlide_Box_c_classInit() {
 /* Definitions stay after the last .text function so they do not insert
  * a function into the ROM-ascending run. Construction order is the model
  * handle, then the collision handle. */
-SlideBoxModelFilePtr gKiSlideBoxModelFile(ASSET_KI_SLIDE_BOX_BMD);
-SlideBoxClsnFilePtr gKiSlideBoxCollisionFile(ASSET_KI_SLIDE_BOX_KCL);
+ModelFile gKiSlideBoxModelFile(ASSET_KI_SLIDE_BOX_BMD);
+ClsnFile gKiSlideBoxCollisionFile(ASSET_KI_SLIDE_BOX_KCL);
 
 extern "C" {
 u32 data_ov016_02114e94[3];

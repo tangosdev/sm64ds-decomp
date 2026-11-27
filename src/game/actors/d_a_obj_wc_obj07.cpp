@@ -11,9 +11,9 @@
  * daObjWc_Obj07_c_classInit is reconstructed (RTTI daObjWc_Obj07_c,
  * WC_UKISIMA registry). Retail does not store that spelling.
  *
- * The CLPS block is data_ov029_021130ac, defined here. The start-angle
- * slot 02113fc4 sits 4 bytes before this class's typeinfo at 02113fc8.
- * What stays: g_profile_WC_UKISIMA lives outside this TU (S14).
+ * The CLPS block is data_ov029_021130ac, defined in the stage-map TU
+ * (d_s_map_ov029.c). The start-angle slot 02113fc4 sits 4 bytes before
+ * this class's typeinfo at 02113fc8.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -27,21 +27,8 @@ enum d_a_obj_wc_obj07_AssetId { ASSET_WC_OBJ07_BMD = 0x06d7, ASSET_WC_OBJ07_KCL 
 
 extern CLPS_Block data_ov029_021130ac;
 
-/* Retail constructs these 8-byte handles in this order and registers
- * their destructors. The wrapper names are local; the ctor/dtor
- * addresses are the ROM resource-family functions. */
-struct WcObj07ModelFilePtr : SharedFilePtr {
-    WcObj07ModelFilePtr(u32 fileID);
-    ~WcObj07ModelFilePtr();
-};
-
-struct WcObj07CollisionFilePtr : SharedFilePtr {
-    WcObj07CollisionFilePtr(u32 fileID);
-    ~WcObj07CollisionFilePtr();
-};
-
-extern WcObj07ModelFilePtr gWcObj07ModelFile;
-extern WcObj07CollisionFilePtr gWcObj07CollisionFile;
+extern ModelFile gWcObj07ModelFile;
+extern ClsnFile gWcObj07CollisionFile;
 
 ResourceDescriptor data_ov029_02113fd4 = {
     &gWcObj07ModelFile,
@@ -67,8 +54,8 @@ s32 daObjWc_Obj07_c::CleanupResources() {
 
 /* The static-init globals -- mwcc emits __sinit_d_a_obj_wc_obj07.cpp
    from these: one ctor veneer plus destructor registration per handle. */
-WcObj07ModelFilePtr gWcObj07ModelFile(ASSET_WC_OBJ07_BMD);
-WcObj07CollisionFilePtr gWcObj07CollisionFile(ASSET_WC_OBJ07_KCL);
+ModelFile gWcObj07ModelFile(ASSET_WC_OBJ07_BMD);
+ClsnFile gWcObj07CollisionFile(ASSET_WC_OBJ07_KCL);
 
 extern "C" SpawnInfo<daObjWc_Obj07_c> g_profile_WC_UKISIMA = {
     daObjWc_Obj07_c_classInit, 94, 270, 0x00000002, 0x00000000, 0x00110000, 0x01c20000, 0x00640000};

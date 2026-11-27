@@ -44,23 +44,10 @@ enum d_a_obj_wc_mizu_AssetId { ASSET_WC_MIZU_BMD = 0x06ca, ASSET_WC_MIZU_KCL = 0
 struct BMD_File;
 struct KCL_File;
 
-/* Retail constructs these 8-byte handles in this order and registers
- * their destructors. The wrapper names are local; the ctor/dtor
- * addresses are the ROM resource-family functions. */
-struct WcMizuModelFilePtr : SharedFilePtr {
-    WcMizuModelFilePtr(u32 fileID);
-    ~WcMizuModelFilePtr();
-};
-
-struct WcMizuCollisionFilePtr : SharedFilePtr {
-    WcMizuCollisionFilePtr(u32 fileID);
-    ~WcMizuCollisionFilePtr();
-};
-
 u8 IsAreaShowing(int idx);
 
-extern WcMizuModelFilePtr daObjWc_Obj07_c_ModelFile;
-extern WcMizuCollisionFilePtr daObjWc_Obj07_c_ClsnFile;
+extern ModelFile daObjWc_Obj07_c_ModelFile;
+extern ClsnFile daObjWc_Obj07_c_ClsnFile;
 extern const int data_ov029_02112b2c[3] = {
     0x0002d000,
     0x003e8000,
@@ -210,5 +197,5 @@ void daObjWc_Mizu_c::UpdateClsnTransform() {
 
 /* The static-init globals -- mwcc emits __sinit_d_a_obj_wc_mizu.cpp
    from these: one ctor veneer plus destructor registration per handle. */
-WcMizuModelFilePtr daObjWc_Obj07_c_ModelFile(ASSET_WC_MIZU_BMD);
-WcMizuCollisionFilePtr daObjWc_Obj07_c_ClsnFile(ASSET_WC_MIZU_KCL);
+ModelFile daObjWc_Obj07_c_ModelFile(ASSET_WC_MIZU_BMD);
+ClsnFile daObjWc_Obj07_c_ClsnFile(ASSET_WC_MIZU_KCL);

@@ -113,20 +113,6 @@ enum {
    pointer-to-member call through mState still matches. */
 typedef void (daRNk_c::*StateFunc)();
 
-/* The model handle's ctor/dtor are the cartridge's ModelFile::ModelFile /
-   ModelFile::~ModelFile pair; the manifest aliases these. */
-struct RNkModelFileHandle : SharedFilePtr {
-    RNkModelFileHandle(u32 fileID);
-    ~RNkModelFileHandle();
-};
-
-/* The seven animation handles construct through AnimFile::AnimFile
-   and register AnimFile::~AnimFile; the manifest aliases these. */
-struct RNkAnimationFileHandle : SharedFilePtr {
-    RNkAnimationFileHandle(u32 fileID);
-    ~RNkAnimationFileHandle();
-};
-
 /* The animation each handle below has loaded. Names are by when SetAnim
    plays them. */
 #define ANIM_IDLE      (gdaRNkNokonokoWait1AnimationFile.filePtr)   /* after talking, after stopping, at spawn */
@@ -173,14 +159,14 @@ extern Timer gRaceTimer;            /* TIME_TIMER: the course timer */
 /* The existing C initializer erases pointer slots to integers. Keep the
    evidenced actor view here; repairing the shared initializer is separate. */
 /* The files InitResources loads and CleanupResources releases; see ANIM_*. */
-extern RNkModelFileHandle gdaRNkNokonokoModelFile;      /* the model (BMD) */
-extern RNkAnimationFileHandle data_ov062_0211e014;  /* ANIM_RUN_START */
-extern RNkAnimationFileHandle data_ov062_0211e024;  /* ANIM_RUN */
-extern RNkAnimationFileHandle gdaRNkNokonokoWalkEdAnimationFile;  /* ANIM_BRAKE */
-extern RNkAnimationFileHandle gdaRNkNokonokoWait1AnimationFile;  /* ANIM_IDLE */
-extern RNkAnimationFileHandle gdaRNkNokonokoWait2AnimationFile;  /* ANIM_TALK */
-extern RNkAnimationFileHandle data_ov062_0211e02c;  /* ANIM_JUMP */
-extern RNkAnimationFileHandle data_ov062_0211e004;  /* ANIM_LAND */
+extern ModelFile gdaRNkNokonokoModelFile;          /* the model (BMD) */
+extern AnimFile data_ov062_0211e014;               /* ANIM_RUN_START */
+extern AnimFile data_ov062_0211e024;               /* ANIM_RUN */
+extern AnimFile gdaRNkNokonokoWalkEdAnimationFile; /* ANIM_BRAKE */
+extern AnimFile gdaRNkNokonokoWait1AnimationFile;  /* ANIM_IDLE */
+extern AnimFile gdaRNkNokonokoWait2AnimationFile;  /* ANIM_TALK */
+extern AnimFile data_ov062_0211e02c;               /* ANIM_JUMP */
+extern AnimFile data_ov062_0211e004;               /* ANIM_LAND */
 
 int *daRNk_c_classInit(void)
 {
@@ -932,11 +918,11 @@ StateFunc data_ov062_0211e0a4[6] = {
     &daRNk_c::func_ov062_0211a0f0,
     &daRNk_c::func_ov062_02119be0,
 };
-RNkModelFileHandle gdaRNkNokonokoModelFile(ASSET_NOKONOKO_BMD);
-RNkAnimationFileHandle data_ov062_0211e014(ASSET_NOKONOKO_WALK_ST_BCA);
-RNkAnimationFileHandle data_ov062_0211e024(ASSET_NOKONOKO_WALK_BCA);
-RNkAnimationFileHandle gdaRNkNokonokoWalkEdAnimationFile(ASSET_NOKONOKO_WALK_ED_BCA);
-RNkAnimationFileHandle gdaRNkNokonokoWait1AnimationFile(ASSET_NOKONOKO_WAIT1_BCA);
-RNkAnimationFileHandle gdaRNkNokonokoWait2AnimationFile(ASSET_NOKONOKO_WAIT2_BCA);
-RNkAnimationFileHandle data_ov062_0211e02c(ASSET_NOKONOKO_JUMP_ST_BCA);
-RNkAnimationFileHandle data_ov062_0211e004(ASSET_NOKONOKO_JUMP_ED_BCA);
+ModelFile gdaRNkNokonokoModelFile(ASSET_NOKONOKO_BMD);
+AnimFile data_ov062_0211e014(ASSET_NOKONOKO_WALK_ST_BCA);
+AnimFile data_ov062_0211e024(ASSET_NOKONOKO_WALK_BCA);
+AnimFile gdaRNkNokonokoWalkEdAnimationFile(ASSET_NOKONOKO_WALK_ED_BCA);
+AnimFile gdaRNkNokonokoWait1AnimationFile(ASSET_NOKONOKO_WAIT1_BCA);
+AnimFile gdaRNkNokonokoWait2AnimationFile(ASSET_NOKONOKO_WAIT2_BCA);
+AnimFile data_ov062_0211e02c(ASSET_NOKONOKO_JUMP_ST_BCA);
+AnimFile data_ov062_0211e004(ASSET_NOKONOKO_JUMP_ED_BCA);

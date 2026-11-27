@@ -71,22 +71,6 @@ void func_02012694(unsigned int id, const Vector3 *pos);
  * order, so this file is written ROM-descending and nearly every intra-TU call
  * is a forward reference. */
 
-/* The bug's file-scope SharedFilePtr objects, spelled through the same
-   wrapper idiom the landed folds use: the handles' code is the veneer pair
-   the cartridge already carries, so the wrappers get no bodies of their own.
-   The constructors alias ModelFile::ModelFile (model) and AnimFile::AnimFile
-   (animation) in this unit's manifest, and the destructors ModelFile::~ModelFile
-   and AnimFile::~AnimFile. */
-struct ScuttlebugModelFilePtr : SharedFilePtr {
-    ScuttlebugModelFilePtr(unsigned int id);
-    ~ScuttlebugModelFilePtr();
-};
-
-struct ScuttlebugAnimFileHandle : SharedFilePtr {
-    ScuttlebugAnimFileHandle(unsigned int id);
-    ~ScuttlebugAnimFileHandle();
-};
-
 /* ------------------------------------------------------------------------
  * The model handle, the animation handle and the state table's eighteen
  * member pointers (nine {enter, run} rows), in static-initializer order:
@@ -94,8 +78,8 @@ struct ScuttlebugAnimFileHandle : SharedFilePtr {
  * copies the pointers from .data. InitResources feeds the model to
  * dExtSimpleModel_c::LoadFile and the animation to dExtFrameCtrl_c::LoadFile.
  * ------------------------------------------------------------------------ */
-ScuttlebugModelFilePtr   data_ov071_02122f80(ASSET_SPIDER_BMD);   /* model */
-ScuttlebugAnimFileHandle gSpiderWalkAnimationFile(ASSET_SPIDER_WALK_BCA);   /* anim  */
+ModelFile data_ov071_02122f80(ASSET_SPIDER_BMD);          /* model */
+AnimFile gSpiderWalkAnimationFile(ASSET_SPIDER_WALK_BCA); /* anim  */
 
 /* The member pointers the initializer copies into the table
    (0x02122b60..0x02122bec in .data, an unclaimed run). Each record is one

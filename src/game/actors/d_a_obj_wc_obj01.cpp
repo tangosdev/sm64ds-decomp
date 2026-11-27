@@ -27,21 +27,8 @@ enum d_a_obj_wc_obj01_AssetId { ASSET_WC_OBJ01_BMD = 0x06cc, ASSET_WC_OBJ01_KCL 
    themselves are constructed below, with the TU's other static-init globals. */
 extern CLPS_Block data_ov029_0211300c;
 
-/* Retail constructs these 8-byte handles in this order and registers
- * their destructors. The wrapper names are local; the ctor/dtor
- * addresses are the ROM resource-family functions. */
-struct WcObj01ModelFilePtr : SharedFilePtr {
-    WcObj01ModelFilePtr(u32 fileID);
-    ~WcObj01ModelFilePtr();
-};
-
-struct WcObj01CollisionFilePtr : SharedFilePtr {
-    WcObj01CollisionFilePtr(u32 fileID);
-    ~WcObj01CollisionFilePtr();
-};
-
-extern WcObj01ModelFilePtr gWcObj01ModelFile;
-extern WcObj01CollisionFilePtr gWcObj01CollisionFile;
+extern ModelFile gWcObj01ModelFile;
+extern ClsnFile gWcObj01CollisionFile;
 
 daObjFloatBoard_c_Resources data_ov029_02113be8 = {
     &gWcObj01ModelFile,
@@ -100,5 +87,5 @@ int daObjWcObj01_c::InitResources() {
 
 /* The static-init globals -- mwcc emits __sinit_d_a_obj_wc_obj01.cpp
    from these: one ctor veneer plus destructor registration per handle. */
-WcObj01ModelFilePtr gWcObj01ModelFile(ASSET_WC_OBJ01_BMD);
-WcObj01CollisionFilePtr gWcObj01CollisionFile(ASSET_WC_OBJ01_KCL);
+ModelFile gWcObj01ModelFile(ASSET_WC_OBJ01_BMD);
+ClsnFile gWcObj01CollisionFile(ASSET_WC_OBJ01_KCL);

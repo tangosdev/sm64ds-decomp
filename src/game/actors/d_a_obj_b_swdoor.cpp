@@ -21,8 +21,8 @@
  *   dExtSimpleModel_c::LoadFile, slot 1 with dBgW_Kc::LoadFile, slot 2 as
  *   CLPS into SetFile, and writes daObjSwdoor_c's four byte fields from
  *   param1.
- * - data_ov014_021145c4 is overlay data; this TU is text-only so the table
- *   stays an extern. g_profile_SWITCHDOOR is the same.
+ * - data_ov014_021145c4 and g_profile_SWITCHDOOR are overlay data this TU
+ *   does not define; the table stays an extern.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -35,22 +35,6 @@ enum d_a_obj_b_swdoor_AssetId {
 #include "SharedFilePtr.h"
 
 #include "ResourceDescriptor.h"
-
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct BSwdoorModelFilePtr : SharedFilePtr {
-    BSwdoorModelFilePtr(unsigned int fileID);
-    ~BSwdoorModelFilePtr();
-};
-
-struct BSwdoorClsnFilePtr : SharedFilePtr {
-    BSwdoorClsnFilePtr(unsigned int fileID);
-    ~BSwdoorClsnFilePtr();
-};
-
-typedef char BSwdoorModelFilePtr_size_must_be_8[sizeof(BSwdoorModelFilePtr) == 8 ? 1 : -1];
-typedef char BSwdoorClsnFilePtr_size_must_be_8[sizeof(BSwdoorClsnFilePtr) == 8 ? 1 : -1];
 
 extern ResourceDescriptor data_ov014_021145c4;
 
@@ -92,5 +76,5 @@ s32 daObjBSwdoor_c::CleanupResources() {
 
 /* Source order is construction order: model file 1443, then the collision
  * file 1444. The compiler registers each destructor beside the object. */
-BSwdoorModelFilePtr gBAnaShutterModelFile(ASSET_B_ANA_SHUTTER_BMD);
-BSwdoorClsnFilePtr gBAnaShutterCollisionFile(ASSET_B_ANA_SHUTTER_KCL);
+ModelFile gBAnaShutterModelFile(ASSET_B_ANA_SHUTTER_BMD);
+ClsnFile gBAnaShutterCollisionFile(ASSET_B_ANA_SHUTTER_KCL);

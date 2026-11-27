@@ -47,31 +47,19 @@ static inline int IsActorID(dActor_c *actor, int id) {
     return actor->actorID == id;
 }
 
-/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile; animation handles construct through AnimFile::AnimFile
- * and destroy through AnimFile::~AnimFile. The manifest aliases those
- * undefined members onto the ROM symbols. filePtr is the BMD or BCA the load
- * just filled in.
+/* The four file handles, defined at the end of this file. filePtr is the
+ * BMD or BCA the load just filled in.
  *   02114968  body BMD   sinit 0x9c02, dExtSimpleModel_c::LoadFile, mAnmModel
  *   02114978  link BMD   sinit 0x9c01, dExtSimpleModel_c::LoadFile, mLinkModels
  *   02114980  idle BCA   sinit 0x9c04, dExtFrameCtrl_c::LoadFile
  *   02114970  lunge BCA  sinit 0x9c03, dExtFrameCtrl_c::LoadFile
  */
-struct WanwanModelFilePtr : SharedFilePtr {
-    WanwanModelFilePtr(u32 fileID);
-    ~WanwanModelFilePtr();
-};
-
-struct WanwanAnimationFileHandle : SharedFilePtr {
-    WanwanAnimationFileHandle(u32 fileID);
-    ~WanwanAnimationFileHandle();
-};
 
 extern "C" {
-extern WanwanModelFilePtr data_ov014_02114968;
-extern WanwanModelFilePtr data_ov014_02114978;
-extern WanwanAnimationFileHandle data_ov014_02114980;
-extern WanwanAnimationFileHandle data_ov014_02114970;
+extern ModelFile data_ov014_02114968;
+extern ModelFile data_ov014_02114978;
+extern AnimFile data_ov014_02114980;
+extern AnimFile data_ov014_02114970;
 extern int data_ov014_02114700[]; /* collision offset (0, -200, 0) */
 extern dCamera_c *gCamera;  /* CAMERA */
 
@@ -891,15 +879,14 @@ void daWanwan_c::StateGiantDamageMain() {
  * That emits D1 then D0 and no D2, which is the ROM order. */
 
 /* Order is the retail initializer: model 0x9c02, model 0x9c01, anim 0x9c04,
- * anim 0x9c03, then the six state rows. The model constructors and both
- * destructor families are the ROM veneers the manifest aliases; mwcc emits
- * __sinit_d_a_wanwan.cpp from these definitions. The table's enter/update
+ *anim 0x9c03, then the six state rows. mwcc emits __sinit_d_a_wanwan.cpp
+ * from these definitions. The table's enter/update
  * fields copy from the ROM PMF descriptors by value; the name pointers are
  * the static part. */
-WanwanModelFilePtr data_ov014_02114968(0x9c02);
-WanwanModelFilePtr data_ov014_02114978(0x9c01);
-WanwanAnimationFileHandle data_ov014_02114980(0x9c04);
-WanwanAnimationFileHandle data_ov014_02114970(0x9c03);
+ModelFile data_ov014_02114968(0x9c02);
+ModelFile data_ov014_02114978(0x9c01);
+AnimFile data_ov014_02114980(0x9c04);
+AnimFile data_ov014_02114970(0x9c03);
 
 extern "C" WanwanStateRow data_ov014_0211476c[6] = {
     {data_ov014_021146e0, data_ov014_021146b8, data_ov014_02114690},

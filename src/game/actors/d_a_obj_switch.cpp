@@ -38,7 +38,7 @@ namespace Event { int ClearBit(unsigned int bit); void SetBit(unsigned int bit);
 extern "C" {
 extern u32 gNextActorUpdateMask;
 extern signed char gCurrentSublevel;
-extern SharedFilePtr data_ov002_0211092c;
+extern ModelFile data_ov002_0211092c;
 extern daObjSwitch_c::Resources data_ov002_021098e8[];
 extern daObjSwitch_c::StateEntry data_ov002_0210e00c[];
 extern ModelFile data_ov002_0210dfd4;

@@ -66,16 +66,6 @@ enum daPopoi_c_AssetId {
  * __sinit_d_a_popoi.cpp from those definitions. */
 typedef int (daPopoi_c::*PopoiPMF)();
 
-struct PopoiModelFile : SharedFilePtr {
-    PopoiModelFile(u32 fileID);
-    ~PopoiModelFile();
-};
-
-struct PopoiAnimationFilePtr : SharedFilePtr {
-    PopoiAnimationFilePtr(u32 fileID);
-    ~PopoiAnimationFilePtr();
-};
-
 struct daPopoi_StateRecord {
     int (daPopoi_c::*enter)();
     int (daPopoi_c::*update)();
@@ -94,10 +84,10 @@ struct PopoiTurnAwayRec {
     }
 };
 
-extern PopoiModelFile data_ov077_02127c88;
-extern PopoiAnimationFilePtr data_ov077_02127ca0;
-extern PopoiAnimationFilePtr data_ov077_02127c90;
-extern PopoiAnimationFilePtr data_ov077_02127c98;
+extern ModelFile data_ov077_02127c88;
+extern AnimFile data_ov077_02127ca0;
+extern AnimFile data_ov077_02127c90;
+extern AnimFile data_ov077_02127c98;
 extern daPopoi_StateRecord data_ov077_02127ce8;
 extern daPopoi_StateRecord data_ov077_02127cf8;
 extern daPopoi_StateRecord data_ov077_02127d08;
@@ -731,10 +721,10 @@ int daPopoi_c::IsBlockedAhead() {
  * Definition order is the retail initializer's construction order: the model
  * handle, then the three animation handles, then the five state records in
  * Wander, Pause, Chase, TurnAway, Grab order. */
-PopoiModelFile data_ov077_02127c88(ASSET_POPOI_BMD);
-PopoiAnimationFilePtr data_ov077_02127ca0(ASSET_POPOI_ATTACK_BCA);
-PopoiAnimationFilePtr data_ov077_02127c90(ASSET_POPOI_MOVE1_BCA);
-PopoiAnimationFilePtr data_ov077_02127c98(ASSET_POPOI_MOVE2_BCA);
+ModelFile data_ov077_02127c88(ASSET_POPOI_BMD);
+AnimFile data_ov077_02127ca0(ASSET_POPOI_ATTACK_BCA);
+AnimFile data_ov077_02127c90(ASSET_POPOI_MOVE1_BCA);
+AnimFile data_ov077_02127c98(ASSET_POPOI_MOVE2_BCA);
 
 daPopoi_StateRecord data_ov077_02127ce8 = {
     &daPopoi_c::EnterWanderState,

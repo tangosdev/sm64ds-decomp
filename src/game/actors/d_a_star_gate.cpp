@@ -57,13 +57,8 @@ extern dCamera_c *gCamera;
 extern daPly_c *gPlayers[];
 extern Vector3 data_020a0ebc;
 
-struct StarGateModelFilePtr : SharedFilePtr {
-    StarGateModelFilePtr(u32 fileID);
-    ~StarGateModelFilePtr();
-};
-
-extern StarGateModelFilePtr gObjStargateModelFile;
-StarGateModelFilePtr gObjStargateModelFile(ASSET_OBJ_STARGATE_BMD);
+extern ModelFile gObjStargateModelFile;
+ModelFile gObjStargateModelFile(ASSET_OBJ_STARGATE_BMD);
 
 extern VecFx32 data_ov100_02148948;
 VecFx32 data_ov100_02148948;

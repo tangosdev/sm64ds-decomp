@@ -4,8 +4,6 @@
  *
  * NOTES:
  * - Break (0x02112ea8) is called by daWanwan_c when the chomp breaks out.
- * - The model and collision handles are local SharedFilePtr
- *   subclasses. The manifest aliases them to the ROM symbols.
  * - The destructor stays inline in the header.
  */
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -20,28 +18,10 @@ enum d_a_obj_wanwan_shutter_AssetId {
 #include "ParticleIds.h"
 #include "SharedFilePtr.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct WanwanShutterModelFilePtr : SharedFilePtr {
-    WanwanShutterModelFilePtr(unsigned int fileID);
-    ~WanwanShutterModelFilePtr();
-};
-
-struct WanwanShutterClsnFilePtr : SharedFilePtr {
-    WanwanShutterClsnFilePtr(unsigned int fileID);
-    ~WanwanShutterClsnFilePtr();
-};
-
-typedef char
-    WanwanShutterModelFilePtr_size_must_be_8[sizeof(WanwanShutterModelFilePtr) == 8 ? 1 : -1];
-typedef char
-    WanwanShutterClsnFilePtr_size_must_be_8[sizeof(WanwanShutterClsnFilePtr) == 8 ? 1 : -1];
-
 /* This overlay's file handles and collision-parameter block. The two handles
    are constructed by this TU's static initializer. */
-extern WanwanShutterModelFilePtr data_ov014_021149c0; /* the BMD model */
-extern WanwanShutterClsnFilePtr data_ov014_021149b8;  /* the KCL collision mesh */
+extern ModelFile data_ov014_021149c0; /* the BMD model */
+extern ClsnFile data_ov014_021149b8;  /* the KCL collision mesh */
 extern CLPS_Block data_ov014_02114558;
 
 /* Reconstructed source-style name. Historical alias: ChainChompFence_Spawn.
@@ -129,5 +109,5 @@ void daObjWanwanShutter_c::Break() {
 
 /* Source order is construction order: model file 1447, then the collision
  * file 1448. The compiler registers each destructor beside the object. */
-WanwanShutterModelFilePtr data_ov014_021149c0(ASSET_B_WAN_SHUTTER_BMD);
-WanwanShutterClsnFilePtr data_ov014_021149b8(ASSET_B_WAN_SHUTTER_KCL);
+ModelFile data_ov014_021149c0(ASSET_B_WAN_SHUTTER_BMD);
+ClsnFile data_ov014_021149b8(ASSET_B_WAN_SHUTTER_KCL);
