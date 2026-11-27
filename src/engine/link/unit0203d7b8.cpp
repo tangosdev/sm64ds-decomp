@@ -3245,8 +3245,8 @@ void func_0203db64(void *parentParam, const void *gameRegistry) {
 }
 
 /* Settings byte `byte` of link slot `slot` (data_020a1154[slot].settings;
-   a slot is one console, 0 the parent). SetLinkByte writes the same bytes in this console's own record,
-   data_020a1040. The accessors func_02020028..func_02020388 give the bits
+   a slot is one console, 0 the parent). SetLinkByte writes the same bytes
+   in this console's own record, data_020a1040. The accessors func_02020028..func_02020388 give the bits
    their roles (ready, go, course, slot mask, controller mode). */
 unsigned char GetLinkByte(int slot, int byte) {
     return data_020a1154[slot].settings[byte];
