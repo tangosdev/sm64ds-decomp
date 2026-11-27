@@ -29,12 +29,12 @@
     "by_kind": {
       "C1": {
         "draft": 0,
-        "migrated": 95,
+        "migrated": 101,
         "unmigrated": 0
       },
       "C2": {
         "draft": 0,
-        "migrated": 26,
+        "migrated": 28,
         "unmigrated": 0
       },
       "D0": {
@@ -44,24 +44,24 @@
       },
       "D1": {
         "draft": 0,
-        "migrated": 434,
+        "migrated": 440,
         "unmigrated": 0
       },
       "D2": {
         "draft": 0,
-        "migrated": 25,
+        "migrated": 27,
         "unmigrated": 0
       },
       "method": {
         "draft": 0,
-        "migrated": 8051,
+        "migrated": 8038,
         "unmigrated": 0
       }
     },
     "cpp_still_handspelled": 0,
     "mangled_c": 0,
-    "mangled_cpp": 9020,
-    "mangled_total": 9020,
+    "mangled_cpp": 9023,
+    "mangled_total": 9023,
     "nonmatching_drafts": 0,
     "unmigrated_total": 0
   },
