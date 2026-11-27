@@ -11,21 +11,6 @@
  * dBgW_Kc::SetFile: the 'CLPS' header (entry stride 8 at +4, live-entry count
  * at +6), two entry slots and all-ones filler to the end of the record. A
  * count-1 block carries the filler in its second slot as well. */
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[29];
-    u32 tail[4];
-} Clps_0211326c;
 
 /* The odd-length tables are followed by two zero bytes of alignment in the
  * cartridge; keeping the pad inside the object is what covers them. */
@@ -67,8 +52,8 @@ extern BTA_File data_ov032_02112f34;
 extern struct PathDef data_ov032_02112f4c[4];
 extern BTA_File data_ov032_02112f64;
 extern LevelRec data_ov032_02112f7c;
-extern struct CLPS_Block data_ov032_02112f98;
-extern struct CLPS_Block data_ov032_02112fb8;
+extern CLPS_Block data_ov032_02112f98;
+extern CLPS_Block data_ov032_02112fb8;
 extern StandardEntry data_ov032_02112fd8[3];
 extern ObjSubTable data_ov032_02113008[7];
 extern ObjSubTable data_ov032_02113040[8];
@@ -76,7 +61,7 @@ extern Exits_02113080 data_ov032_02113080;
 extern Views_021130c8 data_ov032_021130c8;
 extern StandardEntry data_ov032_02113148[8];
 extern Nodes_021131c8 data_ov032_021131c8;
-extern Clps_0211326c data_ov032_0211326c;
+extern CLPS_Block256 data_ov032_0211326c;
 extern SimpleEntry data_ov032_0211336c[32];
 extern StandardEntry data_ov032_0211346c[49];
 
@@ -178,20 +163,18 @@ LevelRec data_ov032_02112f7c = {(struct CLPS_Block *)&data_ov032_0211326c,
                                 0x0640,
                                 0x0000001f};
 
-struct CLPS_Block data_ov032_02112f98 = {
+CLPS_Block data_ov032_02112f98 = {
     0x53504c43,
     0x0008,
     0x0001,
-    {{0x00040fc4, 0x000000ff}, {0xffffffff, 0xffffffff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00040fc4, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
-struct CLPS_Block data_ov032_02112fb8 = {
+CLPS_Block data_ov032_02112fb8 = {
     0x53504c43,
     0x0008,
     0x0001,
-    {{0x00000fe0, 0x000000ff}, {0xffffffff, 0xffffffff}},
-    {0xffffffff, 0xffffffff},
+    {{0x00000fe0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
 StandardEntry data_ov032_02112fd8[3] = {
@@ -278,7 +261,7 @@ Nodes_021131c8 data_ov032_021131c8 = {
     0,
 };
 
-Clps_0211326c data_ov032_0211326c = {
+CLPS_Block256 data_ov032_0211326c = {
     0x53504c43,
     0x0008,
     0x001d,
@@ -291,8 +274,8 @@ Clps_0211326c data_ov032_0211326c = {
      {0x00730002, 0x000000ff}, {0x00732002, 0x000000ff}, {0x005c0002, 0x00000003},
      {0x005c0fc2, 0x00000002}, {0x00040008, 0x000000ff}, {0x00030005, 0x000000ff},
      {0x005c0005, 0x00000003}, {0x00040005, 0x000000ff}, {0x00030fc5, 0x000000ff},
-     {0x01040005, 0x000000ff}, {0x01043005, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+     {0x01040005, 0x000000ff}, {0x01043005, 0x000000ff}, {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff}},
 };
 
 SimpleEntry data_ov032_0211336c[32] = {

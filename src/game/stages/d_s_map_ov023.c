@@ -8,14 +8,6 @@
  */
 
 typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[8];
-    u32 tail[6];
-} Clps_02111c38;
-
-typedef struct {
     PathNode entries[25];
     u16 pad;
 } Pad_02111c98;
@@ -38,12 +30,12 @@ extern LevelRec data_ov023_02111b88;
 extern ViewEntry data_ov023_02111ba4[2];
 extern ObjSubTable data_ov023_02111bc0[7];
 extern StandardEntry data_ov023_02111bf8[4];
-extern Clps_02111c38 data_ov023_02111c38;
+extern CLPS_Block96 data_ov023_02111c38;
 extern Pad_02111c98 data_ov023_02111c98;
 extern SimpleEntry data_ov023_02111d30[28];
 extern StandardEntry data_ov023_02111e10[25];
 
-Clps_02111c38 data_ov023_02111c38 = {
+CLPS_Block96 data_ov023_02111c38 = {
     0x53504c43,
     0x0008,
     0x0008,
@@ -54,8 +46,10 @@ Clps_02111c38 data_ov023_02111c38 = {
      {0x00032004, 0x000000ff},
      {0x00230000, 0x000000ff},
      {0x01032000, 0x000000ff},
-     {0x01030000, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+     {0x01030000, 0x000000ff},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff}},
 };
 
 const fx32 data_ov023_02111764[1] = {0x00001000};

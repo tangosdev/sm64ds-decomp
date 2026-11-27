@@ -20,9 +20,7 @@
 
 #include "dThIcon_c.h"
 #include "PlayerInput.h"
-
-/* local extern: arm9 C helpers with no shared header. */
-extern "C" int func_0203da9c(void);
+#include "LinkSettings.h"
 
 extern int gFrameStep;
 
@@ -76,7 +74,7 @@ int dThIcon_c::TouchArea_Update(int player) {
     if (this->mReady == 0)
         return 0;
     if (player < 0)
-        player = func_0203da9c();
+        player = GetLocalPlayerId();
     fired = 0;
     inside = 0;
     if (gTouchInfo[player].held != 0) {

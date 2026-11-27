@@ -27,21 +27,15 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_hm_bskt_AssetId { ASSET_HM_BASKET_BMD = 0x0618, ASSET_HM_BASKET_KCL = 0x0619 };
 
+#include "CLPS.h"
 #include "daObjHmBskt_c.h"
 #include "SharedFilePtr.h"
 #include "Particle__System.h"
 #include "ParticleIds.h"
 
 struct KCL_File;
-/* CLPS.h keeps the block opaque: an 8-byte header with the entry stride
-   at +4, then the entries. This TU hands a two-entry block to SetFile. */
-struct CLPS_Block {
-    u32 tag;
-    u32 hdr;
-    u32 w0;
-    u32 w1;
-    u32 rest[4];
-};
+/* This TU hands the stage map's two-entry collision-property block to
+   SetFile. */
 
 /* The cartridge's ctor/dtor imports are the functions the wrappers' aliases
  * name. */
