@@ -6,23 +6,8 @@
 
 /* Definition order is what makes the compiler size sort match address order. */
 
-typedef struct {
-    struct PathDef entries[5];
-    u16 pad;
-} PathDefs5;
-
-typedef struct {
-    u16 entries[1];
-    u16 pad;
-} U16s1;
-
-typedef struct {
-    u16 entries[5];
-    u16 pad;
-} U16s5;
-
-extern const U16s1 data_ov012_02111768;
-extern const U16s1 data_ov012_0211176c;
+extern const u16 data_ov012_02111768[1];
+extern const u16 data_ov012_0211176c[1];
 extern const fx32 data_ov012_02111770[1];
 extern const fx32 data_ov012_02111774[1];
 extern const BTAMaterialRecord data_ov012_02111778[1];
@@ -38,17 +23,17 @@ extern ObjTable data_ov012_02111ba4;
 extern ObjSubTable data_ov012_02111bac[1];
 extern ObjTable data_ov012_02111bb4;
 extern ObjTable data_ov012_02111bbc;
-extern char data_ov012_02111bc4[12];
-extern U16s5 data_ov012_02111bd0;
-extern U16s5 data_ov012_02111bdc;
-extern char data_ov012_02111be8[12];
+extern char data_ov012_02111bc4[];
+extern u16 data_ov012_02111bd0[5];
+extern u16 data_ov012_02111bdc[5];
+extern char data_ov012_02111be8[];
 extern SimpleEntry data_ov012_02111bf4[2];
 extern ObjSubTable data_ov012_02111c04[2];
 extern StandardEntry data_ov012_02111c14[1];
 extern BTA_File data_ov012_02111c24;
 extern BTA_File data_ov012_02111c3c;
 extern LevelRec data_ov012_02111c54;
-extern PathDefs5 data_ov012_02111c70;
+extern struct PathDef data_ov012_02111c70[5];
 extern CLPS_Block data_ov012_02111c90;
 extern StandardEntry data_ov012_02111cb0[2];
 extern CLPS_Block data_ov012_02111cd0;
@@ -63,19 +48,13 @@ extern StandardEntry data_ov012_02111f48[11];
 extern StandardEntry data_ov012_02111ff8[20];
 extern PathNode data_ov012_02112138[76];
 
-const fx32 data_ov012_02111770[1] = {0x00001000};
-
 const fx32 data_ov012_02111774[1] = {0x00001000};
 
-const U16s1 data_ov012_0211176c = {
-    {0x0000},
-    0x0000,
-};
+const fx32 data_ov012_02111770[1] = {0x00001000};
 
-const U16s1 data_ov012_02111768 = {
-    {0x0000},
-    0x0000,
-};
+const u16 data_ov012_0211176c[1] = {0x0000};
+
+const u16 data_ov012_02111768[1] = {0x0000};
 
 const BTAMaterialRecord data_ov012_02111778[1] = {{0xffff,
                                                    0x0000,
@@ -141,19 +120,13 @@ ObjSubTable data_ov012_02111b8c[1] = {{0x0000, 0x0014, {0x00, 0x00}, &data_ov012
 
 ObjTable data_ov012_02111bb4 = {0x0001, {0x00, 0x00}, &data_ov012_02111bac[0]};
 
-char data_ov012_02111bc4[12] = "obj_water";
+char data_ov012_02111bc4[] = "obj_water";
 
-char data_ov012_02111be8[12] = "mat_water";
+char data_ov012_02111be8[] = "mat_water";
 
-U16s5 data_ov012_02111bd0 = {
-    {0x0898, 0x0898, 0x0898, 0x0898, 0x0898},
-    0x0000,
-};
+u16 data_ov012_02111bd0[5] = {0x0898, 0x0898, 0x0898, 0x0898, 0x0898};
 
-U16s5 data_ov012_02111bdc = {
-    {0x06fe, 0x06ff, 0x0700, 0x0701, 0x0702},
-    0x0000,
-};
+u16 data_ov012_02111bdc[5] = {0x06fe, 0x06ff, 0x0700, 0x0701, 0x0702};
 
 SimpleEntry data_ov012_02111bf4[2] = {{0x443f, 0x0772, (s16)0xfaec, (s16)0xf7a2},
                                       {0xe43c, 0x0777, (s16)0xfb70, (s16)0xf501}};
@@ -167,7 +140,7 @@ StandardEntry data_ov012_02111c14[1] = {
 BTA_File data_ov012_02111c24 = {0x005b,
                                 0,
                                 (fx32 *)&data_ov012_02111770[0],
-                                (u16 *)&data_ov012_02111768.entries[0],
+                                (u16 *)&data_ov012_02111768[0],
                                 (fx32 *)&data_ov012_0211191c[0],
                                 0x0001,
                                 0,
@@ -176,7 +149,7 @@ BTA_File data_ov012_02111c24 = {0x005b,
 BTA_File data_ov012_02111c3c = {0x005b,
                                 0,
                                 (fx32 *)&data_ov012_02111774[0],
-                                (u16 *)&data_ov012_0211176c.entries[0],
+                                (u16 *)&data_ov012_0211176c[0],
                                 (fx32 *)&data_ov012_021117b0[0],
                                 0x0001,
                                 0,
@@ -194,14 +167,11 @@ LevelRec data_ov012_02111c54 = {(struct CLPS_Block *)&data_ov012_02111e18,
                                 0x0640,
                                 0x0000000f};
 
-PathDefs5 data_ov012_02111c70 = {
-    {{0x0000, 0x0010, 0x00ff, 0x00ff, 0x00ff},
-     {0x0010, 0x0016, 0x00ff, 0x00ff, 0x00ff},
-     {0x0026, 0x001a, 0x00ff, 0x00ff, 0x00ff},
-     {0x0040, 0x0006, 0x00ff, 0x00ff, 0x00ff},
-     {0x0046, 0x0006, 0x00ff, 0x00ff, 0x00ff}},
-    0x0000,
-};
+struct PathDef data_ov012_02111c70[5] = {{0x0000, 0x0010, 0x00ff, 0x00ff, 0x00ff},
+                                         {0x0010, 0x0016, 0x00ff, 0x00ff, 0x00ff},
+                                         {0x0026, 0x001a, 0x00ff, 0x00ff, 0x00ff},
+                                         {0x0040, 0x0006, 0x00ff, 0x00ff, 0x00ff},
+                                         {0x0046, 0x0006, 0x00ff, 0x00ff, 0x00ff}};
 
 CLPS_Block data_ov012_02111c90 = {
     0x53504c43,
@@ -228,16 +198,15 @@ Area data_ov012_02111cf0[5] = {
     {&data_ov012_02111bb4, 0, 0x0003, {0x0002, 0x0006, 0x00ff}},
     {&data_ov012_02111b9c, 0, 0x0004, {0x0002, 0x00a2, 0x00fe}}};
 
-ObjSubTable data_ov012_02111d2c[9] = {
-    {0x0002, 0x004c, {0x00, 0x00}, &data_ov012_02112138[0]},
-    {0x0003, 0x0005, {0x00, 0x00}, &data_ov012_02111c70.entries[0]},
-    {0x0004, 0x0006, {0x00, 0x00}, &data_ov012_02111dc4[0]},
-    {0x000b, 0x0005, {0x00, 0x00}, &data_ov012_02111bdc.entries[0]},
-    {0x0001, 0x000b, {0x00, 0x00}, &data_ov012_02111f48[0]},
-    {0x0009, 0x0008, {0x00, 0x00}, &data_ov012_02111e78[0]},
-    {0x000c, 0x0005, {0x00, 0x00}, &data_ov012_02111bd0.entries[0]},
-    {0x000e, 0x0001, {0x00, 0x00}, &data_ov012_02111b80[0]},
-    {0x000a, 0x0008, {0x00, 0x00}, &data_ov012_02111ed8[0]}};
+ObjSubTable data_ov012_02111d2c[9] = {{0x0002, 0x004c, {0x00, 0x00}, &data_ov012_02112138[0]},
+                                      {0x0003, 0x0005, {0x00, 0x00}, &data_ov012_02111c70[0]},
+                                      {0x0004, 0x0006, {0x00, 0x00}, &data_ov012_02111dc4[0]},
+                                      {0x000b, 0x0005, {0x00, 0x00}, &data_ov012_02111bdc[0]},
+                                      {0x0001, 0x000b, {0x00, 0x00}, &data_ov012_02111f48[0]},
+                                      {0x0009, 0x0008, {0x00, 0x00}, &data_ov012_02111e78[0]},
+                                      {0x000c, 0x0005, {0x00, 0x00}, &data_ov012_02111bd0[0]},
+                                      {0x000e, 0x0001, {0x00, 0x00}, &data_ov012_02111b80[0]},
+                                      {0x000a, 0x0008, {0x00, 0x00}, &data_ov012_02111ed8[0]}};
 
 StandardEntry data_ov012_02111d74[5] = {
     {0x00e4, 0x1af4, (s16)0xfb82, (s16)0xfce0, 0x0000, (s16)0xc000, 0x0000, 0xffff},

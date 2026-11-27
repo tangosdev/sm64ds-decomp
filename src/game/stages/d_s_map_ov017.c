@@ -13,22 +13,17 @@
 
 /* The 0xe-byte view record is followed by two zero bytes before the next
  * label. */
-typedef struct ViewRow {
-    ViewEntry entry;
-    u16 pad;
-} ViewRow;
-
-extern const u16 data_ov017_021114b8[2];
+extern const u16 data_ov017_021114b8[1];
 extern const fx32 data_ov017_021114bc[1];
 extern const BTAMaterialRecord data_ov017_021114c0[1];
 extern const fx32 data_ov017_021114dc[300];
-extern u16 data_ov017_02111a00[2];
+extern u16 data_ov017_02111a00[1];
 extern u32 data_ov017_02111a04[1];
 extern ObjTable data_ov017_02111a08;
 extern ObjTable data_ov017_02111a10;
-extern char data_ov017_02111a18[12];
+extern char data_ov017_02111a18[];
 extern Area data_ov017_02111a24[1];
-extern ViewRow data_ov017_02111a30[1];
+extern ViewEntry data_ov017_02111a30[1];
 extern FogEntry data_ov017_02111a40[2];
 extern ObjSubTable data_ov017_02111a50[2];
 extern BTA_File data_ov017_02111a60;
@@ -42,25 +37,24 @@ extern SimpleEntry data_ov017_02111b6c[9];
 
 u32 data_ov017_02111a04[1] = {0x00000004};
 
-const u16 data_ov017_021114b8[2] = {0x0000, 0x0000};
+const u16 data_ov017_021114b8[1] = {0x0000};
 
 const fx32 data_ov017_021114bc[1] = {0x00001000};
 
-u16 data_ov017_02111a00[2] = {0x0765, 0x0000};
-
-ObjTable data_ov017_02111a10 = {0x0002, {0x00, 0x00}, &data_ov017_02111a50[0]};
+u16 data_ov017_02111a00[1] = {0x0765};
 
 ObjTable data_ov017_02111a08 = {0x0005, {0x00, 0x00}, &data_ov017_02111ad4[0]};
+
+ObjTable data_ov017_02111a10 = {0x0002, {0x00, 0x00}, &data_ov017_02111a50[0]};
 
 Area data_ov017_02111a24[1] = {
     {&data_ov017_02111a10, 0, 0x00, {0x00, 0x2b, 0x0c}},
 };
 
-char data_ov017_02111a18[12] = "water_mat";
+char data_ov017_02111a18[] = "water_mat";
 
-ViewRow data_ov017_02111a30[1] = {
-    {{0x02, 0xff, 0x0384, 0x03b6, (s16)0xfc18, {0x00, 0x00}, (s16)0x8000, 0x0000}, 0x0000},
-};
+ViewEntry data_ov017_02111a30[1] = {
+    {0x02, 0xff, 0x0384, 0x03b6, (s16)0xfc18, {0x00, 0x00}, (s16)0x8000, 0x0000}};
 
 FogEntry data_ov017_02111a40[2] = {
     {0x01, {0x57, 0x87, 0xba}, 0x2af8, 0xb3b0},
