@@ -34,7 +34,7 @@ static inline int FS_IsBusy(const FSFile *p_file) {
 
 /* The link module and the wireless layer under it: the input record each
    console samples every frame (data_020a1040), the four players' copies of
-   it (data_020a1154), the link's status and error bits (data_020a0f1c) and
+   it (data_020a1154), the link's status and error bits (gLinkStatusFlags) and
    their accessors, the per-frame step for each link mode (func_0203df40:
    local only, wireless, download-play parent), and below them the WM
    parent/child state machine, the measured-channel pick, data sharing, the
@@ -56,7 +56,7 @@ static inline int FS_IsBusy(const FSFile *p_file) {
      directly after cstd::sqrt's (0x0207511c, 0x02086bb0), the unit before.
    - Order: mwccarm emits a file's functions in reverse source order, so
      the file runs from the highest address (func_020427f8) down.
-     func_0203ea5c also carries func_0203da4c's body inlined, and only a
+     func_0203ea5c also carries ClearLinkErrors inlined, and only a
      function in the same file can be inlined.
 
    Everything here has C linkage; it is C++ for Memory::Allocate
@@ -163,7 +163,7 @@ unsigned char data_020a0f0c;
 u8 data_020a0f10;
 unsigned short data_020a0f14;
 s16 data_020a0f18;
-u16 data_020a0f1c;
+u16 gLinkStatusFlags;
 u16 data_020a0f20; /* 0x020a0f20 - counter */
 unsigned short data_020a0f24;
 unsigned short data_020a0f28;
@@ -2468,12 +2468,12 @@ void func_0203ea5c(void) {
     }
     synced = 0;
     timeout = data_020a0ef0 != 0 ? 300 : 1200;
-    data_020a0f1c |= 0x2000;
-    data_020a0f1c &= 0xF0FF;
-    data_020a0f1c |= (data_020a0f28 << 8) & 0xF00;
+    gLinkStatusFlags |= 0x2000;
+    gLinkStatusFlags &= 0xF0FF;
+    gLinkStatusFlags |= (data_020a0f28 << 8) & 0xF00;
     while (!synced && timeout != 0) {
         if (data_020a0ef8 != 0) {
-            if (data_020a0f1c & 0x4000) {
+            if (gLinkStatusFlags & 0x4000) {
                 data_020a0ef8--;
             }
             if (data_020a0ef8 != 0) {
@@ -2502,7 +2502,7 @@ void func_0203ea5c(void) {
             MI_CpuCopy8(&data_020a0f00, &data_020a1020[0xe], 1);
             MI_CpuCopy8(data_020a1040.settings, &data_020a1020[0xf], 0x11);
         }
-        data_020a0f1c &= 0xBFFF;
+        gLinkStatusFlags &= 0xBFFF;
         switch (func_02040714()) {
         case 0:
             if (data_020a0f04 == 1) {
@@ -2523,7 +2523,7 @@ void func_0203ea5c(void) {
         case 3:
             synced = func_020406b4(data_020a1020, &sendStatus);
             if (synced != 0) {
-                data_020a0f1c |= 0xC000;
+                gLinkStatusFlags |= 0xC000;
             }
             if (data_020a1154[0].flags & 0x2000) {
                 synced = 1;
@@ -2535,7 +2535,7 @@ void func_0203ea5c(void) {
             } else {
                 synced = func_020406b4(data_020a1020, &sendStatus);
                 if (synced != 0) {
-                    data_020a0f1c |= 0xC000;
+                    gLinkStatusFlags |= 0xC000;
                 }
                 if (data_020a1040.flags & 0x4000) {
                     synced = 1;
@@ -2546,7 +2546,7 @@ void func_0203ea5c(void) {
             synced = 0;
             break;
         }
-        if (data_020a0f1c & 0x4000) {
+        if (gLinkStatusFlags & 0x4000) {
             data_020a0f10 = func_02040704();
             data_02099e18 = 0;
             timeout = 300;
@@ -2674,7 +2674,7 @@ void func_0203ea5c(void) {
                                 if ((frameRec->flags & 0x8000) &&
                                     (frameRec->frame != data_020a1154[data_020a0f10].frame)) {
                                     data_020a1040.frame = data_020a1154[0].frame;
-                                    data_020a0f1c |= 2;
+                                    gLinkStatusFlags |= 2;
                                     if (data_020a0efc == 0) {
                                         synced = 0;
                                     }
@@ -2697,23 +2697,23 @@ void func_0203ea5c(void) {
         }
         if (synced == 0) {
             func_02042778();
-            if (data_020a0f1c & 0x4000) {
+            if (gLinkStatusFlags & 0x4000) {
                 func_02042778();
             }
         }
     }
-    data_020a0f1c &= 0xDFFF;
+    gLinkStatusFlags &= 0xDFFF;
     if (timeout != 0) {
         own = &data_020a1154[data_020a0f10];
         for (verIdx = 0, verRec = data_020a1154; verIdx < 4; verIdx++, verRec++) {
             if (verRec->flags & 0x8000) {
-                if (verRec->unk22 != own->unk22) {
-                    data_020a0f1c |= 8;
+                if (verRec->settings[LINK_SYNC_POSITION] != own->settings[LINK_SYNC_POSITION]) {
+                    gLinkStatusFlags |= 8;
                     break;
-                } else if (verRec->unk22 != own->unk22) {
-                    /* Unreachable: the cartridge tests the same byte twice
-                       (unk23 here moves the code). */
-                    data_020a0f1c |= 0x10;
+                } else if (verRec->settings[LINK_SYNC_WINGS] != own->settings[LINK_SYNC_WINGS]) {
+                    /* LINK_SYNC_WINGS is LINK_SYNC_POSITION on the cartridge
+                       (player_input_record.h), so this never fires. */
+                    gLinkStatusFlags |= 0x10;
                     break;
                 }
             }
@@ -2722,11 +2722,9 @@ void func_0203ea5c(void) {
             data_020a0efc = 3;
         }
         if (data_020a0efc != 0) {
-            data_020a0f1c &= 0xFF60;
-            /* The cartridge stores unk22 twice and never clears unk23
-               (unk23 in the second store moves 22 words). */
-            data_020a1040.unk22 = 0;
-            data_020a1040.unk22 = 0;
+            gLinkStatusFlags &= 0xFF60;
+            data_020a1040.settings[LINK_SYNC_POSITION] = 0;
+            data_020a1040.settings[LINK_SYNC_WINGS] = 0;
             data_020a0f30 = 0;
             data_020a1040.flags &= 0xEFFF;
             data_020a0efc--;
@@ -2752,7 +2750,7 @@ void func_0203ea5c(void) {
         return;
     }
     data_020a0f04 = 0;
-    data_020a0f1c |= 1;
+    gLinkStatusFlags |= 1;
 }
 
 /* The parent state callback func_0203e20c installs
@@ -2814,7 +2812,7 @@ void func_0203e978(ChannelMeasureReply *reply) {
    steps 4 and 5, jumps to step 6; a lost child also sets link error bit
    4. Every frame the local input record data_020a1040 is copied into all
    four records of data_020a1154, and the channel goes into bits 8-11 of
-   data_020a0f1c. */
+   gLinkStatusFlags. */
 void func_0203e20c(void) {
     if (data_020a0f40 != 0 && data_020a0f50 == 3) {
         data_020a0f50 = 6;
@@ -2824,7 +2822,7 @@ void func_0203e20c(void) {
          (u32)MB_CommGetChildrenNumber() < 1)) {
         data_020a0f40 = 1;
         data_020a0f50 = 6;
-        data_020a0f1c |= 4;
+        gLinkStatusFlags |= 4;
     }
 
     switch (data_020a0f50) {
@@ -2834,7 +2832,7 @@ void func_0203e20c(void) {
         data_020a0f0c = 0;
         func_0203f9d4(ptr, func_0203e978);
         data_020a0f50 += 1;
-        data_020a0f1c &= 0xFFFB;
+        gLinkStatusFlags &= 0xFFFB;
         break;
     }
 
@@ -2881,7 +2879,7 @@ void func_0203e20c(void) {
         p9 = data_020a0f9d;
         profile = &data_020a10fc[1];
 
-        data_020a0f1c |= 0x9000;
+        gLinkStatusFlags |= 0x9000;
         data_020a0f08 = cnt2;
         do {
             *p9 = 0;
@@ -2982,7 +2980,7 @@ void func_0203e20c(void) {
 
     case 6:
         data_020a0f70 = 0;
-        data_020a0f1c &= 0x6FFF;
+        gLinkStatusFlags &= 0x6FFF;
         MB_End();
         data_020a0f50 += 1;
         break;
@@ -3020,15 +3018,15 @@ void func_0203e20c(void) {
     }
 
     /* The same copy as func_0203e0ac, without clearing 0x8000. Here the
-       settings bytes (and unk22) go through two walking byte pointers: an
+       settings bytes go through two walking byte pointers: an
        indexed settings[i] loop colours the registers differently. */
     {
         u8 *src = (u8 *)&data_020a1040;
         u8 *dst = (u8 *)data_020a1154;
         int i;
 
-        data_020a0f1c &= 0xF0FF;
-        data_020a0f1c |= (data_020a0f28 << 8) & 0xF00;
+        gLinkStatusFlags &= 0xF0FF;
+        gLinkStatusFlags |= (data_020a0f28 << 8) & 0xF00;
         data_020a1154[0].flags = data_020a1154[1].flags = data_020a1154[2].flags =
             data_020a1154[3].flags = data_020a1040.flags;
         data_020a1154[0].keys = data_020a1154[1].keys = data_020a1154[2].keys =
@@ -3052,7 +3050,7 @@ void func_0203e20c(void) {
    it stores the next, which is how mwccarm evaluates a = b = c, and takes
    the touch samples of records 3, 2 and 1 from their own addresses (the
    pool's 0x020a11c4, 0x020a11a0 and 0x020a117c). The byte loop runs 0x11
-   times, through settings and on into unk22. */
+   times, over every settings byte. */
 void func_0203e0ac(void) {
     int i;
 
@@ -3118,7 +3116,7 @@ void func_0203df40(void) {
             break;
         case 1:
         case 2:
-            data_020a0f1c &= 0x7fff;
+            gLinkStatusFlags &= 0x7fff;
             func_02040724();
             data_02099e18 = 1;
             data_020a0f10 = 0;
@@ -3148,7 +3146,7 @@ typedef struct {
    A download-play child (MB_IsMultiBootChild) takes mode 2 and runs the
    link step (func_0203df40) until each of four handshake waits is met, 0x4b0
    frames for the first and 0x258 for the rest; a wait that runs out flags
-   data_020a0f1c bit 0, shuts the link down and parks the thread. Otherwise
+   gLinkStatusFlags bit 0, shuts the link down and parks the thread. Otherwise
    this console fills in its own profile from the owner settings. */
 void func_0203db64(void *parentParam, const void *gameRegistry) {
     OwnerInfo buf;
@@ -3163,7 +3161,7 @@ void func_0203db64(void *parentParam, const void *gameRegistry) {
     MI_CpuClear8(data_020a10a4, 0x58);
     MI_CpuClear8(data_020a1154, 0x90);
     data_020a0f08 = 0;
-    data_020a0f1c = 0;
+    gLinkStatusFlags = 0;
     data_020a0f30 = 0;
     data_020a0f28 = 0;
     data_02099e18 = 1;
@@ -3176,13 +3174,13 @@ void func_0203db64(void *parentParam, const void *gameRegistry) {
         count = 1200;
         while (!(WFS_GetStatus() == 2 && data_02099e18 == data_020a0f08 && data_020a0f08 != 0) &&
                count != 0) {
-            data_020a0f1c |= 0x2000;
+            gLinkStatusFlags |= 0x2000;
             func_02042778();
             func_0203df40();
             count--;
         }
         if (count == 0) {
-            data_020a0f1c |= 1;
+            gLinkStatusFlags |= 1;
             func_02040724();
             OS_SleepThread(0);
         }
@@ -3190,13 +3188,13 @@ void func_0203db64(void *parentParam, const void *gameRegistry) {
         count = 600;
         data_020a1040.flags |= 1;
         while ((data_020a1040.flags & 1) && count != 0) {
-            data_020a0f1c |= 0x2000;
+            gLinkStatusFlags |= 0x2000;
             func_02042778();
             func_0203df40();
             count--;
         }
         if (count == 0) {
-            data_020a0f1c |= 1;
+            gLinkStatusFlags |= 1;
             func_02040724();
             OS_SleepThread(0);
         }
@@ -3204,13 +3202,13 @@ void func_0203db64(void *parentParam, const void *gameRegistry) {
         func_0203d854();
         count = 600;
         while (func_0203d81c() == 0 && count != 0) {
-            data_020a0f1c |= 0x2000;
+            gLinkStatusFlags |= 0x2000;
             func_02042778();
             func_0203df40();
             count--;
         }
         if (count == 0) {
-            data_020a0f1c |= 1;
+            gLinkStatusFlags |= 1;
             func_02040724();
             OS_SleepThread(0);
         }
@@ -3218,13 +3216,13 @@ void func_0203db64(void *parentParam, const void *gameRegistry) {
         func_0203d918();
         count = 600;
         while (func_0203d8fc() == 0 && count != 0) {
-            data_020a0f1c |= 0x2000;
+            gLinkStatusFlags |= 0x2000;
             func_02042778();
             func_0203df40();
             count--;
         }
         if (count == 0) {
-            data_020a0f1c |= 1;
+            gLinkStatusFlags |= 1;
             func_02040724();
             OS_SleepThread(0);
         }
@@ -3246,17 +3244,17 @@ void func_0203db64(void *parentParam, const void *gameRegistry) {
     data_020a0ef0 = 1;
 }
 
-/* Byte p of player i's link settings (data_020a1154[i].settings).
-   func_0203db3c writes the same bytes in this console's own record,
-   data_020a1040. The accessors func_02020028..func_02020388 give the bits
+/* Settings byte `byte` of link slot `slot` (data_020a1154[slot].settings;
+   a slot is one console, 0 the parent). SetLinkByte writes the same bytes
+   in this console's own record, data_020a1040. The accessors func_02020028..func_02020388 give the bits
    their roles (ready, go, course, slot mask, controller mode). */
-unsigned char GetPlayerFlagByte(int i, int p) {
-    return data_020a1154[i].settings[p];
+unsigned char GetLinkByte(int slot, int byte) {
+    return data_020a1154[slot].settings[byte];
 }
 
 /* Set link settings byte `byte` in this console's own input record
-   data_020a1040: the writer the 0202 accessors pair with GetPlayerFlagByte. */
-void func_0203db3c(int byte, int value) {
+   data_020a1040: the writer the 0202 accessors pair with GetLinkByte. */
+void SetLinkByte(int byte, int value) {
     data_020a1040.settings[byte] = value;
 }
 
@@ -3308,21 +3306,23 @@ int func_0203da9c(void) {
     return data_020a0f10;
 }
 
-/* The link status bits of data_020a0f1c that mask x selects.
-   func_02030e4c and func_020197b8 test the error bits 0x9d with it. */
-unsigned short func_0203da80(unsigned short x) {
-    return data_020a0f1c & x;
+/* The link status bits of gLinkStatusFlags that mask x selects.
+   func_02030e4c and func_020197b8 test the error bits 0x9d with it, and
+   func_0201a8b4 the busy bit 0x2000, held while a link step waits for the
+   other consoles. */
+unsigned short GetLinkStatus(unsigned short x) {
+    return gLinkStatusFlags & x;
 }
 
-/* Clear the link error bits 0x9f of data_020a0f1c and unk22 (byte 0x22) of
-   the local input record data_020a1040. func_02030aa4 calls it when a session
-   starts, and dMeter_c when it sets up. func_0203ea5c runs the same three
-   statements inline in its error countdown, so the two shared a translation
-   unit. The cartridge stores unk22 twice here as well. */
-void func_0203da4c(void) {
-    data_020a0f1c &= 0xff60;
-    data_020a1040.unk22 = 0;
-    data_020a1040.unk22 = 0;
+/* Clear the link error bits 0x9f of gLinkStatusFlags and the two sync bytes of
+   the local input record data_020a1040 (one byte on the cartridge, cleared
+   twice: see LINK_SYNC_WINGS). func_02030aa4 calls it when a session starts,
+   and dMeter_c when it sets up. func_0203ea5c runs the same three statements
+   inline in its error countdown, so the two shared a translation unit. */
+void ClearLinkErrors(void) {
+    gLinkStatusFlags &= 0xff60;
+    data_020a1040.settings[LINK_SYNC_POSITION] = 0;
+    data_020a1040.settings[LINK_SYNC_WINGS] = 0;
 }
 
 /* The link mode data_020a0f04 that func_0203da2c sets (0 local only, 1 and 2
@@ -3337,11 +3337,11 @@ void func_0203da2c(int v) {
     data_020a0f04 = v;
 }
 
-/* While link bit 0x8000 of data_020a0f1c is set (func_0203e20c sets it
+/* While link bit 0x8000 of gLinkStatusFlags is set (func_0203e20c sets it
    with 0x1000), WM_GetLinkLevel's value, else 0. func_0203083c indexes its
    link icon table data_020927a0 with it. */
 int func_0203d9f4(void) {
-    if ((data_020a0f1c & 0x8000) == 0)
+    if ((gLinkStatusFlags & 0x8000) == 0)
         return 0;
     return WM_GetLinkLevel();
 }
@@ -3452,21 +3452,21 @@ int func_0203d81c(void) {
 }
 
 /* Check a file operation's result: nonzero passes (1). Zero sets link
-   error bit 0x80 in data_020a0f1c and returns whether this is a
+   error bit 0x80 in gLinkStatusFlags and returns whether this is a
    download-play child (MB_IsMultiBootChild), which cannot read the
    card again; func_02018e68 then sleeps the thread (see myFS_ReadFile.c). */
 int func_0203d7d4(int arg) {
     if (arg != 0)
         return 1;
-    data_020a0f1c |= 0x80;
+    gLinkStatusFlags |= 0x80;
     return MB_IsMultiBootChild() != 0;
 }
 
-/* Whether a file read has failed (link error bit 0x80 of data_020a0f1c,
+/* Whether a file read has failed (link error bit 0x80 of gLinkStatusFlags,
    set by func_0203d7d4). LoadOverlay, UnloadOverlay and func_02017e94
    then leave the overlay's RAM alone, and dScMb_c waits on it. */
 int func_0203d7b8(void) {
-    return (data_020a0f1c & 0x80) != 0;
+    return (gLinkStatusFlags & 0x80) != 0;
 }
 
 } /* extern "C" */

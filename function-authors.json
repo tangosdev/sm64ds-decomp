@@ -6771,11 +6771,11 @@
     },
     "arm9:0x0203da4c": {
       "author": "tangosdev",
-      "name": "func_0203da4c"
+      "name": "ClearLinkErrors"
     },
     "arm9:0x0203da80": {
       "author": "tangosdev",
-      "name": "func_0203da80"
+      "name": "GetLinkStatus"
     },
     "arm9:0x0203da9c": {
       "author": "tangosdev",
@@ -6811,11 +6811,11 @@
     },
     "arm9:0x0203db3c": {
       "author": "tangosdev",
-      "name": "func_0203db3c"
+      "name": "SetLinkByte"
     },
     "arm9:0x0203db4c": {
       "author": "tangosdev",
-      "name": "GetPlayerFlagByte"
+      "name": "GetLinkByte"
     },
     "arm9:0x0203db64": {
       "author": "tangosdev",

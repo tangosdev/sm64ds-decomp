@@ -19,6 +19,4 @@ data_ov099_0213fab8 kind:bss addr:0x0213fab8 ambiguous
 data_ov099_0213fbc8 kind:bss addr:0x0213fbc8 ambiguous
 data_ov099_0213fd6c kind:bss addr:0x0213fd6c ambiguous
 data_ov099_0213ffb8 kind:bss addr:0x0213ffb8 ambiguous
-data_ov099_02140000 kind:bss addr:0x02140000 ambiguous
-data_ov099_02140108 kind:bss addr:0x02140108 ambiguous
 data_ov099_02140114 kind:bss addr:0x02140114 ambiguous

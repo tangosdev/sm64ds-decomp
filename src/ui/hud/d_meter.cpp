@@ -134,7 +134,7 @@ extern dFdBrightness_c *gSceneFader;
 void *LoadFile(int handle);
 void DecompressLZ16(void *src, void *dst);
 void Deallocate(void *handle);
-void func_0203da4c(void);
+void ClearLinkErrors(void);
 }
 extern unsigned char NumStars(void);
 
@@ -360,7 +360,7 @@ int dMeter_c::InitResources() {
         mStarCountSlideIn = 0;
     }
 
-    func_0203da4c();
+    ClearLinkErrors();
     return 1;
 }
 

@@ -1,5 +1,5 @@
-extern unsigned char GetPlayerFlagByte(int a0, int a1);
+extern unsigned char GetLinkByte(int slot, int byte);
 unsigned char IsPlayerWarping(int a0)
 {
-    return (GetPlayerFlagByte(a0, 0) & 0x70) >> 4;
+    return (GetLinkByte(a0, 0) & 0x70) >> 4;
 }

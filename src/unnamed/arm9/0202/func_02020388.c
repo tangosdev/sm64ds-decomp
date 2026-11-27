@@ -1,6 +1,6 @@
 extern int func_0203da9c(void);
-extern unsigned char GetPlayerFlagByte(int player, int byte);
-extern void func_0203db3c(int byte, int value);
+extern unsigned char GetLinkByte(int slot, int byte);
+extern void SetLinkByte(int byte, int value);
 
 /* If playerNo is the local player's, clears bits 4-6 of its link
    settings byte 0, the field IsPlayerWarping reads. daPly_c::
@@ -10,6 +10,6 @@ extern void func_0203db3c(int byte, int value);
 void func_02020388(int playerNo) {
     if (playerNo != func_0203da9c())
         return;
-    int v = GetPlayerFlagByte(playerNo, 0);
-    func_0203db3c(0, (unsigned char)(v & ~0x70));
+    int v = GetLinkByte(playerNo, 0);
+    SetLinkByte(0, (unsigned char)(v & ~0x70));
 }
