@@ -1,7 +1,6 @@
 #ifndef DAKRB_C_H
 #define DAKRB_C_H
 #include "types.h"
-#include "SharedFilePtr.h"
 #include "dCapEnemy_c.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"

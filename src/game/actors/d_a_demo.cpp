@@ -184,13 +184,8 @@ struct Ent
   char pad30[0x1c];
 };
 
-/* shadow struct 'SharedFilePtr' */
-struct SharedFilePtr;
-
 /* shadow struct 'BMD_File' */
 struct BMD_File;
-
-/* shadow struct 'Vector3' */
 
 /* shadow typedef 's32' */
 typedef int s32;
@@ -200,8 +195,6 @@ typedef unsigned char u8;
 
 /* shadow typedef 'u16' */
 typedef unsigned short u16;
-
-/* shadow typedef 'Vector3' */
 
 extern "C" {
 

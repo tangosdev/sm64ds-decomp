@@ -141,9 +141,12 @@ enum {
     SND_TUMBLE_BOUNCE_LATER = 0x13b   /* second and third bounce */
 };
 
-/* data_ov084_02130cf8 is the BMD this TU LoadFile / Release. The other
-   six handles are never passed to a SharedFilePtr method; this TU reads
-   filePtr as the loaded BCA. Selected by role (see SetAnim calls):
+/* data_ov084_02130cf8 is the BMD this TU loads and releases directly. The
+   seven animation handles are loaded and released through
+   sKuriboAnimationFiles. Six of them are read through filePtr as their
+   BCAs; gKuriboRecoverAnimationFile is only loaded and released.
+   gKuriboLowModelModelFile, the low-detail model, is constructed here, but
+   nothing in this TU loads it. The six by role (see SetAnim calls):
    02130ce8 is the walk animation (target speed data_ov084_02130228[type],
    also what the Goomba returns to after a pause or tumble), 02130cf0 the
    faster one chosen when it speeds up to data_ov084_02130268[type],
