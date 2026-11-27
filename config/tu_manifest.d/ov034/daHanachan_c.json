@@ -2163,8 +2163,7 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local state-name string literal; publish the configured global identity so ROM-data measurement can verify the emitted string and linker zero-fill without changing storage, relocations, or bytes"
-    }
-,
+    },
     {
       "symbol": "data_ov034_02114358",
       "from": "STB_LOCAL",
@@ -2296,7 +2295,8 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local state-table pointer-to-member descriptor; publish the configured global identity so ROM-data measurement can verify the emitted object without changing storage, relocations, or bytes"
-    }  ],
+    }
+  ],
   "relocations": [
     {
       "section": ".rodata",
