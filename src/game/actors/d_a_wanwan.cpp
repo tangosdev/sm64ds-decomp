@@ -879,10 +879,9 @@ void daWanwan_c::StateGiantDamageMain() {
  * That emits D1 then D0 and no D2, which is the ROM order. */
 
 /* Order is the retail initializer: model 0x9c02, model 0x9c01, anim 0x9c04,
- *anim 0x9c03, then the six state rows. mwcc emits __sinit_d_a_wanwan.cpp
- * from these definitions. The table's enter/update
- * fields copy from the ROM PMF descriptors by value; the name pointers are
- * the static part. */
+ * anim 0x9c03, then the six state rows. mwcc emits __sinit_d_a_wanwan.cpp
+ * from these definitions. The table's enter/update fields copy from the ROM
+ * PMF descriptors by value; the name pointers are the static part. */
 ModelFile data_ov014_02114968(0x9c02);
 ModelFile data_ov014_02114978(0x9c01);
 AnimFile data_ov014_02114980(0x9c04);

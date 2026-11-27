@@ -57,7 +57,6 @@ extern dCamera_c *gCamera;
 extern daPly_c *gPlayers[];
 extern Vector3 data_020a0ebc;
 
-extern ModelFile gObjStargateModelFile;
 ModelFile gObjStargateModelFile(ASSET_OBJ_STARGATE_BMD);
 
 extern VecFx32 data_ov100_02148948;

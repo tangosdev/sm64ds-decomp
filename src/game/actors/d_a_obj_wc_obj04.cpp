@@ -14,7 +14,8 @@
  *   mMeshCollider.
  * - dBgW::SetClipRadius: Behavior sets the collider range to 0x100000.
  * - data_ov029_0211432c / 02114324 are this TU's BMD/KCL file handles;
- *   data_ov029_0211304c the CLPS block stays unowned overlay data.
+ *   data_ov029_0211304c, the CLPS block, is defined in the stage-map TU
+ *   (d_s_map_ov029.c).
  * - S14: g_profile_WC_OBJ04 stays outside the licensed .text.
  */
 

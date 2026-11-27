@@ -4,7 +4,6 @@
  *   and a D2.
  * - data_ov026_02113ea0 is the BMD handle and data_ov026_02113a9c
  *   the collision offset. gSaveBlock is the save block.
- *   g_profile_WL_POLELIFT is outside this TU.
  *
  * daObjWlPolelift_c, the Wet-Dry World pole lift. It rides the path
  * in param1 at 10.0 a frame, pauses 60 frames at a dead end, and

@@ -119,7 +119,6 @@ u8 IsAreaShowing(int idx);
 
 /* The seven file handles __sinit_ov063_0211e29c constructs. The destructor
  * chain records the file ID; actor cleanup releases handles separately. */
-
 extern ModelFile data_ov063_0211edc4;
 extern AnimFile data_ov063_0211edcc;
 extern AnimFile data_ov063_0211edd4;
@@ -127,6 +126,7 @@ extern AnimFile data_ov063_0211eddc;
 extern AnimFile data_ov063_0211ede4;
 extern ModelFile data_ov063_0211edec;
 extern ModelFile data_ov063_0211edf4;
+
 extern SharedFilePtr gCoinBluePoly32ModelFile;
 extern SharedFilePtr gCoinRedPoly32ModelFile;
 extern SharedFilePtr gCoinYellowPoly32ModelFile;

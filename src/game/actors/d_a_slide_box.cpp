@@ -51,12 +51,11 @@ enum daSlide_Box_c_AssetId { ASSET_KI_SLIDE_BOX_BMD = 0x0645, ASSET_KI_SLIDE_BOX
 #include "nitro/fx/fx_cp.h"
 #include "math/MtxStack.h"
 
-/* File 1605 / 1606 resource handles. 02113bac is the CLPS block SetFile
- * takes. */
-
+/* File 1605 / 1606 resource handles. */
 extern "C" ModelFile gKiSlideBoxModelFile;
 extern "C" ClsnFile gKiSlideBoxCollisionFile;
 
+/* The CLPS block SetFile takes. */
 extern struct CLPS_Block data_ov016_02113bac;
 
 extern "C" {
