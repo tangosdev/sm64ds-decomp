@@ -50,7 +50,7 @@ enum daChair_c_AssetId { ASSET_CHAIR_BMD = 0x02d0 };
    load. */
 #pragma opt_common_subs off
 
-/* 8-byte file handle. The model uses func_02017acc / func_02017ab4. The
+/* 8-byte file handle. The model uses ModelFile::ModelFile / ModelFile::~ModelFile. The
  * spelling is local; the manifest aliases the generated names to those ROM
  * symbols. */
 struct ChairModelFilePtr : SharedFilePtr {

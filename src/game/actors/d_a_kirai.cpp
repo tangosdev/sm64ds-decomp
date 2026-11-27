@@ -35,8 +35,8 @@ enum daKirai_c_AssetId { ASSET_KOOPA_BOMB_BMD = 0x0382 };
 
 typedef void (daKirai_c::*KiraiState)();
 
-/* The model file handle constructs through func_02017acc and destroys through
- * func_02017ab4; the manifest aliases the wrapper's undefined members onto
+/* The model file handle constructs through ModelFile::ModelFile and destroys through
+ * ModelFile::~ModelFile; the manifest aliases the wrapper's undefined members onto
  * those ROM symbols. */
 struct KiraiModelFilePtr : SharedFilePtr {
     KiraiModelFilePtr(u32 fileID);

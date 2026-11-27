@@ -21,18 +21,25 @@ struct dExtModel_c;
  * halfword store and clears the reference count with a byte store; Load caches the
  * buffer in the word at +4; LoadFile counts holders in the byte at +2; Release frees
  * the buffer when that count reaches zero. Eight bytes, word-aligned.
+ *
+ * A handle is constructed with the overlay-0 file ID and destroyed by publishing
+ * its file ID, and in the ROM every handle is one of the derived kinds below.
+ * The base constructor and destructor are only ever entered from a derived one: the ROM
+ * keeps their base-object variants (C2 0x02017e48, D2 0x02017e34) and no caller
+ * outside this unit reaches them.
  */
 struct SharedFilePtr {
     u16 fileID;    /* 0x00: FAT file ID, resolved from the overlay-0 ID */
     u8 numRefs;    /* 0x02: holders that have loaded the file */
     void *filePtr; /* 0x04: the loaded file, or null */
 
-    /* RETURN TYPES ARE MEASURED, not chosen: both of these set r0 on the way out
-       and the C forms that defined them returned a value, so declaring them void
-       made the declaration and the definition disagree -- harmless while nothing
-       was defined as a real method, and blocking as soon as one is. A return type
-       is not part of an Itanium mangled name, so no symbol changes here. */
-    SharedFilePtr &Construct(unsigned int fileID);
+    /* Each named prototype parameter advances mwcc's @NNN counter in every
+       translation unit that includes this header, so this header names exactly
+       one: the constructor's file ID. Name another, or drop this one, and the
+       pinned @NNN names of every includer renumber. */
+    SharedFilePtr(unsigned int fileID);
+    ~SharedFilePtr();
+
     void ReallocateModelFile();
     void Release();
     void *LoadFile();
@@ -43,37 +50,74 @@ struct SharedFilePtr {
        went unnoticed. A return type is not part of an Itanium mangled name,
        so this changes no symbol. */
     void *Load();
-    /* Address-named. Parameters are unnamed: a named parameter here renumbers
-       @NNN in every translation unit that includes this header. */
-    void *func_02017e48(unsigned int);
-    void *func_02017e34();
+    /* Address-named. */
     void func_02017e0c(unsigned int);
     void func_02017c24();
-    void *func_02017b4c(unsigned int);
-    void *func_02017ae4(unsigned int);
-    void *func_02017acc(unsigned int);
-    int func_02017a9c();
-    void *func_02017a24(unsigned int);
-    int func_02017a0c();
     int func_020179b4(dExtModel_c *, int);
-    void *func_020178cc(unsigned int);
-    int func_020178b4();
     void *func_0201787c();
 };
 
 typedef char SharedFilePtr_size_must_be_0x8[sizeof(SharedFilePtr) == 0x8 ? 1 : -1];
 
-/* The C veneers for the texture-sequence and animation handles; their
- * definitions live in src/SharedFilePtr.cpp. The self parameter is the
- * handle's address, which the compiled ROM passes in r0 as an int. */
-#ifdef __cplusplus
-extern "C" {
-#endif
-void *SharedFilePtr_Construct_TexSeq(void *, unsigned int);
-int SharedFilePtr_Destruct_Anim(int);
-int SharedFilePtr_Destruct_TexSeq(int);
-#ifdef __cplusplus
-}
-#endif
+/* The handle kinds, one per file format. THE CLASS NAMES ARE COINED: none of
+ * these classes is polymorphic, so the cartridge carries no RTTI for any of them
+ * and no original name survives. What is measured is the hierarchy, from which
+ * variants the retail link kept and who calls them:
+ *
+ *   - each kind's complete-object constructor (C1) and destructor (D1) is called
+ *     by the static initializers and cleanup of the files that hold one, and
+ *     each enters SharedFilePtr's C2 / D2;
+ *   - ModelFile alone also keeps its base-object variants (C2 0x02017ae4,
+ *     D2 0x02017a9c), and the only callers of those are ModelFileA's and
+ *     ModelFileB's C1 / D1: both derive from ModelFile.
+ *
+ * mwcc emits all four variants of every constructor and destructor defined in
+ * src/SharedFilePtr.cpp; the variants the cartridge does not carry are recorded
+ * as deadstripped compiler output in its manifest. */
+
+/* A KCL collision file: C1 0x02017b4c, D1 0x02017b34. */
+struct ClsnFile : SharedFilePtr {
+    ClsnFile(unsigned int);
+    ~ClsnFile();
+};
+
+/* A BMD model file: C1 0x02017acc, C2 0x02017ae4, D1 0x02017ab4, D2 0x02017a9c. */
+struct ModelFile : SharedFilePtr {
+    ModelFile(unsigned int);
+    ~ModelFile();
+};
+
+/* A BMD model file the minigames hand to a dExtModel_c through
+   SharedFilePtr::func_020179b4: C1 0x02017a24, D1 0x02017a0c. */
+struct ModelFileA : ModelFile {
+    ModelFileA(unsigned int);
+    ~ModelFileA();
+};
+
+/* A BCA animation file: C1 0x0201799c, D1 0x02017984. */
+struct AnimFile : SharedFilePtr {
+    AnimFile(unsigned int);
+    ~AnimFile();
+};
+
+/* A BTP texture-sequence file: C1 0x02017934, D1 0x0201791c. */
+struct TexSeqFile : SharedFilePtr {
+    TexSeqFile(unsigned int);
+    ~TexSeqFile();
+};
+
+/* A BMD file read for its textures and rebased through
+   SharedFilePtr::func_0201787c: C1 0x020178cc, D1 0x020178b4. */
+struct ModelFileB : ModelFile {
+    ModelFileB(unsigned int);
+    ~ModelFileB();
+};
+
+typedef char ClsnFile_size_must_be_0x8[sizeof(ClsnFile) == 0x8 ? 1 : -1];
+typedef char ModelFile_size_must_be_0x8[sizeof(ModelFile) == 0x8 ? 1 : -1];
+typedef char ModelFileA_size_must_be_0x8[sizeof(ModelFileA) == 0x8 ? 1 : -1];
+typedef char AnimFile_size_must_be_0x8[sizeof(AnimFile) == 0x8 ? 1 : -1];
+typedef char TexSeqFile_size_must_be_0x8[sizeof(TexSeqFile) == 0x8 ? 1 : -1];
+typedef char ModelFileB_size_must_be_0x8[sizeof(ModelFileB) == 0x8 ? 1 : -1];
 
 #endif

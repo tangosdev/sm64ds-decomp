@@ -26,9 +26,9 @@ enum d_a_obj_ki_fune_AssetId {
 #include "dBgW.h"
 #include "nitro/fx/fx_trig.h"
 
-/* Two model handles construct through func_02017acc and destroy through
- * func_02017ab4. Two collision handles construct through func_02017b4c and
- * destroy through SharedFilePtr_Destruct_Clsn. The file tables stay ROM data. */
+/* Two model handles construct through ModelFile::ModelFile and destroy through
+ * ModelFile::~ModelFile. Two collision handles construct through ClsnFile::ClsnFile and
+ * destroy through ClsnFile::~ClsnFile. The file tables stay ROM data. */
 struct KiFuneModelFilePtr : SharedFilePtr {
     KiFuneModelFilePtr(unsigned int fileId);
     ~KiFuneModelFilePtr();

@@ -831,28 +831,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN22SimpleLiftModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN22SimpleLiftModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
     },
     {
       "symbol": "_ZN24SimpleLiftClsnFileHandleC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "canonical_symbol": "_ZN8ClsnFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN24SimpleLiftClsnFileHandleD1Ev",
-      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
+      "canonical_symbol": "_ZN8ClsnFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
@@ -946,7 +946,7 @@
       "source": "0x021346f8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -966,7 +966,7 @@
       "source": "0x02134714",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -986,7 +986,7 @@
       "source": "0x02134730",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1006,7 +1006,7 @@
       "source": "0x0213474c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1026,7 +1026,7 @@
       "source": "0x02134768",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1046,7 +1046,7 @@
       "source": "0x02134784",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1066,7 +1066,7 @@
       "source": "0x021347a0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1086,7 +1086,7 @@
       "source": "0x021347bc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1106,7 +1106,7 @@
       "source": "0x021347d8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1126,7 +1126,7 @@
       "source": "0x021347f4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1146,7 +1146,7 @@
       "source": "0x02134810",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1166,7 +1166,7 @@
       "source": "0x0213482c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1186,7 +1186,7 @@
       "source": "0x02134848",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1206,7 +1206,7 @@
       "source": "0x02134864",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -1236,7 +1236,7 @@
       "source": "0x0213488c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1266,7 +1266,7 @@
       "source": "0x0213489c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
+      "symbol": "_ZN8ClsnFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017b34"

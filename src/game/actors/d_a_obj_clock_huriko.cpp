@@ -50,8 +50,8 @@ enum d_a_obj_clock_huriko_AssetId { ASSET_C2_HURIKO_BMD = 0x05b3 };
 #include "Sound.h"
 #include "math/MtxStack.h"
 
-/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
- * func_02017ab4. The manifest aliases those undefined members onto the ROM
+/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
+ * ModelFile::~ModelFile. The manifest aliases those undefined members onto the ROM
  * symbols. */
 struct ClockHurikoModelFilePtr : SharedFilePtr {
     ClockHurikoModelFilePtr(u32 fileID);

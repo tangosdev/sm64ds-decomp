@@ -531,28 +531,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN14Ov002ModelFileC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor"
     },
     {
       "symbol": "_ZN14Ov002ModelFileD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor"
     },
     {
       "symbol": "_ZN15Ov002TexSeqFileC1Ej",
-      "canonical_symbol": "SharedFilePtr_Construct_TexSeq",
+      "canonical_symbol": "_ZN10TexSeqFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017934",
       "evidence": "retail initializer call destination and the texture-sequence wrapper constructor"
     },
     {
       "symbol": "_ZN15Ov002TexSeqFileD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_TexSeq",
+      "canonical_symbol": "_ZN10TexSeqFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x0201791c",
       "evidence": "retail destructor registration destination and the texture-sequence wrapper destructor"
@@ -722,7 +722,7 @@
       "source": "0x02100570",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -742,7 +742,7 @@
       "source": "0x0210058c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -762,7 +762,7 @@
       "source": "0x021005a8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -782,7 +782,7 @@
       "source": "0x021005c4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -802,7 +802,7 @@
       "source": "0x021005e0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -822,7 +822,7 @@
       "source": "0x021005fc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -842,7 +842,7 @@
       "source": "0x02100618",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -862,7 +862,7 @@
       "source": "0x02100634",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -882,7 +882,7 @@
       "source": "0x02100650",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -902,7 +902,7 @@
       "source": "0x0210066c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -922,7 +922,7 @@
       "source": "0x02100688",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -942,7 +942,7 @@
       "source": "0x021006a4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -962,7 +962,7 @@
       "source": "0x021006c0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -982,7 +982,7 @@
       "source": "0x021006dc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1002,7 +1002,7 @@
       "source": "0x021006f8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1022,7 +1022,7 @@
       "source": "0x02100714",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1042,7 +1042,7 @@
       "source": "0x02100730",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1062,7 +1062,7 @@
       "source": "0x0210074c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1082,7 +1082,7 @@
       "source": "0x02100768",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1102,7 +1102,7 @@
       "source": "0x02100784",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017934"
@@ -1122,7 +1122,7 @@
       "source": "0x021007a0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017934"
@@ -1142,7 +1142,7 @@
       "source": "0x021007bc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1162,7 +1162,7 @@
       "source": "0x021007d8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1182,7 +1182,7 @@
       "source": "0x021007f4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -1212,7 +1212,7 @@
       "source": "0x0210081c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1602,7 +1602,7 @@
       "source": "0x02100900",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_TexSeq",
+      "symbol": "_ZN10TexSeqFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0201791c"
@@ -1709,7 +1709,7 @@
     }
   ],
   "notes": [
-    "The 24 file-scope handles are defined here, in retail construction order, so mwcc emits __sinit_ov002_handles.cpp. The wrapper types are local; undefined_symbol_aliases maps their constructors and destructors onto func_02017acc / func_02017ab4 and the texture-sequence veneers. func_ov002_020ad660 is the module's first function and this TU's .text; the initializer is renamed to .init. The handwritten src/unnamed/ov002/__sinit_ov002_02100560.cpp is retired.",
+    "The 24 file-scope handles are defined here, in retail construction order, so mwcc emits __sinit_ov002_handles.cpp. The wrapper types are local; undefined_symbol_aliases maps their constructors and destructors onto _ZN9ModelFileC1Ej / _ZN9ModelFileD1Ev and the texture-sequence veneers. func_ov002_020ad660 is the module's first function and this TU's .text; the initializer is renamed to .init. The handwritten src/unnamed/ov002/__sinit_ov002_02100560.cpp is retired.",
     "The handles keep the names the actor TUs already read. The registration nodes are the compiler's @NNN temps, renamed where another module already owns that number. No new .bss is allocated: this TU claims the existing 0x0210d9a0..0x0210db80.",
     "LOCAL WORKER NOTE: this machine's stock dump is the EU image, so the scratch link built ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40. The recorded rom.sha256 is the fleet SHA the other intact entries share."
   ],

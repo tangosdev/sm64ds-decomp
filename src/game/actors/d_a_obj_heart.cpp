@@ -27,9 +27,9 @@ enum daObjHeart_c_AssetId { ASSET_OBJ_HEART_BMD = 0x0470, ASSET_OBJ_HEART_WAIT_B
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
-/* The model handle constructs through func_02017acc and destroys through
- * func_02017ab4; the animation handle constructs through
- * SharedFilePtr::Construct and destroys through SharedFilePtr_Destruct_Anim.
+/* The model handle constructs through ModelFile::ModelFile and destroys through
+ * ModelFile::~ModelFile; the animation handle constructs through
+ * AnimFile::AnimFile and destroys through AnimFile::~AnimFile.
  * The manifest aliases those undefined members onto the ROM symbols. */
 struct HeartModelFilePtr : SharedFilePtr {
     HeartModelFilePtr(u32 fileID);

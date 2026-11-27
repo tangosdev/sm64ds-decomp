@@ -85,9 +85,9 @@ enum daStar_c_AssetId {
    daStar_c::State. */
 typedef void (daStar_c::*StateHandler)();
 
-/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
-   func_02017ab4. Animation handles construct through SharedFilePtr::Construct
-   and destroy through SharedFilePtr_Destruct_Anim. The manifest aliases those
+/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
+   ModelFile::~ModelFile. Animation handles construct through AnimFile::AnimFile
+   and destroy through AnimFile::~AnimFile. The manifest aliases those
    undefined members onto the ROM symbols. */
 struct StarModelFilePtr : SharedFilePtr {
     StarModelFilePtr(u32 fileID);
@@ -2942,8 +2942,8 @@ void force_daStarBase_c_dtor_order() {
 }
 
 /* The nine file-scope resource handles, in retail initializer order. Five
-   model files (func_02017acc / func_02017ab4), then four animation files
-   (SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim); the manifest
+   model files (ModelFile::ModelFile / ModelFile::~ModelFile), then four animation files
+   (AnimFile::AnimFile / AnimFile::~AnimFile); the manifest
    aliases each wrapper ctor/dtor onto those ROM symbols. */
 StarModelFilePtr gPowerStarModelFile(0x8015);
 StarModelFilePtr gTransparentStarModelFile(0x8017);

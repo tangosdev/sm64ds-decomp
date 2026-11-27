@@ -56,9 +56,9 @@ enum {
 
 enum { kPlayerActorId = 0xbf };
 
-/* The model handle constructs through func_02017acc and destroys through
- * func_02017ab4; the animation handles go through SharedFilePtr::Construct
- * and SharedFilePtr_Destruct_Anim. The wrappers are declared, never defined:
+/* The model handle constructs through ModelFile::ModelFile and destroys through
+ * ModelFile::~ModelFile; the animation handles go through AnimFile::AnimFile
+ * and AnimFile::~AnimFile. The wrappers are declared, never defined:
  * the manifest aliases their undefined members onto the ROM veneers. Both
  * paths store a u16 file ID at +0, a byte reference count at +2 and a loaded
  * file pointer at +4. */

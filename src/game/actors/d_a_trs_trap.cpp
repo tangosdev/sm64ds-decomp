@@ -139,8 +139,8 @@ s32 data_ov063_0211e9f8[6] = {0x00002000, 0x000d4000, 0x00055000,
 typedef void (daTrsTrap_c::*PMF)();
 extern PMF data_ov063_0211ef38[];
 
-/* 8-byte file handles. The models use func_02017acc / func_02017ab4 and the
- * collision files func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
+/* 8-byte file handles. The models use ModelFile::ModelFile / ModelFile::~ModelFile and the
+ * collision files ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct TrsTrapModelFilePtr : SharedFilePtr {
     TrsTrapModelFilePtr(u32 fileID);

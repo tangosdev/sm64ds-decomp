@@ -69,7 +69,7 @@ enum {
 /* The GORO_ROCK model handle, constructed with file ID 1492 by the
  * compiler's __sinit_d_a_grock.cpp at overlay load. The wrapper name is
  * local; the constructor and destructor are the ROM resource-family
- * functions func_02017acc / func_02017ab4, aliased in the manifest. */
+ * functions ModelFile::ModelFile / ModelFile::~ModelFile, aliased in the manifest. */
 struct GrockModelFilePtr : SharedFilePtr {
     GrockModelFilePtr(u32 fileID);
     ~GrockModelFilePtr();

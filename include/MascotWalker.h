@@ -6,22 +6,6 @@
 #include "dExtBlendAnmModel_c.h"
 #include "dExtShadowModel_c.h"
 
-/* The walker's file handles. Each constructor takes the file's ID and
- * each destructor drops the handle; the names are coined.
- * src/minigames/unit020bfec0.cpp defines them inline over the arm9 veneers
- * the ROM calls (func_02017acc / func_02017ab4 for the model,
- * SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim for the
- * animations). */
-struct MascotWalkerModelFilePtr : SharedFilePtr {
-    MascotWalkerModelFilePtr(u32 fileID);
-    ~MascotWalkerModelFilePtr();
-};
-
-struct MascotWalkerAnimationFileHandle : SharedFilePtr {
-    MascotWalkerAnimationFileHandle(u32 fileID);
-    ~MascotWalkerAnimationFileHandle();
-};
-
 /* One of the four walks mPath points at: a point count, then the points. */
 struct WalkPath;
 
@@ -49,26 +33,26 @@ struct MascotWalker {
     void StartPause();
     void StatePause();
 
-    MascotWalkerModelFilePtr mModelFile; /* 0x00 -- kino_d.bmd (0x205) */
+    ModelFile mModelFile; /* 0x00 -- kino_d.bmd (0x205) */
     /* kino_wait.bca (0x206): its file is the BCA Load starts and StartPause restarts. */
-    MascotWalkerAnimationFileHandle mPauseAnimFile; /* 0x08 */
+    AnimFile mPauseAnimFile; /* 0x08 */
     /* kino_walk.bca (0x207): StartNextPath restarts it. */
-    MascotWalkerAnimationFileHandle mWalkAnimFile; /* 0x10 */
+    AnimFile mWalkAnimFile; /* 0x10 */
     /* 0x70 bytes. UpdateMatrix sets its mat4x3 and turns bone 6 of its
        data.transforms by mHeadAngle; StateWalk pauses when its dExtFrameCtrl_c
        base hits frame 0. */
     dExtBlendAnmModel_c mModel; /* 0x18 */
     /* InitCylinder'd by Load and InitModel'd on mModel.mat4x3 by Draw. */
-    dExtShadowModel_c mShadow; /* 0x88 */
-    WalkPath *mPath;           /* 0xb0 -- the path walked: a point count, then the points */
+    dExtShadowModel_c mShadow;      /* 0x88 */
+    WalkPath *mPath;                /* 0xb0 -- the path walked: a point count, then the points */
     void (MascotWalker::*mState)(); /* 0xb4 -- the current state */
     /* Load sets all three to 0x1000 (1.0), beside mPos and the angles; nothing
        in this file reads it back. */
-    Vector3 mScale;   /* 0xbc */
-    Vector3 mPos;     /* 0xc8 */
-    Vector3 mDir;     /* 0xd4 -- unit vector toward the next point */
-    s32 mPathPoint;   /* 0xe0 -- the point being walked to */
-    s32 mPathIndex;   /* 0xe4 -- which of the four paths, cycling */
+    Vector3 mScale; /* 0xbc */
+    Vector3 mPos;   /* 0xc8 */
+    Vector3 mDir;   /* 0xd4 -- unit vector toward the next point */
+    s32 mPathPoint; /* 0xe0 -- the point being walked to */
+    s32 mPathIndex; /* 0xe4 -- which of the four paths, cycling */
     /* Load copies data_020a0edc's x/y/z into 0xe8/0xea/0xec, the same start
        rotation Dealer::Load copies into Dealer::mRot. */
     s16 mAngleX;      /* 0xe8 */
@@ -84,10 +68,6 @@ struct MascotWalker {
     s32 mPaused;     /* 0xf4 -- set by StartPause, cleared when StatePause resumes the walk */
 };
 
-typedef char
-    MascotWalkerModelFilePtr_size_must_be_0x8[sizeof(MascotWalkerModelFilePtr) == 0x8 ? 1 : -1];
-typedef char MascotWalkerAnimationFileHandle_size_must_be_0x8
-    [sizeof(MascotWalkerAnimationFileHandle) == 0x8 ? 1 : -1];
 typedef char MascotWalker_size_must_be_0xf8[sizeof(MascotWalker) == 0xf8 ? 1 : -1];
 
 #endif

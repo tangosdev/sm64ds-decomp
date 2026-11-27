@@ -9,7 +9,7 @@
     "manually corrected contiguous linker run: 0x021111a0..0x021112bc, five functions; build/tu_map.json stopped at 0x02111280 and omitted the immediately adjacent factory now reconstructed as daObjKm3_Kurumajiku_c_classInit (historical alias RickshawBs_Spawn)",
     "daObjKm3_Kurumajiku_c_classInit constructs daObjKm3_Kurumajiku_c (size 0x330, dBgActor base constructor, then daObjKurumajiku and daObjKm3_Kurumajiku vptr stores), and g_profile_KM3_KURUMAJIKU at 0x0211227c relocates directly to it inside this class's RTTI/type-name/vtable data band; both source-style spellings are lineage-supported reconstructions, not ROM-preserved names",
     "one mwccarm 2004/b56 compile emits all five text contributions plus the measured class data in retail section order; ordinary intact-object scratch linkcheck proves the text and 0x02112258..0x02112320 data ranges, all 106 modules, and the full stock ROM byte-identical",
-    "compiler-generated __sinit_d_a_obj_km3_kurumajiku.cpp is byte-identical to retail __sinit_ov047_021116dc (0x6c): model file 1665 via func_02017acc / func_02017ab4, collision file 1666 via func_02017b4c / SharedFilePtr_Destruct_Clsn, ctor word at 0x021119c4",
+    "compiler-generated __sinit_d_a_obj_km3_kurumajiku.cpp is byte-identical to retail __sinit_ov047_021116dc (0x6c): model file 1665 via _ZN9ModelFileC1Ej / _ZN9ModelFileD1Ev, collision file 1666 via _ZN8ClsnFileC1Ej / _ZN8ClsnFileD1Ev, ctor word at 0x021119c4",
     "2026-10-18 native axle continuation adds16-byteCLPS [02111b54,02111b64) and12-byteownRTTI [0211224c,02112258). Named rodata routing preserves the16FFbytes after the block as ROM-owned storage. Existing methods, initializer, ctor, profile/vtable and BSS retain exact native output; local resource names/layouts are inferred from runtime and asset consumers."
   ],
   "sections": [
@@ -518,7 +518,7 @@
       "source": "0x021116ec",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -538,7 +538,7 @@
       "source": "0x02111708",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "symbol": "_ZN8ClsnFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017b4c"
@@ -568,7 +568,7 @@
       "source": "0x02111730",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -598,7 +598,7 @@
       "source": "0x02111740",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z27SharedFilePtr_Destruct_Clsni",
+      "symbol": "_ZN8ClsnFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017b34"
@@ -1137,28 +1137,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN25Km3KurumajikuModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN25Km3KurumajikuModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model wrapper destructor's exact ABS32 relocation"
     },
     {
       "symbol": "_ZN24Km3KurumajikuClsnFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017b4cEj",
+      "canonical_symbol": "_ZN8ClsnFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b4c",
       "evidence": "retail initializer call destination and the collision wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN24Km3KurumajikuClsnFilePtrD1Ev",
-      "canonical_symbol": "_Z27SharedFilePtr_Destruct_Clsni",
+      "canonical_symbol": "_ZN8ClsnFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017b34",
       "evidence": "retail destructor registration destination and the collision wrapper destructor's exact ABS32 relocation"

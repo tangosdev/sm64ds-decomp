@@ -78,8 +78,8 @@ enum { kTiltSound = 0x8b };
 
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (func_02017acc / func_02017ab4 for the model, func_02017b4c /
- * SharedFilePtr_Destruct_Clsn for the collision), spelled through
+ * veneer pairs (ModelFile::ModelFile / ModelFile::~ModelFile for the model, ClsnFile::ClsnFile /
+ * ClsnFile::~ClsnFile for the collision), spelled through
  * declared-only subclasses so the static initializer names the real entry
  * points. */
 struct SeesawModelFilePtr : SharedFilePtr {
