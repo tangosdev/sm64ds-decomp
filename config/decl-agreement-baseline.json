@@ -153,17 +153,8 @@
    "src/game/player/d_a_ply_methods.cpp": ["return:SharedFilePtr"],
    "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
   },
-  "data_ov002_0210e3a0": {
-   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
-  },
-  "data_ov002_0210e7d8": {
-   "src/game/stages/d_s_stage_methods.cpp": ["return:SharedFilePtr"]
-  },
   "data_ov070_0212360c": {
    "include/decl_common.h": ["return:int []"]
-  },
-  "data_ov081_02128d90": {
-   "src/game/actors/d_a_snowball.cpp": ["return:SharedFilePtr"]
   },
   "func_02018568": {
    "src/unnamed/arm9/0201/func_0201834c.cpp": ["param:#1 void *"]

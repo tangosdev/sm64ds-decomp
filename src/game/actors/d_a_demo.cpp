@@ -302,6 +302,11 @@ extern unsigned char gGameMode;
 extern ModelFile gPowerStarModelFile;
 /* Lakitu's model handle, owned and constructed by d_a_c_jugem.cpp. */
 extern ModelFile data_ov085_0213074c;
+extern ModelFile data_ov002_02110b50;
+extern ModelFile data_ov002_02110b70;
+extern ModelFile data_ov002_02110b78;
+extern ModelFile data_ov002_02110b98;
+extern ModelFile data_ov002_02110c18;
 extern SharedFilePtr *data_ov002_0210b600[1];
 extern SharedFilePtr *data_ov002_0210b604[1];
 extern SharedFilePtr *data_ov002_0210b608[1];

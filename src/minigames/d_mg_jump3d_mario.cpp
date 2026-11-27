@@ -82,26 +82,13 @@ BCA_File *sJump3DAnimJump;
 /* Slots the current mAnimIdx (0/1/2) picks the anim file from. */
 BCA_File **sJump3DAnimTable[] = {&sJump3DAnimJump, &sJump3DAnimDoubleJump1, &sJump3DAnimWallJump};
 
-/* Six anim handles call AnimFile::AnimFile. The model handle calls
-   ModelFileA::ModelFileA. */
-struct Jump3DMarioAnimFilePtr : SharedFilePtr {
-    Jump3DMarioAnimFilePtr(unsigned fileId);
-    ~Jump3DMarioAnimFilePtr();
-};
-struct Jump3DModelFilePtr : SharedFilePtr {
-    Jump3DModelFilePtr(unsigned fileId);
-    ~Jump3DModelFilePtr();
-};
-typedef char Jump3DMarioAnimFilePtr_size[sizeof(Jump3DMarioAnimFilePtr) == 8 ? 1 : -1];
-typedef char Jump3DModelFilePtr_size[sizeof(Jump3DModelFilePtr) == 8 ? 1 : -1];
-
-extern Jump3DMarioAnimFilePtr sJump3DMarioWallJumpAnimFile;
-extern Jump3DMarioAnimFilePtr sJump3DMarioSdownAnimFile;
-extern Jump3DMarioAnimFilePtr sJump3DMarioStruggleAnimFile;
-extern Jump3DModelFilePtr gMarioModelMgModelFile;
-extern Jump3DMarioAnimFilePtr sJump3DMarioRollJumpAnimFile;
-extern Jump3DMarioAnimFilePtr sJump3DMarioJumpAnimFile;
-extern Jump3DMarioAnimFilePtr sJump3DMarioDoubleJump1AnimFile;
+extern AnimFile sJump3DMarioWallJumpAnimFile;
+extern AnimFile sJump3DMarioSdownAnimFile;
+extern AnimFile sJump3DMarioStruggleAnimFile;
+extern ModelFileA gMarioModelMgModelFile;
+extern AnimFile sJump3DMarioRollJumpAnimFile;
+extern AnimFile sJump3DMarioJumpAnimFile;
+extern AnimFile sJump3DMarioDoubleJump1AnimFile;
 
 /* The pool the minigame scenes hand in: count, base pointer, level, round
  * and the three player slots. */
@@ -846,13 +833,13 @@ dMgJump3DMario_c::dMgJump3DMario_c()
 {
 }
 
-Jump3DMarioAnimFilePtr sJump3DMarioJumpAnimFile(32888);
-Jump3DMarioAnimFilePtr sJump3DMarioDoubleJump1AnimFile(32797);
-Jump3DMarioAnimFilePtr sJump3DMarioRollJumpAnimFile(32910);
-Jump3DMarioAnimFilePtr sJump3DMarioWallJumpAnimFile(32958);
-Jump3DMarioAnimFilePtr sJump3DMarioSdownAnimFile(32914);
-Jump3DMarioAnimFilePtr sJump3DMarioStruggleAnimFile(32932);
-Jump3DModelFilePtr gMarioModelMgModelFile(534);
+AnimFile sJump3DMarioJumpAnimFile(32888);
+AnimFile sJump3DMarioDoubleJump1AnimFile(32797);
+AnimFile sJump3DMarioRollJumpAnimFile(32910);
+AnimFile sJump3DMarioWallJumpAnimFile(32958);
+AnimFile sJump3DMarioSdownAnimFile(32914);
+AnimFile sJump3DMarioStruggleAnimFile(32932);
+ModelFileA gMarioModelMgModelFile(534);
 
 /* The one sprite record Draw hands OAM::Render for the shadow; attr3 == 0xffff
    ends the list. */

@@ -52,29 +52,6 @@ void RenderAll();
 }
 void CopyToViewMat(const Matrix4x3 *m);
 
-/* The resource handles as the ROM lays them out: {id, loaded file}. The
-   model handles construct through ModelFile::ModelFile and destroy through
-   ModelFile::~ModelFile; the animation handles construct through
-   AnimFile::AnimFile and destroy through AnimFile::~AnimFile;
-   the texture-sequence handles construct through
-   TexSeqFile::TexSeqFile and destroy through
-   TexSeqFile::~TexSeqFile. The manifest aliases each undefined member
-   onto its ROM symbol. */
-struct EntObjModelFilePtr : SharedFilePtr {
-    EntObjModelFilePtr(u32 fileID);
-    ~EntObjModelFilePtr();
-};
-
-struct EntObjAnimationFileHandle : SharedFilePtr {
-    EntObjAnimationFileHandle(u32 fileID);
-    ~EntObjAnimationFileHandle();
-};
-
-struct EntObjTextureSequenceFileHandle : SharedFilePtr {
-    EntObjTextureSequenceFileHandle(u32 fileID);
-    ~EntObjTextureSequenceFileHandle();
-};
-
 extern "C" {
 
 int Math_Function_0203b14c(int *p, int target, int a, int b, int c);
@@ -85,29 +62,30 @@ extern short data_02082614[];
 extern u8 data_0209fc5c[];
 extern signed char data_0209fc64[];
 
-/* SharedFilePtr handles; the loaded file sits at .ptr. */
-extern EntObjAnimationFileHandle data_ov075_0211d384;
-extern EntObjAnimationFileHandle data_ov075_0211d38c;
-extern EntObjAnimationFileHandle data_ov075_0211d394;
-extern EntObjAnimationFileHandle data_ov075_0211d39c;
-extern EntObjAnimationFileHandle data_ov075_0211d3a4;
-extern EntObjAnimationFileHandle data_ov075_0211d3ac;
-extern EntObjAnimationFileHandle data_ov075_0211d3b4;
-extern EntObjModelFilePtr data_ov075_0211d3bc;
-extern EntObjModelFilePtr data_ov075_0211d3c4;
-extern EntObjAnimationFileHandle data_ov075_0211d3cc;
-extern EntObjAnimationFileHandle data_ov075_0211d3d4;
-extern EntObjTextureSequenceFileHandle data_ov075_0211d3dc;
-extern EntObjAnimationFileHandle data_ov075_0211d3e4;
-extern EntObjAnimationFileHandle data_ov075_0211d3ec;
-extern EntObjAnimationFileHandle data_ov075_0211d3f4;
-extern EntObjModelFilePtr data_ov075_0211d3fc;
-extern EntObjModelFilePtr data_ov075_0211d404;
-extern EntObjTextureSequenceFileHandle data_ov075_0211d40c;
-extern EntObjAnimationFileHandle data_ov075_0211d414;
-extern EntObjAnimationFileHandle data_ov075_0211d41c;
-extern EntObjAnimationFileHandle data_ov075_0211d424;
-extern EntObjAnimationFileHandle data_ov075_0211d42c;
+/* The model, animation and texture-sequence handles; the loaded file sits
+   at .filePtr. */
+extern AnimFile data_ov075_0211d384;
+extern AnimFile data_ov075_0211d38c;
+extern AnimFile data_ov075_0211d394;
+extern AnimFile data_ov075_0211d39c;
+extern AnimFile data_ov075_0211d3a4;
+extern AnimFile data_ov075_0211d3ac;
+extern AnimFile data_ov075_0211d3b4;
+extern ModelFile data_ov075_0211d3bc;
+extern ModelFile data_ov075_0211d3c4;
+extern AnimFile data_ov075_0211d3cc;
+extern AnimFile data_ov075_0211d3d4;
+extern TexSeqFile data_ov075_0211d3dc;
+extern AnimFile data_ov075_0211d3e4;
+extern AnimFile data_ov075_0211d3ec;
+extern AnimFile data_ov075_0211d3f4;
+extern ModelFile data_ov075_0211d3fc;
+extern ModelFile data_ov075_0211d404;
+extern TexSeqFile data_ov075_0211d40c;
+extern AnimFile data_ov075_0211d414;
+extern AnimFile data_ov075_0211d41c;
+extern AnimFile data_ov075_0211d424;
+extern AnimFile data_ov075_0211d42c;
 struct EntAnimSlot {
     u16 fileID;
     u8 numRefs;
@@ -948,28 +926,28 @@ UnknownVsPlayer::UnknownVsPlayer() {}
    (AnimFile::AnimFile / AnimFile::~AnimFile), then two
    texture-sequence files (TexSeqFile::TexSeqFile /
    TexSeqFile::~TexSeqFile). */
-EntObjModelFilePtr data_ov075_0211d3fc(0x9c05);
-EntObjModelFilePtr data_ov075_0211d3bc(0x8417);
-EntObjAnimationFileHandle data_ov075_0211d3e4(0x8416);
-EntObjModelFilePtr data_ov075_0211d404(0x80c4);
-EntObjModelFilePtr data_ov075_0211d3c4(0x80c2);
-EntObjAnimationFileHandle data_ov075_0211d414(0x8043);
-EntObjAnimationFileHandle data_ov075_0211d394(0x841e);
-EntObjAnimationFileHandle data_ov075_0211d3cc(0x8420);
-EntObjAnimationFileHandle data_ov075_0211d39c(0x8422);
-EntObjAnimationFileHandle data_ov075_0211d3d4(0x8424);
-EntObjAnimationFileHandle data_ov075_0211d3a4(0x8419);
-EntObjAnimationFileHandle data_ov075_0211d3ec(0x841a);
-EntObjAnimationFileHandle data_ov075_0211d3ac(0x8426);
-EntObjAnimationFileHandle data_ov075_0211d3b4(0x841b);
-EntObjAnimationFileHandle data_ov075_0211d3f4(0x841c);
-EntObjAnimationFileHandle data_ov075_0211d38c(0x841d);
-EntObjAnimationFileHandle data_ov075_0211d384(0x8050);
-EntObjAnimationFileHandle data_ov075_0211d424(0x8051);
-EntObjAnimationFileHandle data_ov075_0211d42c(0x8048);
-EntObjAnimationFileHandle data_ov075_0211d41c(0x8078);
-EntObjTextureSequenceFileHandle data_ov075_0211d40c(0x804f);
-EntObjTextureSequenceFileHandle data_ov075_0211d3dc(0x804e);
+ModelFile data_ov075_0211d3fc(0x9c05);
+ModelFile data_ov075_0211d3bc(0x8417);
+AnimFile data_ov075_0211d3e4(0x8416);
+ModelFile data_ov075_0211d404(0x80c4);
+ModelFile data_ov075_0211d3c4(0x80c2);
+AnimFile data_ov075_0211d414(0x8043);
+AnimFile data_ov075_0211d394(0x841e);
+AnimFile data_ov075_0211d3cc(0x8420);
+AnimFile data_ov075_0211d39c(0x8422);
+AnimFile data_ov075_0211d3d4(0x8424);
+AnimFile data_ov075_0211d3a4(0x8419);
+AnimFile data_ov075_0211d3ec(0x841a);
+AnimFile data_ov075_0211d3ac(0x8426);
+AnimFile data_ov075_0211d3b4(0x841b);
+AnimFile data_ov075_0211d3f4(0x841c);
+AnimFile data_ov075_0211d38c(0x841d);
+AnimFile data_ov075_0211d384(0x8050);
+AnimFile data_ov075_0211d424(0x8051);
+AnimFile data_ov075_0211d42c(0x8048);
+AnimFile data_ov075_0211d41c(0x8078);
+TexSeqFile data_ov075_0211d40c(0x804f);
+TexSeqFile data_ov075_0211d3dc(0x804e);
 
 /* The entry-stage object's base profile: the factory, then the same priority
    in both halfwords. */

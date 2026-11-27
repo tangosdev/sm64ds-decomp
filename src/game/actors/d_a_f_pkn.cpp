@@ -102,14 +102,14 @@ void func_02012694(u32 id, const Vector3 *pos);
 int IsStarCollectedInCurLevel(s32 flag);
 void SetStarMarker(int i, dActor_c *self, int v);
 
-extern SharedFilePtr data_ov084_02130dfc;   /* the plant's model */
+extern ModelFile data_ov084_02130dfc;              /* the plant's model */
 extern SharedFilePtr *const data_ov084_021302f4[]; /* the six shared animation handles */
-extern SharedFilePtr data_ov002_0210da38;   /* the sleep-bubble model, out of ov002 */
-extern SharedFilePtr data_ov084_02130df4;   /* idle animation */
-extern SharedFilePtr data_ov084_02130e04;   /* spit animation */
-extern SharedFilePtr data_ov084_02130e14;   /* grow-in lunge animation */
-extern SharedFilePtr data_ov084_02130e1c;   /* post-spit animation */
-extern SharedFilePtr data_ov084_02130e24;   /* death animation */
+extern SharedFilePtr data_ov002_0210da38;          /* the sleep-bubble model, out of ov002 */
+extern AnimFile data_ov084_02130df4;               /* idle animation */
+extern AnimFile data_ov084_02130e04;               /* spit animation */
+extern AnimFile data_ov084_02130e14;               /* grow-in lunge animation */
+extern AnimFile data_ov084_02130e1c;               /* post-spit animation */
+extern AnimFile data_ov084_02130e24;               /* death animation */
 /* Per-frame SpawnDeathBurst reach and height, and the five bone indices
  * UpdateClsnOffset maps. */
 extern const int data_ov084_0213029c[10] = {0x78, 0x70,  0x40,  0x10,  0,

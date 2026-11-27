@@ -66,20 +66,6 @@ extern BCA_File *sTrmpAnimJump, *sTrmpAnimDoubleJump1, *sTrmpAnimWallJump, *sTrm
     *sTrmpAnimTurnEnd, *sTrmpAnimBounce, *sTrmpAnimStruggle, *sTrmpAnimSdown;
 BCA_File **sTrmpBounceAnimTable[] = {&sTrmpAnimJump, &sTrmpAnimDoubleJump1, &sTrmpAnimWallJump};
 
-/* The model handle constructs through ModelFileA::ModelFileA, the animation handles
- * through AnimFile::AnimFile. Neither constructor nor destructor is
- * defined here. */
-struct Trmpln2ModelFilePtr : SharedFilePtr {
-    Trmpln2ModelFilePtr(unsigned int fileId);
-    ~Trmpln2ModelFilePtr();
-};
-struct Trmpln2MarioAnimFilePtr : SharedFilePtr {
-    Trmpln2MarioAnimFilePtr(unsigned int fileId);
-    ~Trmpln2MarioAnimFilePtr();
-};
-typedef char Trmpln2ModelFilePtr_size[sizeof(Trmpln2ModelFilePtr) == 8 ? 1 : -1];
-typedef char Trmpln2MarioAnimFilePtr_size[sizeof(Trmpln2MarioAnimFilePtr) == 8 ? 1 : -1];
-
 /* A goal slot. Vector3(x, y, z) matches the first slot of each bank; the
  * other eleven store through an unsigned int*. Every slot registers one
  * destructor. ~TrmpGoal is not defined here. */
@@ -100,20 +86,20 @@ struct TrmpGoal {
 };
 typedef char TrmpGoal_size[sizeof(TrmpGoal) == 0xc ? 1 : -1];
 
-extern Trmpln2ModelFilePtr sTrmpMarioModelFile;
-extern Trmpln2MarioAnimFilePtr sTrmpMarioJumpAnimFile;
-extern Trmpln2MarioAnimFilePtr sTrmpMarioDoubleJump1AnimFile;
-extern Trmpln2MarioAnimFilePtr sTrmpMarioWallJumpAnimFile;
-extern Trmpln2MarioAnimFilePtr sTrmpMarioHangUpAnimFile;
-extern Trmpln2MarioAnimFilePtr sTrmpMarioRollJumpEndAnimFile;
-extern Trmpln2MarioAnimFilePtr sTrmpMarioWalkAnimFile;
-extern Trmpln2MarioAnimFilePtr sTrmpMarioDoubleJump2AnimFile;
-extern Trmpln2MarioAnimFilePtr sTrmpMarioJumpEndAnimFile;
-extern Trmpln2MarioAnimFilePtr sTrmpMarioTurnAnimFile;
-extern Trmpln2MarioAnimFilePtr sTrmpMarioTurnEndAnimFile;
-extern Trmpln2MarioAnimFilePtr sTrmpMarioRollJumpAnimFile;
-extern Trmpln2MarioAnimFilePtr sTrmpMarioStruggleAnimFile;
-extern Trmpln2MarioAnimFilePtr sTrmpMarioSdownAnimFile;
+extern ModelFileA sTrmpMarioModelFile;
+extern AnimFile sTrmpMarioJumpAnimFile;
+extern AnimFile sTrmpMarioDoubleJump1AnimFile;
+extern AnimFile sTrmpMarioWallJumpAnimFile;
+extern AnimFile sTrmpMarioHangUpAnimFile;
+extern AnimFile sTrmpMarioRollJumpEndAnimFile;
+extern AnimFile sTrmpMarioWalkAnimFile;
+extern AnimFile sTrmpMarioDoubleJump2AnimFile;
+extern AnimFile sTrmpMarioJumpEndAnimFile;
+extern AnimFile sTrmpMarioTurnAnimFile;
+extern AnimFile sTrmpMarioTurnEndAnimFile;
+extern AnimFile sTrmpMarioRollJumpAnimFile;
+extern AnimFile sTrmpMarioStruggleAnimFile;
+extern AnimFile sTrmpMarioSdownAnimFile;
 
 /* One declaration per symbol for the whole unit. The tuning words and pools
  * are defined at the bottom of this file. */
@@ -2087,20 +2073,20 @@ extern int data_ov006_0212e014;
 extern int data_ov006_0212dff8;
 extern int data_ov006_0212e01c;
 
-Trmpln2ModelFilePtr sTrmpMarioModelFile(0x216);
-Trmpln2MarioAnimFilePtr sTrmpMarioJumpAnimFile(0x8078);
-Trmpln2MarioAnimFilePtr sTrmpMarioDoubleJump1AnimFile(0x801d);
-Trmpln2MarioAnimFilePtr sTrmpMarioWallJumpAnimFile(0x80be);
-Trmpln2MarioAnimFilePtr sTrmpMarioHangUpAnimFile(0x8071);
-Trmpln2MarioAnimFilePtr sTrmpMarioRollJumpEndAnimFile(0x808f);
-Trmpln2MarioAnimFilePtr sTrmpMarioWalkAnimFile(0x80b4);
-Trmpln2MarioAnimFilePtr sTrmpMarioDoubleJump2AnimFile(0x801e);
-Trmpln2MarioAnimFilePtr sTrmpMarioJumpEndAnimFile(0x8077);
-Trmpln2MarioAnimFilePtr sTrmpMarioTurnAnimFile(0x80ac);
-Trmpln2MarioAnimFilePtr sTrmpMarioTurnEndAnimFile(0x80ab);
-Trmpln2MarioAnimFilePtr sTrmpMarioRollJumpAnimFile(0x808e);
-Trmpln2MarioAnimFilePtr sTrmpMarioStruggleAnimFile(0x80a4);
-Trmpln2MarioAnimFilePtr sTrmpMarioSdownAnimFile(0x8092);
+ModelFileA sTrmpMarioModelFile(0x216);
+AnimFile sTrmpMarioJumpAnimFile(0x8078);
+AnimFile sTrmpMarioDoubleJump1AnimFile(0x801d);
+AnimFile sTrmpMarioWallJumpAnimFile(0x80be);
+AnimFile sTrmpMarioHangUpAnimFile(0x8071);
+AnimFile sTrmpMarioRollJumpEndAnimFile(0x808f);
+AnimFile sTrmpMarioWalkAnimFile(0x80b4);
+AnimFile sTrmpMarioDoubleJump2AnimFile(0x801e);
+AnimFile sTrmpMarioJumpEndAnimFile(0x8077);
+AnimFile sTrmpMarioTurnAnimFile(0x80ac);
+AnimFile sTrmpMarioTurnEndAnimFile(0x80ab);
+AnimFile sTrmpMarioRollJumpAnimFile(0x808e);
+AnimFile sTrmpMarioStruggleAnimFile(0x80a4);
+AnimFile sTrmpMarioSdownAnimFile(0x8092);
 
 int sTrmpRowHeights[2] = {sTrmpRowBaseHeights[0], sTrmpRowBaseHeights[1]};
 int sTrmp3DFallSpeed = data_ov006_0212e000;

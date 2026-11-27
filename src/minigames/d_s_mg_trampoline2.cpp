@@ -72,13 +72,6 @@ enum d_s_mg_trampoline2_AssetId {
 /* The forward declarations below are local stand-ins for types that have
  * no header yet (issue #2497). */
 
-/* The cartridge's ctor/dtor imports are the functions the wrapper's aliases
- * name. */
-struct Trampoline2ModelFilePtr : SharedFilePtr {
-    Trampoline2ModelFilePtr(u32 fileID);
-    ~Trampoline2ModelFilePtr();
-};
-
 struct BMD_File;
 
 struct Vector3_16f;
@@ -117,7 +110,7 @@ dScMgTrampoline2_c *dScMgTrampoline2_c_classInit(void);
 
 extern "C" {
 extern void Trmp2Spinner_UpdateMatrix(char *c);
-extern Trampoline2ModelFilePtr sTrmp2StarModelFile;
+extern ModelFileA sTrmp2StarModelFile;
 extern int sTrmp2SpinnerCount;
 extern char *sTrmp2Spinners;
 extern int sTrmp2BrushWord[];
@@ -1128,10 +1121,10 @@ TrmpItem::~TrmpItem() {}
 
 /* D1 and D0 come from the inline destructor in dScMgTrampoline2_c.h. */
 
-/* sTrmp2StarModelFile is the model SharedFilePtr this Init LoadFile's,
+/* sTrmp2StarModelFile is the model handle this Init LoadFile's,
  * defined here at the end of the file (constructed as file ID 537) so its
  * constructor does not enter .text. */
-Trampoline2ModelFilePtr sTrmp2StarModelFile(ASSET_MINI_STAR_BMD);
+ModelFileA sTrmp2StarModelFile(ASSET_MINI_STAR_BMD);
 
 /* Scripted wave constants and random-wave positions. The array lengths follow
  * the observed consumers; original declaration grouping is not recovered.

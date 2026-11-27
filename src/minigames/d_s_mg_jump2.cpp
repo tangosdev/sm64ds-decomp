@@ -49,16 +49,10 @@ typedef void (dScMgJump2_c::*dScMgJump2_cState)();
 
 /* File-scope objects at the end of this file construct the two model
  * handles (files 0x203 and 0x204). mwcc emits __sinit_d_s_mg_jump2.cpp
- * from those definitions. The wrapper name is local; the handle
- * constructor and destructor are the ROM resource-family functions,
- * aliased in the manifest. */
-struct Jump2ModelFile : SharedFilePtr {
-    Jump2ModelFile(u32 fileID);
-    ~Jump2ModelFile();
-};
+ * from those definitions. */
 
-extern Jump2ModelFile gOV006JumpBack01ModelFile; /* model file 0x203 */
-extern Jump2ModelFile sJump2Back02ModelFile;     /* model file 0x204 */
+extern ModelFile gOV006JumpBack01ModelFile; /* model file 0x203 */
+extern ModelFile sJump2Back02ModelFile;     /* model file 0x204 */
 
 extern "C" {
 extern struct Jump2PopupLink *sJump2PopupList;
@@ -533,5 +527,5 @@ Jump2Popup::~Jump2Popup() {}
 /* Static-init globals (was the handwritten __sinit_ov006_02130f00 shard).
  * Definition order is the retail initializer's construction order: the
  * 0x203 model handle, then the 0x204 model handle. */
-Jump2ModelFile gOV006JumpBack01ModelFile(ASSET_JUMP_BACK01_BMD);
-Jump2ModelFile sJump2Back02ModelFile(ASSET_JUMP_BACK02_BMD);
+ModelFile gOV006JumpBack01ModelFile(ASSET_JUMP_BACK01_BMD);
+ModelFile sJump2Back02ModelFile(ASSET_JUMP_BACK02_BMD);
