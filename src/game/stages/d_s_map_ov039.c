@@ -6,19 +6,8 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-/* The ROM image carries a zero halfword of alignment padding after these
- * records, so it is written as part of the object. */
-typedef struct {
-    s16 value;
-    u16 pad;
-} ScalarEntryS16;
-typedef struct {
-    u16 value;
-    u16 pad;
-} ScalarEntryU16;
-
-extern ScalarEntryU16 data_ov039_02111400;
-extern ScalarEntryS16 data_ov039_02111404;
+extern u16 data_ov039_02111400[1];
+extern s16 data_ov039_02111404[1];
 extern u32 data_ov039_02111408[1];
 extern ObjTable data_ov039_0211140c;
 extern ObjTable data_ov039_02111414;
@@ -32,15 +21,9 @@ extern CLPS_Block64 data_ov039_021114d8;
 extern StandardEntry data_ov039_02111518[20];
 extern SimpleEntry data_ov039_02111658[56];
 
-ScalarEntryS16 data_ov039_02111404 = {
-    0x0ed8,
-    0x0000,
-};
+s16 data_ov039_02111404[1] = {0x0ed8};
 
-ScalarEntryU16 data_ov039_02111400 = {
-    0x074c,
-    0x0000,
-};
+u16 data_ov039_02111400[1] = {0x074c};
 
 u32 data_ov039_02111408[1] = {0x00000014};
 
