@@ -2051,7 +2051,6 @@ data_ov006_0212ebf8 kind:data(any) addr:0x0212ebf8
 data_ov006_0212ec00 kind:data(any) addr:0x0212ec00
 sPachinko2CupX kind:data(any) addr:0x0212ec08
 data_ov006_0212ec10 kind:data(any) addr:0x0212ec10
-data_ov006_0212ec14 kind:data(any) addr:0x0212ec14
 data_ov006_0212ec18 kind:data(any) addr:0x0212ec18
 data_ov006_0212ec20 kind:data(any) addr:0x0212ec20
 data_ov006_0212ec28 kind:data(any) addr:0x0212ec28
@@ -4358,13 +4357,11 @@ g_profile_MG_SNOWBALL kind:data(any) addr:0x0213ffb8 ambiguous
 _ZTI15dScMgSnowball_c kind:data(any) addr:0x0213ffd0
 _ZTS15dScMgSnowball_c kind:data(any) addr:0x0213ffdc
 sSnowballTextSpritesByLanguage kind:data(any) addr:0x0213fff0
-data_ov006_02140000 kind:data(any) addr:0x02140000 ambiguous
 _ZTV15dScMgSnowball_c kind:data(any) addr:0x0214000c
 sSnowballBgNclPath kind:data(any) addr:0x0214009c
 sSnowballNcgPath kind:data(any) addr:0x021400bc
 sSnowballNclPath kind:data(any) addr:0x021400dc
 data_ov006_021400fc kind:data(any) addr:0x021400fc
-data_ov006_02140108 kind:data(any) addr:0x02140108 ambiguous
 g_profile_MG_FLOWER kind:data(any) addr:0x02140114 ambiguous
 _ZTI13dScMgFlower_c kind:data(any) addr:0x0214011c
 _ZTS13dScMgFlower_c kind:data(any) addr:0x02140128
