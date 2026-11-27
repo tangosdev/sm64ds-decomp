@@ -43,6 +43,7 @@
 #include "SaveData.h"
 #include "Heap.h"
 #include "decl_common.h"
+#include "LinkSettings.h"
 #include "nitro/spi/tp.h"
 #include "Memory.h"
 #include "nitro/gx/gx.h"
@@ -263,9 +264,9 @@ s32 dScDSMT_c::Behavior() {
     }
 
     {
-        TPData *tp = func_0203dabc(func_0203da9c());
+        TPData *tp = func_0203dabc(GetLocalPlayerId());
         result = func_ov007_020b7090(tp->x, tp->y, tp->touch, tp->validity,
-                                     func_0203dae4(func_0203da9c()));
+                                     func_0203dae4(GetLocalPlayerId()));
     }
 
     if ((unsigned int)(result - 3) <= 2) {

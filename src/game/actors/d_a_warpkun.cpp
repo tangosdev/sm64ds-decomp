@@ -18,6 +18,7 @@
 #include "daWarpkun_c.h"
 #include "daPly_c.h"
 #include "decl_common.h"
+#include "LinkSettings.h"
 
 /* actorID 0xbf is the daPly_c: Behavior casts the hit actor to daPly_c * and
    reads mPlayerNo / CanWarp off it. No shared header names the id. */

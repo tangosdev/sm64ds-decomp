@@ -695,7 +695,7 @@ src/unnamed/arm9/0201/func_0201ffcc.c:
     complete
     .text start:0x0201ffcc end:0x02020028
 
-src/unnamed/arm9/0202/func_02020028.c:
+src/PostControllerMode.c:
     complete
     .text start:0x02020028 end:0x02020054
 
@@ -703,31 +703,31 @@ src/GetControllerMode.c:
     complete
     .text start:0x02020054 end:0x02020078
 
-src/unnamed/arm9/0202/func_02020078.c:
+src/SetCourseSelectAction.c:
     complete
     .text start:0x02020078 end:0x020200b8
 
-src/unnamed/arm9/0202/func_020200b8.c:
+src/GetCourseSelectAction.c:
     complete
     .text start:0x020200b8 end:0x020200e0
 
-src/unnamed/arm9/0202/func_020200e0.c:
+src/ClearGoSignal.c:
     complete
     .text start:0x020200e0 end:0x02020124
 
-src/unnamed/arm9/0202/func_02020124.c:
+src/RaiseGoSignal.c:
     complete
     .text start:0x02020124 end:0x02020168
 
-src/unnamed/arm9/0202/func_02020168.c:
+src/IsGoSignalRaised.c:
     complete
     .text start:0x02020168 end:0x02020190
 
-src/unnamed/arm9/0202/func_02020190.c:
+src/ClearLocalPlayerReadyForRematch.c:
     complete
     .text start:0x02020190 end:0x020201c0
 
-src/unnamed/arm9/0202/func_020201c0.c:
+src/SetLocalPlayerReadyForRematch.c:
     complete
     .text start:0x020201c0 end:0x020201f0
 
@@ -735,19 +735,19 @@ src/IsPlayerReadyForRematch.c:
     complete
     .text start:0x020201f0 end:0x02020214
 
-src/unnamed/arm9/0202/func_02020214.c:
+src/SetSessionPlayerMask.c:
     complete
     .text start:0x02020214 end:0x02020254
 
-src/unnamed/arm9/0202/func_02020254.c:
+src/GetSessionPlayerMask.c:
     complete
     .text start:0x02020254 end:0x0202027c
 
-src/unnamed/arm9/0202/func_0202027c.c:
+src/IsPlayerInSession.c:
     complete
     .text start:0x0202027c end:0x0202029c
 
-src/unnamed/arm9/0202/func_0202029c.c:
+src/SetParentCourseIndex.c:
     complete
     .text start:0x0202029c end:0x020202dc
 
@@ -755,11 +755,11 @@ src/GetParentCourseIndex.c:
     complete
     .text start:0x020202dc end:0x02020304
 
-src/unnamed/arm9/0202/func_02020304.c:
+src/ClearLocalPlayerReady.c:
     complete
     .text start:0x02020304 end:0x02020334
 
-src/unnamed/arm9/0202/func_02020334.c:
+src/SetLocalPlayerReady.c:
     complete
     .text start:0x02020334 end:0x02020364
 
@@ -767,7 +767,7 @@ src/IsPlayerReady.c:
     complete
     .text start:0x02020364 end:0x02020388
 
-src/unnamed/arm9/0202/func_02020388.c:
+src/ClearPlayerWarp.c:
     complete
     .text start:0x02020388 end:0x020203c4
 
