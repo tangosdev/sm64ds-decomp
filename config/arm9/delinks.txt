@@ -1715,17 +1715,9 @@ src/engine/os/OS_Thread.cpp:
     complete
     .text start:0x02057e34 end:0x02058568
 
-src/OS_InitContext.c:
+src/engine/os/OS_Context.c:
     complete
-    .text start:0x02058568 end:0x020585cc
-
-src/OS_SaveContext.c:
-    complete
-    .text start:0x020585cc end:0x02058618
-
-src/OS_LoadContext.c:
-    complete
-    .text start:0x02058618 end:0x0205865c
+    .text start:0x02058568 end:0x0205865c
 
 src/engine/os/OS_Emulator.cpp:
     complete
