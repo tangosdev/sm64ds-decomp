@@ -43,9 +43,9 @@
  *   ROM's 0x1c frame. The smoke rotation is read as three u16 words: copied
  *   as a Vector3_16 the compiler loads it with ldrsh, the ROM with ldrh.
  * Leftover: the water bomb's model file handles (data_ov098_0213c91c,
- *   data_ov002_0210da38), the state table (data_ov098_0213c8fc, .bss) and the
- *   particle rotation (data_ov098_0213c63c) are unnamed rows this TU does not
- *   own; func_ov002_020df300 / daPly_c::TryEnterCannonState and func_ov102_0214ae1c
+ *   d_a_wbm.cpp's; data_ov002_0210da38, ov002's) and the particle rotation
+ *   (data_ov098_0213c63c) are unnamed rows this TU does not own;
+ *   func_ov002_020df300 / daPly_c::TryEnterCannonState and func_ov102_0214ae1c
  *   are unnamed daPly_c / Bob-omb helpers.
  */
 

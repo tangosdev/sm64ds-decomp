@@ -302,6 +302,7 @@ extern unsigned char gGameMode;
 extern ModelFile gPowerStarModelFile;
 /* Lakitu's model handle, owned and constructed by d_a_c_jugem.cpp. */
 extern ModelFile data_ov085_0213074c;
+/* The demo's own model handles, defined at the bottom of this file. */
 extern ModelFile data_ov002_02110b50;
 extern ModelFile data_ov002_02110b70;
 extern ModelFile data_ov002_02110b78;

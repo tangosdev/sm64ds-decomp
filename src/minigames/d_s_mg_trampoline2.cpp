@@ -1121,9 +1121,8 @@ TrmpItem::~TrmpItem() {}
 
 /* D1 and D0 come from the inline destructor in dScMgTrampoline2_c.h. */
 
-/* sTrmp2StarModelFile is the model handle this Init LoadFile's,
- * defined here at the end of the file (constructed as file ID 537) so its
- * constructor does not enter .text. */
+/* sTrmp2StarModelFile is the spinners' star model, file ID 537:
+ * Trmp2Spinner_SetModel loads it and ~Trmp2Spinner releases it. */
 ModelFileA sTrmp2StarModelFile(ASSET_MINI_STAR_BMD);
 
 /* Scripted wave constants and random-wave positions. The array lengths follow

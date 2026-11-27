@@ -922,10 +922,8 @@ dEntObj_c *dEntObj_c_classInit(void) {
 /* -------------------------------------------------------------------------- */
 UnknownVsPlayer::UnknownVsPlayer() {}
 /* The twenty-two file-scope resource handles, in retail initializer order:
-   four model files (ModelFile::ModelFile / ModelFile::~ModelFile), sixteen animation files
-   (AnimFile::AnimFile / AnimFile::~AnimFile), then two
-   texture-sequence files (TexSeqFile::TexSeqFile /
-   TexSeqFile::~TexSeqFile). */
+   four model files, sixteen animation files, then two texture-sequence
+   files. */
 ModelFile data_ov075_0211d3fc(0x9c05);
 ModelFile data_ov075_0211d3bc(0x8417);
 AnimFile data_ov075_0211d3e4(0x8416);
