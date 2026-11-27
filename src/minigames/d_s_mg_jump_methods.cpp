@@ -115,7 +115,6 @@ int Heyho_AllIdle(void);
 int Heyho_InitPool(Heyho *ptr, int n);
 void Jump3D_EnableInput(void);
 
-
 /* dScMgJump_c's factory, ending the object at 0x020eeafc. `new dScMgJump_c`
  * reproduces it: the inline dScMgD3DBase_c constructor (dScMgBase_c's C2, its
  * vtable, mDrawSubScreen, the empty loop over the two cameras, mParticle),
