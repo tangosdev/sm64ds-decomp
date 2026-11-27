@@ -29,16 +29,9 @@
       "end": "0x02113738"
     },
     {
-      "name": ".rodata.actor",
+      "name": ".data",
       "start": "0x02114740",
-      "end": "0x02114748",
-      "input_section": ".rodata"
-    },
-    {
-      "name": ".data.actors",
-      "start": "0x02114748",
-      "end": "0x0211480c",
-      "input_section": ".data"
+      "end": "0x0211480c"
     },
     {
       "name": ".bss",
@@ -182,6 +175,13 @@
     }
   ],
   "data": [
+    {
+      "symbol": "sNewsLiftPlatformYaws",
+      "address": "0x02114740",
+      "size": "0x8",
+      "binding": "STB_GLOBAL",
+      "evidence": "Native compiler output and all module-qualified relocation destinations reproduce retail; see owned experiment."
+    },
     {
       "symbol": "_ZTI17daObjCvNewsLift_c",
       "address": "0x02114748",
@@ -405,13 +405,6 @@
           "firstDiff": null
         },
         {
-          "section": ".rodata.actor",
-          "start": "0x02114740",
-          "end": "0x02114748",
-          "differingBytes": 0,
-          "firstDiff": null
-        },
-        {
           "section": ".init",
           "start": "0x02113500",
           "end": "0x02113688",
@@ -426,8 +419,8 @@
           "firstDiff": null
         },
         {
-          "section": ".data.actors",
-          "start": "0x02114748",
+          "section": ".data",
+          "start": "0x02114740",
           "end": "0x0211480c",
           "differingBytes": 0,
           "firstDiff": null
@@ -666,18 +659,10 @@
       "reason": "Vague-linkage type-name string for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x02108a04, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
     }
   ],
-  "rodata": [
-    {
-      "symbol": "sNewsLiftPlatformYaws",
-      "address": "0x02114740",
-      "size": "0x8",
-      "binding": "STB_GLOBAL",
-      "evidence": "Native compiler output and all module-qualified relocation destinations reproduce retail; see owned experiment."
-    }
-  ],
+  "rodata": [],
   "relocations": [
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x0211474c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -687,7 +672,7 @@
       "target_address": "0x02114754"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114750",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -697,7 +682,7 @@
       "target_address": "0x021089ec"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114748",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -707,7 +692,7 @@
       "target_address": "0x0209a764"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114768",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -717,7 +702,7 @@
       "target_address": "0x02112168"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114788",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -727,7 +712,7 @@
       "target_address": "0x02114748"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147c8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -737,7 +722,7 @@
       "target_address": "0x02043494"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147c4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -747,7 +732,7 @@
       "target_address": "0x0204349c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -757,7 +742,7 @@
       "target_address": "0x0204357c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -767,7 +752,7 @@
       "target_address": "0x02043ac0"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114804",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -777,7 +762,7 @@
       "target_address": "0x020100dc"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114800",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -787,7 +772,7 @@
       "target_address": "0x02010124"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147fc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -797,7 +782,7 @@
       "target_address": "0x0201012c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -807,7 +792,7 @@
       "target_address": "0x02010130"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147f4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -817,7 +802,7 @@
       "target_address": "0x02010134"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147f0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -827,7 +812,7 @@
       "target_address": "0x02010138"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147ec",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -837,7 +822,7 @@
       "target_address": "0x0201013c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -847,7 +832,7 @@
       "target_address": "0x02010140"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147e4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -857,7 +842,7 @@
       "target_address": "0x02010144"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147e0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -867,7 +852,7 @@
       "target_address": "0x02010148"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147dc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -877,7 +862,7 @@
       "target_address": "0x0201014c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147d8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -887,7 +872,7 @@
       "target_address": "0x02010154"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147d4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -897,7 +882,7 @@
       "target_address": "0x02010160"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -907,7 +892,7 @@
       "target_address": "0x02010f6c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -917,7 +902,7 @@
       "target_address": "0x02010f78"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -927,7 +912,7 @@
       "target_address": "0x02010fc8"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -937,7 +922,7 @@
       "target_address": "0x02010fd4"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -947,7 +932,7 @@
       "target_address": "0x02011214"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x0211479c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -957,7 +942,7 @@
       "target_address": "0x02011220"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114794",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -967,7 +952,7 @@
       "target_address": "0x02011244"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114790",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -977,7 +962,7 @@
       "target_address": "0x02011268"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114808",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -987,7 +972,7 @@
       "target_address": "0x020ee55c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147d0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -997,7 +982,7 @@
       "target_address": "0x02111214"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1007,7 +992,7 @@
       "target_address": "0x02111650"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1017,7 +1002,7 @@
       "target_address": "0x021116c8"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114798",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1027,7 +1012,7 @@
       "target_address": "0x021115dc"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x0211478c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -1037,7 +1022,7 @@
       "target_address": "0x02111c6c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021147cc",
       "type": "R_ARM_ABS32",
       "kind": "load",
