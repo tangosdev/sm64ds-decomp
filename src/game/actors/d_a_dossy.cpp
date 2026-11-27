@@ -47,6 +47,7 @@ enum daDossy_c_AssetId {
     ASSET_DOSSY_SWIM_BCA = 0x02f3
 };
 
+#include "CLPS.h"
 #include "common.h"
 #include "daDossy_c.h"
 #include "daDossyCap_c.h"
@@ -68,9 +69,6 @@ typedef enum { FALSE = 0, TRUE = 1 } BOOL;
 
 /* The collision-property block InitResources hands to dBgW_Kc::SetFile: the
    0x20-byte record whose header and entries dBgW_Kc reads. */
-struct CLPS_Block {
-    u32 words[8];
-};
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
    model handle constructs through ModelFile::ModelFile and destroys through
@@ -130,9 +128,7 @@ extern int AngleDiff(int a, int b);
 typedef void (daDossy_c::*StateFunc)();
 extern "C" StateFunc data_ov065_0211d7fc[];
 
-DorriePlatform::DorriePlatform()
-{
-}
+DorriePlatform::DorriePlatform() {}
 
 daDossy_c *daDossy_c_classInit(void) {
     return new daDossy_c();
@@ -142,8 +138,7 @@ daDossyCap_c *daDossyCap_c_classInit(void) {
     return new daDossyCap_c();
 }
 
-int daDossyCap_c::OnYoshiTryEat()
-{
+int daDossyCap_c::OnYoshiTryEat() {
     return 4;
 }
 
@@ -175,8 +170,7 @@ void daDossy_c::OnHeadStoodOn(dActor_c *other) {
     }
 }
 
-int daDossyCap_c::InitResources()
-{
+int daDossyCap_c::InitResources() {
     mModel.SetFile((BMD_File *)data_ov002_0210d9c0.filePtr, 1, -1);
     mCapIcon.Link(this, 2, 2, 0);
     mdCcAc_c.Init(this, 0x96000, 0x96000, 0x100002, 0x8000);
@@ -184,8 +178,7 @@ int daDossyCap_c::InitResources()
     return 1;
 }
 
-int daDossy_c::InitResources()
-{
+int daDossy_c::InitResources() {
     int i;
     int j;
     BMD_File *f = dExtSimpleModel_c::LoadFile(data_ov065_0211d720);
@@ -252,8 +245,7 @@ int daDossyCap_c::IsRealCap() {
     return (flags >> 31) != 0;
 }
 
-int daDossyCap_c::Behavior()
-{
+int daDossyCap_c::Behavior() {
     daDossy_c *carrier = mCarrier;
     if (carrier == 0)
         return 1;
@@ -288,8 +280,7 @@ int daDossyCap_c::Behavior()
     return 1;
 }
 
-int daDossy_c::Behavior()
-{
+int daDossy_c::Behavior() {
     s16 offCenter;
     int outer;
     int inner;
@@ -340,8 +331,7 @@ int daDossy_c::Behavior()
     return 1;
 }
 
-int daDossyCap_c::Render()
-{
+int daDossyCap_c::Render() {
     unsigned int flags = mCapIcon.mFlags;
     if ((flags << 30) >> 31) {
         Vector3 scale;
@@ -353,14 +343,12 @@ int daDossyCap_c::Render()
     return 1;
 }
 
-int daDossy_c::Render()
-{
+int daDossy_c::Render() {
     mAnmModel.Render(0);
     return 1;
 }
 
-int daDossy_c::CleanupResources()
-{
+int daDossy_c::CleanupResources() {
     int i;
     data_ov002_0210d9c0.Release();
     for (i = 0; i < 7; i++) {
@@ -556,7 +544,8 @@ void daDossy_c::UpdateHeadUp() {
             return;
         mStateState = 1;
         mAnmModel.SetAnim((BCA_File *)data_ov065_0211d770.filePtr, 0, 0x1000, 0);
-        if (mRider == 0) return;
+        if (mRider == 0)
+            return;
         ((daPly_c *)mRider)->Unk_020ca150(5);
         return;
     case 1:
@@ -627,9 +616,7 @@ int daDossyCap_c::ReleaseCapIfTouched() {
     return 0;
 }
 
-DorriePlatform::~DorriePlatform()
-{
-}
+DorriePlatform::~DorriePlatform() {}
 
 /* The eleven file-scope resource handles, in retail initializer order: the
    model file (ModelFile::ModelFile / ModelFile::~ModelFile), three animation files
@@ -668,21 +655,46 @@ extern "C" StateFunc data_ov065_0211d7fc[3] = {
    whose third word is 0x00041fc0 (a different wall property); the others
    select the 0x00000fc0 blocks. */
 CLPS_Block data_ov065_0211cec4[7] = {
-    {0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff,
-     0xffffffff},
-    {0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff,
-     0xffffffff},
-    {0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff,
-     0xffffffff},
-    {0x53504c43, 0x00010008, 0x00041fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff,
-     0xffffffff},
-    {0x53504c43, 0x00010008, 0x00041fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff,
-     0xffffffff},
-    {0x53504c43, 0x00010008, 0x00041fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff,
-     0xffffffff},
-    {0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff,
-     0xffffffff},
-};
+    {
+        0x53504c43,
+        0x0008,
+        0x0001,
+        {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+    },
+    {
+        0x53504c43,
+        0x0008,
+        0x0001,
+        {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+    },
+    {
+        0x53504c43,
+        0x0008,
+        0x0001,
+        {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+    },
+    {
+        0x53504c43,
+        0x0008,
+        0x0001,
+        {{0x00041fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+    },
+    {
+        0x53504c43,
+        0x0008,
+        0x0001,
+        {{0x00041fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+    },
+    {
+        0x53504c43,
+        0x0008,
+        0x0001,
+        {{0x00041fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+    },
+    {0x53504c43,
+     0x0008,
+     0x0001,
+     {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}}}};
 
 CLPS_Block *data_ov065_0211cd68[7] = {
     &data_ov065_0211cec4[5], &data_ov065_0211cec4[4], &data_ov065_0211cec4[3],

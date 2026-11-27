@@ -869,10 +869,7 @@ extern int func_01ffa4bc(int a);
 
 #include "Message.h"
 #include "BgChEvt.h"
-
-extern "C" {
-extern void func_02020388(int playerNo);
-}
+#include "LinkSettings.h"
 
 extern "C" int func_02035638(dBgCh_Actr *);
 extern "C" void *func_0203564c(void *);
@@ -893,10 +890,6 @@ static inline int IsKuppaScriptRunning() {
 }
 
 extern void HitDeathPlane(int arg);
-extern "C" {
-extern unsigned char IsPlayerWarping(int a0);
-}
-
 extern "C" void KillPlayer(void);
 extern void LoadKeyModels(int idx);
 extern void LoadSilverStarAndNumber(void);
@@ -4167,7 +4160,7 @@ void daPly_c::func_ov002_020c2e78() {
     if (w == 0)
         return;
     if (!this->IsState(daPly_c::ST_WAIT)) {
-        func_02020388(mPlayerNo);
+        ClearPlayerWarp(mPlayerNo);
         return;
     }
   mTeleportId = w;
@@ -6022,7 +6015,7 @@ int daPly_c::St_Teleport_Main() {
             break;
         }
         (this->mOpacity)++;
-        func_02020388(mPlayerNo);
+        ClearPlayerWarp(mPlayerNo);
         if (mOpacity >= 0x1f) {
             int hit = 0;
             mOpacity = 0x1f;

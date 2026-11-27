@@ -58,6 +58,7 @@ enum daObjFl_Coin_c_AssetId {
     ASSET_FL_14_13_BMD = 0x060d
 };
 
+#include "CLPS.h"
 #include "daObjFl_Puzzle_c.h"
 #include "daObjFl_Coin_c.h"
 #include "common.h"
@@ -98,9 +99,6 @@ struct FlCoinCollisionFilePtr : SharedFilePtr {
 extern Entry data_ov064_0211c904[];
 extern SharedFilePtr *const data_ov064_0211adc8[];
 extern FlCoinCollisionFilePtr data_ov064_0211c800;
-struct CLPS_Block {
-    u32 words[8];
-};
 extern CLPS_Block data_ov064_0211baac;
 /* Per-type step scripts, indexed by mType (ov064 .data). */
 extern const s8 *data_ov064_0211c198[];
@@ -147,7 +145,6 @@ void daObjFl_Puzzle_c::MarkTouchedByPlayer(dActor_c *other) {
     if (isPlayer)
         mHadClsn = 1;
 }
-
 
 /* Clears the piece-flag byte, the phase and the live-coin count. */
 s32 daObjFl_Coin_c::InitResources() {
@@ -448,7 +445,10 @@ extern SharedFilePtr *const data_ov064_0211adc8[] = {
 };
 
 CLPS_Block data_ov064_0211baac = {
-    0x53504c43, 0x00010008, 0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
 s8 data_ov064_0211bfd8[] = {1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  1,

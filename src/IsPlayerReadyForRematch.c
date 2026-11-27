@@ -1,6 +1,6 @@
-extern unsigned char GetLinkByte(int slot, int byte);
-/* Bit 4 of player's link settings byte 2: the rematch ready bit
-   func_020201c0 sets. */
-unsigned char IsPlayerReadyForRematch(int player) {
-    return GetLinkByte(player, 2) & 0x10;
+#include "LinkSettings.h"
+
+/* Player's rematch ready bit, the one SetLocalPlayerReadyForRematch sets. */
+u8 IsPlayerReadyForRematch(int player) {
+    return GetLinkByte(player, LINK_BYTE_SESSION) & LINK_SESSION_REMATCH_READY;
 }

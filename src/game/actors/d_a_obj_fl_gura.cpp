@@ -18,6 +18,7 @@
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum d_a_obj_fl_gura_AssetId { ASSET_FL_GURA_BMD = 0x05f3, ASSET_FL_GURA_KCL = 0x05f4 };
 
+#include "CLPS.h"
 #include "daObjFl_Gura_c.h"
 #include "SpawnInfo.h"
 #include "SharedFilePtr.h"
@@ -68,12 +69,11 @@ struct FlGuraCollisionFilePtr : SharedFilePtr {
 FlGuraModelFilePtr gFlGuraModelFile(ASSET_FL_GURA_BMD);         /* model */
 FlGuraCollisionFilePtr gFlGuraCollisionFile(ASSET_FL_GURA_KCL); /* collision */
 
-struct CLPS_Block {
-    u32 words[8];
-};
-
 CLPS_Block data_ov064_0211bb8c = {
-    0x53504c43, 0x00020008, 0x00002fc0, 0x000000ff, 0x00000fc0, 0x000000ff, 0xffffffff, 0xffffffff,
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {{0x00002fc0, 0x000000ff}, {0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
 extern const ResourceDescriptor data_ov064_0211adb0 = {&gFlGuraModelFile, &gFlGuraCollisionFile,

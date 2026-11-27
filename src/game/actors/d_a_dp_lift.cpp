@@ -58,14 +58,6 @@ extern DpLiftModelFilePtr data_ov025_02113ae0;
 extern SharedFilePtr data_ov002_0210d9f0;
 extern DpLiftCollisionFilePtr data_ov025_02113ad8;
 
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
-
 extern CLPS_Block data_ov025_02112d08;
 
 daDpLift_c::~daDpLift_c() {}

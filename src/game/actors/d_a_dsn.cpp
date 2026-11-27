@@ -36,6 +36,7 @@ enum daDsn_c_AssetId {
     ASSET_DOSUNE_KCL = 0x02f6
 };
 
+#include "CLPS.h"
 #include "daDsn_c.h"
 #include "daPly_c.h"
 #include "SharedFilePtr.h"
@@ -74,15 +75,11 @@ extern DsnTextureSeqFileHandle gDosuneTextureSequenceFile;
      +0x08 CLPS block (not a file)  +0x14 shadow extent Z */
 /* Collision properties: the 'CLPS' tag, the 8-byte stride header with two
  * entries, then the default entries. */
-struct CLPS_Block {
-    u32 tag;
-    u32 header;
-    u32 entries[6];
-};
 CLPS_Block data_ov091_02135100 = {
     0x53504c43,
-    0x00020008,
-    {0x01001fc4, 0x000000ff, 0x01000fc4, 0x000000ff, 0xffffffff, 0xffffffff},
+    0x0008,
+    0x0002,
+    {{0x01001fc4, 0x000000ff}, {0x01000fc4, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 DsnBaseFileTable data_ov091_02135138 = {
     &gDosuneModelFile,

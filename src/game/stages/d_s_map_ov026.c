@@ -9,16 +9,6 @@
  * file's section order equals the ROM's address order.
  */
 
-/* LoadFog steps 8 bytes: flag, three colour bytes, near, far. */
-typedef struct FogRow {
-    u8 enabled;
-    u8 r;
-    u8 g;
-    u8 b;
-    u16 nearDist;
-    u16 farDist;
-} FogRow;
-
 /* The 0xe-byte exit/view records are followed by two zero bytes before the
  * next labels. */
 typedef struct ExitRow {
@@ -36,30 +26,6 @@ typedef struct PathRun {
     PathNode nodes[45];
     u16 pad;
 } PathRun;
-
-typedef struct Clps_02112f74 {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[1];
-    u32 tail[4];
-} Clps_02112f74;
-
-typedef struct Clps_02112fd4 {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[4];
-    u32 tail[6];
-} Clps_02112fd4;
-
-typedef struct Clps_02113100 {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[16];
-    u32 tail[6];
-} Clps_02113100;
 
 extern const u16 data_ov026_02112490[2];
 extern const u16 data_ov026_02112494[2];
@@ -91,7 +57,7 @@ extern StandardEntry data_ov026_02112e60[1];
 extern StandardEntry data_ov026_02112e70[1];
 extern StandardEntry data_ov026_02112e80[1];
 extern StandardEntry data_ov026_02112e90[1];
-extern FogRow data_ov026_02112ea0[2];
+extern FogEntry data_ov026_02112ea0[2];
 extern StandardEntry data_ov026_02112eb0[1];
 extern StandardEntry data_ov026_02112ec0[1];
 extern StandardEntry data_ov026_02112ed0[1];
@@ -101,13 +67,13 @@ extern Area data_ov026_02112f10[2];
 extern BTA_File data_ov026_02112f28;
 extern BTA_File sWhirlpoolBta;
 extern LevelRec data_ov026_02112f58;
-extern Clps_02112f74 data_ov026_02112f74;
+extern CLPS_Block data_ov026_02112f74;
 extern ObjSubTable data_ov026_02112f94[8];
-extern Clps_02112fd4 data_ov026_02112fd4;
+extern CLPS_Block64 data_ov026_02112fd4;
 extern ObjSubTable data_ov026_02113014[9];
 extern StandardEntry data_ov026_0211305c[5];
 extern struct PathDef data_ov026_021130ac[14];
-extern Clps_02113100 data_ov026_02113100;
+extern CLPS_Block160 data_ov026_02113100;
 extern PathRun data_ov026_021131a0;
 extern StandardEntry data_ov026_021132b0[26];
 extern SimpleEntry data_ov026_02113450[54];
@@ -210,9 +176,9 @@ BTA_File sWhirlpoolBta = {
     (BTAMaterialRecord *)&data_ov026_021124e4[0],
 };
 
-FogRow data_ov026_02112ea0[2] = {
-    {0x01, 0x57, 0x87, 0xba, 0x2af8, 0xb3b0},
-    {0x01, 0x8c, 0xf7, 0xf7, 0x0000, 0xea60},
+FogEntry data_ov026_02112ea0[2] = {
+    {0x01, {0x57, 0x87, 0xba}, 0x2af8, 0xb3b0},
+    {0x01, {0x8c, 0xf7, 0xf7}, 0x0000, 0xea60},
 };
 
 StandardEntry data_ov026_02112eb0[1] = {
@@ -241,29 +207,29 @@ StandardEntry data_ov026_02112ed0[1] = {
     {0x0091, (s16)0xe2b6, (s16)0xfaf0, 0x06db, 0x0000, 0x0000, 0x0000, 0x7001},
 };
 
-Clps_02113100 data_ov026_02113100 = {
+CLPS_Block160 data_ov026_02113100 = {
     0x53504c43,
     0x0008,
     0x0010,
-    {
-        {0x00040fc0, 0x000000ff},
-        {0x00000fe0, 0x000000ff},
-        {0x00050fe0, 0x000000ff},
-        {0x00050fcc, 0x000000ff},
-        {0x00030fc5, 0x000000ff},
-        {0x00050fc5, 0x000000ff},
-        {0x00050fc0, 0x000000ff},
-        {0x018b0fcc, 0x000000ff},
-        {0x018d0fcc, 0x000000ff},
-        {0x018c0fcc, 0x000000ff},
-        {0x00040fcc, 0x000000ff},
-        {0x00040fc4, 0x000000ff},
-        {0x00040fc4, 0x0000000d},
-        {0x00040fc4, 0x0000000a},
-        {0x00040fc4, 0x0000000b},
-        {0x00040fc4, 0x0000000c},
-    },
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+    {{0x00040fc0, 0x000000ff},
+     {0x00000fe0, 0x000000ff},
+     {0x00050fe0, 0x000000ff},
+     {0x00050fcc, 0x000000ff},
+     {0x00030fc5, 0x000000ff},
+     {0x00050fc5, 0x000000ff},
+     {0x00050fc0, 0x000000ff},
+     {0x018b0fcc, 0x000000ff},
+     {0x018d0fcc, 0x000000ff},
+     {0x018c0fcc, 0x000000ff},
+     {0x00040fcc, 0x000000ff},
+     {0x00040fc4, 0x000000ff},
+     {0x00040fc4, 0x0000000d},
+     {0x00040fc4, 0x0000000a},
+     {0x00040fc4, 0x0000000b},
+     {0x00040fc4, 0x0000000c},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff}},
 };
 
 ObjTable data_ov026_02112dd8 = {0x0003, {0x00, 0x00}, &data_ov026_02112ee0[0]};
@@ -391,25 +357,24 @@ SimpleEntry data_ov026_02113600[56] = {
     {0xe225, (s16)0xe732, (s16)0xf3de, 0x0084}, {0xe225, (s16)0xe732, (s16)0xf4a7, 0x0084},
 };
 
-Clps_02112f74 data_ov026_02112f74 = {
+CLPS_Block data_ov026_02112f74 = {
     0x53504c43,
     0x0008,
     0x0001,
-    {{0x00000fc0, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+    {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
-Clps_02112fd4 data_ov026_02112fd4 = {
+CLPS_Block64 data_ov026_02112fd4 = {
     0x53504c43,
     0x0008,
     0x0004,
-    {
-        {0x00000fc5, 0x000000ff},
-        {0x00004fc4, 0x000000ff},
-        {0x01000fc4, 0x000000ff},
-        {0x01000fc5, 0x000000ff},
-    },
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff},
+    {{0x00000fc5, 0x000000ff},
+     {0x00004fc4, 0x000000ff},
+     {0x01000fc4, 0x000000ff},
+     {0x01000fc5, 0x000000ff},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff}},
 };
 
 ObjSubTable data_ov026_02112ee0[3] = {

@@ -7,14 +7,6 @@
 /* Definition order is what makes the compiler size sort match address order. */
 
 typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[24];
-    u32 tail[6];
-} Clps_021139d0;
-
-typedef struct {
     PathNode entries[49];
     u16 pad;
 } PathNodes49;
@@ -51,7 +43,7 @@ extern StandardEntry data_ov014_02113710[10];
 extern StandardEntry data_ov014_021137b0[11];
 extern StandardEntry data_ov014_02113860[11];
 extern StandardEntry data_ov014_02113910[12];
-extern Clps_021139d0 data_ov014_021139d0;
+extern CLPS_Block224 data_ov014_021139d0;
 extern PathNodes49 data_ov014_02113ab0;
 extern StandardEntry data_ov014_02113bd8[19];
 extern SimpleEntry data_ov014_02113d08[88];
@@ -236,7 +228,7 @@ StandardEntry data_ov014_02113910[12] = {
     {0x000f, (s16)0xff38, 0x0000, 0x107c, 0x0000, (s16)0xc000, 0x0000, 0xf0f0},
     {0x000f, 0x1451, 0x03cf, 0x0e18, 0x0000, (s16)0xe000, 0x0000, 0xf1f0}};
 
-Clps_021139d0 data_ov014_021139d0 = {
+CLPS_Block224 data_ov014_021139d0 = {
     0x53504c43,
     0x0008,
     0x0018,
@@ -247,8 +239,9 @@ Clps_021139d0 data_ov014_021139d0 = {
      {0x00043002, 0x000000ff}, {0x00043001, 0x000000ff}, {0x00030fc1, 0x000000ff},
      {0x001b0fc5, 0x000000ff}, {0x01030fc4, 0x000000ff}, {0x01030fcc, 0x000000ff},
      {0x00030fc9, 0x000000ff}, {0x00030fc5, 0x000000ff}, {0x00030fc4, 0x000000ff},
-     {0x00030fc2, 0x000000ff}, {0x00033fc2, 0x000000ff}, {0x00033fc4, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff}};
+     {0x00030fc2, 0x000000ff}, {0x00033fc2, 0x000000ff}, {0x00033fc4, 0x000000ff},
+     {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 PathNodes49 data_ov014_02113ab0 = {
     {{0x0582, 0x0e3c, (s16)0xe92b},

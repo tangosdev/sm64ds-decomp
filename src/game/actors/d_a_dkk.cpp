@@ -201,13 +201,6 @@ DkkModelFilePtr gDonkakuModelFile(ASSET_DONKAKU_BMD);
 DkkClsnFileHandler gDonkakuCollisionFile(ASSET_DONKAKU_KCL);
 
 /* Grindel's collision-property block and the resource table that names it. */
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
 
 extern CLPS_Block data_ov025_02112d28;
 

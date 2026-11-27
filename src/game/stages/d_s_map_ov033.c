@@ -16,14 +16,6 @@ typedef struct PathDefRun3 {
     u16 pad;
 } PathDefRun3;
 
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
-
 typedef struct ExitRun3 {
     ExitEntry entries[3];
     u16 pad;
@@ -38,14 +30,6 @@ typedef struct PathNodeRun17 {
     PathNode nodes[17];
     u16 pad;
 } PathNodeRun17;
-
-typedef struct Clps16 {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[16];
-    u32 tail[6];
-} Clps16;
 
 extern const u16 data_ov033_021116c8[2];
 extern const u16 data_ov033_021116cc[2];
@@ -84,7 +68,7 @@ extern ObjSubTable data_ov033_02111cb8[10];
 extern ViewRun7 data_ov033_02111d08;
 extern PathNodeRun17 data_ov033_02111d6c;
 extern StandardEntry data_ov033_02111dd4[7];
-extern Clps16 data_ov033_02111e44;
+extern CLPS_Block160 data_ov033_02111e44;
 extern SimpleEntry data_ov033_02111ee4[23];
 extern StandardEntry data_ov033_02111f9c[58];
 
@@ -234,23 +218,19 @@ LevelRec data_ov033_02111be0 = {(struct CLPS_Block *)&data_ov033_02111e44,
                                 0x03e8,
                                 0x0000001f};
 
-CLPS_Block data_ov033_02111bfc = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {
-                                      {0x00040fc4, 0x000000ff},
-                                      {0xffffffff, 0xffffffff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov033_02111bfc = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00040fc4, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov033_02111c1c = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {
-                                      {0x00000fe0, 0x000000ff},
-                                      {0xffffffff, 0xffffffff},
-                                  },
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov033_02111c1c = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fe0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 ExitRun3 data_ov033_02111c3c = {
     {
@@ -329,29 +309,30 @@ StandardEntry data_ov033_02111dd4[7] = {
     {0x0000, 0x076c, (s16)0xfe0c, (s16)0xf95c, 0x0000, 0x238e, 0x0000, 0x06a0},
 };
 
-Clps16 data_ov033_02111e44 = {
+CLPS_Block160 data_ov033_02111e44 = {
     0x53504c43,
     0x0008,
     0x0010,
-    {
-        {0x00240fc0, 0x000000ff},
-        {0x01000fc0, 0x000000ff},
-        {0x00000fe3, 0x000000ff},
-        {0x00040008, 0x000000ff},
-        {0x00744004, 0x000000ff},
-        {0x00740004, 0x000000ff},
-        {0x00040004, 0x000000ff},
-        {0x00042004, 0x000000ff},
-        {0x00730002, 0x000000ff},
-        {0x00744002, 0x000000ff},
-        {0x00030002, 0x000000ff},
-        {0x00040002, 0x000000ff},
-        {0x00050005, 0x000000ff},
-        {0x00030fc5, 0x000000ff},
-        {0x00040005, 0x000000ff},
-        {0x00000005, 0x000000ff},
-    },
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff}};
+    {{0x00240fc0, 0x000000ff},
+     {0x01000fc0, 0x000000ff},
+     {0x00000fe3, 0x000000ff},
+     {0x00040008, 0x000000ff},
+     {0x00744004, 0x000000ff},
+     {0x00740004, 0x000000ff},
+     {0x00040004, 0x000000ff},
+     {0x00042004, 0x000000ff},
+     {0x00730002, 0x000000ff},
+     {0x00744002, 0x000000ff},
+     {0x00030002, 0x000000ff},
+     {0x00040002, 0x000000ff},
+     {0x00050005, 0x000000ff},
+     {0x00030fc5, 0x000000ff},
+     {0x00040005, 0x000000ff},
+     {0x00000005, 0x000000ff},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff},
+     {0xffffffff, 0xffffffff}},
+};
 
 SimpleEntry data_ov033_02111ee4[23] = {
     {0xe225, (s16)0xfe88, (s16)0xfe1b, 0x017c},

@@ -28,12 +28,6 @@ enum daObjSlIceBlock_c_AssetId { ASSET_SL_ICE_BROCK_BMD = 0x06b1, ASSET_SL_ICE_B
 #include "math/CalcLib.h"
 
 /* The sliding ice block's collision-property block handed to dBgW_KcMbg::SetFile. */
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[3];
-} CLPS_Block;
 
 extern CLPS_Block data_ov027_02113108;
 

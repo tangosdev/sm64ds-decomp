@@ -28,6 +28,7 @@
 #include "Particle__System.h"
 #include "dEntObj_c.h"
 #include "decl_common.h"
+#include "LinkSettings.h"
 #include "common.h"
 #include "dClipper.h"
 #include "SharedFilePtr.h"
@@ -632,7 +633,7 @@ void dEntObj_c::func_ov075_0211505c() {
     int localPlayer;
     if (mAnimActive == 0)
         return;
-    localPlayer = func_0203da9c();
+    localPlayer = GetLocalPlayerId();
     mPlayers[localPlayer].StartIdle();
     mAnimActive = 0;
 }
@@ -650,7 +651,7 @@ int dEntObj_c::func_ov075_02115098(int playerNo) {
             return 0;
         player++;
     }
-    int localPlayer = func_0203da9c();
+    int localPlayer = GetLocalPlayerId();
     if (playerNo == localPlayer) {
         mPlayers[playerNo].PlaySelectAnim();
         SetMarkerPosition(playerNo);
@@ -824,7 +825,7 @@ int dEntObj_c::Behavior() {
                 SetCamera();
         }
         if (mAnimActive) {
-            int localPlayer = func_0203da9c();
+            int localPlayer = GetLocalPlayerId();
             SetMarkerPosition(localPlayer);
             mAnmModel.Advance();
         }
@@ -902,7 +903,7 @@ int dEntObj_c::InitResources() {
     mAnimActive = 0;
 
     if (param1 == 2) {
-        int localPlayer = func_0203da9c();
+        int localPlayer = GetLocalPlayerId();
         func_ov075_02115098(localPlayer);
     }
 

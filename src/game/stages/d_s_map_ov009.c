@@ -6,22 +6,6 @@
 
 /* Definition order is what makes the compiler size sort match address order. */
 
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[22];
-    u32 tail[2];
-} Clps_02112e7c;
-
 typedef struct {
     struct PathDef entries[17];
     u16 pad;
@@ -68,7 +52,7 @@ extern SimpleEntry data_ov009_02112d44[8];
 extern ViewEntries5 data_ov009_02112d84;
 extern ObjSubTable data_ov009_02112dcc[9];
 extern PathDefs17 data_ov009_02112e14;
-extern Clps_02112e7c data_ov009_02112e7c;
+extern CLPS_Block192 data_ov009_02112e7c;
 extern StandardEntry data_ov009_02112f3c[14];
 extern SimpleEntry data_ov009_0211301c[29];
 extern StandardEntry data_ov009_02113104[17];
@@ -182,29 +166,33 @@ LevelRec data_ov009_02112bdc = {(struct CLPS_Block *)&data_ov009_02112e7c,
                                 0x0640,
                                 0x0000001f};
 
-CLPS_Block data_ov009_02112c18 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {{0x00000fc4, 0x000000ff}, {0xffffffff, 0xffffffff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov009_02112c18 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fc4, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov009_02112c38 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {{0x00000fe0, 0x000000ff}, {0xffffffff, 0xffffffff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov009_02112c38 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fe0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov009_02112c58 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov009_02112c58 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
-CLPS_Block data_ov009_02112bf8 = {0x53504c43,
-                                  0x0008,
-                                  0x0001,
-                                  {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov009_02112bf8 = {
+    0x53504c43,
+    0x0008,
+    0x0001,
+    {{0x00000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 DoorEntry data_ov009_02112c78[3] = {{0x0c34, (s16)0xfe0d, (s16)0xfca5, 0x2000, 0x0000, 0x0010},
                                     {(s16)0xff6a, 0x0310, (s16)0xfbe6, 0x0000, 0x0000, 0x0016},
@@ -276,7 +264,7 @@ PathDefs17 data_ov009_02112e14 = {
     0x0000,
 };
 
-Clps_02112e7c data_ov009_02112e7c = {
+CLPS_Block192 data_ov009_02112e7c = {
     0x53504c43,
     0x0008,
     0x0016,
@@ -287,8 +275,8 @@ Clps_02112e7c data_ov009_02112e7c = {
      {0x00042fc2, 0x000000ff}, {0x00043fc2, 0x000000ff}, {0x00010fc2, 0x000000ff},
      {0x00040fc2, 0x000000ff}, {0x00040fc1, 0x00000005}, {0x00040fc1, 0x00000003},
      {0x00040fc1, 0x000000ff}, {0x00043fc1, 0x000000ff}, {0x01043fc0, 0x000000ff},
-     {0x01000fc0, 0x000000ff}},
-    {0xffffffff, 0xffffffff}};
+     {0x01000fc0, 0x000000ff}, {0xffffffff, 0xffffffff}},
+};
 
 StandardEntry data_ov009_02112f3c[14] = {
     {0x0000, (s16)0xfb50, 0x00fe, 0x1a90, 0x0000, (s16)0x8000, 0x0000, 0x0000},

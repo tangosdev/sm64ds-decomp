@@ -40,13 +40,6 @@
 struct BMD_File;
 #include "private/BTA_File.h"
 
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
 struct KCL_File;
 
 /* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the

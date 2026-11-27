@@ -27,14 +27,6 @@ typedef struct {
     u16 pad;
 } PathDefs13;
 
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[14];
-    u32 tail[2];
-} Clps_02112d44;
-
 extern const fx32 data_ov056_021115cc[1];
 extern const BTAMaterialRecord data_ov056_021115d0[3];
 extern const u16 data_ov056_02111624[542];
@@ -56,7 +48,7 @@ extern StandardEntry data_ov056_02112c68[2];
 extern ViewEntries3 data_ov056_02112c88;
 extern ObjSubTable data_ov056_02112cb4[8];
 extern PathDefs13 data_ov056_02112cf4;
-extern Clps_02112d44 data_ov056_02112d44;
+extern CLPS_Block128 data_ov056_02112d44;
 extern PathNode data_ov056_02112dc4[32];
 extern SimpleEntry data_ov056_02112e84[58];
 extern StandardEntry data_ov056_02113054[44];
@@ -160,26 +152,26 @@ const BTAMaterialRecord data_ov056_021115d0[3] = {
      {0x021d, 0x021d},
      {0x0001, 0x0000}},
 };
-Clps_02112d44 data_ov056_02112d44 = {0x53504c43,
-                                     0x0008,
-                                     0x000e,
-                                     {
-                                         {0x00200fc0, 0x000000ff},
-                                         {0x01000fc0, 0x000000ff},
-                                         {0x00980fc0, 0x000000ff},
-                                         {0x01003fc5, 0x000000ff},
-                                         {0x01003fc0, 0x000000ff},
-                                         {0x00004fc7, 0x000000ff},
-                                         {0x01890fc0, 0x000000ff},
-                                         {0x00014fc7, 0x000000ff},
-                                         {0x00594fc7, 0x00000003},
-                                         {0x00594fc7, 0x00000002},
-                                         {0x00594fc7, 0x00000001},
-                                         {0x00040fe0, 0x000000ff},
-                                         {0x00045fc7, 0x000000ff},
-                                         {0x00044fc7, 0x000000ff},
-                                     },
-                                     {0xffffffff, 0xffffffff}};
+CLPS_Block128 data_ov056_02112d44 = {
+    0x53504c43,
+    0x0008,
+    0x000e,
+    {{0x00200fc0, 0x000000ff},
+     {0x01000fc0, 0x000000ff},
+     {0x00980fc0, 0x000000ff},
+     {0x01003fc5, 0x000000ff},
+     {0x01003fc0, 0x000000ff},
+     {0x00004fc7, 0x000000ff},
+     {0x01890fc0, 0x000000ff},
+     {0x00014fc7, 0x000000ff},
+     {0x00594fc7, 0x00000003},
+     {0x00594fc7, 0x00000002},
+     {0x00594fc7, 0x00000001},
+     {0x00040fe0, 0x000000ff},
+     {0x00045fc7, 0x000000ff},
+     {0x00044fc7, 0x000000ff},
+     {0xffffffff, 0xffffffff}},
+};
 PathNode data_ov056_02112dc4[32] = {
     {0x1482, (s16)0xf5a6, 0x06d6},      {0x1482, (s16)0xf5a6, 0x0abe},
     {0x1a2b, (s16)0xf63c, 0x0dc2},      {0x1a2b, (s16)0xf63c, 0x1167},

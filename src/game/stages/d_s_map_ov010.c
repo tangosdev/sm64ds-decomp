@@ -6,22 +6,6 @@
 
 /* Definition order is what makes the compiler size sort match address order. */
 
-typedef struct CLPS_Block {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[2];
-    u32 tail[2];
-} CLPS_Block;
-
-typedef struct {
-    u32 tag;
-    u16 stride;
-    u16 count;
-    struct CLPS entries[21];
-    u32 tail[4];
-} Clps_021126d0;
-
 typedef struct {
     ExitEntry entries[15];
     u16 pad;
@@ -84,7 +68,7 @@ extern Area data_ov010_021124c0[8];
 extern StandardEntry data_ov010_02112520[6];
 extern ViewEntries11 data_ov010_02112580;
 extern DoorEntry data_ov010_0211261c[15];
-extern Clps_021126d0 data_ov010_021126d0;
+extern CLPS_Block192 data_ov010_021126d0;
 extern ExitEntries15 data_ov010_02112790;
 extern PathNode data_ov010_02112864[38];
 extern StandardEntry data_ov010_02112948[19];
@@ -159,11 +143,12 @@ LevelRec data_ov010_0211229c = {(struct CLPS_Block *)&data_ov010_021126d0,
                                 0x0640,
                                 0x0000000f};
 
-CLPS_Block data_ov010_021122f8 = {0x53504c43,
-                                  0x0008,
-                                  0x0002,
-                                  {{0x04000fc1, 0x000000ff}, {0x00000fc1, 0x000000ff}},
-                                  {0xffffffff, 0xffffffff}};
+CLPS_Block data_ov010_021122f8 = {
+    0x53504c43,
+    0x0008,
+    0x0002,
+    {{0x04000fc1, 0x000000ff}, {0x00000fc1, 0x000000ff}, {0xffffffff, 0xffffffff}},
+};
 
 SimpleEntry data_ov010_02112318[4] = {{0xfe25, (s16)0xfa88, 0x0177, (s16)0xfed4},
                                       {0xfe25, (s16)0xfaec, 0x0177, (s16)0xfed4},
@@ -268,7 +253,7 @@ DoorEntry data_ov010_0211261c[15] = {
     {(s16)0xfb82, 0x01f4, (s16)0xfbe6, 0x0000, 0x0000, 0x0007},
     {(s16)0xfcae, 0x01f4, (s16)0xfbe6, (s16)0x8000, 0x0000, 0x0007}};
 
-Clps_021126d0 data_ov010_021126d0 = {
+CLPS_Block192 data_ov010_021126d0 = {
     0x53504c43,
     0x0008,
     0x0015,
@@ -278,8 +263,9 @@ Clps_021126d0 data_ov010_021126d0 = {
      {0x01040fc5, 0x000000ff}, {0x01043fc5, 0x000000ff}, {0x00042fc4, 0x000000ff},
      {0x01040005, 0x000000ff}, {0x006c0004, 0x000000ff}, {0x00040001, 0x000000ff},
      {0x00040004, 0x000000ff}, {0x00042001, 0x000000ff}, {0x00043004, 0x000000ff},
-     {0x01043005, 0x000000ff}, {0x00040284, 0x000000ff}, {0x00040281, 0x000000ff}},
-    {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff}};
+     {0x01043005, 0x000000ff}, {0x00040284, 0x000000ff}, {0x00040281, 0x000000ff},
+     {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
+};
 
 ExitEntries15 data_ov010_02112790 = {
     {{(s16)0xec14, 0x0190, (s16)0xfe3e, 0x0000, 0x4000, {0x0006, 0x0000, 0x0008, 0x0055}},
