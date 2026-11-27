@@ -803,29 +803,9 @@ src/unnamed/ov007/func_ov007_020bd4a0.cpp:
     .text start:0x020bd4a0 end:0x020bd4e8
 
 
-src/MenuGfx_StartCapture.cpp:
+src/ui/menus/unit020bd4e8.cpp:
     complete
-    .text start:0x020bd4e8 end:0x020bd500
-
-
-src/MenuGfx_InitSubEngine.cpp:
-    complete
-    .text start:0x020bd500 end:0x020bd5a8
-
-
-src/MenuGfx_InitMainEngine.cpp:
-    complete
-    .text start:0x020bd5a8 end:0x020bd648
-
-
-src/MenuGfx_SetBgMode.cpp:
-    complete
-    .text start:0x020bd648 end:0x020bd960
-
-
-src/MenuGfx_ResetVram.cpp:
-    complete
-    .text start:0x020bd960 end:0x020bd9e4
+    .text start:0x020bd4e8 end:0x020bd9e4
 
 
 src/ui/menus/unit020bd9e4.cpp:
