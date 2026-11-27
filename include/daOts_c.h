@@ -193,7 +193,7 @@ struct daOts_c : dEnemyBase_c {
     /* New slots 31..36. Their positions and override ownership are fixed by the
        four ROM vtables. The spellings describe their call sites; the stripped
        image carries no original method names. */
-    virtual int  UpdateRunState();      /* slot 31 -- called only from state 1 */
+    virtual void UpdateRunState();      /* slot 31 -- called only from state 1 */
     virtual void UpdateDeathState();    /* slot 32 -- called only from state 4 */
     virtual void PlayStepSound();       /* slot 33 -- animation frames 4 and 7 */
     virtual void PlayHitSound();        /* slot 34 -- entering the hit state */
