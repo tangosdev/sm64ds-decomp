@@ -38,11 +38,7 @@ enum daObjCtRotateBlock_c_AssetId {
     ASSET_CT_MECHA_OBJ02A_BMD = 0x05bb
 };
 
-/* decl_common.h spells this as a non-const void *[], which cannot be this .rodata. */
-#define data_ov065_0211c0a8 data_ov065_0211c0a8_decl
 #include "decl_common.h"
-#undef data_ov065_0211c0a8
-extern void *const data_ov065_0211c0a8[2];
 u8 sTTCRotatingSolidInitialDelays[4] = {
     120,
     40,
@@ -67,8 +63,8 @@ s16 data_ov065_0211cfa8[2] = {
 /* One record per mVariant: the base model's and the collision mesh's file
  * handles, and the CLPS block SetFile gets with that mesh. */
 struct CtRotateBlockFiles {
-    SharedFilePtr *model;
-    SharedFilePtr *collision;
+    ModelFile *model;
+    ClsnFile *collision;
     CLPS_Block *clps;
 };
 extern CtRotateBlockFiles data_ov065_0211cfd0[2];
@@ -128,7 +124,7 @@ void daObjCtRotateBlock_c::UpdateModel() {
 int daObjCtRotateBlock_c::CleanupResources() {
     if (mMeshCollider.IsEnabled())
         mMeshCollider.Disable();
-    ((SharedFilePtr *)data_ov065_0211c0a8[mVariant])->Release();
+    data_ov065_0211c0a8[mVariant]->Release();
     data_ov065_0211cfd0[mVariant].model->Release();
     data_ov065_0211cfd0[mVariant].collision->Release();
     return 1;
@@ -205,8 +201,7 @@ int daObjCtRotateBlock_c::InitResources() {
     }
 
     {
-        BMD_File *bmd =
-            dExtSimpleModel_c::LoadFile(*(SharedFilePtr *)data_ov065_0211c0a8[mVariant]);
+        BMD_File *bmd = dExtSimpleModel_c::LoadFile(*data_ov065_0211c0a8[mVariant]);
         mRotatingModel.SetFile(bmd, 1, -1);
     }
 
@@ -290,7 +285,7 @@ ModelFile gCtMechaObj01aModelFile(ASSET_CT_MECHA_OBJ01A_BMD);
 ModelFile gCtMechaObj02aModelFile(ASSET_CT_MECHA_OBJ02A_BMD);
 ClsnFile gCtMechaObj01CollisionFile(ASSET_CT_MECHA_OBJ01_KCL);
 ClsnFile gCtMechaObj02CollisionFile(ASSET_CT_MECHA_OBJ02_KCL);
-extern void *const data_ov065_0211c0a8[2] = {
+extern ModelFile *const data_ov065_0211c0a8[2] = {
     &gCtMechaObj01aModelFile,
     &gCtMechaObj02aModelFile,
 };

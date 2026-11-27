@@ -79,17 +79,17 @@ enum daHanachan_c_AssetId {
 extern daHanachan_c::State data_ov034_02114538[];
 
 extern "C" {
-extern SharedFilePtr *const data_ov034_02113888[];
-extern SharedFilePtr *const data_ov034_0211389c[];
-extern SharedFilePtr *const data_ov034_02113860[];
+extern AnimFile *const data_ov034_02113888[];
+extern AnimFile *const data_ov034_0211389c[];
+extern AnimFile *const data_ov034_02113860[];
 extern int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
 extern const int data_ov034_021138c4[];
 extern const short data_ov034_02113820[];
-extern SharedFilePtr *const data_ov034_021138b0[];
+extern AnimFile *const data_ov034_021138b0[];
 extern int data_ov034_02114488[];
-extern SharedFilePtr *const data_ov034_02113838[];
-extern SharedFilePtr *const data_ov034_0211384c[];
-extern SharedFilePtr *const data_ov034_02113874[];
+extern ModelFile *const data_ov034_02113838[];
+extern TexSeqFile *const data_ov034_0211384c[];
+extern AnimFile *const data_ov034_02113874[];
 extern int func_ov002_020c51d0(void *, void *);
 extern unsigned char data_ov034_0211433c[];
 extern const s32 data_ov034_021138d8[];
@@ -766,7 +766,7 @@ int daHanachan_c::Render() {
  * stomp bounce, then moves the body, its cylinders and, while mDriveCamera is
  * set, the camera. */
 int daHanachan_c::Behavior() {
-    SharedFilePtr *animFile;
+    AnimFile *animFile;
     s32 i;
     Vector3 head;
     Vector3 part;
@@ -809,7 +809,7 @@ int daHanachan_c::Behavior() {
     }
 
     animFile = data_ov034_021138b0[0];
-    if (mAnmModels[0].file == ((SharedFilePtr *)animFile)->filePtr &&
+    if (mAnmModels[0].file == animFile->filePtr &&
         (((u32)mAnmModels[0].currFrame << 4) >> 16) == 0xf) {
         func_0201267c(0x11e, &mCamSpacePos);
     }
@@ -864,7 +864,7 @@ int daHanachan_c::Behavior() {
     mdCc_cs1[0].pos = head;
     mdCc_cs2[0].pos = head;
 
-    if (mAnmModels[0].file != ((SharedFilePtr *)animFile)->filePtr) {
+    if (mAnmModels[0].file != animFile->filePtr) {
         u32 n = (u8)(4 - mHealth);
         if (n < 3) {
             part = mSegmentPos[0];
@@ -939,9 +939,9 @@ int daHanachan_c::InitResources() {
     char *texRow;
     dCcAcPos_c *cyl1;
     dCcAcPos_c *cyl2;
-    SharedFilePtr *modelFile;
-    SharedFilePtr *animFile;
-    SharedFilePtr *texFile;
+    ModelFile *modelFile;
+    AnimFile *animFile;
+    TexSeqFile *texFile;
     s32 prev;
     s32 radius;
     s32 one;
@@ -1124,36 +1124,36 @@ TexSeqFile gHanachanBody04TextureSequenceFile(ASSET_HANACHAN_BODY04_BTP);
  * radius. */
 const short data_ov034_02113820[4] = {0x00c6, 0x00c7, 0x00c8, 0x00c9};
 const u32 data_ov034_02113828[4] = {0x6a, 0x6b, 0x6c, 0};
-SharedFilePtr *const data_ov034_02113838[5] = {
+ModelFile *const data_ov034_02113838[5] = {
     &gHanachanHeadModelFile,   &gHanachanBody01ModelFile, &gHanachanBody02ModelFile,
     &gHanachanBody03ModelFile, &gHanachanBody04ModelFile,
 };
-SharedFilePtr *const data_ov034_0211384c[5] = {
+TexSeqFile *const data_ov034_0211384c[5] = {
     &gHanachanHeadTextureSequenceFile,   &gHanachanBody01TextureSequenceFile,
     &gHanachanBody02TextureSequenceFile, &gHanachanBody03TextureSequenceFile,
     &gHanachanBody04TextureSequenceFile,
 };
-SharedFilePtr *const data_ov034_02113860[5] = {
+AnimFile *const data_ov034_02113860[5] = {
     &gHanachanHeadWaitAnimationFile,   &gHanachanBody01WaitAnimationFile,
     &gHanachanBody02WaitAnimationFile, &gHanachanBody03WaitAnimationFile,
     &gHanachanBody04WaitAnimationFile,
 };
-SharedFilePtr *const data_ov034_02113874[5] = {
+AnimFile *const data_ov034_02113874[5] = {
     &gHanachanHeadWalkAnimationFile,   &gHanachanBody01WalkAnimationFile,
     &gHanachanBody02WalkAnimationFile, &gHanachanBody03WalkAnimationFile,
     &gHanachanBody04WalkAnimationFile,
 };
-SharedFilePtr *const data_ov034_02113888[5] = {
+AnimFile *const data_ov034_02113888[5] = {
     &gHanachanHeadWalkStartAnimationFile,   &gHanachanBody01WalkStartAnimationFile,
     &gHanachanBody02WalkStartAnimationFile, &gHanachanBody03WalkStartAnimationFile,
     &gHanachanBody04WalkStartAnimationFile,
 };
-SharedFilePtr *const data_ov034_0211389c[5] = {
+AnimFile *const data_ov034_0211389c[5] = {
     &gHanachanHeadWalkEndAnimationFile,   &gHanachanBody01WalkEndAnimationFile,
     &gHanachanBody02WalkEndAnimationFile, &gHanachanBody03WalkEndAnimationFile,
     &gHanachanBody04WalkEndAnimationFile,
 };
-SharedFilePtr *const data_ov034_021138b0[5] = {
+AnimFile *const data_ov034_021138b0[5] = {
     &gHanachanHeadDamageAnimationFile,   &gHanachanBody01DamageAnimationFile,
     &gHanachanBody02DamageAnimationFile, &gHanachanBody03DamageAnimationFile,
     &gHanachanBody04DamageAnimationFile,
