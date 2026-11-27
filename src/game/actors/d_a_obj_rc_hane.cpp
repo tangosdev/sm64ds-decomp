@@ -64,7 +64,7 @@ enum d_a_obj_rc_hane_AssetId { ASSET_RC_HANE_BMD = 0x06a6 };
 #include "nitro/fx/fx_trig.h"
 
 /* 8-byte model handle. The constructor and destructor are the retail
- * func_02017acc / func_02017ab4 pair; the manifest aliases the generated
+ * ModelFile::ModelFile / ModelFile::~ModelFile pair; the manifest aliases the generated
  * names onto those ROM symbols. */
 struct RcHaneModelFilePtr : SharedFilePtr {
     RcHaneModelFilePtr(unsigned int fileID);
@@ -216,7 +216,7 @@ s32 daObjRc_Hane_c::CleanupResources() {
  * why nothing here names a heap.
  */
 
-/* File 1702. The compiler registers func_02017ab4 beside the object. */
+/* File 1702. The compiler registers ModelFile::~ModelFile beside the object. */
 RcHaneModelFilePtr data_ov036_02114070(ASSET_RC_HANE_BMD);
 
 extern "C" SpawnInfo<daObjRc_Hane_c> g_profile_RC_HANE = {

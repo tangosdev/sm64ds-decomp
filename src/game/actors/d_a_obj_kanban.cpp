@@ -27,7 +27,7 @@ enum daObjKanban_c_AssetId { ASSET_OBJ_KANBAN_BMD = 0x0474 };
 #include "math/Approach.h"
 #include "math/CalcLib.h"
 
-/* 8-byte file handle. The model uses func_02017acc / func_02017ab4. The
+/* 8-byte file handle. The model uses ModelFile::ModelFile / ModelFile::~ModelFile. The
  * spelling is local; the manifest aliases the generated names to those ROM
  * symbols. */
 struct KanbanModelFilePtr : SharedFilePtr {

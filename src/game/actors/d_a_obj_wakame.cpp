@@ -32,8 +32,8 @@
  * - UpdateModelTransform (0x020bc488) is this class's only non-virtual
  *   member; InitResources is its one caller.
  * - data_ov002_0210e0d4 / _0210e0dc keep their ROM bss names. The model
- *   handle constructs through func_02017acc; the animation handle
- *   constructs through SharedFilePtr::Construct.
+ *   handle constructs through ModelFile::ModelFile; the animation handle
+ *   constructs through AnimFile::AnimFile.
  */
 
 /* Runtime asset handles resolved through the overlay 0 file table. */
@@ -43,8 +43,8 @@ enum d_a_obj_wakame_AssetId { ASSET_OBJ_WAKAME_BMD = 0x0495, ASSET_OBJ_WAKAME_WA
 #include "SharedFilePtr.h"
 #include "math/MtxStack.h"
 
-/* dExtSimpleModel_c: func_02017acc / func_02017ab4. Animation: SharedFilePtr::Construct /
- * SharedFilePtr_Destruct_Anim. filePtr is the file LoadFile just filled in. */
+/* dExtSimpleModel_c: ModelFile::ModelFile / ModelFile::~ModelFile. Animation: AnimFile::AnimFile /
+ * AnimFile::~AnimFile. filePtr is the file LoadFile just filled in. */
 struct WakameModelFilePtr : SharedFilePtr {
     WakameModelFilePtr(unsigned int fileId);
     ~WakameModelFilePtr();

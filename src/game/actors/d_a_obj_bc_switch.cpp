@@ -109,8 +109,8 @@ enum d_a_obj_bc_switch_AssetId {
 
 /* File 1084 / 1085 resource handles. The static initializer registers
  * their destructors; the spellings are this TU's, mapped onto
- * func_02017acc / func_02017ab4 and func_02017b4c /
- * SharedFilePtr_Destruct_Clsn. */
+ * ModelFile::ModelFile / ModelFile::~ModelFile and ClsnFile::ClsnFile /
+ * ClsnFile::~ClsnFile. */
 struct BcSwitchModelFilePtr : SharedFilePtr {
     BcSwitchModelFilePtr(u32 fileID);
     ~BcSwitchModelFilePtr();

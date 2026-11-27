@@ -28,9 +28,9 @@ enum daObjKm2_Nobiru_c_AssetId { ASSET_KM2_NOBIRU_BMD = 0x0663, ASSET_KM2_NOBIRU
 
 #pragma defer_codegen off
 
-/* The model handle constructs through func_02017acc and registers
-   func_02017ab4; the collision handle constructs through
-   func_02017b4c and registers SharedFilePtr_Destruct_Clsn.
+/* The model handle constructs through ModelFile::ModelFile and registers
+   ModelFile::~ModelFile; the collision handle constructs through
+   ClsnFile::ClsnFile and registers ClsnFile::~ClsnFile.
    The manifest aliases these. */
 struct NobiruModelFileHandle : SharedFilePtr {
     NobiruModelFileHandle(u32 fileID);

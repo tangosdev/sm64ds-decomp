@@ -54,8 +54,8 @@ enum daObjShell_c_AssetId {
 #include "ParticleIds.h"
 #include "math/MtxStack.h"
 
-/* 8-byte file handles. The model uses func_02017acc / func_02017ab4; both
- * animations use SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim.
+/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile; both
+ * animations use AnimFile::AnimFile / AnimFile::~AnimFile.
  * The spellings are local. The manifest aliases them to those ROM symbols. */
 struct ShellModelFilePtr : SharedFilePtr {
     ShellModelFilePtr(u32 fileID);

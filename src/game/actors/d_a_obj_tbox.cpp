@@ -26,9 +26,9 @@ enum daObjTbox_c_AssetId { ASSET_T_BOX_BMD = 0x04a6, ASSET_T_BOX_OPEN_BCA = 0x04
 #include "math/MtxStack.h"
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
-   model handle constructs through func_02017acc and destroys through
-   func_02017ab4; the animation handle constructs through
-   SharedFilePtr::Construct and destroys through SharedFilePtr_Destruct_Anim.
+   model handle constructs through ModelFile::ModelFile and destroys through
+   ModelFile::~ModelFile; the animation handle constructs through
+   AnimFile::AnimFile and destroys through AnimFile::~AnimFile.
    The manifest aliases those undefined members onto the ROM symbols. */
 struct TboxModelFilePtr : SharedFilePtr {
     TboxModelFilePtr(u32 fileID);
@@ -258,8 +258,8 @@ void daObjTbox_c::UpdateModelTransform() {
 /* D1 and D0 come from the inline destructor in daObjTbox_c.h. */
 
 /* The two file-scope resource handles, in retail initializer order: the
-   model file (func_02017acc / func_02017ab4), then the animation file
-   (SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim). The manifest
+   model file (ModelFile::ModelFile / ModelFile::~ModelFile), then the animation file
+   (AnimFile::AnimFile / AnimFile::~AnimFile). The manifest
    aliases each wrapper ctor/dtor onto those ROM symbols. */
 TboxModelFilePtr data_ov064_0211c96c(ASSET_T_BOX_BMD);
 TboxAnimationFileHandle data_ov064_0211c964(ASSET_T_BOX_OPEN_BCA);

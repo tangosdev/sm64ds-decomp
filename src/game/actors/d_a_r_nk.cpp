@@ -113,15 +113,15 @@ enum {
    pointer-to-member call through mState still matches. */
 typedef void (daRNk_c::*StateFunc)();
 
-/* The model handle's ctor/dtor are the cartridge's func_02017acc /
-   func_02017ab4 pair; the manifest aliases these. */
+/* The model handle's ctor/dtor are the cartridge's ModelFile::ModelFile /
+   ModelFile::~ModelFile pair; the manifest aliases these. */
 struct RNkModelFileHandle : SharedFilePtr {
     RNkModelFileHandle(u32 fileID);
     ~RNkModelFileHandle();
 };
 
-/* The seven animation handles construct through SharedFilePtr::Construct
-   and register SharedFilePtr_Destruct_Anim; the manifest aliases these. */
+/* The seven animation handles construct through AnimFile::AnimFile
+   and register AnimFile::~AnimFile; the manifest aliases these. */
 struct RNkAnimationFileHandle : SharedFilePtr {
     RNkAnimationFileHandle(u32 fileID);
     ~RNkAnimationFileHandle();

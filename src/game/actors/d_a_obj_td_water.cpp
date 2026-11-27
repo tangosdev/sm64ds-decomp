@@ -42,9 +42,9 @@ enum d_a_obj_td_water_AssetId { ASSET_TD_OBJ_WATER_BMD = 0x06b7, ASSET_TD_OBJ_WA
 
 struct KCL_File;
 
-/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
- * func_02017ab4; collision handles construct through func_02017b4c and
- * destroy through SharedFilePtr_Destruct_Clsn. The manifest aliases those
+/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
+ * ModelFile::~ModelFile; collision handles construct through ClsnFile::ClsnFile and
+ * destroy through ClsnFile::~ClsnFile. The manifest aliases those
  * undefined members onto the ROM symbols. */
 struct TdWaterModelFilePtr : SharedFilePtr {
     TdWaterModelFilePtr(u32 fileID);

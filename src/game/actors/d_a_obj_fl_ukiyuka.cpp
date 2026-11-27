@@ -73,8 +73,8 @@ int daObjFl_Ukiyuka_c::InitResources() {
     return InitResourcesFrom(&data_ov022_021140d4[mVariant], kBobAmplitude);
 }
 
-/* 8-byte file handles. Both models use func_02017acc / func_02017ab4 and
- * both collision files func_02017b4c / SharedFilePtr_Destruct_Clsn. The
+/* 8-byte file handles. Both models use ModelFile::ModelFile / ModelFile::~ModelFile and
+ * both collision files ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The
  * spellings are local; the manifest aliases the generated names to those
  * ROM symbols. */
 struct UkiyukaModelFilePtr : SharedFilePtr {

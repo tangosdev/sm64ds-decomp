@@ -60,8 +60,8 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 
-/* The model handle constructs through func_02017acc and the animation
- * handles through SharedFilePtr::Construct. Declared here, ahead of the
+/* The model handle constructs through ModelFile::ModelFile and the animation
+ * handles through AnimFile::AnimFile. Declared here, ahead of the
  * members that read them; defined at the bottom in retail __sinit order. */
 struct MkyModelFilePtr : SharedFilePtr {
     MkyModelFilePtr(unsigned int fileID);
@@ -1450,9 +1450,9 @@ daMky_c *daMky_c_classInit_MONKEY_THIEF() {
  * __sinit_d_a_mky.cpp from these, including one ~Vector3 registration
  * per offset against the destructor this TU already emits.
  *
- * The model handle's ctor/dtor are func_02017acc / func_02017ab4.
- * Each animation handle's are SharedFilePtr::Construct /
- * SharedFilePtr_Destruct_Anim. Those four are not defined here. */
+ * The model handle's ctor/dtor are ModelFile::ModelFile / ModelFile::~ModelFile.
+ * Each animation handle's are AnimFile::AnimFile /
+ * AnimFile::~AnimFile. Those four are not defined here. */
 typedef char MkyModelFilePtr_size_must_be_8[sizeof(MkyModelFilePtr) == 8 ? 1 : -1];
 typedef char MkyAnimFilePtr_size_must_be_8[sizeof(MkyAnimFilePtr) == 8 ? 1 : -1];
 

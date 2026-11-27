@@ -73,8 +73,8 @@ extern daHyuhyu_c_State data_ov091_021356d0; /* cloud: waiting */
 void func_02012694(u32 id, const Vector3 *pos);
 
 /* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * veneer pairs (func_02017acc / func_02017ab4 for the BMD, SharedFilePtr::
- * Construct / SharedFilePtr_Destruct_Anim for the two BCAs), spelled through
+ * handle classes (ModelFile::ModelFile / ModelFile::~ModelFile for the BMD,
+ * AnimFile::AnimFile / AnimFile::~AnimFile for the two BCAs), spelled through
  * declared-only subclasses so the static initializer names the real entry
  * points. */
 struct HyuhyuModelFilePtr : SharedFilePtr {

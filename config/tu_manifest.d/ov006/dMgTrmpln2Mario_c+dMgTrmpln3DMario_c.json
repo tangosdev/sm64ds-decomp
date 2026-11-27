@@ -1576,7 +1576,7 @@
     "Re-keyed 2026-11-11: the extern \"C\" declaration block became one statement per C symbol and the data wrappers dropped, renumbering the BSS registration nodes from @2015..@2040 to @2010..@2035 (object measured; paired by symtab index, every non-strtab section byte-identical).",
     "Re-keyed 2026-11-11: the per-function `namespace ns_<addr>` shards became one declaration block for the unit, which renumbered the BSS registration nodes from @2183..@2208 to @2015..@2040 (object measured; paired by symtab index, every non-strtab section byte-identical).",
     "Text-only fold of 88 one-function shards (0x020c8dd4 dMgTrmpln2Mario_c::GetVelocity .. 0x020cd72c dMgTrmpObjAdapter_c C2). Both Marios' slot overrides (GetPos, GetPrevPos, GetVelocity, IsActive) are real methods, so GetPos is each class's key function and this TU emits both Mario vtables and typeinfos; they are discarded against the cartridge's copies (compiler_only_output deadstrip-data).",
-    "Folded __sinit_ov006_0212f6b4 into this TU. mwcc emits __sinit_d_mg_trmpln2_mario.cpp. @2155-@2166 clash with ov002 and are renamed to unused same-length names. The goal slots are TrmpGoal, not Vector3(x, y, z): ten of them store through an unsigned int*, and the cartridge does not. ~TrmpGoal is aliased to ~Vector3 after the unreferenced vague ~Vector3 import is parked on func_02017a9c.",
+    "Folded __sinit_ov006_0212f6b4 into this TU. mwcc emits __sinit_d_mg_trmpln2_mario.cpp. @2155-@2166 clash with ov002 and are renamed to unused same-length names. The goal slots are TrmpGoal, not Vector3(x, y, z): ten of them store through an unsigned int*, and the cartridge does not. ~TrmpGoal is aliased to ~Vector3 after the unreferenced vague ~Vector3 import is parked on _ZN9ModelFileD2Ev.",
     "LOCAL WORKER NOTE: this machine's EU stock dump builds sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40 (per #3691); the recorded fleet rom.sha256 stays d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8."
   ],
   "verification": {
@@ -2645,7 +2645,7 @@
       "source": "0x0212f6c4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017a24Ej",
+      "symbol": "_ZN10ModelFileAC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017a24"
@@ -2665,7 +2665,7 @@
       "source": "0x0212f6e0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2685,7 +2685,7 @@
       "source": "0x0212f6fc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2705,7 +2705,7 @@
       "source": "0x0212f718",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2725,7 +2725,7 @@
       "source": "0x0212f734",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2745,7 +2745,7 @@
       "source": "0x0212f750",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2765,7 +2765,7 @@
       "source": "0x0212f76c",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2785,7 +2785,7 @@
       "source": "0x0212f788",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2805,7 +2805,7 @@
       "source": "0x0212f7a4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2825,7 +2825,7 @@
       "source": "0x0212f7c0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2845,7 +2845,7 @@
       "source": "0x0212f7dc",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2865,7 +2865,7 @@
       "source": "0x0212f7f8",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2885,7 +2885,7 @@
       "source": "0x0212f814",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -2905,7 +2905,7 @@
       "source": "0x0212f830",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -3055,7 +3055,7 @@
       "source": "0x0212fb10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_ZN13SharedFilePtr13func_02017a0cEv",
+      "symbol": "_ZN10ModelFileAD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017a0c"
@@ -3085,7 +3085,7 @@
       "source": "0x0212fb20",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017984"
@@ -4274,38 +4274,38 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN19Trmpln2ModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017a24Ej",
+      "canonical_symbol": "_ZN10ModelFileAC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a24",
-      "evidence": "model handle construction in the retail initializer is func_02017a24"
+      "evidence": "model handle construction in the retail initializer is _ZN10ModelFileAC1Ej"
     },
     {
       "symbol": "_ZN19Trmpln2ModelFilePtrD1Ev",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017a0cEv",
+      "canonical_symbol": "_ZN10ModelFileAD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a0c",
-      "evidence": "model handle destruction registered by the retail initializer is func_02017a0c"
+      "evidence": "model handle destruction registered by the retail initializer is _ZN10ModelFileAD1Ev"
     },
     {
       "symbol": "_ZN23Trmpln2MarioAnimFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x0201799c",
-      "evidence": "animation handle construction in the retail initializer is SharedFilePtr::Construct"
+      "evidence": "animation handle construction in the retail initializer is _ZN8AnimFileC1Ej"
     },
     {
       "symbol": "_ZN23Trmpln2MarioAnimFilePtrD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
-      "evidence": "animation handle destruction registered by the retail initializer is SharedFilePtr_Destruct_Anim"
+      "evidence": "animation handle destruction registered by the retail initializer is _ZN8AnimFileD1Ev"
     },
     {
       "symbol": "_ZN7Vector3D1Ev",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017a9cEv",
+      "canonical_symbol": "_ZN9ModelFileD2Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017a9c",
-      "evidence": "deadstrip externalises this TU's unreferenced vague ~Vector3, and the leftover import still occupies the name. Nothing references it. Parking that import on func_02017a9c, which this object does not already import, frees _ZN7Vector3D1Ev for the goal-slot registration."
+      "evidence": "deadstrip externalises this TU's unreferenced vague ~Vector3, and the leftover import still occupies the name. Nothing references it. Parking that import on _ZN9ModelFileD2Ev, which this object does not already import, frees _ZN7Vector3D1Ev for the goal-slot registration."
     },
     {
       "symbol": "_ZN8TrmpGoalD1Ev",

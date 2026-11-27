@@ -38,8 +38,8 @@
 
 /* File 0x217 / 0x218 resource handles. The static initializer registers
  * their destructors; the spellings are this TU's, mapped onto
- * func_02017acc / func_02017ab4 and SharedFilePtr::Construct /
- * SharedFilePtr_Destruct_Anim. */
+ * ModelFile::ModelFile / ModelFile::~ModelFile and AnimFile::AnimFile /
+ * AnimFile::~AnimFile. */
 struct HeyhoAdapterModelFilePtr : SharedFilePtr {
     HeyhoAdapterModelFilePtr(u32 fileID);
     ~HeyhoAdapterModelFilePtr();

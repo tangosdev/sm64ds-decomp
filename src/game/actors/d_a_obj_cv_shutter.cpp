@@ -32,8 +32,8 @@ extern ResourceDescriptor data_ov021_021148d0;
 
 /* File 1497 / 1498 resource handles. The static initializer registers
  * their destructors; the spellings are this TU's, mapped onto
- * func_02017acc / func_02017ab4 and func_02017b4c /
- * SharedFilePtr_Destruct_Clsn. */
+ * ModelFile::ModelFile / ModelFile::~ModelFile and ClsnFile::ClsnFile /
+ * ClsnFile::~ClsnFile. */
 struct CvShutterModelFilePtr : SharedFilePtr {
     CvShutterModelFilePtr(u32 fileID);
     ~CvShutterModelFilePtr();

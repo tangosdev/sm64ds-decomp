@@ -31,9 +31,9 @@ enum daBasabasa_c_AssetId {
 #include "math/MtxStack.h"
 #include "LevelRng.h"
 
-/* The model handles construct through func_02017acc and destroy through
- * func_02017ab4; the animation handles go through SharedFilePtr::Construct
- * and SharedFilePtr_Destruct_Anim. The wrappers are declared, never defined:
+/* The model handles construct through ModelFile::ModelFile and destroy through
+ * ModelFile::~ModelFile; the animation handles go through AnimFile::AnimFile
+ * and AnimFile::~AnimFile. The wrappers are declared, never defined:
  * the manifest aliases their undefined members onto the ROM veneers. */
 struct BasabasaModelFilePtr : SharedFilePtr {
     BasabasaModelFilePtr(u32 fileID);
