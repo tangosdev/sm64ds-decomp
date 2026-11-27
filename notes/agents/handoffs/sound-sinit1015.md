@@ -34,29 +34,14 @@ unchanged: original credit is still recorded by address. The conversion baseline
 retires only the C initializer identity, with an explicit generated-code reason;
 every unrelated banked identity and its existing order are preserved.
 
-## Live interior destination
+## Interior label (since removed)
 
-`data_ov006_02142e02` is ten bytes inside the note table at 0x02142df8. It has a
-LIVE relocation from OV007:0x020f7cf0, despite having no source/header reference.
-The initial fully owned object passed the OV006 bytes and all owned-section gates,
-but lost that label and changed OV007 by four bytes. Deleting the label is invalid:
-`dsd delink` then refuses the cross-overlay relocation. It has been retained.
-
-The supporting linker change defines `data_ov006_02142e02 = 0x02142e02;`
-inside the generated `.ov006` output section. It first proves that the label is
-inside actual emitted NOBITS storage. Both names require unique
-configured homes in the same module, exactly one enclosing BSS definition, and a
-complete source range covering its whole emitted extent. Ambiguity, missing
-storage, out-of-range offsets, and existing definitions are not overridden.
-Object bytes, relocation records, compiler instructions and allocated storage are
-unchanged. `tools/test_lcf_interior.py`: 18 tests pass, including negative bounds,
-ownership, ambiguity, duplicate-definition, output-module and byte-preservation cases.
-The real linker experiment is essential: an expression `table + 0xa` retains
-only the offset (10), while a top-level constant gets the right value in the
-wrong overlay section (OV060). A canonical constant inside `.ov006` retains both
-the exact address and OV006 section identity. The direct relink reproduced all
-106 modules with zero differing bytes and no new symbol error; the full gate
-repeats the proof without manually patched scratch inputs.
+This section used to record that `data_ov006_02142e02`, ten bytes into the note
+table at 0x02142df8, had a live relocation from OV007:0x020f7cf0 and had to be kept.
+That relocation was not a pointer: the word sits inside the ov007 image blob
+`data_ov007_020f295c` and only happens to read 0x02142e02. #5763 removed the
+relocation and the label. The linker's interior-alias support described here
+(`tools/test_lcf_interior.py`) is unchanged and still covers real interior labels.
 
 ## Original PR-head producer evidence
 

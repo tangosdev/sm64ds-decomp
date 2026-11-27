@@ -1,6 +1,6 @@
 extern int func_0203da9c(void);
-extern unsigned char GetPlayerFlagByte(int player, int byte);
-extern void func_0203db3c(int byte, int value);
+extern unsigned char GetLinkByte(int slot, int byte);
+extern void SetLinkByte(int byte, int value);
 
 /* daPly_c 0 (the parent) only: bits 0-1 of link settings byte 3 become
    flags. dScEntry_c::UpdateCourseSelect posts 0 for a touched course,
@@ -9,6 +9,6 @@ extern void func_0203db3c(int byte, int value);
 void func_02020078(unsigned int flags) {
     if (func_0203da9c() != 0)
         return;
-    int v = GetPlayerFlagByte(0, 3);
-    func_0203db3c(3, (unsigned char)(flags | (v & ~3)));
+    int v = GetLinkByte(0, 3);
+    SetLinkByte(3, (unsigned char)(flags | (v & ~3)));
 }

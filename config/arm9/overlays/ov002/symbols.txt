@@ -3580,7 +3580,6 @@ data_ov002_0210ff98 kind:bss addr:0x0210ff98
 data_ov002_0210ffa4 kind:bss addr:0x0210ffa4
 data_ov002_0210ffb0 kind:bss addr:0x0210ffb0
 data_ov002_0210ffbc kind:bss addr:0x0210ffbc
-data_ov002_0210ffbf kind:bss addr:0x0210ffbf
 data_ov002_0210ffc8 kind:bss addr:0x0210ffc8
 data_ov002_0210ffd4 kind:bss addr:0x0210ffd4
 data_ov002_0210ffe0 kind:bss addr:0x0210ffe0
