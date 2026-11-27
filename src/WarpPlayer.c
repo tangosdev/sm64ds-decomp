@@ -2,8 +2,7 @@
 
 /* If player is this console's, post its warp destination (daWarpkun_c);
    the other consoles see it through IsPlayerWarping. */
-void WarpPlayer(int player, int destination)
-{
+void WarpPlayer(int player, int destination) {
     int v;
     if (player != GetLocalPlayerId())
         return;

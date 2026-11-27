@@ -71,15 +71,15 @@
 extern "C" {
 #endif
 
-u8 GetLinkByte(int, int);  /* (player, byte) */
+u8 GetLinkByte(int, int);   /* (player, byte) */
 void SetLinkByte(int, int); /* (byte, value) */
 int GetLocalPlayerId(void);
 
 /* LINK_BYTE_PLAYER */
-u8 IsPlayerWarping(int);    /* (player) the destination, 0 for none */
-void WarpPlayer(int, int);  /* (player, destination) */
-void ClearPlayerWarp(int);  /* (player) */
-u8 IsPlayerReady(int);      /* (player) */
+u8 IsPlayerWarping(int);   /* (player) the destination, 0 for none */
+void WarpPlayer(int, int); /* (player, destination) */
+void ClearPlayerWarp(int); /* (player) */
+u8 IsPlayerReady(int);     /* (player) */
 void SetLocalPlayerReady(void);
 void ClearLocalPlayerReady(void);
 
@@ -88,7 +88,7 @@ u8 GetParentCourseIndex(void);
 void SetParentCourseIndex(u32); /* (course) */
 
 /* LINK_BYTE_SESSION */
-u8 IsPlayerInSession(int);       /* (player) */
+u8 IsPlayerInSession(int); /* (player) */
 u8 GetSessionPlayerMask(void);
 void SetSessionPlayerMask(u32);  /* (mask) */
 u8 IsPlayerReadyForRematch(int); /* (player) */

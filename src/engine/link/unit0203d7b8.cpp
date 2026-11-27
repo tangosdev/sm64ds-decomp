@@ -2708,10 +2708,12 @@ void func_0203ea5c(void) {
         own = &data_020a1154[data_020a0f10];
         for (verIdx = 0, verRec = data_020a1154; verIdx < 4; verIdx++, verRec++) {
             if (verRec->flags & 0x8000) {
-                if (verRec->settings[LINK_BYTE_SYNC_POSITION] != own->settings[LINK_BYTE_SYNC_POSITION]) {
+                if (verRec->settings[LINK_BYTE_SYNC_POSITION] !=
+                    own->settings[LINK_BYTE_SYNC_POSITION]) {
                     gLinkStatusFlags |= 8;
                     break;
-                } else if (verRec->settings[LINK_BYTE_SYNC_WINGS] != own->settings[LINK_BYTE_SYNC_WINGS]) {
+                } else if (verRec->settings[LINK_BYTE_SYNC_WINGS] !=
+                           own->settings[LINK_BYTE_SYNC_WINGS]) {
                     /* LINK_BYTE_SYNC_WINGS is LINK_BYTE_SYNC_POSITION on the cartridge
                        (LinkSettings.h), so this never fires. */
                     gLinkStatusFlags |= 0x10;
