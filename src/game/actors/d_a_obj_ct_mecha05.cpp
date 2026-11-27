@@ -40,24 +40,13 @@ enum daObjCtMecha05_c_AssetId {
 
 /* File-scope objects at the end of this file construct the two resource
  * handles (model file 0x5c2, collision file 0x5c3). mwcc emits
- * __sinit_d_a_obj_ct_mecha05.cpp from those definitions. The wrapper names
- * are local; the handle constructors and destructors are the ROM
- * resource-family functions, aliased in the manifest. The definitions
+ * __sinit_d_a_obj_ct_mecha05.cpp from those definitions. The definitions
  * carry the TU's TTC_MovingBar_* names the code already uses; the retired
  * shard's data_ov065_* labels for the same addresses are dropped from
  * symbols.txt, and their stale decl_common.h lines with them (S42). */
-struct Mecha05ModelFile : SharedFilePtr {
-    Mecha05ModelFile(u32 fileID);
-    ~Mecha05ModelFile();
-};
 
-struct Mecha05CollisionFilePtr : SharedFilePtr {
-    Mecha05CollisionFilePtr(u32 fileID);
-    ~Mecha05CollisionFilePtr();
-};
-
-extern Mecha05ModelFile TTC_MovingBar_ModelFile;
-extern Mecha05CollisionFilePtr TTC_MovingBar_ClsnFile;
+extern ModelFile TTC_MovingBar_ModelFile;
+extern ClsnFile TTC_MovingBar_ClsnFile;
 
 extern u8 data_0209f2c0;
 extern const s16 sTTCMovingBarDelays[4] = {
@@ -287,5 +276,5 @@ void daObjCtMecha05_c::UpdateShadow() {
  * Definition order is the retail initializer construction order. These
  * carry the TU's TTC_MovingBar_* names the code already uses; the retired
  * shard's data_ov065_* labels for the same addresses are dropped. */
-Mecha05ModelFile TTC_MovingBar_ModelFile(ASSET_CT_MECHA_OBJ05_BMD);
-Mecha05CollisionFilePtr TTC_MovingBar_ClsnFile(ASSET_CT_MECHA_OBJ05_KCL);
+ModelFile TTC_MovingBar_ModelFile(ASSET_CT_MECHA_OBJ05_BMD);
+ClsnFile TTC_MovingBar_ClsnFile(ASSET_CT_MECHA_OBJ05_KCL);

@@ -37,16 +37,9 @@ enum daObjC1Peach_c_AssetId {
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_cp.h"
 
-/* The cartridge's ctor/dtor imports are the functions the wrapper's aliases
- * name. */
-struct C1PeachModelFilePtr : SharedFilePtr {
-    C1PeachModelFilePtr(u32 fileID);
-    ~C1PeachModelFilePtr();
-};
-
 extern "C" {
 /* Defined at the end of this file so its constructor does not enter .text. */
-extern C1PeachModelFilePtr gC1PeachModelFile;
+extern ModelFile gC1PeachModelFile;
 }
 
 /* Reconstructed source-style name. SM64DS proves daObjC1Peach_c through
@@ -110,7 +103,7 @@ void daObjC1Peach_c::UpdateModelTransform()
 /* The ROM's initializer constructs the model handle with file ID 1454 and
  * registers a destructor node for it. mwcc emits
  * __sinit_d_a_obj_c1_peach.cpp from this definition. */
-C1PeachModelFilePtr gC1PeachModelFile(ASSET_C1_PEACH_BMD);
+ModelFile gC1PeachModelFile(ASSET_C1_PEACH_BMD);
 
 extern "C" SpawnInfo<daObjC1Peach_c> g_profile_C1_PEACH = {
     daObjC1Peach_c_classInit, 38, 325, 0x00000000, 0x00000000, 0x00001000, 0x00000000, 0x00000000};

@@ -50,16 +50,8 @@ enum d_a_obj_clock_huriko_AssetId { ASSET_C2_HURIKO_BMD = 0x05b3 };
 #include "Sound.h"
 #include "math/MtxStack.h"
 
-/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile. The manifest aliases those undefined members onto the ROM
- * symbols. */
-struct ClockHurikoModelFilePtr : SharedFilePtr {
-    ClockHurikoModelFilePtr(u32 fileID);
-    ~ClockHurikoModelFilePtr();
-};
-
 extern signed char gNextSublevel;
-extern ClockHurikoModelFilePtr data_ov013_02112280;
+extern ModelFile data_ov013_02112280;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -154,7 +146,7 @@ s32 daObjClockHuriko_c::CleanupResources() {
 
 /* File-scope object: the pendulum model's SharedFilePtr, the one
  * construction __sinit_d_a_obj_clock_huriko.cpp performs. */
-ClockHurikoModelFilePtr data_ov013_02112280(ASSET_C2_HURIKO_BMD);
+ModelFile data_ov013_02112280(ASSET_C2_HURIKO_BMD);
 
 extern "C" SpawnInfo<daObjClockHuriko_c> g_profile_CLOCK_HURIKO = {daObjClockHuriko_c_classInit,
                                                                    294,

@@ -132,7 +132,8 @@ void daIDonketu_c::UpdateRunState() {
  * D0 adds the inherited inline operator delete. */
 
 /* The Chill Bully's model and animation handles, in the sinit call order the
- * data_ov027_021138f4 file table repeats. */
+ * data_ov027_021138f4 file table repeats. The code reaches them through that
+ * resource block. */
 ModelFile gIceDonketuModelFile(ASSET_ICE_DONKETU_BMD);
 AnimFile gIceDonketuDeadAnimationFile(ASSET_ICE_DONKETU_DEAD_BCA);
 AnimFile gIceDonketuHitAnimationFile(ASSET_ICE_DONKETU_HIT_BCA);

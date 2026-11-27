@@ -19,22 +19,8 @@ enum d_a_mc_flag_AssetId { ASSET_MC_FLAG_BMD = 0x068d, ASSET_MC_FLAG_WAIT_BCA = 
 #include "math/MtxStack.h"
 #include "SpawnInfo.h"
 
-/* The model handle constructs through ModelFile::ModelFile and registers
-   ModelFile::~ModelFile; the animation handle constructs through
-   AnimFile::AnimFile and registers AnimFile::~AnimFile.
-   The manifest aliases these. */
-struct McFlagModelFileHandle : SharedFilePtr {
-    McFlagModelFileHandle(u32 fileID);
-    ~McFlagModelFileHandle();
-};
-
-struct McFlagAnimResFileHandle : SharedFilePtr {
-    McFlagAnimResFileHandle(u32 fileID);
-    ~McFlagAnimResFileHandle();
-};
-
-extern McFlagModelFileHandle data_ov009_02113eb8;
-extern McFlagAnimResFileHandle data_ov009_02113eb0;
+extern ModelFile data_ov009_02113eb8;
+extern AnimFile data_ov009_02113eb0;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -76,9 +62,8 @@ s32 daMcFlag_c::CleanupResources() {
     return 1;
 }
 
-
-McFlagModelFileHandle data_ov009_02113eb8(ASSET_MC_FLAG_BMD);
-McFlagAnimResFileHandle data_ov009_02113eb0(ASSET_MC_FLAG_WAIT_BCA);
+ModelFile data_ov009_02113eb8(ASSET_MC_FLAG_BMD);
+AnimFile data_ov009_02113eb0(ASSET_MC_FLAG_WAIT_BCA);
 
 extern "C" {
 u32 data_ov009_02113ed8[2];

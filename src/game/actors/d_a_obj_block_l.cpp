@@ -41,19 +41,6 @@ struct BigBrickBlockAssets {
 /* POD spelling of Vector3's 0x0c bytes: with a user-declared constructor on
    Vector3, copy-init lowers memberwise; the ROM copy is the block move, so the
    local copy in Render is a VecFx32. */
-/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
- * ModelFile::~ModelFile. Collision handles construct through ClsnFile::ClsnFile and
- * destroy through ClsnFile::~ClsnFile. The manifest aliases those
- * undefined members onto the ROM symbols. */
-struct BlockModelFile : SharedFilePtr {
-    BlockModelFile(u32 fileID);
-    ~BlockModelFile();
-};
-
-struct daObjBlockLClsnFile : SharedFilePtr {
-    daObjBlockLClsnFile(u32 fileID);
-    ~daObjBlockLClsnFile();
-};
 
 extern BigBrickBlockAssets data_ov002_02108ab0[];
 extern VecFx32 data_ov002_021089e0;
@@ -470,9 +457,9 @@ daObjBlockL_c *daObjBlockL_c_classInit_BLOCK_L() {
 
 /* Retail initializer order. The handles themselves land in address order
  * because their names sort that way; these definitions are the call order. */
-extern "C" BlockModelFile data_ov002_0210dcc0(1108);
-extern "C" daObjBlockLClsnFile data_ov002_0210dcb8(1109);
-extern "C" BlockModelFile data_ov002_0210dce0(1110);
-extern "C" daObjBlockLClsnFile data_ov002_0210dcc8(1111);
-extern "C" BlockModelFile data_ov002_0210dcd0(1425);
-extern "C" daObjBlockLClsnFile data_ov002_0210dcd8(1426);
+extern "C" ModelFile data_ov002_0210dcc0(1108);
+extern "C" ClsnFile data_ov002_0210dcb8(1109);
+extern "C" ModelFile data_ov002_0210dce0(1110);
+extern "C" ClsnFile data_ov002_0210dcc8(1111);
+extern "C" ModelFile data_ov002_0210dcd0(1425);
+extern "C" ClsnFile data_ov002_0210dcd8(1426);

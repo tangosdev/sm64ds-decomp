@@ -56,17 +56,18 @@ enum daC_Jugem_c_AssetId {
 /* File-scope objects at the end of this file construct the three resource
  * handles (model file 0x2d7, animation file 0x2d8, texture-sequence file
  * 0x2d9), fill the eleven state pairs and build the two carry-offset
- * vectors. mwcc emits __sinit_d_a_c_jugem.cpp from those definitions. JugemVec3's plain
- * overload builds the first vector with ordinary stores; the (int, int,
- * long) overload builds the second through a volatile lvalue, exactly as
- * retail. Both share the one declared-not-defined destructor, aliased to
- * the ROM's canonical ~Vector3. Plain `Vector3(x, y, z)` globals were
- * measured (#821): the first reproduces, but the second hoists its zero x
- * ahead of the address load and __sinit stops matching, so JugemVec3 stays
- * until the second vector's real shape is known. Also measured and ruled out
- * for the second vector: copy-initialisation from a Vector3 temporary,
- * const/static, every literal spelling of the arguments, by-reference, short
- * and long long ctor parameters, a member Set() from the ctor body, and
+ * vectors. mwcc emits __sinit_d_a_c_jugem.cpp from those definitions.
+ * JugemVec3's plain overload builds the first vector with ordinary stores;
+ * the (int, int, long) overload builds the second through a volatile
+ * lvalue, exactly as retail. Both share the one declared-not-defined
+ * destructor, aliased to the ROM's canonical ~Vector3. Plain
+ * `Vector3(x, y, z)` globals were measured (#821): the first reproduces,
+ * but the second hoists its zero x ahead of the address load and __sinit
+ * stops matching, so JugemVec3 stays until the second vector's real shape
+ * is known. Also measured and ruled out for the second vector:
+ * copy-initialisation from a Vector3 temporary, const/static, every literal
+ * spelling of the arguments, by-reference, short and long long ctor
+ * parameters, a member Set() from the ctor body, and
  * scheduling/peephole/optimisation-level pragmas at end of file. */
 
 struct JugemVec3 {

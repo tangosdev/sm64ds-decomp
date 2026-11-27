@@ -85,11 +85,7 @@ u32 daKrpaFrameController::NextFrame() {
     return this->frames[this->cursor];
 }
 
-struct KrpaModelFilePtr : SharedFilePtr {
-    KrpaModelFilePtr(u32 fileID);
-    ~KrpaModelFilePtr();
-};
-extern KrpaModelFilePtr gKeronpaModelFile;
+extern ModelFile gKeronpaModelFile;
 
 int daKrpa_c::InitResources() {
     Vector3 offset;
@@ -453,7 +449,7 @@ int daKrpa_c::OnYoshiTryEat() {
 /* Retail initializer order is the model handle (file 0x351) with its
  * destructor registration, then the eight {init,behavior} state-method
  * records copied in ascending table slot. */
-KrpaModelFilePtr gKeronpaModelFile(ASSET_KERONPA_BMD);
+ModelFile gKeronpaModelFile(ASSET_KERONPA_BMD);
 daKrpaState data_ov070_021236ac[4] = {
     {(daKrpaStateMethod)&daKrpa_c::EnterIdle, (daKrpaStateMethod)&daKrpa_c::ExecuteIdle},
     {(daKrpaStateMethod)&daKrpa_c::EnterSpit, (daKrpaStateMethod)&daKrpa_c::ExecuteSpit},

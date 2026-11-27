@@ -48,18 +48,6 @@ enum {
     CLOCK_SETTING_STOPPED = 3 /* Behavior skips the belt texture, sound and callback */
 };
 
-/* Resource handles constructed by this TU's static initializer. The
- * constructor and destructor bodies stay out of line; mwcc registers them. */
-struct Mecha04ModelFilePtr : SharedFilePtr {
-    Mecha04ModelFilePtr(u32 fileID);
-    ~Mecha04ModelFilePtr();
-};
-
-struct Mecha04ClsnFilePtr : SharedFilePtr {
-    Mecha04ClsnFilePtr(u32 fileID);
-    ~Mecha04ClsnFilePtr();
-};
-
 /* One 2-row {model, collision, clps} table indexed by mVariant; the three
  * data_ov065_* symbols name row 0's fields, so each column's decl strides by
  * the row size. */
@@ -270,7 +258,7 @@ void daObjCtMecha04_c::UpdateShadow() {
  * 1470) then both collision handles (1473 and 1471), registering a
  * destructor node for each. mwcc emits __sinit_d_a_obj_ct_mecha04.cpp from
  * these definitions. */
-Mecha04ModelFilePtr gCtMechaObj04sModelFile(ASSET_CT_MECHA_OBJ04S_BMD);
-Mecha04ModelFilePtr gCtMechaObj04lModelFile(ASSET_CT_MECHA_OBJ04L_BMD);
-Mecha04ClsnFilePtr gCtMechaObj04sCollisionFile(ASSET_CT_MECHA_OBJ04S_KCL);
-Mecha04ClsnFilePtr gCtMechaObj04lCollisionFile(ASSET_CT_MECHA_OBJ04L_KCL);
+ModelFile gCtMechaObj04sModelFile(ASSET_CT_MECHA_OBJ04S_BMD);
+ModelFile gCtMechaObj04lModelFile(ASSET_CT_MECHA_OBJ04L_BMD);
+ClsnFile gCtMechaObj04sCollisionFile(ASSET_CT_MECHA_OBJ04S_KCL);
+ClsnFile gCtMechaObj04lCollisionFile(ASSET_CT_MECHA_OBJ04L_KCL);

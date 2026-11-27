@@ -63,28 +63,6 @@ struct KaitendaiResources {
 
 typedef char KaitendaiResources_size_must_be_0x0c[sizeof(KaitendaiResources) == 0x0c ? 1 : -1];
 
-/* File-scope objects at the end of this file construct the four resource
- * handles (model files 0x5c4/0x5c6, collision files 0x5c5/0x5c7). mwcc
- * emits __sinit_d_a_obj_ct_kaitendai.cpp from those definitions. The wrapper
- * names are local; the handle constructors and destructors are the ROM
- * resource-family functions, aliased in the manifest. Nothing in this TU
- * names the handles directly; the KaitendaiResources rows above point at
- * them. */
-struct KaitendaiModelFile : SharedFilePtr {
-    KaitendaiModelFile(u32 fileID);
-    ~KaitendaiModelFile();
-};
-
-struct KaitendaiCollisionFilePtr : SharedFilePtr {
-    KaitendaiCollisionFilePtr(u32 fileID);
-    ~KaitendaiCollisionFilePtr();
-};
-
-/* .bss proves each handle is one 0x8 word pair (ov065 0x0211d92c..0x0211d94c). */
-typedef char KaitendaiModelFile_size_must_be_0x08[sizeof(KaitendaiModelFile) == 0x08 ? 1 : -1];
-typedef char
-    KaitendaiCollisionFilePtr_size_must_be_0x08[sizeof(KaitendaiCollisionFilePtr) == 0x08 ? 1 : -1];
-
 extern u8 data_0209f2c0; /* clock setting: 0 slow, 1 fast, 2 random, 3 stopped */
 s16 sTTCCogNormalSpeeds[2] = {
     200,
@@ -195,9 +173,12 @@ void daObjCtKaitendai_c::UpdateShadow() {
     DropShadowRadHeight(mShadowModel, mShadowMat, 0x258000, 0xc8000, 15);
 }
 
-/* Static-init globals (was the handwritten __sinit_ov065_0211c8fc shard).
- * Definition order is the retail initializer's construction order. */
-KaitendaiModelFile gCtMechaObj06ModelFile(ASSET_CT_MECHA_OBJ06_BMD);
-KaitendaiModelFile gCtMechaObj07ModelFile(ASSET_CT_MECHA_OBJ07_BMD);
-KaitendaiCollisionFilePtr gCtMechaObj06CollisionFile(ASSET_CT_MECHA_OBJ06_KCL);
-KaitendaiCollisionFilePtr gCtMechaObj07CollisionFile(ASSET_CT_MECHA_OBJ07_KCL);
+/* The four resource handles (model files 0x5c4/0x5c6, collision files
+ * 0x5c5/0x5c7), in the retail initializer's construction order: mwcc emits
+ * __sinit_d_a_obj_ct_kaitendai.cpp from these definitions. Nothing in this
+ * TU names them directly; the KaitendaiResources rows point at them. .bss
+ * holds each as one 0x8 word pair (ov065 0x0211d92c..0x0211d94c). */
+ModelFile gCtMechaObj06ModelFile(ASSET_CT_MECHA_OBJ06_BMD);
+ModelFile gCtMechaObj07ModelFile(ASSET_CT_MECHA_OBJ07_BMD);
+ClsnFile gCtMechaObj06CollisionFile(ASSET_CT_MECHA_OBJ06_KCL);
+ClsnFile gCtMechaObj07CollisionFile(ASSET_CT_MECHA_OBJ07_KCL);

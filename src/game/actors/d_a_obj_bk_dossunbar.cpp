@@ -35,18 +35,6 @@
 #include "Particle__System.h"
 #include "ParticleIds.h"
 
-/* Local names for the existing eight-byte model/collision resource families.
- * Their constructors and destructors remain ordinary cross-TU C++ imports. */
-struct DossunbarModelFile : SharedFilePtr {
-    DossunbarModelFile(u32 fileID);
-    ~DossunbarModelFile();
-};
-
-struct DossunbarCollisionFile : SharedFilePtr {
-    DossunbarCollisionFile(u32 fileID);
-    ~DossunbarCollisionFile();
-};
-
 #include "ResourceDescriptor.h"
 
 typedef void (daObjBk_Dossunbar_c::*PMF)();
@@ -287,10 +275,10 @@ void daObjBk_Dossunbar_c::Kill() {
 
 /* Preserve the small/model, small/collision, large/model, large/collision
  * construction order before initializing the two dispatch tables. */
-DossunbarModelFile gBkDossunbarSModelFile(0x058d);
-DossunbarCollisionFile gBkDossunbarSCollisionFile(0x058e);
-DossunbarModelFile gBkDossunbarLModelFile(0x058b);
-DossunbarCollisionFile gBkDossunbarLCollisionFile(0x058c);
+ModelFile gBkDossunbarSModelFile(0x058d);
+ClsnFile gBkDossunbarSCollisionFile(0x058e);
+ModelFile gBkDossunbarLModelFile(0x058b);
+ClsnFile gBkDossunbarLCollisionFile(0x058c);
 extern struct CLPS_Block data_ov015_021135b4;
 extern struct CLPS_Block data_ov015_02113634;
 

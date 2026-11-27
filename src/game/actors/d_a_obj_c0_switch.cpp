@@ -42,24 +42,11 @@ enum d_a_obj_c0_switch_AssetId { ASSET_C0_SWITCH_BMD = 0x05a9, ASSET_C0_SWITCH_K
 #include "SharedFilePtr.h"
 #include "SaveBlock.h"
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct C0SwitchModelFilePtr : SharedFilePtr {
-    C0SwitchModelFilePtr(u32 fileID);
-    ~C0SwitchModelFilePtr();
-};
-
-struct C0SwitchCollisionFilePtr : SharedFilePtr {
-    C0SwitchCollisionFilePtr(u32 fileID);
-    ~C0SwitchCollisionFilePtr();
-};
-
 /* This TU's two file handles: the switch model and its collision file.
  * InitResources loads both, CleanupResources releases them. Defined at the
  * end of this file so the constructors do not enter .text. */
-extern C0SwitchModelFilePtr data_ov012_021124a8;
-extern C0SwitchCollisionFilePtr data_ov012_021124a0;
+extern ModelFile data_ov012_021124a8;
+extern ClsnFile data_ov012_021124a0;
 
 /* Stage collision properties owned by d_s_map_ov012.c. */
 extern CLPS_Block data_ov012_02111cd0;
@@ -174,5 +161,5 @@ void daObjC0_Switch_c::OnGroundPounded(dActor_c &other) {
 /* the vtable and tail-calls ~dBgActor_c, with no member teardown.              */
 /* -------------------------------------------------------------------------- */
 
-C0SwitchModelFilePtr data_ov012_021124a8(ASSET_C0_SWITCH_BMD);
-C0SwitchCollisionFilePtr data_ov012_021124a0(ASSET_C0_SWITCH_KCL);
+ModelFile data_ov012_021124a8(ASSET_C0_SWITCH_BMD);
+ClsnFile data_ov012_021124a0(ASSET_C0_SWITCH_KCL);

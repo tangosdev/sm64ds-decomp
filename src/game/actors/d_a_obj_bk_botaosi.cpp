@@ -55,20 +55,8 @@ enum daObjBk_Botaosi_c_AssetId { ASSET_BK_BOTAOSI_BMD = 0x0589, ASSET_BK_BOTAOSI
 #include "math/MtxStack.h"
 #include "nitro/fx/fx_trig.h"
 
-/* The constructors and destructors are the ROM resource-family veneers,
- * aliased in the manifest. */
-struct BkBotaosiModelFilePtr : SharedFilePtr {
-    BkBotaosiModelFilePtr(u32 fileID);
-    ~BkBotaosiModelFilePtr();
-};
-
-struct BkBotaosiCollisionFilePtr : SharedFilePtr {
-    BkBotaosiCollisionFilePtr(u32 fileID);
-    ~BkBotaosiCollisionFilePtr();
-};
-
-extern BkBotaosiCollisionFilePtr data_ov015_02114974; /* collision KCL */
-extern BkBotaosiModelFilePtr data_ov015_0211497c;     /* plank BMD */
+extern ClsnFile data_ov015_02114974;  /* collision KCL */
+extern ModelFile data_ov015_0211497c; /* plank BMD */
 extern struct CLPS_Block data_ov015_02113574;
 
 extern s8 gCurrentSublevel;
@@ -356,5 +344,5 @@ daObjBk_Botaosi_c *daObjBk_Botaosi_c_classInit() {
 /* The ROM's initializer constructs the model handle with file ID 1417 and
  * the collision handle with file ID 1418, registering a destructor node for
  * each. mwcc emits __sinit_d_a_obj_bk_botaosi.cpp from these definitions. */
-BkBotaosiModelFilePtr data_ov015_0211497c(ASSET_BK_BOTAOSI_BMD);
-BkBotaosiCollisionFilePtr data_ov015_02114974(ASSET_BK_BOTAOSI_KCL);
+ModelFile data_ov015_0211497c(ASSET_BK_BOTAOSI_BMD);
+ClsnFile data_ov015_02114974(ASSET_BK_BOTAOSI_KCL);

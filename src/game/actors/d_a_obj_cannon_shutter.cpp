@@ -42,22 +42,8 @@ extern unsigned char gCurrentStarId;
 
 extern CLPS_Block data_ov002_0210d7f4;
 
-/* The model handle constructs through ModelFile::ModelFile and destroys through
- * ModelFile::~ModelFile; the mesh-collision handle constructs through ClsnFile::ClsnFile
- * and destroys through ClsnFile::~ClsnFile. The manifest aliases
- * those undefined members onto the ROM symbols. */
-struct CannonShutterModelFilePtr : SharedFilePtr {
-    CannonShutterModelFilePtr(u32 fileID);
-    ~CannonShutterModelFilePtr();
-};
-
-struct CannonShutterClsnFilePtr : SharedFilePtr {
-    CannonShutterClsnFilePtr(u32 fileID);
-    ~CannonShutterClsnFilePtr();
-};
-
-extern CannonShutterModelFilePtr data_ov002_0210e12c; /* the BMD model */
-extern CannonShutterClsnFilePtr data_ov002_0210e124;  /* the KCL collision mesh */
+extern ModelFile data_ov002_0210e12c; /* the BMD model */
+extern ClsnFile data_ov002_0210e124;  /* the KCL collision mesh */
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -204,5 +190,5 @@ void daObjCannonShutter_c::StartOpening() {
 
 /* Order is the retail initializer: model 0x45f, mesh-collision 0x460. mwcc
  * emits __sinit_d_a_obj_cannon_shutter.cpp from these two definitions. */
-CannonShutterModelFilePtr data_ov002_0210e12c(ASSET_CANNON_SHUTTER_BMD);
-CannonShutterClsnFilePtr data_ov002_0210e124(ASSET_CANNON_SHUTTER_KCL);
+ModelFile data_ov002_0210e12c(ASSET_CANNON_SHUTTER_BMD);
+ClsnFile data_ov002_0210e124(ASSET_CANNON_SHUTTER_KCL);

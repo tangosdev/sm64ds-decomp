@@ -557,24 +557,24 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@643",
+      "from": "@641",
       "to": "data_ov079_0212831c",
-      "evidence": "compiler temp mapped to 0x0212831c by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @666 to @597 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @600 to @602 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @602 to @606 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @606 to @643 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x0212831c by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @666 to @597 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @600 to @602 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @602 to @606 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @606 to @643 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object). Re-keyed from @643 to @641 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
+    },
+    {
+      "from": "@642",
+      "to": "data_ov079_02128328",
+      "evidence": "compiler temp mapped to 0x02128328 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @667 to @598 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @601 to @603 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @603 to @607 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @607 to @644 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object). Re-keyed from @644 to @642 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
+    },
+    {
+      "from": "@643",
+      "to": "data_ov079_02128334",
+      "evidence": "compiler temp mapped to 0x02128334 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @668 to @599 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @602 to @604 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @604 to @608 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @608 to @645 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object). Re-keyed from @645 to @643 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@644",
-      "to": "data_ov079_02128328",
-      "evidence": "compiler temp mapped to 0x02128328 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @667 to @598 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @601 to @603 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @603 to @607 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @607 to @644 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object)."
-    },
-    {
-      "from": "@645",
-      "to": "data_ov079_02128334",
-      "evidence": "compiler temp mapped to 0x02128334 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @668 to @599 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @602 to @604 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @604 to @608 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @608 to @645 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object)."
-    },
-    {
-      "from": "@646",
       "to": "data_ov079_02128310",
-      "evidence": "compiler temp mapped to 0x02128310 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @669 to @600 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @603 to @605 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @605 to @609 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @609 to @646 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object)."
+      "evidence": "compiler temp mapped to 0x02128310 by the retail initializer relocation at the same pool offset; no bytes or relocations change | compiler temp; including Particle__System.h in place of the local stub moves the per-TU @NNN uniquifier, so mwcc emits it under this name now Re-keyed from @669 to @600 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @603 to @605 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @605 to @609 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @609 to @646 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object). Re-keyed from @646 to @644 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     }
   ],
   "symbol_binding_rewrites": [
@@ -613,36 +613,6 @@
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
-    }
-  ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN20BkKillerdaiModelFileC1Ej",
-      "canonical_symbol": "_ZN9ModelFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call/load destination at this exact relocation site"
-    },
-    {
-      "symbol": "_ZN24BkKillerdaiCollisionFileC1Ej",
-      "canonical_symbol": "_ZN8ClsnFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b4c",
-      "evidence": "retail initializer call/load destination at this exact relocation site"
-    },
-    {
-      "symbol": "_ZN20BkKillerdaiModelFileD1Ev",
-      "canonical_symbol": "_ZN9ModelFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail initializer call/load destination at this exact relocation site"
-    },
-    {
-      "symbol": "_ZN24BkKillerdaiCollisionFileD1Ev",
-      "canonical_symbol": "_ZN8ClsnFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b34",
-      "evidence": "retail initializer call/load destination at this exact relocation site"
     }
   ],
   "relocations": [

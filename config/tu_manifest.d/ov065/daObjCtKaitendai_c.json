@@ -539,56 +539,26 @@
       "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail; the other .ctor words belong to the remaining shards"
     }
   ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN18KaitendaiModelFileC1Ej",
-      "canonical_symbol": "_ZN9ModelFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN18KaitendaiModelFileD1Ev",
-      "canonical_symbol": "_ZN9ModelFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
-    },
-    {
-      "symbol": "_ZN25KaitendaiCollisionFilePtrC1Ej",
-      "canonical_symbol": "_ZN8ClsnFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b4c",
-      "evidence": "retail initializer call destination and the collision wrapper constructor exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN25KaitendaiCollisionFilePtrD1Ev",
-      "canonical_symbol": "_ZN8ClsnFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b34",
-      "evidence": "retail destructor registration destination and the collision wrapper destructor exact ABS32 relocation"
-    }
-  ],
   "defined_symbol_renames": [
     {
-      "from": "@444",
+      "from": "@442",
       "to": "@878",
-      "evidence": "mwcc numbers this registration node @455 per TU and the fleet already defines a global @455, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @445 to @408 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @408 to @407 pointer local folded (#821 r82) (measured from the compiled object). Re-keyed to @409 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @408 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @408 to @444 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object)."
+      "evidence": "mwcc numbers this registration node @455 per TU and the fleet already defines a global @455, so the scratch link would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @445 to @408 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @408 to @407 pointer local folded (#821 r82) (measured from the compiled object). Re-keyed to @409 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @408 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @408 to @444 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object). Re-keyed from @444 to @442 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
+    },
+    {
+      "from": "@443",
+      "to": "@867",
+      "evidence": "mwcc numbers this registration node @456 per TU and the in-flight ov060 kpa3bg fork branch already claims @456, so the batch merge would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @446 to @409 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @409 to @408 pointer local folded (#821 r82) (measured from the compiled object). Re-keyed to @410 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @409 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @409 to @445 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object). Re-keyed from @445 to @443 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
+    },
+    {
+      "from": "@444",
+      "to": "@863",
+      "evidence": "mwcc numbers this registration node @457 per TU and the in-flight ov060 kpa3bg fork branch already claims @457, so the batch merge would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @447 to @410 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @410 to @409 pointer local folded (#821 r82) (measured from the compiled object). Re-keyed to @411 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @410 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @410 to @446 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object). Re-keyed from @446 to @444 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
       "from": "@445",
-      "to": "@867",
-      "evidence": "mwcc numbers this registration node @456 per TU and the in-flight ov060 kpa3bg fork branch already claims @456, so the batch merge would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @446 to @409 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @409 to @408 pointer local folded (#821 r82) (measured from the compiled object). Re-keyed to @410 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @409 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @409 to @445 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object)."
-    },
-    {
-      "from": "@446",
-      "to": "@863",
-      "evidence": "mwcc numbers this registration node @457 per TU and the in-flight ov060 kpa3bg fork branch already claims @457, so the batch merge would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @447 to @410 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @410 to @409 pointer local folded (#821 r82) (measured from the compiled object). Re-keyed to @411 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @410 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @410 to @446 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object)."
-    },
-    {
-      "from": "@447",
       "to": "@818",
-      "evidence": "mwcc numbers this registration node @458 per TU and the in-flight ov060 kpa3bg fork branch already claims @458, so the batch merge would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @448 to @411 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @411 to @410 pointer local folded (#821 r82) (measured from the compiled object). Re-keyed to @412 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @411 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @411 to @447 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object)."
+      "evidence": "mwcc numbers this registration node @458 per TU and the in-flight ov060 kpa3bg fork branch already claims @458, so the batch merge would multiply-define it | compiler temp; batch 5 of the Fix12 rename deletes this TU's named-parameter local externs ahead of it, lowering the per-TU @NNN uniquifier, so mwcc emits it under this name now (notes/mwccarm-codegen.md 6az) Re-keyed from @448 to @411 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @411 to @410 pointer local folded (#821 r82) (measured from the compiled object). Re-keyed to @412 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed to @411 when #5609's Matrix4x3 union composed with main (each side's shift added, measured with tubuild verify). Re-keyed from @411 to @447 r110: the file's local copies of math/CalcLib.h and math/MtxStack.h declarations gave way to the headers, which renumbers its @NNN literals. (measured from the compiled object). Re-keyed from @447 to @445 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     }
   ],
   "symbol_binding_rewrites": [

@@ -61,24 +61,12 @@ struct KabeFiles {
 
 /* File-scope objects at the end of this file construct the four resource
  * handles (model files 0x593/0x595, collision files 0x594/0x596). mwcc
- * emits __sinit_d_a_obj_bk_kabe.cpp from those definitions. The wrapper
- * names are local; the handle constructors and destructors are the ROM
- * resource-family functions, aliased in the manifest. Nothing in this TU
- * names the handles directly; the KabeFiles rows above point at them. */
-struct BkKabeModelFile : SharedFilePtr {
-    BkKabeModelFile(u32 fileID);
-    ~BkKabeModelFile();
-};
-
-struct BkKabeCollisionFilePtr : SharedFilePtr {
-    BkKabeCollisionFilePtr(u32 fileID);
-    ~BkKabeCollisionFilePtr();
-};
-
-extern BkKabeModelFile gBkKabe00ModelFile;
-extern BkKabeCollisionFilePtr gBkKabe00CollisionFile;
-extern BkKabeModelFile gBkKabe01ModelFile;
-extern BkKabeCollisionFilePtr gBkKabe01CollisionFile;
+ * emits __sinit_d_a_obj_bk_kabe.cpp from those definitions. Nothing in this
+ * TU names the handles directly; the KabeFiles rows above point at them. */
+extern ModelFile gBkKabe00ModelFile;
+extern ClsnFile gBkKabe00CollisionFile;
+extern ModelFile gBkKabe01ModelFile;
+extern ClsnFile gBkKabe01CollisionFile;
 extern char data_ov009_021136d4;
 extern char data_ov009_02113534;
 KabeFiles data_ov079_02128058[2] = {
@@ -186,10 +174,10 @@ daObjBk_Kabe_c *daObjBk_Kabe_c_classInit_BK_KABE00() {
 
 /* Static-init globals (was the handwritten __sinit_ov079_02127acc shard).
  * Definition order is the retail initializer's construction order. */
-BkKabeModelFile gBkKabe00ModelFile(ASSET_BK_KABE00_BMD);
-BkKabeCollisionFilePtr gBkKabe00CollisionFile(ASSET_BK_KABE00_KCL);
-BkKabeModelFile gBkKabe01ModelFile(ASSET_BK_KABE01_BMD);
-BkKabeCollisionFilePtr gBkKabe01CollisionFile(ASSET_BK_KABE01_KCL);
+ModelFile gBkKabe00ModelFile(ASSET_BK_KABE00_BMD);
+ClsnFile gBkKabe00CollisionFile(ASSET_BK_KABE00_KCL);
+ModelFile gBkKabe01ModelFile(ASSET_BK_KABE01_BMD);
+ClsnFile gBkKabe01CollisionFile(ASSET_BK_KABE01_KCL);
 
 /* Bound tail of this TU's .bss. One object; interior labels stay in symbols.txt. */
 u8 data_ov079_02128390[0x10];

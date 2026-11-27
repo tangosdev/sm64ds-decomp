@@ -60,26 +60,16 @@
 #include "nitro/fx/fx_cp.h"
 #include "nitro/fx/fx_trig.h"
 
-/* The model handle constructs through ModelFile::ModelFile and the animation
- * handles through AnimFile::AnimFile. Declared here, ahead of the
- * members that read them; defined at the bottom in retail __sinit order. */
-struct MkyModelFilePtr : SharedFilePtr {
-    MkyModelFilePtr(unsigned int fileID);
-    ~MkyModelFilePtr();
-};
-struct MkyAnimFilePtr : SharedFilePtr {
-    MkyAnimFilePtr(unsigned int fileID);
-    ~MkyAnimFilePtr();
-};
-
-extern MkyAnimFilePtr gMonkeyHoldAnimationFile;
-extern MkyAnimFilePtr gMonkeyJumpStAnimationFile;
-extern MkyAnimFilePtr gMonkeyJumpEdAnimationFile;
-extern MkyAnimFilePtr gMonkeyRunAnimationFile;
-extern MkyAnimFilePtr data_ov030_02115cf0; /* wait 1 */
-extern MkyAnimFilePtr gMonkeyWait2AnimationFile;
-extern MkyAnimFilePtr gMonkeyWait3AnimationFile;
-extern MkyAnimFilePtr gMonkeyWait4AnimationFile;
+/* The animation handles, declared here ahead of the members that read
+ * them; defined at the bottom in retail __sinit order. */
+extern AnimFile gMonkeyHoldAnimationFile;
+extern AnimFile gMonkeyJumpStAnimationFile;
+extern AnimFile gMonkeyJumpEdAnimationFile;
+extern AnimFile gMonkeyRunAnimationFile;
+extern AnimFile data_ov030_02115cf0; /* wait 1 */
+extern AnimFile gMonkeyWait2AnimationFile;
+extern AnimFile gMonkeyWait3AnimationFile;
+extern AnimFile gMonkeyWait4AnimationFile;
 
 /* The carry offsets, one per hold pose: UpdateModelAndCap picks one by
  * index. The table is defined at the bottom, in retail __sinit order. */
@@ -1300,7 +1290,7 @@ void daMky_c::ChangeState(int idx) {
     this->mStateDesc = &data_ov030_02115e0c[idx];
     CallStateEnter();
 }
-extern MkyModelFilePtr data_ov030_02115d00;
+extern ModelFile data_ov030_02115d00;
 
 /* File-scope extern "C" for the six virtuals below. A block-scope extern
  * inside a daMky_c method gets C++ linkage and the reference mangles a
@@ -1448,13 +1438,7 @@ daMky_c *daMky_c_classInit_MONKEY_THIEF() {
  * Definition order is the retail __sinit order: model, ten animations,
  * the state table, then the four Vector3s. mwcc emits
  * __sinit_d_a_mky.cpp from these, including one ~Vector3 registration
- * per offset against the destructor this TU already emits.
- *
- * The model handle's ctor/dtor are ModelFile::ModelFile / ModelFile::~ModelFile.
- * Each animation handle's are AnimFile::AnimFile /
- * AnimFile::~AnimFile. Those four are not defined here. */
-typedef char MkyModelFilePtr_size_must_be_8[sizeof(MkyModelFilePtr) == 8 ? 1 : -1];
-typedef char MkyAnimFilePtr_size_must_be_8[sizeof(MkyAnimFilePtr) == 8 ? 1 : -1];
+ * per offset against the destructor this TU already emits. */
 
 enum {
     ASSET_MONKEY_BMD = 0x03aa,
@@ -1470,17 +1454,17 @@ enum {
     ASSET_MONKEY_WAIT4_BCA = 0x03b4
 };
 
-MkyModelFilePtr data_ov030_02115d00(ASSET_MONKEY_BMD);
-MkyAnimFilePtr gMonkeyHoldAnimationFile(ASSET_MONKEY_HOLD_BCA);
-MkyAnimFilePtr gMonkeyJumpStAnimationFile(ASSET_MONKEY_JUMP_ST_BCA);
-MkyAnimFilePtr gMonkeyJumpEdAnimationFile(ASSET_MONKEY_JUMP_ED_BCA);
-MkyAnimFilePtr gMonkeyRunStAnimationFile(ASSET_MONKEY_RUN_ST_BCA);
-MkyAnimFilePtr gMonkeyRunAnimationFile(ASSET_MONKEY_RUN_BCA);
-MkyAnimFilePtr gMonkeyRunEdAnimationFile(ASSET_MONKEY_RUN_ED_BCA);
-MkyAnimFilePtr data_ov030_02115cf0(ASSET_MONKEY_WAIT1_BCA);
-MkyAnimFilePtr gMonkeyWait2AnimationFile(ASSET_MONKEY_WAIT2_BCA);
-MkyAnimFilePtr gMonkeyWait3AnimationFile(ASSET_MONKEY_WAIT3_BCA);
-MkyAnimFilePtr gMonkeyWait4AnimationFile(ASSET_MONKEY_WAIT4_BCA);
+ModelFile data_ov030_02115d00(ASSET_MONKEY_BMD);
+AnimFile gMonkeyHoldAnimationFile(ASSET_MONKEY_HOLD_BCA);
+AnimFile gMonkeyJumpStAnimationFile(ASSET_MONKEY_JUMP_ST_BCA);
+AnimFile gMonkeyJumpEdAnimationFile(ASSET_MONKEY_JUMP_ED_BCA);
+AnimFile gMonkeyRunStAnimationFile(ASSET_MONKEY_RUN_ST_BCA);
+AnimFile gMonkeyRunAnimationFile(ASSET_MONKEY_RUN_BCA);
+AnimFile gMonkeyRunEdAnimationFile(ASSET_MONKEY_RUN_ED_BCA);
+AnimFile data_ov030_02115cf0(ASSET_MONKEY_WAIT1_BCA);
+AnimFile gMonkeyWait2AnimationFile(ASSET_MONKEY_WAIT2_BCA);
+AnimFile gMonkeyWait3AnimationFile(ASSET_MONKEY_WAIT3_BCA);
+AnimFile gMonkeyWait4AnimationFile(ASSET_MONKEY_WAIT4_BCA);
 
 /* Eleven {enter, update} pairs. Brace-init is what makes __sinit copy the
  * 22 pointer-to-member constants; a constructor body here scalarizes. */

@@ -42,22 +42,9 @@ struct BMD_File;
 
 struct KCL_File;
 
-/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct C0WaterModelFilePtr : SharedFilePtr {
-    C0WaterModelFilePtr(u32 fileID);
-    ~C0WaterModelFilePtr();
-};
-
-struct C0WaterCollisionFilePtr : SharedFilePtr {
-    C0WaterCollisionFilePtr(u32 fileID);
-    ~C0WaterCollisionFilePtr();
-};
-
 /* Defined at the end of this file so the constructors do not enter .text. */
-extern C0WaterModelFilePtr data_ov012_021124d0;
-extern C0WaterCollisionFilePtr data_ov012_021124c8;
+extern ModelFile data_ov012_021124d0;
+extern ClsnFile data_ov012_021124c8;
 /* Stage data owned by d_s_map_ov012.c: the water texture animation and
  * collision properties. */
 extern BTA_File data_ov012_02111c24;
@@ -136,8 +123,8 @@ int daObjC0Water_c::CleanupResources() {
 /* Source order is construction order: model file 1451, collision file 1452.
  * __sinit_d_a_obj_c0_water.cpp emits both constructions and registers the
  * destructors; the registration nodes are compiler temporaries. */
-C0WaterModelFilePtr data_ov012_021124d0(1451);
-C0WaterCollisionFilePtr data_ov012_021124c8(1452);
+ModelFile data_ov012_021124d0(1451);
+ClsnFile data_ov012_021124c8(1452);
 
 extern "C" {
 u32 data_ov012_021124f0[4];

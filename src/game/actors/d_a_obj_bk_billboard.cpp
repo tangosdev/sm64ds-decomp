@@ -22,14 +22,7 @@ enum d_a_obj_bk_billboard_AssetId { ASSET_BK_BILLBORD_BMD = 0x0588 };
 #include "SharedFilePtr.h"
 #include "math/MtxStack.h"
 
-/* The constructor and destructor are the ROM veneers, aliased in the
- * manifest. */
-struct BkBillboardModelFilePtr : SharedFilePtr {
-    BkBillboardModelFilePtr(u32 fileID);
-    ~BkBillboardModelFilePtr();
-};
-
-extern BkBillboardModelFilePtr gBkBillbordModelFile;
+extern ModelFile gBkBillbordModelFile;
 
 daObjBkBillboard_c *daObjBkBillboard_c_classInit() {
     return new daObjBkBillboard_c();
@@ -73,4 +66,4 @@ void daObjBkBillboard_c::UpdateModelMatrix() {
 /* The ROM's initializer constructs the BMD handle with file ID 1416, then
  * registers its destructor with the node that follows it in .bss. mwcc
  * emits __sinit_d_a_obj_bk_billboard.cpp from this definition. */
-BkBillboardModelFilePtr gBkBillbordModelFile(ASSET_BK_BILLBORD_BMD);
+ModelFile gBkBillbordModelFile(ASSET_BK_BILLBORD_BMD);

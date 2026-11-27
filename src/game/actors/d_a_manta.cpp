@@ -42,19 +42,6 @@ struct MantaState {
     int (daManta_c::*execute)();
 };
 
-/* Local 8-byte resource handles: the constructor stores the file ID and clears
- * numRefs/filePtr; the loaders populate the BMD/BCA payload at +4.
- * The registered destructors record file IDs; actor cleanup releases files. */
-struct MantaModelFilePtr : SharedFilePtr {
-    MantaModelFilePtr(u32 fileID);
-    ~MantaModelFilePtr();
-};
-
-struct MantaAnimationFilePtr : SharedFilePtr {
-    MantaAnimationFilePtr(u32 fileID);
-    ~MantaAnimationFilePtr();
-};
-
 enum {
     /* Runtime asset handles: data/enemy/manta/manta.bmd and manta_swim.bca. */
     MANTA_MODEL_FILE = 0x39d,
@@ -73,10 +60,10 @@ enum {
     MANTA_STAR_FLAG = 0x40
 };
 
-extern MantaModelFilePtr data_ov090_02134524;
+extern ModelFile data_ov090_02134524;
 extern SharedFilePtr gWRingModelFile;
 extern SharedFilePtr data_ov002_0210d9a8;
-extern MantaAnimationFilePtr data_ov090_0213452c;
+extern AnimFile data_ov090_0213452c;
 extern unsigned char gGameMode;
 
 extern MantaState data_ov090_0213454c;
@@ -367,8 +354,8 @@ daManta_c *daManta_c_classInit() {
 
 /* dExtSimpleModel_c, anim, then the state record. The record's pointer-to-member
  * descriptors stay anonymous. This is what emits __sinit_d_a_manta.cpp. */
-MantaModelFilePtr data_ov090_02134524(MANTA_MODEL_FILE);
-MantaAnimationFilePtr data_ov090_0213452c(MANTA_SWIM_ANIMATION_FILE);
+ModelFile data_ov090_02134524(MANTA_MODEL_FILE);
+AnimFile data_ov090_0213452c(MANTA_SWIM_ANIMATION_FILE);
 MantaState data_ov090_0213454c = {
     &daManta_c::EnterSwim,
     &daManta_c::ExecuteSwim,

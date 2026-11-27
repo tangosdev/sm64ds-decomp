@@ -70,7 +70,7 @@ extern "C" {
  * BCA, the still-model BMD, and the animated-model BMD. Cleanup Release. */
 extern SharedFilePtr gOneUpMushroomModelFile;
 extern AnimFile gButterflyFlyAnimationFile;
-extern SharedFilePtr data_ov100_02148668;
+extern ModelFile data_ov100_02148668;
 extern ModelFile gButterflyModelFile;
 extern ButterflyState data_ov100_02148628[];
 

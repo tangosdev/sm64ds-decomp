@@ -37,8 +37,8 @@
 
 struct BMD_File;
 
-extern SharedFilePtr data_ov079_02128300;
-extern SharedFilePtr data_ov079_021282f0;
+extern ModelFile data_ov079_02128300;
+extern ModelFile data_ov079_021282f0;
 
 /* local extern: arm9 C helpers with no shared header yet. */
 void func_02012694(u32 id, const Vector3 *pos);

@@ -48,23 +48,10 @@ struct Vec3;
 
 typedef void (daLinelift2_c::*StateFunc)();
 
-/* 8-byte file handles. The models use ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision files ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct Linelift2ModelFilePtr : SharedFilePtr {
-    Linelift2ModelFilePtr(u32 fileID);
-    ~Linelift2ModelFilePtr();
-};
-
-struct Linelift2CollisionFilePtr : SharedFilePtr {
-    Linelift2CollisionFilePtr(u32 fileID);
-    ~Linelift2CollisionFilePtr();
-};
-
-extern Linelift2CollisionFilePtr gKm3RiftCollisionFile;
-extern Linelift2CollisionFilePtr gKm2SusumuCollisionFile;
-extern Linelift2ModelFilePtr gKm3RiftModelFile;
-extern Linelift2ModelFilePtr gKm2SusumuModelFile;
+extern ClsnFile gKm3RiftCollisionFile;
+extern ClsnFile gKm2SusumuCollisionFile;
+extern ModelFile gKm3RiftModelFile;
+extern ModelFile gKm2SusumuModelFile;
 extern SharedFilePtr *const gLinelift2CollisionFiles[2] = {
     &gKm3RiftCollisionFile,
     &gKm2SusumuCollisionFile,
@@ -307,10 +294,10 @@ void daLinelift2_c::SetVelocityToward(const Vector3 *to, const Vector3 *from) {
  * the constructions, registers the destructors -- the registration nodes
  * are compiler temporaries -- and copies the three pointer-to-member
  * constants (compiler temporaries in .data) into the table. */
-Linelift2ModelFilePtr gKm3RiftModelFile(ASSET_KM3_RIFT_BMD);
-Linelift2ModelFilePtr gKm2SusumuModelFile(ASSET_KM2_SUSUMU_BMD);
-Linelift2CollisionFilePtr gKm3RiftCollisionFile(ASSET_KM3_RIFT_KCL);
-Linelift2CollisionFilePtr gKm2SusumuCollisionFile(ASSET_KM2_SUSUMU_KCL);
+ModelFile gKm3RiftModelFile(ASSET_KM3_RIFT_BMD);
+ModelFile gKm2SusumuModelFile(ASSET_KM2_SUSUMU_BMD);
+ClsnFile gKm3RiftCollisionFile(ASSET_KM3_RIFT_KCL);
+ClsnFile gKm2SusumuCollisionFile(ASSET_KM2_SUSUMU_KCL);
 
 StateFunc gLinelift2StateFuncs[3] = {
     &daLinelift2_c::StateWait,
