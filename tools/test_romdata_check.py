@@ -524,9 +524,10 @@ class LinkedGlobalLocalFunction(unittest.TestCase):
         RDC._source_manifests = self.saved
         self.tmp.cleanup()
 
-    def check(self):
+    def check(self, cartridge_word=0x3000):
         with mock.patch.object(RDC, 'rom_data_index', return_value=self.registry), \
-                mock.patch.object(RDC.RV, 'rom_bytes', return_value=struct.pack('<I', 0x3000)):
+                mock.patch.object(RDC.RV, 'rom_bytes',
+                                  return_value=struct.pack('<I', cartridge_word)):
             row = RDC.check_object(self.path, 'src/t.cpp', self.names)[0]
         return row['symbol'], row['verdict'], row['blindWords']
 
@@ -539,6 +540,19 @@ class LinkedGlobalLocalFunction(unittest.TestCase):
 
     def test_an_init_row_at_another_address_stays_blind(self):
         self.entry['init'][0]['address'] = '0x9000'
+        self.assertEqual(self.check(), ('beta', RDC.PARTIAL, 1))
+
+    def test_a_cartridge_word_at_another_target_differs(self):
+        # Admitting the initializer resolves the word; it does not mask it.
+        self.assertEqual(self.check(cartridge_word=0x3100), ('beta', RDC.DIFFERS, 0))
+
+    def test_an_initializer_owned_only_as_a_function_stays_blind(self):
+        self.entry['functions'] = self.entry.pop('init')
+        self.entry['init'] = []
+        self.assertEqual(self.check(), ('beta', RDC.PARTIAL, 1))
+
+    def test_a_size_mismatch_stays_blind(self):
+        self.entry['init'][0]['size'] = '0x8'
         self.assertEqual(self.check(), ('beta', RDC.PARTIAL, 1))
 
 
