@@ -5097,8 +5097,6 @@ dScStage_c *dScStage_c_classInit() {
     return new dScStage_c();
 }
 
-struct StarModelFilePtr;
-
 extern "C" {
 /* The decimal divisors RenderNumber uses, the stage OAM/camera tables and the
    twelve-overlay pointer record, the six VS star spawn orders, and the stage
@@ -5141,22 +5139,22 @@ extern SharedFilePtr data_ov002_0210d9a0;
 extern SharedFilePtr data_ov002_0210d9c0;
 extern SharedFilePtr data_ov002_0210e7d8;
 extern SharedFilePtr data_ov002_0210e3a0;
-extern SharedFilePtr gPowerStarModelFile;
-extern StarModelFilePtr gTransparentStarModelFile;
+extern ModelFile gPowerStarModelFile;
+extern ModelFile gTransparentStarModelFile;
 extern SharedFilePtr data_ov002_0210d9a8;
 extern SharedFilePtr *const data_020756f0[12] = {
-    &gCoinYellowPoly4ModelFile,
-    &gCoinYellowPoly32ModelFile,
-    &gCoinRedPoly4ModelFile,
-    &gCoinRedPoly32ModelFile,
-    &data_ov002_0210da40,
-    &data_ov002_0210d9a0,
-    &data_ov002_0210d9c0,
-    &data_ov002_0210e7d8,
-    &data_ov002_0210e3a0,
-    &gPowerStarModelFile,
-    (SharedFilePtr *)&gTransparentStarModelFile,
-    &data_ov002_0210d9a8,
+    &gCoinYellowPoly4ModelFile,  // 0x8006
+    &gCoinYellowPoly32ModelFile, // 0x8005
+    &gCoinRedPoly4ModelFile,     // 0x8008
+    &gCoinRedPoly32ModelFile,    // 0x8007
+    &data_ov002_0210da40,        // 0x8011
+    &data_ov002_0210d9a0,        // 0x8010
+    &data_ov002_0210d9c0,        // 0x8014
+    &data_ov002_0210e7d8,        // 0x80c1
+    &data_ov002_0210e3a0,        // 0x80c0
+    &gPowerStarModelFile,        // 0x8015
+    &gTransparentStarModelFile,  // 0x8017
+    &data_ov002_0210d9a8,        // 0x8009
 };
 extern const char VS_STAR_SPAWN_ORDERS[6][12] = {
     {0, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0}, {0, 1, 3, 2, 4, 0, 0, 0, 0, 0, 0, 0},

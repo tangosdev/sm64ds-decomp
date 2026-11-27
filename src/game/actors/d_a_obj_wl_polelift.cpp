@@ -4,7 +4,6 @@
  *   and a D2.
  * - data_ov026_02113ea0 is the BMD handle and data_ov026_02113a9c
  *   the collision offset. gSaveBlock is the save block.
- *   g_profile_WL_POLELIFT is outside this TU.
  *
  * daObjWlPolelift_c, the Wet-Dry World pole lift. It rides the path
  * in param1 at 10.0 a frame, pauses 60 frames at a dead end, and
@@ -26,18 +25,8 @@ enum d_a_obj_wl_polelift_AssetId { ASSET_WL_POLE_LIFT_BMD = 0x06db };
 #include "SaveBlock.h"
 #include "nitro/fx/fx_cp.h"
 
-/* The file-scope object at the end of this file constructs the resource
- * handle (model file 0x6db). mwcc emits __sinit_d_a_obj_wl_polelift.cpp
- * from that definition. The wrapper name is local; the handle constructor
- * and destructor are the ROM resource-family functions, aliased in the
- * manifest. */
-struct PoleliftModelFile : SharedFilePtr {
-    PoleliftModelFile(u32 fileID);
-    ~PoleliftModelFile();
-};
-
 extern "C" {
-extern PoleliftModelFile data_ov026_02113ea0;
+extern ModelFile data_ov026_02113ea0;
 }
 
 /* Collider offset (0, 0x28000, 0), between this class's typeinfo and its
@@ -195,7 +184,7 @@ void daObjWlPolelift_c::UpdateShadow() {
 
 /* Static-init global (was the handwritten __sinit_ov026_02112b7c shard):
  * the model handle (file 0x6db). */
-PoleliftModelFile data_ov026_02113ea0(ASSET_WL_POLE_LIFT_BMD);
+ModelFile data_ov026_02113ea0(ASSET_WL_POLE_LIFT_BMD);
 
 extern "C" SpawnInfo<daObjWlPolelift_c> g_profile_WL_POLELIFT = {daObjWlPolelift_c_classInit,
                                                                  89,

@@ -1,7 +1,5 @@
 //cpp
 /* leftovers:
- * - The local file-handle wrappers' constructor/destructor veneers are
- *   mapped to the retail destinations in this TU's manifest.
  * - The state steps stay func_ov072_*. The cartridge has no names
  *   for them.
  *
@@ -24,32 +22,17 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
-/* Descriptive local types and object names, not recovered source spellings.
- * dExtSimpleModel_c and animation handles use different veneers. */
-struct PgBbyModelFile : SharedFilePtr {
-    PgBbyModelFile(u32 fileID);
-    ~PgBbyModelFile();
-};
-
-struct PgBbyAnimationFile : SharedFilePtr {
-    PgBbyAnimationFile(u32 fileID);
-    ~PgBbyAnimationFile();
-};
-
-typedef char PgBbyModelFile_size_must_be_0x08[sizeof(PgBbyModelFile) == 0x08 ? 1 : -1];
-typedef char PgBbyAnimationFile_size_must_be_0x08[sizeof(PgBbyAnimationFile) == 0x08 ? 1 : -1];
-
 extern "C" {
 
 extern dClipper gClipper;
 extern Matrix4x3 gViewMtx;
 
-extern PgBbyModelFile gPenguinBabyModelFile;
-extern PgBbyAnimationFile gPenguinBabyDiveAnimationFile;
-extern PgBbyAnimationFile gPenguinBabyWaitAnimationFile;
-extern PgBbyAnimationFile gPenguinBabyStandUpAnimationFile;
-extern PgBbyAnimationFile gPenguinBabySlideAnimationFile;
-extern PgBbyAnimationFile gPenguinBabyWalkAnimationFile;
+extern ModelFile gPenguinBabyModelFile;
+extern AnimFile gPenguinBabyDiveAnimationFile;
+extern AnimFile gPenguinBabyWaitAnimationFile;
+extern AnimFile gPenguinBabyStandUpAnimationFile;
+extern AnimFile gPenguinBabySlideAnimationFile;
+extern AnimFile gPenguinBabyWalkAnimationFile;
 extern SharedFilePtr *const gPenguinBabyAnimationFiles[5];
 extern Vector3 gPenguinBabyCarryOffsets[4];
 extern daPgBby_c::State gPenguinBabyStates[6];
@@ -678,12 +661,12 @@ enum PenguinBabyAssetId {
     ASSET_PENGUIN_WALK_BCA = 0x0408
 };
 
-PgBbyModelFile gPenguinBabyModelFile(ASSET_PENGUIN_CHILD_BMD);
-PgBbyAnimationFile gPenguinBabyWaitAnimationFile(ASSET_PENGUIN_WAIT1_BCA);
-PgBbyAnimationFile gPenguinBabyWalkAnimationFile(ASSET_PENGUIN_WALK_BCA);
-PgBbyAnimationFile gPenguinBabyDiveAnimationFile(ASSET_PENGUIN_DIVE_BCA);
-PgBbyAnimationFile gPenguinBabySlideAnimationFile(ASSET_PENGUIN_SLIDER_BCA);
-PgBbyAnimationFile gPenguinBabyStandUpAnimationFile(ASSET_PENGUIN_STAND_UP_BCA);
+ModelFile gPenguinBabyModelFile(ASSET_PENGUIN_CHILD_BMD);
+AnimFile gPenguinBabyWaitAnimationFile(ASSET_PENGUIN_WAIT1_BCA);
+AnimFile gPenguinBabyWalkAnimationFile(ASSET_PENGUIN_WALK_BCA);
+AnimFile gPenguinBabyDiveAnimationFile(ASSET_PENGUIN_DIVE_BCA);
+AnimFile gPenguinBabySlideAnimationFile(ASSET_PENGUIN_SLIDER_BCA);
+AnimFile gPenguinBabyStandUpAnimationFile(ASSET_PENGUIN_STAND_UP_BCA);
 
 SharedFilePtr *const gPenguinBabyAnimationFiles[5] = {
     &gPenguinBabyWaitAnimationFile,    &gPenguinBabyWalkAnimationFile,

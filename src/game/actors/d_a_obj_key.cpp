@@ -177,7 +177,7 @@ extern ModelFile gWarioKeyModelFile;
 extern Vector3 data_ov089_02132b40;
 extern VecFx32 data_ov089_02132ca4;
 /* The power-star model file (0x8015). d_a_star.cpp defines it. */
-extern SharedFilePtr gPowerStarModelFile;
+extern ModelFile gPowerStarModelFile;
 extern int data_0209cef0;
 /* The collect animations, by mAnimID. */
 extern AnimFile *const data_ov089_02132880[];

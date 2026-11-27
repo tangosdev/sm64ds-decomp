@@ -29,21 +29,9 @@ enum daObjWlSubmarine_c_AssetId {
 #include "SharedFilePtr.h"
 #include "SaveBlock.h"
 
-/* BSS file homes (symbols.txt); Init loads them, Cleanup releases them.
- * The ctor/dtor are the ROM's SharedFilePtr veneer pairs (ModelFile::ModelFile /
- * ModelFile::~ModelFile for the model, ClsnFile::ClsnFile / ClsnFile::~ClsnFile
- * for the collision), spelled through declared-only subclasses so the
- * static initializer names the real entry points. */
-struct SubmarineModelFilePtr : SharedFilePtr {
-    SubmarineModelFilePtr(u32 fileID);
-    ~SubmarineModelFilePtr();
-};
-extern SubmarineModelFilePtr Submarine_ModelFile;
-struct SubmarineCollisionFilePtr : SharedFilePtr {
-    SubmarineCollisionFilePtr(u32 fileID);
-    ~SubmarineCollisionFilePtr();
-};
-extern SubmarineCollisionFilePtr Submarine_ClsnFile;
+/* BSS file homes (symbols.txt); Init loads them, Cleanup releases them. */
+extern ModelFile Submarine_ModelFile;
+extern ClsnFile Submarine_ClsnFile;
 
 /* The platform's own collision block in the stage-map TU, fed to the mesh
  * collider by InitResources. Its entries are sized there. */
@@ -98,8 +86,8 @@ daObjWlSubmarine_c *daObjWlSubmarine_c_classInit() {
 
 /* The retail initializer constructs the model first, then the collision
  * file. */
-SubmarineModelFilePtr Submarine_ModelFile(ASSET_WL_SUBMARINE_BMD);    /* model */
-SubmarineCollisionFilePtr Submarine_ClsnFile(ASSET_WL_SUBMARINE_KCL); /* collision */
+ModelFile Submarine_ModelFile(ASSET_WL_SUBMARINE_BMD); /* model */
+ClsnFile Submarine_ClsnFile(ASSET_WL_SUBMARINE_KCL);   /* collision */
 
 extern "C" SpawnInfo<daObjWlSubmarine_c> g_profile_WL_SUBMARINE = {daObjWlSubmarine_c_classInit,
                                                                    90,

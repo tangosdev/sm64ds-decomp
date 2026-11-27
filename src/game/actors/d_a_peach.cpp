@@ -45,29 +45,16 @@ enum daPeach_c_AssetId {
     ASSET_PEACH_WALK_BCA = 0x03f9
 };
 
-/* The handles reach their files through these wrappers' constructor and
-   destructor veneers; the manifest maps each to the retail destination.
-   Descriptive local types, not recovered spellings. */
-struct PeachModelFile : SharedFilePtr {
-    PeachModelFile(u32 fileID);
-    ~PeachModelFile();
-};
-
-struct PeachAnimFile : SharedFilePtr {
-    PeachAnimFile(u32 fileID);
-    ~PeachAnimFile();
-};
-
 /* This TU's file handles, in the order the retail initializer (0x0212f3a0)
    builds them. */
-PeachModelFile gPeachModelFile(ASSET_PEACH_LOW_BMD);
-PeachAnimFile gPeachWaitAnimationFile(ASSET_PEACH_WAIT_BCA);
-PeachAnimFile gPeachWalkAnimationFile(ASSET_PEACH_WALK_BCA);
-PeachAnimFile gPeachRunAnimationFile(ASSET_PEACH_RUN_BCA);
-PeachAnimFile gPeachJumpAnimationFile(ASSET_PEACH_JUMP_BCA);
-PeachAnimFile gPeachJumpEndAnimationFile(ASSET_PEACH_JUMP_END_BCA);
-PeachAnimFile gPeachJumpLoopAnimationFile(ASSET_PEACH_JUMP_LOOP_BCA);
-PeachAnimFile gPeachOpWaitAnimationFile(ASSET_PEACH_OP_WAIT_BCA);
+ModelFile gPeachModelFile(ASSET_PEACH_LOW_BMD);
+AnimFile gPeachWaitAnimationFile(ASSET_PEACH_WAIT_BCA);
+AnimFile gPeachWalkAnimationFile(ASSET_PEACH_WALK_BCA);
+AnimFile gPeachRunAnimationFile(ASSET_PEACH_RUN_BCA);
+AnimFile gPeachJumpAnimationFile(ASSET_PEACH_JUMP_BCA);
+AnimFile gPeachJumpEndAnimationFile(ASSET_PEACH_JUMP_END_BCA);
+AnimFile gPeachJumpLoopAnimationFile(ASSET_PEACH_JUMP_LOOP_BCA);
+AnimFile gPeachOpWaitAnimationFile(ASSET_PEACH_OP_WAIT_BCA);
 extern SharedFilePtr *const data_ov085_0212f280[7] = {
     &gPeachWaitAnimationFile,   &gPeachWalkAnimationFile,    &gPeachRunAnimationFile,
     &gPeachJumpAnimationFile,   &gPeachJumpEndAnimationFile, &gPeachJumpLoopAnimationFile,

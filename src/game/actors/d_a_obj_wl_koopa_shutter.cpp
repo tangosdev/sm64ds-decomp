@@ -29,21 +29,9 @@ enum daObjWlKoopaShutter_c_AssetId {
 #include "SharedFilePtr.h"
 #include "SaveBlock.h"
 
-/* BSS file homes (symbols.txt); Init loads them, Cleanup releases them.
- * The ctor/dtor are the ROM's SharedFilePtr veneer pairs (ModelFile::ModelFile /
- * ModelFile::~ModelFile for the model, ClsnFile::ClsnFile / ClsnFile::~ClsnFile
- * for the collision), spelled through declared-only subclasses so the
- * static initializer names the real entry points. */
-struct KoopaShutterModelFilePtr : SharedFilePtr {
-    KoopaShutterModelFilePtr(u32 fileID);
-    ~KoopaShutterModelFilePtr();
-};
-extern KoopaShutterModelFilePtr BowserShutter_ModelFile;
-struct KoopaShutterCollisionFilePtr : SharedFilePtr {
-    KoopaShutterCollisionFilePtr(u32 fileID);
-    ~KoopaShutterCollisionFilePtr();
-};
-extern KoopaShutterCollisionFilePtr BowserShutter_ClsnFile;
+/* BSS file homes (symbols.txt); Init loads them, Cleanup releases them. */
+extern ModelFile BowserShutter_ModelFile;
+extern ClsnFile BowserShutter_ClsnFile;
 
 /* The shutter's own collision block in the stage-map TU, fed to the mesh
  * collider by InitResources. Its entries are sized there. */
@@ -101,8 +89,8 @@ daObjWlKoopaShutter_c *daObjWlKoopaShutter_c_classInit() {
 
 /* The retail initializer constructs the model first, then the collision
  * file. */
-KoopaShutterModelFilePtr BowserShutter_ModelFile(ASSET_WL_KUPA_SHUTTER_BMD);    /* model */
-KoopaShutterCollisionFilePtr BowserShutter_ClsnFile(ASSET_WL_KUPA_SHUTTER_KCL); /* collision */
+ModelFile BowserShutter_ModelFile(ASSET_WL_KUPA_SHUTTER_BMD); /* model */
+ClsnFile BowserShutter_ClsnFile(ASSET_WL_KUPA_SHUTTER_KCL);   /* collision */
 
 extern "C" SpawnInfo<daObjWlKoopaShutter_c> g_profile_WL_KOOPA_SHUTTER = {
     daObjWlKoopaShutter_c_classInit,

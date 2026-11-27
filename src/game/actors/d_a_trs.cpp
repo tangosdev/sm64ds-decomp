@@ -117,28 +117,16 @@ unsigned char NumStars(void);
 int IsStarCollectedInCurLevel(int n);
 u8 IsAreaShowing(int idx);
 
-/* The seven file handles __sinit_ov063_0211e29c constructs. The model
- * handles get the model-file pair ModelFile::ModelFile/~ModelFile and the
- * animation handles get AnimFile::AnimFile/~AnimFile through thin
- * declaration-only wrappers; the manifest aliases those mangled spellings to
- * the arm9 destinations the retail initializer calls. The destructor chain records the file ID; actor cleanup releases handles
- * separately. These local wrappers retain the existing lifecycle aliases. */
-struct TrsModelFileResHandle : SharedFilePtr {
-    TrsModelFileResHandle(unsigned int fileID);
-    ~TrsModelFileResHandle();
-};
-struct TrsAnimationResFileHandle : SharedFilePtr {
-    TrsAnimationResFileHandle(unsigned int fileID);
-    ~TrsAnimationResFileHandle();
-};
+/* The seven file handles __sinit_ov063_0211e29c constructs. The destructor
+ * chain records the file ID; actor cleanup releases handles separately. */
+extern ModelFile data_ov063_0211edc4;
+extern AnimFile data_ov063_0211edcc;
+extern AnimFile data_ov063_0211edd4;
+extern AnimFile data_ov063_0211eddc;
+extern AnimFile data_ov063_0211ede4;
+extern ModelFile data_ov063_0211edec;
+extern ModelFile data_ov063_0211edf4;
 
-extern TrsModelFileResHandle data_ov063_0211edc4;
-extern TrsAnimationResFileHandle data_ov063_0211edcc;
-extern TrsAnimationResFileHandle data_ov063_0211edd4;
-extern TrsAnimationResFileHandle data_ov063_0211eddc;
-extern TrsAnimationResFileHandle data_ov063_0211ede4;
-extern TrsModelFileResHandle data_ov063_0211edec;
-extern TrsModelFileResHandle data_ov063_0211edf4;
 extern SharedFilePtr gCoinBluePoly32ModelFile;
 extern SharedFilePtr gCoinRedPoly32ModelFile;
 extern SharedFilePtr gCoinYellowPoly32ModelFile;
@@ -3182,13 +3170,13 @@ daTrs_c *daTrs_c_classInit_TERESA() {
  * three model-file handles first, then the four animation-file handles. Each
  * definition emits one construct-and-register pair into .init plus a
  * registration cell in .bss. */
-TrsModelFileResHandle data_ov063_0211edc4(ASSET_TERESA_BMD);
-TrsModelFileResHandle data_ov063_0211edec(ASSET_T_BASKET_BMD);
-TrsModelFileResHandle data_ov063_0211edf4(ASSET_BOSS_TERESA_BMD);
-TrsAnimationResFileHandle data_ov063_0211eddc(ASSET_TERESA_WAIT_BCA);
-TrsAnimationResFileHandle data_ov063_0211ede4(ASSET_BOSS_TERESA_WAIT_BCA);
-TrsAnimationResFileHandle data_ov063_0211edd4(ASSET_BOSS_TERESA_FIRE_BCA);
-TrsAnimationResFileHandle data_ov063_0211edcc(ASSET_BOSS_TERESA_FIRE_ST_BCA);
+ModelFile data_ov063_0211edc4(ASSET_TERESA_BMD);
+ModelFile data_ov063_0211edec(ASSET_T_BASKET_BMD);
+ModelFile data_ov063_0211edf4(ASSET_BOSS_TERESA_BMD);
+AnimFile data_ov063_0211eddc(ASSET_TERESA_WAIT_BCA);
+AnimFile data_ov063_0211ede4(ASSET_BOSS_TERESA_WAIT_BCA);
+AnimFile data_ov063_0211edd4(ASSET_BOSS_TERESA_FIRE_BCA);
+AnimFile data_ov063_0211edcc(ASSET_BOSS_TERESA_FIRE_ST_BCA);
 
 /* The recoil angle ramp and the trailing class typeinfo pointer. */
 extern char data_ov063_0211e7e0_typeinfo[];

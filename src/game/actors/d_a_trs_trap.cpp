@@ -139,19 +139,6 @@ s32 data_ov063_0211e9f8[6] = {0x00002000, 0x000d4000, 0x00055000,
 typedef void (daTrsTrap_c::*PMF)();
 extern PMF data_ov063_0211ef38[];
 
-/* 8-byte file handles. The models use ModelFile::ModelFile / ModelFile::~ModelFile and the
- * collision files ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
- * are local; the manifest aliases the generated names to those ROM symbols. */
-struct TrsTrapModelFilePtr : SharedFilePtr {
-    TrsTrapModelFilePtr(u32 fileID);
-    ~TrsTrapModelFilePtr();
-};
-
-struct TrsTrapCollisionFilePtr : SharedFilePtr {
-    TrsTrapCollisionFilePtr(u32 fileID);
-    ~TrsTrapCollisionFilePtr();
-};
-
 /* --------------------------------------------------------------------------
  * The one file-scope extern "C" region.
  * ------------------------------------------------------------------------ */
@@ -568,14 +555,14 @@ int daTrsTrap_c::InitResources() {
  * dispatch records. __sinit_d_a_trs_trap.cpp emits the constructions, the
  * destructor registrations and the record copies; the registration nodes are
  * compiler temporaries. */
-extern TrsTrapModelFilePtr gThKaidanModelFile;
-extern TrsTrapModelFilePtr gThTrapModelFile;
-extern TrsTrapModelFilePtr gThHondanaModelFile;
-extern TrsTrapModelFilePtr gThMeryGoModelFile;
-extern TrsTrapCollisionFilePtr gThKaidanCollisionFile;
-extern TrsTrapCollisionFilePtr gThTrapCollisionFile;
-extern TrsTrapCollisionFilePtr gThHondanaCollisionFile;
-extern TrsTrapCollisionFilePtr gThMeryGoCollisionFile;
+extern ModelFile gThKaidanModelFile;
+extern ModelFile gThTrapModelFile;
+extern ModelFile gThHondanaModelFile;
+extern ModelFile gThMeryGoModelFile;
+extern ClsnFile gThKaidanCollisionFile;
+extern ClsnFile gThTrapCollisionFile;
+extern ClsnFile gThHondanaCollisionFile;
+extern ClsnFile gThMeryGoCollisionFile;
 extern SharedFilePtr *const data_ov063_0211e27c[4] = {
     &gThKaidanModelFile,
     &gThTrapModelFile,
@@ -588,14 +575,14 @@ extern SharedFilePtr *const data_ov063_0211e28c[4] = {
     &gThHondanaCollisionFile,
     &gThMeryGoCollisionFile,
 };
-TrsTrapModelFilePtr gThHondanaModelFile(ASSET_TH_HONDANA_BMD);
-TrsTrapModelFilePtr gThKaidanModelFile(ASSET_TH_KAIDAN_BMD);
-TrsTrapModelFilePtr gThMeryGoModelFile(ASSET_TH_MERY_GO_BMD);
-TrsTrapModelFilePtr gThTrapModelFile(ASSET_TH_TRAP_BMD);
-TrsTrapCollisionFilePtr gThHondanaCollisionFile(ASSET_TH_HONDANA_KCL);
-TrsTrapCollisionFilePtr gThKaidanCollisionFile(ASSET_TH_KAIDAN_KCL);
-TrsTrapCollisionFilePtr gThMeryGoCollisionFile(ASSET_TH_MERY_GO_KCL);
-TrsTrapCollisionFilePtr gThTrapCollisionFile(ASSET_TH_TRAP_KCL);
+ModelFile gThHondanaModelFile(ASSET_TH_HONDANA_BMD);
+ModelFile gThKaidanModelFile(ASSET_TH_KAIDAN_BMD);
+ModelFile gThMeryGoModelFile(ASSET_TH_MERY_GO_BMD);
+ModelFile gThTrapModelFile(ASSET_TH_TRAP_BMD);
+ClsnFile gThHondanaCollisionFile(ASSET_TH_HONDANA_KCL);
+ClsnFile gThKaidanCollisionFile(ASSET_TH_KAIDAN_KCL);
+ClsnFile gThMeryGoCollisionFile(ASSET_TH_MERY_GO_KCL);
+ClsnFile gThTrapCollisionFile(ASSET_TH_TRAP_KCL);
 
 PMF data_ov063_0211ef38[] = {
     &daTrsTrap_c::UpdateStaircase,

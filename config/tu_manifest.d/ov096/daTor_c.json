@@ -571,36 +571,6 @@
       "target_address": "0x02137894"
     }
   ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN15TorModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN9ModelFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call destination and the model wrapper constructor's exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN15TorModelFilePtrD1Ev",
-      "canonical_symbol": "_ZN9ModelFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail destructor-registration destination and the model wrapper destructor's exact ABS32 relocation"
-    },
-    {
-      "symbol": "_ZN22TorAnimationFileHandleC1Ej",
-      "canonical_symbol": "_ZN8AnimFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0201799c",
-      "evidence": "retail initializer call destination and the animation wrapper constructor's exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN22TorAnimationFileHandleD1Ev",
-      "canonical_symbol": "_ZN8AnimFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017984",
-      "evidence": "retail destructor-registration destination and the animation wrapper destructor's exact ABS32 relocation"
-    }
-  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_d_a_tor.cpp",
@@ -629,14 +599,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@624",
+      "from": "@622",
       "to": "@449",
-      "evidence": "mwcc numbers this destructor-registration node @436 per TU; ov100's daStarGate_c already licenses @436 globally, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after including math/MtxStack.h, math/CalcLib.h and Particle__System.h (and dropping dead local declarations) shifted the TU's @NNN uniquifier Re-keyed from @537 to @545 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @545 to @491 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @491 to @528 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @528 to @540 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @540 to @545 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @545 to @547 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @547 to @551 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @551 to @624 now that it includes daPly_c.h for daPly_c::EnterTornado (r15) (measured from the compiled object)."
+      "evidence": "mwcc numbers this destructor-registration node @436 per TU; ov100's daStarGate_c already licenses @436 globally, so the scratch link would multiply-define it | re-keyed by __sinit relocation-site order after including math/MtxStack.h, math/CalcLib.h and Particle__System.h (and dropping dead local declarations) shifted the TU's @NNN uniquifier Re-keyed from @537 to @545 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @545 to @491 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @491 to @528 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @528 to @540 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @540 to @545 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @545 to @547 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @547 to @551 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @551 to @624 now that it includes daPly_c.h for daPly_c::EnterTornado (r15) (measured from the compiled object). Re-keyed from @624 to @622 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@625",
+      "from": "@623",
       "to": "@437",
-      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @451 now; licensed under the existing pin @437 | re-keyed by __sinit relocation-site order after including math/MtxStack.h, math/CalcLib.h and Particle__System.h (and dropping dead local declarations) shifted the TU's @NNN uniquifier Re-keyed from @538 to @546 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @546 to @492 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @492 to @529 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @529 to @541 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @541 to @546 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @546 to @548 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @548 to @552 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @552 to @625 now that it includes daPly_c.h for daPly_c::EnterTornado (r15) (measured from the compiled object)."
+      "evidence": "compiler temp; the types.h Vector3 ctors and main's sinit folds shift this TU's per-TU @NNN uniquifier, so mwcc emits it as @451 now; licensed under the existing pin @437 | re-keyed by __sinit relocation-site order after including math/MtxStack.h, math/CalcLib.h and Particle__System.h (and dropping dead local declarations) shifted the TU's @NNN uniquifier Re-keyed from @538 to @546 when the TU included nitro/fx/fx_trig.h for FX_SinIdx/FX_CosIdx (#821; measured from the compiled object). Re-keyed from @546 to @492 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @492 to @529 when math/CalcLib.h gained its inline Vector3 VEC_* overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @529 to @541 when math/MtxStack.h gained the MTX_MultVec33/43 Vector3 overloads (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @541 to @546 when MTX_Inverse43 and G3i_LookAt_ took NitroSDK signatures with Matrix4x3 / Vector3 overloads in math/MtxStack.h and nitro/gx/g3_util.h (#5207) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @546 to @548 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @548 to @552 after the Particle::System callbackFlags union (#821 r92) (measured from the compiled object). Re-keyed from @552 to @625 now that it includes daPly_c.h for daPly_c::EnterTornado (r15) (measured from the compiled object). Re-keyed from @625 to @623 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     }
   ]
 }

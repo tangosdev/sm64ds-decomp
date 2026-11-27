@@ -80,18 +80,8 @@ enum {
    records it copies pointer-to-member descriptors into. Definitions are at
    the end of the file. */
 
-struct TatumakiModelFilePtr : SharedFilePtr {
-    TatumakiModelFilePtr(u32 fileID);
-    ~TatumakiModelFilePtr();
-};
-
-struct TatumakiAnimFileHandle : SharedFilePtr {
-    TatumakiAnimFileHandle(u32 fileID);
-    ~TatumakiAnimFileHandle();
-};
-
-extern "C" TatumakiModelFilePtr gWaterTatumakiModelFile;       /* water_tatumaki.bmd, 0x4a9 */
-extern "C" TatumakiAnimFileHandle gWaterTatumakiAnimationFile; /* water_tatumaki.bca, 0x4a8 */
+extern "C" ModelFile gWaterTatumakiModelFile;                  /* water_tatumaki.bmd, 0x4a9 */
+extern "C" AnimFile gWaterTatumakiAnimationFile;               /* water_tatumaki.bca, 0x4a8 */
 extern daWater_Tatumaki_c::State sSpinState;                   /* spin, waiting to catch */
 extern daWater_Tatumaki_c::State sDragState;                   /* drag the player down */
 /* The whirlpool texture animation in the stage-map TU. */
@@ -333,8 +323,8 @@ daWater_Tatumaki_c *daWater_Tatumaki_c_classInit() {
 
 /* Static initializer: model handle, anim handle, then the two state records.
    The pointer-to-member descriptors stay anonymous compiler objects. */
-TatumakiModelFilePtr gWaterTatumakiModelFile(ASSET_WATER_TATUMAKI_BMD);
-TatumakiAnimFileHandle gWaterTatumakiAnimationFile(ASSET_WATER_TATUMAKI_BCA);
+ModelFile gWaterTatumakiModelFile(ASSET_WATER_TATUMAKI_BMD);
+AnimFile gWaterTatumakiAnimationFile(ASSET_WATER_TATUMAKI_BCA);
 
 daWater_Tatumaki_c::State sSpinState = {
     &daWater_Tatumaki_c::InitStateSpin,

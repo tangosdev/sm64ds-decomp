@@ -14,7 +14,8 @@
  *   mMeshCollider.
  * - dBgW::SetClipRadius: Behavior sets the collider range to 0x100000.
  * - data_ov029_0211432c / 02114324 are this TU's BMD/KCL file handles;
- *   data_ov029_0211304c the CLPS block stays unowned overlay data.
+ *   data_ov029_0211304c, the CLPS block, is defined in the stage-map TU
+ *   (d_s_map_ov029.c).
  * - S14: g_profile_WC_OBJ04 stays outside the licensed .text.
  */
 
@@ -27,21 +28,8 @@ enum d_a_obj_wc_obj04_AssetId { ASSET_WC_OBJ04_BMD = 0x06d1, ASSET_WC_OBJ04_KCL 
 #include "Event.h"
 #include "math/MtxStack.h"
 
-/* Retail constructs these 8-byte handles in this order and registers
- * their destructors. The wrapper names are local; the ctor/dtor
- * addresses are the ROM resource-family functions. */
-struct WcObj04ModelFilePtr : SharedFilePtr {
-    WcObj04ModelFilePtr(u32 fileID);
-    ~WcObj04ModelFilePtr();
-};
-
-struct WcObj04CollisionFilePtr : SharedFilePtr {
-    WcObj04CollisionFilePtr(u32 fileID);
-    ~WcObj04CollisionFilePtr();
-};
-
-extern WcObj04ModelFilePtr data_ov029_0211432c;
-extern WcObj04CollisionFilePtr data_ov029_02114324;
+extern ModelFile data_ov029_0211432c;
+extern ClsnFile data_ov029_02114324;
 
 /* The float board's floor and wall pair; stage data in d_s_map_ov029.c. */
 extern CLPS_Block data_ov029_0211304c;
@@ -182,8 +170,8 @@ void daObjWc_Obj04_c::UpdateClsnMatrix() {
 
 /* The static-init globals -- mwcc emits __sinit_d_a_obj_wc_obj04.cpp
    from these: one ctor veneer plus destructor registration per handle. */
-WcObj04ModelFilePtr data_ov029_0211432c(ASSET_WC_OBJ04_BMD);
-WcObj04CollisionFilePtr data_ov029_02114324(ASSET_WC_OBJ04_KCL);
+ModelFile data_ov029_0211432c(ASSET_WC_OBJ04_BMD);
+ClsnFile data_ov029_02114324(ASSET_WC_OBJ04_KCL);
 
 extern "C" {
 u32 data_ov029_0211434c[5];

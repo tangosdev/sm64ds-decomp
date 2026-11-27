@@ -114,12 +114,6 @@
    "src/WBT_InitParent.cpp": ["return:int"],
    "src/unnamed/arm9/0206/func_02065af0.cpp": ["return:int"]
   },
-  "data_ov002_0211092c": {
-   "src/game/actors/d_a_star.cpp": ["return:StarModelFilePtr"]
-  },
-  "data_ov002_02110964": {
-   "src/game/actors/d_a_obj_key.cpp": ["return:AnimFile"]
-  },
   "data_ov026_02113f4c": {
    "src/game/actors/d_a_water_suikomi.cpp": ["return:Vector3"]
   },
@@ -156,9 +150,6 @@
   },
   "gNextSceneParam": {
    "src/game/stages/d_scene.cpp": ["return:unsigned int"]
-  },
-  "gPowerStarModelFile": {
-   "src/game/actors/d_a_star.cpp": ["return:StarModelFilePtr"]
   },
   "gRunningKuppaScript": {
    "src/KuppaScript.cpp": ["return:unsigned char *"]

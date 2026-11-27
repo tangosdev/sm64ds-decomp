@@ -1361,50 +1361,6 @@
       "evidence": "compiler-local object is a configured initializer relocation destination; changing the ELF binding preserves storage, relocations and bytes"
     }
   ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN15PgRcerModelFileC1Ej",
-      "canonical_symbol": "_ZN9ModelFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call/load destination at this exact relocation site"
-    },
-    {
-      "symbol": "_ZN14PgRcerAnimFileC1Ej",
-      "canonical_symbol": "_ZN8AnimFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0201799c",
-      "evidence": "retail initializer call/load destination at this exact relocation site"
-    },
-    {
-      "symbol": "_ZN16PgRcerTexSeqFileC1Ej",
-      "canonical_symbol": "_ZN10TexSeqFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017934",
-      "evidence": "retail initializer call/load destination at this exact relocation site"
-    },
-    {
-      "symbol": "_ZN15PgRcerModelFileD1Ev",
-      "canonical_symbol": "_ZN9ModelFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail initializer call/load destination at this exact relocation site"
-    },
-    {
-      "symbol": "_ZN14PgRcerAnimFileD1Ev",
-      "canonical_symbol": "_ZN8AnimFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017984",
-      "evidence": "retail initializer call/load destination at this exact relocation site"
-    },
-    {
-      "symbol": "_ZN16PgRcerTexSeqFileD1Ev",
-      "canonical_symbol": "_ZN10TexSeqFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x0201791c",
-      "evidence": "retail initializer call/load destination at this exact relocation site"
-    }
-  ],
   "relocations": [
     {
       "section": ".rodata",

@@ -23,22 +23,8 @@ struct BCA_File;
 
 extern Timer gRaceTimer;
 
-/* The model handle constructs through ModelFile::ModelFile and registers
-   ModelFile::~ModelFile; the animation handle constructs through
-   AnimFile::AnimFile and registers AnimFile::~AnimFile.
-   The manifest aliases these. */
-struct RFlagModelFileHandle : SharedFilePtr {
-    RFlagModelFileHandle(u32 fileID);
-    ~RFlagModelFileHandle();
-};
-
-struct RFlagAnimResFileHandle : SharedFilePtr {
-    RFlagAnimResFileHandle(u32 fileID);
-    ~RFlagAnimResFileHandle();
-};
-
-extern RFlagModelFileHandle data_ov062_0211e0d4;
-extern RFlagAnimResFileHandle data_ov062_0211e0dc;
+extern ModelFile data_ov062_0211e0d4;
+extern AnimFile data_ov062_0211e0dc;
 
 #pragma defer_codegen off
 
@@ -119,5 +105,5 @@ daRFlag_c *daRFlag_c_classInit(void) {
     return new daRFlag_c();
 }
 
-RFlagModelFileHandle data_ov062_0211e0d4(ASSET_OBJ_RACE_FLAG_BMD);
-RFlagAnimResFileHandle data_ov062_0211e0dc(ASSET_OBJ_RACE_FLAG_WAIT_BCA);
+ModelFile data_ov062_0211e0d4(ASSET_OBJ_RACE_FLAG_BMD);
+AnimFile data_ov062_0211e0dc(ASSET_OBJ_RACE_FLAG_WAIT_BCA);

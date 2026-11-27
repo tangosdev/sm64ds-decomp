@@ -328,36 +328,6 @@
       "evidence": "constructor-table word relocates to the owned initializer"
     }
   ],
-  "undefined_symbol_aliases": [
-    {
-      "symbol": "_ZN19BSwdoorModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN9ModelFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017acc",
-      "evidence": "retail initializer call destination and the model wrapper constructor exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN19BSwdoorModelFilePtrD1Ev",
-      "canonical_symbol": "_ZN9ModelFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017ab4",
-      "evidence": "retail destructor registration destination and the model wrapper destructor exact ABS32 relocation"
-    },
-    {
-      "symbol": "_ZN18BSwdoorClsnFilePtrC1Ej",
-      "canonical_symbol": "_ZN8ClsnFileC1Ej",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b4c",
-      "evidence": "retail initializer call destination and the collision wrapper constructor exact PC24 relocation"
-    },
-    {
-      "symbol": "_ZN18BSwdoorClsnFilePtrD1Ev",
-      "canonical_symbol": "_ZN8ClsnFileD1Ev",
-      "canonical_module": "arm9",
-      "canonical_address": "0x02017b34",
-      "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
-    }
-  ],
   "symbol_binding_rewrites": [
     {
       "symbol": "__sinit_d_a_obj_b_swdoor.cpp",
@@ -386,14 +356,14 @@
   ],
   "defined_symbol_renames": [
     {
-      "from": "@348",
+      "from": "@346",
       "to": "@636",
-      "evidence": "compiler temporary; mwcc numbers it @369 per TU and ov036 defines a global @369, so the scratch link collides | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @368 to @346 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @346 to @348 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "compiler temporary; mwcc numbers it @369 per TU and ov036 defines a global @369, so the scratch link collides | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @368 to @346 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @346 to @348 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @348 to @346 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     },
     {
-      "from": "@349",
+      "from": "@347",
       "to": "@633",
-      "evidence": "compiler temporary; mwcc numbers it @370 per TU and ov036 defines a global @370, so the scratch link collides | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @369 to @347 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @347 to @349 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name)."
+      "evidence": "compiler temporary; mwcc numbers it @370 per TU and ov036 defines a global @370, so the scratch link collides | re-keyed by __sinit relocation-site order after the actor cleanup member conversions shifted the TU's @NNN uniquifier Re-keyed from @369 to @347 when the class-scope operator delete members that forwarded to Memory::operator_delete2 gave way to the global operator delete at its real address (include/ headers lost their inline bodies) (measured from the compiled object). Re-keyed from @347 to @349 when Matrix4x3 became a union of its twelve words and its r/t rows (#821) (measured from the compiled object: same section, value, size and de-numbered name). Re-keyed from @349 to @347 when the TU's coined SharedFilePtr wrapper types gave way to the real handle classes (measured from the compiled object: paired by de-numbered name, section, value, size and type)."
     }
   ],
   "relocations": [

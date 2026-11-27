@@ -57,26 +57,13 @@ enum daYurei_Mucho_c_AssetId {
     ASSET_YUREI_MUCHO_WAIT_BCA = 0x0430
 };
 
-/* The handles reach their files through these wrappers' constructor and
- * destructor veneers; the manifest maps each to the retail destination.
- * Descriptive local types, not recovered spellings. */
-struct YureiMuchoModelFile : SharedFilePtr {
-    YureiMuchoModelFile(u32 fileID);
-    ~YureiMuchoModelFile();
-};
-
-struct YureiMuchoAnimFile : SharedFilePtr {
-    YureiMuchoAnimFile(u32 fileID);
-    ~YureiMuchoAnimFile();
-};
-
 /* This TU's four file handles, in the order the retail initializer
  * (0x0211c110) builds them. d_a_propeller_heyho_fire.cpp also loads the
  * shot model through an extern, so that handle keeps its address name. */
-YureiMuchoModelFile data_ov065_0211d610(ASSET_YUREI_MUCHO_BALL_BMD);
-YureiMuchoModelFile gYureiMuchoModelFile(ASSET_YUREI_MUCHO_BMD);
-YureiMuchoAnimFile gYureiMuchoWaitAnimFile(ASSET_YUREI_MUCHO_WAIT_BCA);
-YureiMuchoAnimFile gYureiMuchoAttackAnimFile(ASSET_YUREI_MUCHO_ATTACK_BCA);
+ModelFile data_ov065_0211d610(ASSET_YUREI_MUCHO_BALL_BMD);
+ModelFile gYureiMuchoModelFile(ASSET_YUREI_MUCHO_BMD);
+AnimFile gYureiMuchoWaitAnimFile(ASSET_YUREI_MUCHO_WAIT_BCA);
+AnimFile gYureiMuchoAttackAnimFile(ASSET_YUREI_MUCHO_ATTACK_BCA);
 
 /* The four State records, defined at the end of this file. */
 extern daYurei_Mucho_c::State data_ov065_0211d670;

@@ -63,15 +63,8 @@ extern "C" {
 
 }
 
-/* File-scope resource handles: the ctor/dtor are the ROM's SharedFilePtr
- * pair (ModelFile::ModelFile / ModelFile::~ModelFile), spelled through a declared-only
- * subclass so the static initializer names the real entry points. */
-struct SanboModelFilePtr : SharedFilePtr {
-    SanboModelFilePtr(u32 fileID);
-    ~SanboModelFilePtr();
-};
-extern SanboModelFilePtr gSanboHeadModelFile;
-extern SanboModelFilePtr gSanboBodyModelFile;
+extern ModelFile gSanboHeadModelFile;
+extern ModelFile gSanboBodyModelFile;
 extern daSanbo_c::StateFunc data_ov096_02137b48[];
 
 /* Both profiles construct this class. The synthesized ctor stores
@@ -752,8 +745,8 @@ int daSanbo_c::OnYoshiTryEat()
 /* D1 and D0 come from the inline destructor in include/daSanbo_c.h.
  * An out-of-line body here would emit D2 and put D0 below D1. */
 
-SanboModelFilePtr gSanboHeadModelFile(ASSET_SANBO_HEAD_BMD);   /* head model */
-SanboModelFilePtr gSanboBodyModelFile(ASSET_SANBO_BODY_BMD);   /* segment model */
+ModelFile gSanboHeadModelFile(ASSET_SANBO_HEAD_BMD); /* head model */
+ModelFile gSanboBodyModelFile(ASSET_SANBO_BODY_BMD); /* segment model */
 
 /* Native member pointers emit twelve descriptors in .data. The initializer
  * copies them into this runtime table as six entry/update pairs. The state

@@ -145,29 +145,14 @@ s32 daPropeller_Heyho_c::OnAimedAtWithEgg() {
 
 /* -------------------------------------------------------------------------- */
 #include "SharedFilePtr.h"
-/* File-scope objects at the end of this file construct the seven resource
- * handles (model file 0x411, animation files 0x417/0x412/0x413/0x414/0x415/
- * 0x416) and fill the six state records. mwcc emits __sinit_d_a_propeller_heyho.cpp
- * from those definitions. The wrapper names are local; the handle
- * constructors and destructors are the ROM resource-family functions,
- * aliased in the manifest. */
-struct HeyhoModelFile : SharedFilePtr {
-    HeyhoModelFile(u32 fileID);
-    ~HeyhoModelFile();
-};
 
-struct HeyhoAnimationFilePtr : SharedFilePtr {
-    HeyhoAnimationFilePtr(u32 fileID);
-    ~HeyhoAnimationFilePtr();
-};
-
-extern HeyhoModelFile data_ov070_02123530;
-extern HeyhoAnimationFilePtr data_ov070_02123520;
-extern HeyhoAnimationFilePtr data_ov070_02123518;
-extern HeyhoAnimationFilePtr data_ov070_02123510;
-extern HeyhoAnimationFilePtr data_ov070_02123528;
-extern HeyhoAnimationFilePtr data_ov070_02123508;
-extern HeyhoAnimationFilePtr data_ov070_02123500;
+extern ModelFile data_ov070_02123530;
+extern AnimFile data_ov070_02123520;
+extern AnimFile data_ov070_02123518;
+extern AnimFile data_ov070_02123510;
+extern AnimFile data_ov070_02123528;
+extern AnimFile data_ov070_02123508;
+extern AnimFile data_ov070_02123500;
 /* The six state records (each {init PMF, main PMF}, built by __sinit_ov070_02122afc
  * from PMF literals in .data). The role names below are read off the handler
  * bodies:
@@ -467,7 +452,6 @@ int daPropeller_Heyho_c::St_Wander_Main() {
 
 /* -------------------------------------------------------------------------- */
 
-/* (data_ov070_02123520: SharedFilePtr view declared earlier in this TU) */
 /* Chase init: plays the file-02123520 animation (the wander one) at speed 1.0. */
 int daPropeller_Heyho_c::St_Chase_Init() {
     this->mAnmModel.SetAnim((BCA_File *)data_ov070_02123520.filePtr, 0, 0x1000, 0);
@@ -599,8 +583,6 @@ typedef unsigned short u16;
 typedef unsigned char u8;
 typedef signed char s8;
 
-
-/* (data_ov070_02123510: SharedFilePtr view declared earlier in this TU) */
 extern s8 gCurrentSublevel;
 extern daPropeller_Heyho_c::State data_ov070_0212359c;
 extern daPropeller_Heyho_c::State data_ov070_021235dc;
@@ -764,8 +746,6 @@ int daPropeller_Heyho_c::St_Settle_Main() {
 struct BCA_File;
 /* (dExtAnmModel_c: real header type in scope) */
 
-/* (data_ov070_02123500: SharedFilePtr view declared earlier in this TU) */
-
 /* Fire init: plays the file-02123500 animation (flags 0x40000000) at speed 1.0. */
 int daPropeller_Heyho_c::St_Fire_Init() {
     unsigned int flags = 0;
@@ -882,7 +862,6 @@ struct BCA_File;
 
 extern daPropeller_Heyho_c::State data_ov070_021235bc;
 extern daPropeller_Heyho_c::State data_ov070_021235cc;
-/* (data_ov070_02123528: SharedFilePtr view declared earlier in this TU) */
 
 int FlyGuy_ChangeState(daPropeller_Heyho_c *c, daPropeller_Heyho_c::State *p);
 extern void func_02012694(unsigned int a, const Vector3 *b);
@@ -991,13 +970,13 @@ void daPropeller_Heyho_c::func_ov070_0211f0a4() {
  * model handle (file 0x411), the six animation handles (files 0x417/0x412/
  * 0x413/0x414/0x415/0x416), then the six state records copied from the ROM
  * PMF constants. */
-HeyhoModelFile data_ov070_02123530(ASSET_PROPELLER_HEYHO_BMD);
-HeyhoAnimationFilePtr data_ov070_02123520(ASSET_PROPELLER_HEYHO_WAIT_BCA);
-HeyhoAnimationFilePtr data_ov070_02123518(ASSET_PROPELLER_HEYHO_ATTACK01_BCA);
-HeyhoAnimationFilePtr data_ov070_02123510(ASSET_PROPELLER_HEYHO_ATTACK02_BCA);
-HeyhoAnimationFilePtr data_ov070_02123528(ASSET_PROPELLER_HEYHO_ATTACK03_BCA);
-HeyhoAnimationFilePtr data_ov070_02123508(ASSET_PROPELLER_HEYHO_ATTACK04_BCA);
-HeyhoAnimationFilePtr data_ov070_02123500(ASSET_PROPELLER_HEYHO_FIRE_ATTACK_BCA);
+ModelFile data_ov070_02123530(ASSET_PROPELLER_HEYHO_BMD);
+AnimFile data_ov070_02123520(ASSET_PROPELLER_HEYHO_WAIT_BCA);
+AnimFile data_ov070_02123518(ASSET_PROPELLER_HEYHO_ATTACK01_BCA);
+AnimFile data_ov070_02123510(ASSET_PROPELLER_HEYHO_ATTACK02_BCA);
+AnimFile data_ov070_02123528(ASSET_PROPELLER_HEYHO_ATTACK03_BCA);
+AnimFile data_ov070_02123508(ASSET_PROPELLER_HEYHO_ATTACK04_BCA);
+AnimFile data_ov070_02123500(ASSET_PROPELLER_HEYHO_FIRE_ATTACK_BCA);
 daPropeller_Heyho_c::State data_ov070_0212359c = {data_ov070_021230e8, data_ov070_021230c8};
 daPropeller_Heyho_c::State data_ov070_021235ac = {data_ov070_021230d8, data_ov070_021230f0};
 daPropeller_Heyho_c::State data_ov070_021235cc = {data_ov070_021230c0, data_ov070_02123118};

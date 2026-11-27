@@ -85,21 +85,7 @@ enum daStar_c_AssetId {
    daStar_c::State. */
 typedef void (daStar_c::*StateHandler)();
 
-/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
-   ModelFile::~ModelFile. Animation handles construct through AnimFile::AnimFile
-   and destroy through AnimFile::~AnimFile. The manifest aliases those
-   undefined members onto the ROM symbols. */
-struct StarModelFilePtr : SharedFilePtr {
-    StarModelFilePtr(u32 fileID);
-    ~StarModelFilePtr();
-};
-
-struct StarAnimationFileHandle : SharedFilePtr {
-    StarAnimationFileHandle(u32 fileID);
-    ~StarAnimationFileHandle();
-};
-
-extern StarAnimationFileHandle data_ov002_02110944;
+extern AnimFile data_ov002_02110944;
 
 /* Actor IDs this file spawns or searches for. */
 enum {
@@ -125,7 +111,7 @@ extern "C" void FUN_0202a130(void);
 
 extern void UnloadSilverStarAndNumber(void);
 extern "C" {
-extern StarAnimationFileHandle data_ov002_02110934;
+extern AnimFile data_ov002_02110934;
 extern unsigned int gNextActorUpdateMask;
 extern SharedFilePtr gSilverNumberModelFile;
 extern signed char gNumStageStars[];
@@ -192,19 +178,19 @@ extern signed char gNumStageStars[];
 
 extern "C" int NumVsStarsObtained(void);
 extern "C" {
-extern StarModelFilePtr data_ov002_0211092c;
-extern StarModelFilePtr data_ov002_0211093c;
-extern StarAnimationFileHandle data_ov002_02110924;
-extern StarAnimationFileHandle data_ov002_02110964;
+extern ModelFile data_ov002_0211092c;
+extern ModelFile data_ov002_0211093c;
+extern AnimFile data_ov002_02110924;
+extern AnimFile data_ov002_02110964;
 extern SharedFilePtr data_ov002_0210d9a8;
 extern int data_ov002_0210aa0c[3];
 extern StateHandler data_ov002_021109d8[];
 extern u8 gCurrentStarId;
 extern s32 data_0209cef0;
 extern s32 gLevelMinY;
-extern StarModelFilePtr gPowerStarModelFile;
-extern StarModelFilePtr data_ov002_02110954;
-extern StarModelFilePtr gTransparentStarModelFile;
+extern ModelFile gPowerStarModelFile;
+extern ModelFile data_ov002_02110954;
+extern ModelFile gTransparentStarModelFile;
 }
 
 extern void LoadSilverStarAndNumber(void);
@@ -2941,19 +2927,17 @@ void force_daStarBase_c_dtor_order() {
     func_02012790(0);
 }
 
-/* The nine file-scope resource handles, in retail initializer order. Five
-   model files (ModelFile::ModelFile / ModelFile::~ModelFile), then four animation files
-   (AnimFile::AnimFile / AnimFile::~AnimFile); the manifest
-   aliases each wrapper ctor/dtor onto those ROM symbols. */
-StarModelFilePtr gPowerStarModelFile(0x8015);
-StarModelFilePtr gTransparentStarModelFile(0x8017);
-StarModelFilePtr data_ov002_02110954(0x8019);
-StarModelFilePtr data_ov002_0211093c(ASSET_STAR_BASE_BMD);
-StarModelFilePtr data_ov002_0211092c(0x801c);
-StarAnimationFileHandle data_ov002_02110944(0x8016);
-StarAnimationFileHandle data_ov002_02110924(0x801a);
-StarAnimationFileHandle data_ov002_02110964(0x801b);
-StarAnimationFileHandle data_ov002_02110934(0x8018);
+/* The nine file-scope resource handles, in retail initializer order: five
+   model files, then four animation files. */
+ModelFile gPowerStarModelFile(0x8015);
+ModelFile gTransparentStarModelFile(0x8017);
+ModelFile data_ov002_02110954(0x8019);
+ModelFile data_ov002_0211093c(ASSET_STAR_BASE_BMD);
+ModelFile data_ov002_0211092c(0x801c);
+AnimFile data_ov002_02110944(0x8016);
+AnimFile data_ov002_02110924(0x801a);
+AnimFile data_ov002_02110964(0x801b);
+AnimFile data_ov002_02110934(0x8018);
 
 /* One pointer-to-member per State. mwcc cannot link-time-initialize them, so
    the initializer copies fourteen descriptor records in. */

@@ -46,28 +46,15 @@ enum daPkn_c_AssetId {
     ASSET_PAKKUN_SLEEP_LOOP_BCA = 0x03d5
 };
 
-/* The handles reach their files through these wrappers' constructor and
-   destructor veneers; the manifest maps each to the retail destination.
-   Descriptive local types, not recovered spellings. */
-struct PknModelFile : SharedFilePtr {
-    PknModelFile(u32 fileID);
-    ~PknModelFile();
-};
-
-struct PknAnimFile : SharedFilePtr {
-    PknAnimFile(u32 fileID);
-    ~PknAnimFile();
-};
-
 /* The piranha plants' shared files, in the order the retail initializer
    (0x02130654) builds them. d_a_f_pkn.cpp reads them too. */
-PknModelFile data_ov084_02130dfc(ASSET_PAKKUN_MODEL_BMD);     /* the plant's own model */
-PknAnimFile data_ov084_02130e14(ASSET_PAKKUN_ATTACK_BCA);     /* lunge animation */
-PknAnimFile data_ov084_02130e24(ASSET_PAKKUN_DEAD_BCA);       /* death animation */
-PknAnimFile data_ov084_02130e0c(ASSET_PAKKUN_SLEEP_BCA);      /* recoil animation */
-PknAnimFile data_ov084_02130df4(ASSET_PAKKUN_SLEEP_LOOP_BCA); /* idle animation */
-PknAnimFile data_ov084_02130e04(ASSET_PAKKUN_FIRE_BCA);       /* spit animation */
-PknAnimFile data_ov084_02130e1c(ASSET_PAKKUN_FIRE_ED_BCA);    /* post-spit animation */
+ModelFile data_ov084_02130dfc(ASSET_PAKKUN_MODEL_BMD);     /* the plant's own model */
+AnimFile data_ov084_02130e14(ASSET_PAKKUN_ATTACK_BCA);     /* lunge animation */
+AnimFile data_ov084_02130e24(ASSET_PAKKUN_DEAD_BCA);       /* death animation */
+AnimFile data_ov084_02130e0c(ASSET_PAKKUN_SLEEP_BCA);      /* recoil animation */
+AnimFile data_ov084_02130df4(ASSET_PAKKUN_SLEEP_LOOP_BCA); /* idle animation */
+AnimFile data_ov084_02130e04(ASSET_PAKKUN_FIRE_BCA);       /* spit animation */
+AnimFile data_ov084_02130e1c(ASSET_PAKKUN_FIRE_ED_BCA);    /* post-spit animation */
 
 extern SharedFilePtr
     data_ov002_0210da38; /* BUBBLE_MODEL_PTR -- sleep bubble, shared out of ov002 */

@@ -88,28 +88,12 @@ static inline int IsActorID(dActor_c *actor, int id) {
     return actor->actorID == id;
 }
 
-/* File-scope objects at the end of this file construct the six resource
- * handles (model files 0x6bf/0x5db/0x6ab, collision files 0x6c0/0x5dc/0x6ac)
- * and fill the five-entry state table. mwcc emits __sinit_d_a_udlift.cpp
- * from those definitions. The wrapper names are local; the handle
- * constructors and destructors are the ROM resource-family functions,
- * aliased in the manifest. */
-struct UdliftModelFile : SharedFilePtr {
-    UdliftModelFile(u32 fileID);
-    ~UdliftModelFile();
-};
-
-struct UdliftCollisionFilePtr : SharedFilePtr {
-    UdliftCollisionFilePtr(u32 fileID);
-    ~UdliftCollisionFilePtr();
-};
-
-extern UdliftModelFile gThLiftModelFile;
-extern UdliftModelFile gCvUdLiftModelFile;
-extern UdliftModelFile gRcRift02ModelFile;
-extern UdliftCollisionFilePtr gThLiftCollisionFile;
-extern UdliftCollisionFilePtr gCvUdLiftCollisionFile;
-extern UdliftCollisionFilePtr gRcRift02CollisionFile;
+extern ModelFile gThLiftModelFile;
+extern ModelFile gCvUdLiftModelFile;
+extern ModelFile gRcRift02ModelFile;
+extern ClsnFile gThLiftCollisionFile;
+extern ClsnFile gCvUdLiftCollisionFile;
+extern ClsnFile gRcRift02CollisionFile;
 
 /* Per-variant model and collision files, and the CLPS block handed to
  * dBgW_KcMbg::SetFile, all indexed by mVariant. */
@@ -393,12 +377,12 @@ void daUdlift_c::StateStop()
  * three model handles (files 0x6bf/0x5db/0x6ab), the three collision
  * handles (files 0x6c0/0x5dc/0x6ac), then the five state records copied
  * from the ROM PMF constants. */
-UdliftModelFile gThLiftModelFile(ASSET_TH_LIFT_BMD);
-UdliftModelFile gCvUdLiftModelFile(ASSET_CV_UD_LIFT_BMD);
-UdliftModelFile gRcRift02ModelFile(ASSET_RC_RIFT02_BMD);
-UdliftCollisionFilePtr gThLiftCollisionFile(ASSET_TH_LIFT_KCL);
-UdliftCollisionFilePtr gCvUdLiftCollisionFile(ASSET_CV_UD_LIFT_KCL);
-UdliftCollisionFilePtr gRcRift02CollisionFile(ASSET_RC_RIFT02_KCL);
+ModelFile gThLiftModelFile(ASSET_TH_LIFT_BMD);
+ModelFile gCvUdLiftModelFile(ASSET_CV_UD_LIFT_BMD);
+ModelFile gRcRift02ModelFile(ASSET_RC_RIFT02_BMD);
+ClsnFile gThLiftCollisionFile(ASSET_TH_LIFT_KCL);
+ClsnFile gCvUdLiftCollisionFile(ASSET_CV_UD_LIFT_KCL);
+ClsnFile gRcRift02CollisionFile(ASSET_RC_RIFT02_KCL);
 /* Six slots: the five states plus section-alignment fill. Retail BSS runs
  * 8 bytes past the fifth entry to the section end at 0x02137940. The
  * initializer never touches the sixth slot; it is zeros. The claim has to

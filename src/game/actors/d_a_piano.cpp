@@ -28,26 +28,9 @@
 #include "math/CalcLib.h"
 #include "math/MtxStack.h"
 
-/* The TU's three resource handles, defined at file end so mwcc emits their
- * constructor calls, destructor registrations, and the PMF-table copy into
- * __sinit_d_a_piano.cpp. Each flavor binds the constructor/destructor veneer
- * the cartridge uses for its asset kind (model / mesh collision / animation). */
-struct PianoModelFilePtr : SharedFilePtr {
-    PianoModelFilePtr(u32 fileID);
-    ~PianoModelFilePtr();
-};
-struct PianoCollisionFilePtr : SharedFilePtr {
-    PianoCollisionFilePtr(u32 fileID);
-    ~PianoCollisionFilePtr();
-};
-struct PianoAnimationFilePtr : SharedFilePtr {
-    PianoAnimationFilePtr(u32 fileID);
-    ~PianoAnimationFilePtr();
-};
-
-extern PianoModelFilePtr sPianoModelFile;
-extern PianoCollisionFilePtr sPianoCollisionFile;
-extern PianoAnimationFilePtr sPianoAttackAnimationFile;
+extern ModelFile sPianoModelFile;
+extern ClsnFile sPianoCollisionFile;
+extern AnimFile sPianoAttackAnimationFile;
 CLPS_Block data_ov063_0211ecb8 = {
     0x53504c43,
     0x0008,
@@ -399,9 +382,9 @@ void daPiano_c::UpdateShadows() {
  * PMF table copies its four {ptr, adj} records. mwcc emits all of it as
  * __sinit_d_a_piano.cpp in .init; the handwritten __sinit_ov063_0211e5fc.c
  * is retired. */
-PianoModelFilePtr sPianoModelFile(MAD_PIANO_MODEL_ASSET);
-PianoCollisionFilePtr sPianoCollisionFile(MAD_PIANO_COLLISION_ASSET);
-PianoAnimationFilePtr sPianoAttackAnimationFile(MAD_PIANO_ATTACK_ANIMATION_ASSET);
+ModelFile sPianoModelFile(MAD_PIANO_MODEL_ASSET);
+ClsnFile sPianoCollisionFile(MAD_PIANO_COLLISION_ASSET);
+AnimFile sPianoAttackAnimationFile(MAD_PIANO_ATTACK_ANIMATION_ASSET);
 
 PianoStateEntry data_ov063_0211efbc[2] = {
     {&daPiano_c::InitStateSearch, &daPiano_c::StateSearch},

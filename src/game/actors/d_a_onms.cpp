@@ -91,26 +91,9 @@ struct daOnms_cStateEntry { daOnms_cState state; };
 #define ActorPos(actor) (&(actor)->mPos)
 #define CamPos(actor)   (&(actor)->mCamSpacePos)
 
-/* The retail static initializer constructs these two 8-byte resource handles
- * in source order (model 0x3c9, collision 0x3ca) and lets the C++ runtime
- * register their destructors. The family spellings are reconstructed; the
- * constructor/destructor addresses, file IDs, object widths, BSS order, and
- * registration topology are direct ROM evidence. The intact-TU manifest maps
- * their compiler-generated undefined member imports onto the existing
- * evidence-bounded ROM symbols. */
-struct OnmsModelFilePtr : SharedFilePtr {
-    OnmsModelFilePtr(u32 fileID);
-    ~OnmsModelFilePtr();
-};
-
-struct OnmsCollisionFilePtr : SharedFilePtr {
-    OnmsCollisionFilePtr(u32 fileID);
-    ~OnmsCollisionFilePtr();
-};
-
 /* BMD (dExtSimpleModel_c::LoadFile) and KCL (dBgW_Kc::LoadFile). Cleanup releases both. */
-extern OnmsModelFilePtr gOnimasuModelFile;
-extern OnmsCollisionFilePtr gOnimasuCollisionFile;
+extern ModelFile gOnimasuModelFile;
+extern ClsnFile gOnimasuCollisionFile;
 extern daOnms_cStateEntry data_ov092_02132568[9];
 
 extern "C" int func_ov002_020de328(void *player);
@@ -636,8 +619,8 @@ daOnms_c *daOnms_c_classInit() {
  * then copies the nine anonymous pointer-to-member descriptors into the
  * state table Behavior indexes by mMoveDir. StateBounce returns int, so
  * its descriptor needs the cast; the emitted pair is still {addr, 0}. */
-OnmsModelFilePtr gOnimasuModelFile(ASSET_ONIMASU_BMD);
-OnmsCollisionFilePtr gOnimasuCollisionFile(ASSET_ONIMASU_KCL);
+ModelFile gOnimasuModelFile(ASSET_ONIMASU_BMD);
+ClsnFile gOnimasuCollisionFile(ASSET_ONIMASU_KCL);
 daOnms_cStateEntry data_ov092_02132568[9] = {
     &daOnms_c::StateLand,
     &daOnms_c::func_ov092_02131578,

@@ -137,23 +137,10 @@ struct ChompPmfSelf {
     ChompState *state;  /* 0x668, daWanwan2_c::mStatePair */
 };
 
-/* 8-byte resource handles. The wrapper names are local; the handle
- * constructors and destructors are the ROM resource-family functions,
- * aliased in the manifest. */
-struct Wanwan2ModelFilePtr : SharedFilePtr {
-    Wanwan2ModelFilePtr(u32 fileID);
-    ~Wanwan2ModelFilePtr();
-};
-
-struct Wanwan2AnimFileHandle : SharedFilePtr {
-    Wanwan2AnimFileHandle(u32 fileID);
-    ~Wanwan2AnimFileHandle();
-};
-
-extern Wanwan2ModelFilePtr data_ov100_021486bc;
-extern Wanwan2ModelFilePtr data_ov100_021486a4;
-extern Wanwan2AnimFileHandle data_ov100_021486ac;
-extern Wanwan2AnimFileHandle data_ov100_021486b4;
+extern ModelFile data_ov100_021486bc;
+extern ModelFile data_ov100_021486a4;
+extern AnimFile data_ov100_021486ac;
+extern AnimFile data_ov100_021486b4;
 
 struct Vector3_16;
 struct dCc_c;
@@ -162,7 +149,7 @@ void func_02012694(unsigned int, const Vector3 *);
 void LoadSilverStarAndNumber();
 void UnloadSilverStarAndNumber();
 
-extern SharedFilePtr data_ov002_0211092c;
+extern ModelFile data_ov002_0211092c;
 extern ChompState data_ov100_021486f4;
 int func_ov100_02143aa4(daWanwan2_c *);
 int func_ov100_02143ae0(daWanwan2_c *);
@@ -777,10 +764,10 @@ daWanwan2_c *daWanwan2_c_classInit() {
 /* Static-init globals (was the handwritten __sinit_ov100_021475a4 shard).
  * Handles first, in construction order, then the state record. That is
  * what emits __sinit_d_a_wanwan2.cpp. */
-Wanwan2ModelFilePtr data_ov100_021486bc(0x9c02);
-Wanwan2ModelFilePtr data_ov100_021486a4(0x9c01);
-Wanwan2AnimFileHandle data_ov100_021486ac(0x9c04);
-Wanwan2AnimFileHandle data_ov100_021486b4(0x9c03);
+ModelFile data_ov100_021486bc(0x9c02);
+ModelFile data_ov100_021486a4(0x9c01);
+AnimFile data_ov100_021486ac(0x9c04);
+AnimFile data_ov100_021486b4(0x9c03);
 ChompState data_ov100_021486f4 = {
     /* Kept (#821 r76): a real &daWanwan2_c:: constant makes the sinit 0x12c, not 0xf4 (r68); no
        r72-r75 lever applies. */

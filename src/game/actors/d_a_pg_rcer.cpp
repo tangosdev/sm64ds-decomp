@@ -6,7 +6,6 @@
  * Remaining reconstruction:
  * - Actor position and scale triples are scalar members in dActor_c;
  *   vector views retain their established layout and load grouping.
- * - SharedFilePtr has no shared field layout; LOADED reads its file word.
  * - The state table keeps its address name.
  *   The file handles, the state table, both volumes and
  *   g_profile_PENGUIN_RACER are this TU's statics; mwcc emits their
@@ -34,23 +33,6 @@ extern unsigned char data_0209d684;                /* talk-script choice */
 }
 extern unsigned char NumStars(void);
 
-/* Resource handles owned by this TU. The static initializer constructs the
-   model, seven animations and three texture sequences and registers each
-   destructor. The wrappers' constructor and destructor resolve to the
-   retail veneers through the manifest. */
-struct PgRcerModelFile : SharedFilePtr {
-    PgRcerModelFile(u32);
-    ~PgRcerModelFile();
-};
-struct PgRcerAnimFile : SharedFilePtr {
-    PgRcerAnimFile(u32);
-    ~PgRcerAnimFile();
-};
-struct PgRcerTexSeqFile : SharedFilePtr {
-    PgRcerTexSeqFile(u32);
-    ~PgRcerTexSeqFile();
-};
-
 /* Runtime asset handles resolved through the overlay 0 file table. */
 enum PgRcerAssetId {
     ASSET_PENGUIN_BMD = 0x03fb,
@@ -68,17 +50,17 @@ enum PgRcerAssetId {
 
 /* This TU's statics, in the order the retail initializer (0x021127a4)
    builds them. */
-PgRcerModelFile gOV019PenguinModelFile(ASSET_PENGUIN_BMD);
-PgRcerAnimFile gOV019PenguinWait1AnimationFile(ASSET_PENGUIN_WAIT1_BCA); /* idle */
-PgRcerAnimFile gOV019PenguinWalkAnimationFile(ASSET_PENGUIN_WALK_BCA);
-PgRcerAnimFile gPenguinJumpStAnimationFile(ASSET_PENGUIN_JUMP_ST_BCA);           /* jump */
-PgRcerAnimFile gPenguinJumpEdAnimationFile(ASSET_PENGUIN_JUMP_ED_BCA);           /* land */
-PgRcerAnimFile gPenguinDiveAnimationFile(ASSET_PENGUIN_DIVE_BCA);                /* race start */
-PgRcerAnimFile gPenguinSliderAnimationFile(ASSET_PENGUIN_SLIDER_BCA);            /* race */
-PgRcerAnimFile gPenguinStandUpAnimationFile(ASSET_PENGUIN_STAND_UP_BCA);         /* near finish */
-PgRcerTexSeqFile gOV019PenguinAngryTextureSequenceFile(ASSET_PENGUIN_ANGRY_BTP); /* lost */
-PgRcerTexSeqFile gPenguinSliderTextureSequenceFile(ASSET_PENGUIN_SLIDER_BTP);    /* race */
-PgRcerTexSeqFile gOV019PenguinWait1TextureSequenceFile(ASSET_PENGUIN_WAIT1_BTP); /* neutral */
+ModelFile gOV019PenguinModelFile(ASSET_PENGUIN_BMD);
+AnimFile gOV019PenguinWait1AnimationFile(ASSET_PENGUIN_WAIT1_BCA); /* idle */
+AnimFile gOV019PenguinWalkAnimationFile(ASSET_PENGUIN_WALK_BCA);
+AnimFile gPenguinJumpStAnimationFile(ASSET_PENGUIN_JUMP_ST_BCA);           /* jump */
+AnimFile gPenguinJumpEdAnimationFile(ASSET_PENGUIN_JUMP_ED_BCA);           /* land */
+AnimFile gPenguinDiveAnimationFile(ASSET_PENGUIN_DIVE_BCA);                /* race start */
+AnimFile gPenguinSliderAnimationFile(ASSET_PENGUIN_SLIDER_BCA);            /* race */
+AnimFile gPenguinStandUpAnimationFile(ASSET_PENGUIN_STAND_UP_BCA);         /* near finish */
+TexSeqFile gOV019PenguinAngryTextureSequenceFile(ASSET_PENGUIN_ANGRY_BTP); /* lost */
+TexSeqFile gPenguinSliderTextureSequenceFile(ASSET_PENGUIN_SLIDER_BTP);    /* race */
+TexSeqFile gOV019PenguinWait1TextureSequenceFile(ASSET_PENGUIN_WAIT1_BTP); /* neutral */
 
 extern SharedFilePtr *const data_ov019_0211277c[3] = {
     &gOV019PenguinAngryTextureSequenceFile,

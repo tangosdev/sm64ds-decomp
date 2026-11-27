@@ -85,19 +85,6 @@ int data_ov094_02136a1c[3] = {0, 0xfffe0000, 0};
 #include "LevelRng.h"
 #include "Sound.h"
 
-/* Resource handles the static initializer constructs. The wrapper spellings
- * are reconstructed; the constructor and destructor addresses, the file IDs
- * and the 8-byte width are the ROM's. */
-struct OwlModelFilePtr : SharedFilePtr {
-    OwlModelFilePtr(u32 fileID);
-    ~OwlModelFilePtr();
-};
-
-struct daOwlAnimationFilePtr : SharedFilePtr {
-    daOwlAnimationFilePtr(u32 fileID);
-    ~daOwlAnimationFilePtr();
-};
-
 /* One BSS state: two pointer-to-member constants, copied by the initializer. */
 struct OwlState {
     int (daOwl_c::*enter)();
@@ -107,14 +94,12 @@ struct OwlState {
         : enter(enterFn), main(mainFn) {}
 };
 
-typedef char OwlModelFilePtr_size_must_be_8[sizeof(OwlModelFilePtr) == 8 ? 1 : -1];
-typedef char daOwlAnimationFilePtr_size_must_be_8[sizeof(daOwlAnimationFilePtr) == 8 ? 1 : -1];
 typedef char OwlState_size_must_be_0x10[sizeof(OwlState) == 0x10 ? 1 : -1];
 
-extern OwlModelFilePtr data_ov094_02136ae0;
-extern daOwlAnimationFilePtr data_ov094_02136ae8;
-extern daOwlAnimationFilePtr data_ov094_02136af0;
-extern daOwlAnimationFilePtr data_ov094_02136af8;
+extern ModelFile data_ov094_02136ae0;
+extern AnimFile data_ov094_02136ae8;
+extern AnimFile data_ov094_02136af0;
+extern AnimFile data_ov094_02136af8;
 extern OwlState data_ov094_02136b30;
 extern OwlState data_ov094_02136b40;
 extern OwlState data_ov094_02136b50;
@@ -615,10 +600,10 @@ daOwl_c *daOwl_c_classInit() {
  * Definition order is the retail initializer's construction order. The
  * registration nodes and the pointer-to-member descriptors are compiler
  * temporaries. */
-OwlModelFilePtr data_ov094_02136ae0(ASSET_OWL_BMD);
-daOwlAnimationFilePtr data_ov094_02136af8(ASSET_OWL_FLY_1_BCA);
-daOwlAnimationFilePtr data_ov094_02136ae8(ASSET_OWL_FLY_2_BCA);
-daOwlAnimationFilePtr data_ov094_02136af0(ASSET_OWL_FLY_FREE_BCA);
+ModelFile data_ov094_02136ae0(ASSET_OWL_BMD);
+AnimFile data_ov094_02136af8(ASSET_OWL_FLY_1_BCA);
+AnimFile data_ov094_02136ae8(ASSET_OWL_FLY_2_BCA);
+AnimFile data_ov094_02136af0(ASSET_OWL_FLY_FREE_BCA);
 
 OwlState data_ov094_02136b40(&daOwl_c::EnterDormant, &daOwl_c::UpdateDormant);
 OwlState data_ov094_02136b50(&daOwl_c::EnterTalk, &daOwl_c::UpdateTalk);

@@ -110,16 +110,6 @@ extern int IsStarCollectedInLevel(signed char levelID, int starID);
 
 extern daPicGate_c::State sStates[];
 
-/* A picture's texture/collision handle. The nineteen instances below are
-   constructed by __sinit_d_a_pic_gate_methods.cpp and reached through the rodata
-   pointer table data_ov080_0212775c, indexed by picture id. The declared
-   ctor/dtor stand for the cartridge's ModelFileB::ModelFileB/ModelFileB::~ModelFileB pair;
-   words[] is the two words the ROM object carries. */
-struct PicGateFilePtr : SharedFilePtr {
-    PicGateFilePtr(u32 fileID);
-    ~PicGateFilePtr();
-};
-
 /* State 1 behavior. Picture 7 slides open; every picture then ripples. */
 void daPicGate_c::UpdateContinuousRipple() {
     if ((u8)((this->param1 >> 8) & 0x1f) == kPicSlide && !(gSaveBlock.file.flags2 & kOpened) &&
@@ -370,25 +360,25 @@ daPicGate_c *daPicGate_c_classInit() {
  * state rows. __sinit_d_a_pic_gate_methods.cpp emits the constructions, the
  * destructor registrations and the record copies; the registration nodes
  * are compiler temporaries. */
-PicGateFilePtr gForBhModelFile(ASSET_FOR_BH_BMD);
-PicGateFilePtr gForBkModelFile(ASSET_FOR_BK_BMD);
-PicGateFilePtr gForKiModelFile(ASSET_FOR_KI_BMD);
-PicGateFilePtr gForSmModelFile(ASSET_FOR_SM_BMD);
-PicGateFilePtr gForCvEx5ModelFile(ASSET_FOR_CV_EX5_BMD);
-PicGateFilePtr gForFlModelFile(ASSET_FOR_FL_BMD);
-PicGateFilePtr gForDlModelFile(ASSET_FOR_DL_BMD);
-PicGateFilePtr gForWlModelFile(ASSET_FOR_WL_BMD);
-PicGateFilePtr gForSlModelFile(ASSET_FOR_SL_BMD);
-PicGateFilePtr gForWcModelFile(ASSET_FOR_WC_BMD);
-PicGateFilePtr gForHmModelFile(ASSET_FOR_HM_BMD);
-PicGateFilePtr gForHsModelFile(ASSET_FOR_HS_BMD);
-PicGateFilePtr gForTdTtModelFile(ASSET_FOR_TD_TT_BMD);
-PicGateFilePtr gForCtModelFile(ASSET_FOR_CT_BMD);
-PicGateFilePtr gForExMarioModelFile(ASSET_FOR_EX_MARIO_BMD);
-PicGateFilePtr gForExLuigiModelFile(ASSET_FOR_EX_LUIGI_BMD);
-PicGateFilePtr gForExWarioModelFile(ASSET_FOR_EX_WARIO_BMD);
-PicGateFilePtr gForVsCrossModelFile(ASSET_FOR_VS_CROSS_BMD);
-PicGateFilePtr gForVsIslandModelFile(ASSET_FOR_VS_ISLAND_BMD);
+ModelFileB gForBhModelFile(ASSET_FOR_BH_BMD);
+ModelFileB gForBkModelFile(ASSET_FOR_BK_BMD);
+ModelFileB gForKiModelFile(ASSET_FOR_KI_BMD);
+ModelFileB gForSmModelFile(ASSET_FOR_SM_BMD);
+ModelFileB gForCvEx5ModelFile(ASSET_FOR_CV_EX5_BMD);
+ModelFileB gForFlModelFile(ASSET_FOR_FL_BMD);
+ModelFileB gForDlModelFile(ASSET_FOR_DL_BMD);
+ModelFileB gForWlModelFile(ASSET_FOR_WL_BMD);
+ModelFileB gForSlModelFile(ASSET_FOR_SL_BMD);
+ModelFileB gForWcModelFile(ASSET_FOR_WC_BMD);
+ModelFileB gForHmModelFile(ASSET_FOR_HM_BMD);
+ModelFileB gForHsModelFile(ASSET_FOR_HS_BMD);
+ModelFileB gForTdTtModelFile(ASSET_FOR_TD_TT_BMD);
+ModelFileB gForCtModelFile(ASSET_FOR_CT_BMD);
+ModelFileB gForExMarioModelFile(ASSET_FOR_EX_MARIO_BMD);
+ModelFileB gForExLuigiModelFile(ASSET_FOR_EX_LUIGI_BMD);
+ModelFileB gForExWarioModelFile(ASSET_FOR_EX_WARIO_BMD);
+ModelFileB gForVsCrossModelFile(ASSET_FOR_VS_CROSS_BMD);
+ModelFileB gForVsIslandModelFile(ASSET_FOR_VS_ISLAND_BMD);
 
 /* Picture id to its model-file handle. The nineteen handles above are
    constructed in this order, so the table is a real relocation per name. */

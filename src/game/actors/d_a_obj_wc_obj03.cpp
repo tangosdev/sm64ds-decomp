@@ -19,7 +19,7 @@
  * where the cartridge has it.
  *
  * What stays:
- * - data_ov029_02114270 is the model SharedFilePtr, defined here; symbols.txt
+ * - data_ov029_02114270 is the ModelFile, defined here; symbols.txt
  *   has no recovered name, so it is not coined.
  * - Address-valued `&mAngle.y` in Behavior: a named increment CSEs the field
  *   address. The cartridge keeps r1 as &mAngle.y for both the halfword load
@@ -38,18 +38,10 @@ enum d_a_obj_wc_obj03_AssetId {
 #include "math/MtxStack.h"
 #include "SpawnInfo.h"
 
-/* 8-byte file handle. The model uses ModelFile::ModelFile / ModelFile::~ModelFile. The
- * spelling is local; the manifest aliases the generated names to those ROM
- * symbols. */
-struct WcObj03ModelFilePtr : SharedFilePtr {
-    WcObj03ModelFilePtr(u32 fileID);
-    ~WcObj03ModelFilePtr();
-};
-
 /* This TU's file handle: the water-diamond model, file 0x6d0. InitResources
  * loads it, CleanupResources releases it. Defined at the end of this file so
  * the constructor does not enter .text. */
-extern WcObj03ModelFilePtr data_ov029_02114270;
+extern ModelFile data_ov029_02114270;
 
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -207,7 +199,7 @@ void daObjWc_Obj03_c::CheckClsnWithPlayer()
  * the actor heap through dActor_c's inline operator delete.
  */
 
-WcObj03ModelFilePtr data_ov029_02114270(ASSET_WC_OBJ03_BMD);
+ModelFile data_ov029_02114270(ASSET_WC_OBJ03_BMD);
 
 extern "C" SpawnInfo<daObjWc_Obj03_c> g_profile_WC_OBJ03 = {
     daObjWc_Obj03_c_classInit, 97, 273, 0x00000002, 0x00000000, 0x00040000, 0x01000000, 0x00000000};

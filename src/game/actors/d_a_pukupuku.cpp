@@ -49,21 +49,6 @@ struct PukuMainView {
     PukuMainPMF main;
 };
 
-/* File-scope objects at the end of this file construct the two resource
- * handles and fill the two state rows. mwcc emits
- * __sinit_d_a_pukupuku.cpp from those definitions. The wrapper names are
- * local; the handle constructors and destructors are the ROM resource-family
- * functions, aliased in the manifest. */
-struct PukupukuModelFile : SharedFilePtr {
-    PukupukuModelFile(u32 fileID);
-    ~PukupukuModelFile();
-};
-
-struct PukupukuAnimationFilePtr : SharedFilePtr {
-    PukupukuAnimationFilePtr(u32 fileID);
-    ~PukupukuAnimationFilePtr();
-};
-
 /* One 8-byte state word (a pointer-to-member: function address, this-delta).
  * The four words live in .data; each state row copies two of them. */
 typedef int (daPukupuku_c::*PukuStateEntry)();
@@ -78,8 +63,8 @@ struct PukuBodyOffset {
     fx32 x, y, z;
 };
 
-extern PukupukuModelFile data_ov090_02134564;
-extern PukupukuAnimationFilePtr data_ov090_0213455c;
+extern ModelFile data_ov090_02134564;
+extern AnimFile data_ov090_0213455c;
 extern PukuStateRow data_ov090_02134594;
 extern PukuStateRow data_ov090_02134584;
 
@@ -269,8 +254,8 @@ void daPukupuku_c::CheckPlayerHit() {
  * handle (file 0x418), then the animation handle (file 0x419), then the swim
  * row (InitStateSwim, StateSwim) and the pause row (InitStatePause,
  * StatePause). */
-PukupukuModelFile data_ov090_02134564(0x418);
-PukupukuAnimationFilePtr data_ov090_0213455c(0x419);
+ModelFile data_ov090_02134564(0x418);
+AnimFile data_ov090_0213455c(0x419);
 PukuStateRow data_ov090_02134594 = {&daPukupuku_c::InitStateSwim, &daPukupuku_c::StateSwim};
 PukuStateRow data_ov090_02134584 = {&daPukupuku_c::InitStatePause, &daPukupuku_c::StatePause};
 

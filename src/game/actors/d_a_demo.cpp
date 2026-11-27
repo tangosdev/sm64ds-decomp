@@ -319,7 +319,7 @@ extern daPly_c *gPlayers[];
 extern int data_ov002_0210b964[3];
 extern Matrix4x3 gInvViewMtx;
 extern unsigned char gGameMode;
-extern SharedFilePtr gPowerStarModelFile;
+extern ModelFile gPowerStarModelFile;
 /* Lakitu's model handle, owned and constructed by d_a_c_jugem.cpp. */
 extern ModelFile data_ov085_0213074c;
 extern SharedFilePtr *data_ov002_0210b600[1];
