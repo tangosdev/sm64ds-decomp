@@ -23,8 +23,8 @@ struct dExtModel_c;
  * the buffer when that count reaches zero. Eight bytes, word-aligned.
  *
  * A handle is constructed with the overlay-0 file ID and destroyed by publishing
- * its file ID, and every handle is one of the derived kinds below. The base
- * constructor and destructor are only ever entered from a derived one: the ROM
+ * its file ID, and in the ROM every handle is one of the derived kinds below.
+ * The base constructor and destructor are only ever entered from a derived one: the ROM
  * keeps their base-object variants (C2 0x02017e48, D2 0x02017e34) and no caller
  * outside this unit reaches them.
  */
@@ -112,5 +112,12 @@ struct ModelFileB : ModelFile {
     ModelFileB(unsigned int);
     ~ModelFileB();
 };
+
+typedef char ClsnFile_size_must_be_0x8[sizeof(ClsnFile) == 0x8 ? 1 : -1];
+typedef char ModelFile_size_must_be_0x8[sizeof(ModelFile) == 0x8 ? 1 : -1];
+typedef char ModelFileA_size_must_be_0x8[sizeof(ModelFileA) == 0x8 ? 1 : -1];
+typedef char AnimFile_size_must_be_0x8[sizeof(AnimFile) == 0x8 ? 1 : -1];
+typedef char TexSeqFile_size_must_be_0x8[sizeof(TexSeqFile) == 0x8 ? 1 : -1];
+typedef char ModelFileB_size_must_be_0x8[sizeof(ModelFileB) == 0x8 ? 1 : -1];
 
 #endif
