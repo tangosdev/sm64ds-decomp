@@ -3313,12 +3313,12 @@ int GetLocalPlayerId(void) {
     return data_020a0f10;
 }
 
-/* The link status bits of gLinkStatusFlags that mask x selects.
+/* The link status bits of gLinkStatusFlags that mask selects.
    func_02030e4c and func_020197b8 test the error bits 0x9d with it, and
    func_0201a8b4 the busy bit 0x2000, held while a link step waits for the
    other consoles. */
-unsigned short GetLinkStatus(unsigned short x) {
-    return gLinkStatusFlags & x;
+unsigned short GetLinkStatus(unsigned short mask) {
+    return gLinkStatusFlags & mask;
 }
 
 /* Clear the link error bits 0x9f of gLinkStatusFlags and the two sync bytes of

@@ -44,25 +44,26 @@
 
 /* The settings bytes the link checks for desync. dScStage_c::Render stores
  * two values through SetLinkByte every frame, an XOR of the players'
- * positions and a bit per player with wings, and func_0203ea5c compares each
- * across the four records: a position mismatch raises link error bit 0x08,
- * a wing mismatch 0x10. ClearLinkErrors and func_0203ea5c's error countdown
- * clear both.
+ * positions and a bit per player with wings, and func_0203ea5c is meant to
+ * compare each across the four records, so that a position mismatch would
+ * raise link error bit 0x08 and a wing mismatch 0x10. ClearLinkErrors and
+ * func_0203ea5c's error countdown clear both.
  *
  * On the cartridge both indices are 0x10: Render's second store overwrites
  * its first, the two compares test the same byte, and the two clears clear
  * it twice. One wrong constant explains all three doublings, so this is most
- * likely an EAD bug, the second index meant to be 0x11. What the cartridge
- * does is a wing check only: the position check never runs, and since a
- * wing mismatch already fails the first compare, error bit 0x10 can never be
- * raised (callers test it through GetLinkStatus(0x9d)).
+ * likely an EAD bug, the second index presumably meant to name another byte.
+ * What the cartridge does is a wing check only: the position check never
+ * runs, and since a wing mismatch already fails the first compare, error bit
+ * 0x10 can never be raised (callers test it through GetLinkStatus(0x9d)).
  *
- * 0x11 would not have worked either. The link exchanges only the first 0x11
- * settings bytes (0x12..0x22): they fill the last 0x11 bytes of the 0x20-byte
- * packet data_020a1020, and 0x20 bytes per console is what func_0203fa50
- * shares, so record byte 0x23 had no room to travel. */
+ * Which byte was meant is not recoverable. It was not 0x11: the link
+ * exchanges only the first 0x11 settings bytes (0x12..0x22), which fill the
+ * last 0x11 bytes of the 0x20-byte packet data_020a1020, and 0x20 bytes per
+ * console is what func_0203fa50 shares, so record byte 0x23 had no room to
+ * travel. Settings bytes 5..0x0f are never used and would have fit. */
 #define LINK_BYTE_SYNC_POSITION 0x10
-#define LINK_BYTE_SYNC_WINGS    0x10 /* meant to be 0x11 (see above) */
+#define LINK_BYTE_SYNC_WINGS    0x10 /* presumably meant to differ (see above) */
 
 /* Parameters are unnamed on purpose: a named parameter in a shared
  * prototype takes a number from mwccarm's @NNN counter in every C++
