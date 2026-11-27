@@ -846,6 +846,13 @@ class ParserTests(unittest.TestCase):
                          ["int (Thing)"])
         self.assertEqual(kinds(findings, "f"), [])
 
+    def test_a_type_named_like_a_literal_keyword_is_still_a_parameter(self):
+        self.assertFalse(CDA.is_direct_initialiser("NULLHandle h"))
+        self.assertFalse(CDA.is_direct_initialiser("trueColor c, int n"))
+        self.assertTrue(CDA.is_direct_initialiser("NULL"))
+        self.assertTrue(CDA.is_direct_initialiser("0x49b"))
+        self.assertTrue(CDA.is_direct_initialiser("-1"))
+
     def test_a_static_assertion_is_not_a_declaration(self):
         """It carries a `==`, and this tree writes hundreds of them."""
         with tempfile.TemporaryDirectory() as tmp:
