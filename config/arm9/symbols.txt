@@ -1691,8 +1691,8 @@ func_0203d9b4 kind:function(arm,size=0x40) addr:0x0203d9b4
 func_0203d9f4 kind:function(arm,size=0x38) addr:0x0203d9f4
 func_0203da2c kind:function(arm,size=0x10) addr:0x0203da2c
 func_0203da3c kind:function(arm,size=0x10) addr:0x0203da3c
-func_0203da4c kind:function(arm,size=0x34) addr:0x0203da4c
-func_0203da80 kind:function(arm,size=0x1c) addr:0x0203da80
+ClearLinkErrors kind:function(arm,size=0x34) addr:0x0203da4c
+GetLinkStatus kind:function(arm,size=0x1c) addr:0x0203da80
 func_0203da9c kind:function(arm,size=0x10) addr:0x0203da9c
 func_0203daac kind:function(arm,size=0x10) addr:0x0203daac
 func_0203dabc kind:function(arm,size=0x18) addr:0x0203dabc
@@ -1701,8 +1701,8 @@ func_0203dae4 kind:function(arm,size=0x18) addr:0x0203dae4
 func_0203dafc kind:function(arm,size=0x10) addr:0x0203dafc
 func_0203db0c kind:function(arm,size=0x18) addr:0x0203db0c
 GetAngleToCamera kind:function(arm,size=0x18) addr:0x0203db24
-func_0203db3c kind:function(arm,size=0x10) addr:0x0203db3c
-GetPlayerFlagByte kind:function(arm,size=0x18) addr:0x0203db4c
+SetLinkByte kind:function(arm,size=0x10) addr:0x0203db3c
+GetLinkByte kind:function(arm,size=0x18) addr:0x0203db4c
 func_0203db64 kind:function(arm,size=0x3dc) addr:0x0203db64
 func_0203df40 kind:function(arm,size=0x16c) addr:0x0203df40
 func_0203e0ac kind:function(arm,size=0x160) addr:0x0203e0ac
@@ -4950,7 +4950,7 @@ data_020a0f0c kind:bss addr:0x020a0f0c
 data_020a0f10 kind:bss addr:0x020a0f10
 data_020a0f14 kind:bss addr:0x020a0f14
 data_020a0f18 kind:bss addr:0x020a0f18
-data_020a0f1c kind:bss addr:0x020a0f1c
+gLinkStatusFlags kind:bss addr:0x020a0f1c
 data_020a0f20 kind:bss addr:0x020a0f20
 data_020a0f24 kind:bss addr:0x020a0f24
 data_020a0f28 kind:bss addr:0x020a0f28
