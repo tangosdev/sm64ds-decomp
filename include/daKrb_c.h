@@ -9,14 +9,6 @@
 #include "dExtShadowModel_c.h"
 #include "dExtAnmMaterial_c.h"
 
-struct KrbAnimationFileHandle : SharedFilePtr {
-    KrbAnimationFileHandle(u32 fileID);
-    ~KrbAnimationFileHandle();
-};
-
-typedef char
-    KrbAnimationFileHandle_size_must_be_0x08[sizeof(KrbAnimationFileHandle) == 0x08 ? 1 : -1];
-
 /* Goomba (KURIBO 200 / KURIBO_S 201 / KURIBO_L 202) -- ov084/daKrb_c.
  *
  * RTTI ov084:0x021308d4 is the length-prefixed string 7daKrb_c;

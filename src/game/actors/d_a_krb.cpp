@@ -150,13 +150,13 @@ enum {
    02130cc8 the standing one a king minion plays while its target speed is
    0, 02130cc0 the tumble animation, 02130ce0 the one played on deaths 2, 5
    and 7, and 02130cd0 the one played on deaths 3, 4 and 6. */
-extern KrbAnimationFileHandle data_ov084_02130cc0;
-extern KrbAnimationFileHandle data_ov084_02130cc8;
-extern KrbAnimationFileHandle data_ov084_02130cd0;
-extern KrbAnimationFileHandle gKuriboRecoverAnimationFile;
-extern KrbAnimationFileHandle data_ov084_02130ce0;
-extern KrbAnimationFileHandle data_ov084_02130ce8;
-extern KrbAnimationFileHandle data_ov084_02130cf0;
+extern AnimFile data_ov084_02130cc0;
+extern AnimFile data_ov084_02130cc8;
+extern AnimFile data_ov084_02130cd0;
+extern AnimFile gKuriboRecoverAnimationFile;
+extern AnimFile data_ov084_02130ce0;
+extern AnimFile data_ov084_02130ce8;
+extern AnimFile data_ov084_02130cf0;
 extern ModelFile data_ov084_02130cf8;
 extern ModelFile gKuriboLowModelModelFile;
 extern StateHandler data_ov084_02130d74[];
@@ -1840,13 +1840,13 @@ SpawnInfo<daKrb_c> g_profile_KURIBO_L = {
    model files, then seven animation files. */
 ModelFile data_ov084_02130cf8(ASSET_KURIBO_MODEL_BMD);
 ModelFile gKuriboLowModelModelFile(ASSET_KURIBO_LOW_MODEL_BMD);
-KrbAnimationFileHandle data_ov084_02130ce8(ASSET_KURIBO_WALK_BCA);
-KrbAnimationFileHandle data_ov084_02130ce0(ASSET_KURIBO_ROLLING_BCA);
-KrbAnimationFileHandle data_ov084_02130cd0(ASSET_KURIBO_STRETCH_BCA);
-KrbAnimationFileHandle data_ov084_02130cc0(ASSET_KURIBO_UNBALANCE_BCA);
-KrbAnimationFileHandle gKuriboRecoverAnimationFile(ASSET_KURIBO_RECOVER_BCA);
-KrbAnimationFileHandle data_ov084_02130cc8(ASSET_KURIBO_WAIT_BCA);
-KrbAnimationFileHandle data_ov084_02130cf0(ASSET_KURIBO_RUN_BCA);
+AnimFile data_ov084_02130ce8(ASSET_KURIBO_WALK_BCA);
+AnimFile data_ov084_02130ce0(ASSET_KURIBO_ROLLING_BCA);
+AnimFile data_ov084_02130cd0(ASSET_KURIBO_STRETCH_BCA);
+AnimFile data_ov084_02130cc0(ASSET_KURIBO_UNBALANCE_BCA);
+AnimFile gKuriboRecoverAnimationFile(ASSET_KURIBO_RECOVER_BCA);
+AnimFile data_ov084_02130cc8(ASSET_KURIBO_WAIT_BCA);
+AnimFile data_ov084_02130cf0(ASSET_KURIBO_RUN_BCA);
 
 /* One pointer-to-member per State, in state-index order. Each &daKrb_c::
    expression is an 8-byte {code address, 0} constant in .data, and

@@ -25,9 +25,9 @@
  *   unsigned: a signed % 400 / % 4000 or >> 16 changes codegen.
  * - Behavior builds the model matrix through MtxStack (math/MtxStack.h)
  *   and copies it out whole.
- * - data_ov009_02113c20 / 02113c28 SharedFilePtr handles: the initializer
- *   constructs them as file IDs 1080 / 1081. symbols.txt has no recovered
- *   names, so they are not coined.
+ * - data_ov009_02113c20 / 02113c28, the model and animation handles: the
+ *   initializer constructs them as file IDs 1080 / 1081. symbols.txt has
+ *   no recovered names, so they are not coined.
  * - data_0209e650 RNG seed; func_0201267c plays
  *   sound 0x6a at mCamSpacePos.
  * - The flock measures from the ClosestPlayer result's mPos.
@@ -279,7 +279,7 @@ daSBird_c *daSBird_c_classInit() {
  * model handle (file 1080), the animation handle (file 1081). Their
  * registration nodes are compiler temporaries, like the PMF descriptors
  * the table initializer below materializes. */
-SBirdModelFilePtr data_ov009_02113c20(1080);
-SBirdAnimationFilePtr data_ov009_02113c28(1081);
+ModelFile data_ov009_02113c20(1080);
+AnimFile data_ov009_02113c28(1081);
 
 SBirdStateTable data_ov009_02113c48;

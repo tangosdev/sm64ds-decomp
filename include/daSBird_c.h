@@ -65,20 +65,9 @@ struct daSBird_c : dActor_c {
 /* The bird's resource handles, which ov009's static initializer constructs
  * (src/game/actors/d_a_s_bird.cpp): the model, file 1080, and the
  * animation, file 1081. d_a_demo.cpp's cutscene birds load through the same
- * two. The wrapper spellings are reconstructed; constructor and destructor
- * addresses, file IDs, widths and BSS order are the ROM's. */
-struct SBirdModelFilePtr : SharedFilePtr {
-    SBirdModelFilePtr(u32 fileID);
-    ~SBirdModelFilePtr();
-};
-
-struct SBirdAnimationFilePtr : SharedFilePtr {
-    SBirdAnimationFilePtr(u32 fileID);
-    ~SBirdAnimationFilePtr();
-};
-
-extern SBirdModelFilePtr data_ov009_02113c20;
-extern SBirdAnimationFilePtr data_ov009_02113c28;
+ * two. */
+extern ModelFile data_ov009_02113c20;
+extern AnimFile data_ov009_02113c28;
 
 typedef char daSBird_c_size_must_be_0x184[sizeof(daSBird_c) == 0x184 ? 1 : -1];
 
