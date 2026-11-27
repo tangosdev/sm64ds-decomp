@@ -6,31 +6,6 @@
 
 /* Definition order is what makes the compiler's size sort match address order. */
 
-typedef struct U16Run1 {
-    u16 entries[1];
-    u16 pad;
-} U16Run1;
-
-typedef struct PathDefRun3 {
-    struct PathDef entries[3];
-    u16 pad;
-} PathDefRun3;
-
-typedef struct ExitRun3 {
-    ExitEntry entries[3];
-    u16 pad;
-} ExitRun3;
-
-typedef struct ViewRun7 {
-    ViewEntry entries[7];
-    u16 pad;
-} ViewRun7;
-
-typedef struct PathNodeRun17 {
-    PathNode nodes[17];
-    u16 pad;
-} PathNodeRun17;
-
 extern const u16 data_ov033_021116c8[2];
 extern const u16 data_ov033_021116cc[2];
 extern const fx32 data_ov033_021116d0[1];
@@ -39,8 +14,8 @@ extern const BTAMaterialRecord data_ov033_021116d8[1];
 extern const BTAMaterialRecord data_ov033_021116f4[1];
 extern const fx32 data_ov033_02111710[91];
 extern const fx32 data_ov033_0211187c[91];
-extern U16Run1 data_ov033_02111ae0;
-extern U16Run1 data_ov033_02111ae4;
+extern u16 data_ov033_02111ae0[1];
+extern u16 data_ov033_02111ae4[1];
 extern u32 data_ov033_02111ae8[1];
 extern ObjTable data_ov033_02111aec;
 extern TeleportSourceEntry data_ov033_02111af4[1];
@@ -56,29 +31,29 @@ extern StandardEntry data_ov033_02111b5c[1];
 extern StandardEntry data_ov033_02111b6c[1];
 extern StandardEntry data_ov033_02111b7c[1];
 extern StandardEntry data_ov033_02111b8c[1];
-extern PathDefRun3 data_ov033_02111b9c;
+extern struct PathDef data_ov033_02111b9c[3];
 extern BTA_File data_ov033_02111bb0;
 extern BTA_File data_ov033_02111bc8;
 extern LevelRec data_ov033_02111be0;
 extern CLPS_Block data_ov033_02111bfc;
 extern CLPS_Block data_ov033_02111c1c;
-extern ExitRun3 data_ov033_02111c3c;
+extern ExitEntry data_ov033_02111c3c[3];
 extern ObjSubTable data_ov033_02111c68[10];
 extern ObjSubTable data_ov033_02111cb8[10];
-extern ViewRun7 data_ov033_02111d08;
-extern PathNodeRun17 data_ov033_02111d6c;
+extern ViewEntry data_ov033_02111d08[7];
+extern PathNode data_ov033_02111d6c[17];
 extern StandardEntry data_ov033_02111dd4[7];
 extern CLPS_Block160 data_ov033_02111e44;
 extern SimpleEntry data_ov033_02111ee4[23];
 extern StandardEntry data_ov033_02111f9c[58];
 
-const fx32 data_ov033_021116d4[1] = {0x00001000};
+const fx32 data_ov033_021116d0[1] = {0x00001000};
 
 const u16 data_ov033_021116c8[2] = {0x0000, 0x0000};
 
-const fx32 data_ov033_021116d0[1] = {0x00001000};
-
 const u16 data_ov033_021116cc[2] = {0x0000, 0x0000};
+
+const fx32 data_ov033_021116d4[1] = {0x00001000};
 
 const BTAMaterialRecord data_ov033_021116d8[1] = {{0xffff,
                                                    0x0000,
@@ -126,9 +101,13 @@ const fx32 data_ov033_0211187c[91] = {
     0x00000e39, 0x00000e66, 0x00000e94, 0x00000ec1, 0x00000eef, 0x00000f1c, 0x00000f4a, 0x00000f77,
     0x00000fa5, 0x00000fd2, 0x00001000};
 
-U16Run1 data_ov033_02111ae0 = {{0x07e9}, 0x0000};
+u16 data_ov033_02111ae4[1] = {
+    0x0960,
+};
 
-U16Run1 data_ov033_02111ae4 = {{0x0960}, 0x0000};
+u16 data_ov033_02111ae0[1] = {
+    0x07e9,
+};
 
 u32 data_ov033_02111ae8[1] = {0x03033334};
 
@@ -181,12 +160,11 @@ StandardEntry data_ov033_02111b8c[1] = {
     {0x00fc, 0x012c, (s16)0xfe70, 0x076c, 0x0000, 0x0000, 0x0000, 0xf002},
 };
 
-PathDefRun3 data_ov033_02111b9c = {{
-                                       {0x0000, 0x09, 0xff, 0xff, 0x7f},
-                                       {0x0009, 0x04, 0xff, 0xff, 0xff},
-                                       {0x000d, 0x04, 0xff, 0xff, 0xff},
-                                   },
-                                   0x0000};
+struct PathDef data_ov033_02111b9c[3] = {
+    {0x0000, 0x09, 0xff, 0xff, 0x7f},
+    {0x0009, 0x04, 0xff, 0xff, 0xff},
+    {0x000d, 0x04, 0xff, 0xff, 0xff},
+};
 
 BTA_File data_ov033_02111bb0 = {0x005b,
                                 0,
@@ -232,13 +210,11 @@ CLPS_Block data_ov033_02111c1c = {
     {{0x00000fe0, 0x000000ff}, {0xffffffff, 0xffffffff}, {0xffffffff, 0xffffffff}},
 };
 
-ExitRun3 data_ov033_02111c3c = {
-    {
-        {(s16)0xf934, (s16)0xfdda, (s16)0xf93e, (s16)0xc000, 0x0000, {0x18, 0x05, 0xff, 0x00}},
-        {(s16)0xfc20, 0x00be, (s16)0xfba5, (s16)0xc000, 0x0000, {0x18, 0x06, 0xff, 0x00}},
-        {0x076c, (s16)0xfe70, (s16)0xf98e, (s16)0xc000, 0x0000, {0x18, 0x07, 0xff, 0x00}},
-    },
-    0x0000};
+ExitEntry data_ov033_02111c3c[3] = {
+    {(s16)0xf934, (s16)0xfdda, (s16)0xf93e, (s16)0xc000, 0x0000, {0x18, 0x05, 0xff, 0x00}},
+    {(s16)0xfc20, 0x00be, (s16)0xfba5, (s16)0xc000, 0x0000, {0x18, 0x06, 0xff, 0x00}},
+    {0x076c, (s16)0xfe70, (s16)0xf98e, (s16)0xc000, 0x0000, {0x18, 0x07, 0xff, 0x00}},
+};
 
 ObjSubTable data_ov033_02111cb8[10] = {
     {0x02, 0x11, {0x00, 0x00}, &data_ov033_02111d6c},
@@ -266,38 +242,35 @@ ObjSubTable data_ov033_02111c68[10] = {
     {0xe0, 0x01, {0x00, 0x00}, &data_ov033_02111b7c},
 };
 
-ViewRun7 data_ov033_02111d08 = {
-    {
-        {0x00, 0xff, 0x0000, 0x0514, (s16)0xffce, {0x00, 0x00}, 0x0000, 0x0000},
-        {0x02, 0xff, (s16)0xf510, (s16)0xfdd9, 0x0898, {0x00, 0x00}, 0x4000, 0x0000},
-        {0x07, 0xff, 0x0000, (s16)0xfbe6, (s16)0xffce, {0x00, 0x00}, 0x0000, 0x0000},
-        {0x02, 0xff, (s16)0xf768, (s16)0xfe70, (s16)0xf8f8, {0x00, 0x00}, 0x2aaa, 0x0000},
-        {0x02, 0xff, 0x09c4, (s16)0xff6a, (s16)0xf8f8, {0x00, 0x00}, (s16)0xd1c8, 0x0000},
-        {0x02, 0xff, (s16)0xfa24, 0x012c, (s16)0xfa88, {0x00, 0x00}, 0x238e, 0x0000},
-        {0x02, 0xff, (s16)0xfc18, (s16)0xfed4, (s16)0xf63c, {0x00, 0x00}, (s16)0xeaab, 0x0000},
-    },
-    0x0000};
+ViewEntry data_ov033_02111d08[7] = {
+    {0x00, 0xff, 0x0000, 0x0514, (s16)0xffce, {0x00, 0x00}, 0x0000, 0x0000},
+    {0x02, 0xff, (s16)0xf510, (s16)0xfdd9, 0x0898, {0x00, 0x00}, 0x4000, 0x0000},
+    {0x07, 0xff, 0x0000, (s16)0xfbe6, (s16)0xffce, {0x00, 0x00}, 0x0000, 0x0000},
+    {0x02, 0xff, (s16)0xf768, (s16)0xfe70, (s16)0xf8f8, {0x00, 0x00}, 0x2aaa, 0x0000},
+    {0x02, 0xff, 0x09c4, (s16)0xff6a, (s16)0xf8f8, {0x00, 0x00}, (s16)0xd1c8, 0x0000},
+    {0x02, 0xff, (s16)0xfa24, 0x012c, (s16)0xfa88, {0x00, 0x00}, 0x238e, 0x0000},
+    {0x02, 0xff, (s16)0xfc18, (s16)0xfed4, (s16)0xf63c, {0x00, 0x00}, (s16)0xeaab, 0x0000},
+};
 
-PathNodeRun17 data_ov033_02111d6c = {{
-                                         {(s16)0xfab5, 0x0050, (s16)0xfd87},
-                                         {(s16)0xfa79, 0x001c, (s16)0xfd52},
-                                         {(s16)0xf9c0, 0x0034, (s16)0xfa88},
-                                         {(s16)0xfa88, 0x0003, (s16)0xfa24},
-                                         {(s16)0xfbd9, (s16)0xff9a, (s16)0xfa6a},
-                                         {(s16)0xfe12, (s16)0xfe94, (s16)0xfa6a},
-                                         {0x00d1, (s16)0xfe20, (s16)0xfa6a},
-                                         {0x032d, (s16)0xfda8, (s16)0xfa6a},
-                                         {0x03b3, (s16)0xfd99, (s16)0xfa6a},
-                                         {0x0000, 0x0384, 0x0384},
-                                         {(s16)0xfc68, 0x0384, (s16)0xff6a},
-                                         {0x0000, (s16)0xfe5c, (s16)0xee6c},
-                                         {0x0514, 0x04b0, (s16)0xfe0c},
-                                         {(s16)0xfc18, 0x00c8, 0x02bc},
-                                         {(s16)0xfc18, 0x00c8, 0x05dc},
-                                         {0x0000, 0x00c8, 0x0640},
-                                         {0x0190, 0x00c8, 0x02bc},
-                                     },
-                                     0x0000};
+PathNode data_ov033_02111d6c[17] = {
+    {(s16)0xfab5, 0x0050, (s16)0xfd87},
+    {(s16)0xfa79, 0x001c, (s16)0xfd52},
+    {(s16)0xf9c0, 0x0034, (s16)0xfa88},
+    {(s16)0xfa88, 0x0003, (s16)0xfa24},
+    {(s16)0xfbd9, (s16)0xff9a, (s16)0xfa6a},
+    {(s16)0xfe12, (s16)0xfe94, (s16)0xfa6a},
+    {0x00d1, (s16)0xfe20, (s16)0xfa6a},
+    {0x032d, (s16)0xfda8, (s16)0xfa6a},
+    {0x03b3, (s16)0xfd99, (s16)0xfa6a},
+    {0x0000, 0x0384, 0x0384},
+    {(s16)0xfc68, 0x0384, (s16)0xff6a},
+    {0x0000, (s16)0xfe5c, (s16)0xee6c},
+    {0x0514, 0x04b0, (s16)0xfe0c},
+    {(s16)0xfc18, 0x00c8, 0x02bc},
+    {(s16)0xfc18, 0x00c8, 0x05dc},
+    {0x0000, 0x00c8, 0x0640},
+    {0x0190, 0x00c8, 0x02bc},
+};
 
 StandardEntry data_ov033_02111dd4[7] = {
     {0x0000, (s16)0xf7cc, 0x033e, 0x076c, 0x0000, 0x5c71, 0x0000, 0x0508},

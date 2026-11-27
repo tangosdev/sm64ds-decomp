@@ -6,11 +6,6 @@
 
 /* Definition order is what makes the compiler's size sort match address order. */
 
-typedef struct U16Run1 {
-    u16 entries[1];
-    u16 pad;
-} U16Run1;
-
 extern const u16 data_ov035_02111bd0[2];
 extern const u16 data_ov035_02111bd4[2];
 extern const fx32 data_ov035_02111bd8[1];
@@ -19,8 +14,8 @@ extern const BTAMaterialRecord data_ov035_02111be0[1];
 extern const BTAMaterialRecord data_ov035_02111bfc[1];
 extern const fx32 data_ov035_02111c18[91];
 extern const fx32 data_ov035_02111d84[91];
-extern U16Run1 data_ov035_02112040;
-extern U16Run1 data_ov035_02112044;
+extern u16 data_ov035_02112040[1];
+extern u16 data_ov035_02112044[1];
 extern u32 data_ov035_02112048[1];
 extern ObjTable data_ov035_0211204c;
 extern ObjTable data_ov035_02112054;
@@ -52,11 +47,11 @@ extern CLPS_Block128 data_ov035_0211236c;
 extern SimpleEntry data_ov035_021123ec[31];
 extern StandardEntry data_ov035_021124e4[90];
 
-const fx32 data_ov035_02111bdc[1] = {0x00001000};
+const u16 data_ov035_02111bd4[2] = {0x0000, 0x0000};
 
 const fx32 data_ov035_02111bd8[1] = {0x00001000};
 
-const u16 data_ov035_02111bd4[2] = {0x0000, 0x0000};
+const fx32 data_ov035_02111bdc[1] = {0x00001000};
 
 const u16 data_ov035_02111bd0[2] = {0x0000, 0x0000};
 
@@ -106,9 +101,13 @@ const fx32 data_ov035_02111d84[91] = {
     0xffffc71c, 0xffffc666, 0xffffc5b0, 0xffffc4fa, 0xffffc444, 0xffffc38e, 0xffffc2d8, 0xffffc222,
     0xffffc16c, 0xffffc0b6, 0xffffc000};
 
-U16Run1 data_ov035_02112044 = {{0x070d}, 0x0000};
+u16 data_ov035_02112040[1] = {
+    0x0a8c,
+};
 
-U16Run1 data_ov035_02112040 = {{0x0a8c}, 0x0000};
+u16 data_ov035_02112044[1] = {
+    0x070d,
+};
 
 u32 data_ov035_02112048[1] = {0x00000004};
 

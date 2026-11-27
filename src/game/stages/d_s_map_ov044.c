@@ -6,28 +6,12 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-/* The ROM image carries a zero halfword of alignment padding after these
- * records, so it is written as part of the object. */
-typedef struct {
-    s16 value;
-    u16 pad;
-} ScalarEntryS16;
-typedef struct {
-    u16 value;
-    u16 pad;
-} ScalarEntryU16;
-
-typedef struct {
-    ViewEntry entries[1];
-    u16 pad;
-} ViewEntriesPad;
-
-extern ScalarEntryU16 data_ov044_02111360;
+extern u16 data_ov044_02111360[1];
 extern ObjSubTable data_ov044_02111364[1];
 extern ObjTable data_ov044_0211136c;
 extern ObjTable data_ov044_02111374;
 extern Area data_ov044_0211137c[1];
-extern ViewEntriesPad data_ov044_02111388;
+extern ViewEntry data_ov044_02111388[1];
 extern ObjSubTable data_ov044_02111398[3];
 extern LevelRec data_ov044_021113b0;
 extern CLPS_Block data_ov044_021113cc;
@@ -42,20 +26,14 @@ ObjSubTable data_ov044_02111364[1] = {
 
 ObjTable data_ov044_02111374 = {0x0003, {0x0, 0x0}, (void *)&data_ov044_02111398[0]};
 
-ScalarEntryU16 data_ov044_02111360 = {
-    0x076a,
-    0x0000,
-};
+u16 data_ov044_02111360[1] = {0x076a};
 
 Area data_ov044_0211137c[1] = {
     {(struct ObjTable *)&data_ov044_0211136c, 0, 0x00, {0x00, 0x3e, 0x03}},
 };
 
-ViewEntriesPad data_ov044_02111388 = {
-    {
-        {0x07, 0xff, 0x0000, 0x012c, 0x0000, {0x00, 0x00}, 0x0000, 0x0000},
-    },
-    0x0000,
+ViewEntry data_ov044_02111388[1] = {
+    {0x07, 0xff, 0x0000, 0x012c, 0x0000, {0x00, 0x00}, 0x0000, 0x0000},
 };
 
 ObjSubTable data_ov044_02111398[3] = {
