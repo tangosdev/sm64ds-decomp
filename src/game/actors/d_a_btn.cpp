@@ -122,10 +122,10 @@ extern const int data_ov079_021275dc[2] = {0x00003000, 0x00002000};
 extern const int data_ov079_021275e4[2] = {0x00028000, 0x00046000};
 
 /* File-scope resource handles: each ctor/dtor pair is a ROM SharedFilePtr
-   veneer (func_02017acc/func_02017ab4 for the two BMDs, SharedFilePtr::
-   Construct/SharedFilePtr_Destruct_TexSeq for the king's face BTP,
-   Construct/Destruct_Anim for the eleven BCAs, func_02017b4c/
-   SharedFilePtr_Destruct_Clsn for the two KCLs), spelled through
+   handle class (ModelFile::ModelFile/~ModelFile for the two BMDs,
+   TexSeqFile::TexSeqFile/~TexSeqFile for the king's face BTP,
+   AnimFile::AnimFile/~AnimFile for the eleven BCAs, ClsnFile::ClsnFile/
+   ClsnFile::~ClsnFile for the two KCLs), spelled through
    declared-only subclasses so the static initializer names the real
    entry points. */
 struct BtnModelFilePtr : SharedFilePtr {

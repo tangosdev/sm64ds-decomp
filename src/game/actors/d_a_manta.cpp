@@ -42,7 +42,7 @@ struct MantaState {
     int (daManta_c::*execute)();
 };
 
-/* Local 8-byte resource handles: Construct stores the file ID and clears
+/* Local 8-byte resource handles: the constructor stores the file ID and clears
  * numRefs/filePtr; the loaders populate the BMD/BCA payload at +4.
  * The registered destructors record file IDs; actor cleanup releases files. */
 struct MantaModelFilePtr : SharedFilePtr {

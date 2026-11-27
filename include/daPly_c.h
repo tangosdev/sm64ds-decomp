@@ -96,7 +96,7 @@ struct daPly_c : dActor_c {
        ov002 has kind:bss data at both 0x02110154 and 0x02110244, inside an
        unbroken 0x18-stride run that starts at 0x0211013c -- 0x18 being exactly
        sizeof(State). ov002 loads 0x02110154 twenty times and 0x02110244 five
-       times, every one module:overlay(2). __sinit_ov002_021019d0 fills
+       times, every one module:overlay(2). The initializer at 0x021019d0 fills
        0x02110154's three slots from 0x0210a25c, 0x02109e14 and 0x02109f84, all
        inside ov002's pointer-to-member constant pool: a State being built
        member by member. And daPly_c::CanEnterDoor already cast the raw address
@@ -724,14 +724,15 @@ struct daPly_c : dActor_c {
 
        Both live in ov002 .bss at 0x02110154 and 0x02110244, inside the same
        unbroken 0x18-stride run as the five this header already names from
-       ChangeState. __sinit_ov002_021019d0 fills 0x02110154's three slots from
+       ChangeState. The initializer at 0x021019d0 fills 0x02110154's three slots from
        0x0210a25c, 0x02109e14 and 0x02109f84 -- all inside ov002's
        pointer-to-member constant pool -- which is a State being constructed,
        member by member, in front of you.
 
-       Defined in src/game/player/d_a_ply_methods.cpp, outside extern "C",
-       so each object is the mangled static member and not a second BSS
-       symbol. */
+       Defined in src/game/player/d_a_ply_methods.cpp with the other states,
+       aggregate-initialized, so mwcc builds them in that file's static
+       initializer. A class member's name keeps C++ linkage inside the
+       extern "C" block there ([dcl.link]/4). */
     static State ST_WAIT;
     static State ST_OWL;
 
@@ -1212,13 +1213,13 @@ struct daPly_c : dActor_c {
     void func_ov002_020c9998();
     void func_ov002_020c9a04();
     void func_ov002_020c9ac0();
-    int func_ov002_020c9b10();
+    void func_ov002_020c9b10();
     void func_ov002_020c9b5c();
     void func_ov002_020c9b7c();
-    int func_ov002_020c9c00();
+    void func_ov002_020c9c00();
     void func_ov002_020c9c4c();
     void func_ov002_020c9cc0();
-    int func_ov002_020c9d1c();
+    void func_ov002_020c9d1c();
     void func_ov002_020c9d68();
     void func_ov002_020c9e18();
     void func_ov002_020ca108();

@@ -38,8 +38,8 @@ enum daObjFl_Block_c_AssetId { ASSET_FL_BLOCK_BMD = 0x05f1, ASSET_FL_BLOCK_KCL =
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 
-/* 8-byte file handles. The model uses func_02017acc / func_02017ab4 and the
- * collision file func_02017b4c / SharedFilePtr_Destruct_Clsn. The spellings
+/* 8-byte file handles. The model uses ModelFile::ModelFile / ModelFile::~ModelFile and the
+ * collision file ClsnFile::ClsnFile / ClsnFile::~ClsnFile. The spellings
  * are local; the manifest aliases the generated names to those ROM symbols. */
 struct FlBlockModelFilePtr : SharedFilePtr {
     FlBlockModelFilePtr(u32 fileID);

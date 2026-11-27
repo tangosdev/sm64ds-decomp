@@ -65,23 +65,61 @@ FIELD_OWNER_RE = re.compile(
     r"(?P<offset>0[xX][0-9a-fA-F]+|[0-9]+)"
 )
 
+# The SharedFilePtr handle constructors, each taking (this, file ID).  First by
+# their mangled names, the way a C file calls them, then by their spellings
+# before they became real classes (SharedFilePtr::func_02017acc and friends,
+# the extern "C" veneer SharedFilePtr_Construct_TexSeq), which older checkouts
+# and branches still carry.  The recovered prototypes of the old veneers
+# sometimes omit the file ID, but retail forwards it to func_02017e0c.
+HANDLE_CONSTRUCTOR_CALLS = (
+    "_ZN8ClsnFileC1Ej",
+    "_ZN9ModelFileC1Ej",
+    "_ZN9ModelFileC2Ej",
+    "_ZN10ModelFileAC1Ej",
+    "_ZN10ModelFileBC1Ej",
+    "_ZN8AnimFileC1Ej",
+    "_ZN10TexSeqFileC1Ej",
+    "_ZN13SharedFilePtrC2Ej",
+    "_ZN13SharedFilePtr9ConstructEj",
+    "SharedFilePtr_Construct_TexSeq",
+    "func_020178cc",
+    "func_02017a24",
+    "func_02017ae4",
+    "func_02017acc",
+    "func_02017b4c",
+    "func_02017e48",
+)
+
 REFERENCE_CALLS = {
     "LoadFile": 0,
     "LoadFileAt": 0,
     "LoadCompressedFileAt": 0,
     "_ZN17dExtSimpleModel_c14LoadAndSetFileEtii": 1,
-    "_ZN13SharedFilePtr9ConstructEj": 1,
-    "SharedFilePtr_Construct_TexSeq": 1,
-    # Matched constructor veneers.  Their recovered prototypes sometimes omit
-    # the second argument, but retail forwards it to func_02017e0c.
-    "func_020178cc": 1,
-    "func_02017a24": 1,
-    "func_02017ae4": 1,
-    "func_02017acc": 1,
-    "func_02017b4c": 1,
-    "func_02017e48": 1,
+    **{name: 1 for name in HANDLE_CONSTRUCTOR_CALLS},
     "func_02017e0c": 1,
 }
+
+# The handle classes (include/SharedFilePtr.h).  A file-scope handle is defined
+# with its file ID as the constructor argument, `TexSeqFile data_x(0x8021);`,
+# and the compiler's static initializer makes the constructor call.  Coined
+# per-TU wrappers that derive from SharedFilePtr are not listed: they are
+# counted once they are converted to these classes.
+HANDLE_CLASSES = (
+    "SharedFilePtr", "ClsnFile", "ModelFile", "ModelFileA", "ModelFileB",
+    "AnimFile", "TexSeqFile",
+)
+HANDLE_DEFINITION_RE = re.compile(
+    r"^[ \t]*(?:static[ \t]+)?(?P<cls>" + "|".join(HANDLE_CLASSES) + r")[ \t]+"
+    r"(?P<name>[A-Za-z_]\w*)[ \t]*\((?P<args>[^()]*)\)[ \t]*;",
+    re.M,
+)
+
+
+def handle_definitions(text: str):
+    """Yield (class, object name, offset, raw argument) per handle definition."""
+    for match in HANDLE_DEFINITION_RE.finditer(text):
+        yield (match.group("cls"), match.group("name"), match.start("cls"),
+               match.group("args"))
 
 
 @dataclass(frozen=True)
@@ -469,17 +507,24 @@ def scan_references(src_root: pathlib.Path,
     rows = []
     for path in sorted((*src_root.rglob("*.c"), *src_root.rglob("*.cpp"))):
         text = path.read_text(encoding="utf-8", errors="replace")
+        # (callee, offset, file-ID argument, owner expression)
+        references = []
         for callee, offset, raw_args in _balanced_calls(text):
             args = _split_args(raw_args)
             arg_index = REFERENCE_CALLS[callee]
-            if arg_index >= len(args):
-                continue
-            raw_id = _integer_literal(args[arg_index])
+            if arg_index < len(args):
+                owner = args[0].strip() if arg_index > 0 else ""
+                references.append((callee, offset, args[arg_index], owner))
+        # A handle definition owns itself: its owner is the object's name.
+        for cls, name, offset, raw_arg in handle_definitions(text):
+            references.append((f"{cls}::{cls}", offset, raw_arg, name))
+        references.sort(key=lambda reference: reference[1])
+        for callee, offset, raw_arg, owner in references:
+            raw_id = _integer_literal(raw_arg)
             if raw_id is None:
                 continue
             asset = by_id.get(raw_id)
             line = text.count("\n", 0, offset) + 1
-            owner = args[0].strip() if arg_index > 0 and args else ""
             rows.append({
                 "source": path.relative_to(REPO).as_posix(),
                 "line": str(line),

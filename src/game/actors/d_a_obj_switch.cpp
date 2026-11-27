@@ -35,9 +35,9 @@ enum daObjSwitch_c_AssetId {
 
 namespace Event { int ClearBit(unsigned int bit); void SetBit(unsigned int bit); }
 
-/* dExtSimpleModel_c handles construct through func_02017acc and destroy through
- * func_02017ab4; collision handles construct through func_02017b4c and destroy
- * through SharedFilePtr_Destruct_Clsn. The manifest aliases those undefined
+/* dExtSimpleModel_c handles construct through ModelFile::ModelFile and destroy through
+ * ModelFile::~ModelFile; collision handles construct through ClsnFile::ClsnFile and destroy
+ * through ClsnFile::~ClsnFile. The manifest aliases those undefined
  * members onto the ROM symbols. */
 struct SwitchModelFilePtr : SharedFilePtr {
     SwitchModelFilePtr(u32 fileID);

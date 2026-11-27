@@ -30,8 +30,8 @@ enum d_a_obj_hs_billboard_AssetId {
 #include "BMD_File.h"
 #include "math/MtxStack.h"
 
-/* Four model handles. Each constructs through func_02017acc and destroys
- * through func_02017ab4. The four-pointer table stays ROM rodata. */
+/* Four model handles. Each constructs through ModelFile::ModelFile and destroys
+ * through ModelFile::~ModelFile. The four-pointer table stays ROM rodata. */
 struct HsBillboardModelFilePtr : SharedFilePtr {
     HsBillboardModelFilePtr(unsigned int fileId);
     ~HsBillboardModelFilePtr();

@@ -71,11 +71,11 @@ typedef enum { FALSE = 0, TRUE = 1 } BOOL;
    0x20-byte record whose header and entries dBgW_Kc reads. */
 
 /* The resource handles as the ROM lays them out: {id, loaded file}. The
-   model handle constructs through func_02017acc and destroys through
-   func_02017ab4; the animation handles construct through
-   SharedFilePtr::Construct and destroy through SharedFilePtr_Destruct_Anim;
-   the collision handles construct through func_02017b4c and destroy through
-   SharedFilePtr_Destruct_Clsn. The manifest aliases each undefined member
+   model handle constructs through ModelFile::ModelFile and destroys through
+   ModelFile::~ModelFile; the animation handles construct through
+   AnimFile::AnimFile and destroy through AnimFile::~AnimFile;
+   the collision handles construct through ClsnFile::ClsnFile and destroy through
+   ClsnFile::~ClsnFile. The manifest aliases each undefined member
    onto its ROM symbol. */
 struct DossyModelFilePtr : SharedFilePtr {
     DossyModelFilePtr(u32 fileID);
@@ -619,9 +619,9 @@ int daDossyCap_c::ReleaseCapIfTouched() {
 DorriePlatform::~DorriePlatform() {}
 
 /* The eleven file-scope resource handles, in retail initializer order: the
-   model file (func_02017acc / func_02017ab4), three animation files
-   (SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim), then seven
-   collision files (func_02017b4c / SharedFilePtr_Destruct_Clsn). The
+   model file (ModelFile::ModelFile / ModelFile::~ModelFile), three animation files
+   (AnimFile::AnimFile / AnimFile::~AnimFile), then seven
+   collision files (ClsnFile::ClsnFile / ClsnFile::~ClsnFile). The
    manifest aliases each wrapper ctor/dtor onto those ROM symbols. */
 DossyModelFilePtr data_ov065_0211d720(ASSET_DOSSY_BMD);
 DossyAnimationFileHandle data_ov065_0211d768(ASSET_DOSSY_HEAD_DOWN_BCA);

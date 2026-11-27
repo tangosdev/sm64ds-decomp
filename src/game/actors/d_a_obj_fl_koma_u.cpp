@@ -30,8 +30,8 @@ enum daObjFl_KomaU_c_AssetId { ASSET_FL_KOMA_U_BMD = 0x05f7, ASSET_FL_KOMA_U_KCL
 #include "math/MtxStack.h"
 #include "math/CalcLib.h"
 
-/* The ctor/dtor pairs are the ROM's SharedFilePtr veneers (func_02017acc /
- * func_02017ab4 for the model, func_02017b4c / SharedFilePtr_Destruct_Clsn
+/* The ctor/dtor pairs are the ROM's SharedFilePtr veneers (ModelFile::ModelFile /
+ * ModelFile::~ModelFile for the model, ClsnFile::ClsnFile / ClsnFile::~ClsnFile
  * for the collision); the subclasses exist to spell those entry points.
  * data_ov064_0211adbc stays the file table. */
 struct KomaUModelFilePtr : SharedFilePtr {

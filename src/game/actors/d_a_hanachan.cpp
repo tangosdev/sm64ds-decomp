@@ -76,10 +76,10 @@ enum daHanachan_c_AssetId {
 #include "CLPS.h"
 
 /* The file-scope resource handles. The model five use the plain SharedFilePtr
- * pair (func_02017acc / func_02017ab4), the animation twenty-five use
- * SharedFilePtr::Construct / SharedFilePtr_Destruct_Anim, and the texture
- * sequence five use SharedFilePtr_Construct_TexSeq /
- * SharedFilePtr_Destruct_TexSeq. */
+ * pair (ModelFile::ModelFile / ModelFile::~ModelFile), the animation twenty-five use
+ * AnimFile::AnimFile / AnimFile::~AnimFile, and the texture
+ * sequence five use TexSeqFile::TexSeqFile /
+ * TexSeqFile::~TexSeqFile. */
 struct HanachanModelFilePtr : SharedFilePtr {
     HanachanModelFilePtr(u32 fileID);
     ~HanachanModelFilePtr();

@@ -75,9 +75,9 @@ typedef void (daKpa3Bg_c::*Handler)();
 struct HandlerEntry { Handler pmf; };
 extern HandlerEntry data_ov060_0211b1ac[];
 
-/* The ten model handles construct through func_02017acc and destroy through
- * func_02017ab4; the ten collision handles construct through func_02017b4c
- * and destroy through SharedFilePtr_Destruct_Clsn. The wrappers are declared,
+/* The ten model handles construct through ModelFile::ModelFile and destroy through
+ * ModelFile::~ModelFile; the ten collision handles construct through ClsnFile::ClsnFile
+ * and destroy through ClsnFile::~ClsnFile. The wrappers are declared,
  * never defined: the manifest aliases their members onto the ROM veneers. */
 struct Kpa3BgModelFilePtr : SharedFilePtr {
     Kpa3BgModelFilePtr(u32 fileID);

@@ -1123,14 +1123,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN23daObjMarioCapFileHandleC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x0201799c",
       "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN23daObjMarioCapFileHandleD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
       "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
@@ -1143,7 +1143,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "target_module": "arm9",
       "target_address": "0x0201799c"
     },
@@ -1163,7 +1163,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "target_module": "arm9",
       "target_address": "0x0201799c"
     },
@@ -1183,7 +1183,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "target_module": "arm9",
       "target_address": "0x0201799c"
     },
@@ -1203,7 +1203,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "target_module": "arm9",
       "target_address": "0x0201799c"
     },
@@ -1223,7 +1223,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "target_module": "arm9",
       "target_address": "0x0201799c"
     },
@@ -1243,7 +1243,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "target_module": "arm9",
       "target_address": "0x0201799c"
     },
@@ -1263,7 +1263,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "target_module": "arm9",
       "target_address": "0x0201799c"
     },
@@ -1283,7 +1283,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "target_module": "arm9",
       "target_address": "0x0201799c"
     },
@@ -1303,7 +1303,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "target_module": "arm9",
       "target_address": "0x0201799c"
     },
@@ -1323,7 +1323,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "target_module": "arm9",
       "target_address": "0x0201799c"
     },
@@ -1343,7 +1343,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "target_module": "arm9",
       "target_address": "0x0201799c"
     },
@@ -1363,7 +1363,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "target_module": "arm9",
       "target_address": "0x0201799c"
     },
@@ -1383,7 +1383,7 @@
       "type": "R_ARM_PC24",
       "kind": "arm_call",
       "addend": -8,
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "target_module": "arm9",
       "target_address": "0x0201799c"
     },
@@ -1413,7 +1413,7 @@
       "type": "R_ARM_ABS32",
       "kind": "load",
       "addend": 0,
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "target_module": "arm9",
       "target_address": "0x02017984"
     },

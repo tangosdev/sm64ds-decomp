@@ -98,14 +98,14 @@
       "address": "0x0210e0d4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "animation SharedFilePtr, file 1174, constructed by SharedFilePtr::Construct"
+      "evidence": "animation SharedFilePtr, file 1174, constructed by _ZN8AnimFileC1Ej"
     },
     {
       "symbol": "data_ov002_0210e0dc",
       "address": "0x0210e0dc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model SharedFilePtr, file 1173, constructed by func_02017acc"
+      "evidence": "model SharedFilePtr, file 1173, constructed by _ZN9ModelFileC1Ej"
     },
     {
       "symbol": "@295",
@@ -128,7 +128,7 @@
     "daObjWakame_c's own _ZTI13daObjWakame_c/_ZTS13daObjWakame_c/_ZTV13daObjWakame_c ARE data-verifiable, and this note previously said the opposite. It was written while the class still carried the coined name Seaweed, when the length-prefixed mangled strings could not be word-compared against anything in the ROM; tools/class_rename.py then substituted the new name into both halves of the comparison, leaving it claiming a length mismatch between daObjWakame_c and daObjWakame_c. The rename settled it: ov002 0x02109b78 is a __si_class_type_info whose _ZTS at 0x02109b84 reads exactly `13daObjWakame_c` and whose one base is arm9 0x0208e390 = _ZTI8dActor_c, so the decomp name and the ROM name are the same string. romdata_check now reports all three records VERIFIED -- _ZTV at ov002 0x02109bb8, 124 bytes = 31 slots, scoped to the slots because a symbols.txt _ZTV address is the address point, eight bytes past the table's real start.",
     "Unlike daFeather_c/#1727, the legacy src/_ZN13daObjWakame_cD0Ev.c and src/daObjWakame_c_Spawn.c both already referenced this project's own _ZTV13daObjWakame_c symbol (not a coined ROM alias), so `linkcheck --partial` reached full 8/8 contribution equivalence and PARTIAL-LINK-VERIFIED cleanly -- the daFeather_c pitfall does not recur here.",
     "Leftover cleanup folded daObjWakame_c_classInit as return new daObjWakame_c(); leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj. dActor_c's destructor is out of line, so the factory does not re-emit a compiler-only D2 helper. pad_0d0 renamed unk_0d0.",
-    "Folded __sinit_ov002_02101894 into this TU. mwcc emits __sinit_d_a_obj_wakame.cpp (model file 1173 via func_02017acc, animation file 1174 via SharedFilePtr::Construct, guards @295 and @296). The handwritten src/unnamed/ov002/__sinit_ov002_02101894.c is retired.",
+    "Folded __sinit_ov002_02101894 into this TU. mwcc emits __sinit_d_a_obj_wakame.cpp (model file 1173 via _ZN9ModelFileC1Ej, animation file 1174 via _ZN8AnimFileC1Ej, guards @295 and @296). The handwritten src/unnamed/ov002/__sinit_ov002_02101894.c is retired.",
     "LOCAL WORKER NOTE: this machine stock dump is the EU image (gamecode ASMP), so the scratch link built ROM sha256 ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to this tree stock build and to the strict control, while the recorded rom.sha256 carries the fleet-canonical stock SHA-256 that every other intact entry on main shares (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8). The divergent bytes are NDS container fields outside every module range. The content proof is the same either way: moduleSetSha256 f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b, 106/106 modules, and the four owned ranges identical.",
     "Actor cleanup b16: func_ov002_020bc488 became the member daObjWakame_c::UpdateModelTransform (byte-identical; @NNN re-keyed)."
   ],
@@ -437,28 +437,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN18WakameModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and the model constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN18WakameModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor registration destination and the model destructor's exact ABS32 relocation"
     },
     {
       "symbol": "_ZN25WakameAnimationFileHandleC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "canonical_symbol": "_ZN8AnimFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x0201799c",
       "evidence": "retail initializer call destination and the animation constructor's exact PC24 relocation"
     },
     {
       "symbol": "_ZN25WakameAnimationFileHandleD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_Anim",
+      "canonical_symbol": "_ZN8AnimFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017984",
       "evidence": "retail destructor registration destination and the animation SharedFilePtr family identity"
@@ -496,7 +496,7 @@
       "source": "0x021018a4",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -516,7 +516,7 @@
       "source": "0x021018c0",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr9ConstructEj",
+      "symbol": "_ZN8AnimFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x0201799c"
@@ -546,7 +546,7 @@
       "source": "0x021018e8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -576,7 +576,7 @@
       "source": "0x021018f8",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_Anim",
+      "symbol": "_ZN8AnimFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017984"

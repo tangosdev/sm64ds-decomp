@@ -47,9 +47,9 @@ struct BMD_File;
 struct BCA_File;
 
 /* 8-byte file handles: filePtr is the loaded file. The model constructs
- * with func_02017acc and destroys with func_02017ab4; the anims use
- * SharedFilePtr::Construct and
- * SharedFilePtr_Destruct_Anim. Manifest aliases carry the spellings. */
+ * with ModelFile::ModelFile and destroys with ModelFile::~ModelFile; the anims use
+ * AnimFile::AnimFile and
+ * AnimFile::~AnimFile. Manifest aliases carry the spellings. */
 struct MenboModelFilePtr : SharedFilePtr {
     MenboModelFilePtr(u32 fileID);
     ~MenboModelFilePtr();

@@ -71,11 +71,11 @@ extern daLuigiState data_ov055_02111b70;
 
 /* Body model 0x8080, second model 0x807e, body anim 0x8029, texture
  * patterns 0x8022 (body) and 0x8025 (second model). */
-extern SharedFilePtr data_ov002_0210ebb8;
-extern SharedFilePtr data_ov002_0210eb20;
-extern SharedFilePtr data_ov002_0210eaa0;
-extern SharedFilePtr data_ov002_0210e8d0;
-extern SharedFilePtr data_ov002_0210ebd8;
+extern ModelFile data_ov002_0210ebb8;
+extern ModelFile data_ov002_0210eb20;
+extern AnimFile data_ov002_0210eaa0;
+extern TexSeqFile data_ov002_0210e8d0;
+extern TexSeqFile data_ov002_0210ebd8;
 
 extern unsigned char gLocalPlayerId;
 extern daPly_c *gPlayers[];

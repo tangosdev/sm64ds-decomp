@@ -63,7 +63,7 @@ typedef daBombking_c::StateFunction PMF;
 
 /* Resource handles owned by this TU. The static initializer constructs the
  * model (id 0x2c7) and twelve animations (ids 0x2bb..0x2c6) and registers
- * each destructor. Construct/Load/Release use a u16 fileID at +0, a u8
+ * each destructor. The constructors, Load and Release use a u16 fileID at +0, a u8
  * reference count at +2 and the loaded file at +4. The wrappers' constructor
  * and destructor resolve to the retail veneers through the manifest. Names
  * follow the runtime asset paths; they are reconstructed identifiers. */

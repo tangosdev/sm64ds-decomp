@@ -284,21 +284,21 @@
       "address": "0x02122bc4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "model resource handle constructed with asset 0x2af and registered with func_02017ab4, as in retail"
+      "evidence": "model resource handle constructed with asset 0x2af and registered with _ZN9ModelFileD1Ev, as in retail"
     },
     {
       "symbol": "gBigSnowmanSmileTextureSequenceFile",
       "address": "0x02122bcc",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "texture-sequence handle constructed with asset 0x2b0 through SharedFilePtr_Construct_TexSeq and registered with SharedFilePtr_Destruct_TexSeq, as in retail"
+      "evidence": "texture-sequence handle constructed with asset 0x2b0 through _ZN10TexSeqFileC1Ej and registered with _ZN10TexSeqFileD1Ev, as in retail"
     },
     {
       "symbol": "gBigSnowmanCryTextureSequenceFile",
       "address": "0x02122bd4",
       "size": "0x8",
       "binding": "STB_GLOBAL",
-      "evidence": "texture-sequence handle constructed with asset 0x2ae through SharedFilePtr_Construct_TexSeq and registered with SharedFilePtr_Destruct_TexSeq, as in retail"
+      "evidence": "texture-sequence handle constructed with asset 0x2ae through _ZN10TexSeqFileC1Ej and registered with _ZN10TexSeqFileD1Ev, as in retail"
     },
     {
       "symbol": "data_ov072_02122bdc",
@@ -790,28 +790,28 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN17BgSnmHedModelFileC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call/load destination at this exact relocation site"
     },
     {
       "symbol": "_ZN18BgSnmHedTexSeqFileC1Ej",
-      "canonical_symbol": "SharedFilePtr_Construct_TexSeq",
+      "canonical_symbol": "_ZN10TexSeqFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017934",
       "evidence": "retail initializer call/load destination at this exact relocation site"
     },
     {
       "symbol": "_ZN17BgSnmHedModelFileD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail initializer call/load destination at this exact relocation site"
     },
     {
       "symbol": "_ZN18BgSnmHedTexSeqFileD1Ev",
-      "canonical_symbol": "SharedFilePtr_Destruct_TexSeq",
+      "canonical_symbol": "_ZN10TexSeqFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x0201791c",
       "evidence": "retail initializer call/load destination at this exact relocation site"
@@ -843,7 +843,7 @@
       "source": "0x02122208",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -863,7 +863,7 @@
       "source": "0x02122224",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017934"
@@ -883,7 +883,7 @@
       "source": "0x02122240",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "SharedFilePtr_Construct_TexSeq",
+      "symbol": "_ZN10TexSeqFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017934"
@@ -913,7 +913,7 @@
       "source": "0x0212230c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -943,7 +943,7 @@
       "source": "0x0212231c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "SharedFilePtr_Destruct_TexSeq",
+      "symbol": "_ZN10TexSeqFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x0201791c"

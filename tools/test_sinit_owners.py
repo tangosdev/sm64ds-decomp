@@ -112,6 +112,26 @@ class SinitOwnersTests(unittest.TestCase):
             ["data_copy", "data_object"],
         )
 
+    def test_handle_class_definitions_are_owned_resource_handles(self):
+        # The initializer of a TU that defines real-class handles constructs
+        # each one; the old free-function veneer spelling still counts.
+        text = (
+            "TexSeqFile data_tex(0x8021);\n"
+            "AnimFile data_anim(ASSET_SOME_BCA);\n"
+            "func_02017acc(&data_model, 0x40a);\n"
+            "extern ModelFile data_elsewhere;\n"
+        )
+        known = ["data_tex", "data_anim", "data_model", "data_elsewhere"]
+        self.assertEqual(
+            SO.infer_ownership_globals(text, known, []),
+            ["data_anim", "data_model", "data_tex"],
+        )
+        self.assertEqual(SO.asset_handles(text), [0x40A, 0x8021])
+        self.assertIn(
+            "resource-handle-initialization",
+            SO.initializer_cause(0x40, [], known, "ModelFile data_m(0x25c);"),
+        )
+
     def test_consumer_coverage_does_not_count_unconsumed_globals_as_mapped(self):
         mapped, unconsumed = SO.consumer_coverage(
             {

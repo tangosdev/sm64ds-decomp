@@ -154,14 +154,14 @@
   "undefined_symbol_aliases": [
     {
       "symbol": "_ZN24Kb1BillboardModelFilePtrC1Ej",
-      "canonical_symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "canonical_symbol": "_ZN9ModelFileC1Ej",
       "canonical_module": "arm9",
       "canonical_address": "0x02017acc",
       "evidence": "retail initializer call destination and wrapper constructor relocation"
     },
     {
       "symbol": "_ZN24Kb1BillboardModelFilePtrD1Ev",
-      "canonical_symbol": "_Z13func_02017ab4i",
+      "canonical_symbol": "_ZN9ModelFileD1Ev",
       "canonical_module": "arm9",
       "canonical_address": "0x02017ab4",
       "evidence": "retail destructor-registration destination and wrapper destructor relocation"
@@ -205,7 +205,7 @@
       "source": "0x02111324",
       "type": "R_ARM_PC24",
       "kind": "arm_call",
-      "symbol": "_ZN13SharedFilePtr13func_02017accEj",
+      "symbol": "_ZN9ModelFileC1Ej",
       "addend": -8,
       "target_module": "arm9",
       "target_address": "0x02017acc"
@@ -235,7 +235,7 @@
       "source": "0x0211134c",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "_Z13func_02017ab4i",
+      "symbol": "_ZN9ModelFileD1Ev",
       "addend": 0,
       "target_module": "arm9",
       "target_address": "0x02017ab4"
@@ -1004,14 +1004,14 @@
         "requested": [
           {
             "from": "_ZN24Kb1BillboardModelFilePtrC1Ej",
-            "to": "_ZN13SharedFilePtr13func_02017accEj",
+            "to": "_ZN9ModelFileC1Ej",
             "module": "arm9",
             "address": "0x02017acc",
             "evidence": "retail initializer call destination and wrapper constructor relocation"
           },
           {
             "from": "_ZN24Kb1BillboardModelFilePtrD1Ev",
-            "to": "_Z13func_02017ab4i",
+            "to": "_ZN9ModelFileD1Ev",
             "module": "arm9",
             "address": "0x02017ab4",
             "evidence": "retail destructor-registration destination and wrapper destructor relocation"
@@ -1028,12 +1028,12 @@
           {
             "symbolIndex": 75,
             "from": "_ZN24Kb1BillboardModelFilePtrC1Ej",
-            "to": "_ZN13SharedFilePtr13func_02017accEj"
+            "to": "_ZN9ModelFileC1Ej"
           },
           {
             "symbolIndex": 77,
             "from": "_ZN24Kb1BillboardModelFilePtrD1Ev",
-            "to": "_Z13func_02017ab4i"
+            "to": "_ZN9ModelFileD1Ev"
           },
           {
             "symbolIndex": 76,
@@ -1704,14 +1704,14 @@
         "requested": [
           {
             "from": "_ZN24Kb1BillboardModelFilePtrC1Ej",
-            "to": "_ZN13SharedFilePtr13func_02017accEj",
+            "to": "_ZN9ModelFileC1Ej",
             "module": "arm9",
             "address": "0x02017acc",
             "evidence": "retail initializer call destination and wrapper constructor relocation"
           },
           {
             "from": "_ZN24Kb1BillboardModelFilePtrD1Ev",
-            "to": "_Z13func_02017ab4i",
+            "to": "_ZN9ModelFileD1Ev",
             "module": "arm9",
             "address": "0x02017ab4",
             "evidence": "retail destructor-registration destination and wrapper destructor relocation"
@@ -1728,12 +1728,12 @@
           {
             "symbolIndex": 75,
             "from": "_ZN24Kb1BillboardModelFilePtrC1Ej",
-            "to": "_ZN13SharedFilePtr13func_02017accEj"
+            "to": "_ZN9ModelFileC1Ej"
           },
           {
             "symbolIndex": 77,
             "from": "_ZN24Kb1BillboardModelFilePtrD1Ev",
-            "to": "_Z13func_02017ab4i"
+            "to": "_ZN9ModelFileD1Ev"
           },
           {
             "symbolIndex": 76,
