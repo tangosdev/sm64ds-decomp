@@ -96,7 +96,7 @@ extern struct CLPS_Block data_ov021_02113a80;
 /* The identity quaternion. */
 extern Quaternion data_02092768;
 /* Yaw for the +Z, -Z, +X and -X platforms, in the transform loops' order. */
-extern const u16 sNewsLiftPlatformYaws[4] = {0, 0x8000, 0x4000, 0xc000};
+u16 sNewsLiftPlatformYaws[4] = {0, 0x8000, 0x4000, 0xc000};
 
 /* CV_NEWS_LIFT factory. classInit is the EAD shape; the cartridge's RTTI
  * names the class, not this function. */

@@ -7,27 +7,6 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-/* The ROM image carries a zero halfword of alignment padding after these
- * records, so it is written as part of the object. */
-typedef struct {
-    s16 value;
-    u16 pad;
-} ScalarEntryS16;
-typedef struct {
-    u16 value;
-    u16 pad;
-} ScalarEntryU16;
-
-typedef struct {
-    ExitEntry entries[1];
-    u16 pad;
-} ExitEntriesPad;
-
-typedef struct {
-    struct PathDef entries[5];
-    u16 pad;
-} PathDefsPad;
-
 /* The fixed 0x20-byte collision-property block actors hand to
  * dBgW_Kc::SetFile: two entry slots and all-ones filler. */
 
@@ -35,7 +14,7 @@ extern const u16 data_ov030_02114690[2];
 extern const fx32 data_ov030_02114694[1];
 extern const BTAMaterialRecord data_ov030_02114698[1];
 extern const fx32 data_ov030_021146b4[92];
-extern ScalarEntryU16 data_ov030_02114de0;
+extern u16 data_ov030_02114de0[1];
 extern u32 data_ov030_02114de4[1];
 extern SimpleEntry data_ov030_02114de8[1];
 extern SimpleEntry data_ov030_02114df0[1];
@@ -43,7 +22,7 @@ extern ObjTable data_ov030_02114df8;
 extern ObjTable data_ov030_02114e00;
 extern char data_ov030_02114e08[];
 extern Area data_ov030_02114e14[1];
-extern ExitEntriesPad data_ov030_02114e20;
+extern ExitEntry data_ov030_02114e20[1];
 extern StandardEntry data_ov030_02114e30[1];
 extern StandardEntry data_ov030_02114e40[1];
 extern TeleportSourceEntry data_ov030_02114e50[2];
@@ -52,7 +31,7 @@ extern StandardEntry data_ov030_02114e70[1];
 extern TeleportDest data_ov030_02114e80[2];
 extern BTA_File data_ov030_02114e90;
 extern LevelRec data_ov030_02114ea8;
-extern PathDefsPad data_ov030_02114ec4;
+extern struct PathDef data_ov030_02114ec4[5];
 extern CLPS_Block data_ov030_02114ee4;
 extern StandardEntry data_ov030_02114f04[2];
 extern CLPS_Block data_ov030_02114f24;
@@ -72,10 +51,7 @@ const u16 data_ov030_02114690[2] = {0x0000, 0x0000};
 
 u32 data_ov030_02114de4[1] = {0x11111114};
 
-ScalarEntryU16 data_ov030_02114de0 = {
-    0x0751,
-    0x0000,
-};
+u16 data_ov030_02114de0[1] = {0x0751};
 
 ObjTable data_ov030_02114df8 = {0x000a, {0x0, 0x0}, (void *)&data_ov030_02115044[0]};
 
@@ -102,11 +78,8 @@ StandardEntry data_ov030_02114e30[1] = {
     {0x00ef, (s16)0xfb1e, (s16)0xf1dc, 0x14e6, 0x0000, 0x4000, 0x0000, 0xffff},
 };
 
-ExitEntriesPad data_ov030_02114e20 = {
-    {
-        {0x0bb8, 0x0384, (s16)0xfbe6, 0x0000, 0x4000, {0x17, 0x00, 0xff, 0x44}},
-    },
-    0x0000,
+ExitEntry data_ov030_02114e20[1] = {
+    {0x0bb8, 0x0384, (s16)0xfbe6, 0x0000, 0x4000, {0x17, 0x00, 0xff, 0x44}},
 };
 
 StandardEntry data_ov030_02114e40[1] = {
@@ -163,15 +136,10 @@ LevelRec data_ov030_02114ea8 = {(struct CLPS_Block *)&data_ov030_0211510c,
                                 0x0640,
                                 0x0000001f};
 
-PathDefsPad data_ov030_02114ec4 = {
-    {
-        {0x0000, 0x09, 0xff, 0xff, 0x7f},
-        {0x0009, 0x05, 0xff, 0xff, 0x7f},
-        {0x000e, 0x02, 0xff, 0x01, 0x7f},
-        {0x0010, 0x02, 0xff, 0x01, 0x7f},
-        {0x0012, 0x02, 0xff, 0x01, 0x7f},
-    },
-    0x0000,
+struct PathDef data_ov030_02114ec4[5] = {
+    {0x0000, 0x09, 0xff, 0xff, 0x7f}, {0x0009, 0x05, 0xff, 0xff, 0x7f},
+    {0x000e, 0x02, 0xff, 0x01, 0x7f}, {0x0010, 0x02, 0xff, 0x01, 0x7f},
+    {0x0012, 0x02, 0xff, 0x01, 0x7f},
 };
 
 CLPS_Block data_ov030_02114ee4 = {

@@ -6,21 +6,11 @@
 
 /* Definition order is what makes the compiler size sort match address order. */
 
-typedef struct {
-    ExitEntry entries[1];
-    u16 pad;
-} ExitEntries1;
-
-typedef struct {
-    u16 entries[1];
-    u16 pad;
-} U16s1;
-
-extern const U16s1 data_ov022_02112950;
+extern const u16 data_ov022_02112950[1];
 extern const fx32 data_ov022_02112954[1];
 extern const BTAMaterialRecord data_ov022_02112958[1];
 extern const fx32 data_ov022_02112974[201];
-extern U16s1 data_ov022_02113140;
+extern u16 data_ov022_02113140[1];
 extern u32 data_ov022_02113144[1];
 extern ObjTable data_ov022_02113148;
 extern SimpleEntry data_ov022_02113150[1];
@@ -29,7 +19,7 @@ extern ObjTable data_ov022_02113160;
 extern char data_ov022_02113168[8];
 extern struct PathDef data_ov022_02113170[2];
 extern Area data_ov022_0211317c[1];
-extern ExitEntries1 data_ov022_02113188;
+extern ExitEntry data_ov022_02113188[1];
 extern TeleportDest data_ov022_02113198[2];
 extern StandardEntry data_ov022_021131a8[1];
 extern StandardEntry data_ov022_021131b8[1];
@@ -50,10 +40,7 @@ extern StandardEntry data_ov022_021136f8[93];
 
 const fx32 data_ov022_02112954[1] = {0x00001000};
 
-const U16s1 data_ov022_02112950 = {
-    {0x0000},
-    0x0000,
-};
+const u16 data_ov022_02112950[1] = {0x0000};
 
 const BTAMaterialRecord data_ov022_02112958[1] = {{0xffff,
                                                    0x0000,
@@ -94,10 +81,7 @@ const fx32 data_ov022_02112974[201] = {
 
 u32 data_ov022_02113144[1] = {0x03030304};
 
-U16s1 data_ov022_02113140 = {
-    {0x0741},
-    0x0000,
-};
+u16 data_ov022_02113140[1] = {0x0741};
 
 SimpleEntry data_ov022_02113150[1] = {{0xea3d, 0x0000, 0x0000, 0x0000}};
 
@@ -124,10 +108,8 @@ StandardEntry data_ov022_021131d8[1] = {
 TeleportSourceEntry data_ov022_021131e8[2] = {{(s16)0xf3cb, 0x0032, 0x0d2f, 0x1000},
                                               {(s16)0xe98a, 0x0096, 0x1964, 0x0000}};
 
-ExitEntries1 data_ov022_02113188 = {
-    {{0x0000, 0x00c8, 0x00fa, (s16)0xc000, 0x0000, {0x000f, 0x0000, 0x00ff, 0x0044}}},
-    0x0000,
-};
+ExitEntry data_ov022_02113188[1] = {
+    {0x0000, 0x00c8, 0x00fa, (s16)0xc000, 0x0000, {0x000f, 0x0000, 0x00ff, 0x0044}}};
 
 StandardEntry data_ov022_021131b8[1] = {
     {0x001f, 0x0352, 0x0190, 0x173e, 0x0000, 0x0000, 0x0000, 0xff03}};
@@ -141,7 +123,7 @@ StandardEntry data_ov022_021131a8[1] = {
 BTA_File data_ov022_021131f8 = {0x00c8,
                                 0,
                                 (fx32 *)&data_ov022_02112954[0],
-                                (u16 *)&data_ov022_02112950.entries[0],
+                                (u16 *)&data_ov022_02112950[0],
                                 (fx32 *)&data_ov022_02112974[0],
                                 0x0001,
                                 0,
@@ -193,16 +175,15 @@ StandardEntry data_ov022_021132d8[4] = {
     {0x0000, (s16)0xf1f0, 0x0096, 0x186a, 0x0000, 0x4000, 0x0000, 0x0000},
     {0x0000, (s16)0xf0c4, 0x0096, 0x186a, 0x0000, 0x4000, 0x0000, 0x0000}};
 
-ObjSubTable data_ov022_02113360[9] = {
-    {0x0002, 0x0004, {0x00, 0x00}, &data_ov022_02113210[0]},
-    {0x0003, 0x0002, {0x00, 0x00}, &data_ov022_02113170[0]},
-    {0x0004, 0x0002, {0x00, 0x00}, &data_ov022_02113244[0]},
-    {0x000b, 0x0001, {0x00, 0x00}, &data_ov022_02113140.entries[0]},
-    {0x0001, 0x0004, {0x00, 0x00}, &data_ov022_021132d8[0]},
-    {0x0006, 0x0002, {0x00, 0x00}, &data_ov022_021131e8[0]},
-    {0x0007, 0x0002, {0x00, 0x00}, &data_ov022_02113198[0]},
-    {0x000e, 0x0001, {0x00, 0x00}, &data_ov022_02113144[0]},
-    {0x000a, 0x0001, {0x00, 0x00}, &data_ov022_02113188.entries[0]}};
+ObjSubTable data_ov022_02113360[9] = {{0x0002, 0x0004, {0x00, 0x00}, &data_ov022_02113210[0]},
+                                      {0x0003, 0x0002, {0x00, 0x00}, &data_ov022_02113170[0]},
+                                      {0x0004, 0x0002, {0x00, 0x00}, &data_ov022_02113244[0]},
+                                      {0x000b, 0x0001, {0x00, 0x00}, &data_ov022_02113140[0]},
+                                      {0x0001, 0x0004, {0x00, 0x00}, &data_ov022_021132d8[0]},
+                                      {0x0006, 0x0002, {0x00, 0x00}, &data_ov022_021131e8[0]},
+                                      {0x0007, 0x0002, {0x00, 0x00}, &data_ov022_02113198[0]},
+                                      {0x000e, 0x0001, {0x00, 0x00}, &data_ov022_02113144[0]},
+                                      {0x000a, 0x0001, {0x00, 0x00}, &data_ov022_02113188[0]}};
 
 ObjSubTable data_ov022_02113318[9] = {{0x0000, 0x005d, {0x00, 0x00}, &data_ov022_021136f8[0]},
                                       {0x0005, 0x006a, {0x00, 0x00}, &data_ov022_021133a8[0]},

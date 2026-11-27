@@ -6,39 +6,19 @@
 
 /* Definition order is what makes the compiler size sort match address order. */
 
-typedef struct {
-    ExitEntry entries[1];
-    u16 pad;
-} ExitEntries1;
-
-typedef struct {
-    struct PathDef entries[1];
-    u16 pad;
-} PathDefs1;
-
-typedef struct {
-    u16 entries[1];
-    u16 pad;
-} U16s1;
-
-typedef struct {
-    ViewEntry entries[3];
-    u16 pad;
-} ViewEntries3;
-
-extern const U16s1 data_ov027_02112b14;
+extern const u16 data_ov027_02112b14[1];
 extern const fx32 data_ov027_02112b18[1];
 extern const BTAMaterialRecord data_ov027_02112b1c[1];
 extern const fx32 data_ov027_02112b38[91];
-extern U16s1 data_ov027_02112fe0;
+extern u16 data_ov027_02112fe0[1];
 extern u32 data_ov027_02112fe4[1];
-extern PathDefs1 data_ov027_02112fe8;
+extern struct PathDef data_ov027_02112fe8[1];
 extern ObjTable data_ov027_02112ff0;
 extern ObjTable data_ov027_02112ff8;
 extern char data_ov027_02113000[12];
 extern PathNode data_ov027_0211300c[2];
 extern Area data_ov027_02113018[1];
-extern ExitEntries1 data_ov027_02113024;
+extern ExitEntry data_ov027_02113024[1];
 extern StandardEntry data_ov027_02113034[1];
 extern StandardEntry data_ov027_02113044[1];
 extern StandardEntry data_ov027_02113054[1];
@@ -51,7 +31,7 @@ extern BTA_File data_ov027_021130b4;
 extern LevelRec data_ov027_021130cc;
 extern CLPS_Block data_ov027_021130e8;
 extern CLPS_Block data_ov027_02113108;
-extern ViewEntries3 data_ov027_02113128;
+extern ViewEntry data_ov027_02113128[3];
 extern SimpleEntry data_ov027_02113154[6];
 extern ObjSubTable data_ov027_02113184[9];
 extern ObjSubTable data_ov027_021131cc[9];
@@ -60,10 +40,7 @@ extern CLPS_Block224 data_ov027_02113264;
 extern SimpleEntry data_ov027_02113344[30];
 extern StandardEntry data_ov027_02113434[57];
 
-const U16s1 data_ov027_02112b14 = {
-    {0x0000},
-    0x0000,
-};
+const u16 data_ov027_02112b14[1] = {0x0000};
 
 const fx32 data_ov027_02112b18[1] = {0x00001000};
 
@@ -92,15 +69,9 @@ const fx32 data_ov027_02112b38[91] = {
 
 u32 data_ov027_02112fe4[1] = {0x00101014};
 
-U16s1 data_ov027_02112fe0 = {
-    {0x07b9},
-    0x0000,
-};
+u16 data_ov027_02112fe0[1] = {0x07b9};
 
-PathDefs1 data_ov027_02112fe8 = {
-    {{0x0000, 0x0002, 0x00ff, 0x0001, 0x007f}},
-    0x0000,
-};
+struct PathDef data_ov027_02112fe8[1] = {{0x0000, 0x0002, 0x00ff, 0x0001, 0x007f}};
 
 ObjTable data_ov027_02112ff8 = {0x0009, {0x00, 0x00}, &data_ov027_02113184[0]};
 
@@ -134,10 +105,8 @@ TeleportDest data_ov027_021130a4[2] = {{(s16)0xf19f, 0x03e8, (s16)0xfb6f, 0x0080
 StandardEntry data_ov027_02113064[1] = {
     {0x00ef, 0x0652, 0x0834, (s16)0xf23f, 0x0000, 0x0000, 0x0000, 0xffff}};
 
-ExitEntries1 data_ov027_02113024 = {
-    {{0x01eb, 0x0834, 0x052b, 0x0000, (s16)0xcaab, {0x0014, 0x0000, 0x00ff, 0x0000}}},
-    0x0000,
-};
+ExitEntry data_ov027_02113024[1] = {
+    {0x01eb, 0x0834, 0x052b, 0x0000, (s16)0xcaab, {0x0014, 0x0000, 0x00ff, 0x0000}}};
 
 StandardEntry data_ov027_02113034[1] = {
     {0x00ef, 0x0652, 0x0834, (s16)0xf23f, 0x0000, 0x0000, 0x0000, 0xffff}};
@@ -145,7 +114,7 @@ StandardEntry data_ov027_02113034[1] = {
 BTA_File data_ov027_021130b4 = {0x005b,
                                 0,
                                 (fx32 *)&data_ov027_02112b18[0],
-                                (u16 *)&data_ov027_02112b14.entries[0],
+                                (u16 *)&data_ov027_02112b14[0],
                                 (fx32 *)&data_ov027_02112b38[0],
                                 0x0001,
                                 0,
@@ -177,28 +146,25 @@ CLPS_Block data_ov027_02113108 = {
     {{0x00004fc7, 0x000000ff}, {0x04004fc7, 0x000000ff}, {0xffffffff, 0xffffffff}},
 };
 
-ViewEntries3 data_ov027_02113128 = {
-    {{0x0002, 0x00ff, 0x1806, 0x0514, 0x0258, {0x0000, 0x0000}, (s16)0xc16d, 0x0000},
-     {0x0002, 0x00ff, (s16)0xfed4, 0x0960, 0x0514, {0x0000, 0x0000}, 0x33e9, 0x0000},
-     {0x0007, 0x00ff, 0x0000, 0x1356, 0x0000, {0x0000, 0x0000}, 0x0000, 0x0000}},
-    0x0000,
-};
+ViewEntry data_ov027_02113128[3] = {
+    {0x0002, 0x00ff, 0x1806, 0x0514, 0x0258, {0x0000, 0x0000}, (s16)0xc16d, 0x0000},
+    {0x0002, 0x00ff, (s16)0xfed4, 0x0960, 0x0514, {0x0000, 0x0000}, 0x33e9, 0x0000},
+    {0x0007, 0x00ff, 0x0000, 0x1356, 0x0000, {0x0000, 0x0000}, 0x0000, 0x0000}};
 
 SimpleEntry data_ov027_02113154[6] = {
     {0x0a3e, 0x10cc, 0x0541, (s16)0xecdc},      {0x0a3e, 0x012c, 0x041a, (s16)0xee6c},
     {0x0a3e, (s16)0xe764, 0x067e, 0x12c0},      {0x0a3e, (s16)0xeed0, 0x054b, (s16)0xec78},
     {0x0a3e, (s16)0xe5d4, 0x08fc, (s16)0xea84}, {0xca3d, 0x1194, 0x04e2, (s16)0xff38}};
 
-ObjSubTable data_ov027_02113184[9] = {
-    {0x0002, 0x0002, {0x00, 0x00}, &data_ov027_0211300c[0]},
-    {0x0003, 0x0001, {0x00, 0x00}, &data_ov027_02112fe8.entries[0]},
-    {0x0004, 0x0003, {0x00, 0x00}, &data_ov027_02113128.entries[0]},
-    {0x000b, 0x0001, {0x00, 0x00}, &data_ov027_02112fe0.entries[0]},
-    {0x0001, 0x0005, {0x00, 0x00}, &data_ov027_02113214[0]},
-    {0x0006, 0x0002, {0x00, 0x00}, &data_ov027_02113074[0]},
-    {0x0007, 0x0002, {0x00, 0x00}, &data_ov027_021130a4[0]},
-    {0x000e, 0x0001, {0x00, 0x00}, &data_ov027_02112fe4[0]},
-    {0x000a, 0x0001, {0x00, 0x00}, &data_ov027_02113024.entries[0]}};
+ObjSubTable data_ov027_02113184[9] = {{0x0002, 0x0002, {0x00, 0x00}, &data_ov027_0211300c[0]},
+                                      {0x0003, 0x0001, {0x00, 0x00}, &data_ov027_02112fe8[0]},
+                                      {0x0004, 0x0003, {0x00, 0x00}, &data_ov027_02113128[0]},
+                                      {0x000b, 0x0001, {0x00, 0x00}, &data_ov027_02112fe0[0]},
+                                      {0x0001, 0x0005, {0x00, 0x00}, &data_ov027_02113214[0]},
+                                      {0x0006, 0x0002, {0x00, 0x00}, &data_ov027_02113074[0]},
+                                      {0x0007, 0x0002, {0x00, 0x00}, &data_ov027_021130a4[0]},
+                                      {0x000e, 0x0001, {0x00, 0x00}, &data_ov027_02112fe4[0]},
+                                      {0x000a, 0x0001, {0x00, 0x00}, &data_ov027_02113024[0]}};
 
 ObjSubTable data_ov027_021131cc[9] = {{0x0000, 0x0039, {0x00, 0x00}, &data_ov027_02113434[0]},
                                       {0x0005, 0x001e, {0x00, 0x00}, &data_ov027_02113344[0]},

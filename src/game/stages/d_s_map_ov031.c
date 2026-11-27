@@ -6,35 +6,14 @@
 /* Definition order is what makes the compiler's size sort match address order.
  */
 
-/* The ROM image carries a zero halfword of alignment padding after these
- * records, so it is written as part of the object. */
-typedef struct {
-    s16 value;
-    u16 pad;
-} ScalarEntryS16;
-typedef struct {
-    u16 value;
-    u16 pad;
-} ScalarEntryU16;
-
-typedef struct {
-    ExitEntry entries[1];
-    u16 pad;
-} ExitEntriesPad;
-
-typedef struct {
-    ViewEntry entries[1];
-    u16 pad;
-} ViewEntriesPad;
-
-extern ScalarEntryU16 data_ov031_02111500;
+extern u16 data_ov031_02111500[1];
 extern u32 data_ov031_02111504[1];
 extern ObjTable data_ov031_02111508;
 extern ObjTable data_ov031_02111510;
 extern FogEntry data_ov031_02111518[1];
 extern Area data_ov031_02111520[1];
-extern ViewEntriesPad data_ov031_0211152c;
-extern ExitEntriesPad data_ov031_0211153c;
+extern ViewEntry data_ov031_0211152c[1];
+extern ExitEntry data_ov031_0211153c[1];
 extern ObjSubTable data_ov031_0211154c[2];
 extern LevelRec data_ov031_0211155c;
 extern ObjSubTable data_ov031_02111578[6];
@@ -45,27 +24,18 @@ extern SimpleEntry data_ov031_02111758[50];
 
 u32 data_ov031_02111504[1] = {0x11111114};
 
-ScalarEntryU16 data_ov031_02111500 = {
-    0x0756,
-    0x0000,
-};
+u16 data_ov031_02111500[1] = {0x0756};
 
 ObjTable data_ov031_02111510 = {0x0006, {0x0, 0x0}, (void *)&data_ov031_02111578[0]};
 
 ObjTable data_ov031_02111508 = {0x0002, {0x0, 0x0}, (void *)&data_ov031_0211154c[0]};
 
-ViewEntriesPad data_ov031_0211152c = {
-    {
-        {0x02, 0xff, 0x2d67, 0x32e3, 0x31f5, {0x00, 0x00}, (s16)0xa000, 0x0000},
-    },
-    0x0000,
+ViewEntry data_ov031_0211152c[1] = {
+    {0x02, 0xff, 0x2d67, 0x32e3, 0x31f5, {0x00, 0x00}, (s16)0xa000, 0x0000},
 };
 
-ExitEntriesPad data_ov031_0211153c = {
-    {
-        {(s16)0xf9fb, (s16)0xcaf2, (s16)0xd2d8, (s16)0xc000, 0x0000, {0x16, 0x04, 0xff, 0x11}},
-    },
-    0x0000,
+ExitEntry data_ov031_0211153c[1] = {
+    {(s16)0xf9fb, (s16)0xcaf2, (s16)0xd2d8, (s16)0xc000, 0x0000, {0x16, 0x04, 0xff, 0x11}},
 };
 
 ObjSubTable data_ov031_0211154c[2] = {

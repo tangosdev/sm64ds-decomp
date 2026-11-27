@@ -30,10 +30,9 @@
       "end": "0x0211373c"
     },
     {
-      "name": ".data.actors",
+      "name": ".data",
       "start": "0x02114818",
-      "end": "0x021148c4",
-      "input_section": ".data"
+      "end": "0x021148c4"
     },
     {
       "name": ".bss",
@@ -288,7 +287,7 @@
       "target_address": "0x02113688"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114824",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -298,7 +297,7 @@
       "target_address": "0x02112d64"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114844",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -308,7 +307,7 @@
       "target_address": "0x02114818"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114884",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -318,7 +317,7 @@
       "target_address": "0x02043494"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114880",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -328,7 +327,7 @@
       "target_address": "0x0204349c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x0211487c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -338,7 +337,7 @@
       "target_address": "0x0204357c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114878",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -348,7 +347,7 @@
       "target_address": "0x02043ac0"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021148c0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -358,7 +357,7 @@
       "target_address": "0x020100dc"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021148b8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -368,7 +367,7 @@
       "target_address": "0x0201012c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021148b4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -378,7 +377,7 @@
       "target_address": "0x02010130"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021148b0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -388,7 +387,7 @@
       "target_address": "0x02010134"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021148ac",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -398,7 +397,7 @@
       "target_address": "0x02010138"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021148a8",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -408,7 +407,7 @@
       "target_address": "0x0201013c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021148a4",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -418,7 +417,7 @@
       "target_address": "0x02010140"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021148a0",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -428,7 +427,7 @@
       "target_address": "0x02010144"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x0211489c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -438,7 +437,7 @@
       "target_address": "0x02010148"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114898",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -448,7 +447,7 @@
       "target_address": "0x0201014c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114894",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -458,7 +457,7 @@
       "target_address": "0x02010154"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114890",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -468,7 +467,7 @@
       "target_address": "0x02010160"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114874",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -478,7 +477,7 @@
       "target_address": "0x02010f6c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114870",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -488,7 +487,7 @@
       "target_address": "0x02010f78"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114868",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -498,7 +497,7 @@
       "target_address": "0x02010fc8"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114864",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -508,7 +507,7 @@
       "target_address": "0x02010fd4"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x0211485c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -518,7 +517,7 @@
       "target_address": "0x02011214"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114858",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -528,7 +527,7 @@
       "target_address": "0x02011220"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114850",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -538,7 +537,7 @@
       "target_address": "0x02011244"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x0211484c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -548,7 +547,7 @@
       "target_address": "0x02011268"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x0211488c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -558,7 +557,7 @@
       "target_address": "0x02112230"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114854",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -568,7 +567,7 @@
       "target_address": "0x021127f8"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x0211486c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -578,7 +577,7 @@
       "target_address": "0x0211281c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114848",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -588,7 +587,7 @@
       "target_address": "0x02112b2c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114860",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -598,7 +597,7 @@
       "target_address": "0x02112854"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x021148bc",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -608,7 +607,7 @@
       "target_address": "0x0211228c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114888",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -618,7 +617,7 @@
       "target_address": "0x021121e8"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x0211481c",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -628,7 +627,7 @@
       "target_address": "0x0211480c"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114820",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -638,7 +637,7 @@
       "target_address": "0x021081c0"
     },
     {
-      "section": ".data.actors",
+      "section": ".data",
       "source": "0x02114818",
       "type": "R_ARM_ABS32",
       "kind": "load",
@@ -780,7 +779,7 @@
           "comparison": "NOBITS -- symbol/module gates"
         },
         {
-          "section": ".data.actors",
+          "section": ".data",
           "start": "0x02114818",
           "end": "0x021148c4",
           "differingBytes": 0,
