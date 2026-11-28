@@ -1,0 +1,84 @@
+{
+  "id": "arm9/semihosted_console_io",
+  "module": "arm9",
+  "source": "src/lib/runtime/semihosted_console_io.c",
+  "promoted_source": "src/lib/runtime/semihosted_console_io.c",
+  "status": "promoted",
+  "production_mode": "text-only",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "pret pokediamond arm9/asm/RUNTIME_ARM_semihosted_console_io.s: the RUNTIME_ARM library object semihosted_console_io holds exactly these six functions (sys_writec, sys_readc, sys_exit, __read_console, __write_console, __close_console) and nothing else, so they are one translation unit here.",
+    "One contiguous six-function run, 0x02071974..0x02071a50, gapless in config/arm9/delinks.txt, between the exception runtime's frame reader above and its varint reader below.",
+    "The three semihosting stubs are hand-written assembly (swi 0x123456 with r0 = 3/7/0x18) and emit first in ascending order; the three console procs are compiled C and follow in reverse source order, which is why this cart's close proc sits below the write proc where pokediamond's carries it last."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02071974",
+      "end": "0x02071a50"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "sys_writec",
+      "address": "0x02071974",
+      "size": "0x00000014",
+      "legacy_source": "src/sys_writec.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "sys_readc",
+      "address": "0x02071988",
+      "size": "0x00000014",
+      "legacy_source": "src/sys_readc.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "sys_exit",
+      "address": "0x0207199c",
+      "size": "0x00000010",
+      "legacy_source": "src/sys_exit.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "__close_console",
+      "address": "0x020719ac",
+      "size": "0x00000008",
+      "legacy_source": "src/__close_console.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "__write_console",
+      "address": "0x020719b4",
+      "size": "0x00000038",
+      "legacy_source": "src/__write_console.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "__read_console",
+      "address": "0x020719ec",
+      "size": "0x00000064",
+      "legacy_source": "src/__read_console.c",
+      "ordinal": 5
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "rodata": [],
+  "compiler_only_output": [],
+  "notes": [
+    "The console procs call the semihosting stubs inside this same TU; mwccarm -O4,p does not inline the asm bodies into them (asm callees are not inline candidates), so the fold is byte-neutral against the six single-function shards it replaces.",
+    "No data, rodata or bss belongs to this run."
+  ],
+  "verification": {
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "linkcheck": {
+      "round": "tools/rombuild.py -j8 --no-rom stock build, 106/106 modules exact, 11,405 source-built functions reproducing, 0 mismatching",
+      "result": "pass",
+      "rom": {
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      }
+    }
+  }
+}

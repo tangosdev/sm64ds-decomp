@@ -698,16 +698,13 @@ src/minigames/d_s_mg_hanachan.cpp:
 
 src/minigames/d_s_mg_jump_methods.cpp:
     complete
-    .text start:0x020edec0 end:0x020eeafc
+    .text start:0x020edec0 end:0x020eebe8
     .init start:0x02130e9c end:0x02130f00
     .ctor start:0x021335a4 end:0x021335a8
     .data.gap55 start:0x0213cb4c end:0x0213cb8c
     .data.sJumpNcgByLanguage start:0x0213cbc8 end:0x0213cbdc
     .bss start:0x02142044 end:0x021421c4
 
-src/minigames/d_s_mg_jump.cpp:
-    complete
-    .text start:0x020eeafc end:0x020eebe8
 
 src/minigames/d_s_mg_jump2.cpp:
     complete

@@ -1169,4 +1169,4 @@ int func_02011654(char *table, char *n) {
 /* re-hosted arm9 data */
 /* The sound driver's mixer state, SaveBlock and the save-file tables up to
    Timer's state; interior labels keep their symbols.txt addresses. */
-u8 data_0209ba84[0x1a34];
+u8 data_0209ba84[0x1348];

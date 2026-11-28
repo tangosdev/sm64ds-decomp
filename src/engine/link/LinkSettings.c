@@ -1,15 +1,22 @@
 /*
- * The link settings accessors: for each field of the settings bytes that
- * LinkSettings.h maps, its getter and then its writers. The fields run in
- * byte order: the player byte's warp destination and ready bit, the
- * parent's course, the session byte's player mask, rematch ready bit and go
- * signal, the parent's course-select action, and the controller mode.
+ * The per-frame link step and the link settings accessors: for each field of
+ * the settings bytes that LinkSettings.h maps, its getter and then its
+ * writers. The fields run in byte order: the player byte's warp destination
+ * and ready bit, the parent's course, the session byte's player mask, rematch
+ * ready bit and go signal, the parent's course-select action, and the
+ * controller mode.
  *
  * mwcc emits C bodies in reverse source order, so the cartridge holds this
- * file backwards, PostControllerMode at 0x02020028 up to IsPlayerWarping,
- * which ends at 0x0202043c.
+ * file backwards: func_0201ffcc at 0x0201ffcc, then PostControllerMode at
+ * 0x02020028 up to IsPlayerWarping, which ends at 0x0202043c.
  */
 #include "LinkSettings.h"
+#include "private/watchdog_alarm.h"
+
+extern unsigned char data_0209e64c;
+extern unsigned char data_0208f274;
+extern void func_0203df40(void);
+extern int func_0203daac(void);
 
 /* LINK_BYTE_PLAYER */
 
@@ -175,4 +182,19 @@ u8 GetControllerMode(int player) {
 void PostControllerMode(int player, u8 mode) {
     int v = GetLinkByte(player, LINK_BYTE_CONTROLLER);
     SetLinkByte(LINK_BYTE_CONTROLLER, (u8)(mode | (v & ~LINK_CONTROLLER_MODE_MASK)));
+}
+
+/* The link step, once the link is started (data_0209e64c): run
+   func_0203df40 with the watchdog (gWatchdog) held, take the player
+   count (func_0203daac) into data_0208f274 and restart the watchdog's
+   count. The main loop (func_020197b8) runs it every frame. */
+void func_0201ffcc(void) {
+    unsigned char saved;
+    if (data_0209e64c == 0)
+        return;
+    saved = func_0201a9ec(&gWatchdog);
+    func_0203df40();
+    data_0208f274 = func_0203daac();
+    func_0201a9fc(&gWatchdog);
+    func_0201a96c(&gWatchdog, saved);
 }

@@ -3,7 +3,7 @@
 
 /* A thread's saved CPU state, NitroSDK's nitro/os/common/context.h. The
  * bodies are the hand-written asm of os_context.c: OS_InitContext
- * (src/OS_InitContext.c), OS_SaveContext and OS_LoadContext. The
+ * (src/engine/os/OS_Context.c), OS_SaveContext and OS_LoadContext. The
  * OS_CONTEXT_* offsets are the SDK's, for that asm.
  *
  * The parameters are unnamed on purpose: a named parameter in a shared

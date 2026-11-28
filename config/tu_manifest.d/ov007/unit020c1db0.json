@@ -1,0 +1,151 @@
+{
+  "id": "ov007/unit020c1db0",
+  "module": "ov007",
+  "source": "src/ui/menus/unit020c1db0.c",
+  "promoted_source": "src/ui/menus/unit020c1db0.c",
+  "status": "promoted",
+  "production_mode": "intact-object",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous run 0x020c1db0..0x020c2090, 4 functions. Every function creates, clears, destroys or updates the same 0x44-byte Ov007Touch record; the allocation tag \"touch_panel\" is used only by func_ov007_020c2068.",
+    "end edge: func_ov007_020c2090 clears an Ov007Pad and begins the pad-input run. Start edge: unit020c1d78 ends before the first touch sampler."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020c1db0",
+      "end": "0x020c2090"
+    },
+    {
+      "name": ".data",
+      "start": "0x2103240",
+      "end": "0x210324c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov007_020c1db0",
+      "address": "0x20c1db0",
+      "size": "0x268",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c1db0.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov007_020c2018",
+      "address": "0x20c2018",
+      "size": "0xc",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c2018.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov007_020c2024",
+      "address": "0x20c2024",
+      "size": "0x44",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c2024.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov007_020c2068",
+      "address": "0x20c2068",
+      "size": "0x28",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c2024.c",
+      "ordinal": 3
+    }
+  ],
+  "data": [
+    {
+      "symbol": "data_ov007_02103240",
+      "address": "0x2103240",
+      "size": "0xc",
+      "binding": "STB_GLOBAL"
+    }
+  ],
+  "bss": [],
+  "notes": [
+    "The data shard formerly swallowed three independent objects: \"touch_panel\", \"pad\", and the 0x98765432 memory-hook magic. Only \"touch_panel\" belongs to this unit; the other eight bytes are left ROM-owned until their pad and memory units are folded.",
+    "Folded from 3 one-function sources plus the touch panel bytes of data_ov007_02103240.c."
+  ],
+  "verification": {
+    "round": "tools/match.py per function against the one unit source -- whole TU compiled",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "functions_matched": 4,
+    "functions_declared": 4,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "functions_occur_in_expected_order": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "data-verified",
+      "scratch": "build/tu/ov007-unit020c1db0/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": true,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020c1db0",
+        "end": "0x020c2090",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020c1db0",
+          "end": "0x020c2090",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02103240",
+          "end": "0x0210324c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 5
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".data",
+            "original": [
+              5
+            ],
+            "desired": [
+              5
+            ]
+          }
+        ],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "relocations": []
+}

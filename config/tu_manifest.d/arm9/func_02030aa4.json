@@ -1,12 +1,12 @@
 {
   "id": "arm9/func_02030aa4",
-  "source": "src/unnamed/arm9/0203/func_02030aa4.c",
+  "source": "src/unnamed/arm9/0203/func_02030500.cpp",
   "status": "promoted",
   "sections": [
     {
       "name": ".text",
-      "start": "0x02030aa4",
-      "end": "0x02030b58"
+      "start": "0x02030500",
+      "end": "0x02030fa8"
     },
     {
       "name": ".bss",
@@ -66,8 +66,148 @@
     }
   ],
   "production_mode": "intact-object",
+  "module": "arm9",
+  "promoted_source": "src/unnamed/arm9/0203/func_02030500.cpp",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "the link session's state block at 0x0209fc50: present slots, re-ranks, counts, disconnect bits, and the session state machine data_0209fc68"
+  ],
+  "functions": [
+    {
+      "symbol": "_Z13func_02030500v",
+      "address": "0x02030500",
+      "size": "0x00000290",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030500.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_02030790",
+      "address": "0x02030790",
+      "size": "0x000000a8",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030790.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_02030838",
+      "address": "0x02030838",
+      "size": "0x00000004",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030838.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_0203083c",
+      "address": "0x0203083c",
+      "size": "0x0000006c",
+      "legacy_source": "src/unnamed/arm9/0203/func_0203083c.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_020308a8",
+      "address": "0x020308a8",
+      "size": "0x0000000c",
+      "legacy_source": "src/unnamed/arm9/0203/func_020308a8.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_020308b4",
+      "address": "0x020308b4",
+      "size": "0x0000001c",
+      "legacy_source": "src/unnamed/arm9/0203/func_020308b4.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_020308d0",
+      "address": "0x020308d0",
+      "size": "0x00000088",
+      "legacy_source": "src/unnamed/arm9/0203/func_020308d0.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_02030958",
+      "address": "0x02030958",
+      "size": "0x0000003c",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030958.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_02030994",
+      "address": "0x02030994",
+      "size": "0x000000a4",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030994.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_02030a38",
+      "address": "0x02030a38",
+      "size": "0x00000034",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030a38.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_02030a6c",
+      "address": "0x02030a6c",
+      "size": "0x0000000c",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030a6c.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_02030a78",
+      "address": "0x02030a78",
+      "size": "0x0000002c",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030a78.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_02030aa4",
+      "address": "0x02030aa4",
+      "size": "0x000000b4",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030aa4.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_02030b58",
+      "address": "0x02030b58",
+      "size": "0x000000e0",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030b58.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_02030c38",
+      "address": "0x02030c38",
+      "size": "0x00000068",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030c38.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_02030ca0",
+      "address": "0x02030ca0",
+      "size": "0x0000010c",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030ca0.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_02030dac",
+      "address": "0x02030dac",
+      "size": "0x000000a0",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030dac.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_02030e4c",
+      "address": "0x02030e4c",
+      "size": "0x0000015c",
+      "legacy_source": "src/unnamed/arm9/0203/func_02030e4c.c",
+      "ordinal": 17
+    }
+  ],
+  "compiler_only_output": [],
+  "data": [],
+  "notes": [
+    "The eighteen link-session shards 0x02030500..0x02030fa8 fold into one TU: contiguous .text, the session state block 0x0209fc50..0x0209fc6c already owned here. C++ TU under default deferred codegen; the bodies are defined in reverse ROM order so the reverse emission emits them ROM-ascending. func_02030500 keeps its C++ mangling (_Z13func_02030500v), the seventeen C bodies sit inside extern \"C\" and compile byte-identical under -lang c++. Oracle-verified 18/18 byte-exact in ROM order before application.",
+    "The TU is the owner of the wireless-session state block because func_02030aa4 clears the slot and state words consumed by the neighboring entry/link TUs.",
+    "LOCAL WORKER NOTE: this machine builds the EU-dump control ROM ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to its strict stock control; verification.linkcheck.rom.sha256 is normalized to the fleet-canonical hash per #3691."
+  ],
   "verification": {
-    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "linkcheck": {
       "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
       "result": "scratch-data-verified",
@@ -82,16 +222,16 @@
         "rom": true
       },
       "tuRange": {
-        "start": "0x02030aa4",
-        "end": "0x02030b58",
+        "start": "0x02030500",
+        "end": "0x02030fa8",
         "differingBytes": 0,
         "firstDiff": null
       },
       "tuRanges": [
         {
           "section": ".text",
-          "start": "0x02030aa4",
-          "end": "0x02030b58",
+          "start": "0x02030500",
+          "end": "0x02030fa8",
           "differingBytes": 0,
           "firstDiff": null
         },
@@ -104,7 +244,7 @@
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 8
+          "LICENSED": 25
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -124,13 +264,13 @@
               11
             ],
             "desired": [
-              6,
               7,
               5,
-              11,
+              6,
               9,
               8,
-              10
+              10,
+              11
             ]
           }
         ],
@@ -148,13 +288,13 @@
                 11
               ],
               "desired": [
-                6,
                 7,
                 5,
-                11,
+                6,
                 9,
                 8,
-                10
+                10,
+                11
               ],
               "slots": [
                 5,
@@ -185,47 +325,6 @@
         "matchesStockRom": true
       },
       "linkerOutput": null
-    },
-    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
-    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
-    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/arm9-func_02030aa4/func_02030aa4.o (gitignored)",
-    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 1,
-    "functions_declared": 1,
-    "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
-      "data": [],
-      "dataExternalized": []
-    },
-    "criteria": {
-      "every_declared_function_defined": "PASS",
-      "every_declared_function_bytes_match": "PASS",
-      "declared_function_set_equals_defined_function_set": "PASS",
-      "functions_occur_in_expected_order": "PASS",
-      "relocation_destinations_verified": "PASS"
     }
-  },
-  "module": "arm9",
-  "promoted_source": "src/unnamed/arm9/0203/func_02030aa4.c",
-  "boundary_confidence": "high",
-  "boundary_evidence": [
-    "the link session's state block at 0x0209fc50: present slots, re-ranks, counts, disconnect bits, and the session state machine data_0209fc68"
-  ],
-  "functions": [
-    {
-      "symbol": "func_02030aa4",
-      "address": "0x02030aa4",
-      "size": "0xb4",
-      "legacy_source": "src/unnamed/arm9/0203/func_02030aa4.c",
-      "ordinal": 0
-    }
-  ],
-  "compiler_only_output": [],
-  "data": [],
-  "notes": [
-    "The TU is the owner of the wireless-session state block because func_02030aa4 clears the slot and state words consumed by the neighboring entry/link TUs.",
-    "LOCAL WORKER NOTE: this machine builds the EU-dump control ROM ddab9300b24aeae254192c2a30d812b07ece3adff83230e75c865ed915c9de40, byte-identical to its strict stock control; verification.linkcheck.rom.sha256 is normalized to the fleet-canonical hash per #3691."
-  ]
+  }
 }

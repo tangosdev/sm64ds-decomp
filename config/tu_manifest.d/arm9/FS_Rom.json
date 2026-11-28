@@ -22,7 +22,7 @@
     {
       "name": ".bss",
       "start": "0x020a805c",
-      "end": "0x020a80c8"
+      "end": "0x020a80c4"
     }
   ],
   "functions": [
@@ -106,14 +106,6 @@
       "binding": "STB_GLOBAL",
       "evidence": "the FSArchive the file registers as \"rom\"; sizeof(FSArchive) is asserted 0x50 in private/fs_views.h"
     }
-  ,
-    {
-      "symbol": "data_020a80c4",
-      "address": "0x020a80c4",
-      "size": "0x4",
-      "binding": "STB_GLOBAL",
-      "evidence": "Zero tail of this file. The placeholder name stays."
-    }
   ],
   "relocations": [],
   "compiler_only_output": [],
@@ -121,7 +113,7 @@
     "Hand-assembled, following arm9/FS_Archive: tu_map cannot segment arm9/main.",
     "FS_TryLoadTable, FSi_RomArchiveProc, FSi_WriteDummyCallback, FSi_ReadRomCallback and FSi_OnRomReadDone were renamed from their func_ names in this change. symbols/actor_renames.tsv records the evidence. FSi_InitRom kept its name.",
     "Text-only. The data symbols stay in the data link under fs_rom.c's names (fsi_default_dma_no, fsi_card_lock_id, fsi_ovt9, fsi_ovt7, fsi_arc_rom), declared in include/private/fs_rom.h. The \"rom\" string keeps its address name, data_0209a048.",
-    "Owns .bss 0x020a805c..0x020a80c8 from source now: the five globals are the private/fs_rom.h externs defined at file scope, and data_020a80c4 is the following word. FS_Overlay.c and the game's overlay loader keep binding the same addresses."
+    "Owns .bss 0x020a805c..0x020a80c4 from source now: the five globals are the private/fs_rom.h externs defined at file scope. The following word, data_020a80c4, belongs to the DGT hash implementation and is no longer swallowed here."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -174,7 +166,7 @@
         {
           "section": ".bss",
           "start": "0x020a805c",
-          "end": "0x020a80c8",
+          "end": "0x020a80c4",
           "comparison": "NOBITS -- symbol/module gates"
         }
       ],

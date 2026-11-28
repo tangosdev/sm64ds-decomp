@@ -1,0 +1,124 @@
+{
+  "id": "ov007/unit020c8498",
+  "module": "ov007",
+  "source": "src/ui/menus/unit020c8498.c",
+  "promoted_source": "src/ui/menus/unit020c8498.c",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous run 0x020c8498..0x020c8de0, 12 functions, all byte-matched from the one unit source. The named Transition entry points and the unnamed helpers all operate on the same Ov007Transition record: create/clear, start/stop, update, destroy, and the three per-effect appliers.",
+    "end edge: func_ov007_020c8de0 takes Ov007VecTween and begins the vector-tween run. Start edge: func_ov007_020c844c is a tiny preceding helper with no transition-record use."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x20c8498",
+      "end": "0x20c8de0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "Transition_Update",
+      "address": "0x20c8498",
+      "size": "0x1f0",
+      "legacy_source": "src/Transition_Update.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "Transition_StartBackward",
+      "address": "0x20c8688",
+      "size": "0x20",
+      "legacy_source": "src/Transition_StartBackward.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "Transition_StartForward",
+      "address": "0x20c86a8",
+      "size": "0x1c",
+      "legacy_source": "src/Transition_StartForward.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov007_020c86c4",
+      "address": "0x20c86c4",
+      "size": "0x2ac",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c86c4.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov007_020c8970",
+      "address": "0x20c8970",
+      "size": "0xc",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c8970.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov007_020c897c",
+      "address": "0x20c897c",
+      "size": "0x144",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c897c.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov007_020c8ac0",
+      "address": "0x20c8ac0",
+      "size": "0x44",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c8ac0.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "Transition_Destroy",
+      "address": "0x20c8b04",
+      "size": "0xc",
+      "legacy_source": "src/Transition_Destroy.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "Transition_Create",
+      "address": "0x20c8b10",
+      "size": "0x24",
+      "legacy_source": "src/Transition_Create.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov007_020c8b34",
+      "address": "0x20c8b34",
+      "size": "0x94",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c8b34.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov007_020c8bc8",
+      "address": "0x20c8bc8",
+      "size": "0xc0",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c8bc8.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov007_020c8c88",
+      "address": "0x20c8c88",
+      "size": "0x158",
+      "legacy_source": "src/unnamed/ov007/func_ov007_020c8c88.c",
+      "ordinal": 11
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Text only: transition records are heap-owned by callers; the unit owns no data or bss.",
+    "Folded from 12 one-function sources. Two helpers were formerly compiled as .cpp only for their frontend codegen; the folded C unit reproduces all twelve functions byte-identically.",
+    "The two long-branch veneers keep positional long_calls brackets."
+  ],
+  "verification": {
+    "round": "tools/match.py per function against the one unit source -- text-only, whole TU compiled",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "functions_matched": 12,
+    "functions_declared": 12,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "functions_occur_in_expected_order": "PASS"
+    }
+  }
+}

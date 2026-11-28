@@ -62,15 +62,7 @@ src/_u32_div_f.c:
 
 src/_fp_init.c:
     complete
-    .text start:0x01ffafd4 end:0x01ffb008
-
-src/__ieee_status.c:
-    complete
-    .text start:0x01ffb008 end:0x01ffb030
-
-src/__fp_status.c:
-    complete
-    .text start:0x01ffb030 end:0x01ffb07c
+    .text start:0x01ffafd4 end:0x01ffb07c
 
 src/engine/collision/d_bg_w_kc_itcm.cpp:
     complete
@@ -82,23 +74,11 @@ src/IRQHandler.cpp:
 
 src/OSi_DoBoot.c:
     complete
-    .text start:0x01ffdb28 end:0x01ffdbd8
-
-src/OSReadROMArea.c:
-    complete
-    .text start:0x01ffdbd8 end:0x01ffdd08
+    .text start:0x01ffdb28 end:0x01ffdd08
 
 src/OSi_ReloadRomData.c:
     complete
     .text start:0x01ffdd08 end:0x01ffde00
 src/MIi_DmaSetParams_wait.cpp:
     complete
-    .text start:0x01ffde00 end:0x01ffde50
-
-src/MIi_DmaSetParams.cpp:
-    complete
-    .text start:0x01ffde50 end:0x01ffde98
-
-src/MI_SendGXCommand.c:
-    complete
-    .text start:0x01ffde98 end:0x01ffdf3c
+    .text start:0x01ffde00 end:0x01ffdf3c

@@ -155,7 +155,7 @@ extern TrsAngleTable sBooHitRotations;
 void func_02012694(unsigned int a, const Vector3 *p);
 
 #include "daLuigi_c.h"
-extern u16 func_02011d14(void);
+extern void func_02011d14(void);
 
 /* Actor ids this file spawns, finds or compares (the names are the ones in
    symbols/actor_debug_names.tsv). */
