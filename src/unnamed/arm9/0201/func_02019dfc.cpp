@@ -22,7 +22,7 @@ extern unsigned short data_0209d534[];
 extern int data_0209d51c;
 extern int gGlobalTimer;
 extern unsigned char data_0209d4f0;
-extern unsigned char data_0209ee90[];
+extern char data_0209ee90[];
 extern int data_0209d514;
 extern unsigned char gSoundInitialized;
 extern unsigned char data_0209e64c;
@@ -63,11 +63,9 @@ extern "C" void func_02011db4(void);
 extern "C" void func_0201a4d0(void);
 extern "C" void func_02030838(void);
 extern "C" void func_0201a4bc(void);
-extern "C" u8 func_0201a9ec(WatchdogAlarm *);
 extern "C" unsigned short GetLinkStatus(unsigned short);
 extern "C" void func_02061128(int (*callback)(void));
 extern "C" int func_02019f10(void);
-extern void func_0201a490(void);
 
 extern "C" {
 
