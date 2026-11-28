@@ -1933,272 +1933,20 @@ src/engine/wm/WM_Etc.c:
     .text start:0x020634fc end:0x02063718
     .bss start:0x020a9440 end:0x020a94c0
 
-src/unnamed/arm9/0206/func_02063718.c:
+src/engine/wbt/wbt_context.c:
     complete
-    .text start:0x02063718 end:0x02063980
-
-src/unnamed/arm9/0206/func_02063980.c:
-    complete
-    .text start:0x02063980 end:0x02063ae4
-
-src/unnamed/arm9/0206/func_02063ae4.c:
-    complete
-    .text start:0x02063ae4 end:0x02063bc4
-
-src/unnamed/arm9/0206/func_02063bc4.c:
-    complete
-    .text start:0x02063bc4 end:0x02063d3c
-
-src/unnamed/arm9/0206/func_02063d3c.c:
-    complete
-    .text start:0x02063d3c end:0x02063da0
-
-src/unnamed/arm9/0206/func_02063da0.c:
-    complete
-    .text start:0x02063da0 end:0x02063e08
-
-src/unnamed/arm9/0206/func_02063e08.c:
-    complete
-    .text start:0x02063e08 end:0x02063ea8
-
-src/unnamed/arm9/0206/func_02063ea8.c:
-    complete
-    .text start:0x02063ea8 end:0x02064470
-
-src/unnamed/arm9/0206/func_02064470.c:
-    complete
-    .text start:0x02064470 end:0x02064554
-
-src/unnamed/arm9/0206/func_02064554.c:
-    complete
-    .text start:0x02064554 end:0x02064674
-
-src/unnamed/arm9/0206/func_02064674.c:
-    complete
-    .text start:0x02064674 end:0x0206470c
-
-src/unnamed/arm9/0206/func_0206470c.c:
-    complete
-    .text start:0x0206470c end:0x020647a4
-
-src/unnamed/arm9/0206/func_020647a4.c:
-    complete
-    .text start:0x020647a4 end:0x020647d8
-
-src/unnamed/arm9/0206/func_020647d8.c:
-    complete
-    .text start:0x020647d8 end:0x020647fc
-
-src/unnamed/arm9/0206/func_020647fc.c:
-    complete
-    .text start:0x020647fc end:0x02064888
-
-src/unnamed/arm9/0206/func_02064888.c:
-    complete
-    .text start:0x02064888 end:0x0206491c
-
-src/unnamed/arm9/0206/func_0206491c.c:
-    complete
-    .text start:0x0206491c end:0x02064a28
+    .text start:0x02063718 end:0x02065050
     .data start:0x0209a064 end:0x0209a070
 
-src/unnamed/arm9/0206/func_02064a28.c:
+src/engine/wbt/wbt_api.c:
     complete
-    .text start:0x02064a28 end:0x02064a94
-
-src/unnamed/arm9/0206/func_02064a94.c:
-    complete
-    .text start:0x02064a94 end:0x02064b2c
-
-src/unnamed/arm9/0206/func_02064b2c.c:
-    complete
-    .text start:0x02064b2c end:0x02064bac
-
-src/unnamed/arm9/0206/func_02064bac.c:
-    complete
-    .text start:0x02064bac end:0x02064c2c
-
-src/unnamed/arm9/0206/func_02064c2c.c:
-    complete
-    .text start:0x02064c2c end:0x02064cd8
-
-src/unnamed/arm9/0206/func_02064cd8.c:
-    complete
-    .text start:0x02064cd8 end:0x02064d6c
-
-src/unnamed/arm9/0206/func_02064d6c.c:
-    complete
-    .text start:0x02064d6c end:0x02064e18
-
-src/unnamed/arm9/0206/func_02064e18.c:
-    complete
-    .text start:0x02064e18 end:0x02064eac
-
-src/unnamed/arm9/0206/func_02064eac.c:
-    complete
-    .text start:0x02064eac end:0x02064f54
-
-src/unnamed/arm9/0206/func_02064f54.c:
-    complete
-    .text start:0x02064f54 end:0x02064fe8
-
-src/unnamed/arm9/0206/func_02064fe8.c:
-    complete
-    .text start:0x02064fe8 end:0x02065050
-
-src/WBT_MpChildRecvHook.c:
-    complete
-    .text start:0x02065050 end:0x020650a0
-
-src/WBT_MpChildSendHook.c:
-    complete
-    .text start:0x020650a0 end:0x020650d8
-
-src/WBT_MpParentRecvHook.c:
-    complete
-    .text start:0x020650d8 end:0x02065138
-
-src/WBT_MpParentSendHook.c:
-    complete
-    .text start:0x02065138 end:0x02065170
-
-src/WBT_End.cpp:
-    complete
-    .text start:0x02065170 end:0x02065234
+    .text start:0x02065050 end:0x02065c2c
+    .data start:0x0209a070 end:0x0209a078
     .bss start:0x020a94c0 end:0x020aa420
 
-src/WBT_InitChild.cpp:
+src/engine/mb/mb_block.c:
     complete
-    .text start:0x02065234 end:0x020652fc
-
-src/WBT_InitParent.cpp:
-    complete
-    .text start:0x020652fc end:0x020653cc
-
-src/unnamed/arm9/0206/func_020653cc.c:
-    complete
-    .text start:0x020653cc end:0x020654d0
-
-src/unnamed/arm9/0206/func_020654d0.c:
-    complete
-    .text start:0x020654d0 end:0x02065500
-
-src/unnamed/arm9/0206/func_02065500.c:
-    complete
-    .text start:0x02065500 end:0x02065538
-
-src/unnamed/arm9/0206/func_02065538.c:
-    complete
-    .text start:0x02065538 end:0x020656d4
-    .data start:0x0209a070 end:0x0209a074
-
-src/WBT_PutUserData.c:
-    complete
-    .text start:0x020656d4 end:0x02065730
-
-src/WBT_GetBlock.c:
-    complete
-    .text start:0x02065730 end:0x02065788
-
-src/WBT_GetBlockInfo.c:
-    complete
-    .text start:0x02065788 end:0x020657d0
-
-src/WBT_RequestSync.c:
-    complete
-    .text start:0x020657d0 end:0x020657fc
-
-src/WBT_UnregisterBlock.cpp:
-    complete
-    .text start:0x020657fc end:0x020658c0
-
-src/WBT_RegisterBlock.cpp:
-    complete
-    .text start:0x020658c0 end:0x02065970
-
-src/WBT_NumOfRegisteredBlock.c:
-    complete
-    .text start:0x02065970 end:0x020659a0
-
-src/WBT_SetPacketSize.c:
-    complete
-    .text start:0x020659a0 end:0x020659f8
-
-src/WBT_CalcPacketbitmapSize.c:
-    complete
-    .text start:0x020659f8 end:0x02065a4c
-
-src/WBT_AidbitmapToAid.c:
-    complete
-    .text start:0x02065a4c end:0x02065a74
-
-src/WBT_GetOwnAid.c:
-    complete
-    .text start:0x02065a74 end:0x02065a94
-    .data start:0x0209a074 end:0x0209a078
-src/unnamed/arm9/0206/func_02065a94.c:
-    complete
-    .text start:0x02065a94 end:0x02065ad0
-
-src/unnamed/arm9/0206/func_02065ad0.c:
-    complete
-    .text start:0x02065ad0 end:0x02065ae0
-
-src/unnamed/arm9/0206/func_02065ae0.c:
-    complete
-    .text start:0x02065ae0 end:0x02065af0
-
-src/unnamed/arm9/0206/func_02065af0.cpp:
-    complete
-    .text start:0x02065af0 end:0x02065b88
-
-src/unnamed/arm9/0206/func_02065b88.c:
-    complete
-    .text start:0x02065b88 end:0x02065b94
-
-src/unnamed/arm9/0206/func_02065b94.c:
-    complete
-    .text start:0x02065b94 end:0x02065ba0
-
-src/unnamed/arm9/0206/func_02065ba0.c:
-    complete
-    .text start:0x02065ba0 end:0x02065bb0
-
-src/unnamed/arm9/0206/func_02065bb0.c:
-    complete
-    .text start:0x02065bb0 end:0x02065bc0
-
-src/unnamed/arm9/0206/func_02065bc0.c:
-    complete
-    .text start:0x02065bc0 end:0x02065bd0
-
-src/unnamed/arm9/0206/func_02065bd0.c:
-    complete
-    .text start:0x02065bd0 end:0x02065be0
-
-src/unnamed/arm9/0206/func_02065be0.c:
-    complete
-    .text start:0x02065be0 end:0x02065bf4
-
-src/unnamed/arm9/0206/func_02065bf4.c:
-    complete
-    .text start:0x02065bf4 end:0x02065c1c
-
-src/unnamed/arm9/0206/func_02065c1c.c:
-    complete
-    .text start:0x02065c1c end:0x02065c2c
-
-src/MBi_SetRecvBufferFromChild.c:
-    complete
-    .text start:0x02065c2c end:0x02065d5c
-
-src/MBi_MakeParentSendBuffer.c:
-    complete
-    .text start:0x02065d5c end:0x02065de4
-
-src/MBi_ReceiveRequestDataPiece.c:
-    complete
-    .text start:0x02065de4 end:0x02065eb8
+    .text start:0x02065c2c end:0x02065eb8
 
 src/engine/mb/MB_Parent.c:
     complete
@@ -2235,58 +1983,14 @@ src/engine/ctrdg/CTRDG_Proc.cpp:
     complete
     .text start:0x0206a600 end:0x0206a928
 
-src/unnamed/arm9/0206/func_0206a928.c:
+src/engine/isd/isdprintf.c:
     complete
-    .text start:0x0206a928 end:0x0206bc8c
+    .text start:0x0206a928 end:0x0206ca7c
     .rodata start:0x02086880 end:0x020868a0
 
-src/unnamed/arm9/0206/func_0206bc8c.c:
+src/engine/isd/isdconsole.c:
     complete
-    .text start:0x0206bc8c end:0x0206bdb4
-
-src/unnamed/arm9/0206/func_0206bdb4.c:
-    complete
-    .text start:0x0206bdb4 end:0x0206c244
-
-src/unnamed/arm9/0206/func_0206c244.c:
-    complete
-    .text start:0x0206c244 end:0x0206c51c
-
-src/unnamed/arm9/0206/func_0206c51c.c:
-    complete
-    .text start:0x0206c51c end:0x0206c8b4
-
-src/unnamed/arm9/0206/func_0206c8b4.c:
-    complete
-    .text start:0x0206c8b4 end:0x0206c90c
-
-src/unnamed/arm9/0206/func_0206c90c.c:
-    complete
-    .text start:0x0206c90c end:0x0206c93c
-
-src/unnamed/arm9/0206/func_0206c93c.c:
-    complete
-    .text start:0x0206c93c end:0x0206c9f4
-
-src/unnamed/arm9/0206/func_0206c9f4.c:
-    complete
-    .text start:0x0206c9f4 end:0x0206ca44
-
-src/unnamed/arm9/0206/func_0206ca44.c:
-    complete
-    .text start:0x0206ca44 end:0x0206ca7c
-
-src/unnamed/arm9/0206/func_0206ca7c.c:
-    complete
-    .text start:0x0206ca7c end:0x0206cb0c
-
-src/unnamed/arm9/0206/func_0206cb0c.c:
-    complete
-    .text start:0x0206cb0c end:0x0206cbc0
-
-src/unnamed/arm9/0206/func_0206cbc0.c:
-    complete
-    .text start:0x0206cbc0 end:0x0206ccd8
+    .text start:0x0206ca7c end:0x0206ccd8
 
 src/cstd3.cpp:
     complete
@@ -2330,30 +2034,10 @@ src/cstd4.cpp:
     complete
     .text start:0x0206dab4 end:0x0206ece0
 
-src/float2str.c:
+src/lib/msl/printf.c:
     complete
-    .text start:0x0206ece0 end:0x0206f338
+    .text start:0x0206ece0 end:0x02070348
     .rodata start:0x02086a58 end:0x02086b60
-
-src/round_decimal.c:
-    complete
-    .text start:0x0206f338 end:0x0206f46c
-
-src/double2hex.c:
-    complete
-    .text start:0x0206f46c end:0x0206f820
-
-src/longlong2str.c:
-    complete
-    .text start:0x0206f820 end:0x0206fb08
-
-src/long2str.c:
-    complete
-    .text start:0x0206fb08 end:0x0206fd6c
-
-src/parse_format.c:
-    complete
-    .text start:0x0206fd6c end:0x02070348
 
 src/cstd6.cpp:
     complete
@@ -2408,29 +2092,9 @@ src/unnamed/arm9/0207/func_02071910.cpp:
     complete
     .text start:0x02071910 end:0x02071974
 
-src/sys_writec.c:
+src/lib/runtime/semihosted_console_io.c:
     complete
-    .text start:0x02071974 end:0x02071988
-
-src/sys_readc.c:
-    complete
-    .text start:0x02071988 end:0x0207199c
-
-src/sys_exit.c:
-    complete
-    .text start:0x0207199c end:0x020719ac
-
-src/__close_console.c:
-    complete
-    .text start:0x020719ac end:0x020719b4
-
-src/__write_console.c:
-    complete
-    .text start:0x020719b4 end:0x020719ec
-
-src/__read_console.c:
-    complete
-    .text start:0x020719ec end:0x02071a50
+    .text start:0x02071974 end:0x02071a50
 
 src/unnamed/arm9/0207/func_02071a50.cpp:
     complete
@@ -2488,13 +2152,9 @@ src/unnamed/arm9/0207/func_02072ed0.cpp:
     complete
     .text start:0x02072ed0 end:0x02072f3c
 
-src/__destroy_global_chain.c:
+src/lib/runtime/StaticInitializers.c:
     complete
-    .text start:0x02072f3c end:0x02072f94
-
-src/__call_static_initializers.c:
-    complete
-    .text start:0x02072f94 end:0x02072fcc
+    .text start:0x02072f3c end:0x02072fcc
 
 src/__throw_catch_compare.c:
     complete

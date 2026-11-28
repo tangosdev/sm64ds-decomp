@@ -1,0 +1,56 @@
+{
+  "id": "arm9/StaticInitializers",
+  "module": "arm9",
+  "source": "src/lib/runtime/StaticInitializers.c",
+  "promoted_source": "src/lib/runtime/StaticInitializers.c",
+  "status": "promoted",
+  "production_mode": "text-only",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "pret pokediamond arm9/asm/RUNTIME_CPLUS_StaticInitializers.s: the RUNTIME_CPLUS library object StaticInitializers holds exactly __call_static_initializers, __destroy_global_chain and the __global_destructor_chain .bss, so the two functions are one translation unit here.",
+    "One contiguous two-function run, 0x02072f3c..0x02072fcc, gapless in config/arm9/delinks.txt, between the exception table search above and __throw_catch_compare below.",
+    "__register_global_object is not part of it: the cartridge links it at 0x020731dc, above __throw_catch_compare (0x02072fcc..0x020731dc) and away from this pair, and pokediamond's object does not carry it."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02072f3c",
+      "end": "0x02072fcc"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "__destroy_global_chain",
+      "address": "0x02072f3c",
+      "size": "0x00000058",
+      "legacy_source": "src/__destroy_global_chain.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "__call_static_initializers",
+      "address": "0x02072f94",
+      "size": "0x00000038",
+      "legacy_source": "src/__call_static_initializers.c",
+      "ordinal": 1
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "rodata": [],
+  "compiler_only_output": [],
+  "notes": [
+    "Written __call_static_initializers then __destroy_global_chain because mwcc emits compiled C in reverse source order; pokediamond's object carries the pair in the opposite order, so this cart's object is a different revision or pokediamond's was written in assembly.",
+    "The __global_destructor_chain .bss word pokediamond's object owns is not claimed here; ownership of .bss is not part of this text-only fold."
+  ],
+  "verification": {
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "linkcheck": {
+      "round": "tools/rombuild.py -j8 --no-rom stock build, 106/106 modules exact",
+      "result": "pass",
+      "rom": {
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      }
+    }
+  }
+}
