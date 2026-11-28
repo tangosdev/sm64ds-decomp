@@ -1,0 +1,74 @@
+{
+  "id": "ov007/unit020bd4e8",
+  "module": "ov007",
+  "source": "src/ui/menus/unit020bd4e8.cpp",
+  "promoted_source": "src/ui/menus/unit020bd4e8.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous run 0x020bd4e8..0x020bd9e4, 5 functions, all byte-matched from the one unit source. The five entry points share the MenuGfx prefix, carry no state, and are the display-engine helpers called by the menu work dispatcher in unit020b6eb4.",
+    "end edge: unit020bd9e4 begins the menu sound module, whose bss and data users are disjoint. Start edge: func_ov007_020bd4a0 is the VRAM/texture-region dispatcher and is left in the preceding unnamed run."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x20bd4e8",
+      "end": "0x20bd9e4"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_Z20MenuGfx_StartCapturev",
+      "address": "0x20bd4e8",
+      "size": "0x18",
+      "legacy_source": "src/MenuGfx_StartCapture.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_Z21MenuGfx_InitSubEnginev",
+      "address": "0x20bd500",
+      "size": "0xa8",
+      "legacy_source": "src/MenuGfx_InitSubEngine.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_Z22MenuGfx_InitMainEnginev",
+      "address": "0x20bd5a8",
+      "size": "0xa0",
+      "legacy_source": "src/MenuGfx_InitMainEngine.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_Z17MenuGfx_SetBgModei",
+      "address": "0x20bd648",
+      "size": "0x318",
+      "legacy_source": "src/MenuGfx_SetBgMode.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_Z17MenuGfx_ResetVramv",
+      "address": "0x20bd960",
+      "size": "0x84",
+      "legacy_source": "src/MenuGfx_ResetVram.cpp",
+      "ordinal": 4
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Text only: the group owns no data or bss; every function programs graphics registers or VRAM-bank state.",
+    "Folded from 5 one-function sources with no signature or linkage changes."
+  ],
+  "verification": {
+    "round": "tools/match.py per function against the one unit source -- text-only, whole TU compiled",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "functions_matched": 5,
+    "functions_declared": 5,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "functions_occur_in_expected_order": "PASS"
+    }
+  }
+}

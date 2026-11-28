@@ -1,11 +1,52 @@
+/* unit020c1db0 -- ov007 unit 0x020c1db0..0x020c2090: 4 functions, .text + .data.
+ *
+ * The title menu's touch-panel record: once-per-frame sampling and button-like
+ * press/release/drag state, plus its create, clear and destroy entry points.
+ * The allocation tag "touch_panel" belongs to this unit. func_ov007_020c2090
+ * begins the pad-record unit and is the end edge.
+ *
+ * Emission order: mwccarm 2004/b56 emits one .text section per function in
+ * the reverse of source order, so the highest-address function is written
+ * first here and the functions come out in ROM order.
+ */
 #include "types.h"
 #include "nitro/spi/tp.h"
 #include "Ov007Touch.h"
+#include "Ov007MenuMem.h"
 
-/* Updates the touch record once a frame from a stylus reading (b, or a
- * fresh calibrated sample when b is null): patches invalid axes from the
- * previous frame, then tracks press/release positions, held/idle frame
- * counts and the drag and per-frame deltas. */
+extern char data_ov007_02103240[];
+void func_ov007_020c2024(Ov007Touch *t);
+
+// @symbol func_ov007_020c2068
+Ov007Touch *func_ov007_020c2068(void) {
+    Ov007Touch *t = func_ov007_020c3df4(data_ov007_02103240, sizeof(Ov007Touch));
+    func_ov007_020c2024(t);
+    return t;
+}
+
+// @symbol func_ov007_020c2024
+void func_ov007_020c2024(Ov007Touch *t) {
+    t->heldFrames = 0;
+    t->releasedFrames = 0;
+    t->countdown = 0;
+    t->pressY = 0;
+    t->pressX = t->pressY;
+    t->releaseY = 0;
+    t->releaseX = t->releaseY;
+    t->dragY = 0;
+    t->dragX = t->dragY;
+    t->flags = 0;
+    t->pad_40 = -1;
+}
+
+// @symbol func_ov007_020c2018
+#pragma long_calls on
+void func_ov007_020c2018(void *p) {
+    func_ov007_020c3d1c(p);
+}
+#pragma long_calls off
+
+// @symbol func_ov007_020c1db0
 void func_ov007_020c1db0(Ov007Touch *a, TPData *b) {
     a->prev = a->cur;
     a->cur = a->raw;
@@ -80,3 +121,5 @@ void func_ov007_020c1db0(Ov007Touch *a, TPData *b) {
     if (a->countdown < 0)
         a->countdown = 0;
 }
+
+char data_ov007_02103240[] = "touch_panel";
