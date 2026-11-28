@@ -1,0 +1,103 @@
+{
+  "id": "arm9/SPLUtil",
+  "module": "arm9",
+  "source": "src/engine/particle/SPLUtil.c",
+  "promoted_source": "src/engine/particle/SPLUtil.c",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "One contiguous run, 0x0204d8e8..0x0204dcfc, gapless in config/arm9/delinks.txt between Particle_Behavior and NestedHeapIterator: the intrusive-list trio, the two random unit vectors and the three particle tracking helpers.",
+    "The tracking helpers (func_0204dab4/func_0204dc84/func_0204dcc0) read the particle system through the same private views and sit inside the library run; the split from the core library is forced by the enrolled Particle_Behavior translation unit."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0204d8e8",
+      "end": "0x0204dcfc"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "SPLList_Erase",
+      "address": "0x0204d8e8",
+      "size": "0x70",
+      "legacy_source": "src/SPLList_Erase.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "SPLList_PopFront",
+      "address": "0x0204d958",
+      "size": "0x48",
+      "legacy_source": "src/SPLList_PopFront.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "SPLList_PushFront",
+      "address": "0x0204d9a0",
+      "size": "0x50",
+      "legacy_source": "src/SPLList_PushFront.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "SPLRandom_VecFx32_XY",
+      "address": "0x0204d9f0",
+      "size": "0x5c",
+      "legacy_source": "src/SPLRandom_VecFx32_XY.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "SPLRandom_VecFx32",
+      "address": "0x0204da4c",
+      "size": "0x68",
+      "legacy_source": "src/SPLRandom_VecFx32.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_0204dab4",
+      "address": "0x0204dab4",
+      "size": "0x1d0",
+      "legacy_source": "src/unnamed/arm9/0204/func_0204dab4.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_0204dc84",
+      "address": "0x0204dc84",
+      "size": "0x3c",
+      "legacy_source": "src/unnamed/arm9/0204/func_0204dc84.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_0204dcc0",
+      "address": "0x0204dcc0",
+      "size": "0x3c",
+      "legacy_source": "src/unnamed/arm9/0204/func_0204dcc0.c",
+      "ordinal": 7
+    }
+  ],
+  "notes": [
+    "Folded production TU: the former SPL utility shards and tracking shards are consolidated in reverse ROM emission order.",
+    "The merged object is text-only: gSPLRandomState/PARTICLE_RNG_STATE (alias, 0x020a4d30) stays hole-owned as before."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-SPLUtil/SPLUtil.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}
