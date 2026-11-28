@@ -1648,6 +1648,54 @@
       "count": 1,
       "reason": "dScMgCurling2_c::ResetGame clears 0x55b0 through the existing header member instead of a raw `*((short *)(c + 0x55b0))` store off a `char *c = (char *)this` alias (#821). It is the only access to the field anywhere in the tree; with no reader there is no evidence for a name, so none is invented. Same shape as the file's unk_55a0 and unk_55c0 stores. Follow-up: name it if a reader is found.",
       "evidence": "include/dScMgCurling2_c.h `u16 unk_55b0; /* 0x55b0, write-only: ResetGame zeroes it */`; fdiff _ZN15dScMgCurling2_c9ResetGameEv ov006 58/58 2004/b56"
+    },
+    {
+      "path": "src/unnamed/arm9/0201/func_02019dfc.cpp",
+      "rule": "raw-offset",
+      "match": "(int*)(data_0209ee90+0x108",
+      "count": 1,
+      "reason": "Carried verbatim from the absorbed func_020197b8.cpp main loop. The folded TU is byte-identical; no field name or owner type is established by the tree, so the fold preserves the existing access rather than inventing one.",
+      "evidence": "present verbatim in pre-fold src/unnamed/arm9/0201/func_020197b8.cpp; arm9/func_02019dfc linkcheck DATA-VERIFIED, full ROM identical"
+    },
+    {
+      "path": "src/OSi_DoBoot.c",
+      "rule": "raw-offset",
+      "match": "(vu8*)(HW_REG_BASE+0x1a1",
+      "count": 1,
+      "reason": "Carried verbatim from the absorbed OSReadROMArea.c ROM-header read path. The folded TU is byte-identical and the hardware/header layouts have no established owner struct in the tree, so the fold preserves the existing accesses rather than inventing field names.",
+      "evidence": "present verbatim in pre-fold src/OSReadROMArea.c; production tuverify2 PASS 2/2 for the folded OSi_DoBoot range"
+    },
+    {
+      "path": "src/OSi_DoBoot.c",
+      "rule": "raw-offset",
+      "match": "(vu8*)(HW_REG_BASE+0x1a8",
+      "count": 1,
+      "reason": "Carried verbatim from the absorbed OSReadROMArea.c ROM-header read path. The folded TU is byte-identical and the hardware/header layouts have no established owner struct in the tree, so the fold preserves the existing accesses rather than inventing field names.",
+      "evidence": "present verbatim in pre-fold src/OSReadROMArea.c; production tuverify2 PASS 2/2 for the folded OSi_DoBoot range"
+    },
+    {
+      "path": "src/OSi_DoBoot.c",
+      "rule": "raw-offset",
+      "match": "(vu32*)(HW_REG_BASE+0x1a4",
+      "count": 1,
+      "reason": "Carried verbatim from the absorbed OSReadROMArea.c ROM-header read path. The folded TU is byte-identical and the hardware/header layouts have no established owner struct in the tree, so the fold preserves the existing accesses rather than inventing field names.",
+      "evidence": "present verbatim in pre-fold src/OSReadROMArea.c; production tuverify2 PASS 2/2 for the folded OSi_DoBoot range"
+    },
+    {
+      "path": "src/OSi_DoBoot.c",
+      "rule": "raw-offset",
+      "match": "(vu32*)(HW_REG_BASE+0x100010",
+      "count": 1,
+      "reason": "Carried verbatim from the absorbed OSReadROMArea.c ROM-header read path. The folded TU is byte-identical and the hardware/header layouts have no established owner struct in the tree, so the fold preserves the existing accesses rather than inventing field names.",
+      "evidence": "present verbatim in pre-fold src/OSReadROMArea.c; production tuverify2 PASS 2/2 for the folded OSi_DoBoot range"
+    },
+    {
+      "path": "src/OSi_DoBoot.c",
+      "rule": "raw-offset",
+      "match": "(vu32*)(HW_ROM_HEADER_BUF+0x60",
+      "count": 1,
+      "reason": "Carried verbatim from the absorbed OSReadROMArea.c ROM-header read path. The folded TU is byte-identical and the hardware/header layouts have no established owner struct in the tree, so the fold preserves the existing accesses rather than inventing field names.",
+      "evidence": "present verbatim in pre-fold src/OSReadROMArea.c; production tuverify2 PASS 2/2 for the folded OSi_DoBoot range"
     }
   ]
 }

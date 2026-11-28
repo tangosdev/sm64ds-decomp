@@ -513,24 +513,10 @@ src/NitroStartUp.cpp:
     complete
     .text start:0x02019780 end:0x020197b8
 
-src/unnamed/arm9/0201/func_020197b8.cpp:
+src/unnamed/arm9/0201/func_02019dfc.cpp:
     complete
-    .text start:0x020197b8 end:0x020199a4
-
-src/unnamed/arm9/0201/func_020199a4.c:
-    complete
-    .text start:0x020199a4 end:0x02019dfc
-src/unnamed/arm9/0201/func_02019dfc.c:
-    complete
-    .text start:0x02019dfc end:0x02019ebc
+    .text start:0x020197b8 end:0x02019f10
     .bss start:0x0209d4d4 end:0x0209d528
-src/unnamed/arm9/0201/func_02019ebc.c:
-    complete
-    .text start:0x02019ebc end:0x02019ed0
-
-src/unnamed/arm9/0201/func_02019ed0.c:
-    complete
-    .text start:0x02019ed0 end:0x02019f10
 
 src/unnamed/arm9/0201/func_02019f10.cpp:
     complete
@@ -573,30 +559,7 @@ src/IRQ2.cpp:
 
 src/unnamed/arm9/0201/func_0201a5cc.c:
     complete
-    .text start:0x0201a5cc end:0x0201a5f8
-
-src/unnamed/arm9/0201/func_0201a5f8.c:
-    complete
-    .text start:0x0201a5f8 end:0x0201a614
-
-src/unnamed/arm9/0201/func_0201a614.c:
-    complete
-    .text start:0x0201a614 end:0x0201a754
-src/unnamed/arm9/0201/func_0201a754.c:
-    complete
-    .text start:0x0201a754 end:0x0201a798
-
-src/unnamed/arm9/0201/func_0201a798.c:
-    complete
-    .text start:0x0201a798 end:0x0201a7dc
-
-src/GetSceneOverlayID.c:
-    complete
-    .text start:0x0201a7dc end:0x0201a888
-
-src/IsMinigameActorID.c:
-    complete
-    .text start:0x0201a888 end:0x0201a8b4
+    .text start:0x0201a5cc end:0x0201a8b4
 
 src/unnamed/arm9/0201/func_0201a8b4.cpp:
     complete
