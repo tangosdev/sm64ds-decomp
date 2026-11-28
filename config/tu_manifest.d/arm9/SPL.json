@@ -1,0 +1,232 @@
+{
+  "id": "arm9/SPL",
+  "module": "arm9",
+  "source": "src/engine/particle/SPL.c",
+  "promoted_source": "src/engine/particle/SPL.c",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "One contiguous particle-library run, 0x0204a5bc..0x0204d4d0, gapless in config/arm9/delinks.txt between Particle_Manager and Particle_Behavior: emitter setup and update, the draw routines, the animation callbacks and the texture/plane utility functions.",
+    "The run cannot join the SPL utility functions in one object because the enrolled Particle_Behavior translation unit interrupts it at 0x0204d4d0..0x0204d8e8; the delinks format admits one .text range per object.",
+    "mwccarm emits deferred bodies in reverse source order, so the last ROM function (SPLAnim_Scale) is first in source."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0204a5bc",
+      "end": "0x0204d4d0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "SPLEmitter_Emit",
+      "address": "0x0204a5bc",
+      "size": "0xc",
+      "legacy_source": "src/SPLEmitter_Emit.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "SPLManager_DoDraw",
+      "address": "0x0204a5c8",
+      "size": "0x168",
+      "legacy_source": "src/SPLManager_DoDraw.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "SPLEmitter_Update",
+      "address": "0x0204a730",
+      "size": "0x6fc",
+      "legacy_source": "src/SPLEmitter_Update.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "SPLEmitter_Init",
+      "address": "0x0204ae2c",
+      "size": "0x10c",
+      "legacy_source": "src/SPLEmitter_Init.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "SPLUtil_SetTexture_Stub",
+      "address": "0x0204af38",
+      "size": "0x4",
+      "legacy_source": "src/SPLUtil_SetTexture_Stub.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "SPLUtil_SetTexture",
+      "address": "0x0204af3c",
+      "size": "0xec",
+      "legacy_source": "src/SPLUtil_SetTexture.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "SPLDraw_Child_Polygon",
+      "address": "0x0204b028",
+      "size": "0x21c",
+      "legacy_source": "src/SPLDraw_Child_Polygon.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "SPLDraw_Polygon",
+      "address": "0x0204b244",
+      "size": "0x21c",
+      "legacy_source": "src/SPLDraw_Polygon.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "SPLDraw_Child_DirectionalBillboard",
+      "address": "0x0204b460",
+      "size": "0x3bc",
+      "legacy_source": "src/SPLDraw_Child_DirectionalBillboard.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "SPLDraw_DirectionalBillboard",
+      "address": "0x0204b81c",
+      "size": "0x3bc",
+      "legacy_source": "src/SPLDraw_DirectionalBillboard.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "SPLDraw_Child_Billboard",
+      "address": "0x0204bbd8",
+      "size": "0x268",
+      "legacy_source": "src/SPLDraw_Child_Billboard.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "SPLDraw_Billboard",
+      "address": "0x0204be40",
+      "size": "0x268",
+      "legacy_source": "src/SPLDraw_Billboard.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "SPLUtil_RotateY",
+      "address": "0x0204c0a8",
+      "size": "0x40",
+      "legacy_source": "src/SPLUtil_RotateY.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "SPLUtil_RotateXYZ",
+      "address": "0x0204c0e8",
+      "size": "0xac",
+      "legacy_source": "src/SPLUtil_RotateXYZ.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "SPLUtil_DrawXZPlane",
+      "address": "0x0204c194",
+      "size": "0xb8",
+      "legacy_source": "src/SPLUtil_DrawXZPlane.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "SPLUtil_DrawXYPlane",
+      "address": "0x0204c24c",
+      "size": "0xb8",
+      "legacy_source": "src/SPLUtil_DrawXYPlane.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "SPLEmitter_EmitChildren",
+      "address": "0x0204c304",
+      "size": "0x280",
+      "legacy_source": "src/SPLEmitter_EmitChildren.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "SPLEmitter_EmitParticles",
+      "address": "0x0204c584",
+      "size": "0x7d8",
+      "legacy_source": "src/SPLEmitter_EmitParticles.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "SPLUtil_TiltCoordinates",
+      "address": "0x0204cd5c",
+      "size": "0x160",
+      "legacy_source": "src/SPLEmitter_EmitParticles.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "SPLEmitter_ComputeOrthogonalAxes",
+      "address": "0x0204cebc",
+      "size": "0x1fc",
+      "legacy_source": "src/SPLEmitter_EmitParticles.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "SPLAnim_ChildAlpha",
+      "address": "0x0204d0b8",
+      "size": "0x4c",
+      "legacy_source": "src/SPLAnim_ChildAlpha.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "SPLAnim_ChildScale",
+      "address": "0x0204d104",
+      "size": "0x4c",
+      "legacy_source": "src/SPLAnim_ChildScale.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "SPLAnim_Texture",
+      "address": "0x0204d150",
+      "size": "0x64",
+      "legacy_source": "src/SPLAnim_Texture.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "SPLAnim_Alpha",
+      "address": "0x0204d1b4",
+      "size": "0xe0",
+      "legacy_source": "src/SPLAnim_Alpha.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "SPLAnim_Color",
+      "address": "0x0204d294",
+      "size": "0x1ac",
+      "legacy_source": "src/SPLAnim_Color.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "SPLAnim_Scale",
+      "address": "0x0204d440",
+      "size": "0x90",
+      "legacy_source": "src/SPLAnim_Scale.c",
+      "ordinal": 25
+    }
+  ],
+  "notes": [
+    "Folded production TU: the former SPL shard objects of this contiguous run are consolidated in reverse ROM emission order.",
+    "The merged object is text-only: gSPLRandomState (0x020a4d30) stays hole-owned as before, and the sRotationFunctions/sPlaneDrawingFunctions tables stay gap-owned .data; claiming them is later refinement work.",
+    "SPLUtil_TiltCoordinates and SPLEmitter_ComputeOrthogonalAxes are retail functions tiling the tail of the EmitParticles span (0x0204cd5c/0x0204cebc); the merged object emits them in ROM order and they are licensed here like every other row.",
+    "ColorRampInit/TexAnimInit are the init-time views of the records SPLAnim_Color and SPLAnim_Texture read through their own same-named views; the casts are representation-inert."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/arm9-SPL/SPL.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 26,
+    "functions_declared": 26,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

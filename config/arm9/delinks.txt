@@ -189,7 +189,7 @@ src/engine/sound/Sound.cpp:
     .init start:0x02074da8 end:0x02074dbc
     .ctor start:0x02086b6c end:0x02086b70
     .data start:0x0208e420 end:0x0208e4b0
-    .bss start:0x0209b470 end:0x0209d4b8
+    .bss start:0x0209b470 end:0x0209cdcc
     .rodata start:0x02075250 end:0x02075264
 
 src/GetLevelPart.cpp:
@@ -214,37 +214,10 @@ src/runtime/actor/ActorDerived.cpp:
     complete
     .text start:0x02013e80 end:0x02013f4c
 
-src/func_02013f4c.cpp:
+src/CrashScreen.cpp:
     complete
-    .text start:0x02013f4c end:0x02014150
-
-src/InitCrashScreen.cpp:
-    complete
-    .text start:0x02014150 end:0x02014214
-
-src/ResetCrashScreen.cpp:
-    complete
-    .text start:0x02014214 end:0x02014244
-
-src/ShowCrashScreen.cpp:
-    complete
-    .text start:0x02014244 end:0x02014620
-
-src/nds_printt.cpp:
-    complete
-    .text start:0x02014620 end:0x0201470c
-
-src/nds_printf.c:
-    complete
-    .text start:0x0201470c end:0x0201473c
-
-src/nds_vprintf.c:
-    complete
-    .text start:0x0201473c end:0x02014770
-
-src/nds_print.c:
-    complete
-    .text start:0x02014770 end:0x020147bc
+    .text start:0x02013f4c end:0x020147bc
+    .bss start:0x0209cdcc end:0x0209cee8
 
 src/engine/collision/d_cc_pos.cpp:
     complete
@@ -275,132 +248,10 @@ src/SharedFilePtr.cpp:
     complete
     .text start:0x0201787c end:0x02017e60
 
-src/unnamed/arm9/0201/func_02017e60.c:
+src/FileLoader.cpp:
     complete
-    .text start:0x02017e60 end:0x02017e94
-
-src/unnamed/arm9/0201/func_02017e94.c:
-    complete
-    .text start:0x02017e94 end:0x02017f34
-
-src/UnloadOverlay.c:
-    complete
-    .text start:0x02017f34 end:0x02017fd0
-
-src/unnamed/arm9/0201/func_02017fd0.cpp:
-    complete
-    .text start:0x02017fd0 end:0x02018028
-
-src/LoadOverlay.c:
-    complete
-    .text start:0x02018028 end:0x02018100
-
-src/LoadCompressedFileAt.c:
-    complete
-    .text start:0x02018100 end:0x02018144
-
-src/Deallocate.cpp:
-    complete
-    .text start:0x02018144 end:0x0201816c
-
-src/LoadFile.c:
-    complete
-    .text start:0x0201816c end:0x0201817c
-
-src/unnamed/arm9/0201/func_0201817c.c:
-    complete
-    .text start:0x0201817c end:0x0201818c
-
-src/unnamed/arm9/0201/func_0201818c.cpp:
-    complete
-    .text start:0x0201818c end:0x02018270
-
-src/unnamed/arm9/0201/func_02018270.c:
-    complete
-    .text start:0x02018270 end:0x020182ac
-
-src/LoadFileAt.c:
-    complete
-    .text start:0x020182ac end:0x020182bc
-
-src/unnamed/arm9/0201/func_020182bc.c:
-    complete
-    .text start:0x020182bc end:0x0201834c
-src/unnamed/arm9/0201/func_0201834c.cpp:
-    complete
-    .text start:0x0201834c end:0x02018434
-
-src/unnamed/arm9/0201/func_02018434.c:
-    complete
-    .text start:0x02018434 end:0x02018474
-
-src/unnamed/arm9/0201/func_02018474.c:
-    complete
-    .text start:0x02018474 end:0x020184e0
-
-src/unnamed/arm9/0201/func_020184e0.cpp:
-    complete
-    .text start:0x020184e0 end:0x02018568
-
-src/unnamed/arm9/0201/func_02018568.c:
-    complete
-    .text start:0x02018568 end:0x02018598
-
-src/unnamed/arm9/0201/func_02018598.c:
-    complete
-    .text start:0x02018598 end:0x020185c0
-
-src/unnamed/arm9/0201/func_020185c0.c:
-    complete
-    .text start:0x020185c0 end:0x020186c0
-
-src/unnamed/arm9/0201/func_020186c0.c:
-    complete
-    .text start:0x020186c0 end:0x02018770
-
-src/unnamed/arm9/0201/func_02018770.c:
-    complete
-    .text start:0x02018770 end:0x020187b0
-
-src/UnloadArchives.c:
-    complete
-    .text start:0x020187b0 end:0x020187f4
-
-src/LoadTextNarcs.c:
-    complete
-    .text start:0x020187f4 end:0x02018864
-
-src/UnloadArchive.c:
-    complete
-    .text start:0x02018864 end:0x020188a8
-
-src/LoadArchive.c:
-    complete
-    .text start:0x020188a8 end:0x02018908
-
-src/unnamed/arm9/0201/func_02018908.cpp:
-    complete
-    .text start:0x02018908 end:0x02018934
-
-src/unnamed/arm9/0201/func_02018934.cpp:
-    complete
-    .text start:0x02018934 end:0x020189f0
-
-src/unnamed/arm9/0201/func_020189f0.c:
-    complete
-    .text start:0x020189f0 end:0x02018a24
-
-src/unnamed/arm9/0201/func_02018a24.c:
-    complete
-    .text start:0x02018a24 end:0x02018a40
-
-src/SetAssetHandleFileID.c:
-    complete
-    .text start:0x02018a40 end:0x02018a58
-
-src/AllocAssetHandleTable.cpp:
-    complete
-    .text start:0x02018a58 end:0x02018aa4
+    .text start:0x02017e60 end:0x02018aa4
+    .bss start:0x0209d3b0 end:0x0209d454
 
 src/unnamed/arm9/0201/func_02018aa4.c:
     complete
@@ -432,76 +283,10 @@ src/engine/graph/d_graph_c_callback.cpp:
 src/unnamed/arm9/0201/func_02018ec0.cpp:
     complete
     .text start:0x02018ec0 end:0x02018f38
-src/SetSubBg3Offset.c:
+src/Display.cpp:
     complete
-    .text start:0x02018f38 end:0x02018f54
-
-src/SetSubBg2Offset.c:
-    complete
-    .text start:0x02018f54 end:0x02018f70
-
-src/SetSubBg1Offset.c:
-    complete
-    .text start:0x02018f70 end:0x02018f8c
-
-src/SetSubBg0Offset.c:
-    complete
-    .text start:0x02018f8c end:0x02018fa8
-
-src/SetBg3Offset.c:
-    complete
-    .text start:0x02018fa8 end:0x02018fc4
-
-src/SetBg2Offset.c:
-    complete
-    .text start:0x02018fc4 end:0x02018fe0
-
-src/SetBg1Offset.c:
-    complete
-    .text start:0x02018fe0 end:0x02018ffc
-
-src/SetBg0Offset.c:
-    complete
-    .text start:0x02018ffc end:0x02019018
-
-src/unnamed/arm9/0201/func_02019018.c:
-    complete
-    .text start:0x02019018 end:0x02019070
-src/Enable3dEngines.c:
-    complete
-    .text start:0x02019070 end:0x020190b8
-
-src/unnamed/arm9/0201/func_020190b8.c:
-    complete
-    .text start:0x020190b8 end:0x02019100
-
-src/unnamed/arm9/0201/func_02019100.c:
-    complete
-    .text start:0x02019100 end:0x02019144
-
-src/unnamed/arm9/0201/func_02019144.cpp:
-    complete
-    .text start:0x02019144 end:0x02019390
-
-src/unnamed/arm9/0201/func_02019390.cpp:
-    complete
-    .text start:0x02019390 end:0x02019404
-
-src/unnamed/arm9/0201/func_02019404.cpp:
-    complete
-    .text start:0x02019404 end:0x02019440
-
-src/unnamed/arm9/0201/func_02019440.cpp:
-    complete
-    .text start:0x02019440 end:0x02019510
-
-src/SetSoundMode.c:
-    complete
-    .text start:0x02019510 end:0x02019574
-
-src/GetSoundMode.c:
-    complete
-    .text start:0x02019574 end:0x02019584
+    .text start:0x02018f38 end:0x02019584
+    .bss start:0x0209d454 end:0x0209d4b8
 
 src/Timer.cpp:
     complete
@@ -1259,7 +1044,7 @@ src/fListNode.cpp:
 src/engine/model/ModelComponents.cpp:
     complete
     .text start:0x020443c8 end:0x0204547c
-    .bss start:0x020a4bb8 end:0x020a7fc4
+    .bss start:0x020a4bb8 end:0x020a4c48
     .rodata start:0x02082190 end:0x020821c0
 
 src/func_0204547c.cpp:
@@ -1334,177 +1119,27 @@ src/engine/sound/Sound2.cpp:
     .text start:0x02048528 end:0x020490b0
     .rodata start:0x020821c0 end:0x02082200
 
-src/unnamed/arm9/0204/func_020490b0.cpp:
+src/engine/sound/CaptureEffect.cpp:
     complete
-    .text start:0x020490b0 end:0x0204921c
-
-src/unnamed/arm9/0204/func_0204921c.c:
-    complete
-    .text start:0x0204921c end:0x020494cc
-
-src/unnamed/arm9/0204/func_020494cc.c:
-    complete
-    .text start:0x020494cc end:0x02049764
-    .rodata start:0x02082200 end:0x02086214
-
-src/unnamed/arm9/0204/func_02049764.c:
-    complete
-    .text start:0x02049764 end:0x020497a0
-
-src/unnamed/arm9/0204/func_020497a0.cpp:
-    complete
-    .text start:0x020497a0 end:0x020499bc
-
-src/unnamed/arm9/0204/func_020499bc.cpp:
-    complete
-    .text start:0x020499bc end:0x02049ba8
-
-src/unnamed/arm9/0204/func_02049ba8.c:
-    complete
-    .text start:0x02049ba8 end:0x02049c48
-
-src/unnamed/arm9/0204/func_02049c48.cpp:
-    complete
-    .text start:0x02049c48 end:0x02049cd8
-
-src/unnamed/arm9/0204/func_02049cd8.c:
-    complete
-    .text start:0x02049cd8 end:0x02049d60
+    .text start:0x020490b0 end:0x02049d60
+    .bss start:0x020a4c48 end:0x020a4d30
+    .rodata start:0x02082200 end:0x02082214
 
 src/engine/particle/Particle_Manager.cpp:
     complete
     .text start:0x02049d60 end:0x0204a5bc
 
-src/SPLEmitter_Emit.c:
+src/engine/particle/SPL.c:
     complete
-    .text start:0x0204a5bc end:0x0204a5c8
-
-src/SPLManager_DoDraw.c:
-    complete
-    .text start:0x0204a5c8 end:0x0204a730
-
-src/SPLEmitter_Update.c:
-    complete
-    .text start:0x0204a730 end:0x0204ae2c
-
-src/SPLEmitter_Init.c:
-    complete
-    .text start:0x0204ae2c end:0x0204af38
-
-src/SPLUtil_SetTexture_Stub.c:
-    complete
-    .text start:0x0204af38 end:0x0204af3c
-
-src/SPLUtil_SetTexture.c:
-    complete
-    .text start:0x0204af3c end:0x0204b028
-
-src/SPLDraw_Child_Polygon.c:
-    complete
-    .text start:0x0204b028 end:0x0204b244
-
-src/SPLDraw_Polygon.c:
-    complete
-    .text start:0x0204b244 end:0x0204b460
-
-src/SPLDraw_Child_DirectionalBillboard.c:
-    complete
-    .text start:0x0204b460 end:0x0204b81c
-
-src/SPLDraw_DirectionalBillboard.c:
-    complete
-    .text start:0x0204b81c end:0x0204bbd8
-
-src/SPLDraw_Child_Billboard.c:
-    complete
-    .text start:0x0204bbd8 end:0x0204be40
-
-src/SPLDraw_Billboard.c:
-    complete
-    .text start:0x0204be40 end:0x0204c0a8
-
-src/SPLUtil_RotateY.c:
-    complete
-    .text start:0x0204c0a8 end:0x0204c0e8
-
-src/SPLUtil_RotateXYZ.c:
-    complete
-    .text start:0x0204c0e8 end:0x0204c194
-
-src/SPLUtil_DrawXZPlane.c:
-    complete
-    .text start:0x0204c194 end:0x0204c24c
-
-src/SPLUtil_DrawXYPlane.c:
-    complete
-    .text start:0x0204c24c end:0x0204c304
-
-src/SPLEmitter_EmitChildren.c:
-    complete
-    .text start:0x0204c304 end:0x0204c584
-
-src/SPLEmitter_EmitParticles.c:
-    complete
-    .text start:0x0204c584 end:0x0204d0b8
-src/SPLAnim_ChildAlpha.c:
-    complete
-    .text start:0x0204d0b8 end:0x0204d104
-
-src/SPLAnim_ChildScale.c:
-    complete
-    .text start:0x0204d104 end:0x0204d150
-
-src/SPLAnim_Texture.c:
-    complete
-    .text start:0x0204d150 end:0x0204d1b4
-
-src/SPLAnim_Alpha.c:
-    complete
-    .text start:0x0204d1b4 end:0x0204d294
-
-src/SPLAnim_Color.c:
-    complete
-    .text start:0x0204d294 end:0x0204d440
-
-src/SPLAnim_Scale.c:
-    complete
-    .text start:0x0204d440 end:0x0204d4d0
+    .text start:0x0204a5bc end:0x0204d4d0
 
 src/engine/particle/Particle_Behavior.cpp:
     complete
     .text start:0x0204d4d0 end:0x0204d8e8
 
-src/SPLList_Erase.c:
+src/engine/particle/SPLUtil.c:
     complete
-    .text start:0x0204d8e8 end:0x0204d958
-
-src/SPLList_PopFront.c:
-    complete
-    .text start:0x0204d958 end:0x0204d9a0
-
-src/SPLList_PushFront.c:
-    complete
-    .text start:0x0204d9a0 end:0x0204d9f0
-
-src/SPLRandom_VecFx32_XY.c:
-    complete
-    .text start:0x0204d9f0 end:0x0204da4c
-
-src/SPLRandom_VecFx32.c:
-    complete
-    .text start:0x0204da4c end:0x0204dab4
-
-src/unnamed/arm9/0204/func_0204dab4.cpp:
-    complete
-    .text start:0x0204dab4 end:0x0204dc84
-
-src/unnamed/arm9/0204/func_0204dc84.c:
-    complete
-    .text start:0x0204dc84 end:0x0204dcc0
-
-src/unnamed/arm9/0204/func_0204dcc0.c:
-    complete
-    .text start:0x0204dcc0 end:0x0204dcfc
+    .text start:0x0204d8e8 end:0x0204dcfc
 
 src/engine/heap/NestedHeapIterator.cpp:
     complete
@@ -1834,71 +1469,25 @@ src/engine/spi/TP.c:
 src/engine/spi/PM.c:
     complete
     .text start:0x0205f5c0 end:0x0205ff70
-    .bss start:0x020a8104 end:0x020a8780
+    .bss start:0x020a8104 end:0x020a8160
 
 src/engine/card/CARD_Common.cpp:
     complete
-    .text start:0x0205ff70 end:0x020602bc
+    .text start:0x0205ff70 end:0x02060364
+    .bss start:0x020a8160 end:0x020a8760
 
-src/CARDi_TaskThread.cpp:
+src/engine/card/CARD_Backup.c:
     complete
-    .text start:0x020602bc end:0x02060310
-
-src/CARDi_OnFifoRecv.c:
-    complete
-    .text start:0x02060310 end:0x02060364
-
-src/unnamed/arm9/0206/func_02060364.c:
-    complete
-    .text start:0x02060364 end:0x02060398
-
-src/unnamed/arm9/0206/func_02060398.c:
-    complete
-    .text start:0x02060398 end:0x020603c8
+    .text start:0x02060364 end:0x02060890
     .rodata start:0x020867bc end:0x0208685c
-
-src/CARD_IdentifyBackup.cpp:
-    complete
-    .text start:0x020603c8 end:0x0206045c
-
-src/CARD_GetBackupTotalSize.c:
-    complete
-    .text start:0x0206045c end:0x02060470
-
-src/CARD_GetCurrentBackupType.c:
-    complete
-    .text start:0x02060470 end:0x02060484
-
-src/unnamed/arm9/0206/func_02060484.cpp:
-    complete
-    .text start:0x02060484 end:0x02060558
-
-src/unnamed/arm9/0206/func_02060558.cpp:
-    complete
-    .text start:0x02060558 end:0x0206062c
-
-src/unnamed/arm9/0206/func_0206062c.cpp:
-    complete
-    .text start:0x0206062c end:0x0206071c
-
-src/unnamed/arm9/0206/func_0206071c.cpp:
-    complete
-    .text start:0x0206071c end:0x020607e8
-
-src/unnamed/arm9/0206/func_020607e8.c:
-    complete
-    .text start:0x020607e8 end:0x0206081c
-
-src/CARDi_EndTask.cpp:
-    complete
-    .text start:0x0206081c end:0x02060890
+    .bss start:0x020a8760 end:0x020a8780
 
 src/engine/card/CARD_Rom.c:
     complete
     .text start:0x02060890 end:0x02060f60
     .bss start:0x020a8780 end:0x020a89a0
 
-src/CARDi_Request.cpp:
+src/engine/card/CARD_Request.c:
     complete
     .text start:0x02060f60 end:0x020610ac
 

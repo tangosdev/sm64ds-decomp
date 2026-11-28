@@ -5203,6 +5203,7 @@ data_020a81bc kind:bss addr:0x020a81bc
 cardi_thread_stack kind:bss addr:0x020a8360
 data_020a8760 kind:bss addr:0x020a8760
 data_020a8764 kind:bss addr:0x020a8764
+data_020a8768 kind:bss addr:0x020a8768
 rom_stat kind:bss addr:0x020a8780
 data_020a89a0 kind:bss addr:0x020a89a0
 data_020a89a4 kind:bss addr:0x020a89a4
