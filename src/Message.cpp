@@ -32,8 +32,9 @@
  *   to the type it computes with.
  * - Address-named helpers stay address-named. The ROM has no English name
  *   for them.
- * - dScStage_c::UpdateMessage, the stage's per-frame message driver, opens
- *   the file: it is first by address (0x0201cb7c).
+ * - Message::SetTextGlobals opens the file: it is first by address
+ *   (0x0201cb2c). dScStage_c::UpdateMessage, the stage's per-frame message
+ *   driver, follows it.
  */
 
 #pragma defer_codegen off
@@ -46,6 +47,7 @@
 #include "Sound.h"
 #include "MessageBank.h"
 #include "nitro/gx/gx_bgcnt.h"
+#include "nitro/gx/gx_load.h"
 #include "nitro/mi/memory.h"
 #include "nitro/gx/gx.h"
 
@@ -55,11 +57,12 @@ extern u8 gSubScreenLayers;
    sorts a translation unit's .bss objects by ascending size, and this run
    climbs without a drop from the u8 state through the 16-bit words, the
    choice table, the words and pointers, to the two glyph buffers. Its
-   readers are this file, Message2.cpp, Message::SetTextGlobals, LoadFont and
-   Message::LoadText: the five tree files that tile .text 0x0201ab04..
-   0x0201fec8, one original translation unit. Every object below is reached
-   from more than one of them or from outside the run, so all stay global.
-   The address-named objects keep their address names. */
+   readers are this file and Message2.cpp: the two tree files that tile
+   .text 0x0201ab04..0x0201fec8, with this file carrying
+   Message::SetTextGlobals, LoadFont and Message::LoadText as one original
+   translation unit. Every object below is reached from more than one of
+   them or from outside the run, so all stay global. The address-named
+   objects keep their address names. */
 /* The message box rectangle, set when a box opens (Message.cpp's layout code):
    gMsgBoxLeft/gMsgBoxTop are its final left and top edges and
    gMsgBoxCenterX/gMsgBoxCenterY its centre. The window registers (WIN0H/WIN0V)
@@ -150,6 +153,14 @@ extern void SetSubBg1Offset(int a, int b);
 
 extern int IsStarCollected(s32 a, s32 b);
 extern "C" int SublevelToLevel(int a);
+extern "C" {
+extern int GetOwnerLanguage(void);
+extern void *LoadFile(int handle);
+extern void *Mg_GetWorkBuffer(void);
+extern int LoadFileAt(int handle, void *dest);
+extern void Deallocate(void *ptr);
+extern void DecompressLZ16(void *src, void *dst);
+}
 
 namespace Sound {
 int ChangeMusicVolume(u32 a, s32 b);
@@ -158,6 +169,20 @@ int ChangeMusicVolume(u32 a, s32 b);
 void LoadControllerModeText(int param0);
 void Message_DrawLineBG2(void);
 extern "C" void Message_DrawCenteredLine(int mapPos, int width);
+
+/* Splits the loaded message bank into the pointers the renderer reads; the
+   layout it pins is spelled out in MessageBank.h. The VS build's twin is
+   Message::SetTextGlobalsVS (word-identical with relocations masked). */
+void Message::SetTextGlobals() {
+    int bankBase = gMessageBankBase;
+    int infoSection = bankBase + 0x20;
+    gMessageBankHeader = bankBase;
+    gMessageInfoSection = (MessageInfoSection *)infoSection;
+    int dataSection = infoSection + ((MessageInfoSection *)infoSection)->sectionSize;
+    gMessageDataSection = dataSection;
+    gMessageEntries =
+        (MessageEntry *)((u8 *)bankBase + sizeof(MessageBankHeader) + sizeof(MessageInfoSection));
+}
 
 void dScStage_c::UpdateMessage() {
     if (data_0209d660 == 0)
@@ -1475,4 +1500,53 @@ void Message::ResetAllGlobals()
 {
     func_0201eaac();
     data_0209d660 = 0;
+}
+
+enum LoadFont_AssetId { ASSET_D_2D_MARIO_3DFONT_NCL_BIN = 0x0237 };
+
+extern "C" void LoadFont(unsigned char arg) {
+    void *file;
+    void *chars;
+    data_0209d698 = arg;
+    chars = LoadFile(0x980e);
+    if (data_0209d698 == 2) {
+        LoadFileAt(0x980e, Mg_GetWorkBuffer());
+        data_0209d6f8 = Mg_GetWorkBuffer();
+        file = LoadFile(ASSET_D_2D_MARIO_3DFONT_NCL_BIN);
+        /* colours 1.. of the palette; colour 0 stays the backdrop */
+        GX_LoadBGPltt((u16 *)file + 1, 2, 0x20);
+        Deallocate(file);
+    } else if (data_0209d698 == 1) {
+        MI_CpuCopy32(chars, G2S_GetBG1CharPtr(), 0x4000);
+        file = LoadFile(ASSET_D_2D_MARIO_3DFONT_NCL_BIN);
+        GXS_LoadBGPltt(file, 0x40, 0x20);
+        Deallocate(file);
+    } else {
+        MI_CpuCopy32(chars, G2_GetBG3CharPtr(), 0x4000);
+        file = LoadFile(0x980d);
+        DecompressLZ16(file, (u8 *)G2_GetBG3CharPtr() + 0x8000);
+        Deallocate(file);
+    }
+    Deallocate(chars);
+    data_0209d660 = 0;
+    gCurrentMsgId = -1;
+}
+
+/* Loads the message bank for the console's language and splits it with
+   SetTextGlobals. The VS build's Message::LoadTextVS has the same descending
+   language chain, but points at text tables linked into arm9 instead of
+   loading a file. */
+void Message::LoadText() {
+    if (GetOwnerLanguage() == 5) {
+        gMessageBankBase = (int)LoadFile(MESSAGE_BANK_SPN_ASSET);
+    } else if (GetOwnerLanguage() == 4) {
+        gMessageBankBase = (int)LoadFile(MESSAGE_BANK_ITL_ASSET);
+    } else if (GetOwnerLanguage() == 3) {
+        gMessageBankBase = (int)LoadFile(MESSAGE_BANK_GMN_ASSET);
+    } else if (GetOwnerLanguage() == 2) {
+        gMessageBankBase = (int)LoadFile(MESSAGE_BANK_FRN_ASSET);
+    } else {
+        gMessageBankBase = (int)LoadFile(MESSAGE_BANK_ENG_ASSET);
+    }
+    SetTextGlobals();
 }

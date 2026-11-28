@@ -230,6 +230,57 @@ daStar_c::~daStar_c()
 
 #pragma defer_codegen on
 
+/* The four actor-profile factories. They end the object (ov002
+ * 0x020ebe5c..0x020ebf8c, directly after daStar_c::InitResources), so under
+ * defer_codegen they are defined first, in reverse ROM order. */
+
+/* Reconstructed source-style name: SM64DS proves daStar_c through RTTI,
+ * allocation size, vtable identity, and the STAR registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: PowerStar_Spawn.
+ *
+ * `new` alone reproduces the body: the fBase_c::operator new(1220) call, the
+ * dEnemyBase_c C2, the vptr store and the member constructors (dCcAcPos_c,
+ * dBgCh_Actr, two dExtAnmModel_c, dExtShadowModel_c). */
+daStar_c *daStar_c_classInit_STAR() {
+    return new daStar_c();
+}
+
+/* Reconstructed source-style name: SM64DS proves daStar_c through RTTI,
+ * allocation size, vtable identity, and the SILVER_STAR registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: SilverStar_Spawn.
+ *
+ * `new` alone reproduces the body: the fBase_c::operator new(1220) call, the
+ * dEnemyBase_c C2, the vptr store and the member constructors (dCcAcPos_c,
+ * dBgCh_Actr, two dExtAnmModel_c, dExtShadowModel_c). */
+daStar_c *daStar_c_classInit_SILVER_STAR() {
+    return new daStar_c();
+}
+
+/* Reconstructed source-style name: SM64DS proves daStarBase_c through RTTI,
+ * allocation size, vtable identity, and the STARBASE registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: StarMarker_Spawn.
+ *
+ * `new` alone reproduces the body: the fBase_c::operator new(476) call, the
+ * dActor_c C2, the vptr store and the member constructors (dCcAcPos_c,
+ * dExtSimpleModel_c, dExtShadowModel_c). */
+daStarBase_c *daStarBase_c_classInit() {
+    return new daStarBase_c();
+}
+
+/* StarCamera_Spawn -- the factory the STAR_CAMERA actor profile registers
+ * (ov002 0x020ebe5c..0x020ebe8c). It allocates 0xd4 bytes, exactly
+ * sizeof(dActor_c), runs dActor_c's constructor on the allocation and hands
+ * it back: the surviving vptr is dActor_c's. No most-derived vptr is
+ * installed and the ROM keeps no identifying RTTI record for it, so this is
+ * a bare dActor_c. StarCamera is the profile-derived label, not a recovered
+ * class name. */
+void *StarCamera_Spawn(void) {
+    return new dActor_c;
+}
+
 /* Spawn-time set-up for the Power Star (actor 0xb2) and the silver star
  * (0xb3). Loads the shared animation files and the star models, then picks the
  * first State from the Kind in param1 bits 4..7: kinds 0, 5, 6 and 7 idle,

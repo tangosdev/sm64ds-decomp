@@ -150,26 +150,10 @@ src/KuppaScript.cpp:
     .data start:0x0208751c end:0x0208a0e0
     .bss start:0x0209b270 end:0x0209b2e4
 
-src/GetLanguageIndex.c:
-    complete
-    .text start:0x0200f0bc end:0x0200f13c
-
 src/unnamed/arm9/0200/func_0200f13c.cpp:
     complete
-    .text start:0x0200f13c end:0x0200f2cc
+    .text start:0x0200f0bc end:0x0200f470
     .data start:0x0208a0e0 end:0x0208a170
-
-src/unnamed/arm9/0200/func_0200f2cc.cpp:
-    complete
-    .text start:0x0200f2cc end:0x0200f450
-
-src/SetNumPlayers.c:
-    complete
-    .text start:0x0200f450 end:0x0200f468
-
-src/unnamed/arm9/0200/func_0200f468.c:
-    complete
-    .text start:0x0200f468 end:0x0200f470
 
 src/engine/view/Graphics3D.cpp:
     complete
@@ -314,24 +298,10 @@ src/NitroStartUp.cpp:
     complete
     .text start:0x02019780 end:0x020197b8
 
-src/unnamed/arm9/0201/func_020197b8.cpp:
+src/unnamed/arm9/0201/func_02019dfc.cpp:
     complete
-    .text start:0x020197b8 end:0x020199a4
-
-src/unnamed/arm9/0201/func_020199a4.c:
-    complete
-    .text start:0x020199a4 end:0x02019dfc
-src/unnamed/arm9/0201/func_02019dfc.c:
-    complete
-    .text start:0x02019dfc end:0x02019ebc
+    .text start:0x020197b8 end:0x02019f10
     .bss start:0x0209d4d4 end:0x0209d528
-src/unnamed/arm9/0201/func_02019ebc.c:
-    complete
-    .text start:0x02019ebc end:0x02019ed0
-
-src/unnamed/arm9/0201/func_02019ed0.c:
-    complete
-    .text start:0x02019ed0 end:0x02019f10
 
 src/unnamed/arm9/0201/func_02019f10.cpp:
     complete
@@ -374,30 +344,7 @@ src/IRQ2.cpp:
 
 src/unnamed/arm9/0201/func_0201a5cc.c:
     complete
-    .text start:0x0201a5cc end:0x0201a5f8
-
-src/unnamed/arm9/0201/func_0201a5f8.c:
-    complete
-    .text start:0x0201a5f8 end:0x0201a614
-
-src/unnamed/arm9/0201/func_0201a614.c:
-    complete
-    .text start:0x0201a614 end:0x0201a754
-src/unnamed/arm9/0201/func_0201a754.c:
-    complete
-    .text start:0x0201a754 end:0x0201a798
-
-src/unnamed/arm9/0201/func_0201a798.c:
-    complete
-    .text start:0x0201a798 end:0x0201a7dc
-
-src/GetSceneOverlayID.c:
-    complete
-    .text start:0x0201a7dc end:0x0201a888
-
-src/IsMinigameActorID.c:
-    complete
-    .text start:0x0201a888 end:0x0201a8b4
+    .text start:0x0201a5cc end:0x0201a8b4
 
 src/unnamed/arm9/0201/func_0201a8b4.cpp:
     complete
@@ -451,22 +398,10 @@ src/Message2.cpp:
     .text start:0x0201ab04 end:0x0201cb2c
     .data start:0x0208ee64 end:0x0208ee80
 
-src/ui/messages/_ZN7Message14SetTextGlobalsEv.cpp:
-    complete
-    .text start:0x0201cb2c end:0x0201cb7c
-
 src/Message.cpp:
     complete
-    .text start:0x0201cb7c end:0x0201fcd4
+    .text start:0x0201cb2c end:0x0201fec8
     .bss start:0x0209d64c end:0x0209e64c
-
-src/LoadFont.cpp:
-    complete
-    .text start:0x0201fcd4 end:0x0201fe08
-
-src/ui/messages/_ZN7Message8LoadTextEv.cpp:
-    complete
-    .text start:0x0201fe08 end:0x0201fec8
 
 src/unnamed/arm9/0201/func_0201fec8.cpp:
     complete
@@ -476,13 +411,9 @@ src/unnamed/arm9/0201/func_0201fec8.cpp:
     .bss start:0x0209e64c end:0x0209e660
     .rodata start:0x020752cc end:0x020755a0
 
-src/unnamed/arm9/0201/func_0201ffcc.c:
-    complete
-    .text start:0x0201ffcc end:0x02020028
-
 src/engine/link/LinkSettings.c:
     complete
-    .text start:0x02020028 end:0x0202043c
+    .text start:0x0201ffcc end:0x0202043c
 
 src/unnamed/arm9/0202/func_0202043c.cpp:
     complete
@@ -602,76 +533,9 @@ src/Quaternion_Normalize.c:
 
 src/unnamed/arm9/0203/func_02030500.cpp:
     complete
-    .text start:0x02030500 end:0x02030790
-
-src/unnamed/arm9/0203/func_02030790.cpp:
-    complete
-    .text start:0x02030790 end:0x02030838
-
-src/unnamed/arm9/0203/func_02030838.c:
-    complete
-    .text start:0x02030838 end:0x0203083c
-
-src/unnamed/arm9/0203/func_0203083c.cpp:
-    complete
-    .text start:0x0203083c end:0x020308a8
-
-src/unnamed/arm9/0203/func_020308a8.c:
-    complete
-    .text start:0x020308a8 end:0x020308b4
-
-src/unnamed/arm9/0203/func_020308b4.c:
-    complete
-    .text start:0x020308b4 end:0x020308d0
-
-src/unnamed/arm9/0203/func_020308d0.c:
-    complete
-    .text start:0x020308d0 end:0x02030958
-
-src/unnamed/arm9/0203/func_02030958.c:
-    complete
-    .text start:0x02030958 end:0x02030994
-
-src/unnamed/arm9/0203/func_02030994.c:
-    complete
-    .text start:0x02030994 end:0x02030a38
-
-src/unnamed/arm9/0203/func_02030a38.c:
-    complete
-    .text start:0x02030a38 end:0x02030a6c
-
-src/unnamed/arm9/0203/func_02030a6c.c:
-    complete
-    .text start:0x02030a6c end:0x02030a78
-
-src/unnamed/arm9/0203/func_02030a78.c:
-    complete
-    .text start:0x02030a78 end:0x02030aa4
-
-src/unnamed/arm9/0203/func_02030aa4.c:
-    complete
-    .text start:0x02030aa4 end:0x02030b58
+    .text start:0x02030500 end:0x02030fa8
     .bss start:0x0209fc50 end:0x0209fc6c
 
-src/unnamed/arm9/0203/func_02030b58.c:
-    complete
-    .text start:0x02030b58 end:0x02030c38
-
-src/unnamed/arm9/0203/func_02030c38.c:
-    complete
-    .text start:0x02030c38 end:0x02030ca0
-
-src/unnamed/arm9/0203/func_02030ca0.c:
-    complete
-    .text start:0x02030ca0 end:0x02030dac
-
-src/unnamed/arm9/0203/func_02030dac.c:
-    complete
-    .text start:0x02030dac end:0x02030e4c
-
-src/unnamed/arm9/0203/func_02030e4c.c:
-    complete
-    .text start:0x02030e4c end:0x02030fa8
 
 src/Message3.cpp:
     complete
