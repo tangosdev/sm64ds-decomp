@@ -30,3 +30,8 @@
 {"module": "ov047", "section": ".rodata", "start": "0x02111b54", "end": "0x02111b74", "reason": "section-kind correction: gKm3KurumajikuClps sits physically inside the contiguous stage-map .data in retail; its bytes remain source-built as .data by the same d_s_map_ov047.c claim, so the .rodata family decrease is a reclassification, not a coverage loss"}
 {"module": "ov047", "section": ".rodata", "start": "0x02111bf4", "end": "0x02111c14", "reason": "section-kind correction: gKm3KaitendaiClps sits physically inside the contiguous stage-map .data in retail; its bytes remain source-built as .data by the same d_s_map_ov047.c claim, so the .rodata family decrease is a reclassification, not a coverage loss"}
 
+{"module": "arm9", "section": ".rodata", "start": "0x02082214", "end": "0x02086214", "reason": "SPL/data decomposition hole: the folded SPL and sound TUs own code but this large rodata run remains cartridge-backed pending data decomposition"}
+{"module": "arm9", "section": ".bss", "start": "0x020a4d30", "end": "0x020a7fc4", "reason": "SPL bss hole: ModelComponents and the folded particle TUs do not yet claim this unannotated bss run"}
+{"module": "arm9", "section": ".bss", "start": "0x0209cee8", "end": "0x0209d3b0", "reason": "sound bss hole: the folded sound TUs do not yet claim this unannotated bss run"}
+{"module": "ov007", "section": ".data", "start": "0x0210324c", "end": "0x02103254", "reason": "touch-panel data hole: the folded ov007 TUs leave these eight bytes cartridge-backed pending data decomposition"}
+{"module": "arm9", "section": ".bss", "start": "0x020a80c4", "end": "0x020a80c8", "reason": "FS bss hole: the folded FS_Rom TU does not yet claim this trailing word"}
