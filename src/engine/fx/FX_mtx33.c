@@ -190,4 +190,3 @@ asm void MTX_RotZ33_(Matrix3x3 *m, int s, int c) {
     str r1, [r0, #0xc]
     bx lr
 }
-

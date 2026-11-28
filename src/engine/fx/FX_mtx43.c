@@ -270,4 +270,3 @@ asm void MTX_RotZ43_(union Matrix4x3 *m, int s, int c) {
     stmia r0!, {r1, r2, r3}
     bx lr
 }
-
